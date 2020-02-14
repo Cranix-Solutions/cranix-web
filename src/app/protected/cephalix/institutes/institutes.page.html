@@ -1,0 +1,49 @@
+<cranix-toolbar></cranix-toolbar>
+
+<!--ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ institutes | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header-->
+
+<ion-content>
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+
+    <ng-container matColumnDef="id">
+	    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ id | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.id}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="uuid">
+	    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'uuid' | translate }} </th>
+      <td mat-cell *matCellDef="let institute"> {{institute.uuid}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+	    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'name' | translate }} </th>
+      <td mat-cell *matCellDef="let institute"> {{institute.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="locality">
+	    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ locality | translate }} </th>
+      <td mat-cell *matCellDef="let institute"> {{institute.locality}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ipVPN">
+	    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ ipVPN | translate }} </th>
+      <td mat-cell *matCellDef="let institute"> {{institute.ipVPN}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="regCode">
+	    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ regCode | translate }} </th>
+      <td mat-cell *matCellDef="let institute"> {{institute.regCode}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+
+<!-- mat-paginator [pageSizeOptions]="[1, 2, 5]" showFirstLastButtons></mat-paginator -->
+
+</ion-content>

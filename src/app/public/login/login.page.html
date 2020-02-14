@@ -1,0 +1,31 @@
+<ion-grid>
+  <ion-row class="ion-justify-content-center">
+    <ion-col>
+      <div calss="ion-text-center">
+        <h4>{{ instName | async }}</h4>
+      </div>
+      <form [formGroup]="authForm" (ngSubmit)="onSubmit(authForm.value)">
+        <ion-item>
+          <ion-input formControlName="username" type="text" placeholder="{{ 'username' | translate }}"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="authForm.controls.username.hasError('required') && authForm.controls.username.touched">
+          <p>{{ 'Sorry, field username is required!' | translate }}</p>
+        </ion-item>
+
+        <ion-item>
+          <ion-input formControlName="password" type="password" placeholder="{{ 'password' | translate }}"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="authForm.controls.password.hasError('required') && authForm.controls.password.touched">
+          <p>{{ 'Sorry, field password is required!' | translate }}</p>
+        </ion-item>
+
+        <ion-button full color="primary" [disabled]="!authForm.valid" style="margin-top: 20px;"
+          type="submit">{{ 'login' | translate }}</ion-button>
+      </form>
+    </ion-col>
+  </ion-row>
+  <div class="bar bar-footer bar-balanced">
+    <div class="title">CRANIX IONIC</div>
+  </div>
+</ion-grid>
