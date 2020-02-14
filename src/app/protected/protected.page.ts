@@ -21,7 +21,7 @@ export class ProtectedPage implements OnInit {
     },
     {
       title: 'Groups',
-      url: 'cranix/groups',
+      url: '/pages/cranix/groups',
       icon: 'list'
     }
   ];

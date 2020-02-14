@@ -15,6 +15,10 @@ const routes: Routes = [
   {
     path: 'users',
     loadChildren: () => import('./cranix/users/users.module').then( m => m.UsersPageModule)
+  },
+  {
+    path: 'groups',
+    loadChildren: () => import('./cranix/groups/groups.module').then( m => m.GroupsPageModule)
   }
 ];
 

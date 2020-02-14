@@ -3,34 +3,33 @@ import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TranslateService } from '@ngx-translate/core';
 
-
-import {CephalixService} from 'src/app/services/cephalix.service';
-import { Institute } from 'src/app/shared/models/cephalix-data-model';
+//Own modules
+import { GroupsService } from 'src/app/services/groups.service';
+import { Group } from 'src/app/shared/models/data-model';
 
 @Component({
-  selector: 'cranix-institutes',
-  templateUrl: './institutes.page.html',
-  styleUrls: ['./institutes.page.scss'],
+  selector: 'app-groups',
+  templateUrl: './groups.page.html',
+  styleUrls: ['./groups.page.scss'],
 })
-export class InstitutesPage implements OnInit {
+export class GroupsPage implements OnInit {
 
-  displayedColumns: string[] = ['select', 'uuid', 'name', 'locality','ipVPN', 'regCode','actions'];
-  dataSource:  MatTableDataSource<Institute> ;
-  selection = new SelectionModel<Institute>(true, []);
+  displayedColumns: string[] = ['select', 'name', 'description', 'groupType','actions'];
+  dataSource: MatTableDataSource<Group>;
+  selection = new SelectionModel<Group>(true, []);
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
-    cephalixS: CephalixService,
+    groupS: GroupsService,
     public translateService: TranslateService
   ) {
-   // this.translateService.setDefaultLang('de');
-   console.log('Trans in institutes', this.translateService.translations);
-    cephalixS.getAllInstitutes().subscribe(
+    this.translateService.setDefaultLang('de');
+    groupS.getGroups().subscribe(
       (res) => {
-      this.dataSource = new MatTableDataSource<Institute>(res)
-    },
-    (err) => { },
+        this.dataSource = new MatTableDataSource<Group>(res)
+      },
+      (err) => { },
       () => {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -39,7 +38,8 @@ export class InstitutesPage implements OnInit {
 
   ngOnInit() {
   }
-  public doFilter = (value: string) => {
+
+public doFilter = (value: string) => {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
   /** Whether the number of selected elements matches the total number of rows. */
@@ -55,11 +55,13 @@ export class InstitutesPage implements OnInit {
       this.selection.clear() :
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
-  public redirectToEdit = (institute: Institute) => {
-    console.log("edit:" + institute.name)
+  public redirectToMember= (group: Group) => {
+    console.log("Details:" + group.name)
   }
- 
-  public redirectToDelete = (institute: Institute)  => {
-    console.log("Delete:" + institute.uuid)
+  public redirectToEdit = (group: Group) => {
+    console.log("Details:" + group.name)
+  }
+  public redirectToDelete = (group: Group)=> {
+    console.log("Delete:" + group.name)
   }
 }
