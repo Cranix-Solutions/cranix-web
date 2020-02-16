@@ -1,10 +1,6 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-content>
-  <div>
-    <mat-form-field fxFlex="40%">
-      <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Filter">
-    </mat-form-field>
-  </div>
+    <ion-searchbar (keyup)="doFilter($event.target.value)" ></ion-searchbar>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
     <ng-container matColumnDef="select">
       <mat-header-cell *matHeaderCellDef>
@@ -42,14 +38,24 @@
     </ng-container>
 
     <ng-container matColumnDef="actions">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>
+        <ion-button size="small"  (click)="redirectToAdd()">
+          <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+        </ion-button>
+        <ion-button size="small" (click)="openActions()">
+          <ion-icon slot="icon-only" name="menu"></ion-icon>
+        </ion-button>
+        <ion-button size="small"  (click)="openCollums()">
+          <ion-icon slot="icon-only" name="apps"></ion-icon>
+        </ion-button>
+        </mat-header-cell>
       <mat-cell *matCellDef="let object" (click)="$event.stopPropagation()">
-        <button mat-icon-button color="black" (click)="redirectToEdit(object)">
-          <mat-icon class="mat-18">edit</mat-icon>
-        </button>
-          <button mat-icon-button color="warn" (click)="redirectToDelete(object)">
-            <mat-icon class="mat-18">delete</mat-icon>
-          </button>
+        <ion-button fill="clear"  size="small" (click)="redirectToEdit(object)">
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button  fill="clear" size="small" (click)="redirectToDelete(object)">
+          <ion-icon slot="icon-only" color="danger" name="trash-outline"></ion-icon>
+        </ion-button>
         </mat-cell>
     </ng-container>
 

@@ -9,7 +9,6 @@ import { Router, RouteReuseStrategy } from '@angular/router';
 import { UtilsService } from './utils.service';
 import { UserResponse,LoginForm } from 'src/app/shared/models/server-models';
 
-
 @Injectable({
     providedIn: 'root'
 })
@@ -65,7 +64,7 @@ export class AuthenticationService {
                         cssClass: "bar-assertive",
                         duration: 3000
                     });
-                    (await toast).present();
+                    (await toast).present(); 
                 }
                 }, () => {
                     console.log("login call completed" + this.session.role);

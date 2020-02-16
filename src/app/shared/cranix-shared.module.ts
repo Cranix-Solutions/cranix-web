@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SelectionModel } from '@angular/cdk/collections';
 import {
   MatTableModule,
   MatStepperModule,
@@ -37,9 +36,7 @@ import { TranslateModule } from '@ngx-translate/core';
   MatIconModule,
   MatPaginatorModule,
   MatSortModule,
-  SelectionModel,
-  TranslateModule,
-  ToolbarComponent
+  TranslateModule
   ], exports: [
     FormsModule,
     IonicModule,
@@ -54,7 +51,6 @@ import { TranslateModule } from '@ngx-translate/core';
     MatIconModule,
     MatPaginatorModule,
     MatSortModule,
-    SelectionModel,
     TranslateModule,
     ToolbarComponent
   ]
