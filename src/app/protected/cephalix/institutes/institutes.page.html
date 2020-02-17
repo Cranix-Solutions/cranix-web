@@ -1,49 +1,77 @@
 <cranix-toolbar></cranix-toolbar>
-
-<!--ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>{{ institutes | translate }}</ion-title>
-  </ion-toolbar>
-</ion-header-->
-
 <ion-content>
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+    <ion-searchbar (keyup)="doFilter($event.target.value)" ></ion-searchbar>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+
+    <ng-container matColumnDef="select">
+      <mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()">
+        </mat-checkbox>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)">
+        </mat-checkbox>
+      </mat-cell>
+    </ng-container>
 
     <ng-container matColumnDef="id">
-	    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ id | translate }}</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'id' | translate }}</th>
       <td mat-cell *matCellDef="let institute"> {{institute.id}} </td>
     </ng-container>
 
     <ng-container matColumnDef="uuid">
-	    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'uuid' | translate }} </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'uuid' | translate }} </th>
       <td mat-cell *matCellDef="let institute"> {{institute.uuid}} </td>
     </ng-container>
 
     <ng-container matColumnDef="name">
-	    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'name' | translate }} </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'name' | translate }} </th>
       <td mat-cell *matCellDef="let institute"> {{institute.name}} </td>
     </ng-container>
 
     <ng-container matColumnDef="locality">
-	    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ locality | translate }} </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'locality' | translate }} </th>
       <td mat-cell *matCellDef="let institute"> {{institute.locality}} </td>
     </ng-container>
 
     <ng-container matColumnDef="ipVPN">
-	    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ ipVPN | translate }} </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'ipVPN' | translate }} </th>
       <td mat-cell *matCellDef="let institute"> {{institute.ipVPN}} </td>
     </ng-container>
 
     <ng-container matColumnDef="regCode">
-	    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ regCode | translate }} </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'regCode' | translate }} </th>
       <td mat-cell *matCellDef="let institute"> {{institute.regCode}} </td>
     </ng-container>
 
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef> 
+        <ion-button size="small"  (click)="redirectToAdd()">
+          <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+        </ion-button>
+        <ion-button size="small" (click)="openActions($event)">
+          <ion-icon slot="icon-only" name="menu"></ion-icon>
+        </ion-button>
+        <ion-button size="small"  (click)="openCollums($event)">
+          <ion-icon slot="icon-only" name="apps"></ion-icon>
+        </ion-button>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let object" (click)="$event.stopPropagation()">
+        <ion-button fill="clear"  size="small" (click)="redirectToEdit(object)">
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button  fill="clear" size="small" (click)="redirectToDelete(object)">
+          <ion-icon slot="icon-only" color="danger" name="trash-outline"></ion-icon>
+        </ion-button>
+      </mat-cell>
+    </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
 
-</table>
+  </table>
 
-<!-- mat-paginator [pageSizeOptions]="[1, 2, 5]" showFirstLastButtons></mat-paginator -->
+  <!-- mat-paginator [pageSizeOptions]="[1, 2, 5]" showFirstLastButtons></mat-paginator -->
 
 </ion-content>

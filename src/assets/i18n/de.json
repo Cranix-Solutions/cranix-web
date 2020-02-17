@@ -19,7 +19,7 @@
 	"ipTrNet": "IP im Transportnetz",
 	"ipVPN": "Verbindungs-IP (VPN)",
 	"locality": "Address",
-	"name": "Institutename",
+	"name": "Name",
 	"network": "Intranet",
 	"serverNetwork": "Servernetz",
 	"nmTrNet": "Netzwerkmaske",

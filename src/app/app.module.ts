@@ -18,6 +18,7 @@ import { SystemService } from './services/system.service';
 import { LanguageService } from './services/language.service';
 
 import { ErrorHandler, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ActionsComponent } from './shared/actions/actions.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -36,8 +37,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [AppComponent,ActionsComponent],
+  entryComponents: [ActionsComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),

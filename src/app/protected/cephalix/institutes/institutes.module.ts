@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-
 import { InstitutesPage } from './institutes.page';
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';

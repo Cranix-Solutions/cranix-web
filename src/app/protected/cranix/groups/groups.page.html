@@ -1,19 +1,7 @@
-<!--ion-header>
-  <ion-toolbar>
-    <ion-title>{{ users | translate }}</ion-title>
-  </ion-toolbar>
-</ion-header-->
-
 <cranix-toolbar></cranix-toolbar>
-<ion-content class="ion-padding">
-  <div>
-    <!-- mat-form-field fxFlex="40%">
-      <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Filter">
-    </mat-form-field -->
-    <ion-searchbar (keyup)="doFilter($event.target.value)"></ion-searchbar>
-  </div>
+<ion-content>
+    <ion-searchbar (keyup)="doFilter($event.target.value)" ></ion-searchbar>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
-
     <ng-container matColumnDef="select">
       <mat-header-cell *matHeaderCellDef>
         <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
@@ -29,27 +17,24 @@
 
     <ng-container matColumnDef="id">
       <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'id' | translate }} </mat-header-cell>
-      <mat-cell *matCellDef="let object">{{object.id}}</mat-cell>
+      <mat-cell *matCellDef="let group"> {{group.id}} </mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="uid">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'uid' | translate }} </mat-header-cell>
-      <mat-cell *matCellDef="let user"> {{user.uid}} </mat-cell>
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'name' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let group" (click)="$event.stopPropagation()">
+        <a (click)="redirectToMember(group)"><span>{{group.name}}</span></a>
+      </mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="surName">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'surName' | translate }} </mat-header-cell>
-      <mat-cell *matCellDef="let user"> {{user.surName}} </mat-cell>
+    <ng-container matColumnDef="description">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'description' | translate }}</mat-header-cell>
+      <mat-cell class="description-cell" *matCellDef="let group"> {{group.description}} </mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="givenName">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'givenName' | translate }} </mat-header-cell>
-      <mat-cell *matCellDef="let user"> {{user.givenName}} </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="role">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'role' | translate }} </mat-header-cell>
-      <mat-cell *matCellDef="let user"> {{user.role}} </mat-cell>
+    <ng-container matColumnDef="groupType">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'groupType' | translate }} </mat-header-cell>
+      <mat-cell *matCellDef="let group"> {{group.groupType}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="actions">
@@ -63,24 +48,20 @@
         <ion-button size="small"  (click)="openCollums($event)">
           <ion-icon slot="icon-only" name="apps"></ion-icon>
         </ion-button>
-        <!--ion-button  color="black" (click)="openPopover()">
-          {{ 'actions' | translate }}
-        </ion-button-->
-      </mat-header-cell>
+        </mat-header-cell>
       <mat-cell *matCellDef="let object" (click)="$event.stopPropagation()">
         <ion-button fill="clear"  size="small" (click)="redirectToEdit(object)">
           <ion-icon slot="icon-only" name="create-outline"></ion-icon>
         </ion-button>
-        <ion-button  fill="clear" size="small" (click)="setPasswor(object)">
-          <ion-icon slot="icon-only" color="success" name="key-outline"></ion-icon>
-        </ion-button>
         <ion-button  fill="clear" size="small" (click)="redirectToDelete(object)">
           <ion-icon slot="icon-only" color="danger" name="trash-outline"></ion-icon>
         </ion-button>
-      </mat-cell>
+        </mat-cell>
     </ng-container>
+
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></mat-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></mat-row>>
+
   </table>
-  <!-- at-paginator [pageSizeOptions]="[1, 2, 5]" showFirstLastButtons></mat-paginator -->
+  <!-- mat-paginator [pageSizeOptions]="[20,30,50]" showFirstLastButtons></mat-paginator -->
 </ion-content>
