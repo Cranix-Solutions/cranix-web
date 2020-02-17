@@ -9,6 +9,10 @@ th.mat-header-cell {
     text-align: left;
     max-width: 300px;
 }
-.mat-column-select {
-    overflow: initial;
- }
+.mat-row:nth-child(even){
+    background-color: LightGray;
+    }
+
+.mat-row:nth-child(odd){
+    background-color:silver;
+    }

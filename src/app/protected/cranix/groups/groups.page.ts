@@ -2,10 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TranslateService } from '@ngx-translate/core';
+import { PopoverController } from '@ionic/angular';
 
 //Own modules
 import { GroupsService } from 'src/app/services/groups.service';
 import { Group } from 'src/app/shared/models/data-model';
+import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 
 @Component({
   selector: 'app-groups',
@@ -17,12 +19,14 @@ export class GroupsPage implements OnInit {
   displayedColumns: string[] = ['select', 'name', 'description', 'groupType','actions'];
   dataSource: MatTableDataSource<Group>;
   selection = new SelectionModel<Group>(true, []);
+  objectIds: number[] = [];
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
     groupS: GroupsService,
-    public translateService: TranslateService
+    public translateService: TranslateService,
+    public popoverCtrl: PopoverController
   ) {
     this.translateService.setDefaultLang('de');
     groupS.getGroups().subscribe(
@@ -36,8 +40,8 @@ export class GroupsPage implements OnInit {
       });
   }
 
-  ngOnInit() {
-  }
+ ngOnInit() {
+ }
 
 public doFilter = (value: string) => {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
@@ -63,5 +67,27 @@ public doFilter = (value: string) => {
   }
   public redirectToDelete = (group: Group)=> {
     console.log("Delete:" + group.name)
+  }
+    /**
+   * Open the actions menu with the selected object ids.
+   * @param ev 
+   */
+  async openActions(ev: any) {
+    for (let i = 0; i <  this.selection.selected.length; i++) {
+      this.objectIds.push(this.selection.selected[i].id);
+    }
+    console.log("openActions"  + this.objectIds);
+    
+    const popover = await  this.popoverCtrl.create({
+      component: ActionsComponent,
+      event: ev,
+      componentProps: {
+        objectType:  "group",
+         objectIds: this.objectIds
+      },
+      animated: true,
+      showBackdrop: true
+  });
+    (await popover).present();
   }
 }

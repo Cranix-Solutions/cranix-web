@@ -19,7 +19,7 @@ const routes: Routes = [
     CranixSharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [UsersPage,],
+  declarations: [UsersPage],
   providers: [
     UsersService
   ]
