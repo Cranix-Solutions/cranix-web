@@ -5,7 +5,9 @@
 </ion-header-->
 
 <cranix-toolbar></cranix-toolbar>
-<ion-content class="ion-padding">
+<ion-content class="ion-padding" fxFlex=100%>
+  <ion-card>
+
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
 
     <ng-container matColumnDef="id">
@@ -37,6 +39,7 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
 </table>
+  </ion-card>
 
 <!-- at-paginator [pageSizeOptions]="[1, 2, 5]" showFirstLastButtons></mat-paginator -->
 

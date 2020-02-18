@@ -6,43 +6,121 @@
   </ion-toolbar>
 </ion-header-->
 
-<ion-content>
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+<ion-content >
 
-    <ng-container matColumnDef="id">
-	    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ id | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.id}} </td>
-    </ng-container>
+  <!--ion-card style="display: flex;
+  flex-direction: column;">
+    <ion-card-header>
 
-    <ng-container matColumnDef="uuid">
-	    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'uuid' | translate }} </th>
-      <td mat-cell *matCellDef="let institute"> {{institute.uuid}} </td>
-    </ng-container>
+    </ion-card-header>
+      <i<on-card-content-->
 
-    <ng-container matColumnDef="name">
-	    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'name' | translate }} </th>
-      <td mat-cell *matCellDef="let institute"> {{institute.name}} </td>
-    </ng-container>
+  <ion-card >
+    <ion-card-header>
+      <ion-row>
+        <ion-col class="ion-text-start">
+          <ion-item>
+            <ion-label position="floating">{{ 'search' | translate}}</ion-label>
+            <ion-input (keyup)="updateFilter($event)"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col >
 
-    <ng-container matColumnDef="locality">
-	    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ locality | translate }} </th>
-      <td mat-cell *matCellDef="let institute"> {{institute.locality}} </td>
-    </ng-container>
+        </ion-col>
+        <ion-col class="ion-text-end">
+          <ion-button color="primary">adsf</ion-button>
+        </ion-col>
+      </ion-row>
 
-    <ng-container matColumnDef="ipVPN">
-	    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ ipVPN | translate }} </th>
-      <td mat-cell *matCellDef="let institute"> {{institute.ipVPN}} </td>
-    </ng-container>
+    </ion-card-header>
+    <ion-card-content>
+    <ion-infinite-scroll>
+      <ion-infinite-scroll-content>
+      <!--table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
 
-    <ng-container matColumnDef="regCode">
-	    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ regCode | translate }} </th>
-      <td mat-cell *matCellDef="let institute"> {{institute.regCode}} </td>
-    </ng-container>
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ id | translate }}</th>
+          <td mat-cell *matCellDef="let institute"> {{institute.id}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="uuid">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'uuid' | translate }} </th>
+          <td mat-cell *matCellDef="let institute"> {{institute.uuid}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'name' | translate }} </th>
+          <td mat-cell *matCellDef="let institute"> {{institute.name}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="locality">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ locality | translate }} </th>
+          <td mat-cell *matCellDef="let institute"> {{institute.locality}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="ipVPN">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ ipVPN | translate }} </th>
+          <td mat-cell *matCellDef="let institute"> {{institute.ipVPN}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="regCode">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ regCode | translate }} </th>
+          <td mat-cell *matCellDef="let institute"> {{institute.regCode}} </td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    
+    </table.-->
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <mat-table [dataSource]="dataSource" matSort>
 
-</table>
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'id' | translate }}</mat-header-cell>
+        <mat-cell *matCellDef="let institute"> {{institute.id}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="uuid">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'uuid' | translate }} </mat-header-cell>
+        <mat-cell *matCellDef="let institute"> {{institute.uuid}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'name' | translate }} </mat-header-cell>
+        <mat-cell *matCellDef="let institute"> {{institute.name}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="locality">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'locality' | translate }} </mat-header-cell>
+        <mat-cell *matCellDef="let institute"> {{institute.locality}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="ipVPN">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'ipVPN' | translate }} </mat-header-cell>
+        <mat-cell *matCellDef="let institute"> {{institute.ipVPN}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="regCode">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'regCode' | translate }} </mat-header-cell>
+        <mat-cell *matCellDef="let institute"> {{institute.regCode}} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+    </mat-table>
+  </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+  </ion-card-content>    
+
+
+  </ion-card>
+     <!--mat-paginator [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator-->
+
+    <!--/ion-card-content-->
+
+  <!--/ion-card-->
 
 <!-- mat-paginator [pageSizeOptions]="[1, 2, 5]" showFirstLastButtons></mat-paginator -->
 
