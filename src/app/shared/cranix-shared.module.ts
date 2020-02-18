@@ -1,42 +1,50 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
   MatTableModule,
   MatStepperModule,
   MatButtonModule,
+  MatCheckboxModule,
   MatFormFieldModule,
   MatInputModule,
   MatOptionModule,
   MatSelectModule,
   MatIconModule,
   MatPaginatorModule,
-  MatSortModule
+  MatSortModule,
 } from "@angular/material";
 import { ToolbarComponent } from '../protected/toolbar/toolbar.component';
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
+import { ActionsComponent } from './actions/actions.component';
 
 
 
 @NgModule({
   declarations: [ToolbarComponent],
   imports: [
-  MatTableModule,
+  FormsModule,
   IonicModule,
+  MatTableModule,
   MatStepperModule,
   MatButtonModule,
+  MatCheckboxModule,
   MatFormFieldModule,
   MatInputModule,
   MatOptionModule,
   MatSelectModule,
   MatIconModule,
   MatPaginatorModule,
-  TranslateModule,
-  MatSortModule
+  MatSortModule,
+  TranslateModule
   ], exports: [
+    FormsModule,
+    IonicModule,
     MatTableModule,
     MatStepperModule,
     MatButtonModule,
+    MatCheckboxModule,
     MatFormFieldModule,
     MatInputModule,
     MatOptionModule,
@@ -45,7 +53,7 @@ import { TranslateModule } from '@ngx-translate/core';
     MatPaginatorModule,
     MatSortModule,
     TranslateModule,
-    ToolbarComponent
+    ToolbarComponent,
   ]
 })
 export class CranixSharedModule { }

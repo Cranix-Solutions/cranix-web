@@ -1,13 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-
-import { IonicModule } from '@ionic/angular';
-
+import { RouterModule, Routes } from '@angular/router';
 
 import { UsersPage } from './users.page';
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
-import { RouterModule, Routes } from '@angular/router';
 import { UsersService } from 'src/app/services/users.service';
 
 const routes: Routes = [
@@ -20,8 +16,6 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
-    IonicModule,
     CranixSharedModule,
     RouterModule.forChild(routes)
   ],

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { GroupsPageModule } from './groups/groups.module';
 import { UsersPageModule } from './users/users.module';
 
 
@@ -8,6 +9,7 @@ import { UsersPageModule } from './users/users.module';
   declarations: [],
   imports: [
     CommonModule,
+    GroupsPageModule,
     UsersPageModule
   ]
 })
