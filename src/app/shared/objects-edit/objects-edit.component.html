@@ -1,0 +1,39 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-title>{{  objectActionTitle | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content fullscreen>
+   <!--form (ngSubmit)="processModal(event)"-->
+  <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
+    <ion-list lines="full" class="ion-no-margin ion-no-padding" *ngFor="let key of objectKeys"  [ngSwitch]="typeOf(key)">
+      <ion-item *ngSwitchCase="'booleanTrue'">
+        <ion-label>{{ key | translate }}</ion-label>
+      <ion-toggle slot="start" formControlName="{{key}}" color="secondary" checked></ion-toggle>
+      </ion-item>
+      <ion-item *ngSwitchCase="'booleanFalse'">
+        <ion-label>{{ key | translate }}</ion-label>
+        <ion-toggle slot="start" formControlName="{{key}}" color="secondary"></ion-toggle>
+      </ion-item>
+      <ion-item *ngSwitchCase="'string'">
+        <ion-label position="stacked">{{ key | translate }}</ion-label>
+        <ion-input type="text" formControlName="{{key}}"  value="{{object[key]}}"></ion-input>
+      </ion-item>
+      <ion-item *ngSwitchCase="'stringRO'">
+        <ion-label position="stacked">{{ key | translate }}</ion-label>
+        <ion-input type="text" formControlName="{{key}}"  value="{{object[key]}}"  readonly></ion-input>
+      </ion-item>
+      <ion-item *ngSwitchCase="'date'">
+        <ion-label>{{ key | translate }}</ion-label>
+        <ion-datetime formControlName="{{key}}" max="2100" value="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z'}}"></ion-datetime>
+      </ion-item>
+      <ion-item *ngSwitchCase="'date-time'">
+        <ion-label>{{ key | translate }}</ion-label>
+        <ion-datetime formControlName="{{key}}" max="2100" value="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z'}}"></ion-datetime>
+      </ion-item>
+    </ion-list>
+    <div class="ion-padding">
+      <ion-button expand="block" type="submit" class="ion-no-margin">{{ objectAction | translate }}</ion-button>
+    </div>
+  </form>
+</ion-content>

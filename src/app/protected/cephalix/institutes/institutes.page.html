@@ -1,8 +1,7 @@
 <cranix-toolbar></cranix-toolbar>
-<ion-content>
+<ion-content scroll-x="true" scroll-y="true">
     <ion-searchbar (keyup)="doFilter($event.target.value)" ></ion-searchbar>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
-
     <ng-container matColumnDef="select">
       <mat-header-cell *matHeaderCellDef>
         <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
@@ -48,7 +47,7 @@
 
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef> 
-        <ion-button size="small"  (click)="redirectToAdd()">
+        <ion-button size="small"  (click)="redirectToAdd($event)">
           <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
         </ion-button>
         <ion-button size="small" (click)="openActions($event)">
@@ -59,7 +58,7 @@
         </ion-button>
       </mat-header-cell>
       <mat-cell *matCellDef="let object" (click)="$event.stopPropagation()">
-        <ion-button fill="clear"  size="small" (click)="redirectToEdit(object)">
+        <ion-button fill="clear"  size="small" (click)="redirectToEdit($event,object)">
           <ion-icon slot="icon-only" name="create-outline"></ion-icon>
         </ion-button>
         <ion-button  fill="clear" size="small" (click)="redirectToDelete(object)">

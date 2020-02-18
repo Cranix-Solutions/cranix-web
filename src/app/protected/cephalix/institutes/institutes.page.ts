@@ -2,13 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TranslateService } from '@ngx-translate/core';
-import { PopoverController } from '@ionic/angular';
+import { PopoverController, ModalController } from '@ionic/angular';
 
 import {CephalixService} from 'src/app/services/cephalix.service';
 import { Institute } from 'src/app/shared/models/cephalix-data-model';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
-
-
+import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
 @Component({
   selector: 'cranix-institutes',
   templateUrl: './institutes.page.html',
@@ -26,7 +25,8 @@ export class InstitutesPage implements OnInit {
   constructor(
     cephalixS: CephalixService,
     public translateService: TranslateService,
-    public popoverCtrl: PopoverController
+    public popoverCtrl: PopoverController,
+    public modalCtrl: ModalController
   ) {
    // this.translateService.setDefaultLang('de');
    console.log('Trans in institutes', this.translateService.translations);
@@ -59,10 +59,7 @@ export class InstitutesPage implements OnInit {
       this.selection.clear() :
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
-  public redirectToEdit = (institute: Institute) => {
-    console.log("edit:" + institute.name)
-  }
- 
+  
   public redirectToDelete = (institute: Institute)  => {
     console.log("Delete:" + institute.uuid)
   }
@@ -87,5 +84,32 @@ async openActions(ev: any) {
     showBackdrop: true
 });
   (await popover).present();
+}
+async redirectToEdit(ev: Event, institute: Institute){
+  const modal = await  this.modalCtrl.create({
+    component: ObjectsEditComponent,
+    componentProps: {
+      objectType:  "institute",
+      objectAction:  "modify",
+      object: institute
+    },
+    animated: true,
+    showBackdrop: true
+});
+  (await modal).present();
+}
+
+async redirectToAdd(ev: Event){
+  const modal = await  this.modalCtrl.create({
+    component: ObjectsEditComponent,
+    componentProps: {
+      objectType:  "group",
+      objectAction:  "add",
+      object: new Institute()
+    },
+    animated: true,
+    showBackdrop: true
+});
+  (await modal).present();
 }
 }

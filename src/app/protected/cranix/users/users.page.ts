@@ -2,11 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { SelectionModel, isDataSource } from '@angular/cdk/collections';
 import { TranslateService } from '@ngx-translate/core';
+import { PopoverController, ModalController } from '@ionic/angular';
 //own modules
 import { UsersService } from 'src/app/services/users.service';
 import { User } from 'src/app/shared/models/data-model';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
-import { PopoverController } from '@ionic/angular';
+import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
 
 @Component({
   selector: 'cranix-users',
@@ -26,7 +27,8 @@ export class UsersPage implements OnInit {
   constructor(
     userS: UsersService,
     public translateService: TranslateService,
-    public popoverCtrl: PopoverController
+    public popoverCtrl: PopoverController,
+    public modalCtrl: ModalController
   ) {
     userS.getUsers().subscribe((res) => {
       this.dataSource = new MatTableDataSource<User>(res)
@@ -57,10 +59,33 @@ export class UsersPage implements OnInit {
       this.selection.clear() :
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
-  public redirectToEdit = (user: User) => {
-    console.log("Edit:" + user.uid)
+  async redirectToEdit(ev: Event, user: User) {
+    const modal = await this.modalCtrl.create({
+      component: ObjectsEditComponent,
+      componentProps: {
+        objectType: "user",
+        objectAction: "modify",
+        object: user
+      },
+      animated: true,
+      showBackdrop: true
+    });
+    (await modal).present();
   }
 
+  async redirectToAdd(ev: Event, ) {
+    const modal = await this.modalCtrl.create({
+      component: ObjectsEditComponent,
+      componentProps: {
+        objectType: "user",
+        objectAction: "add",
+        object: new User()
+      },
+      animated: true,
+      showBackdrop: true
+    });
+    (await modal).present();
+  }
 
   public redirectToDelete = (user: User) => {
     console.log("Delete:" + user.uid)
@@ -70,20 +95,24 @@ export class UsersPage implements OnInit {
    * Open the actions menu with the selected object ids.
    * @param ev 
    */
-async openActions(ev: any) {
-  for (let i = 0; i <  this.selection.selected.length; i++) {
-    this.objectIds.push(this.selection.selected[i].id);
+  async openActions(ev: any) {
+    for (let i = 0; i < this.selection.selected.length; i++) {
+      this.objectIds.push(this.selection.selected[i].id);
+    }
+    const popover = await this.popoverCtrl.create({
+      component: ActionsComponent,
+      event: ev,
+      componentProps: {
+        objectType: "user",
+        objectIds: this.objectIds
+      },
+      animated: true,
+      showBackdrop: true
+    });
+    (await popover).present();
   }
-  const popover = await  this.popoverCtrl.create({
-    component: ActionsComponent,
-    event: ev,
-    componentProps: {
-      objectType:  "user",
-       objectIds: this.objectIds
-    },
-    animated: true,
-    showBackdrop: true
-});
-  (await popover).present();
-}
+  procesModal(ev: Event) {
+    console.log(ev);
+    this.modalCtrl.dismiss();
+  }
 }

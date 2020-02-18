@@ -1,6 +1,5 @@
 
 export interface HWConfig {
-
 	id: number,
 	name: string,
 	deviceType: string,
@@ -19,21 +18,37 @@ export interface Partition {
 	lastCloned:number|string,
 }
 
-export interface User {
-	id: number,
-	surName: string,
-	givenName: string,
-	birthDay?: any,
-	password?: string,
-	uuid?: string,
-	uid?: string,
-	role?: string,
-	classses?: string,
-	msQuota?: number,
-	fsQuota?: number,
-	msQuotaUsed?: number,
-	fsQuotaUsed?: number,
-	mailAliases?: any
+export class User {
+	id: number;
+	surName: string;
+	givenName: string;
+	birthDay?: any;
+	password?: string;
+	uuid?: string;
+	uid?: string;
+	role?: string;
+	classes?: string;
+	msQuota?: number;
+	fsQuota?: number;
+	msQuotaUsed?: number;
+	fsQuotaUsed?: number;
+	mailAliases?: any;
+	constructor(){
+		this.id= 0;
+		this.surName="";
+		this.givenName="";
+		this.birthDay= new Date();
+		this.password="";
+		this.uuid = "";
+		this.uid="";
+		this.role="";
+		this.classes="";
+		this.msQuota=0;
+		this.msQuotaUsed=0;
+		this.fsQuota=0;
+		this.fsQuotaUsed=0;
+		this.mailAliases="";
+	}
 }
 export interface OldImportsUser{
 	role: string,
@@ -97,11 +112,18 @@ export interface Room {
 	}
 }
 
-export interface Group {
-	id: number,
-	name: string,
-	description: string,
-	groupType: string,
+export class Group {
+	id: number;
+	name: string;
+	description: string;
+	groupType: string;
+	constructor()
+	{
+		this.id = 0;
+		this.name = "";
+		this.description = "";
+		this.groupType = "";
+	}
 }
 
 export interface Software {

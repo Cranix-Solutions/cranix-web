@@ -17,35 +17,65 @@ export interface Customer {
     telephone: string
 }
 
-export interface Institute {
-    id: number,
-    uuid: string,
-    adminPW: string,
-    anonDhcpNetwork: string,
-    cephalixPW: string,
-    domain: string,
-    firstRoom: string,
-    gwTrNet: string,
-    ipAdmin: string,
-    ipBackup: string,
-    ipGateway: string,
-    ipMail: string,
-    ipPrint: string,
-    ipProxy: string,
-    ipTrNet: string,
-    ipVPN: string,
-    locality: string,
-    name: string,
-    network: string,
-    serverNetwork: string,
-    nmTrNet: string,
-    type: string,
-    deleted: string,
-    recDate: number,
-    validity: number,
-    ayTemplate: string,
-    customerId: number,
-    regCode: string
+export class Institute {
+    id: number;
+    uuid: string;
+    adminPW: string;
+    anonDhcpNetwork: string;
+    cephalixPW: string;
+    domain: string;
+    firstRoom: string;
+    gwTrNet: string;
+    ipAdmin: string;
+    ipBackup: string;
+    ipGateway: string;
+    ipMail: string;
+    ipPrint: string;
+    ipProxy: string;
+    ipTrNet: string;
+    ipVPN: string;
+    locality: string;
+    name: string;
+    network: string;
+    serverNetwork: string;
+    nmTrNet: string;
+    type: string;
+    deleted: string;
+    recDate: any;
+    validity: any;
+    ayTemplate: string;
+    customerId: number;
+    regCode: string;
+    constructor() {
+        this.id = 0;
+        this.uuid = '';
+        this.adminPW = '';
+        this.anonDhcpNetwork = '';
+        this.cephalixPW = '';
+        this.domain = '';
+        this.firstRoom = '';
+        this.gwTrNet = '';
+        this.ipAdmin = '';
+        this.ipBackup = '';
+        this.ipGateway = '';
+        this.ipMail = '';
+        this.ipPrint = '';
+        this.ipProxy = '';
+        this.ipTrNet = '';
+        this.ipVPN = '';
+        this.locality = '';
+        this.name = '';
+        this.network = '';
+        this.serverNetwork = '';
+        this.nmTrNet = '';
+        this.type = '';
+        this.deleted = '';
+        this.recDate = new Date();
+        this.validity = new Date();
+        this.ayTemplate = '';
+        this.customerId = 0;
+        this.regCode = '';
+    }
 }
 
 export interface DynDns {
