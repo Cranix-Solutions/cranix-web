@@ -15,7 +15,7 @@ import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.
 })
 export class InstitutesPage implements OnInit {
 
-  displayedColumns: string[] = ['select', 'uuid', 'name', 'locality','ipVPN', 'regCode','actions'];
+  displayedColumns: string[] = ['select', 'uuid', 'name', 'locality','ipVPN', 'regCode','validity','actions'];
   dataSource:  MatTableDataSource<Institute> ;
   selection = new SelectionModel<Institute>(true, []);
   objectIds: number[] = [];
@@ -45,6 +45,18 @@ export class InstitutesPage implements OnInit {
   }
   public doFilter = (value: string) => {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  /**
+   * Helper script fot the template to detect the type of the variables
+   * @param val 
+   */
+  typeOf(key) {
+    if (key == 'birthDay'|| key == 'validity' || key=='recDate' || key == 'validFrom' || key == 'validUntil' ) {
+      let d = new Date()
+      return "date";
+    }
+    return "string";
   }
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {

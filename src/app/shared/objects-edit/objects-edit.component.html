@@ -1,6 +1,11 @@
 <ion-header translucent>
   <ion-toolbar>
     <ion-title>{{  objectActionTitle | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" size="small" (click)="closeWindow()">
+        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content fullscreen>
@@ -25,7 +30,7 @@
       </ion-item>
       <ion-item *ngSwitchCase="'date'">
         <ion-label>{{ key | translate }}</ion-label>
-        <ion-datetime formControlName="{{key}}" max="2100" value="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z'}}"></ion-datetime>
+        <ion-datetime formControlName="{{key}}" max="2100" value="{{object[key] | date:'yyyy-MM-dd'}}"></ion-datetime>
       </ion-item>
       <ion-item *ngSwitchCase="'date-time'">
         <ion-label>{{ key | translate }}</ion-label>

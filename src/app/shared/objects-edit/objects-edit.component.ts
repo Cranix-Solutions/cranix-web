@@ -3,6 +3,7 @@ import { ModalController, NavParams } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 //own 
+import {GenericObjectService} from '../../services/generic-object.service';
 import { User, Group, Room, Device, HWConfig, UserC } from '../models/data-model';
 import { Institute, Customer } from '../models/cephalix-data-model';
 @Component({
@@ -29,7 +30,8 @@ export class ObjectsEditComponent implements OnInit {
   hiddenAttributes: string[] = [
     'id',
     'ownerId',
-    'deleted'
+    'deleted',
+    'saveNext'
   ]
 
   constructor(
@@ -37,6 +39,7 @@ export class ObjectsEditComponent implements OnInit {
     private navParams: NavParams,
     private modalController: ModalController,
     public translateService: TranslateService,
+    public objectService: GenericObjectService
   ) {
     this.objectType = this.navParams.get('objectType');
     this.object = this.navParams.get('object');
@@ -73,15 +76,29 @@ export class ObjectsEditComponent implements OnInit {
     if (this.hiddenAttributes.indexOf(key) != -1) {
       return "hidden";
     }
-    if (this.readOnlyAttributes.indexOf(key) != -1) {
+    if (this.objectAction == 'modify' && this.readOnlyAttributes.indexOf(key) != -1) {
       return "stringRO";
     }
     return "string";
   }
 
-  onSubmit(event) {
-    console.log(event);
+  closeWindow() {
     this.modalController.dismiss();
+  }
+
+  onSubmit(object) {
+    this.objectService.applyAction(object,this.objectType,this.objectAction).subscribe(
+      (val) => {
+          console.log(val);
+      },
+      (error) => {
+
+      },
+      () => {
+        this.modalController.dismiss();
+      }
+      )
+    console.log(object);
   }
 
   convertObject(){

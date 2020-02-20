@@ -32,7 +32,7 @@ export class User {
 	fsQuota?: number;
 	msQuotaUsed?: number;
 	fsQuotaUsed?: number;
-	mailAliases?: any;
+	mailAliases?: string[];
 	constructor(){
 		this.id= 0;
 		this.surName="";
@@ -47,7 +47,7 @@ export class User {
 		this.msQuotaUsed=0;
 		this.fsQuota=0;
 		this.fsQuotaUsed=0;
-		this.mailAliases="";
+		this.mailAliases=[];
 	}
 }
 export interface OldImportsUser{

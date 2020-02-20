@@ -1,6 +1,6 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-content scroll-x="true" scroll-y="true">
-    <ion-searchbar (keyup)="doFilter($event.target.value)" ></ion-searchbar>
+  <ion-searchbar (keyup)="doFilter($event.target.value)"></ion-searchbar>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
     <ng-container matColumnDef="select">
       <mat-header-cell *matHeaderCellDef>
@@ -21,47 +21,157 @@
     </ng-container>
 
     <ng-container matColumnDef="uuid">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'uuid' | translate }} </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'uuid' | translate }}</th>
       <td mat-cell *matCellDef="let institute"> {{institute.uuid}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'name' | translate }} </th>
-      <td mat-cell *matCellDef="let institute"> {{institute.name}} </td>
+    <ng-container matColumnDef="adminPW">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'adminPW' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.adminPW}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="locality">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'locality' | translate }} </th>
-      <td mat-cell *matCellDef="let institute"> {{institute.locality}} </td>
+    <ng-container matColumnDef="anonDhcpNetwork">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'anonDhcpNetwork' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.anonDhcpNetwork}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cephalixPW">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'cephalixPW' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.cephalixPW}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="domain">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'domain' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.domain}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="firstRoom">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'firstRoom' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.firstRoom}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="gwTrNet">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'gwTrNet' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.gwTrNet}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ipAdmin">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipAdmin' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.ipAdmin}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ipBackup">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipBackup' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.ipBackup}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ipGateway">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipGateway' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.ipGateway}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ipMail">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipMail' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.ipMail}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ipPrint">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipPrint' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.ipPrint}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ipProxy">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipProxy' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.ipProxy}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ipTrNet">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipTrNet' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.ipTrNet}} </td>
     </ng-container>
 
     <ng-container matColumnDef="ipVPN">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'ipVPN' | translate }} </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipVPN' | translate }}</th>
       <td mat-cell *matCellDef="let institute"> {{institute.ipVPN}} </td>
     </ng-container>
 
+    <ng-container matColumnDef="locality">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'locality' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.locality}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'name' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="network">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'network' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.network}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="serverNetwork">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'serverNetwork' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.serverNetwork}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nmTrNet">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'nmTrNet' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.nmTrNet}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'type' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.type}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="deleted">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'deleted' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.deleted}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="recDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'recDate' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.recDate}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="validity">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'validity' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.validity  | date:'yyyy-MM-dd' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ayTemplate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ayTemplate' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.ayTemplate}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="customerId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'customerId' | translate }}</th>
+      <td mat-cell *matCellDef="let institute"> {{institute.customerId}} </td>
+    </ng-container>
+
     <ng-container matColumnDef="regCode">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'regCode' | translate }} </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'regCode' | translate }}</th>
       <td mat-cell *matCellDef="let institute"> {{institute.regCode}} </td>
     </ng-container>
 
     <ng-container matColumnDef="actions">
-      <mat-header-cell *matHeaderCellDef> 
-        <ion-button size="small"  (click)="redirectToAdd($event)">
+      <mat-header-cell *matHeaderCellDef>
+        <ion-button size="small" (click)="redirectToAdd($event)">
           <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
         </ion-button>
         <ion-button size="small" (click)="openActions($event)">
           <ion-icon slot="icon-only" name="menu"></ion-icon>
         </ion-button>
-        <ion-button size="small"  (click)="openCollums($event)">
+        <ion-button size="small" (click)="openCollums($event)">
           <ion-icon slot="icon-only" name="apps"></ion-icon>
         </ion-button>
       </mat-header-cell>
       <mat-cell *matCellDef="let object" (click)="$event.stopPropagation()">
-        <ion-button fill="clear"  size="small" (click)="redirectToEdit($event,object)">
+        <ion-button fill="clear" size="small" (click)="redirectToEdit($event,object)">
           <ion-icon slot="icon-only" name="create-outline"></ion-icon>
         </ion-button>
-        <ion-button  fill="clear" size="small" (click)="redirectToDelete(object)">
+        <ion-button fill="clear" size="small" (click)="redirectToDelete(object)">
           <ion-icon slot="icon-only" color="danger" name="trash-outline"></ion-icon>
         </ion-button>
       </mat-cell>
