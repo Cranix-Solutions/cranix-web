@@ -9,12 +9,12 @@
   </ion-toolbar>
 </ion-header>
 <ion-content fullscreen>
-   <!--form (ngSubmit)="processModal(event)"-->
+  <!--form (ngSubmit)="processModal(event)"-->
   <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
-    <ion-list lines="full" class="ion-no-margin ion-no-padding" *ngFor="let key of objectKeys"  [ngSwitch]="typeOf(key)">
+    <ion-list lines="full" class="ion-no-margin ion-no-padding" *ngFor="let key of objectKeys" [ngSwitch]="typeOf(key)">
       <ion-item *ngSwitchCase="'booleanTrue'">
         <ion-label>{{ key | translate }}</ion-label>
-      <ion-toggle slot="start" formControlName="{{key}}" color="secondary" checked></ion-toggle>
+        <ion-toggle slot="start" formControlName="{{key}}" color="secondary" checked></ion-toggle>
       </ion-item>
       <ion-item *ngSwitchCase="'booleanFalse'">
         <ion-label>{{ key | translate }}</ion-label>
@@ -22,19 +22,29 @@
       </ion-item>
       <ion-item *ngSwitchCase="'string'">
         <ion-label position="stacked">{{ key | translate }}</ion-label>
-        <ion-input type="text" formControlName="{{key}}"  value="{{object[key]}}"></ion-input>
+        <ng-template [ngIf]="defaults[key]"  [ngIfElse]="elseBlock">
+          <ion-select type="text" formControlName="{{key}}" value="{{object[key]}}">
+            <ion-select-option *ngFor="let option of  defaults[key]" value="{{option}}">{{option | translate}}</ion-select-option>
+          </ion-select>
+        </ng-template>
+        <ng-template #elseBlock>
+          <ion-input type="text" formControlName="{{key}}" value="{{object[key]}}"></ion-input>
+        </ng-template>
       </ion-item>
       <ion-item *ngSwitchCase="'stringRO'">
         <ion-label position="stacked">{{ key | translate }}</ion-label>
-        <ion-input type="text" formControlName="{{key}}"  value="{{object[key]}}"  readonly></ion-input>
+        <ion-input color="tertiary" type="text" formControlName="{{key}}" value="{{object[key]}}" readonly></ion-input>
       </ion-item>
       <ion-item *ngSwitchCase="'date'">
         <ion-label>{{ key | translate }}</ion-label>
-        <ion-datetime formControlName="{{key}}" max="2100" value="{{object[key] | date:'yyyy-MM-dd'}}"></ion-datetime>
+        <ion-datetime formControlName="{{key}}" cancel-text="{{ 'cancel' | translate }}"
+          done-text="{{'apply' | translate }}" max="2100" value="{{object[key] | date:'yyyy-MM-dd'}}"></ion-datetime>
       </ion-item>
       <ion-item *ngSwitchCase="'date-time'">
         <ion-label>{{ key | translate }}</ion-label>
-        <ion-datetime formControlName="{{key}}" max="2100" value="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z'}}"></ion-datetime>
+        <ion-datetime formControlName="{{key}}" cancel-text="{{ 'cancel' | translate }}"
+          done-text="{{'apply' | translate }}" max="2100" value="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z'}}">
+        </ion-datetime>
       </ion-item>
     </ion-list>
     <div class="ion-padding">
