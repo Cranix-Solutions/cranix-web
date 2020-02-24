@@ -2,12 +2,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TranslateService } from '@ngx-translate/core';
-import { PopoverController } from '@ionic/angular';
+import { PopoverController, ModalController } from '@ionic/angular';
 
 //Own modules
 import { GroupsService } from 'src/app/services/groups.service';
 import { Group } from 'src/app/shared/models/data-model';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
+import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
 
 @Component({
   selector: 'app-groups',
@@ -26,7 +27,8 @@ export class GroupsPage implements OnInit {
   constructor(
     groupS: GroupsService,
     public translateService: TranslateService,
-    public popoverCtrl: PopoverController
+    public popoverCtrl: PopoverController,
+    public modalCtrl: ModalController
   ) {
     this.translateService.setDefaultLang('de');
     groupS.getGroups().subscribe(
@@ -62,9 +64,7 @@ public doFilter = (value: string) => {
   public redirectToMember= (group: Group) => {
     console.log("Details:" + group.name)
   }
-  public redirectToEdit = (group: Group) => {
-    console.log("Details:" + group.name)
-  }
+
   public redirectToDelete = (group: Group)=> {
     console.log("Delete:" + group.name)
   }
@@ -90,4 +90,33 @@ public doFilter = (value: string) => {
   });
     (await popover).present();
   }
+
+  async redirectToEdit(ev: Event, group: Group){
+    const modal = await  this.modalCtrl.create({
+      component: ObjectsEditComponent,
+      componentProps: {
+        objectType:  "group",
+        objectAction:  "modify",
+        object: group
+      },
+      animated: true,
+      showBackdrop: true
+  });
+    (await modal).present();
+  }
+
+  async redirectToAdd(ev: Event,){
+    const modal = await  this.modalCtrl.create({
+      component: ObjectsEditComponent,
+      componentProps: {
+        objectType:  "group",
+        objectAction:  "add",
+        object: new Group()
+      },
+      animated: true,
+      showBackdrop: true
+  });
+    (await modal).present();
+  }
+
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from '../../services/auth.service';
 
 @Component({
   selector: 'cranix-toolbar',
@@ -7,7 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ToolbarComponent implements OnInit {
 
-  constructor() { }
+  roomName: string ="";
+  commonName: string="";
+  instituteName: string = "";
+  constructor( authService: AuthenticationService ) {
+    this.commonName = authService.session.commonName;
+    this.roomName = authService.session.roomName;
+    this.instituteName = authService.session.instituteName;
+   }
 
   ngOnInit() {}
 

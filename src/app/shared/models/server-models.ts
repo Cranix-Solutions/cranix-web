@@ -11,6 +11,8 @@ export interface UserResponse {
   role: string,
   dnsname: string,
   roomId: string,
+  roomName?: string,
+  instituteName?: string,
   mustChange: boolean,
   commonName: string,
   acls: string[]

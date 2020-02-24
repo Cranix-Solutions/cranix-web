@@ -45,7 +45,7 @@ export class AuthenticationService {
         return this.http.post<UserResponse>(this.url, user, { headers: headers });
     }
 
-    setUpSession(user: LoginForm) {
+    setUpSession(user: LoginForm, instituteName: string) {
         this.session = null;
         this.authenticationState.next(false);
         this.subscription = this.login(user)
@@ -53,6 +53,7 @@ export class AuthenticationService {
                 (val) => {
                     console.log('login respons is', val);
                     this.session = val;
+                    this.session['instituteName'] = instituteName;
                     this.authenticationState.next(true);
                },
                async (err) => {

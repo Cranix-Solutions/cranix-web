@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatTableModule,
   MatStepperModule,
@@ -17,7 +17,6 @@ import {
 import { ToolbarComponent } from '../protected/toolbar/toolbar.component';
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
-import { ActionsComponent } from './actions/actions.component';
 
 
 
@@ -37,6 +36,7 @@ import { ActionsComponent } from './actions/actions.component';
   MatIconModule,
   MatPaginatorModule,
   MatSortModule,
+  ReactiveFormsModule,
   TranslateModule
   ], exports: [
     FormsModule,
@@ -53,6 +53,7 @@ import { ActionsComponent } from './actions/actions.component';
     MatPaginatorModule,
     MatSortModule,
     TranslateModule,
+    ReactiveFormsModule,
     ToolbarComponent,
   ]
 })

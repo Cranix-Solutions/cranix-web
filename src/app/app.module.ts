@@ -19,6 +19,7 @@ import { LanguageService } from './services/language.service';
 
 import { ErrorHandler, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ActionsComponent } from './shared/actions/actions.component';
+import { ObjectsEditComponent } from './shared/objects-edit/objects-edit.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -37,8 +38,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [AppComponent,ActionsComponent],
-  entryComponents: [ActionsComponent],
+  declarations: [AppComponent,ActionsComponent,ObjectsEditComponent],
+  entryComponents: [ActionsComponent,ObjectsEditComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
