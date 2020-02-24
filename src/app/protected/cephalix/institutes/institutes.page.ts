@@ -8,6 +8,7 @@ import {CephalixService} from 'src/app/services/cephalix.service';
 import { Institute } from 'src/app/shared/models/cephalix-data-model';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
+import { mdLeaveAnimation } from '../../../shared/animations/md.leave'
 @Component({
   selector: 'cranix-institutes',
   templateUrl: './institutes.page.html',
@@ -98,28 +99,20 @@ async openActions(ev: any) {
   (await popover).present();
 }
 async redirectToEdit(ev: Event, institute: Institute){
+  let action = 'modify';
+  if( institute == null ){
+    institute = new Institute();
+    action = 'add';
+  }
   const modal = await  this.modalCtrl.create({
     component: ObjectsEditComponent,
     componentProps: {
       objectType:  "institute",
-      objectAction:  "modify",
+      objectAction: action,
       object: institute
     },
     animated: true,
-    showBackdrop: true
-});
-  (await modal).present();
-}
-
-async redirectToAdd(ev: Event){
-  const modal = await  this.modalCtrl.create({
-    component: ObjectsEditComponent,
-    componentProps: {
-      objectType:  "group",
-      objectAction:  "add",
-      object: new Institute()
-    },
-    animated: true,
+    swipeToClose: true,
     showBackdrop: true
 });
   (await modal).present();

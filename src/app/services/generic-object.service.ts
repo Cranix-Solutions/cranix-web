@@ -10,6 +10,9 @@ import { timer } from 'rxjs';
 })
 export class GenericObjectService {
 
+  defaults: any;
+  initialized: boolean = false;
+
   constructor(
     private http: HttpClient,
     private utilsS: UtilsService,
@@ -42,5 +45,11 @@ export class GenericObjectService {
       'Authorization': "Bearer " + this.authS.getToken()
     });
     return this.http.post<ServerResponse>(url, body, { headers: headers })
+  }
+
+  initialize() {
+    if(this.initialized) {
+      return;
+    }
   }
 }

@@ -60,27 +60,19 @@ export class UsersPage implements OnInit {
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
   async redirectToEdit(ev: Event, user: User) {
+    let action = 'modify';
+    if( user == null ){
+      user = new User();
+      action = 'add';
+    }
     const modal = await this.modalCtrl.create({
       component: ObjectsEditComponent,
       componentProps: {
         objectType: "user",
-        objectAction: "modify",
+        objectAction: action,
         object: user
       },
-      animated: true,
-      showBackdrop: true
-    });
-    (await modal).present();
-  }
-
-  async redirectToAdd(ev: Event, ) {
-    const modal = await this.modalCtrl.create({
-      component: ObjectsEditComponent,
-      componentProps: {
-        objectType: "user",
-        objectAction: "add",
-        object: new User()
-      },
+      swipeToClose: true,
       animated: true,
       showBackdrop: true
     });

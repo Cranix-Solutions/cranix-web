@@ -70,14 +70,14 @@ public doFilter = (value: string) => {
   }
     /**
    * Open the actions menu with the selected object ids.
-   * @param ev 
+   * @param ev
    */
   async openActions(ev: any) {
     for (let i = 0; i <  this.selection.selected.length; i++) {
       this.objectIds.push(this.selection.selected[i].id);
     }
     console.log("openActions"  + this.objectIds);
-    
+
     const popover = await  this.popoverCtrl.create({
       component: ActionsComponent,
       event: ev,
@@ -92,27 +92,19 @@ public doFilter = (value: string) => {
   }
 
   async redirectToEdit(ev: Event, group: Group){
+    let action = 'modify';
+    if( group == null ){
+      group = new Group();
+      action = 'add';
+    }
     const modal = await  this.modalCtrl.create({
       component: ObjectsEditComponent,
       componentProps: {
         objectType:  "group",
-        objectAction:  "modify",
+        objectAction: action,
         object: group
       },
-      animated: true,
-      showBackdrop: true
-  });
-    (await modal).present();
-  }
-
-  async redirectToAdd(ev: Event,){
-    const modal = await  this.modalCtrl.create({
-      component: ObjectsEditComponent,
-      componentProps: {
-        objectType:  "group",
-        objectAction:  "add",
-        object: new Group()
-      },
+      swipeToClose: true,
       animated: true,
       showBackdrop: true
   });
