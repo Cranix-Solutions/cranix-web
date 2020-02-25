@@ -1,396 +1,356 @@
-
-export interface HWConfig {
-	id: number,
-	name: string,
-	deviceType: string,
-	description: string,
+export class Hwconf {
+	id?: number = 0;
+	name: string = "";
+	deviceType: string = "";
+	description: string = "";
 	partitions: Partition[]
+	constructor(){}
 }
-export interface Partition {
-	id: number,
-	description: string,
-	format: string,
-	joinType: string,
-	name: string,
-	os: string,
-	tool: string,
-	devId?: number,
-	lastCloned:number|string,
+export class Partition {
+	id?: number = 0;
+	description: string = "";
+	format: string = "";
+	joinType: string = "";
+	name: string = "";
+	os: string = "";
+	tool: string = "";
+	devId?: number = 0;
+	lastCloned:number|string = "";
+	constructor(){}
 }
 
 export class User {
-	id: number;
-	surName: string;
-	givenName: string;
-	birthDay?: any;
-	password?: string;
-	uuid?: string;
-	uid?: string;
-	role?: string;
-	classes?: string;
+	id?: number = 0;
+	surName: string = "";
+	givenName: string = "";
+	birthDay?: any = new Date();
+	password?: string = "";
+	uuid?: string = "";
+	uid?: string = "";
+	role?: string = "";
+	classes?: string = "";
 	msQuota?: number;
 	fsQuota?: number;
 	msQuotaUsed?: number;
 	fsQuotaUsed?: number;
-	mailAliases?: string[];
-	constructor(){
-		this.id= 0;
-		this.surName="";
-		this.givenName="";
-		this.birthDay= new Date();
-		this.password="";
-		this.uuid = "";
-		this.uid="";
-		this.role="";
-		this.classes="";
-		this.msQuota=0;
-		this.msQuotaUsed=0;
-		this.fsQuota=0;
-		this.fsQuotaUsed=0;
-		this.mailAliases=[];
-	}
+	mailAliases?: string[] =[];
+	constructor(){}
 }
-export interface OldImportsUser{
-	role: string,
-    lang: string,
-    identifier: string,
-    test: boolean,
-    password: string,
-    mustchange: boolean,
-    full: boolean,
-    allClasses: boolean,
-    cleanClassDirs: boolean,
-    resetPassword: boolean,
-	startTime: number,
-    result: any
+export class OldImportsUser{
+	role: string = "";
+	lang: string = "";
+	identifier: string = "";
+	test: boolean = false;
+	password: string = "";
+	mustchange: boolean = false;
+	full: boolean = false;
+	allClasses: boolean = false;
+	cleanClassDirs: boolean = false;
+	resetPassword: boolean = false;
+	startTime: number = 0;
+	result: any;
+	constructor(){}
 }
-export interface ImportUser{
-	role: string,
-	lang: string,
-	identifier: string,
-	test: boolean,
-	password: string,
-	mustchange: boolean,
-	full: boolean,
-	allClasses: boolean,
-	cleanClassDirs: boolean,
-	resetPassword: boolean,
+export class ImportUser{
+	role: string = "";
+	lang: string = "";
+	identifier: string = "";
+	test: boolean = false;
+	password: string = "";
+	mustchange: boolean = false;
+	full: boolean = false;
+	allClasses: boolean = false;
+	cleanClassDirs: boolean = false;
+	resetPassword: boolean = false;
+	appendBirthdayToPassword: boolean = false;
+	startTime?: any = new Date();
+	result?: any = null;
+	constructor(){}
 }
-export interface Room {
-	id: any,
-	name: string,
-	places: number,
-	rows: number,
-	description: string,
-	netMask: number,
-	devices?:any,
-	users?: User[],
-	startIP?: string,
-	roomType: string,
-	roomControl: string,
-	network: string,
-	hwconfId: number,
-	accessInRooms?: {
-		id?: number,
-		accessType: string,
-		action?: string,
-		roomId: number,
-		monday?: boolean,
-		tuesday?: boolean,
-		wednesday?: boolean,
-		thursday?: boolean,
-		friday?: boolean,
-		saturday?: boolean,
-		sunday?: boolean,
-		holiday?: boolean,
-		direct: boolean,
-		login: boolean,
-		portal: boolean,
-		printing: boolean,
-		proxy: boolean,
-		pointInTime?: string
-	}
+
+export class AccessInRooms{
+	id?: number = 0;
+	accessType: string = "";
+	action?: string = "";
+	roomId: number = 0;
+	monday?: boolean = false;
+	tuesday?: boolean = false;
+	wednesday?: boolean = false;
+	thursday?: boolean = false;
+	friday?: boolean = false;
+	saturday?: boolean = false;
+	sunday?: boolean = false;
+	holiday?: boolean = false;
+	direct: boolean = false;
+	login: boolean = false;
+	portal: boolean = false;
+	printing: boolean = false;
+	proxy: boolean = false;
+	pointInTime?: string = "";
+	constructor(){}
+}
+
+export class Room {
+	id?: number = 0;
+	name: string = "";
+	places: number = 0;
+	rows: number = 0;
+	description: string = "";
+	netMask: number = 0;
+	devices?:any = null;
+	users?: User[] = [];
+	startIP?: string = "";
+	roomType: string = "";
+	roomControl: string = "";
+	network: string = "";
+	hwconfId: number = 0;
+	accessInRooms?: AccessInRooms[] = [];
+	constructor(){}
 }
 
 export class Group {
-	id: number;
-	name: string;
-	description: string;
-	groupType: string;
-	constructor()
-	{
-		this.id = 0;
-		this.name = "";
-		this.description = "";
-		this.groupType = "";
-	}
+	id?: number = 0;
+	name: string = "";
+	description: string = "";
+	groupType: string = "";
+	constructor() { }
 }
 
-export interface Software {
-	id?: number,
-	description: string,
-	manually: boolean,
-	name: string,
-	weight: number,
-	version?: string;
-	softwareVersions: [
-		{
-			id?: number,
-			version: string,
-			status?: string
-		}
-	]
+export class SoftwareVersions{
+	id?: number = 0;
+	version: string = "";
+	status?: string = "";
+	constructor() { }
 }
 
-export interface RepoSoftware {
-	name: string,
-	version: string,
+export class Software {
+	id?: number = 0;
+	description: string = "";
+	manually: boolean = false;
+	name: string = "";
+	weight: number = 0;
+	version?: string = "";
+	softwareVersions: SoftwareVersions = new SoftwareVersions();
+	constructor() { }
 }
 
-export interface InstallStateDev {
-	softwareName : string,
-	deviceName : string,
-	softwareversionId : string,
-	version : string,
-	status : string,
-	manually : boolean,
+export class RepoSoftware {
+	name: string = "";
+	version: string = "";
+	constructor(){}
 }
 
-export interface License {
-	softwareId: number,
-	licenseType: string,
-	count: number,
-	value: string,
-	file?: File, 	
-	id: number,
-
+export class InstallStateDev {
+	softwareName : string = "";
+	deviceName : string = "";
+	softwareversionId : string = "";
+	version : string = "";
+	status : string = "";
+	manually : boolean = false;
+	constructor(){}
 }
-export interface Device {
 
-	id?: number,
-	name: string,
-	place?: number,
-	row?: number,
-	ip: string,
-	mac: string,
-	wlanIp?: string,
-	wlanMac?: string,
-	serial?: string,
-	inventary?: string,
-	locality?: string,
-	hwconfId: number,
-	roomId?: any,
-	
-
+export class License {
+	id?: number = 0;
+	softwareId: number = 0;
+	licenseType: string = "";
+	count: number = 0;
+	value: string = "";
+	file?: File = null; 
+	constructor(){}
 }
-export interface Printer {
-	id: number,
-	name: string,
-	devId: number,
-	mac: string,
-	roomId: number,
-	model: string,
-	windowsDriver: boolean,
-	state: string,
-	acceptingJobs: boolean,
-	activeJobs: number,
-
+export class Device {
+	id?: number = 0;
+	name: string = "";
+	place?: number = 0;
+	row?: number = 0;
+	ip: string = "";
+	mac: string = "";
+	wlanIp?: string = "";
+	wlanMac?: string = "";
+	serial?: string = "";
+	inventary?: string = "";
+	locality?: string = "";
+	hwconfId: number = 0;
+	roomId?: any = null;
+	constructor(){}
 }
-export interface Drivers {
-	name: string,
-	printers: String[],
+export class Printer {
+	id?: number = 0;
+	name: string = "";
+	devId: number = 0;
+	mac: string = "";
+	roomId: number = 0;
+	model: string = "";
+	windowsDriver: boolean = false;
+	state: string = "";
+	acceptingJobs: boolean = false;
+	activeJobs: number = 0;
+	constructor(){}
 }
-export interface Installation {
-	id: number,
-	description?: string,
-	name?: string,
-	categoryType?: string,
-	deviceIds?: number[],
-	roomIds?: number[],
-	softwareIds?: number[],
+export class Drivers {
+	name: string = "";
+	printers: String[] = [];
+	constructor(){}
+}
+export class Installation {
+	id?: number = 0;
+	description?: string = "";
+	name?: string = "";
+	categoryType?: string = "";
+	deviceIds?: number[] = [];
+	roomIds?: number[] = [];
+	softwareIds?: number[] = [];
 	hwconfIds?: number[]
+	constructor(){}
 }
 
-export interface Permission {
-	id?: number,
-	acl: string,
-	allowed: boolean,
-	userId?: number,
-	groupId?: number,
+export class Permission {
+	id?: number = 0;
+	acl: string = "";
+	allowed: boolean = false;
+	userId?: number = 0;
+	groupId?: number = 0;
+	constructor(){}
 }
 
-export interface AccessStatus {
-	id?: number,
-	accessType?: string,
-	action?: string,
-	roomId: any,
-	monday?: boolean,
-	tuesday?: boolean,
-	wednesday?: boolean,
-	thursday?: boolean,
-	friday?: boolean,
-	saturday?: boolean,
-	sunday?: boolean,
-	holiday?: boolean,
-	direct: boolean,
-	login: boolean,
-	portal: boolean,
-	printing: boolean,
-	proxy: boolean,
-	pointInTime?: string
+export class AccessStatus {
+	id?: number = 0;
+	accessType?: string = "";
+	action?: string = "";
+	roomId: any = null;
+	monday?: boolean = false;
+	tuesday?: boolean = false;
+	wednesday?: boolean = false;
+	thursday?: boolean = false;
+	friday?: boolean = false;
+	saturday?: boolean = false;
+	sunday?: boolean = false;
+	holiday?: boolean = false;
+	direct: boolean = false;
+	login: boolean = false;
+	portal: boolean = false;
+	printing: boolean = false;
+	proxy: boolean = false;
+	pointInTime?: string = "";
+	constructor(){}
 }
 
-export interface Announcenement {
-	id: number,
-	abstract_: string,
-    issue: string,
-    keywords: string,
-    text: string,
-    title: string,
-    validFrom: number,
-	validUntil: number,
-	categories: InfoCategory[],
+export class Announcenement {
+	id?: number = 0;
+	abstract: string = "";
+	issue: string = "";
+	keywords: string = "";
+	text: string = "";
+	title: string = "";
+	validFrom: any = new Date();
+	validUntil: any = new Date();
+	categories: Category[] = [];
+	constructor(){}
 }
 
-export interface FAQ {
-	id: number,
-    abstract_: string,
-    issue: string,
-    text: string,
-	title: string,
-	categories: InfoCategory[],
-
+export class FAQ {
+	id?: number = 0;
+	abstract: string = "";
+	issue: string = "";
+	text: string = "";
+	title: string = "";
+	categories: Category[] = [];
+	constructor(){}
 }
 
-export interface Contact {
-	id: number,
-    email: string,
-    issue: string,
-    name: string,
-    phone: string,
-	title: string,
-	categories: InfoCategory[]
+export class Contact {
+	id?: number = 0;
+	email: string = "";
+	issue: string = "";
+	name: string = "";
+	phone: string = "";
+	title: string = "";
+	categories: Category[];
+	constructor(){}
 }
 
-export interface InfoCategory {
-    id: number,
-    description: string,
-    name: string,
-    categoryType: string,
-    validFrom: number,
-    validUntil: number,
-    ownerId: number,
-    deviceIds: number[],
-    hwConfIds: number[],
-    roomIds: number[],
-    userIds: number[],
-    groupIds: number[],
-    softwareIds: number[],
-    announcementIds: number[],
-    contactIds: number[],
-    faqIds: number[],
-    studentsOnly: boolean,
-    hwconfIds: number[],
-	faqids: number[]
-	
+export class AdHocRoom{
+	id?: number = 0;
+	name: string = "";
+	places: number = 0;
+	description: string = "";
+	netMask: number = 0;
+	startIP?: string = "";
+	roomType?: string = "";
+	roomControl?: string = "";
+	network?: string = "";
+	studentsOnly: boolean = false;
+	constructor(){}
 }
 
-
-export interface AdHocRoom{
-	id: any,
-	name: string,
-	places: number,
-	description: string,
-	netMask: number,
-	startIP?: string,
-	roomType?: string,
-	roomControl?: string,
-	network?: string,
-	studentsOnly: boolean
+export class SupportTicket{
+	email: string = "";
+	subject: string = "";
+	description: string = "";
+	regcode: string = "";
+	product: string = "";
+	firstname: string = "";
+	lastname: string = "";
+	company: string = "";
+	supporttype?: string = "";
+	regcodeValidUntil?: number = 0;
+	status?: string = "";
+	requestDate?: number = 0;
+	ticketno?: number = 0;
+	ticketResponseInfo?: string = "";
+	constructor(){}
 }
 
-export interface SupportTicket{
-	email: string,
-	subject: string,
-	description: string,
-	regcode: string,
-	product: string,
-	firstname: string,
-	lastname: string,
-	company: string,
-	supporttype?: string, //Error | Features
-	regcodeValidUntil?: number,
-	status?: string,
-	requestDate?: number,
-	ticketno?: number,
-	ticketResponseInfo?: string
+export class DNSRecord {
+	domainName: string = "";
+	recordType: string = "";
+	recordName: string = "";
+	recordData: string = "";
+	constructor(){}
 }
 
-export interface DNSRecord {
-	domainName: string,
-    recordType: string,
-    recordName: string,
-    recordData: string
+export class GuestUsers{
+	name: string = "";
+	description: string = "";
+	count: number = 0;
+	password: string = "";
+	roomIds?: number[] = [];
+	validUntil: any = new Date();
+	privateGroup: boolean = false;
+	createAdHocRoom: boolean = false;
+	roomControl?: string = "";
+	constructor(){}
 }
 
-export class UserC {
-
-	constructor(
-
-	public id: any,
-	public surName: string,
-	public givenName: string,
-	public birthDay?: number,
-	public password?: string,
-	public uid?: string,
-	public role?: string,
-	public msQuota?: number,
-	public fsQuota?: number,
-	public msQuotaUsed?: number,
-	public fsQuotaUsed?: number,
-	){}
+export class Category{
+	id?: number = 0;
+	description: string = "";
+	name: string = "";
+	categoryType: string = "";
+	validFrom?: any = new Date();
+	validUntil: any = new Date();
+	ownerId?: number = 0;
+	deviceIds?: number[] = [];
+	roomIds?: number[] = [];
+	userIds?: number[] = [];
+	groupIds?: number[] = [];
+	softwareIds?: number[] = [];
+	announcementIds?: number[] = [];
+	contactIds?: number[] = [];
+	faqIds?: number[] = [];
+	studentsOnly?: boolean = false;
+	publicAccess?: boolean = false;
+	hwconfIds?: number[] = [];
+	faqids?: number[];
+	constructor(){}
 }
 
-export interface GuestUsers{
-	name: string,
-	description: string,
-	count: number,
-	password: string,
-	roomIds?: number[],
-	validUntil: number,
-	privateGroup: boolean,
-	createAdHocRoom: boolean,
-	roomControl?: string,
+export class DHCP {
+	id?: number = 0;
+	objectType: string = "";
+	objectId: number = 0;
+	keyword: string = "";
+	value: string = "";
+	constructor(){}
 }
-
-export interface Category{
-	
-		id?: number;	
-		description: string,
-		name: string,
-		categoryType: string,
-		validFrom?: number,
-		validUntil: number,
-		ownerId?: number,
-		deviceIds?: number[],
-		hwConfIds?: number[],
-		roomIds?: number[],
-		userIds?: number[],
-		groupIds?: number[],
-		softwareIds?: number[],
-		announcementIds?: number[],
-		contactIds?: number[],
-		faqIds?: number[],
-		studentsOnly?: true,
-		publicAccess?: true,
-		hwconfIds?: number[],
-		faqids?: number[]	
-}
-
-export interface DHCP {
-	id: number,
-	objectType: string,
-	objectId: number,
-	keyword: string,
-	value: string
-  }

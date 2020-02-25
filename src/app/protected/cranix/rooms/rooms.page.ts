@@ -5,48 +5,47 @@ import { TranslateService } from '@ngx-translate/core';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 //own modules
-import { UsersService } from 'src/app/services/users.service';
-import { User } from 'src/app/shared/models/data-model';
+import { RoomsService } from 'src/app/services/rooms.service';
+import { Room } from 'src/app/shared/models/data-model';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
 import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
 
 @Component({
-  selector: 'cranix-users',
-  templateUrl: './users.page.html',
-  styleUrls: ['./users.page.scss'],
+  selector: 'cranix-rooms',
+  templateUrl: './rooms.page.html',
+  styleUrls: ['./rooms.page.scss'],
 })
-export class UsersPage implements OnInit {
+export class RoomsPage implements OnInit {
 
   allSelected: boolean = false;
-  displayedColumns: string[] = ['select', 'uid', 'surName', 'givenName', 'role', 'actions'];
+  displayedColumns: string[] = ['select', 'name', 'description', 'roomControl', 'roomType', 'actions'];
   objectKeys:  string[]  = [];
-  dataSource: MatTableDataSource<User>;
-  selection = new SelectionModel<User>(true, []);
+  dataSource: MatTableDataSource<Room>;
+  selection = new SelectionModel<Room>(true, []);
   objectIds: number[] = [];
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
-    private userS: UsersService,
+    private roomS: RoomsService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     private storage: Storage,
     public translateService: TranslateService
   ) {
-    this.objectKeys = Object.getOwnPropertyNames( new User() );
-      this.storage.get('UsersPage.displayedColumns').then((val) => {
+    this.objectKeys = Object.getOwnPropertyNames( new Room() );
+      this.storage.get('RoomsPage.displayedColumns').then((val) => {
       let myArray  = JSON.parse(val);
       if(myArray  ) {
-        this.displayedColumns = ['select'].concat(myArray);
-        this.displayedColumns.push('actions');
+        this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
       }
     });
   }
 
   ngOnInit() {
-    this.userS.getUsers().subscribe((res) => {
-      this.dataSource = new MatTableDataSource<User>(res)
+    this.roomS.getAllRooms().subscribe((res) => {
+      this.dataSource = new MatTableDataSource<Room>(res)
     },
       (err) => { },
       () => {
@@ -82,7 +81,7 @@ export class UsersPage implements OnInit {
       componentProps: {
         columns: this.objectKeys ,
         selected: this.displayedColumns,
-        objectPath: "UsersPage.displayedColumns"
+        objectPath: "RoomsPage.displayedColumns"
       },
       animated: true,
       swipeToClose: true,
@@ -97,18 +96,18 @@ export class UsersPage implements OnInit {
     })
   }
   
-  async redirectToEdit(ev: Event, user: User) {
+  async redirectToEdit(ev: Event, room: Room) {
     let action = 'modify';
-    if( user == null ){
-      user = new User();
+    if( room == null ){
+      room = new Room();
       action = 'add';
     }
     const modal = await this.modalCtrl.create({
       component: ObjectsEditComponent,
       componentProps: {
-        objectType: "user",
+        objectType: "room",
         objectAction: action,
-        object: user
+        object: room
       },
       swipeToClose: true,
       animated: true,
@@ -117,8 +116,8 @@ export class UsersPage implements OnInit {
     (await modal).present();
   }
 
-  public redirectToDelete = (user: User) => {
-    console.log("Delete:" + user.uid)
+  public redirectToDelete = (room: Room) => {
+    console.log("Delete:" + room.name)
   }
 
   /**
@@ -133,7 +132,7 @@ export class UsersPage implements OnInit {
       component: ActionsComponent,
       event: ev,
       componentProps: {
-        objectType: "user",
+        objectType: "room",
         objectIds: this.objectIds
       },
       animated: true,

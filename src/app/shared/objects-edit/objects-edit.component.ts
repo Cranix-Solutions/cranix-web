@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 //own 
 import { GenericObjectService } from '../../services/generic-object.service';
-import { User, Group, Room, Device, HWConfig, UserC } from '../models/data-model';
+import { User, Group, Room, Device, Hwconf } from '../models/data-model';
 import { Institute, Customer } from '../models/cephalix-data-model';
 import { async } from 'rxjs/internal/scheduler/async';
 import { ServerResponse } from '../models/server-models';

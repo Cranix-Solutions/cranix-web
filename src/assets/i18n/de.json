@@ -62,5 +62,25 @@
 	"sysadmins": "Systemadministratoren",
 	"teachers": "Lehrer",
 	"students": "Schüler",
-	"administration": "Verwaltung"
+	"administration": "Verwaltung",
+	"description": "Beschreibung",
+	"groupType": "Art der Gruppe",
+	"roomControl": "Kontrolle im Raum",
+	"roomType": "Art des Raumes",
+	"ip": "IP-Adresse",
+	"mac": "MAC-Adresse",
+	"wlanIp": "WLAN-IP-Adresse",
+	"wlanMac": "WLAN-MAC-Adresse",
+	"telephone": "Telefonnummer",
+	"category": "Kategorie",
+	"id": "Technisches ID",
+	"address1": "Adresse",
+	"address2": "Adressenzusatz",
+	"contact": "Kontaktperson",
+	"country": "Land",
+	"name2": "Namenzusatz",
+	"state": "Bundesland",
+	"Select columns to show": "Sichbare Felder wählen."
+
+
 }

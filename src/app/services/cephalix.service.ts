@@ -8,6 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Institute, Object, Note, OssCare } from 'src/app/shared/models/cephalix-data-model';
 import { ServerResponse } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from './auth.service';
+import { Customer } from '../shared/models/cephalix-data-model';
 
 
 export interface InstallSetSync{
@@ -78,6 +79,17 @@ export class CephalixService {
 			'Authorization': "Bearer " + this.token
 		});
 		return this.http.get<Institute[]>(this.url, { headers: headers });
+	};
+	getAllCustomers(): Observable<Customer[]> {
+		//	this.hostname = this.utils.hostName();
+		//  this.token = this.token;
+		this.url = this.hostname + `/customers/all`;
+		console.log(this.url);
+		const headers = new HttpHeaders({
+			'Accept': "application/json",
+			'Authorization': "Bearer " + this.token
+		});
+		return this.http.get<Customer[]>(this.url, { headers: headers });
 	};
 	getNextDefault(){
 		//	this.hostname = this.utils.hostName();

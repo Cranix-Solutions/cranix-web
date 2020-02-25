@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
-
-
-import { ProtectedPage } from './protected.page';
 import { RouterModule,Routes } from '@angular/router';
+
+import {CranixSharedModule } from '../shared/cranix-shared.module';
+import { ProtectedPage } from './protected.page';
 
 const routes: Routes = [
   {
@@ -25,9 +24,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
+    CranixSharedModule,
     RouterModule.forChild(routes)
   ],
   declarations: [ProtectedPage]

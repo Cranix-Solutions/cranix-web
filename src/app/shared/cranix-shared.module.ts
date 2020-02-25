@@ -23,6 +23,7 @@ import { TranslateModule } from '@ngx-translate/core';
 @NgModule({
   declarations: [ToolbarComponent],
   imports: [
+  CommonModule,
   FormsModule,
   IonicModule,
   MatTableModule,
@@ -39,6 +40,7 @@ import { TranslateModule } from '@ngx-translate/core';
   ReactiveFormsModule,
   TranslateModule
   ], exports: [
+    CommonModule,
     FormsModule,
     IonicModule,
     MatTableModule,

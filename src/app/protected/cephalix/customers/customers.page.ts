@@ -1,41 +1,40 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
-import { SelectionModel, isDataSource } from '@angular/cdk/collections';
+import { SelectionModel } from '@angular/cdk/collections';
 import { TranslateService } from '@ngx-translate/core';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
-//own modules
-import { UsersService } from 'src/app/services/users.service';
-import { User } from 'src/app/shared/models/data-model';
+
+import { CephalixService } from 'src/app/services/cephalix.service';
+import { Customer } from 'src/app/shared/models/cephalix-data-model';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
 import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
 
 @Component({
-  selector: 'cranix-users',
-  templateUrl: './users.page.html',
-  styleUrls: ['./users.page.scss'],
+  selector: 'cranix-customers',
+  templateUrl: './customers.page.html',
+  styleUrls: ['./customers.page.scss'],
 })
-export class UsersPage implements OnInit {
-
-  allSelected: boolean = false;
-  displayedColumns: string[] = ['select', 'uid', 'surName', 'givenName', 'role', 'actions'];
+export class CustomersPage implements OnInit {
+  displayedColumns: string[] = ['select', 'uuid', 'name', 'locality', 'description', 'telephone', 'recDate', 'actions'];
   objectKeys:  string[]  = [];
-  dataSource: MatTableDataSource<User>;
-  selection = new SelectionModel<User>(true, []);
+  dataSource: MatTableDataSource<Customer>;
+  selection = new SelectionModel<Customer>(true, []);
   objectIds: number[] = [];
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
-    private userS: UsersService,
+    private cephalixS: CephalixService,    
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     private storage: Storage,
-    public translateService: TranslateService
+    public translateService: TranslateService,
+
   ) {
-    this.objectKeys = Object.getOwnPropertyNames( new User() );
-      this.storage.get('UsersPage.displayedColumns').then((val) => {
+    this.objectKeys = Object.getOwnPropertyNames( new Customer() );
+    this.storage.get('CustomersPage.displayedColumns').then((val) => {
       let myArray  = JSON.parse(val);
       if(myArray  ) {
         this.displayedColumns = ['select'].concat(myArray);
@@ -45,9 +44,10 @@ export class UsersPage implements OnInit {
   }
 
   ngOnInit() {
-    this.userS.getUsers().subscribe((res) => {
-      this.dataSource = new MatTableDataSource<User>(res)
-    },
+    this.cephalixS.getAllCustomers().subscribe(
+      (res) => {
+        this.dataSource = new MatTableDataSource<Customer>(res)
+      },
       (err) => { },
       () => {
         this.dataSource.paginator = this.paginator;
@@ -55,9 +55,16 @@ export class UsersPage implements OnInit {
       });
   }
 
+  typeOf(key) {
+    if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
+      return "date";
+    }
+    return "string";
+  }
   public doFilter = (value: string) => {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
+
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -82,7 +89,7 @@ export class UsersPage implements OnInit {
       componentProps: {
         columns: this.objectKeys ,
         selected: this.displayedColumns,
-        objectPath: "UsersPage.displayedColumns"
+        objectPath: "CustomersPage.displayedColumns"
       },
       animated: true,
       swipeToClose: true,
@@ -90,50 +97,32 @@ export class UsersPage implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-         this.displayedColumns =  ['select'].concat(dataReturned.data).concat(['actions']);
+          this.displayedColumns =  ['select'].concat(dataReturned.data).concat(['actions']);
       }
     });
     (await modal).present().then((val) => {
+      console.log("most lett vegrehajtva.")
     })
   }
-  
-  async redirectToEdit(ev: Event, user: User) {
-    let action = 'modify';
-    if( user == null ){
-      user = new User();
-      action = 'add';
-    }
-    const modal = await this.modalCtrl.create({
-      component: ObjectsEditComponent,
-      componentProps: {
-        objectType: "user",
-        objectAction: action,
-        object: user
-      },
-      swipeToClose: true,
-      animated: true,
-      showBackdrop: true
-    });
-    (await modal).present();
-  }
 
-  public redirectToDelete = (user: User) => {
-    console.log("Delete:" + user.uid)
+  public redirectToDelete = (customer: Customer) => {
+    console.log("Delete:" + customer.uuid)
   }
 
   /**
    * Open the actions menu with the selected object ids.
-   * @param ev 
+   * @param ev
    */
   async openActions(ev: any) {
     for (let i = 0; i < this.selection.selected.length; i++) {
       this.objectIds.push(this.selection.selected[i].id);
     }
+    console.log("openActions" + this.objectIds);
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
       event: ev,
       componentProps: {
-        objectType: "user",
+        objectType: "customer",
         objectIds: this.objectIds
       },
       animated: true,
@@ -141,8 +130,24 @@ export class UsersPage implements OnInit {
     });
     (await popover).present();
   }
-  procesModal(ev: Event) {
-    console.log(ev);
-    this.modalCtrl.dismiss();
+
+  async redirectToEdit(ev: Event, customer: Customer) {
+    let action = 'modify';
+    if (customer == null) {
+      customer = new Customer();
+      action = 'add';
+    }
+    const modal = await this.modalCtrl.create({
+      component: ObjectsEditComponent,
+      componentProps: {
+        objectType: "customer",
+        objectAction: action,
+        object: customer
+      },
+      animated: true,
+      swipeToClose: true,
+      showBackdrop: true
+    });
+    (await modal).present();
   }
 }

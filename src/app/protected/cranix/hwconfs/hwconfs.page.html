@@ -14,30 +14,32 @@
         </mat-checkbox>
       </mat-cell>
     </ng-container>
-
     <ng-container matColumnDef="id">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'id' | translate }} </mat-header-cell>
-      <mat-cell *matCellDef="let group"> {{group.id}} </mat-cell>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'id' | translate }}</th>
+      <td mat-cell *matCellDef="let object"> {{object.id}} </td>
     </ng-container>
 
     <ng-container matColumnDef="name">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'name' | translate }}</mat-header-cell>
-      <mat-cell *matCellDef="let group" (click)="$event.stopPropagation()">
-        <a (click)="redirectToMember(group)"><span>{{group.name}}</span></a>
-      </mat-cell>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'name' | translate }}</th>
+      <td mat-cell *matCellDef="let object"> {{object.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="deviceType">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'deviceType' | translate }}</th>
+      <td mat-cell *matCellDef="let object"> {{object.deviceType}} </td>
     </ng-container>
 
     <ng-container matColumnDef="description">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'description' | translate }}</mat-header-cell>
-      <mat-cell class="description-cell" *matCellDef="let group"> {{group.description}} </mat-cell>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'description' | translate }}</th>
+      <td mat-cell *matCellDef="let object"> {{object.description}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="groupType">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'groupType' | translate }} </mat-header-cell>
-      <mat-cell *matCellDef="let group"> {{group.groupType}} </mat-cell>
+    <ng-container matColumnDef="partitions">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'partitions' | translate }}</th>
+      <td mat-cell *matCellDef="let object"> {{object.partitions}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="actions">
+   <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef>
         <ion-button size="small"  (click)="redirectToEdit($event,null)">
           <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
@@ -45,7 +47,7 @@
         <ion-button size="small" (click)="openActions($event)">
           <ion-icon slot="icon-only" name="menu"></ion-icon>
         </ion-button>
-        <ion-button size="small"  (click)="openCollums($event)">
+        <ion-button size="small"  (click)="openCollums()">
           <ion-icon slot="icon-only" name="apps"></ion-icon>
         </ion-button>
         </mat-header-cell>

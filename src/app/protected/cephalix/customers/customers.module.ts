@@ -6,12 +6,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
-import { InstitutesPage } from './institutes.page';
+import { CustomersPage } from './customers.page';
 
 const routes: Routes = [
   {
-    path: 'institutes',
-    component: InstitutesPage
+    path: 'customers',
+    component: CustomersPage
   }
 ];
 
@@ -19,12 +19,11 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
-    RouterModule.forChild(routes),
     IonicModule,
-    
+    RouterModule.forChild(routes),
     CranixSharedModule
   ],
-  declarations: [InstitutesPage],
-  providers: [TranslateService]
+  declarations: [CustomersPage],
+   providers: [TranslateService]
 })
-export class InstitutesPageModule {}
+export class CustomersPageModule {}
