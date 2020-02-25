@@ -18,6 +18,7 @@ export class LoginPage implements OnInit {
 
     authForm: FormGroup;
     instName: Observable<string>;
+    instituteName: string = "";
 
     constructor(
         private authS: AuthenticationService,
@@ -26,6 +27,7 @@ export class LoginPage implements OnInit {
         private translateService: TranslateService
     ) {
         this.instName = this.systemS.getInstituteName();
+        this.instName.subscribe((val)=>{ this.instituteName = val});
     //    this.translateService.setDefaultLang('de');
     }
 
@@ -38,7 +40,7 @@ export class LoginPage implements OnInit {
 
     onSubmit(user: any): void {
         if (this.authForm.valid) {
-            this.authS.setUpSession(user);
+            this.authS.setUpSession(user,  this.instituteName);
         }
     }
 

@@ -13,7 +13,8 @@ export class ActionsComponent implements OnInit {
   objectIds: number[] = [];
   count: number = 0;
   objectType: string = '';
-  menu: any[] = []
+  menu: any[] = [];
+  
   commonMenu: any[] = [{
     "name": "CSV Export",
     "icon": "download-outline",
