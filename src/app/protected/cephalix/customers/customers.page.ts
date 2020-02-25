@@ -50,6 +50,7 @@ export class CustomersPage implements OnInit {
       },
       (err) => { },
       () => {
+        console.log(this.dataSource);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
@@ -147,6 +148,11 @@ export class CustomersPage implements OnInit {
       animated: true,
       swipeToClose: true,
       showBackdrop: true
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+          this.ngOnInit();
+      }
     });
     (await modal).present();
   }

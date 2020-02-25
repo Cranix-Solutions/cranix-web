@@ -113,6 +113,11 @@ export class RoomsPage implements OnInit {
       animated: true,
       showBackdrop: true
     });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+          this.ngOnInit();
+      }
+    });
     (await modal).present();
   }
 

@@ -131,7 +131,7 @@ export class ObjectsEditComponent implements OnInit {
             duration: 5000
           });
           (await toast).present();
-          this.modalController.dismiss();
+          this.modalController.dismiss("succes");
         } else {
           const toast = this.toastController.create({
             position: "middle",

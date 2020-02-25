@@ -140,7 +140,12 @@ async redirectToEdit(ev: Event, institute: Institute){
     animated: true,
     swipeToClose: true,
     showBackdrop: true
-});
+    });
+  modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+          this.ngOnInit();
+      }
+    });
   (await modal).present();
 }
 }

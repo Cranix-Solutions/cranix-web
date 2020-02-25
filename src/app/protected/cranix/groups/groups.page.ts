@@ -142,7 +142,12 @@ public doFilter = (value: string) => {
       swipeToClose: true,
       animated: true,
       showBackdrop: true
-  });
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+          this.ngOnInit();
+      }
+    });
     (await modal).present();
   }
 
