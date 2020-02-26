@@ -3,11 +3,15 @@ import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TranslateService } from '@ngx-translate/core';
 import { PopoverController, ModalController } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
 
-import {CephalixService} from 'src/app/services/cephalix.service';
+// own modules
+import { CephalixService } from 'src/app/services/cephalix.service';
 import { Institute } from 'src/app/shared/models/cephalix-data-model';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
+import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
+
 @Component({
   selector: 'cranix-institutes',
   templateUrl: './institutes.page.html',
@@ -16,6 +20,7 @@ import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.
 export class InstitutesPage implements OnInit {
 
   displayedColumns: string[] = ['select', 'uuid', 'name', 'locality','ipVPN', 'regCode','validity','actions'];
+  objectKeys:  string[]  = [];
   dataSource:  MatTableDataSource<Institute> ;
   selection = new SelectionModel<Institute>(true, []);
   objectIds: number[] = [];
@@ -23,14 +28,23 @@ export class InstitutesPage implements OnInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
-    cephalixS: CephalixService,
-    public translateService: TranslateService,
+    private cephalixS: CephalixService,
+    public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
-    public modalCtrl: ModalController
+    private storage: Storage,
+    public translateService: TranslateService
   ) {
-   // this.translateService.setDefaultLang('de');
-   console.log('Trans in institutes', this.translateService.translations);
-    cephalixS.getAllInstitutes().subscribe(
+    this.objectKeys = Object.getOwnPropertyNames( new Institute() );
+      this.storage.get('InstitutesPage.displayedColumns').then((val) => {
+      let myArray  = JSON.parse(val);
+      if(myArray  ) {
+          this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.cephalixS.getAllInstitutes().subscribe(
       (res) => {
       this.dataSource = new MatTableDataSource<Institute>(res)
     },
@@ -41,24 +55,11 @@ export class InstitutesPage implements OnInit {
       });
   }
 
-  ngOnInit() {
-  }
   public doFilter = (value: string) => {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
 
-  /**
-   * Helper script fot the template to detect the type of the variables
-   * @param val 
-   */
-  typeOf(key) {
-    if (key == 'birthDay'|| key == 'validity' || key=='recDate' || key == 'validFrom' || key == 'validUntil' ) {
-      let d = new Date()
-      return "date";
-    }
-    return "string";
-  }
-  /** Whether the number of selected elements matches the total number of rows. */
+ /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
@@ -70,6 +71,32 @@ export class InstitutesPage implements OnInit {
     this.isAllSelected() ?
       this.selection.clear() :
       this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+  
+   /**
+   * Function to select the columns to show
+   * @param ev 
+   */
+  async openCollums(ev: any) {
+    const modal = await this.modalCtrl.create({
+      component: SelectColumnsComponent,
+      componentProps: {
+        columns: this.objectKeys ,
+        selected: this.displayedColumns,
+        objectPath: "InstitutesPage.displayedColumns"
+      },
+      animated: true,
+      swipeToClose: true,
+      backdropDismiss: false
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+         this.displayedColumns =  ['select'].concat(dataReturned.data).concat(['actions']);
+      }
+    });
+    (await modal).present().then((val) => {
+      console.log("most lett vegrehajtva.")
+    })
   }
   
   public redirectToDelete = (institute: Institute)  => {
@@ -90,7 +117,8 @@ async openActions(ev: any) {
     event: ev,
     componentProps: {
       objectType:  "institute",
-       objectIds: this.objectIds
+       objectIds: this.objectIds,
+      selection: this.selection.selected
     },
     animated: true,
     showBackdrop: true
@@ -98,30 +126,27 @@ async openActions(ev: any) {
   (await popover).present();
 }
 async redirectToEdit(ev: Event, institute: Institute){
+  let action = 'modify';
+  if( institute == null ){
+    institute = new Institute();
+    action = 'add';
+  }
   const modal = await  this.modalCtrl.create({
     component: ObjectsEditComponent,
     componentProps: {
       objectType:  "institute",
-      objectAction:  "modify",
+      objectAction: action,
       object: institute
     },
     animated: true,
+    swipeToClose: true,
     showBackdrop: true
-});
-  (await modal).present();
-}
-
-async redirectToAdd(ev: Event){
-  const modal = await  this.modalCtrl.create({
-    component: ObjectsEditComponent,
-    componentProps: {
-      objectType:  "group",
-      objectAction:  "add",
-      object: new Institute()
-    },
-    animated: true,
-    showBackdrop: true
-});
+    });
+  modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+          this.ngOnInit();
+      }
+    });
   (await modal).present();
 }
 }

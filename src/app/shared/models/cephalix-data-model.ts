@@ -1,20 +1,21 @@
 
-export interface Customer {
-    id: number,
-    uuid: string,
-    address1: string,
-    address2: string,
-    category: string,
-    locality: string,
-    contact: string,
-    country: string,
-    description: string,
-    name: string,
-    name2: string,
-    postalCode: string,
-    recDate: number,
-    state: string,
-    telephone: string
+export class Customer {
+    id: number = 0;
+    uuid: string = '';
+    address1: string = '';
+    address2: string = '';
+    category: string = '';
+    locality: string = '';
+    contact: string = '';
+    country: string = '';
+    description: string = '';
+    name: string = '';
+    name2: string = '';
+    postalCode: string = '';
+    recDate: any = new Date();
+    state: string = '';
+    telephone: string = '';
+    constructor() {}
 }
 
 export class Institute {

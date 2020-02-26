@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AlertController } from '@ionic/angular';
+//Own module
 import { AuthenticationService } from '../../services/auth.service';
 
 @Component({
@@ -8,15 +10,37 @@ import { AuthenticationService } from '../../services/auth.service';
 })
 export class ToolbarComponent implements OnInit {
 
-  roomName: string ="";
-  commonName: string="";
+  roomName: string = "";
+  commonName: string = "";
   instituteName: string = "";
-  constructor( authService: AuthenticationService ) {
+  constructor(
+    private authService: AuthenticationService,
+    public alertController: AlertController
+  ) {
     this.commonName = authService.session.commonName;
-    this.roomName = authService.session.roomName;
-    this.instituteName = authService.session.instituteName;
-   }
+    this.roomName        = authService.session.roomName;
+    this.instituteName  = authService.session.instituteName;
+  }
 
-  ngOnInit() {}
+  ngOnInit() { }
+
+  async logOut() {
+    const alert = await this.alertController.create({
+      header: 'Confirm!',
+      message: 'Do you realy want to logout?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        }, {
+          text: 'OK',
+          handler: () => {
+            this.authService.logout();
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
 
 }

@@ -3,9 +3,10 @@ import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { AuthenticationService } from './services/auth.service';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+//own services
+import { AuthenticationService } from './services/auth.service';
+import { GenericObjectService } from './services/generic-object.service';
 import { LanguageService } from './services/language.service';
 
 @Component({
@@ -15,12 +16,13 @@ import { LanguageService } from './services/language.service';
 })
 export class AppComponent {
   constructor(
+    private authS: AuthenticationService,
+    private genericObjectS: GenericObjectService,
+    private languageService: LanguageService,
     private platform: Platform,
+    private router: Router,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private authS: AuthenticationService,
-    private router: Router,
-    private languageService: LanguageService
   ) {
     this.initializeApp();
   }
@@ -32,6 +34,7 @@ export class AppComponent {
       this.languageService.setInitialAppLanguage();
       this.authS.authenticationState.subscribe(state => {
         if (state) {
+          this.genericObjectS.initialize(true);
           this.router.navigate(['pages/cephalix/institutes']);
         } else {
           this.router.navigate(['login']);

@@ -12,6 +12,8 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { IonicStorageModule } from '@ionic/storage';
+import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
+
 import { CranixSharedModule } from './shared/cranix-shared.module';
 import { UtilsService } from './services/utils.service';
 import { SystemService } from './services/system.service';
@@ -20,6 +22,7 @@ import { LanguageService } from './services/language.service';
 import { ErrorHandler, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ActionsComponent } from './shared/actions/actions.component';
 import { ObjectsEditComponent } from './shared/objects-edit/objects-edit.component';
+import {SelectColumnsComponent } from './shared/select-columns/select-columns.component'
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -38,8 +41,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [AppComponent,ActionsComponent,ObjectsEditComponent],
-  entryComponents: [ActionsComponent,ObjectsEditComponent],
+  declarations: [AppComponent,ActionsComponent,ObjectsEditComponent,SelectColumnsComponent],
+  entryComponents: [ActionsComponent,ObjectsEditComponent,SelectColumnsComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -62,6 +65,7 @@ const routes: Routes = [
     TranslateService,
     SystemService,
     LanguageService,
+    SpinnerDialog,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

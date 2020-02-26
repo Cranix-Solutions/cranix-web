@@ -39,7 +39,7 @@
 
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef>
-        <ion-button size="small"  (click)="redirectToAdd()">
+        <ion-button size="small"  (click)="redirectToEdit($event,null)">
           <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
         </ion-button>
         <ion-button size="small" (click)="openActions($event)">
@@ -59,8 +59,8 @@
         </mat-cell>
     </ng-container>
 
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></mat-row>>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
 
   </table>
   <!-- mat-paginator [pageSizeOptions]="[20,30,50]" showFirstLastButtons></mat-paginator -->

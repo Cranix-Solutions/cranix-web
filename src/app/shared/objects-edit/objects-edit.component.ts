@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+import { ModalController, NavParams, ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+/* import { SplashScreen } from '@ionic-native/splash-screen/ngx'; */
+import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
 //own 
-import {GenericObjectService} from '../../services/generic-object.service';
-import { User, Group, Room, Device, HWConfig, UserC } from '../models/data-model';
-import { Institute, Customer } from '../models/cephalix-data-model';
+import { GenericObjectService } from '../../services/generic-object.service';
+import { ServerResponse } from '../models/server-models';
 @Component({
   selector: 'cranix-objects-edit',
   templateUrl: './objects-edit.component.html',
@@ -14,19 +15,28 @@ import { Institute, Customer } from '../models/cephalix-data-model';
 export class ObjectsEditComponent implements OnInit {
 
   result: any = {};
+
+    ;
+  /**
+   * This hash defines if a key  has defaults
+   */
+  hasDefaults: any = {};
   editForm: FormGroup;
   objectType: string = "";
   object: any = null;
   objectKeys: string[] = [];
   objectActionTitle: string = "";
-  objectAction = "";
+  objectAction: string = "";
+
   readOnlyAttributes: string[] = [
     'fsQuotaUsed',
     'msQuotaUsed',
     'recDate',
     'role',
   ]
-
+  /**
+   * Attributes which we get but need not be shown
+   */
   hiddenAttributes: string[] = [
     'id',
     'ownerId',
@@ -36,10 +46,12 @@ export class ObjectsEditComponent implements OnInit {
 
   constructor(
     public formBuilder: FormBuilder,
+    public objectService: GenericObjectService,
     private navParams: NavParams,
     private modalController: ModalController,
+    private splashScreen: SpinnerDialog,
     public translateService: TranslateService,
-    public objectService: GenericObjectService
+    public toastController: ToastController
   ) {
     this.objectType = this.navParams.get('objectType');
     this.object = this.navParams.get('object');
@@ -63,7 +75,7 @@ export class ObjectsEditComponent implements OnInit {
    */
   typeOf(key) {
     let obj = this.object[key];
-    if (key == 'birthDay'|| key == 'validity' || key=='recDate' || key == 'validFrom' || key == 'validUntil' ) {
+    if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
       let d = new Date()
       return "date";
     }
@@ -87,26 +99,59 @@ export class ObjectsEditComponent implements OnInit {
   }
 
   onSubmit(object) {
-    this.objectService.applyAction(object,this.objectType,this.objectAction).subscribe(
+    this.editForm.disable();
+    let serverResponse: ServerResponse;
+    this.splashScreen.show();
+    this.objectService.applyAction(object, this.objectType, this.objectAction).subscribe(
       (val) => {
-          console.log(val);
+        serverResponse = val;
+        console.log(val);
       },
-      (error) => {
-
+      async (error) => {
+        const toast = this.toastController.create({
+          position: "middle",
+          message: "An Server Error is accoured",
+          cssClass: "bar-assertive",
+          duration: 3000
+        });
+        this.editForm.enable();
+        this.splashScreen.hide();
+        (await toast).present();
       },
-      () => {
-        this.modalController.dismiss();
+      async () => {
+        if (serverResponse.code == "OK") {
+          const toast = this.toastController.create({
+            position: "middle",
+            header: "Success:",
+            message: serverResponse.value,
+            color: "success",
+            duration: 5000
+          });
+          (await toast).present();
+          this.modalController.dismiss("succes");
+        } else {
+          const toast = this.toastController.create({
+            position: "middle",
+            header: "An Error was accoured:",
+            message: serverResponse.value,
+            color: "danger",
+            duration: 3000
+          });
+          this.editForm.enable();
+          this.splashScreen.hide();
+          (await toast).present();
+        }
       }
-      )
-    console.log(object);
+    )
+
   }
 
-  convertObject(){
+  convertObject() {
     //TODO introduce checks
-    let output: any ={};
-    for(let key in this.object){
-      if(key == 'birthDay' || key == 'validity' || key=='recDate' || key == 'validFrom' || key == 'validUntil' ){
-        let date =  new Date(this.object[key]);
+    let output: any = {};
+    for (let key in this.object) {
+      if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
+        let date = new Date(this.object[key]);
         output[key] = date.toJSON();
       } else {
         output[key] = this.object[key];
