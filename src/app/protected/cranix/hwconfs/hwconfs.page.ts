@@ -19,7 +19,7 @@ import { SelectColumnsComponent } from '../../../shared/select-columns/select-co
 export class HwconfsPage implements OnInit {
 
   allSelected: boolean = false;
-  displayedColumns: string[] = ['select', 'name', 'mac', 'ip', 'hwconfId','actions'];
+  displayedColumns: string[] = ['select', 'name', 'description', 'deviceType','actions'];
   objectKeys:  string[]  = [];
   dataSource: MatTableDataSource<Hwconf>;
   selection = new SelectionModel<Hwconf>(true, []);

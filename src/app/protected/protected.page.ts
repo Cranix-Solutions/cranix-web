@@ -13,37 +13,37 @@ export class ProtectedPage implements OnInit {
     {
       title: 'Customers',
       url: '/pages/cephalix/customers',
-      icon: 'list'
+      icon: 'albums'
     },
     {
       title: 'Institutes',
       url: '/pages/cephalix/institutes',
-      icon: 'list'
+      icon: 'business'
     },
     {
       title: 'Groups',
       url: '/pages/cranix/groups',
-      icon: 'list'
+      icon: 'people'
     },
     {
       title: 'Users',
       url: '/pages/cranix/users',
-      icon: 'list'
+      icon: 'person'
     },
     {
       title: 'HWConfs',
       url: '/pages/cranix/hwconfs',
-      icon: 'list'
+      icon: 'file-tray-stacked'
     },
     {
       title: 'Rooms',
       url: '/pages/cranix/rooms',
-      icon: 'list'
+      icon: 'home'
     },
     {
       title: 'Devices',
       url: '/pages/cranix/devices',
-      icon: 'list'
+      icon: 'laptop'
     }
   ];
 

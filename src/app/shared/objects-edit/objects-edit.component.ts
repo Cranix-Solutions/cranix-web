@@ -6,9 +6,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
 //own 
 import { GenericObjectService } from '../../services/generic-object.service';
-import { User, Group, Room, Device, Hwconf } from '../models/data-model';
-import { Institute, Customer } from '../models/cephalix-data-model';
-import { async } from 'rxjs/internal/scheduler/async';
 import { ServerResponse } from '../models/server-models';
 @Component({
   selector: 'cranix-objects-edit',
@@ -18,12 +15,7 @@ import { ServerResponse } from '../models/server-models';
 export class ObjectsEditComponent implements OnInit {
 
   result: any = {};
-  /**
-   * This hash will contains the default values for some enumerated values like role, network ...
-   */
-  defaults: any = {
-    'role': ['teachers', 'students', 'sysadmins']
-  }
+
     ;
   /**
    * This hash defines if a key  has defaults
@@ -34,11 +26,8 @@ export class ObjectsEditComponent implements OnInit {
   object: any = null;
   objectKeys: string[] = [];
   objectActionTitle: string = "";
-  objectAction = "";
-  iputDisabled
-  /**
-   * Attributes which can not be modified.
-   */
+  objectAction: string = "";
+
   readOnlyAttributes: string[] = [
     'fsQuotaUsed',
     'msQuotaUsed',

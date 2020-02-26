@@ -75,7 +75,7 @@ export class ActionsComponent implements OnInit {
     switch (ev) {
       case 'csv-export': {
         let header: string[] = [];
-        new AngularCsv(this.selection, this.objectType + ".csv", { showLabels: true, headers: Object.getOwnPropertyNames(this.selection[0])});
+        new AngularCsv(this.selection, this.objectType , { showLabels: true, headers: Object.getOwnPropertyNames(this.selection[0])});
         this.popoverController.dismiss();
         break;
       }

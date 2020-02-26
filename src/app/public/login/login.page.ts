@@ -24,11 +24,9 @@ export class LoginPage implements OnInit {
         private authS: AuthenticationService,
         private formBuilder: FormBuilder,
         private systemS: SystemService,
-        private translateService: TranslateService
     ) {
         this.instName = this.systemS.getInstituteName();
         this.instName.subscribe((val)=>{ this.instituteName = val});
-    //    this.translateService.setDefaultLang('de');
     }
 
     ngOnInit() {
