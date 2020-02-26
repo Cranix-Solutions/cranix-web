@@ -71,7 +71,6 @@ export class ObjectsEditComponent implements OnInit {
   }
 
   compareFn(a: string, b:string): boolean{
-    console.log(a  + " " + b)
     return a == b;
   }
   /**
