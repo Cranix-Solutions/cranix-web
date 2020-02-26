@@ -23,7 +23,7 @@
         <ion-label position="stacked">{{ key | translate }}</ion-label>
         <ng-template [ngIf]="objectService.selects[key]"  [ngIfElse]="elseBlock">
           <ion-select type="text" formControlName="{{key}}" value="{{object[key]}}">
-            <ion-select-option *ngFor="let option of  objectService.selects[key]" value="{{option}}">{{option | translate}}</ion-select-option>
+            <ion-select-option *ngFor="let option of objectService.selects[key]" value="{{option}}">{{option | translate}}</ion-select-option>
           </ion-select>
         </ng-template>
         <ng-template #elseBlock>
