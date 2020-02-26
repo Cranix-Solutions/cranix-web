@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'cranix-protected',
@@ -10,23 +11,45 @@ export class ProtectedPage implements OnInit {
   
   public appPages = [
     {
-      title: 'Institutes',
-      url: '/pages/cephalix/institutes',
-      icon: 'list'
+      title: 'Customers',
+      url: '/pages/cephalix/customers',
+      icon: 'albums'
     },
     {
-      title: 'Users',
-      url: '/pages/cranix/users',
-      icon: 'list'
+      title: 'Institutes',
+      url: '/pages/cephalix/institutes',
+      icon: 'business'
     },
     {
       title: 'Groups',
       url: '/pages/cranix/groups',
-      icon: 'list'
+      icon: 'people'
+    },
+    {
+      title: 'Users',
+      url: '/pages/cranix/users',
+      icon: 'person'
+    },
+    {
+      title: 'HWConfs',
+      url: '/pages/cranix/hwconfs',
+      icon: 'file-tray-stacked'
+    },
+    {
+      title: 'Rooms',
+      url: '/pages/cranix/rooms',
+      icon: 'home'
+    },
+    {
+      title: 'Devices',
+      url: '/pages/cranix/devices',
+      icon: 'laptop'
     }
   ];
 
-  constructor() { }
+  constructor(
+    public translateService: TranslateService,
+  ) { }
 
   ngOnInit() {
   }

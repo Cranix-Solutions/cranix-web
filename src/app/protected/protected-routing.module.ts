@@ -9,6 +9,10 @@ const routes: Routes = [
     component: ProtectedPage
   },
   {
+    path: 'customers',
+    loadChildren: () => import('./cephalix/customers/customers.module').then( m => m.CustomersPageModule)
+  },
+  {
     path: 'institutes',
     loadChildren: () => import('./cephalix/institutes/institutes.module').then( m => m.InstitutesPageModule)
   },
@@ -19,6 +23,18 @@ const routes: Routes = [
   {
     path: 'groups',
     loadChildren: () => import('./cranix/groups/groups.module').then( m => m.GroupsPageModule)
+  },
+  {
+    path: 'hwconfs',
+    loadChildren: () => import('./cranix/hwconfs/hwconfs.module').then( m => m.HwconfsPageModule)
+  },
+  {
+    path: 'rooms',
+    loadChildren: () => import('./cranix/rooms/rooms.module').then( m => m.RoomsPageModule)
+  },
+  {
+    path: 'devices',
+    loadChildren: () => import('./cranix/devices/devices.module').then( m => m.DevicesPageModule)
   }
 ];
 

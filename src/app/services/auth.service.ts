@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
-import { Router, RouteReuseStrategy } from '@angular/router';
+import { Router } from '@angular/router';
 
 //Own modules
 import { UtilsService } from './utils.service';
@@ -69,13 +69,6 @@ export class AuthenticationService {
                 }
                 }, () => {
                     console.log("login call completed" + this.session.role);
-                  /*  if(this.session.mac) {
-                        this.router.navigate(['register']);
-                    } else if(this.session.role == 'sysadmins') {
-                        this.router.navigate(['users']);
-                    } else {
-                        this.router.navigate(['myself']);
-                    }*/
                 }
             );
     }

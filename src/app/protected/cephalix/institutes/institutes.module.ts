@@ -1,13 +1,12 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA, ErrorHandler} from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { TranslateService  } from '@ngx-translate/core';
+import { RouterModule, Routes } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
-import { InstitutesPage } from './institutes.page';
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { RouterModule, Routes } from '@angular/router';
+import { InstitutesPage } from './institutes.page';
 
 const routes: Routes = [
   {
