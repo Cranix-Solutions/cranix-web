@@ -1,5 +1,7 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-content scroll-x="true" scroll-y="true">
+  <ion-card>
+  <ion-card-content>
   <ion-searchbar (keyup)="doFilter($event.target.value)"></ion-searchbar>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
     <ng-container matColumnDef="select">
