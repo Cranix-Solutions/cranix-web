@@ -1,7 +1,7 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-content scroll-x="true" scroll-y="true">
   <ion-searchbar (keyup)="doFilter($event.target.value)" ></ion-searchbar>
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+  <mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
     <ng-container matColumnDef="select">
       <mat-header-cell *matHeaderCellDef>
         <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
@@ -15,68 +15,68 @@
       </mat-cell>
     </ng-container>
     <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'id' | translate }}</th>
-      <td mat-cell *matCellDef="let object"> {{object.id}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'id' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.id}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'name' | translate }}</th>
-      <td mat-cell *matCellDef="let object"> {{object.name}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'name' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.name}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="place">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'place' | translate }}</th>
-      <td mat-cell *matCellDef="let object"> {{object.place}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'place' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.place}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="row">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'row' | translate }}</th>
-      <td mat-cell *matCellDef="let object"> {{object.row}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'row' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.row}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="ip">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ip' | translate }}</th>
-      <td mat-cell *matCellDef="let object"> {{object.ip}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ip' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.ip}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="mac">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'mac' | translate }}</th>
-      <td mat-cell *matCellDef="let object"> {{object.mac}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'mac' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.mac}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="wlanIp">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'wlanIp' | translate }}</th>
-      <td mat-cell *matCellDef="let object"> {{object.wlanIp}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'wlanIp' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.wlanIp}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="wlanMac">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'wlanMac' | translate }}</th>
-      <td mat-cell *matCellDef="let object"> {{object.wlanMac}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'wlanMac' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.wlanMac}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="serial">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'serial' | translate }}</th>
-      <td mat-cell *matCellDef="let object"> {{object.serial}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'serial' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.serial}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="inventary">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'inventary' | translate }}</th>
-      <td mat-cell *matCellDef="let object"> {{object.inventary}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'inventary' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.inventary}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="locality">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'locality' | translate }}</th>
-      <td mat-cell *matCellDef="let object"> {{object.locality}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'locality' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.locality}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="hwconfId">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'hwconfId' | translate }}</th>
-      <td mat-cell *matCellDef="let object"> {{object.hwconfId}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'hwconfId' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.hwconfId}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="roomId">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'roomId' | translate }}</th>
-      <td mat-cell *matCellDef="let object"> {{object.roomId}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'roomId' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.roomId}} </mat-cell>
     </ng-container>
 
    <ng-container matColumnDef="actions">
@@ -101,9 +101,9 @@
         </mat-cell>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></mat-row>
 
-  </table>
+  </mat-table>
   <!-- mat-paginator [pageSizeOptions]="[20,30,50]" showFirstLastButtons></mat-paginator -->
 </ion-content>

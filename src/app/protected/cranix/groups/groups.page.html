@@ -1,7 +1,7 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-content scroll-x="true" scroll-y="true">
   <ion-searchbar (keyup)="doFilter($event.target.value)" ></ion-searchbar>
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+  <mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
     <ng-container matColumnDef="select">
       <mat-header-cell *matHeaderCellDef>
         <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
@@ -59,9 +59,9 @@
         </mat-cell>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></mat-row>
 
-  </table>
+  </mat-table>
   <!-- mat-paginator [pageSizeOptions]="[20,30,50]" showFirstLastButtons></mat-paginator -->
 </ion-content>

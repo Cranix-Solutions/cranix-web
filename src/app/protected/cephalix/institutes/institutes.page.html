@@ -1,7 +1,7 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-content scroll-x="true" scroll-y="true">
   <ion-searchbar (keyup)="doFilter($event.target.value)"></ion-searchbar>
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+  <mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
     <ng-container matColumnDef="select">
       <mat-header-cell *matHeaderCellDef>
         <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
@@ -16,143 +16,143 @@
     </ng-container>
 
     <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'id' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.id}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'id' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.id}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="uuid">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'uuid' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.uuid}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'uuid' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.uuid}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="adminPW">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'adminPW' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.adminPW}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'adminPW' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.adminPW}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="anonDhcpNetwork">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'anonDhcpNetwork' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.anonDhcpNetwork}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'anonDhcpNetwork' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.anonDhcpNetwork}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="cephalixPW">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'cephalixPW' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.cephalixPW}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'cephalixPW' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.cephalixPW}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="domain">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'domain' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.domain}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'domain' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.domain}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="firstRoom">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'firstRoom' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.firstRoom}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'firstRoom' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.firstRoom}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="gwTrNet">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'gwTrNet' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.gwTrNet}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'gwTrNet' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.gwTrNet}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="ipAdmin">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipAdmin' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.ipAdmin}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipAdmin' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.ipAdmin}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="ipBackup">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipBackup' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.ipBackup}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipBackup' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.ipBackup}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="ipGateway">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipGateway' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.ipGateway}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipGateway' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.ipGateway}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="ipMail">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipMail' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.ipMail}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipMail' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.ipMail}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="ipPrint">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipPrint' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.ipPrint}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipPrint' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.ipPrint}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="ipProxy">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipProxy' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.ipProxy}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipProxy' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.ipProxy}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="ipTrNet">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipTrNet' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.ipTrNet}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipTrNet' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.ipTrNet}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="ipVPN">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipVPN' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.ipVPN}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ipVPN' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.ipVPN}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="locality">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'locality' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.locality}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'locality' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.locality}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'name' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.name}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'name' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.name}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="network">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'network' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.network}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'network' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.network}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="serverNetwork">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'serverNetwork' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.serverNetwork}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'serverNetwork' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.serverNetwork}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="nmTrNet">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'nmTrNet' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.nmTrNet}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'nmTrNet' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.nmTrNet}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="type">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'type' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.type}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'type' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.type}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="deleted">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'deleted' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.deleted}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'deleted' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.deleted}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="recDate">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'recDate' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.recDate}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'recDate' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.recDate}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="validity">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'validity' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.validity  | date:'yyyy-MM-dd' }} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'validity' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.validity  | date:'yyyy-MM-dd' }} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="ayTemplate">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ayTemplate' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.ayTemplate}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ayTemplate' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.ayTemplate}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="customerId">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'customerId' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.customerId}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'customerId' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.customerId}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="regCode">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'regCode' | translate }}</th>
-      <td mat-cell *matCellDef="let institute"> {{institute.regCode}} </td>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'regCode' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let institute"> {{institute.regCode}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="actions">
@@ -176,10 +176,10 @@
         </ion-button>
       </mat-cell>
     </ng-container>
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></mat-row>
 
-  </table>
+  </mat-table>
 
   <!-- mat-paginator [pageSizeOptions]="[1, 2, 5]" showFirstLastButtons></mat-paginator -->
 

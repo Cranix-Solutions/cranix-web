@@ -69,6 +69,11 @@ export class ObjectsEditComponent implements OnInit {
   ngOnInit() {
     this.editForm = this.formBuilder.group(this.convertObject());
   }
+
+  compareFn(a: string, b:string): boolean{
+    console.log(a  + " " + b)
+    return a == b;
+  }
   /**
    * Helper script fot the template to detect the type of the variables
    * @param val 
