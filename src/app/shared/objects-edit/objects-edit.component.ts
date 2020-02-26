@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams, ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+/* import { SplashScreen } from '@ionic-native/splash-screen/ngx'; */
+import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
 //own 
 import { GenericObjectService } from '../../services/generic-object.service';
 import { User, Group, Room, Device, Hwconf } from '../models/data-model';
@@ -33,6 +35,7 @@ export class ObjectsEditComponent implements OnInit {
   objectKeys: string[] = [];
   objectActionTitle: string = "";
   objectAction = "";
+  iputDisabled
   /**
    * Attributes which can not be modified.
    */
@@ -54,10 +57,11 @@ export class ObjectsEditComponent implements OnInit {
 
   constructor(
     public formBuilder: FormBuilder,
+    public objectService: GenericObjectService,
     private navParams: NavParams,
     private modalController: ModalController,
+    private splashScreen: SpinnerDialog,
     public translateService: TranslateService,
-    public objectService: GenericObjectService,
     public toastController: ToastController
   ) {
     this.objectType = this.navParams.get('objectType');
@@ -106,7 +110,9 @@ export class ObjectsEditComponent implements OnInit {
   }
 
   onSubmit(object) {
+    this.editForm.disable();
     let serverResponse: ServerResponse;
+    this.splashScreen.show();
     this.objectService.applyAction(object, this.objectType, this.objectAction).subscribe(
       (val) => {
         serverResponse = val;
@@ -119,6 +125,8 @@ export class ObjectsEditComponent implements OnInit {
           cssClass: "bar-assertive",
           duration: 3000
         });
+        this.editForm.enable();
+        this.splashScreen.hide();
         (await toast).present();
       },
       async () => {
@@ -140,6 +148,8 @@ export class ObjectsEditComponent implements OnInit {
             color: "danger",
             duration: 3000
           });
+          this.editForm.enable();
+          this.splashScreen.hide();
           (await toast).present();
         }
       }

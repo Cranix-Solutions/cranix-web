@@ -18,7 +18,7 @@ import { SelectColumnsComponent } from '../../../shared/select-columns/select-co
 })
 export class CustomersPage implements OnInit {
   displayedColumns: string[] = ['select', 'uuid', 'name', 'locality', 'description', 'telephone', 'recDate', 'actions'];
-  objectKeys:  string[]  = [];
+  objectKeys: string[] = [];
   dataSource: MatTableDataSource<Customer>;
   selection = new SelectionModel<Customer>(true, []);
   objectIds: number[] = [];
@@ -26,17 +26,17 @@ export class CustomersPage implements OnInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
-    private cephalixS: CephalixService,    
+    private cephalixS: CephalixService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     private storage: Storage,
     public translateService: TranslateService,
 
   ) {
-    this.objectKeys = Object.getOwnPropertyNames( new Customer() );
+    this.objectKeys = Object.getOwnPropertyNames(new Customer());
     this.storage.get('CustomersPage.displayedColumns').then((val) => {
-      let myArray  = JSON.parse(val);
-      if(myArray  ) {
+      let myArray = JSON.parse(val);
+      if (myArray) {
         this.displayedColumns = ['select'].concat(myArray);
         this.displayedColumns.push('actions');
       }
@@ -88,21 +88,20 @@ export class CustomersPage implements OnInit {
     const modal = await this.modalCtrl.create({
       component: SelectColumnsComponent,
       componentProps: {
-        columns: this.objectKeys ,
+        columns: this.objectKeys,
         selected: this.displayedColumns,
         objectPath: "CustomersPage.displayedColumns"
       },
       animated: true,
       swipeToClose: true,
-      showBackdrop: true
+      backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-          this.displayedColumns =  ['select'].concat(dataReturned.data).concat(['actions']);
+        this.displayedColumns = ['select'].concat(dataReturned.data).concat(['actions']);
       }
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
     })
   }
 
@@ -124,7 +123,9 @@ export class CustomersPage implements OnInit {
       event: ev,
       componentProps: {
         objectType: "customer",
-        objectIds: this.objectIds
+        objectIds: this.objectIds,
+        columnts: this.objectKeys,
+        selection: this.selection.selected
       },
       animated: true,
       showBackdrop: true
@@ -151,7 +152,7 @@ export class CustomersPage implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-          this.ngOnInit();
+        this.ngOnInit();
       }
     });
     (await modal).present();

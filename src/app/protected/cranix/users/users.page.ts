@@ -86,7 +86,8 @@ export class UsersPage implements OnInit {
       },
       animated: true,
       swipeToClose: true,
-      showBackdrop: true
+      showBackdrop: false,
+      backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
@@ -139,7 +140,8 @@ export class UsersPage implements OnInit {
       event: ev,
       componentProps: {
         objectType: "user",
-        objectIds: this.objectIds
+        objectIds: this.objectIds,
+        selection: this.selection.selected
       },
       animated: true,
       showBackdrop: true

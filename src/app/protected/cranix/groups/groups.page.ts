@@ -86,7 +86,7 @@ public doFilter = (value: string) => {
       },
       animated: true,
       swipeToClose: true,
-      showBackdrop: true
+      backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
@@ -118,7 +118,8 @@ public doFilter = (value: string) => {
       event: ev,
       componentProps: {
         objectType:  "group",
-         objectIds: this.objectIds
+         objectIds: this.objectIds,
+         selection: this.selection.selected
       },
       animated: true,
       showBackdrop: true

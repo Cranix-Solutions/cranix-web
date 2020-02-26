@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { PopoverController, NavParams } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
+import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { userMenu, groupMenu, roomMenu, deviceMenu, instituteMenu } from './objects.menus';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'cranix-actions',
@@ -11,13 +13,16 @@ import { userMenu, groupMenu, roomMenu, deviceMenu, instituteMenu } from './obje
 export class ActionsComponent implements OnInit {
 
   objectIds: number[] = [];
+  selection: any[]= [];
+  columns: string[] = [];
   count: number = 0;
   objectType: string = '';
   menu: any[] = [];
-  
+
   commonMenu: any[] = [{
     "name": "CSV Export",
     "icon": "download-outline",
+    "action": "csv-export",
     "enabled": true
   }]
 
@@ -30,12 +35,15 @@ export class ActionsComponent implements OnInit {
 
 
   constructor(
+    public alertController: AlertController,
     private navParams: NavParams,
     private popoverController: PopoverController,
     public translateService: TranslateService,
+    
   ) {
     this.objectType = this.navParams.get('objectType');
     this.objectIds = this.navParams.get('objectIds');
+    this.selection = this.navParams.get('selection');
     if (this.objectIds) {
       this.count = this.objectIds.length;
     }
@@ -54,15 +62,47 @@ export class ActionsComponent implements OnInit {
     }
   }
 
-  ngOnInit() { 
-  console.log("ActionsComponent"  + this.objectIds);
+  ngOnInit() {
+    console.log("ActionsComponent" + this.objectIds);
   }
 
   closePopover() {
     this.popoverController.dismiss();
   }
 
-  messages(ev: String) {
+ async messages(ev: String) {
     console.log(ev);
+    switch (ev) {
+      case 'csv-export': {
+        let header: string[] = [];
+        new AngularCsv(this.selection, this.objectType + ".csv", { showLabels: true, headers: Object.getOwnPropertyNames(this.selection[0])});
+        this.popoverController.dismiss();
+        break;
+      }
+      case 'wol' : {
+        const alert = await this.alertController.create({
+          header: 'WOL!',
+          buttons: [
+            {
+              text: 'Cancel',
+              role: 'cancel',
+              cssClass: 'secondary',
+              handler: (blah) => {
+                console.log('Confirm Cancel: blah');
+              }
+            }, {
+              text: 'Okay',
+              handler: () => {
+                console.log('Confirm Okay');
+              }
+            }
+          ]
+        });
+        alert.onDidDismiss().then(() => this.popoverController.dismiss() );
+        await alert.present();
+        break;
+      }
+    }
   }
 }
+

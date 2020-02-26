@@ -111,7 +111,8 @@ export class RoomsPage implements OnInit {
       },
       swipeToClose: true,
       animated: true,
-      showBackdrop: true
+      backdropDismiss: false,
+      showBackdrop: false
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
@@ -138,7 +139,8 @@ export class RoomsPage implements OnInit {
       event: ev,
       componentProps: {
         objectType: "room",
-        objectIds: this.objectIds
+        objectIds: this.objectIds,
+        selection: this.selection.selected
       },
       animated: true,
       showBackdrop: true

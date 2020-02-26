@@ -12,6 +12,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { IonicStorageModule } from '@ionic/storage';
+import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
 
 import { CranixSharedModule } from './shared/cranix-shared.module';
 import { UtilsService } from './services/utils.service';
@@ -64,6 +65,7 @@ const routes: Routes = [
     TranslateService,
     SystemService,
     LanguageService,
+    SpinnerDialog,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

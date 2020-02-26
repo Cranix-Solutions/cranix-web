@@ -86,7 +86,7 @@ export class DevicesPage implements OnInit {
       },
       animated: true,
       swipeToClose: true,
-      showBackdrop: true
+      backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
@@ -139,7 +139,8 @@ export class DevicesPage implements OnInit {
       event: ev,
       componentProps: {
         objectType: "device",
-        objectIds: this.objectIds
+        objectIds: this.objectIds,
+        selection: this.selection.selected
       },
       animated: true,
       showBackdrop: true

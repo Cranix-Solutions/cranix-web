@@ -1,16 +1,15 @@
-<ion-header translucent>
+<form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
+  <ion-header translucent>
   <ion-toolbar>
     <ion-title>{{  objectActionTitle | translate }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button fill="clear" size="small" (click)="closeWindow()">
+      <ion-button fill="clear" size="small" (click)="closeWindow()" disabled="{{editForm.disabled}}">
         <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content fullscreen>
-  <!--form (ngSubmit)="processModal(event)"-->
-  <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
     <ion-list lines="full" class="ion-no-margin ion-no-padding" *ngFor="let key of objectKeys" [ngSwitch]="typeOf(key)">
       <ion-item *ngSwitchCase="'booleanTrue'">
         <ion-label>{{ key | translate }}</ion-label>
@@ -50,5 +49,6 @@
     <div class="ion-padding">
       <ion-button expand="block" type="submit" class="ion-no-margin">{{ objectAction | translate }}</ion-button>
     </div>
-  </form>
+  
 </ion-content>
+</form>

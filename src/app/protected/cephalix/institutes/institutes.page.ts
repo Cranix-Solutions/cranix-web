@@ -87,7 +87,7 @@ export class InstitutesPage implements OnInit {
       },
       animated: true,
       swipeToClose: true,
-      showBackdrop: true
+      backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
@@ -117,7 +117,8 @@ async openActions(ev: any) {
     event: ev,
     componentProps: {
       objectType:  "institute",
-       objectIds: this.objectIds
+       objectIds: this.objectIds,
+      selection: this.selection.selected
     },
     animated: true,
     showBackdrop: true
