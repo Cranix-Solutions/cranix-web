@@ -1,0 +1,36 @@
+ion-menu {
+    --ion-background-color: var(--ion-color-primary);
+    --ion-text-color: var(--ion-color-primary-contrast);
+  
+    ion-toolbar {
+      --background: var(--ion-color-primary);
+    }
+  
+    ion-list {/* optional, but it needs when you use gradient as a background color.*/
+      background: transparent;
+    }
+    ion-list-header{
+        padding: 0px;
+        border-width: 2px;
+        border-color: var(--ion-color-primary-tint);
+        border-left: none;
+        border-right: none;
+        border-top: none;
+        h3 {
+            padding-left: 15px;
+            font-size: 20px;
+            font-weight: 300;
+            letter-spacing: .4px;
+            transition: opacity 200ms ease;
+        }
+    //    border-bottom: medium;
+    //    border-color: var(--ion-color-primary-tint)!important; 
+    //    border-bottom-width: 2px !important;
+    }
+    img {
+        object-fit: contain;
+    }
+   /* ion-list-header{
+      --background: var(--ion-color-primary-tint);
+    }*/
+  }

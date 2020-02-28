@@ -1,18 +1,30 @@
-table {
-    width: 100%;
+ion-card {
+    //flex-grow: 1;
+    height: 93%;
+    display: flex;
+    flex-direction: column;
+    //#display: flex;
+  //flex-direction: column;
+  //justify-content: center;
+
+  }
+
+ion-card-content{
+    scroll-behavior: auto;
     overflow-x: auto;
-    overflow-y: hidden;
-    min-width: 500px;
+    overflow-y: auto;
 }
- 
-th.mat-header-cell {
+
+mat-table {
+    width: 100%;
+    min-width: 700px !important;
+}
+
+mat-header-cell {
     text-align: left;
     max-width: 300px;
+    padding: 10px;
 }
-.mat-row:nth-child(even){
-    background-color: LightGray;
-    }
-
-.mat-row:nth-child(odd){
-    background-color:silver;
-    }
+mat-cell{
+    padding: 10px;
+}

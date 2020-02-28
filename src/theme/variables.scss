@@ -41,14 +41,14 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
   **/
   /** cranix primary **/
 
-  --ion-color-primary: #fab90a;
+  --ion-color-primary: #3c4252;;
   --ion-color-primary-rgb: 250,185,10;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 0,0,0;
-  --ion-color-primary-shade: #dca309;
-  --ion-color-primary-tint: #fbc023;
+  --ion-color-primary-shade: #5C616F;
+  --ion-color-primary-tint: #2D323E;
 
-  --ion-color-cranix-black: #3c4252;
+  --ion-color-cranix-black: #FAB90A;
   --ion-color-cranix-black-rgb: 60,66,82;
   --ion-color-cranix-black-contrast: #ffffff;
   --ion-color-cranix-black-contrast-rgb: 255,255,255;
@@ -56,7 +56,7 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
   --ion-color-cranix-black-tint: #505563;
   
   /** secondary **/
-  --ion-color-secondary: #3dc2ff;
+  --ion-color-secondary: #FAB90A;
   --ion-color-secondary-rgb: 61, 194, 255;
   --ion-color-secondary-contrast: #ffffff;
   --ion-color-secondary-contrast-rgb: 255, 255, 255;
@@ -119,7 +119,10 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
 }
-
+.header-row {
+  background-color: #FAB90A;
+  height: 80px;
+}
 @media (prefers-color-scheme: dark) {
   /*
    * Dark Colors
