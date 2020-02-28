@@ -26,7 +26,7 @@ export class LoginPage implements OnInit {
         private systemS: SystemService,
     ) {
         this.instName = this.systemS.getInstituteName();
-        this.instName.subscribe((val)=>{ this.instituteName = val});
+      //  this.instName.subscribe((val)=>{ this.instituteName = val});
     }
 
     ngOnInit() {
@@ -36,7 +36,7 @@ export class LoginPage implements OnInit {
         });
     }
 
-    onSubmit(user: any): void {
+    submit(user: any): void {
         if (this.authForm.valid) {
             this.authS.setUpSession(user,  this.instituteName);
         }
