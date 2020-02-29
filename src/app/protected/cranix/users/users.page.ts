@@ -5,9 +5,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { PopoverController, ModalController, AlertController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 //own modules
-import { UsersService } from 'src/app/services/users.service';
-import { User } from 'src/app/shared/models/data-model';
-import { ActionsComponent } from 'src/app/shared/actions/actions.component';
+import { UsersService } from '../../../services/users.service';
+import { User } from '../../../shared/models/data-model';
+import { ActionsComponent } from '../../../shared/actions/actions.component';
 import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
 import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
 import { GenericObjectService } from '../../../services/generic-object.service';

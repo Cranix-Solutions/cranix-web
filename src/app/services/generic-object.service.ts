@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 import { Subscription, BehaviorSubject } from 'rxjs';
-import { ServerResponse } from 'src/app/shared/models/server-models';
+import { ServerResponse } from '../shared/models/server-models';
 import { AlertController, ToastController } from '@ionic/angular';
 @Injectable({
   providedIn: 'root'

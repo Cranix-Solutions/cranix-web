@@ -46,11 +46,14 @@ export class ObjectsEditComponent implements OnInit {
     'saveNext'
   ]
   required: any = {
-    'givenName': true,
-    'name': true,
-    'role': true,
-    'suerName': true
-};
+    'givenName': '*',
+    'groupType': '*',
+    'instituteType': '*',
+    'name': '*',
+    'regCode': '*',
+    'role': '*',
+    'surName': '*'
+  };
 
   constructor(
     public formBuilder: FormBuilder,
@@ -111,55 +114,53 @@ export class ObjectsEditComponent implements OnInit {
   }
 
   onSubmit(object) {
-    if (this.editForm.valid) {
-      this.editForm.disable();
-      let serverResponse: ServerResponse;
-      this.splashScreen.show();
-      console.log("onSubmit", object);
-      let subs = this.objectService.applyAction(object, this.objectType, this.objectAction).subscribe(
-        async (val) => {
-          serverResponse = val;
-          console.log(val);
-          if (serverResponse.code == "OK") {
-            const toast = this.toastController.create({
-              position: "middle",
-              header: "Success:",
-              message: serverResponse.value,
-              color: "success",
-              duration: 5000
-            });
-            (await toast).present();
-            this.modalController.dismiss("succes");
-          } else {
-
-            const toast = this.toastController.create({
-              position: "middle",
-              header: "An Error was accoured:",
-              message: serverResponse.value,
-              color: "danger",
-              duration: 6000
-            });
-            this.editForm.enable();
-            this.splashScreen.hide();
-            (await toast).present();
-          }
-        },
-        async (error) => {
+    this.editForm.disable();
+    let serverResponse: ServerResponse;
+    this.splashScreen.show();
+    console.log("onSubmit", object);
+    let subs = this.objectService.applyAction(object, this.objectType, this.objectAction).subscribe(
+      async (val) => {
+        serverResponse = val;
+        console.log(val);
+        if (serverResponse.code == "OK") {
           const toast = this.toastController.create({
             position: "middle",
-            message: "An Server Error is accoured",
-            cssClass: "bar-assertive",
-            duration: 3000
+            header: "Success:",
+            message: serverResponse.value,
+            color: "success",
+            duration: 5000
+          });
+          (await toast).present();
+          this.modalController.dismiss("succes");
+        } else {
+
+          const toast = this.toastController.create({
+            position: "middle",
+            header: "An Error was accoured:",
+            message: serverResponse.value,
+            color: "danger",
+            duration: 6000
           });
           this.editForm.enable();
           this.splashScreen.hide();
           (await toast).present();
-        },
-        () => {
-          subs.unsubscribe();
         }
-      )
-    }
+      },
+      async (error) => {
+        const toast = this.toastController.create({
+          position: "middle",
+          message: "An Server Error is accoured",
+          cssClass: "bar-assertive",
+          duration: 3000
+        });
+        this.editForm.enable();
+        this.splashScreen.hide();
+        (await toast).present();
+      },
+      () => {
+        subs.unsubscribe();
+      }
+    )
   }
 
   convertObject() {

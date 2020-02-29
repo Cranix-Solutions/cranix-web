@@ -21,9 +21,10 @@
         <ion-toggle slot="start" formControlName="{{key}}" color="secondary"></ion-toggle>
       </ion-item>
       <ion-item *ngSwitchCase="'string'">
-        <ion-label position="stacked">{{ key | translate }}</ion-label>
+        <ion-label position="stacked">{{ key | translate }}{{required[key]}}</ion-label>
+        <!--ion-item *ngIf="editForm.controls[key].hasError('required') && editForm.controls[key].touched"-->
+        <ion-label position="stacked" *ngIf="editForm.controls[key].hasError('required')  && editForm.controls[key].touched">{{ 'This field is required!' | translate }}</ion-label>
         <ng-template [ngIf]="objectService.selects[key]"  [ngIfElse]="elseBlock">
-          <!-- ion-select type="text" formControlName="{{key}}" value="{{object[key]}}" [compareWith]="compareFn" -->
             <ion-select type="text" formControlName="{{key}}"  [compareWith]="compareFn" [required]="required[key]">
             <ion-select-option *ngFor="let option of  objectService.selects[key]" value="{{option}}">{{option | translate}}</ion-select-option>
           </ion-select>
@@ -47,13 +48,10 @@
           done-text="{{'apply' | translate }}" max="2100" value="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z'}}">
         </ion-datetime>
       </ion-item>
-      <ion-item *ngIf="editForm.controls[key].hasError('required') && editForm.controls[key].touched">
-        <p>{{ 'This field is required!' | translate }}</p>
-      </ion-item>
     </ion-list>
   </form>
     <div class="ion-padding ion-text-center">
-      <ion-button type="submit" class="ion-no-margin">{{ objectAction | translate }}</ion-button>
+      <ion-button type="submit" class="ion-no-margin" [disabled]="!editForm.valid">{{ objectAction | translate }}</ion-button>
     </div>
   
 </ion-content>
