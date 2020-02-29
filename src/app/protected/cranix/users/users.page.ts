@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { SelectionModel, isDataSource } from '@angular/cdk/collections';
 import { TranslateService } from '@ngx-translate/core';
-import { PopoverController, ModalController } from '@ionic/angular';
+import { PopoverController, ModalController, AlertController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 //own modules
 import { UsersService } from 'src/app/services/users.service';
@@ -10,6 +10,7 @@ import { User } from 'src/app/shared/models/data-model';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
 import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
+import { GenericObjectService } from '../../../services/generic-object.service';
 
 @Component({
   selector: 'cranix-users',
@@ -20,7 +21,7 @@ export class UsersPage implements OnInit {
 
   allSelected: boolean = false;
   displayedColumns: string[] = ['select', 'uid', 'surName', 'givenName', 'role', 'actions'];
-  objectKeys:  string[]  = [];
+  objectKeys: string[] = [];
   dataSource: MatTableDataSource<User>;
   selection = new SelectionModel<User>(true, []);
   objectIds: number[] = [];
@@ -28,19 +29,24 @@ export class UsersPage implements OnInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
+
     private userS: UsersService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     private storage: Storage,
-    public translateService: TranslateService
+    public translateService: TranslateService,
+    private objectService: GenericObjectService
   ) {
-    this.objectKeys = Object.getOwnPropertyNames( new User() );
-      this.storage.get('UsersPage.displayedColumns').then((val) => {
-      let myArray  = JSON.parse(val);
-      if(myArray  ) {
+    this.objectKeys = Object.getOwnPropertyNames(new User());
+    this.storage.get('UsersPage.displayedColumns').then((val) => {
+      let myArray = JSON.parse(val);
+      if (myArray) {
         this.displayedColumns = ['select'].concat(myArray);
         this.displayedColumns.push('actions');
       }
+    });
+    this.objectService.usersModified.subscribe((status) => {
+      if(status) { this.ngOnInit() }
     });
   }
 
@@ -74,13 +80,13 @@ export class UsersPage implements OnInit {
 
   /**
    * Function to select the columns to show
-   * @param ev 
+   * @param ev
    */
   async openCollums(ev: any) {
     const modal = await this.modalCtrl.create({
       component: SelectColumnsComponent,
       componentProps: {
-        columns: this.objectKeys ,
+        columns: this.objectKeys,
         selected: this.displayedColumns,
         objectPath: "UsersPage.displayedColumns"
       },
@@ -91,16 +97,16 @@ export class UsersPage implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-         this.displayedColumns =  ['select'].concat(dataReturned.data).concat(['actions']);
+        this.displayedColumns = ['select'].concat(dataReturned.data).concat(['actions']);
       }
     });
     (await modal).present().then((val) => {
     })
   }
-  
+
   async redirectToEdit(ev: Event, user: User) {
     let action = 'modify';
-    if( user == null ){
+    if (user == null) {
       user = new User();
       action = 'add';
     }
@@ -117,19 +123,19 @@ export class UsersPage implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-          this.ngOnInit();
+        this.ngOnInit();
       }
     });
     (await modal).present();
   }
 
-  public redirectToDelete = (user: User) => {
-    console.log("Delete:" + user.uid)
+  async redirectToDelete(user: User) {
+    this.objectService.deleteObjectDialog(user, "user");
   }
 
   /**
    * Open the actions menu with the selected object ids.
-   * @param ev 
+   * @param ev
    */
   async openActions(ev: any) {
     for (let i = 0; i < this.selection.selected.length; i++) {

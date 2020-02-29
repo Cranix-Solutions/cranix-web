@@ -42,5 +42,4 @@ export class ToolbarComponent implements OnInit {
     });
     await alert.present();
   }
-
 }
