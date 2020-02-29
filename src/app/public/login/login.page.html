@@ -1,10 +1,20 @@
 <ion-grid>
   <ion-row class="ion-justify-content-center">
+        <div class="title">CRANIX IONIC</div>
+  </ion-row>
+  <ion-row class="ion-justify-content-center">
     <ion-col>
-      <div calss="ion-text-center">
-        <h4>{{ instName | async }}</h4>
-      </div>
-      <form [formGroup]="authForm" (ngSubmit)="onSubmit(authForm.value)">
+      <ion-card class="ion-text-center"> 
+        <img  src="assets/images/logo/cranix_school.svg" style="height: 250px; width: 250px; padding: 10px">
+        <ion-card-header class="ion-text-center">
+          <!--ion-item lines="none">
+            <ion-thumbnail-->
+             
+            <!--/ion-thumbnail>
+          </ion-item-->
+          <h2>{{ instName | async }}</h2>
+        </ion-card-header>
+      <form [formGroup]="authForm" (ngSubmit)="onSubmit(authForm.value)" style="padding: 15px;">
         <ion-item>
           <ion-input formControlName="username" type="text" placeholder="{{ 'username' | translate }}"></ion-input>
         </ion-item>
@@ -20,12 +30,20 @@
           <p>{{ 'Sorry, field password is required!' | translate }}</p>
         </ion-item>
 
-        <ion-button full color="primary" [disabled]="!authForm.valid" style="margin-top: 20px;"
-          type="submit">{{ 'login' | translate }}</ion-button>
+      
       </form>
+      <ion-row class="ion-text-center">
+        <ion-col>
+             <ion-button full color="primary" [disabled]="!authForm.valid" style="margin-top: 20px;"
+      (click)="submit()">{{ 'login' | translate }}</ion-button>
+        </ion-col>
+     
+      </ion-row>
+        
+    </ion-card>
     </ion-col>
   </ion-row>
-  <div class="bar bar-footer bar-balanced">
-    <div class="title">CRANIX IONIC</div>
-  </div>
+  <ion-row >
+  </ion-row>
+  
 </ion-grid>

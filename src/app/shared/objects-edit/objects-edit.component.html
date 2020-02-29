@@ -1,4 +1,4 @@
-<form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
+
   <ion-header translucent>
   <ion-toolbar>
     <ion-title>{{  objectActionTitle | translate }}</ion-title>
@@ -10,6 +10,7 @@
   </ion-toolbar>
 </ion-header>
 <ion-content fullscreen>
+  <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
     <ion-list lines="full" class="ion-no-margin ion-no-padding" *ngFor="let key of objectKeys" [ngSwitch]="typeOf(key)">
       <ion-item *ngSwitchCase="'booleanTrue'">
         <ion-label>{{ key | translate }}</ion-label>
@@ -50,9 +51,10 @@
         <p>{{ 'This field is required!' | translate }}</p>
       </ion-item>
     </ion-list>
-    <div class="ion-padding">
-      <ion-button expand="block" type="submit" class="ion-no-margin">{{ objectAction | translate }}</ion-button>
+  </form>
+    <div class="ion-padding ion-text-center">
+      <ion-button type="submit" class="ion-no-margin">{{ objectAction | translate }}</ion-button>
     </div>
   
 </ion-content>
-</form>
+
