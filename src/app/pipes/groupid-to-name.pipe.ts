@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'groupidToName'
+  name: 'groupIdToName'
 })
 export class GroupidToNamePipe implements PipeTransform {
 

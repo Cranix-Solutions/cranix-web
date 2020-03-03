@@ -19,9 +19,9 @@
       <mat-cell *matCellDef="let object"> {{object.id}} </mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="cephalixinstituteId">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'cephalixinstituteId' | translate }}</mat-header-cell>
-      <mat-cell *matCellDef="let object"> {{object.cephalixinstituteId | instituteIdToName}} </mat-cell>
+    <ng-container matColumnDef="cephalixInstituteId">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'cephalixInstituteId' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{ object.cephalixInstituteId | instituteIdToName}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="ossuserId">

@@ -15,7 +15,7 @@ import { SelectColumnsComponent } from '../../../shared/select-columns/select-co
   styleUrls: ['./tickets.page.scss'],
 })
 export class TicketsPage implements OnInit {
-  displayedColumns: string[] = ['select', 'title', 'recDate', 'status','cephalixinstituteId','actions'];
+  displayedColumns: string[] = ['select', 'title', 'recDate', 'status','cephalixInstituteId','actions'];
   objectKeys:  string[]  = [];
   dataSource:  MatTableDataSource<Ticket> ;
   selection = new SelectionModel<Ticket>(true, []);
@@ -40,6 +40,7 @@ export class TicketsPage implements OnInit {
   ngOnInit() {
     let sub = this.cephalixS.getAllTickets().subscribe(
       (res) => {
+        console.log(res);
         this.dataSource = new MatTableDataSource<Ticket>(res)
       },
       (err) => { },

@@ -81,7 +81,7 @@ export class Institute {
 
 export class Ticket{
     id: number = 0;
-    cephalixinstituteId: number = 0;
+    cephalixInstituteId: number = 0;
     ossuserId: number = 0;
     ownerId: number = 0;
     type: string = "";
@@ -97,7 +97,7 @@ export class Ticket{
 
 export class Article{
     id: number = 0;
-    cephalixinstituteId: number = 0;
+    cephalixInstituteId: number = 0;
     sender: string = "";
     recipient: string = "";
     title: string = "";
@@ -120,7 +120,7 @@ export class Repository{
 
 export class OssCare{
     id: number = 0;
-    cephalixinstituteId: number = 0;
+    cephalixInstituteId: number = 0;
     description: string = "";
     access: string = "";
     contact: string = "";

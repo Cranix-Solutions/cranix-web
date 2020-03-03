@@ -55,11 +55,10 @@ import { PipesModule } from '../pipes/pipe-modules';
     MatIconModule,
     MatPaginatorModule,
     MatSortModule,
+    PipesModule,
     ReactiveFormsModule,
     TranslateModule,
     ToolbarComponent,
-  ], providers : [
-    PipesModule
   ]
 })
 export class CranixSharedModule { }
