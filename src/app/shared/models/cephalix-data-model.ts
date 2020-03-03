@@ -42,8 +42,8 @@ export class Institute {
     nmTrNet: string;
     type: string;
     deleted: string;
-    recDate: any;
-    validity: any;
+    recDate: any = new Date();
+    validity: any = new Date();
     ayTemplate: string;
     customerId: number;
     regCode: string;
@@ -79,20 +79,80 @@ export class Institute {
     }
 }
 
-export interface DynDns {
-    id: number,
-    cephalixinstituteId: number,
-    hostname: string,
-    domain: string,
-    ip: string,
-    port: string,
-    ro: boolean
+export class Ticket{
+    id: number = 0;
+    cephalixinstituteId: number = 0;
+    ossuserId: number = 0;
+    ownerId: number = 0;
+    type: string = "";
+    firstname: string = "";
+    lastname: string = "";
+    email: string = "";
+    title: string = "";
+    priority: number = 0;
+    recDate: any = new Date();
+    status: string = "";
+    constructor() {}
 }
 
+export class Article{
+    id: number = 0;
+    cephalixinstituteId: number = 0;
+    sender: string = "";
+    recipient: string = "";
+    title: string = "";
+    type: string = "";
+    seen: boolean = false;
+    text: string = "";
+    recDate: any = new Date();
+    reminder: any = new Date();
+    workTime: number = 0;
+    constructor() {}
+}
+export class Repository{
+    id: number = 0;
+    name: string = "";
+    type: string = "";
+    description: string = "";
+    repository: string = "";
+    constructor() {}
+}
+
+export class OssCare{
+    id: number = 0;
+    cephalixinstituteId: number = 0;
+    description: string = "";
+    access: string = "";
+    contact: string = "";
+    recDate:  any = new Date();
+    validity: any = new Date();
+    constructor() {}
+}
+
+export class OssCareMessage{
+    id: number = 0;
+    cephalixosscareId: number = 0;
+    recDate: any = new Date();
+    type: string = "";
+    description: string = "";
+    text: string = "";
+    constructor() {}
+}
+
+export class DynDns {
+    id: number = 0;
+    cephalixinstituteId: number = 0;
+    hostname: string = "";
+    domain: string = "";
+    ip: string = "";
+    port: string = "";
+    ro: boolean = false;
+    constructor() {}
+}
 
 export interface CopyFile {
     instituteIds: number [],
-    directory: string, 
+    directory: string,
     mode: string,
     execute: boolean,
     file: File
@@ -109,62 +169,8 @@ export interface Object {
 }
 
 export interface Note{
-  tite: string, 
-  type: string, 
-  text: string
+    tite: string, 
+    type: string, 
+    text: string
 }
 
-export interface Ticket{
-  id: number,
-  cephalixinstituteId: number,
-  ossuserId: number,
-  ownerId: number,
-  type: string,
-  firstname: string,
-  lastname: string,
-  email: string,
-  title: string,
-  priority: number,
-  created: number,
-  done: boolean
-}
-
-export interface Article{
-  id: number,
-  cephalixinstituteId: number,
-  sender: string,
-  recipient: string,
-  title: string,
-  type: string,
-  seen: boolean,
-  text: string,
-  created: number,
-  reminder: number,
-  workTime: number
-}
-export interface Repository{
-  id: number,
-  name: string,
-  type: string,
-  description: string,
-  repository: string
-}
-
-export interface OssCare{
-  id: number,
-  cephalixinstituteId: number,
-  description: string,
-  access: string,
-  contact: string,
-  recDate: number,
-  validity: number
-}
-
-export interface OssCareMessage{
-  id: number,
-  cephalixosscareId: number,
-  recDate: number,
-  type: string,
-  description: string,
-  text: string
-}

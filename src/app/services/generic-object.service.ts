@@ -5,6 +5,9 @@ import { AuthenticationService } from './auth.service';
 import { Subscription, BehaviorSubject } from 'rxjs';
 import { ServerResponse } from '../shared/models/server-models';
 import { AlertController, ToastController } from '@ionic/angular';
+// own modules
+import { Group, User,  Room, Device  } from '../shared/models/data-model';
+import { Institute, Customer, Ticket, Article } from '../shared/models/cephalix-data-model';
 @Injectable({
   providedIn: 'root'
 })
@@ -16,6 +19,11 @@ export class GenericObjectService {
   institutesModified   = new BehaviorSubject(false);
   roomsModified         = new BehaviorSubject(false);
   usersModified           = new BehaviorSubject(false);
+  allObjects: any = {};
+  objects: string[] = [
+    'user','group','room','device','institute','customer','ticket'
+  ]
+
   selects: any = {
     'status': ['N','A','D']
   }
@@ -47,8 +55,21 @@ export class GenericObjectService {
           (err) => {},
           () => { subs[key].unsubscribe() });
       }
+      for(let key of this.objects ){
+        this.getAllObject(key);
+      }
       this.initialized = true;
     }
+  }
+
+  getAllObject(objectType) {
+    let url = this.utilsS.hostName() + "/" + objectType + "s/all";
+    let sub = this.http.get<ServerResponse>(url,  { headers: this.headers }).subscribe(
+      (val) => ( this.allObjects[objectType] = val ),
+      (err) => {},
+      () => { sub.unsubscribe(); }
+    );
+    this.setModified(objectType);
   }
   applyAction(object, objectType, action) {
     switch (action) {

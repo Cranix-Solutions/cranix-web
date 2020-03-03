@@ -21,6 +21,11 @@ export class ProtectedPage implements OnInit {
       icon: 'business'
     },
     {
+      title: 'Tickets',
+      url: '/pages/cephalix/tickets',
+      icon: 'pricetags'
+    },
+    {
       title: 'Groups',
       url: '/pages/cranix/groups',
       icon: 'people'

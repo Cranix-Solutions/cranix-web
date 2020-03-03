@@ -17,7 +17,7 @@ import {
 import { ToolbarComponent } from '../protected/toolbar/toolbar.component';
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
-
+import { PipesModule } from '../pipes/pipe-modules';
 
 
 @NgModule({
@@ -38,7 +38,8 @@ import { TranslateModule } from '@ngx-translate/core';
   MatPaginatorModule,
   MatSortModule,
   ReactiveFormsModule,
-  TranslateModule
+  PipesModule,
+  TranslateModule,
   ], exports: [
     CommonModule,
     FormsModule,
@@ -54,9 +55,11 @@ import { TranslateModule } from '@ngx-translate/core';
     MatIconModule,
     MatPaginatorModule,
     MatSortModule,
-    TranslateModule,
     ReactiveFormsModule,
+    TranslateModule,
     ToolbarComponent,
+  ], providers : [
+    PipesModule
   ]
 })
 export class CranixSharedModule { }

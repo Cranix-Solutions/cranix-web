@@ -38,7 +38,6 @@ export class DevicesService {
 		'Accept' : "application/json",
 		'Authorization' : "Bearer " + this.token
 	});
-	
 	return this.http.post<ServerResponse>(this.url, dhcp , { headers: headers});
 
 }

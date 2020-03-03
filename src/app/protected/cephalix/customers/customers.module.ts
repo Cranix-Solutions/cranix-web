@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { CustomersPage } from './customers.page';
+import { PipesModule } from '../../../pipes/pipe-modules';
 
 const routes: Routes = [
   {
@@ -24,6 +25,6 @@ const routes: Routes = [
     CranixSharedModule
   ],
   declarations: [CustomersPage],
-   providers: [TranslateService]
+   providers: [TranslateService,PipesModule]
 })
 export class CustomersPageModule {}

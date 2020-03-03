@@ -35,6 +35,10 @@ const routes: Routes = [
   {
     path: 'devices',
     loadChildren: () => import('./cranix/devices/devices.module').then( m => m.DevicesPageModule)
+  },
+  {
+    path: 'tickets',
+    loadChildren: () => import('./cephalix/tickets/tickets.module').then( m => m.TicketsPageModule)
   }
 ];
 

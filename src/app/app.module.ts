@@ -22,7 +22,7 @@ import { LanguageService } from './services/language.service';
 import { ErrorHandler, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ActionsComponent } from './shared/actions/actions.component';
 import { ObjectsEditComponent } from './shared/objects-edit/objects-edit.component';
-import {SelectColumnsComponent } from './shared/select-columns/select-columns.component'
+import {SelectColumnsComponent } from './shared/select-columns/select-columns.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');

@@ -51,14 +51,7 @@ export class UsersPage implements OnInit {
   }
 
   ngOnInit() {
-    this.userS.getUsers().subscribe((res) => {
-      this.dataSource = new MatTableDataSource<User>(res)
-    },
-      (err) => { },
-      () => {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      });
+    this.dataSource = new MatTableDataSource<User>(this.objectService.allObjects['user']);
   }
 
   public doFilter = (value: string) => {

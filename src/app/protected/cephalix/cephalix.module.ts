@@ -3,16 +3,18 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 //own
 import { CephalixService } from 'src/app/services/cephalix.service';
-import { InstitutesPageModule } from 'src/app/protected/cephalix/institutes/institutes.module';
 import { CustomersPageModule } from 'src/app/protected/cephalix/customers/customers.module';
+import { InstitutesPageModule } from 'src/app/protected/cephalix/institutes/institutes.module';
+import { TicketsPageModule } from 'src/app/protected/cephalix/tickets/tickets.module';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
+    CustomersPageModule,
     IonicModule,
     InstitutesPageModule,
-    CustomersPageModule
+    TicketsPageModule
   ],
   providers:[CephalixService]
 })
