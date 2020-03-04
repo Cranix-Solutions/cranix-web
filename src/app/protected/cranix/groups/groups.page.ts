@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 //Own modules
-import { GroupsService } from 'src/app/services/groups.service';
+import {GenericObjectService } from '../../../services/generic-object.service';
 import { Group } from 'src/app/shared/models/data-model';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
@@ -27,7 +27,7 @@ export class GroupsPage implements OnInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
-    private groupS: GroupsService,
+    private objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     private storage: Storage,
@@ -41,19 +41,15 @@ export class GroupsPage implements OnInit {
         this.displayedColumns.push('actions');
       }
     });
+    this.objectService.modified['group'].subscribe((status) => {
+      if(status) { this.ngOnInit() }
+    });
   }
 
   ngOnInit() {
-    this.groupS.getGroups().subscribe(
-      (res) => {
-        this.dataSource = new MatTableDataSource<Group>(res)
-      },
-      (err) => { },
-      () => {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      });
- }
+      this.dataSource = new MatTableDataSource<Group>(this.objectService.allObjects['group']);
+      this.dataSource.sort = this.sort;
+  }
 
 public doFilter = (value: string) => {
     this.dataSource.filter = value.trim().toLocaleLowerCase();

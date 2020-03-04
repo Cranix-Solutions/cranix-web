@@ -6,22 +6,14 @@ import { Subscription, BehaviorSubject } from 'rxjs';
 import { ServerResponse } from '../shared/models/server-models';
 import { AlertController, ToastController } from '@ionic/angular';
 // own modules
-import { Group, User,  Room, Device  } from '../shared/models/data-model';
-import { Institute, Customer, Ticket, Article } from '../shared/models/cephalix-data-model';
 @Injectable({
   providedIn: 'root'
 })
 export class GenericObjectService {
-  customersModified = new BehaviorSubject(false);
-  devicesModified       = new BehaviorSubject(false);
-  groupsModified        = new BehaviorSubject(false);
-  hwconfsModified     = new BehaviorSubject(false);
-  institutesModified   = new BehaviorSubject(false);
-  roomsModified         = new BehaviorSubject(false);
-  usersModified           = new BehaviorSubject(false);
+  modified: any = {};
   allObjects: any = {};
   objects: string[] = [
-    'user','group','room','device','institute','customer','ticket'
+    'user','group','room','device','institute','customer','ticket','hwconf'
   ]
 
   selects: any = {
@@ -38,7 +30,11 @@ export class GenericObjectService {
     private authS: AuthenticationService,
     private http: HttpClient,
     private utilsS: UtilsService,
-    private toastController: ToastController) { }
+    private toastController: ToastController) {
+      for(let key of  this.objects) {
+        this.modified[key] = new BehaviorSubject(false);
+      }
+    }
 
   initialize(force: boolean) {
     let subs: any = {};
@@ -67,9 +63,10 @@ export class GenericObjectService {
     let sub = this.http.get<ServerResponse>(url,  { headers: this.headers }).subscribe(
       (val) => ( this.allObjects[objectType] = val ),
       (err) => {},
-      () => { sub.unsubscribe(); }
+      () => {
+        this.modified[objectType].next(true);
+        sub.unsubscribe(); }
     );
-    this.setModified(objectType);
   }
   applyAction(object, objectType, action) {
     switch (action) {
@@ -118,7 +115,7 @@ export class GenericObjectService {
                 serverResponse = val;
                 if (serverResponse.code == "OK") {
                   this.okMessage("Object was deleted");
-                  this.setModified(objectType);
+                  this.modified[objectType].next(true);
                 } else {
                   this.errorMessage("" + serverResponse.value  );
                 }
@@ -154,16 +151,5 @@ async okMessage(message: string){
     duration: 3000
   });
     (await toast).present();
-}
-setModified(objectType: string){
-  switch(objectType) {
-    case 'customer': {this.customersModified.next(true);break;}
-    case 'device': {this.devicesModified.next(true);break;}
-    case 'group': {this.groupsModified.next(true);break;}
-    case 'hwconf': {this.hwconfsModified.next(true);break;}
-    case 'institute': {this.institutesModified.next(true);break;}
-    case 'user': {this.usersModified.next(true);break; }
-    case 'room': {this.roomsModified.next(true);break;}
-  }
 }
 }

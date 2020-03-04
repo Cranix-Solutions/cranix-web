@@ -45,7 +45,7 @@ export class UsersPage implements OnInit {
         this.displayedColumns.push('actions');
       }
     });
-    this.objectService.usersModified.subscribe((status) => {
+    this.objectService.modified['user'].subscribe((status) => {
       if(status) { this.ngOnInit() }
     });
   }

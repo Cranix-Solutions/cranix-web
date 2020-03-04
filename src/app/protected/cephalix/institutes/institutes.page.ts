@@ -6,11 +6,11 @@ import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 
 // own modules
-import { CephalixService } from 'src/app/services/cephalix.service';
 import { Institute } from 'src/app/shared/models/cephalix-data-model';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
 import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
+import {GenericObjectService } from '../../../services/generic-object.service';
 
 @Component({
   selector: 'cranix-institutes',
@@ -28,7 +28,7 @@ export class InstitutesPage implements OnInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
-    private cephalixS: CephalixService,
+    private objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     private storage: Storage,
@@ -41,18 +41,15 @@ export class InstitutesPage implements OnInit {
         this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
       }
     });
+    this.objectService.modified['institute'].subscribe((status) => {
+      if(status) { this.ngOnInit() }
+    });
   }
 
   ngOnInit() {
-    this.cephalixS.getAllInstitutes().subscribe(
-      (res) => {
-        this.dataSource = new MatTableDataSource<Institute>(res)
-      },
-      (err) => { },
-      () => {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      });
+      this.dataSource = new MatTableDataSource<Institute>(this.objectService.allObjects['institute']);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
   }
 
   public doFilter = (value: string) => {

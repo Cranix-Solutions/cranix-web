@@ -37,7 +37,7 @@ export class Institute {
     ipVPN: string;
     locality: string;
     name: string;
-    network: string;
+    internalNetwork: string;
     serverNetwork: string;
     nmTrNet: string;
     type: string;
@@ -66,7 +66,7 @@ export class Institute {
         this.ipVPN = '';
         this.locality = '';
         this.name = '';
-        this.network = '';
+        this.internalNetwork = '';
         this.serverNetwork = '';
         this.nmTrNet = '';
         this.type = '';

@@ -6,7 +6,7 @@ import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 
 // own modules
-import { CephalixService } from '../../../services/cephalix.service';
+import { GenericObjectService } from '../../../services/generic-object.service'
 import { Ticket } from '../../../shared/models/cephalix-data-model';
 import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
 @Component({
@@ -23,7 +23,7 @@ export class TicketsPage implements OnInit {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   constructor(
-    private cephalixS: CephalixService,
+    private objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     private storage: Storage,
@@ -36,19 +36,13 @@ export class TicketsPage implements OnInit {
           this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
       }
     });
+    this.objectService.modified['ticket'].subscribe((status) => {
+      if(status) { this.ngOnInit() }
+    });
   }
   ngOnInit() {
-    let sub = this.cephalixS.getAllTickets().subscribe(
-      (res) => {
-        console.log(res);
-        this.dataSource = new MatTableDataSource<Ticket>(res)
-      },
-      (err) => { },
-      () => {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        sub.unsubscribe();
-      });
+    this.dataSource = new MatTableDataSource<Ticket>(this.objectService.allObjects['ticket']);
+    this.dataSource.sort = this.sort;
   }
 
   public doFilter = (value: string) => {

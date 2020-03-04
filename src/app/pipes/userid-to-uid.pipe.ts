@@ -1,16 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { GenericObjectService } from '../services/generic-object.service'
 @Pipe({
-  name: 'groupIdToName'
+  name: 'userIdToUid'
 })
-export class GroupidToNamePipe implements PipeTransform {
-
+export class UseridToUidPipe implements PipeTransform {
   constructor(private gOS: GenericObjectService) { }
-
   transform(value: any, ...args: any[]): any {
-    for (let obj of this.gOS.allObjects['group']) {
+    for (let obj of this.gOS.allObjects['user']) {
       if (obj.id === value) {
-        return obj.name;
+        return obj.uid ;
       }
     }
     return value;
