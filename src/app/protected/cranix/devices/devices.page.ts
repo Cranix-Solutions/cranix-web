@@ -120,6 +120,7 @@ export class DevicesPage implements OnInit {
   }
 
   public redirectToDelete = (device: Device) => {
+    this.objectService.deleteObjectDialog(device,"device");
     console.log("Delete:" + device.name)
   }
 

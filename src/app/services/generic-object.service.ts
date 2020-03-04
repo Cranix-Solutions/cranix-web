@@ -85,6 +85,8 @@ export class GenericObjectService {
   addObject(object, objectType) {
     const body = object;
     let url = this.utilsS.hostName() + "/" + objectType + "s/add";
+    console.log(objectType);
+    console.log(object);
     return this.http.post<ServerResponse>(url, body, { headers: this.headers });
   }
   modifyObject(object, objectType) {
@@ -114,8 +116,8 @@ export class GenericObjectService {
               (val) => {
                 serverResponse = val;
                 if (serverResponse.code == "OK") {
+                  this.getAllObject(objectType);
                   this.okMessage("Object was deleted");
-                  this.modified[objectType].next(true);
                 } else {
                   this.errorMessage("" + serverResponse.value  );
                 }

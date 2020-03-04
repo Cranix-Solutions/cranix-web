@@ -3,15 +3,20 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule, Routes } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
+//own modules
 import { CranixSharedModule } from '../../../shared/cranix-shared.module';
 import { TicketsPage } from './tickets.page';
-import { TranslateService } from '@ngx-translate/core';
 
 const routes: Routes = [
   {
     path: 'tickets',
     component: TicketsPage
+  },
+  {
+    path: 'tickets/:id',
+    loadChildren: () => import('./details/details.module').then( m => m.DetailsPageModule)
   }
 ];
 

@@ -120,7 +120,7 @@ export class HwconfsPage implements OnInit {
   }
 
   public redirectToDelete = (hwconf: Hwconf) => {
-    console.log("Delete:" + hwconf.name)
+    this.objectService.deleteObjectDialog(hwconf,"hwconf");
   }
 
   /**

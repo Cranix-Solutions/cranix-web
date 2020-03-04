@@ -13,10 +13,7 @@ import { ServerResponse } from '../models/server-models';
   styleUrls: ['./objects-edit.component.scss'],
 })
 export class ObjectsEditComponent implements OnInit {
-
   result: any = {};
-
-  ;
   /**
    * This hash defines if a key  has defaults
    */
@@ -123,6 +120,7 @@ export class ObjectsEditComponent implements OnInit {
         serverResponse = val;
         console.log(val);
         if (serverResponse.code == "OK") {
+          this.objectService.getAllObject(this.objectType);
           const toast = this.toastController.create({
             position: "middle",
             header: "Success:",

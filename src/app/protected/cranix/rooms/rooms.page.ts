@@ -121,7 +121,7 @@ export class RoomsPage implements OnInit {
   }
 
   public redirectToDelete = (room: Room) => {
-    console.log("Delete:" + room.name)
+    this.objectService.deleteObjectDialog(room,"room");
   }
 
   /**

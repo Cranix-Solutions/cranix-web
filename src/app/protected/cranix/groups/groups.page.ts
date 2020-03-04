@@ -97,6 +97,7 @@ public doFilter = (value: string) => {
   }
 
   public redirectToDelete = (group: Group)=> {
+    this.objectService.deleteObjectDialog(group,"group");
     console.log("Delete:" + group.name)
   }
     /**

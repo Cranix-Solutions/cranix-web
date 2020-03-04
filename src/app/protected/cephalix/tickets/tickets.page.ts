@@ -7,17 +7,19 @@ import { Storage } from '@ionic/storage';
 
 // own modules
 import { GenericObjectService } from '../../../services/generic-object.service'
-import { Ticket } from '../../../shared/models/cephalix-data-model';
+import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
 import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
+import { Ticket } from '../../../shared/models/cephalix-data-model';
+import { Router } from '@angular/router';
 @Component({
   selector: 'cranix-tickets',
   templateUrl: './tickets.page.html',
   styleUrls: ['./tickets.page.scss'],
 })
 export class TicketsPage implements OnInit {
-  displayedColumns: string[] = ['select', 'title', 'recDate', 'status','cephalixInstituteId','actions'];
-  objectKeys:  string[]  = [];
-  dataSource:  MatTableDataSource<Ticket> ;
+  displayedColumns: string[] = ['select', 'title', 'recDate', 'status', 'cephalixInstituteId', 'actions'];
+  objectKeys: string[] = [];
+  dataSource: MatTableDataSource<Ticket>;
   selection = new SelectionModel<Ticket>(true, []);
   objectIds: number[] = [];
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -26,18 +28,19 @@ export class TicketsPage implements OnInit {
     private objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
+    private route: Router,
     private storage: Storage,
     public translateService: TranslateService
   ) {
-    this.objectKeys = Object.getOwnPropertyNames( new Ticket() );
-      this.storage.get('TicketsPage.displayedColumns').then((val) => {
-      let myArray  = JSON.parse(val);
-      if(myArray  ) {
-          this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
+    this.objectKeys = Object.getOwnPropertyNames(new Ticket());
+    this.storage.get('TicketsPage.displayedColumns').then((val) => {
+      let myArray = JSON.parse(val);
+      if (myArray) {
+        this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
       }
     });
     this.objectService.modified['ticket'].subscribe((status) => {
-      if(status) { this.ngOnInit() }
+      if (status) { this.ngOnInit() }
     });
   }
   ngOnInit() {
@@ -63,30 +66,53 @@ export class TicketsPage implements OnInit {
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
-    /**
-  * Function to select the columns to show
-  * @param ev 
-  */
- async openCollums(ev: any) {
-  const modal = await this.modalCtrl.create({
-    component: SelectColumnsComponent,
-    componentProps: {
-      columns: this.objectKeys,
-      selected: this.displayedColumns,
-      objectPath: "TicketsPage.displayedColumns"
-    },
-    animated: true,
-    swipeToClose: true,
-    backdropDismiss: false
-  });
-  modal.onDidDismiss().then((dataReturned) => {
-    if (dataReturned.data) {
-      this.displayedColumns = ['select'].concat(dataReturned.data).concat(['actions']);
-    }
-  });
-  (await modal).present().then((val) => {
-    console.log("most lett vegrehajtva.")
-  })
-}
+  /**
+* Function to select the columns to show
+* @param ev 
+*/
+  async openCollums(ev: any) {
+    const modal = await this.modalCtrl.create({
+      component: SelectColumnsComponent,
+      componentProps: {
+        columns: this.objectKeys,
+        selected: this.displayedColumns,
+        objectPath: "TicketsPage.displayedColumns"
+      },
+      animated: true,
+      swipeToClose: true,
+      backdropDismiss: false
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        this.displayedColumns = ['select'].concat(dataReturned.data).concat(['actions']);
+      }
+    });
+    (await modal).present().then((val) => {
+      console.log("most lett vegrehajtva.")
+    })
+  }
 
+  async redirectToEdit(ev: Event, object: Ticket) {
+    if (object == null) {
+      const modal = await this.modalCtrl.create({
+        component: ObjectsEditComponent,
+        componentProps: {
+          objectType: "ticket",
+          objectAction: "add",
+          object: new Ticket()
+        },
+        animated: true,
+        swipeToClose: true,
+        showBackdrop: true
+      });
+      modal.onDidDismiss().then((dataReturned) => {
+        if (dataReturned.data) {
+          this.ngOnInit();
+        }
+      });
+      (await modal).present();
+    } else {
+      this.route.navigate(['/pages/cephalix/tickets/' + object.id]);
+    }
+  }
 }

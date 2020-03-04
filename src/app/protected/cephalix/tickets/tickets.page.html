@@ -21,7 +21,7 @@
 
     <ng-container matColumnDef="cephalixInstituteId">
       <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'cephalixInstituteId' | translate }}</mat-header-cell>
-      <mat-cell *matCellDef="let object"> {{ object.cephalixInstituteId | instituteIdToName}} </mat-cell>
+      <mat-cell *matCellDef="let object"> {{ object.cephalixInstituteId | idToName:'institute' }} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="ossuserId">
@@ -61,7 +61,7 @@
 
     <ng-container matColumnDef="priority">
       <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'priority' | translate }}</mat-header-cell>
-      <mat-cell *matCellDef="let object"> {{object.priority}} </mat-cell>
+      <mat-cell *matCellDef="let object"> {{object.priority}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="recDate">
