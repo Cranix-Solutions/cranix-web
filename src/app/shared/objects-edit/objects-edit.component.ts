@@ -13,10 +13,7 @@ import { ServerResponse } from '../models/server-models';
   styleUrls: ['./objects-edit.component.scss'],
 })
 export class ObjectsEditComponent implements OnInit {
-
   result: any = {};
-
-    ;
   /**
    * This hash defines if a key  has defaults
    */
@@ -31,8 +28,10 @@ export class ObjectsEditComponent implements OnInit {
   readOnlyAttributes: string[] = [
     'fsQuotaUsed',
     'msQuotaUsed',
+    'name',
     'recDate',
     'role',
+    'uid'
   ]
   /**
    * Attributes which we get but need not be shown
@@ -43,6 +42,15 @@ export class ObjectsEditComponent implements OnInit {
     'deleted',
     'saveNext'
   ]
+  required: any = {
+    'givenName': '*',
+    'groupType': '*',
+    'instituteType': '*',
+    'name': '*',
+    'regCode': '*',
+    'role': '*',
+    'surName': '*'
+  };
 
   constructor(
     public formBuilder: FormBuilder,
@@ -70,7 +78,7 @@ export class ObjectsEditComponent implements OnInit {
     this.editForm = this.formBuilder.group(this.convertObject());
   }
 
-  compareFn(a: string, b:string): boolean{
+  compareFn(a: string, b: string): boolean {
     return a == b;
   }
   /**
@@ -106,10 +114,35 @@ export class ObjectsEditComponent implements OnInit {
     this.editForm.disable();
     let serverResponse: ServerResponse;
     this.splashScreen.show();
-    this.objectService.applyAction(object, this.objectType, this.objectAction).subscribe(
-      (val) => {
+    console.log("onSubmit", object);
+    let subs = this.objectService.applyAction(object, this.objectType, this.objectAction).subscribe(
+      async (val) => {
         serverResponse = val;
         console.log(val);
+        if (serverResponse.code == "OK") {
+          this.objectService.getAllObject(this.objectType);
+          const toast = this.toastController.create({
+            position: "middle",
+            header: "Success:",
+            message: serverResponse.value,
+            color: "success",
+            duration: 5000
+          });
+          (await toast).present();
+          this.modalController.dismiss("succes");
+        } else {
+
+          const toast = this.toastController.create({
+            position: "middle",
+            header: "An Error was accoured:",
+            message: serverResponse.value,
+            color: "danger",
+            duration: 6000
+          });
+          this.editForm.enable();
+          this.splashScreen.hide();
+          (await toast).present();
+        }
       },
       async (error) => {
         const toast = this.toastController.create({
@@ -122,32 +155,10 @@ export class ObjectsEditComponent implements OnInit {
         this.splashScreen.hide();
         (await toast).present();
       },
-      async () => {
-        if (serverResponse.code == "OK") {
-          const toast = this.toastController.create({
-            position: "middle",
-            header: "Success:",
-            message: serverResponse.value,
-            color: "success",
-            duration: 5000
-          });
-          (await toast).present();
-          this.modalController.dismiss("succes");
-        } else {
-          const toast = this.toastController.create({
-            position: "middle",
-            header: "An Error was accoured:",
-            message: serverResponse.value,
-            color: "danger",
-            duration: 3000
-          });
-          this.editForm.enable();
-          this.splashScreen.hide();
-          (await toast).present();
-        }
+      () => {
+        subs.unsubscribe();
       }
     )
-
   }
 
   convertObject() {
@@ -157,6 +168,8 @@ export class ObjectsEditComponent implements OnInit {
       if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
         let date = new Date(this.object[key]);
         output[key] = date.toJSON();
+      } else if (this.required[key]) {
+        output[key] = [this.object[key], Validators.compose([Validators.required])];
       } else {
         output[key] = this.object[key];
       }

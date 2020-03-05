@@ -62,7 +62,7 @@ export class AuthenticationService {
                     const toast = this.toastController.create({
                         position: "middle",
                         message: 'Passwort falsch!',
-                        cssClass: "bar-assertive",
+                        color: "danger",
                         duration: 3000
                     });
                     (await toast).present(); 

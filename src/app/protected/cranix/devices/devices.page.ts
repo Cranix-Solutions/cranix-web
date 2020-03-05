@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 //own modules
-import { DevicesService } from 'src/app/services/devices.service';
+import { GenericObjectService } from '../../../services/generic-object.service';
 import { Device } from 'src/app/shared/models/data-model';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
@@ -28,7 +28,7 @@ export class DevicesPage implements OnInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
-    private deviceS: DevicesService,
+    private objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     private storage: Storage,
@@ -42,17 +42,14 @@ export class DevicesPage implements OnInit {
         this.displayedColumns.push('actions');
       }
     });
+    this.objectService.modified['device'].subscribe((status) => {
+      if(status) { this.ngOnInit() }
+    });
   }
 
   ngOnInit() {
-    this.deviceS.getAllDevices().subscribe((res) => {
-      this.dataSource = new MatTableDataSource<Device>(res)
-    },
-      (err) => { },
-      () => {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      });
+      this.dataSource = new MatTableDataSource<Device>(this.objectService.allObjects['device']);
+      this.dataSource.sort = this.sort;
   }
 
   public doFilter = (value: string) => {
@@ -123,6 +120,7 @@ export class DevicesPage implements OnInit {
   }
 
   public redirectToDelete = (device: Device) => {
+    this.objectService.deleteObjectDialog(device,"device");
     console.log("Delete:" + device.name)
   }
 

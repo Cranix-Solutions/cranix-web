@@ -35,7 +35,7 @@
       <ion-row class="ion-text-center">
         <ion-col>
              <ion-button full color="primary" [disabled]="!authForm.valid" style="margin-top: 20px;"
-      (click)="submit()">{{ 'login' | translate }}</ion-button>
+      (click)="submit(authForm.value)">{{ 'login' | translate }}</ion-button>
         </ion-col>
      
       </ion-row>

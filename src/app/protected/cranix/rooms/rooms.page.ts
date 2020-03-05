@@ -5,11 +5,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 //own modules
-import { RoomsService } from 'src/app/services/rooms.service';
-import { Room } from 'src/app/shared/models/data-model';
+import {GenericObjectService } from '../../../services/generic-object.service';
+import { Room } from '../../../shared/models/data-model';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
 import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
+
 
 @Component({
   selector: 'cranix-rooms',
@@ -28,7 +29,7 @@ export class RoomsPage implements OnInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
-    private roomS: RoomsService,
+    private objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     private storage: Storage,
@@ -41,17 +42,14 @@ export class RoomsPage implements OnInit {
         this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
       }
     });
+    this.objectService.modified['room'].subscribe((status) => {
+      if(status) { this.ngOnInit() }
+    });
   }
 
   ngOnInit() {
-    this.roomS.getAllRooms().subscribe((res) => {
-      this.dataSource = new MatTableDataSource<Room>(res)
-    },
-      (err) => { },
-      () => {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      });
+      this.dataSource = new MatTableDataSource<Room>(this.objectService.allObjects['room']);
+      this.dataSource.sort = this.sort;
   }
 
   public doFilter = (value: string) => {
@@ -123,7 +121,7 @@ export class RoomsPage implements OnInit {
   }
 
   public redirectToDelete = (room: Room) => {
-    console.log("Delete:" + room.name)
+    this.objectService.deleteObjectDialog(room,"room");
   }
 
   /**

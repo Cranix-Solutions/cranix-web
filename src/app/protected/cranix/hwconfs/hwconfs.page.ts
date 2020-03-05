@@ -5,11 +5,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 //own modules
-import { HwconfsService } from 'src/app/services/hwconfs.service';
-import { Hwconf } from 'src/app/shared/models/data-model';
+import {GenericObjectService } from '../../../services/generic-object.service';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
 import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
+import { Hwconf } from '../../../shared/models/data-model';
 
 @Component({
   selector: 'cranix-hwconfs',
@@ -28,7 +28,7 @@ export class HwconfsPage implements OnInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
-    private hwconfS: HwconfsService,
+    private objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     private storage: Storage,
@@ -42,17 +42,14 @@ export class HwconfsPage implements OnInit {
         this.displayedColumns.push('actions');
       }
     });
+    this.objectService.modified['hwconf'].subscribe((status) => {
+      if(status) { this.ngOnInit() }
+    });
   }
 
   ngOnInit() {
-    this.hwconfS.getAllHwconfs().subscribe((res) => {
-      this.dataSource = new MatTableDataSource<Hwconf>(res)
-    },
-      (err) => { },
-      () => {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      });
+      this.dataSource = new MatTableDataSource<Hwconf>(this.objectService.allObjects['hwconf']);
+      this.dataSource.sort = this.sort;
   }
 
   public doFilter = (value: string) => {
@@ -123,7 +120,7 @@ export class HwconfsPage implements OnInit {
   }
 
   public redirectToDelete = (hwconf: Hwconf) => {
-    console.log("Delete:" + hwconf.name)
+    this.objectService.deleteObjectDialog(hwconf,"hwconf");
   }
 
   /**

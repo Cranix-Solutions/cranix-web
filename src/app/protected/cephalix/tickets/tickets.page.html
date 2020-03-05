@@ -1,0 +1,104 @@
+<cranix-toolbar></cranix-toolbar>
+<ion-content scroll-x="true" scroll-y="true">
+  <ion-searchbar (keyup)="doFilter($event.target.value)" ></ion-searchbar>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+    <ng-container matColumnDef="select">
+      <mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()">
+        </mat-checkbox>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)">
+        </mat-checkbox>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'id' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.id}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="cephalixInstituteId">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'cephalixInstituteId' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{ object.cephalixInstituteId | idToName:'institute' }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="ossuserId">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ossuserId' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.ossuserId}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="ownerId">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ownerId' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.ownerId | userIdToName }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'type' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.type}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="firstname">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'firstname' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.firstname}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="lastname">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'lastname' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.lastname}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'email' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.email}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="title">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'title' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.title}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="priority">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'priority' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.priority}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="recDate">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'recDate' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.recDate  | date:'yyyy-MM-dd HH:mm' }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'status' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let object"> {{object.status}} </mat-cell>
+    </ng-container>
+
+   <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef>
+        <ion-button size="small"  (click)="redirectToEdit($event,null)">
+          <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+        </ion-button>
+        <ion-button size="small" (click)="openActions($event)">
+          <ion-icon slot="icon-only" name="menu"></ion-icon>
+        </ion-button>
+        <ion-button size="small"  (click)="openCollums($event)">
+          <ion-icon slot="icon-only" name="apps"></ion-icon>
+        </ion-button>
+        </mat-header-cell>
+      <mat-cell *matCellDef="let object" (click)="$event.stopPropagation()">
+        <ion-button fill="clear"  size="small" (click)="redirectToEdit($event,object)">
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button  fill="clear" size="small" (click)="redirectToDelete(object)">
+          <ion-icon slot="icon-only" color="danger" name="trash-outline"></ion-icon>
+        </ion-button>
+        </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></mat-row>>
+
+  </table>
+  <!-- mat-paginator [pageSizeOptions]="[20,30,50]" showFirstLastButtons></mat-paginator -->
+</ion-content>
