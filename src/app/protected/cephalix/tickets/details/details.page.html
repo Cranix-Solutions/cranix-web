@@ -1,0 +1,20 @@
+<cranix-toolbar></cranix-toolbar>
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ticket.title}}</ion-card-title>
+      <ion-card-subtitle> {{ticket.recDate | date:'yy-MM-dd HH:mm'}} {{ticket.email}}:
+        {{ticket.lastname}},{{ticket.givenname}}</ion-card-subtitle>
+    </ion-card-header>
+  </ion-card>
+
+    <ion-card *ngFor="let article of articles">
+      <ion-card-header>
+        <ion-card-subtitle>{{article.recDate | date:'yy-MM-dd HH:mm'}}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <a href="#" class="item-icon-right"><i class="icon ion-minus"></i></a>
+        <pre>{{article.text}}</pre>
+      </ion-card-content>
+    </ion-card>
+</ion-content>
