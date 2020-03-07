@@ -6,7 +6,7 @@ import { GenericObjectService } from '../services/generic-object.service'
 export class UseridToNamePipe implements PipeTransform {
   constructor(private gOS: GenericObjectService) { }
   transform(value: any, ...args: any[]): any {
-    for (let obj of this.gOS.allObjects['user']) {
+    for (let obj of this.gOS.allObjects['user'].getValue()) {
       if (obj.id === value) {
         return obj.uid + " (" + obj.givenName + " " + obj.surName + ")";
       }
