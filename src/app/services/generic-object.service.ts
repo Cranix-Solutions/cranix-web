@@ -14,11 +14,11 @@ import { Institute, Customer, Ticket } from '../shared/models/cephalix-data-mode
 export class GenericObjectService {
   allObjects: any = {};
   objects: string[] = [
-    'user','group','room','device','institute','customer','ticket','hwconf'
+    'user', 'group', 'room', 'device', 'institute', 'customer', 'ticket', 'hwconf'
   ]
 
   selects: any = {
-    'status': ['N','A','D']
+    'status': ['N', 'A', 'D']
   }
   initialized: boolean = false;
   enumerates: string[] = [
@@ -32,19 +32,19 @@ export class GenericObjectService {
     private http: HttpClient,
     private utilsS: UtilsService,
     private toastController: ToastController) {
-      for(let key of  this.objects) {
-        switch(key) {
-	  case 'user':      { this.allObjects[key] BehaviorSubject<User[]> = new BehaviorSubject([]); }
-	  case 'group':     { this.allObjects[key] BehaviorSubject<Group[]> = new BehaviorSubject([]); }
-	  case 'room':      { this.allObjects[key] BehaviorSubject<Room[]> = new BehaviorSubject([]); }
-	  case 'device':    { this.allObjects[key] BehaviorSubject<Device[]> = new BehaviorSubject([]); }
-	  case 'institute': { this.allObjects[key] BehaviorSubject<Institute[]> = new BehaviorSubject([]); }
-	  case 'customer':  { this.allObjects[key] BehaviorSubject<Customer[]> = new BehaviorSubject([]); }
-	  case 'ticket':    { this.allObjects[key] BehaviorSubject<Ticket[]> = new BehaviorSubject([]); }
-	  case 'hwconf':    { this.allObjects[key] BehaviorSubject<Hwconf[]> = new BehaviorSubject([]); }
-	}
+    for (let key of this.objects) {
+      switch (key) {
+        case 'user': { this.allObjects[key] BehaviorSubject < User[] > = new BehaviorSubject([]); }
+        case 'group': { this.allObjects[key] BehaviorSubject < Group[] > = new BehaviorSubject([]); }
+        case 'room': { this.allObjects[key] BehaviorSubject < Room[] > = new BehaviorSubject([]); }
+        case 'device': { this.allObjects[key] BehaviorSubject < Device[] > = new BehaviorSubject([]); }
+        case 'institute': { this.allObjects[key] BehaviorSubject < Institute[] > = new BehaviorSubject([]); }
+        case 'customer': { this.allObjects[key] BehaviorSubject < Customer[] > = new BehaviorSubject([]); }
+        case 'ticket': { this.allObjects[key] BehaviorSubject < Ticket[] > = new BehaviorSubject([]); }
+        case 'hwconf': { this.allObjects[key] BehaviorSubject < Hwconf[] > = new BehaviorSubject([]); }
       }
     }
+  }
 
   initialize(force: boolean) {
     let subs: any = {};
@@ -58,10 +58,10 @@ export class GenericObjectService {
         let url = this.utilsS.hostName() + "/system/enumerates/" + key;
         subs[key] = this.http.get<string[]>(url, { headers: this.headers }).subscribe(
           (val) => { this.selects[key] = val; },
-          (err) => {},
+          (err) => { },
           () => { subs[key].unsubscribe() });
       }
-      for(let key of this.objects ){
+      for (let key of this.objects) {
         this.getAllObject(key);
       }
       this.initialized = true;
@@ -70,13 +70,19 @@ export class GenericObjectService {
 
   getAllObject(objectType) {
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";
-    let sub = this.http.get<ServerResponse>(url,  { headers: this.headers }).subscribe(
-      (val) => { this.allObjects[objectType].next(val)  },
-      (err) => { console.log('getAllObject',objectType,err); }
+    let sub = this.http.get<ServerResponse>(url, { headers: this.headers }).subscribe(
+      (val) => { this.allObjects[objectType].next(val) },
+      (err) => { console.log('getAllObject', objectType, err); }
       () => {
-        sub.unsubscribe(); }
+        sub.unsubscribe();
+      }
     );
   }
+
+  getObjects(objectType){
+    return this.allObjects[objectType].asObservable();
+  }
+  
   applyAction(object, objectType, action) {
     switch (action) {
       case "add": {
@@ -128,11 +134,11 @@ export class GenericObjectService {
                   this.getAllObject(objectType);
                   this.okMessage("Object was deleted");
                 } else {
-                  this.errorMessage("" + serverResponse.value  );
+                  this.errorMessage("" + serverResponse.value);
                 }
-               },
+              },
               (err) => {
-                 this.errorMessage("An error was accoured");
+                this.errorMessage("An error was accoured");
               },
               () => { a.unsubscribe() }
             )
@@ -143,24 +149,24 @@ export class GenericObjectService {
     await alert.present();
   }
 
-async errorMessage(message: string){
-  const toast = await  this.toastController.create({
-    position: "middle",
-    message: message,
-    cssClass: "bar-assertive",
-    color: "danger",
-    duration: 3000
-  });
+  async errorMessage(message: string) {
+    const toast = await this.toastController.create({
+      position: "middle",
+      message: message,
+      cssClass: "bar-assertive",
+      color: "danger",
+      duration: 3000
+    });
     (await toast).present();
-}
-async okMessage(message: string){
-  const toast = await  this.toastController.create({
-    position: "middle",
-    message: message,
-    cssClass: "bar-assertive",
-    color: "success",
-    duration: 3000
-  });
+  }
+  async okMessage(message: string) {
+    const toast = await this.toastController.create({
+      position: "middle",
+      message: message,
+      cssClass: "bar-assertive",
+      color: "success",
+      duration: 3000
+    });
     (await toast).present();
-}
+  }
 }

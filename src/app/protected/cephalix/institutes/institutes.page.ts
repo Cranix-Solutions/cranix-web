@@ -41,15 +41,17 @@ export class InstitutesPage implements OnInit {
         this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
       }
     });
-    this.objectService.modified['institute'].subscribe((status) => {
-      if(status) { this.ngOnInit() }
-    });
   }
 
   ngOnInit() {
-      this.dataSource = new MatTableDataSource<Institute>(this.objectService.allObjects['institute']);
+      this.getObjects();
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
+  }
+
+  getObjects(){
+    this.objectService.getObjects('institue')
+    .subscribe(obj => this.dataSource = new MatTableDataSource<Institute>(obj));
   }
 
   public doFilter = (value: string) => {
