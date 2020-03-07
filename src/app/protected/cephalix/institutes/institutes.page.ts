@@ -50,7 +50,7 @@ export class InstitutesPage implements OnInit {
   }
 
   getObjects(){
-    this.objectService.getObjects('institue')
+    this.objectService.getObjects('institute')
     .subscribe(obj => this.dataSource = new MatTableDataSource<Institute>(obj));
   }
 
