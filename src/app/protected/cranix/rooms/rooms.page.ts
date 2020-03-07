@@ -42,14 +42,17 @@ export class RoomsPage implements OnInit {
         this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
       }
     });
-    this.objectService.modified['room'].subscribe((status) => {
-      if(status) { this.ngOnInit() }
-    });
   }
 
   ngOnInit() {
-      this.dataSource = new MatTableDataSource<Room>(this.objectService.allObjects['room']);
+      this.getObjects();
       this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+  }
+
+  getObjects(){
+    this.objectService.getObjects('room')
+    .subscribe(obj => this.dataSource = new MatTableDataSource<Room>(obj));
   }
 
   public doFilter = (value: string) => {

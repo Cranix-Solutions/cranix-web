@@ -10,7 +10,7 @@ import { Institute } from 'src/app/shared/models/cephalix-data-model';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
 import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
-import {GenericObjectService } from '../../../services/generic-object.service';
+import { GenericObjectService } from '../../../services/generic-object.service';
 
 @Component({
   selector: 'cranix-institutes',
@@ -50,7 +50,7 @@ export class InstitutesPage implements OnInit {
   }
 
   getObjects(){
-    this.objectService.getObjects('institue')
+    this.objectService.getObjects('institute')
     .subscribe(obj => this.dataSource = new MatTableDataSource<Institute>(obj));
   }
 

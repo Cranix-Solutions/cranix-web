@@ -42,14 +42,17 @@ export class DevicesPage implements OnInit {
         this.displayedColumns.push('actions');
       }
     });
-    this.objectService.modified['device'].subscribe((status) => {
-      if(status) { this.ngOnInit() }
-    });
   }
 
   ngOnInit() {
-      this.dataSource = new MatTableDataSource<Device>(this.objectService.allObjects['device']);
+      this.getObjects();
       this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+  }
+
+  getObjects(){
+    this.objectService.getObjects('device')
+    .subscribe(obj => this.dataSource = new MatTableDataSource<Device>(obj));
   }
 
   public doFilter = (value: string) => {

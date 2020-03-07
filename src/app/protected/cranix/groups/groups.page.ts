@@ -41,17 +41,20 @@ export class GroupsPage implements OnInit {
         this.displayedColumns.push('actions');
       }
     });
-    this.objectService.modified['group'].subscribe((status) => {
-      if(status) { this.ngOnInit() }
-    });
   }
 
   ngOnInit() {
-      this.dataSource = new MatTableDataSource<Group>(this.objectService.allObjects['group']);
+      this.getObjects();
       this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
   }
 
-public doFilter = (value: string) => {
+  getObjects(){
+    this.objectService.getObjects('group')
+    .subscribe(obj => this.dataSource = new MatTableDataSource<Group>(obj));
+  }
+
+  public doFilter = (value: string) => {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
   /** Whether the number of selected elements matches the total number of rows. */

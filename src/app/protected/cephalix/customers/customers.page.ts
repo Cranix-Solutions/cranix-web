@@ -10,6 +10,7 @@ import { Customer } from 'src/app/shared/models/cephalix-data-model';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
 import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
+import { GenericObjectService } from '../../../services/generic-object.service';
 
 @Component({
   selector: 'cranix-customers',
@@ -27,6 +28,7 @@ export class CustomersPage implements OnInit {
 
   constructor(
     private cephalixS: CephalixService,
+    private objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     private storage: Storage,
@@ -44,16 +46,14 @@ export class CustomersPage implements OnInit {
   }
 
   ngOnInit() {
-    this.cephalixS.getAllCustomers().subscribe(
-      (res) => {
-        this.dataSource = new MatTableDataSource<Customer>(res)
-      },
-      (err) => { },
-      () => {
-        console.log(this.dataSource);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      });
+      this.getObjects();
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+  }
+
+  getObjects(){
+    this.objectService.getObjects('customer')
+    .subscribe(obj => this.dataSource = new MatTableDataSource<Customer>(obj));
   }
 
   typeOf(key) {

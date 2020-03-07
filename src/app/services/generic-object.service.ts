@@ -6,8 +6,6 @@ import { Subscription, BehaviorSubject } from 'rxjs';
 import { ServerResponse } from '../shared/models/server-models';
 import { AlertController, ToastController } from '@ionic/angular';
 // own modules
-import { User, Group, Device, Room, Hwconf } from '../shared/models/data-model.ts';
-import { Institute, Customer, Ticket } from '../shared/models/cephalix-data-model.ts';
 @Injectable({
   providedIn: 'root'
 })
@@ -33,16 +31,7 @@ export class GenericObjectService {
     private utilsS: UtilsService,
     private toastController: ToastController) {
     for (let key of this.objects) {
-      switch (key) {
-        case 'user': { this.allObjects[key] BehaviorSubject < User[] > = new BehaviorSubject([]); }
-        case 'group': { this.allObjects[key] BehaviorSubject < Group[] > = new BehaviorSubject([]); }
-        case 'room': { this.allObjects[key] BehaviorSubject < Room[] > = new BehaviorSubject([]); }
-        case 'device': { this.allObjects[key] BehaviorSubject < Device[] > = new BehaviorSubject([]); }
-        case 'institute': { this.allObjects[key] BehaviorSubject < Institute[] > = new BehaviorSubject([]); }
-        case 'customer': { this.allObjects[key] BehaviorSubject < Customer[] > = new BehaviorSubject([]); }
-        case 'ticket': { this.allObjects[key] BehaviorSubject < Ticket[] > = new BehaviorSubject([]); }
-        case 'hwconf': { this.allObjects[key] BehaviorSubject < Hwconf[] > = new BehaviorSubject([]); }
-      }
+      this.allObjects[key] = new BehaviorSubject([]);
     }
   }
 
@@ -72,7 +61,7 @@ export class GenericObjectService {
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";
     let sub = this.http.get<ServerResponse>(url, { headers: this.headers }).subscribe(
       (val) => { this.allObjects[objectType].next(val) },
-      (err) => { console.log('getAllObject', objectType, err); }
+      (err) => { console.log('getAllObject', objectType, err); },
       () => {
         sub.unsubscribe();
       }
