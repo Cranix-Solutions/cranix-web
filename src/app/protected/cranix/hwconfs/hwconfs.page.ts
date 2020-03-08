@@ -42,14 +42,17 @@ export class HwconfsPage implements OnInit {
         this.displayedColumns.push('actions');
       }
     });
-    this.objectService.modified['hwconf'].subscribe((status) => {
-      if(status) { this.ngOnInit() }
-    });
   }
 
   ngOnInit() {
-      this.dataSource = new MatTableDataSource<Hwconf>(this.objectService.allObjects['hwconf']);
+      this.getObjects();
       this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+  }
+
+  getObjects(){
+    this.objectService.getObjects('hwconf')
+    .subscribe(obj => this.dataSource = new MatTableDataSource<Hwconf>(obj));
   }
 
   public doFilter = (value: string) => {

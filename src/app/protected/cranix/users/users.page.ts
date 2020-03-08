@@ -45,13 +45,17 @@ export class UsersPage implements OnInit {
         this.displayedColumns.push('actions');
       }
     });
-    this.objectService.modified['user'].subscribe((status) => {
-      if(status) { this.ngOnInit() }
-    });
   }
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource<User>(this.objectService.allObjects['user']);
+      this.getObjects();
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+  }
+
+  getObjects(){
+    this.objectService.getObjects('user')
+    .subscribe(obj => this.dataSource = new MatTableDataSource<User>(obj));
   }
 
   public doFilter = (value: string) => {

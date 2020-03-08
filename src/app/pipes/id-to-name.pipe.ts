@@ -8,7 +8,7 @@ export class IdToNamePipe implements PipeTransform {
   constructor(private gOS: GenericObjectService) { }
 
   transform(value: any, objectType: string ): string {
-    for (let obj of this.gOS.allObjects[objectType]) {
+    for (let obj of this.gOS.allObjects[objectType].getValue()) {
       if (obj.id === value) {
         return obj.name;
       }

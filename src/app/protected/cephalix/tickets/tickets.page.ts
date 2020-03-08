@@ -39,13 +39,17 @@ export class TicketsPage implements OnInit {
         this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
       }
     });
-    this.objectService.modified['ticket'].subscribe((status) => {
-      if (status) { this.ngOnInit() }
-    });
   }
+
   ngOnInit() {
-    this.dataSource = new MatTableDataSource<Ticket>(this.objectService.allObjects['ticket']);
-    this.dataSource.sort = this.sort;
+      this.getObjects();
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+  }
+
+  getObjects(){
+    this.objectService.getObjects('ticket')
+    .subscribe(obj => this.dataSource = new MatTableDataSource<Ticket>(obj));
   }
 
   public doFilter = (value: string) => {

@@ -10,14 +10,13 @@ import { AlertController, ToastController } from '@ionic/angular';
   providedIn: 'root'
 })
 export class GenericObjectService {
-  modified: any = {};
   allObjects: any = {};
   objects: string[] = [
-    'user','group','room','device','institute','customer','ticket','hwconf'
+    'user', 'group', 'room', 'device', 'institute', 'customer', 'ticket', 'hwconf'
   ]
 
   selects: any = {
-    'status': ['N','A','D']
+    'status': ['N', 'A', 'D']
   }
   initialized: boolean = false;
   enumerates: string[] = [
@@ -31,10 +30,10 @@ export class GenericObjectService {
     private http: HttpClient,
     private utilsS: UtilsService,
     private toastController: ToastController) {
-      for(let key of  this.objects) {
-        this.modified[key] = new BehaviorSubject(false);
-      }
+    for (let key of this.objects) {
+      this.allObjects[key] = new BehaviorSubject([]);
     }
+  }
 
   initialize(force: boolean) {
     let subs: any = {};
@@ -48,10 +47,10 @@ export class GenericObjectService {
         let url = this.utilsS.hostName() + "/system/enumerates/" + key;
         subs[key] = this.http.get<string[]>(url, { headers: this.headers }).subscribe(
           (val) => { this.selects[key] = val; },
-          (err) => {},
+          (err) => { },
           () => { subs[key].unsubscribe() });
       }
-      for(let key of this.objects ){
+      for (let key of this.objects) {
         this.getAllObject(key);
       }
       this.initialized = true;
@@ -60,14 +59,19 @@ export class GenericObjectService {
 
   getAllObject(objectType) {
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";
-    let sub = this.http.get<ServerResponse>(url,  { headers: this.headers }).subscribe(
-      (val) => ( this.allObjects[objectType] = val ),
-      (err) => {},
+    let sub = this.http.get<ServerResponse>(url, { headers: this.headers }).subscribe(
+      (val) => { this.allObjects[objectType].next(val) },
+      (err) => { console.log('getAllObject', objectType, err); },
       () => {
-        this.modified[objectType].next(true);
-        sub.unsubscribe(); }
+        sub.unsubscribe();
+      }
     );
   }
+
+  getObjects(objectType){
+    return this.allObjects[objectType].asObservable();
+  }
+  
   applyAction(object, objectType, action) {
     switch (action) {
       case "add": {
@@ -119,11 +123,11 @@ export class GenericObjectService {
                   this.getAllObject(objectType);
                   this.okMessage("Object was deleted");
                 } else {
-                  this.errorMessage("" + serverResponse.value  );
+                  this.errorMessage("" + serverResponse.value);
                 }
-               },
+              },
               (err) => {
-                 this.errorMessage("An error was accoured");
+                this.errorMessage("An error was accoured");
               },
               () => { a.unsubscribe() }
             )
@@ -134,24 +138,24 @@ export class GenericObjectService {
     await alert.present();
   }
 
-async errorMessage(message: string){
-  const toast = await  this.toastController.create({
-    position: "middle",
-    message: message,
-    cssClass: "bar-assertive",
-    color: "danger",
-    duration: 3000
-  });
+  async errorMessage(message: string) {
+    const toast = await this.toastController.create({
+      position: "middle",
+      message: message,
+      cssClass: "bar-assertive",
+      color: "danger",
+      duration: 3000
+    });
     (await toast).present();
-}
-async okMessage(message: string){
-  const toast = await  this.toastController.create({
-    position: "middle",
-    message: message,
-    cssClass: "bar-assertive",
-    color: "success",
-    duration: 3000
-  });
+  }
+  async okMessage(message: string) {
+    const toast = await this.toastController.create({
+      position: "middle",
+      message: message,
+      cssClass: "bar-assertive",
+      color: "success",
+      duration: 3000
+    });
     (await toast).present();
-}
+  }
 }
