@@ -1,4 +1,4 @@
-import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__ } from '@angular/core';
+import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__, AfterContentInit } from '@angular/core';
 import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
@@ -20,9 +20,10 @@ import { Institute } from '../../../shared/models/cephalix-data-model'
 })
 export class InstitutesPage implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['uuid', 'name', 'locality', 'ipVPN', 'regCode', 'validity', 'actions'];
+  displayedColumns: string[] = ['name', 'uuid','locality', 'ipVPN', 'regCode', 'validity', 'actions'];
   sortableColumns: string[] = ['uuid', 'name', 'locality', 'ipVPN', 'regCode', 'validity'];
   gridOptions: GridOptions;
+  columnDefs = [];
   gridApi: GridApi;
   columnApi: ColumnApi;
   rowSelection;
@@ -39,20 +40,40 @@ export class InstitutesPage implements OnInit {
     public languageS: LanguageService,
     private storage: Storage
   ) {
+  
+    this.context = { componentParent: this };
+    this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new Institute());
+    this.createColumnDefs();
+    this.gridOptions = <GridOptions>{
+      defaultColDef: {
+        resizable: true,
+        sortable: true,
+        hide: false
+      },
+      columnDefs: this.columnDefs
+    }
+  }
+
+  ngOnInit() {
     this.storage.get('InstitutesPage.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
-        this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
+        this.displayedColumns = (myArray).concat(['actions']);
+        this.createColumnDefs();
       }
     });
+    this.objectService.getObjects('institute').subscribe(obj => this.rowData = obj);
+  }
+
+  createColumnDefs() {
     let columnDefs = [];
     for (let key of this.objectKeys) {
       let col = {};
       col['field'] = key;
       col['headerName'] = this.languageS.trans(key);
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
-      col['sortable'] = (this.displayedColumns.indexOf(key) != -1);
+      col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
       switch (key) {
         case 'name': {
           col['headerCheckboxSelection'] = true;
@@ -72,27 +93,13 @@ export class InstitutesPage implements OnInit {
       field: 'actions',
       cellRendererFramework: ActionBTNRenderer
     });
-
-    this.gridOptions = <GridOptions>{
-      defaultColDef: {
-        resizable: true,
-        sortable: true,
-        hide: false
-      },
-      columnDefs: columnDefs
-    }
-    this.context = { componentParent: this };
-    this.rowSelection = 'multiple';
-
-  }
-  ngOnInit() {
-    this.objectService.getObjects('institute').subscribe(obj => this.rowData = obj);
+    this.columnDefs = columnDefs;
   }
 
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
+    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
     this.gridApi.sizeColumnsToFit();
   }
   onSelectionChanged() {
@@ -188,6 +195,7 @@ export class InstitutesPage implements OnInit {
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
         this.displayedColumns = ['select'].concat(dataReturned.data).concat(['actions']);
+        this.createColumnDefs();
       }
     });
     (await modal).present().then((val) => {

@@ -23,6 +23,7 @@ export class CustomersPage implements OnInit {
   displayedColumns: string[] = ['uuid', 'name', 'locality', 'ipVPN', 'regCode', 'validity', 'actions'];
   sortableColumns: string[] = ['uuid', 'name', 'locality', 'ipVPN', 'regCode', 'validity'];
   gridOptions: GridOptions;
+  columnDefs = [];
   gridApi: GridApi;
   columnApi: ColumnApi;
   rowSelection;
@@ -40,12 +41,31 @@ export class CustomersPage implements OnInit {
     private storage: Storage
   ) {
     this.objectKeys = Object.getOwnPropertyNames(new Customer());
+    this.createColumnDefs();
+    this.gridOptions = <GridOptions>{
+      defaultColDef: {
+        resizable: true,
+        sortable: true,
+        hide: false
+      },
+      columnDefs: this.columnDefs
+    }
+    this.context = { componentParent: this };
+    this.rowSelection = 'multiple';
+
+  }
+  ngOnInit() {
     this.storage.get('CustomersPage.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
-        this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
+         this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
+         this.createColumnDefs();
       }
     });
+    this.objectService.getObjects('customer').subscribe(obj => this.rowData = obj);
+  }
+
+  createColumnDefs() {
     let columnDefs = [];
     for (let key of this.objectKeys) {
       let col = {};
@@ -72,21 +92,7 @@ export class CustomersPage implements OnInit {
       field: 'actions',
       cellRendererFramework: ActionBTNRenderer
     });
-
-    this.gridOptions = <GridOptions>{
-      defaultColDef: {
-        resizable: true,
-        sortable: true,
-        hide: false
-      },
-      columnDefs: columnDefs
-    }
-    this.context = { componentParent: this };
-    this.rowSelection = 'multiple';
-
-  }
-  ngOnInit() {
-    this.objectService.getObjects('customer').subscribe(obj => this.rowData = obj);
+    this.columnDefs = columnDefs;
   }
 
   onGridReady(params) {
