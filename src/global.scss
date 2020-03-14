@@ -25,5 +25,14 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+/* AgGrifd */
+@import "~ag-grid-community/dist/styles/ag-grid.css";
+@import "~ag-grid-community/dist/styles/ag-theme-balham.css";
+@import "~ag-grid-community/dist/styles/ag-theme-balham-dark.css";
+@import "~ag-grid-community/dist/styles/ag-theme-blue.css";
+@import "~ag-grid-community/dist/styles/ag-theme-dark.css";
+@import "~ag-grid-community/dist/styles/ag-theme-fresh.css";
+@import "~ag-grid-community/dist/styles/ag-theme-material.css";
+
 /* Custom */
  @import "theme/tables.scss"; 

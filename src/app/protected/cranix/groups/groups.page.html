@@ -1,67 +1,33 @@
 <cranix-toolbar></cranix-toolbar>
-<ion-content scroll-x="true" scroll-y="true">
-  <ion-searchbar (keyup)="doFilter($event.target.value)"></ion-searchbar>
-  <mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
-    <ng-container matColumnDef="select">
-      <mat-header-cell *matHeaderCellDef>
-        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-          [indeterminate]="selection.hasValue() && !isAllSelected()">
-        </mat-checkbox>
-      </mat-header-cell>
-      <mat-cell *matCellDef="let row">
-        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-          [checked]="selection.isSelected(row)">
-        </mat-checkbox>
-      </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="id">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'id' | translate }} </mat-header-cell>
-      <mat-cell *matCellDef="let group"> {{group.id}} </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="name">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'name' | translate }}</mat-header-cell>
-      <mat-cell *matCellDef="let group" (click)="$event.stopPropagation()">
-        <a (click)="redirectToMember(group)"><span>{{group.name}}</span></a>
-      </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="description">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'description' | translate }}</mat-header-cell>
-      <mat-cell class="description-cell" *matCellDef="let group"> {{group.description}} </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="groupType">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'groupType' | translate }} </mat-header-cell>
-      <mat-cell *matCellDef="let group"> {{group.groupType}} </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="actions">
-      <mat-header-cell *matHeaderCellDef>
-        <ion-button size="small" (click)="redirectToEdit($event,null)">
-          <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
-        </ion-button>
-        <ion-button size="small" (click)="openActions($event)">
-          <ion-icon slot="icon-only" name="menu"></ion-icon>
-        </ion-button>
-        <ion-button size="small" (click)="openCollums($event)">
-          <ion-icon slot="icon-only" name="apps"></ion-icon>
-        </ion-button>
-      </mat-header-cell>
-      <mat-cell *matCellDef="let object" (click)="$event.stopPropagation()">
-        <ion-button fill="clear" size="small" (click)="redirectToEdit($event,object)">
-          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
-        </ion-button>
-        <ion-button fill="clear" size="small" (click)="redirectToDelete(object)">
-          <ion-icon slot="icon-only" color="danger" name="trash-outline"></ion-icon>
-        </ion-button>
-      </mat-cell>
-    </ng-container>
-
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></mat-row>
-
-  </mat-table>
-  <!-- mat-paginator [pageSizeOptions]="[20,30,50]" showFirstLastButtons></mat-paginator -->
+<ion-row class="header-row"></ion-row>
+<ion-content (window:resize)="onResize($event)">
+  <ion-card>
+    <ion-card-header>
+      <ion-row class="ion-align-items-center">
+        <ion-col size="3">
+          <input matInput placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()"
+            id="quickFilter">
+        </ion-col>
+        <ion-col size="7">
+        </ion-col>
+        <ion-col size="2">
+          <ion-button size="small" (click)="redirectToEdit($event,null)"  matTooltip="{{'create a new institute' | translate }}">
+            <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+          </ion-button>
+          <ion-button size="small" (click)="openActions($event)" matTooltip="{{'apply actions on the selected objects' | translate }}" >
+            <ion-icon slot="icon-only" name="menu"></ion-icon>
+          </ion-button>
+          <ion-button size="small" (click)="openCollums($event)" matTooltip="{{'select the columns to show' | translate }}">
+            <ion-icon slot="icon-only" name="apps"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card-header>
+    <ion-card-content>
+      <ag-grid-angular style="width: 100%; height: 450px;" class="ag-theme-balham-dark" [gridOptions]="gridOptions"
+        [rowData]="rowData" [columnDefs]="columnDefs" [context]="context" [rowSelection]="rowSelection"
+        (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged()" id="agGridTable">
+      </ag-grid-angular>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

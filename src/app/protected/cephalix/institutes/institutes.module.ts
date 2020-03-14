@@ -6,8 +6,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
-import { InstitutesPage } from './institutes.page';
 import { PipesModule } from '../../../pipes/pipe-modules';
+import { InstitutesPage } from './institutes.page';
 
 const routes: Routes = [
   {
@@ -24,7 +24,7 @@ const routes: Routes = [
     IonicModule,
     CranixSharedModule
   ],
-  declarations: [InstitutesPage],
+  declarations: [ InstitutesPage ],
   providers: [TranslateService, PipesModule]
 })
 export class InstitutesPageModule {}

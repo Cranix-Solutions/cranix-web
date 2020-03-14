@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
 //own 
 import { GenericObjectService } from '../../services/generic-object.service';
+import { LanguageService } from '../../services/language.service';
 import { ServerResponse } from '../models/server-models';
 @Component({
   selector: 'cranix-objects-edit',
@@ -55,6 +56,7 @@ export class ObjectsEditComponent implements OnInit {
   constructor(
     public formBuilder: FormBuilder,
     public objectService: GenericObjectService,
+    public languageS: LanguageService,
     private navParams: NavParams,
     private modalController: ModalController,
     private splashScreen: SpinnerDialog,
@@ -70,7 +72,7 @@ export class ObjectsEditComponent implements OnInit {
       this.objectActionTitle = "Edit " + this.objectType;
       this.objectAction = "Apply";
     }
-    this.objectKeys = Object.getOwnPropertyNames(this.object);
+    this.objectKeys =  this.navParams.get('objectKeys');
     console.log(this.objectKeys);
     console.log(this.object);
   }
@@ -123,7 +125,7 @@ export class ObjectsEditComponent implements OnInit {
           this.objectService.getAllObject(this.objectType);
           const toast = this.toastController.create({
             position: "middle",
-            header: "Success:",
+            header:  this.languageS.trans("Success:"),
             message: serverResponse.value,
             color: "success",
             duration: 5000
@@ -131,12 +133,11 @@ export class ObjectsEditComponent implements OnInit {
           (await toast).present();
           this.modalController.dismiss("succes");
         } else {
-
           const toast = this.toastController.create({
             position: "middle",
-            header: "An Error was accoured:",
+            header:  this.languageS.trans("An Error was accoured:"),
             message: serverResponse.value,
-            color: "danger",
+            color: "warning",
             duration: 6000
           });
           this.editForm.enable();
@@ -145,10 +146,11 @@ export class ObjectsEditComponent implements OnInit {
         }
       },
       async (error) => {
+        console.log(error);
         const toast = this.toastController.create({
           position: "middle",
-          message: "An Server Error is accoured",
-          cssClass: "bar-assertive",
+          message: "A Server Error is accoured:" + error,
+          color: "danger",
           duration: 3000
         });
         this.editForm.enable();

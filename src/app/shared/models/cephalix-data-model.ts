@@ -2,81 +2,52 @@
 export class Customer {
     id: number = 0;
     uuid: string = '';
-    address1: string = '';
-    address2: string = '';
-    category: string = '';
-    locality: string = '';
-    contact: string = '';
-    country: string = '';
-    description: string = '';
     name: string = '';
     name2: string = '';
+    description: string = '';
+    category: string = '';
+    address1: string = '';
+    address2: string = '';
     postalCode: string = '';
-    recDate: any = new Date();
     state: string = '';
+    locality: string = '';
+    country: string = '';
+    contact: string = '';
     telephone: string = '';
+    recDate: any = new Date();
     constructor() {}
 }
 
 export class Institute {
-    id: number;
-    uuid: string;
-    adminPW: string;
-    anonDhcpNetwork: string;
-    cephalixPW: string;
-    domain: string;
-    firstRoom: string;
-    gwTrNet: string;
-    ipAdmin: string;
-    ipBackup: string;
-    ipGateway: string;
-    ipMail: string;
-    ipPrint: string;
-    ipProxy: string;
-    ipTrNet: string;
-    ipVPN: string;
-    locality: string;
-    name: string;
-    internalNetwork: string;
-    serverNetwork: string;
-    nmTrNet: string;
-    type: string;
-    deleted: string;
-    recDate: any = new Date();
+    name: string = '';
+    id: number = 0;
+    uuid: string = '';
+    instituteType: string = '';
+    locality: string = '';
+    regCode: string = '';
     validity: any = new Date();
-    ayTemplate: string;
-    customerId: number;
-    regCode: string;
-    constructor() {
-        this.id = 0;
-        this.uuid = '';
-        this.adminPW = '';
-        this.anonDhcpNetwork = '';
-        this.cephalixPW = '';
-        this.domain = '';
-        this.firstRoom = '';
-        this.gwTrNet = '';
-        this.ipAdmin = '';
-        this.ipBackup = '';
-        this.ipGateway = '';
-        this.ipMail = '';
-        this.ipPrint = '';
-        this.ipProxy = '';
-        this.ipTrNet = '';
-        this.ipVPN = '';
-        this.locality = '';
-        this.name = '';
-        this.internalNetwork = '';
-        this.serverNetwork = '';
-        this.nmTrNet = '';
-        this.type = '';
-        this.deleted = '';
-        this.recDate = new Date();
-        this.validity = new Date();
-        this.ayTemplate = '';
-        this.customerId = 0;
-        this.regCode = '';
-    }
+    domain: string = '';
+    ayTemplate: string = '';
+    internalNetwork: string = '';
+    ipVPN: string = '';
+    serverNetwork: string = '';
+    anonDhcpNetwork: string = '';
+    firstRoom: string = '';
+    ipAdmin: string = '';
+    ipMail: string = '';
+    ipPrint: string = '';
+    ipProxy: string = '';
+    ipBackup: string = '';
+    ipGateway: string = '';
+    ipTrNet: string = '';
+    gwTrNet: string = '';
+    nmTrNet: string = '';
+    deleted: string = '';
+    adminPW: string = '';
+    cephalixPW: string = '';
+    recDate: any = new Date();
+    customerId: number = 0;
+    constructor() {}
 }
 
 export class Ticket{
@@ -84,11 +55,11 @@ export class Ticket{
     cephalixInstituteId: number = 0;
     ossuserId: number = 0;
     ownerId: number = 0;
-    type: string = "";
+    title: string = "";
+    ticketType: string = "";
     firstname: string = "";
     lastname: string = "";
     email: string = "";
-    title: string = "";
     priority: number = 0;
     recDate: any = new Date();
     status: string = "";
@@ -97,11 +68,11 @@ export class Ticket{
 
 export class Article{
     id: number = 0;
-    cephalixInstituteId: number = 0;
+    cephalixArticleId: number = 0;
+    title: string = "";
     sender: string = "";
     recipient: string = "";
-    title: string = "";
-    type: string = "";
+    articleType: string = "";
     seen: boolean = false;
     text: string = "";
     recDate: any = new Date();
@@ -109,10 +80,11 @@ export class Article{
     workTime: number = 0;
     constructor() {}
 }
+
 export class Repository{
     id: number = 0;
     name: string = "";
-    type: string = "";
+    repositoryType: string = "";
     description: string = "";
     repository: string = "";
     constructor() {}
@@ -133,7 +105,7 @@ export class OssCareMessage{
     id: number = 0;
     cephalixosscareId: number = 0;
     recDate: any = new Date();
-    type: string = "";
+    careMessageType: string = "";
     description: string = "";
     text: string = "";
     constructor() {}
@@ -168,9 +140,9 @@ export interface Object {
     lastSync: number
 }
 
-export interface Note{
+export interface Notice{
     tite: string, 
-    type: string, 
+    noticeType: string, 
     text: string
 }
 

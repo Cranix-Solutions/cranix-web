@@ -6,8 +6,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
-import { CustomersPage } from './customers.page';
 import { PipesModule } from '../../../pipes/pipe-modules';
+import { CustomersPage } from './customers.page';
 
 const routes: Routes = [
   {
@@ -20,11 +20,11 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule,
     RouterModule.forChild(routes),
+    IonicModule,
     CranixSharedModule
   ],
-  declarations: [CustomersPage],
-   providers: [TranslateService,PipesModule]
+  declarations: [ CustomersPage],
+  providers: [TranslateService, PipesModule]
 })
 export class CustomersPageModule {}

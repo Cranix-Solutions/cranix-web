@@ -13,17 +13,22 @@ import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-transla
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { IonicStorageModule } from '@ionic/storage';
 import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
+//import { AgGridModule } from 'ag-grid-angular';
+import { ErrorHandler, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
+//own modules 
 import { CranixSharedModule } from './shared/cranix-shared.module';
 import { UtilsService } from './services/utils.service';
 import { SystemService } from './services/system.service';
 import { LanguageService } from './services/language.service';
 
-import { ErrorHandler, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ActionsComponent } from './shared/actions/actions.component';
 import { GenericObjectService } from './services/generic-object.service';
 import { ObjectsEditComponent } from './shared/objects-edit/objects-edit.component';
 import { SelectColumnsComponent } from './shared/select-columns/select-columns.component';
+import { ActionBTNRenderer } from './pipes/ag-action-renderer';
+import { DateCellRenderer } from './pipes/ag-date-renderer';
+
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -43,9 +48,14 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [AppComponent,ActionsComponent,ObjectsEditComponent,SelectColumnsComponent],
+  declarations: [
+     AppComponent,
+     ActionsComponent,
+     ObjectsEditComponent,
+     SelectColumnsComponent],
   entryComponents: [ActionsComponent,ObjectsEditComponent,SelectColumnsComponent],
   imports: [
+ //   AgGridModule.withComponents( [ActionBTNRenderer, DateCellRenderer]),
     BrowserModule,
     IonicModule.forRoot(),
     BrowserAnimationsModule,

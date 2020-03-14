@@ -1,16 +1,17 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
-import { SelectionModel, isDataSource } from '@angular/cdk/collections';
-import { TranslateService } from '@ngx-translate/core';
-import { PopoverController, ModalController, AlertController } from '@ionic/angular';
+import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__ } from '@angular/core';
+import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
+import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
+
 //own modules
-import { UsersService } from '../../../services/users.service';
-import { User } from '../../../shared/models/data-model';
 import { ActionsComponent } from '../../../shared/actions/actions.component';
+import { DateCellRenderer } from '../../../pipes/ag-date-renderer';
+import { ActionBTNRenderer } from '../../../pipes/ag-action-renderer';
 import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
-import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
 import { GenericObjectService } from '../../../services/generic-object.service';
+import { LanguageService } from '../../../services/language.service';
+import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
+import { User } from '../../../shared/models/data-model'
 
 @Component({
   selector: 'cranix-users',
@@ -18,89 +19,130 @@ import { GenericObjectService } from '../../../services/generic-object.service';
   styleUrls: ['./users.page.scss'],
 })
 export class UsersPage implements OnInit {
-
-  allSelected: boolean = false;
-  displayedColumns: string[] = ['select', 'uid', 'surName', 'givenName', 'role', 'actions'];
   objectKeys: string[] = [];
-  dataSource: MatTableDataSource<User>;
-  selection = new SelectionModel<User>(true, []);
+  displayedColumns: string[] = ['uid', 'uuid', 'givenName', 'surName', 'role', 'classes', 'actions'];
+  sortableColumns: string[] = [ 'uid', 'uuid', 'givenName', 'surName', 'role', 'classes' ];
+  gridOptions: GridOptions;
+  gridApi: GridApi;
+  columnApi: ColumnApi;
+  rowSelection;
+  context;
+  selected: User[];
+  title = 'app';
+  rowData = [];
   objectIds: number[] = [];
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
-
-    private userS: UsersService,
+    private objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
-    private storage: Storage,
-    public translateService: TranslateService,
-    private objectService: GenericObjectService
+    public languageS: LanguageService,
+    private storage: Storage
   ) {
     this.objectKeys = Object.getOwnPropertyNames(new User());
     this.storage.get('UsersPage.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
-        this.displayedColumns = ['select'].concat(myArray);
-        this.displayedColumns.push('actions');
+        this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
       }
     });
-  }
+    let columnDefs = [];
+    for (let key of this.objectKeys) {
+      let col = {};
+      col['field'] = key;
+      col['headerName'] = this.languageS.trans(key);
+      col['hide'] = (this.displayedColumns.indexOf(key) == -1);
+      col['sortable'] = (this.displayedColumns.indexOf(key) != -1);
+      switch (key) {
+        case 'name': {
+          col['headerCheckboxSelection'] = true;
+          col['headerCheckboxSelectionFilteredOnly'] = true;
+          col['checkboxSelection'] = true;
+          break;
+        }
+        case 'validity': {
+          col['cellRendererFramework'] = DateCellRenderer;
+          break;
+        }
+      }
+      columnDefs.push(col);
+    }
+    columnDefs.push({
+      headerName: "",
+      field: 'actions',
+      cellRendererFramework: ActionBTNRenderer
+    });
 
+    this.gridOptions = <GridOptions>{
+      defaultColDef: {
+        resizable: true,
+        sortable: true,
+        hide: false
+      },
+      columnDefs: columnDefs
+    }
+    this.context = { componentParent: this };
+    this.rowSelection = 'multiple';
+
+  }
   ngOnInit() {
-      this.getObjects();
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
+    this.objectService.getObjects('user').subscribe(obj => this.rowData = obj);
   }
 
-  getObjects(){
-    this.objectService.getObjects('user')
-    .subscribe(obj => this.dataSource = new MatTableDataSource<User>(obj));
+  onGridReady(params) {
+    this.gridApi = params.api;
+    this.columnApi = params.columnApi;
+    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
+    this.gridApi.sizeColumnsToFit();
+  }
+  onSelectionChanged() {
+    this.selected = this.gridApi.getSelectedRows();
   }
 
-  public doFilter = (value: string) => {
-    this.dataSource.filter = value.trim().toLocaleLowerCase();
+  onQuickFilterChanged() {
+    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById("quickFilter")).value);
+    this.gridApi.doLayout();
+
   }
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected == numRows;
+  onResize($event) {
+    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
+    this.sizeAll();
+    this.gridApi.sizeColumnsToFit();
+  }
+  sizeAll() {
+    var allColumnIds = [];
+    this.columnApi.getAllColumns().forEach((column) => {
+      allColumnIds.push(column.getColId());
+    });
+    this.columnApi.autoSizeColumns(allColumnIds);
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
+  public redirectToDelete = (user: User) => {
+    console.log("Delete:" + user.uid)
   }
-
   /**
-   * Function to select the columns to show
-   * @param ev
-   */
-  async openCollums(ev: any) {
-    const modal = await this.modalCtrl.create({
-      component: SelectColumnsComponent,
+ * Open the actions menu with the selected object ids.
+ * @param ev 
+ */
+  async openActions(ev: any) {
+    if (this.selected) {
+      for (let i = 0; i < this.selected.length; i++) {
+        this.objectIds.push(this.selected[i].id);
+      }
+    }
+    const popover = await this.popoverCtrl.create({
+      component: ActionsComponent,
+      event: ev,
       componentProps: {
-        columns: this.objectKeys,
-        selected: this.displayedColumns,
-        objectPath: "UsersPage.displayedColumns"
+        objectType: "user",
+        objectIds: this.objectIds,
+        selection: this.selected
       },
       animated: true,
-      swipeToClose: true,
-      showBackdrop: false,
-      backdropDismiss: false
+      showBackdrop: true
     });
-    modal.onDidDismiss().then((dataReturned) => {
-      if (dataReturned.data) {
-        this.displayedColumns = ['select'].concat(dataReturned.data).concat(['actions']);
-      }
-    });
-    (await modal).present().then((val) => {
-    })
+    (await popover).present();
   }
-
   async redirectToEdit(ev: Event, user: User) {
     let action = 'modify';
     if (user == null) {
@@ -112,47 +154,44 @@ export class UsersPage implements OnInit {
       componentProps: {
         objectType: "user",
         objectAction: action,
-        object: user
+        object: user,
+        objectKeys: this.objectKeys
       },
-      swipeToClose: true,
       animated: true,
+      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        this.ngOnInit();
+        console.log("Object was created or modified", dataReturned.data)
       }
     });
     (await modal).present();
   }
 
-  async redirectToDelete(user: User) {
-    this.objectService.deleteObjectDialog(user, "user");
-  }
-
   /**
-   * Open the actions menu with the selected object ids.
-   * @param ev
-   */
-  async openActions(ev: any) {
-    for (let i = 0; i < this.selection.selected.length; i++) {
-      this.objectIds.push(this.selection.selected[i].id);
-    }
-    const popover = await this.popoverCtrl.create({
-      component: ActionsComponent,
-      event: ev,
+* Function to select the columns to show
+* @param ev 
+*/
+  async openCollums(ev: any) {
+    const modal = await this.modalCtrl.create({
+      component: SelectColumnsComponent,
       componentProps: {
-        objectType: "user",
-        objectIds: this.objectIds,
-        selection: this.selection.selected
+        columns: this.objectKeys,
+        selected: this.displayedColumns,
+        objectPath: "UsersPage.displayedColumns"
       },
       animated: true,
-      showBackdrop: true
+      swipeToClose: true,
+      backdropDismiss: false
     });
-    (await popover).present();
-  }
-  procesModal(ev: Event) {
-    console.log(ev);
-    this.modalCtrl.dismiss();
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        this.displayedColumns = ['select'].concat(dataReturned.data).concat(['actions']);
+      }
+    });
+    (await modal).present().then((val) => {
+      console.log("most lett vegrehajtva.")
+    })
   }
 }
