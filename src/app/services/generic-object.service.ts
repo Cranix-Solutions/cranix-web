@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { UtilsService } from './utils.service';
-import { AuthenticationService } from './auth.service';
-import { Subscription, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { ServerResponse } from '../shared/models/server-models';
 import { AlertController, ToastController } from '@ionic/angular';
 // own modules
+import { UtilsService } from './utils.service';
+import { AuthenticationService } from './auth.service';
+import { LanguageService } from './language.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -28,6 +29,7 @@ export class GenericObjectService {
     public alertController: AlertController,
     private authS: AuthenticationService,
     private http: HttpClient,
+    private languageS: LanguageService,
     private utilsS: UtilsService,
     private toastController: ToastController) {
     for (let key of this.objects) {
@@ -68,10 +70,10 @@ export class GenericObjectService {
     );
   }
 
-  getObjects(objectType){
+  getObjects(objectType) {
     return this.allObjects[objectType].asObservable();
   }
-  
+
   applyAction(object, objectType, action) {
     switch (action) {
       case "add": {
@@ -86,6 +88,23 @@ export class GenericObjectService {
     }
   }
 
+  idToName(objectType, objectId) {
+    console.log(objectType, objectId);
+    for (let obj of this.allObjects[objectType].getValue()) {
+      if (obj.id === objectId) {
+        return obj.name;
+      }
+    }
+    return objectId;
+  }
+  idToUid(objectType, objectId) {
+    for (let obj of this.allObjects[objectType].getValue()) {
+      if (obj.id === objectId) {
+        return obj.uid;
+      }
+    }
+    return objectId;
+  }
   addObject(object, objectType) {
     const body = object;
     let url = this.utilsS.hostName() + "/" + objectType + "s/add";
@@ -105,13 +124,19 @@ export class GenericObjectService {
   }
 
   async deleteObjectDialog(object, objectType) {
+    let name = "";
+    if (objectType == 'user') {
+      name = object.uid + " ( " + object.givenName + " " + object.surName + " )";
+    } else {
+      name = object.name;
+    }
     let serverResponse: ServerResponse;
     const alert = await this.alertController.create({
-      header: 'Confirm!',
-      message: 'Do you realy want to  delete:',
+      header: this.languageS.trans('Confirm!'),
+      message: this.languageS.trans('Do you realy want to  delete?') + '<br>' + name,
       buttons: [
         {
-          text: 'Cancel',
+          text: this.languageS.trans('Cancel'),
           role: 'cancel',
         }, {
           text: 'OK',
@@ -121,13 +146,13 @@ export class GenericObjectService {
                 serverResponse = val;
                 if (serverResponse.code == "OK") {
                   this.getAllObject(objectType);
-                  this.okMessage("Object was deleted");
+                  this.okMessage(this.languageS.trans("Object was deleted"));
                 } else {
                   this.errorMessage("" + serverResponse.value);
                 }
               },
               (err) => {
-                this.errorMessage("An error was accoured");
+                this.errorMessage(this.languageS.trans("An error was accoured"));
               },
               () => { a.unsubscribe() }
             )

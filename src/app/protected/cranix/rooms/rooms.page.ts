@@ -12,6 +12,7 @@ import { GenericObjectService } from '../../../services/generic-object.service';
 import { LanguageService } from '../../../services/language.service';
 import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
 import { Room } from '../../../shared/models/data-model'
+import { HwconfIdCellRenderer } from '../../../pipes/ag-hwconfid-renderer';
 
 @Component({
   selector: 'cranix-rooms',
@@ -23,6 +24,7 @@ export class RoomsPage implements OnInit {
   displayedColumns: string[] = [ 'name', 'description', 'roomType', 'roomControl', 'hwconfId', 'actions'];
   sortableColumns: string[] = ['name', 'description', 'roomType', 'roomControl', 'hwconfId' ];
   gridOptions: GridOptions;
+  columnDefs = [];
   gridApi: GridApi;
   columnApi: ColumnApi;
   rowSelection;
@@ -39,20 +41,38 @@ export class RoomsPage implements OnInit {
     public languageS: LanguageService,
     private storage: Storage
   ) {
+    this.context = { componentParent: this };
+    this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new Room());
+    this.createColumnDefs();
+    this.gridOptions = <GridOptions>{
+      defaultColDef: {
+        resizable: true,
+        sortable: true,
+        hide: false
+      },
+      columnDefs: this.columnDefs,
+      context: this.context
+    }
+  }
+  ngOnInit() {
     this.storage.get('RoomsPage.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
-        this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
+        this.displayedColumns = myArray.concat(['actions']);
+        this.createColumnDefs();
       }
     });
+    this.objectService.getObjects('room').subscribe(obj => this.rowData = obj);
+  }
+  createColumnDefs() {
     let columnDefs = [];
     for (let key of this.objectKeys) {
       let col = {};
       col['field'] = key;
       col['headerName'] = this.languageS.trans(key);
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
-      col['sortable'] = (this.displayedColumns.indexOf(key) != -1);
+      col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
       switch (key) {
         case 'name': {
           col['headerCheckboxSelection'] = true;
@@ -60,8 +80,11 @@ export class RoomsPage implements OnInit {
           col['checkboxSelection'] = true;
           break;
         }
-        case 'validity': {
-          col['cellRendererFramework'] = DateCellRenderer;
+        case 'hwconfId': {
+          col['valueGetter'] = function(params) {
+            return params.context['componentParent'].objectService.idToName('hwconf',params.data.hwconfId);
+          }
+          //col['cellRendererFramework'] = HwconfIdCellRenderer;
           break;
         }
       }
@@ -72,23 +95,8 @@ export class RoomsPage implements OnInit {
       field: 'actions',
       cellRendererFramework: ActionBTNRenderer
     });
-
-    this.gridOptions = <GridOptions>{
-      defaultColDef: {
-        resizable: true,
-        sortable: true,
-        hide: false
-      },
-      columnDefs: columnDefs
-    }
-    this.context = { componentParent: this };
-    this.rowSelection = 'multiple';
-
+    this.columnDefs = columnDefs;
   }
-  ngOnInit() {
-    this.objectService.getObjects('room').subscribe(obj => this.rowData = obj);
-  }
-
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
@@ -118,7 +126,7 @@ export class RoomsPage implements OnInit {
   }
 
   public redirectToDelete = (room: Room) => {
-    console.log("Delete:" + room.name)
+    this.objectService.deleteObjectDialog(room, 'room')
   }
   /**
  * Open the actions menu with the selected object ids.
@@ -187,7 +195,8 @@ export class RoomsPage implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        this.displayedColumns = ['select'].concat(dataReturned.data).concat(['actions']);
+        this.displayedColumns = dataReturned.data.concat(['actions']);
+        this.createColumnDefs();
       }
     });
     (await modal).present().then((val) => {

@@ -1,73 +1,197 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
-import { SelectionModel } from '@angular/cdk/collections';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__, AfterContentInit } from '@angular/core';
+import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
-
-// own modules
-import { GenericObjectService } from '../../../services/generic-object.service'
-import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
-import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
-import { Ticket } from '../../../shared/models/cephalix-data-model';
 import { Router } from '@angular/router';
+
+
+//own modules
+import { ActionsComponent } from '../../../shared/actions/actions.component';
+import { DateCellRenderer } from '../../../pipes/ag-date-renderer';
+import { InstituteIdCellRenderer  } from '../../../pipes/ag-instituteid-renderer';
+import { ActionBTNRenderer } from '../../../pipes/ag-action-renderer';
+import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
+import { GenericObjectService } from '../../../services/generic-object.service';
+import { LanguageService } from '../../../services/language.service';
+import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
+import { Ticket } from '../../../shared/models/cephalix-data-model'
+
 @Component({
   selector: 'cranix-tickets',
   templateUrl: './tickets.page.html',
   styleUrls: ['./tickets.page.scss'],
 })
 export class TicketsPage implements OnInit {
-  displayedColumns: string[] = ['select', 'title', 'recDate', 'status', 'cephalixInstituteId', 'actions'];
   objectKeys: string[] = [];
-  dataSource: MatTableDataSource<Ticket>;
-  selection = new SelectionModel<Ticket>(true, []);
+  displayedColumns: string[] = ['title', 'cephalixInstituteId', 'recDate', 'ticketStatus', 'actions'];
+  sortableColumns: string[] = ['title', 'cephalixInstituteId', 'recDate', 'ticketStatus'];
+  gridOptions: GridOptions;
+  columnDefs = [];
+  gridApi: GridApi;
+  columnApi: ColumnApi;
+  rowSelection;
+  context;
+  selected: Ticket[];
+  title = 'app';
+  rowData = [];
   objectIds: number[] = [];
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
+
   constructor(
     private objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
+    public languageS: LanguageService,
     private route: Router,
-    private storage: Storage,
-    public translateService: TranslateService
+    private storage: Storage
   ) {
+
+    this.context = { componentParent: this };
+    this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new Ticket());
-    this.storage.get('TicketsPage.displayedColumns').then((val) => {
-      let myArray = JSON.parse(val);
-      if (myArray) {
-        this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
-      }
-    });
+    this.createColumnDefs();
+    this.gridOptions = <GridOptions>{
+      defaultColDef: {
+        resizable: true,
+        sortable: true,
+        hide: false
+      },
+      columnDefs: this.columnDefs,
+      context: this.context
+    }
   }
 
   ngOnInit() {
-      this.getObjects();
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
+    this.storage.get('TicketsPage.displayedColumns').then((val) => {
+      let myArray = JSON.parse(val);
+      if (myArray) {
+        this.displayedColumns = (myArray).concat(['actions']);
+        this.createColumnDefs();
+      }
+    });
+    this.objectService.getObjects('ticket').subscribe(obj => this.rowData = obj);
   }
 
-  getObjects(){
-    this.objectService.getObjects('ticket')
-    .subscribe(obj => this.dataSource = new MatTableDataSource<Ticket>(obj));
+  instituteIdToName(params) {
+        console.log(Object.getOwnPropertyNames(params));
+        return this.objectService.idToName('institute',params.id);
   }
 
-  public doFilter = (value: string) => {
-    this.dataSource.filter = value.trim().toLocaleLowerCase();
+  createColumnDefs() {
+    let columnDefs = [];
+    for (let key of this.objectKeys) {
+      let col = {};
+      col['field'] = key;
+      col['headerName'] = this.languageS.trans(key);
+      col['hide'] = (this.displayedColumns.indexOf(key) == -1);
+      col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
+      switch (key) {
+        case 'title': {
+          col['headerCheckboxSelection'] = true;
+          col['headerCheckboxSelectionFilteredOnly'] = true;
+          col['checkboxSelection'] = true;
+          break;
+        }
+        case 'cephalixInstituteId': {
+          col['valueGetter'] = function(params) {
+            return params.context['componentParent'].objectService.idToName('institute',params.data.cephalixInstituteId);
+          }
+          //col['valueFormatter'] =  this.instituteIdToName; 
+          //col['cellRendererFramework'] = InstituteIdCellRenderer;
+          break;
+        }
+        case 'recDate': {
+          col['cellRendererFramework'] = DateCellRenderer;
+          break;
+        }
+      }
+      columnDefs.push(col);
+    }
+    columnDefs.push({
+      headerName: "",
+      field: 'actions',
+      cellRendererFramework: ActionBTNRenderer
+    });
+    this.columnDefs = columnDefs;
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected == numRows;
+  onGridReady(params) {
+    this.gridApi = params.api;
+    this.columnApi = params.columnApi;
+    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
+    this.gridApi.sizeColumnsToFit();
+  }
+  onSelectionChanged() {
+    this.selected = this.gridApi.getSelectedRows();
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
+  onQuickFilterChanged() {
+    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById("quickFilter")).value);
+    this.gridApi.doLayout();
+
+  }
+  onResize($event) {
+    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
+    this.sizeAll();
+    this.gridApi.sizeColumnsToFit();
+  }
+  sizeAll() {
+    var allColumnIds = [];
+    this.columnApi.getAllColumns().forEach((column) => {
+      allColumnIds.push(column.getColId());
+    });
+    this.columnApi.autoSizeColumns(allColumnIds);
+  }
+
+  public redirectToDelete = (ticket: Ticket) => {
+    this.objectService.deleteObjectDialog(ticket, 'institute')
+  }
+  /**
+ * Open the actions menu with the selected object ids.
+ * @param ev 
+ */
+  async openActions(ev: any) {
+    if (this.selected) {
+      for (let i = 0; i < this.selected.length; i++) {
+        this.objectIds.push(this.selected[i].id);
+      }
+    }
+    const popover = await this.popoverCtrl.create({
+      component: ActionsComponent,
+      event: ev,
+      componentProps: {
+        objectType: "ticket",
+        objectIds: this.objectIds,
+        selection: this.selected
+      },
+      animated: true,
+      showBackdrop: true
+    });
+    (await popover).present();
+  }
+  async redirectToEdit(ev: Event, ticket: Ticket) {
+    if (ticket) {
+      this.route.navigate(['/pages/cephalix/tickets/' + ticket.id]);
+    } else {
+      ticket = new Ticket();
+      const modal = await this.modalCtrl.create({
+        component: ObjectsEditComponent,
+        componentProps: {
+          objectType: "ticket",
+          objectAction: "add",
+          object: ticket,
+          objectKeys: this.objectKeys
+        },
+        animated: true,
+        swipeToClose: true,
+        showBackdrop: true
+      });
+      modal.onDidDismiss().then((dataReturned) => {
+        if (dataReturned.data) {
+          console.log("Object was created or modified", dataReturned.data)
+        }
+      });
+      (await modal).present();
+    }
   }
 
   /**
@@ -88,35 +212,12 @@ export class TicketsPage implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        this.displayedColumns = ['select'].concat(dataReturned.data).concat(['actions']);
+        this.displayedColumns = (dataReturned.data).concat(['actions']);
+        this.createColumnDefs();
       }
     });
     (await modal).present().then((val) => {
       console.log("most lett vegrehajtva.")
     })
-  }
-
-  async redirectToEdit(ev: Event, object: Ticket) {
-    if (object == null) {
-      const modal = await this.modalCtrl.create({
-        component: ObjectsEditComponent,
-        componentProps: {
-          objectType: "ticket",
-          objectAction: "add",
-          object: new Ticket()
-        },
-        animated: true,
-        swipeToClose: true,
-        showBackdrop: true
-      });
-      modal.onDidDismiss().then((dataReturned) => {
-        if (dataReturned.data) {
-          this.ngOnInit();
-        }
-      });
-      (await modal).present();
-    } else {
-      this.route.navigate(['/pages/cephalix/tickets/' + object.id]);
-    }
   }
 }

@@ -1,12 +1,11 @@
 import {Component} from "@angular/core";
-
 import {ICellRendererAngularComp} from "ag-grid-angular";
 
 @Component({
-    selector: 'date-cell',
-    template: `{{ params.value | date:'yyyy-MM-dd' }}`,
+    selector: 'hwconfid-cell',
+    template: `{{ params.value | idToName:'hwconf' }}`,
 })
-export class DateCellRenderer implements ICellRendererAngularComp {
+export class HwconfIdCellRenderer implements ICellRendererAngularComp {
      params: any;
 
     constructor(){ }

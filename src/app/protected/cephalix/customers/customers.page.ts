@@ -20,8 +20,8 @@ import { Customer } from '../../../shared/models/cephalix-data-model'
 })
 export class CustomersPage implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['uuid', 'name', 'locality', 'ipVPN', 'regCode', 'validity', 'actions'];
-  sortableColumns: string[] = ['uuid', 'name', 'locality', 'ipVPN', 'regCode', 'validity'];
+  displayedColumns: string[] = ['name', 'uuid',  'locality', 'ipVPN', 'regCode', 'validity', 'actions'];
+  sortableColumns: string[] = [ 'name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity'];
   gridOptions: GridOptions;
   columnDefs = [];
   gridApi: GridApi;
@@ -48,7 +48,8 @@ export class CustomersPage implements OnInit {
         sortable: true,
         hide: false
       },
-      columnDefs: this.columnDefs
+      columnDefs: this.columnDefs,
+      context: this.context
     }
     this.context = { componentParent: this };
     this.rowSelection = 'multiple';
@@ -80,7 +81,7 @@ export class CustomersPage implements OnInit {
           col['checkboxSelection'] = true;
           break;
         }
-        case 'validity': {
+        case 'recDate': {
           col['cellRendererFramework'] = DateCellRenderer;
           break;
         }
@@ -124,7 +125,7 @@ export class CustomersPage implements OnInit {
   }
 
   public redirectToDelete = (customer: Customer) => {
-    console.log("Delete:" + customer.uuid)
+    this.objectService.deleteObjectDialog(customer, 'customer')
   }
   /**
  * Open the actions menu with the selected object ids.
@@ -193,7 +194,8 @@ export class CustomersPage implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        this.displayedColumns = ['select'].concat(dataReturned.data).concat(['actions']);
+        this.displayedColumns = (dataReturned.data).concat(['actions']);
+        this.createColumnDefs();
       }
     });
     (await modal).present().then((val) => {

@@ -5,17 +5,19 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
 @Component({
     selector: 'action-cell',
     template: `
+      
         <button size="small" (click)="details()" mat-icon-button matTooltip="{{'edit' | translate }}">
-             <ion-icon slot="top" name="create-outline"></ion-icon>
+             <ion-icon name="create-outline"></ion-icon>
         </button>
         <button size="small" mat-icon-button (click)="notes()" matTooltip="{{'notes' | translate }}">
-            <ion-icon slot="icon-only" name="menu"></ion-icon>
+            <ion-icon  name="menu"></ion-icon>
         </button>
         <button size="small" mat-icon-button (click)="delete()" matTooltip="{{'delete' | translate }}">
-            <ion-icon slot="icon-only" color="danger" name="trash-outline"></ion-icon>
+            <ion-icon color="danger" name="trash-outline"></ion-icon>
         </button>` ,
 
 })
+
 export class ActionBTNRenderer implements ICellRendererAngularComp {
     private params: any;
 

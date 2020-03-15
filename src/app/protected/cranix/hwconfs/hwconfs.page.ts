@@ -23,6 +23,7 @@ export class HwconfsPage implements OnInit {
   displayedColumns: string[] = ['name', 'description', 'deviceType','actions'];
   sortableColumns: string[] = ['name', 'description', 'deviceType'];
   gridOptions: GridOptions;
+  columnDefs = [];
   gridApi: GridApi;
   columnApi: ColumnApi;
   rowSelection;
@@ -39,29 +40,43 @@ export class HwconfsPage implements OnInit {
     public languageS: LanguageService,
     private storage: Storage
   ) {
+    this.context = { componentParent: this };
+    this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new Hwconf());
+    this.createColumnDefs();
+    this.gridOptions = <GridOptions>{
+      defaultColDef: {
+        resizable: true,
+        sortable: true,
+        hide: false
+      },
+      columnDefs: this.columnDefs,
+      context: this.context
+    }
+  }
+  ngOnInit() {
     this.storage.get('HwconfsPage.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
-        this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
+        this.displayedColumns = myArray.concat(['actions']);
+        this.createColumnDefs();
       }
     });
+    this.objectService.getObjects('hwconf').subscribe(obj => this.rowData = obj);
+  }
+  createColumnDefs() {
     let columnDefs = [];
     for (let key of this.objectKeys) {
       let col = {};
       col['field'] = key;
       col['headerName'] = this.languageS.trans(key);
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
-      col['sortable'] = (this.displayedColumns.indexOf(key) != -1);
+      col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
       switch (key) {
         case 'name': {
           col['headerCheckboxSelection'] = true;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
-          break;
-        }
-        case 'validity': {
-          col['cellRendererFramework'] = DateCellRenderer;
           break;
         }
       }
@@ -72,23 +87,8 @@ export class HwconfsPage implements OnInit {
       field: 'actions',
       cellRendererFramework: ActionBTNRenderer
     });
-
-    this.gridOptions = <GridOptions>{
-      defaultColDef: {
-        resizable: true,
-        sortable: true,
-        hide: false
-      },
-      columnDefs: columnDefs
-    }
-    this.context = { componentParent: this };
-    this.rowSelection = 'multiple';
-
+    this.columnDefs = columnDefs;
   }
-  ngOnInit() {
-    this.objectService.getObjects('hwconf').subscribe(obj => this.rowData = obj);
-  }
-
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
@@ -118,7 +118,7 @@ export class HwconfsPage implements OnInit {
   }
 
   public redirectToDelete = (hwconf: Hwconf) => {
-    console.log("Delete:" + hwconf.name)
+    this.objectService.deleteObjectDialog(hwconf, 'hwconf')
   }
   /**
  * Open the actions menu with the selected object ids.
@@ -187,7 +187,8 @@ export class HwconfsPage implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        this.displayedColumns = ['select'].concat(dataReturned.data).concat(['actions']);
+        this.displayedColumns = dataReturned.data.concat(['actions']);
+        this.createColumnDefs();
       }
     });
     (await modal).present().then((val) => {

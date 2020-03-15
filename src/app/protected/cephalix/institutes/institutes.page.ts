@@ -51,7 +51,8 @@ export class InstitutesPage implements OnInit {
         sortable: true,
         hide: false
       },
-      columnDefs: this.columnDefs
+      columnDefs: this.columnDefs,
+      context: this.context
     }
   }
 
@@ -82,6 +83,10 @@ export class InstitutesPage implements OnInit {
           break;
         }
         case 'validity': {
+          col['cellRendererFramework'] = DateCellRenderer;
+          break;
+        }
+        case 'recDate': {
           col['cellRendererFramework'] = DateCellRenderer;
           break;
         }
@@ -125,7 +130,7 @@ export class InstitutesPage implements OnInit {
   }
 
   public redirectToDelete = (institute: Institute) => {
-    console.log("Delete:" + institute.uuid)
+    this.objectService.deleteObjectDialog(institute, 'institute')
   }
   /**
  * Open the actions menu with the selected object ids.
@@ -194,7 +199,7 @@ export class InstitutesPage implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        this.displayedColumns = ['select'].concat(dataReturned.data).concat(['actions']);
+        this.displayedColumns = (dataReturned.data).concat(['actions']);
         this.createColumnDefs();
       }
     });

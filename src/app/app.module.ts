@@ -26,10 +26,6 @@ import { ActionsComponent } from './shared/actions/actions.component';
 import { GenericObjectService } from './services/generic-object.service';
 import { ObjectsEditComponent } from './shared/objects-edit/objects-edit.component';
 import { SelectColumnsComponent } from './shared/select-columns/select-columns.component';
-import { ActionBTNRenderer } from './pipes/ag-action-renderer';
-import { DateCellRenderer } from './pipes/ag-date-renderer';
-
-
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -55,7 +51,6 @@ const routes: Routes = [
      SelectColumnsComponent],
   entryComponents: [ActionsComponent,ObjectsEditComponent,SelectColumnsComponent],
   imports: [
- //   AgGridModule.withComponents( [ActionBTNRenderer, DateCellRenderer]),
     BrowserModule,
     IonicModule.forRoot(),
     BrowserAnimationsModule,

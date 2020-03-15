@@ -1,12 +1,11 @@
 import {Component} from "@angular/core";
-
 import {ICellRendererAngularComp} from "ag-grid-angular";
 
 @Component({
-    selector: 'date-cell',
-    template: `{{ params.value | date:'yyyy-MM-dd' }}`,
+    selector: 'userid-cell',
+    template: `{{ params.value | userIdToUid }}`,
 })
-export class DateCellRenderer implements ICellRendererAngularComp {
+export class UserIdCellRenderer implements ICellRendererAngularComp {
      params: any;
 
     constructor(){ }

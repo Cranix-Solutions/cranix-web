@@ -1,9 +1,9 @@
 
 export class Customer {
     id: number = 0;
-    uuid: string = '';
     name: string = '';
     name2: string = '';
+    uuid: string = '';
     description: string = '';
     category: string = '';
     address1: string = '';
@@ -52,17 +52,17 @@ export class Institute {
 
 export class Ticket{
     id: number = 0;
+    title: string = "";
     cephalixInstituteId: number = 0;
     ossuserId: number = 0;
     ownerId: number = 0;
-    title: string = "";
     ticketType: string = "";
     firstname: string = "";
     lastname: string = "";
     email: string = "";
     priority: number = 0;
     recDate: any = new Date();
-    status: string = "";
+    ticketStatus: string = "";
     constructor() {}
 }
 

@@ -23,6 +23,7 @@ export class UsersPage implements OnInit {
   displayedColumns: string[] = ['uid', 'uuid', 'givenName', 'surName', 'role', 'classes', 'actions'];
   sortableColumns: string[] = [ 'uid', 'uuid', 'givenName', 'surName', 'role', 'classes' ];
   gridOptions: GridOptions;
+  columnDefs = [];
   gridApi: GridApi;
   columnApi: ColumnApi;
   rowSelection;
@@ -39,28 +40,46 @@ export class UsersPage implements OnInit {
     public languageS: LanguageService,
     private storage: Storage
   ) {
+    this.context = { componentParent: this };
+    this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new User());
+    this.createColumnDefs();
+    this.gridOptions = <GridOptions>{
+      defaultColDef: {
+        resizable: true,
+        sortable: true,
+        hide: false
+      },
+      columnDefs: this.columnDefs,
+      context: this.context
+    }
+  }
+  ngOnInit() {
     this.storage.get('UsersPage.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
-        this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
+        this.displayedColumns = myArray.concat(['actions']);
+        this.createColumnDefs();
       }
     });
+    this.objectService.getObjects('user').subscribe(obj => this.rowData = obj);
+  }
+  createColumnDefs() {
     let columnDefs = [];
     for (let key of this.objectKeys) {
       let col = {};
       col['field'] = key;
       col['headerName'] = this.languageS.trans(key);
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
-      col['sortable'] = (this.displayedColumns.indexOf(key) != -1);
+      col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
       switch (key) {
-        case 'name': {
+        case 'uid': {
           col['headerCheckboxSelection'] = true;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
           break;
         }
-        case 'validity': {
+        case 'birthDay': {
           col['cellRendererFramework'] = DateCellRenderer;
           break;
         }
@@ -72,23 +91,8 @@ export class UsersPage implements OnInit {
       field: 'actions',
       cellRendererFramework: ActionBTNRenderer
     });
-
-    this.gridOptions = <GridOptions>{
-      defaultColDef: {
-        resizable: true,
-        sortable: true,
-        hide: false
-      },
-      columnDefs: columnDefs
-    }
-    this.context = { componentParent: this };
-    this.rowSelection = 'multiple';
-
+    this.columnDefs = columnDefs;
   }
-  ngOnInit() {
-    this.objectService.getObjects('user').subscribe(obj => this.rowData = obj);
-  }
-
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
@@ -118,7 +122,7 @@ export class UsersPage implements OnInit {
   }
 
   public redirectToDelete = (user: User) => {
-    console.log("Delete:" + user.uid)
+    this.objectService.deleteObjectDialog(user, 'user')
   }
   /**
  * Open the actions menu with the selected object ids.
