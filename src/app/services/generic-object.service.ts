@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { ServerResponse } from '../shared/models/server-models';
 import { AlertController, ToastController } from '@ionic/angular';
+import { Validators } from '@angular/forms';
 // own modules
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
@@ -12,6 +13,7 @@ import { LanguageService } from './language.service';
 })
 export class GenericObjectService {
   allObjects: any = {};
+  selectedObject: any = null;
   objects: string[] = [
     'user', 'group', 'room', 'device', 'institute', 'customer', 'ticket', 'hwconf'
   ]
@@ -23,6 +25,35 @@ export class GenericObjectService {
   enumerates: string[] = [
     'instituteType', 'groupType', 'deviceType', 'roomType', 'roomControl', 'network', 'accessType', 'role'
   ];
+
+  readOnlyAttributes: string[] = [
+    'fsQuotaUsed',
+    'msQuotaUsed',
+    'name',
+    'recDate',
+    'role',
+    'classes',
+    'uid'
+  ]
+  /**
+   * Attributes which we get but need not be shown
+   */
+  hiddenAttributes: string[] = [
+    'id',
+    'ownerId',
+    'deleted',
+    'saveNext'
+  ]
+  required: any = {
+    'givenName': '*',
+    'groupType': '*',
+    'instituteType': '*',
+    'name': '*',
+    'regCode': '*',
+    'role': '*',
+    'surName': '*'
+  };
+
   headers: HttpHeaders;
 
   constructor(
@@ -182,5 +213,50 @@ export class GenericObjectService {
       duration: 3000
     });
     (await toast).present();
+  }
+
+  compareFn(a: string, b: string): boolean {
+    return a == b;
+  }
+  /**
+   * Helper script fot the template to detect the type of the variables
+   * @param val 
+   */
+  typeOf(key,object,action) {
+    let obj = object[key];
+    if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
+      let d = new Date()
+      return "date";
+    }
+    if (typeof obj === 'boolean' && obj) {
+      return "booleanTrue";
+    }
+    if (typeof obj === 'boolean') {
+      return "booleanFalse";
+    }
+    if (this.hiddenAttributes.indexOf(key) != -1) {
+      return "hidden";
+    }
+    if (action == 'edit' && this.readOnlyAttributes.indexOf(key) != -1) {
+      return "stringRO";
+    }
+    return "string";
+  }
+
+  convertObject(object) {
+    //TODO introduce checks
+    let output: any = {};
+    for (let key in object) {
+      if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
+        let date = new Date(object[key]);
+        output[key] = date.toJSON();
+      } else if (this.required[key]) {
+        output[key] = [object[key], Validators.compose([Validators.required])];
+      } else {
+        output[key] = object[key];
+      }
+    }
+    console.log(output);
+    return output;
   }
 }

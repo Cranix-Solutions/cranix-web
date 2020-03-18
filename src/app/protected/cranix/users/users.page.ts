@@ -1,6 +1,7 @@
 import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__ } from '@angular/core';
 import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
+import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 
 //own modules
@@ -26,7 +27,6 @@ export class UsersPage implements OnInit {
   columnDefs = [];
   gridApi: GridApi;
   columnApi: ColumnApi;
-  rowSelection;
   context;
   selected: User[];
   title = 'app';
@@ -38,10 +38,10 @@ export class UsersPage implements OnInit {
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     public languageS: LanguageService,
+    private route: Router,
     private storage: Storage
   ) {
     this.context = { componentParent: this };
-    this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new User());
     this.createColumnDefs();
     this.gridOptions = <GridOptions>{
@@ -51,7 +51,9 @@ export class UsersPage implements OnInit {
         hide: false
       },
       columnDefs: this.columnDefs,
-      context: this.context
+      context: this.context,
+      rowSelection: 'multiple',
+      rowHeight: 35
     }
   }
   ngOnInit() {
@@ -106,9 +108,11 @@ export class UsersPage implements OnInit {
   onQuickFilterChanged() {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById("quickFilter")).value);
     this.gridApi.doLayout();
-
   }
+
   onResize($event) {
+    console.log("window");
+    console.log(window);
     (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
     this.sizeAll();
     this.gridApi.sizeColumnsToFit();
@@ -148,29 +152,30 @@ export class UsersPage implements OnInit {
     (await popover).present();
   }
   async redirectToEdit(ev: Event, user: User) {
-    let action = 'modify';
-    if (user == null) {
+    if (user) {
+      this.objectService.selectedObject = user;
+       this.route.navigate(['/pages/cranix/users/' + user.id]);
+    } else {
       user = new User();
-      action = 'add';
+      const modal = await this.modalCtrl.create({
+        component: ObjectsEditComponent,
+        componentProps: {
+          objectType: "user",
+          objectAction: "add",
+          object: user,
+          objectKeys: this.objectKeys
+        },
+        animated: true,
+        swipeToClose: true,
+        showBackdrop: true
+      });
+      modal.onDidDismiss().then((dataReturned) => {
+        if (dataReturned.data) {
+          console.log("Object was created or modified", dataReturned.data)
+        }
+      });
+      (await modal).present();
     }
-    const modal = await this.modalCtrl.create({
-      component: ObjectsEditComponent,
-      componentProps: {
-        objectType: "user",
-        objectAction: action,
-        object: user,
-        objectKeys: this.objectKeys
-      },
-      animated: true,
-      swipeToClose: true,
-      showBackdrop: true
-    });
-    modal.onDidDismiss().then((dataReturned) => {
-      if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
-      }
-    });
-    (await modal).present();
   }
 
   /**

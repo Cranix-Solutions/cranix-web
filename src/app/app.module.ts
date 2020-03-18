@@ -13,7 +13,6 @@ import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-transla
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { IonicStorageModule } from '@ionic/storage';
 import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
-//import { AgGridModule } from 'ag-grid-angular';
 import { ErrorHandler, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 //own modules 
@@ -24,6 +23,7 @@ import { LanguageService } from './services/language.service';
 
 import { ActionsComponent } from './shared/actions/actions.component';
 import { GenericObjectService } from './services/generic-object.service';
+import { UsersService } from './services/users.service';
 import { ObjectsEditComponent } from './shared/objects-edit/objects-edit.component';
 import { SelectColumnsComponent } from './shared/select-columns/select-columns.component';
 
@@ -47,9 +47,12 @@ const routes: Routes = [
   declarations: [
      AppComponent,
      ActionsComponent,
-     ObjectsEditComponent,
+    ObjectsEditComponent,
      SelectColumnsComponent],
-  entryComponents: [ActionsComponent,ObjectsEditComponent,SelectColumnsComponent],
+  entryComponents: [
+    ActionsComponent,
+    ObjectsEditComponent,
+    SelectColumnsComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -69,6 +72,7 @@ const routes: Routes = [
     GenericObjectService,
     StatusBar,
     SplashScreen,
+    UsersService,
     UtilsService,
     TranslateService,
     SystemService,

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams, ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 /* import { SplashScreen } from '@ionic-native/splash-screen/ngx'; */
 import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
 //own 
@@ -15,10 +15,6 @@ import { ServerResponse } from '../models/server-models';
 })
 export class ObjectsEditComponent implements OnInit {
   result: any = {};
-  /**
-   * This hash defines if a key  has defaults
-   */
-  hasDefaults: any = {};
   editForm: FormGroup;
   objectType: string = "";
   object: any = null;
@@ -72,42 +68,16 @@ export class ObjectsEditComponent implements OnInit {
       this.objectActionTitle = "Edit " + this.objectType;
       this.objectAction = "Apply";
     }
-    this.objectKeys =  this.navParams.get('objectKeys');
+    this.objectKeys = Object.getOwnPropertyNames(this.object);
     console.log(this.objectKeys);
     console.log(this.object);
   }
   ngOnInit() {
-    this.editForm = this.formBuilder.group(this.convertObject());
+    this.editForm = this.formBuilder.group(this.objectService.convertObject(this.object));
   }
 
-  compareFn(a: string, b: string): boolean {
-    return a == b;
-  }
-  /**
-   * Helper script fot the template to detect the type of the variables
-   * @param val 
-   */
-  typeOf(key) {
-    let obj = this.object[key];
-    if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
-      let d = new Date()
-      return "date";
-    }
-    if (typeof obj === 'boolean' && obj) {
-      return "booleanTrue";
-    }
-    if (typeof obj === 'boolean') {
-      return "booleanFalse";
-    }
-    if (this.hiddenAttributes.indexOf(key) != -1) {
-      return "hidden";
-    }
-    if (this.objectAction == 'modify' && this.readOnlyAttributes.indexOf(key) != -1) {
-      return "stringRO";
-    }
-    return "string";
-  }
-
+  
+ 
   closeWindow() {
     this.modalController.dismiss();
   }
@@ -163,22 +133,7 @@ export class ObjectsEditComponent implements OnInit {
     )
   }
 
-  convertObject() {
-    //TODO introduce checks
-    let output: any = {};
-    for (let key in this.object) {
-      if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
-        let date = new Date(this.object[key]);
-        output[key] = date.toJSON();
-      } else if (this.required[key]) {
-        output[key] = [this.object[key], Validators.compose([Validators.required])];
-      } else {
-        output[key] = this.object[key];
-      }
-    }
-    console.log(output);
-    return output;
-  }
+
 }
 
 

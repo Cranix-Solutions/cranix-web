@@ -20,13 +20,13 @@ export class Partition {
 }
 
 export class User {
+	uid?: string = "";
+	uuid?: string = "";
 	id?: number = 0;
 	surName: string = "";
 	givenName: string = "";
 	birthDay?: any = new Date();
 	password?: string = "";
-	uuid?: string = "";
-	uid?: string = "";
 	role?: string = "";
 	classes?: string = "";
 	msQuota?: number;

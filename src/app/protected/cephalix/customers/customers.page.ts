@@ -49,7 +49,8 @@ export class CustomersPage implements OnInit {
         hide: false
       },
       columnDefs: this.columnDefs,
-      context: this.context
+      context: this.context,
+      rowHeight: 35
     }
     this.context = { componentParent: this };
     this.rowSelection = 'multiple';

@@ -29,7 +29,6 @@ import { InstituteIdCellRenderer } from '../pipes/ag-instituteid-renderer';
 import { UserIdCellRenderer } from '../pipes/ag-userid-renderer';
 import { UserIdToNameCellRenderer } from '../pipes/ag-userid-to-name-renderer';
 
-
 @NgModule({
   declarations: [ 
     ActionBTNRenderer, 
@@ -40,7 +39,7 @@ import { UserIdToNameCellRenderer } from '../pipes/ag-userid-to-name-renderer';
     RoomIdCellRenderer,
     UserIdCellRenderer,
     UserIdToNameCellRenderer,
-    ToolbarComponent
+    ToolbarComponent,
   ],
   imports: [
   CommonModule,
