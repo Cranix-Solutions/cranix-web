@@ -5,10 +5,9 @@ import { UtilsService } from './utils.service';
 import { Observable } from 'rxjs/internal/Observable';
 import { BehaviorSubject } from 'rxjs';
 
-import { Institute, Object, Note, OssCare } from 'src/app/shared/models/cephalix-data-model';
+import { Customer, Institute, Object, Ticket, Article, Notice, OssCare } from 'src/app/shared/models/cephalix-data-model';
 import { ServerResponse } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from './auth.service';
-import { Customer, Ticket, Article } from '../shared/models/cephalix-data-model';
 
 
 export interface InstallSetSync{
@@ -172,7 +171,7 @@ export class CephalixService {
 		});
 		return this.http.get<string[]>(this.url, { headers: headers });
 	}
-	getNotesOfInst(id: number){
+	getNoticesOfInst(id: number){
 			//	this.hostname = this.utils.hostName();
 		//      this.token = this.token;
 		this.url = this.hostname + `/institutes/${id}/notices`;
@@ -181,7 +180,7 @@ export class CephalixService {
 			'Accept': "application/json",
 			'Authorization': "Bearer " + this.token
 		});
-		return this.http.get<Note[]>(this.url, { headers: headers });
+		return this.http.get<Notice[]>(this.url, { headers: headers });
 	}
 	getOssCaerOfInst(id: number){
 			//	this.hostname = this.utils.hostName();
@@ -196,7 +195,7 @@ export class CephalixService {
 	}
 
 	//POST
-	addNoteToInst(id: number, note: Note){
+	addNoticeToInst(id: number, note: Notice){
 		this.url = this.hostname + `/institutes/${id}/notices`;
 		const headers = new HttpHeaders({
 				'Accept' : "application/json",

@@ -1,16 +1,17 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
-import { SelectionModel } from '@angular/cdk/collections';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__ } from '@angular/core';
+import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 
-import { CephalixService } from 'src/app/services/cephalix.service';
-import { Customer } from 'src/app/shared/models/cephalix-data-model';
-import { ActionsComponent } from 'src/app/shared/actions/actions.component';
+//own modules
+import { ActionsComponent } from '../../../shared/actions/actions.component';
+import { DateCellRenderer } from '../../../pipes/ag-date-renderer';
+import { ActionBTNRenderer } from '../../../pipes/ag-action-renderer';
 import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
-import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
 import { GenericObjectService } from '../../../services/generic-object.service';
+import { LanguageService } from '../../../services/language.service';
+import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
+import { Customer } from '../../../shared/models/cephalix-data-model'
 
 @Component({
   selector: 'cranix-customers',
@@ -18,72 +19,168 @@ import { GenericObjectService } from '../../../services/generic-object.service';
   styleUrls: ['./customers.page.scss'],
 })
 export class CustomersPage implements OnInit {
-  displayedColumns: string[] = ['select', 'uuid', 'name', 'locality', 'description', 'telephone', 'recDate', 'actions'];
   objectKeys: string[] = [];
-  dataSource: MatTableDataSource<Customer>;
-  selection = new SelectionModel<Customer>(true, []);
+  displayedColumns: string[] = ['name', 'uuid',  'locality', 'ipVPN', 'regCode', 'validity', 'actions'];
+  sortableColumns: string[] = [ 'name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity'];
+  gridOptions: GridOptions;
+  columnDefs = [];
+  gridApi: GridApi;
+  columnApi: ColumnApi;
+  rowSelection;
+  context;
+  selected: Customer[];
+  title = 'app';
+  rowData = [];
   objectIds: number[] = [];
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
-    private cephalixS: CephalixService,
     private objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
-    private storage: Storage,
-    public translateService: TranslateService,
-
+    public languageS: LanguageService,
+    private storage: Storage
   ) {
     this.objectKeys = Object.getOwnPropertyNames(new Customer());
+    this.createColumnDefs();
+    this.gridOptions = <GridOptions>{
+      defaultColDef: {
+        resizable: true,
+        sortable: true,
+        hide: false
+      },
+      columnDefs: this.columnDefs,
+      context: this.context,
+      rowHeight: 35
+    }
+    this.context = { componentParent: this };
+    this.rowSelection = 'multiple';
+
+  }
+  ngOnInit() {
     this.storage.get('CustomersPage.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
-        this.displayedColumns = ['select'].concat(myArray);
-        this.displayedColumns.push('actions');
+         this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
+         this.createColumnDefs();
       }
     });
+    this.objectService.getObjects('customer').subscribe(obj => this.rowData = obj);
   }
 
-  ngOnInit() {
-      this.getObjects();
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-  }
-
-  getObjects(){
-    this.objectService.getObjects('customer')
-    .subscribe(obj => this.dataSource = new MatTableDataSource<Customer>(obj));
-  }
-
-  typeOf(key) {
-    if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
-      return "date";
+  createColumnDefs() {
+    let columnDefs = [];
+    for (let key of this.objectKeys) {
+      let col = {};
+      col['field'] = key;
+      col['headerName'] = this.languageS.trans(key);
+      col['hide'] = (this.displayedColumns.indexOf(key) == -1);
+      col['sortable'] = (this.displayedColumns.indexOf(key) == -1);
+      switch (key) {
+        case 'name': {
+          col['headerCheckboxSelection'] = true;
+          col['headerCheckboxSelectionFilteredOnly'] = true;
+          col['checkboxSelection'] = true;
+          break;
+        }
+        case 'recDate': {
+          col['cellRendererFramework'] = DateCellRenderer;
+          break;
+        }
+      }
+      columnDefs.push(col);
     }
-    return "string";
-  }
-  public doFilter = (value: string) => {
-    this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected == numRows;
+    columnDefs.push({
+      headerName: "",
+      field: 'actions',
+      cellRendererFramework: ActionBTNRenderer
+    });
+    this.columnDefs = columnDefs;
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
+  onGridReady(params) {
+    this.gridApi = params.api;
+    this.columnApi = params.columnApi;
+    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
+    this.gridApi.sizeColumnsToFit();
+  }
+  onSelectionChanged() {
+    this.selected = this.gridApi.getSelectedRows();
+  }
+
+  onQuickFilterChanged() {
+    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById("quickFilter")).value);
+    this.gridApi.doLayout();
+
+  }
+  onResize($event) {
+    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
+    this.sizeAll();
+    this.gridApi.sizeColumnsToFit();
+  }
+  sizeAll() {
+    var allColumnIds = [];
+    this.columnApi.getAllColumns().forEach((column) => {
+      allColumnIds.push(column.getColId());
+    });
+    this.columnApi.autoSizeColumns(allColumnIds);
+  }
+
+  public redirectToDelete = (customer: Customer) => {
+    this.objectService.deleteObjectDialog(customer, 'customer')
+  }
+  /**
+ * Open the actions menu with the selected object ids.
+ * @param ev 
+ */
+  async openActions(ev: any) {
+    if (this.selected) {
+      for (let i = 0; i < this.selected.length; i++) {
+        this.objectIds.push(this.selected[i].id);
+      }
+    }
+    const popover = await this.popoverCtrl.create({
+      component: ActionsComponent,
+      event: ev,
+      componentProps: {
+        objectType: "customer",
+        objectIds: this.objectIds,
+        selection: this.selected
+      },
+      animated: true,
+      showBackdrop: true
+    });
+    (await popover).present();
+  }
+  async redirectToEdit(ev: Event, customer: Customer) {
+    let action = 'modify';
+    if (customer == null) {
+      customer = new Customer();
+      action = 'add';
+    }
+    const modal = await this.modalCtrl.create({
+      component: ObjectsEditComponent,
+      componentProps: {
+        objectType: "customer",
+        objectAction: action,
+        object: customer,
+        objectKeys: this.objectKeys
+      },
+      animated: true,
+      swipeToClose: true,
+      showBackdrop: true
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        console.log("Object was created or modified", dataReturned.data)
+      }
+    });
+    (await modal).present();
   }
 
   /**
-   * Function to select the columns to show
-   * @param ev 
-   */
+* Function to select the columns to show
+* @param ev 
+*/
   async openCollums(ev: any) {
     const modal = await this.modalCtrl.create({
       component: SelectColumnsComponent,
@@ -98,63 +195,12 @@ export class CustomersPage implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        this.displayedColumns = ['select'].concat(dataReturned.data).concat(['actions']);
+        this.displayedColumns = (dataReturned.data).concat(['actions']);
+        this.createColumnDefs();
       }
     });
     (await modal).present().then((val) => {
+      console.log("most lett vegrehajtva.")
     })
-  }
-
-  public redirectToDelete = (customer: Customer) => {
-    console.log("Delete:" + customer.uuid)
-  }
-
-  /**
-   * Open the actions menu with the selected object ids.
-   * @param ev
-   */
-  async openActions(ev: any) {
-    for (let i = 0; i < this.selection.selected.length; i++) {
-      this.objectIds.push(this.selection.selected[i].id);
-    }
-    console.log("openActions" + this.objectIds);
-    const popover = await this.popoverCtrl.create({
-      component: ActionsComponent,
-      event: ev,
-      componentProps: {
-        objectType: "customer",
-        objectIds: this.objectIds,
-        columnts: this.objectKeys,
-        selection: this.selection.selected
-      },
-      animated: true,
-      showBackdrop: true
-    });
-    (await popover).present();
-  }
-
-  async redirectToEdit(ev: Event, customer: Customer) {
-    let action = 'modify';
-    if (customer == null) {
-      customer = new Customer();
-      action = 'add';
-    }
-    const modal = await this.modalCtrl.create({
-      component: ObjectsEditComponent,
-      componentProps: {
-        objectType: "customer",
-        objectAction: action,
-        object: customer
-      },
-      animated: true,
-      swipeToClose: true,
-      showBackdrop: true
-    });
-    modal.onDidDismiss().then((dataReturned) => {
-      if (dataReturned.data) {
-        this.ngOnInit();
-      }
-    });
-    (await modal).present();
   }
 }

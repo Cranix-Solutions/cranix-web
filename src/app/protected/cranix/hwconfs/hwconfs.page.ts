@@ -1,15 +1,17 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
-import { SelectionModel, isDataSource } from '@angular/cdk/collections';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__ } from '@angular/core';
+import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
+
 //own modules
-import {GenericObjectService } from '../../../services/generic-object.service';
-import { ActionsComponent } from 'src/app/shared/actions/actions.component';
+import { ActionsComponent } from '../../../shared/actions/actions.component';
+import { DateCellRenderer } from '../../../pipes/ag-date-renderer';
+import { ActionBTNRenderer } from '../../../pipes/ag-action-renderer';
 import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
+import { GenericObjectService } from '../../../services/generic-object.service';
+import { LanguageService } from '../../../services/language.service';
 import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
-import { Hwconf } from '../../../shared/models/data-model';
+import { Hwconf } from '../../../shared/models/data-model'
 
 @Component({
   selector: 'cranix-hwconfs',
@@ -17,89 +19,133 @@ import { Hwconf } from '../../../shared/models/data-model';
   styleUrls: ['./hwconfs.page.scss'],
 })
 export class HwconfsPage implements OnInit {
-
-  allSelected: boolean = false;
-  displayedColumns: string[] = ['select', 'name', 'description', 'deviceType','actions'];
-  objectKeys:  string[]  = [];
-  dataSource: MatTableDataSource<Hwconf>;
-  selection = new SelectionModel<Hwconf>(true, []);
+  objectKeys: string[] = [];
+  displayedColumns: string[] = ['name', 'description', 'deviceType','actions'];
+  sortableColumns: string[] = ['name', 'description', 'deviceType'];
+  gridOptions: GridOptions;
+  columnDefs = [];
+  gridApi: GridApi;
+  columnApi: ColumnApi;
+  rowSelection;
+  context;
+  selected: Hwconf[];
+  title = 'app';
+  rowData = [];
   objectIds: number[] = [];
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
     private objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
-    private storage: Storage,
-    public translateService: TranslateService
+    public languageS: LanguageService,
+    private storage: Storage
   ) {
-    this.objectKeys = Object.getOwnPropertyNames( new Hwconf() );
-      this.storage.get('HwconfsPage.displayedColumns').then((val) => {
-      let myArray  = JSON.parse(val);
-      if(myArray  ) {
-        this.displayedColumns = ['select'].concat(myArray);
-        this.displayedColumns.push('actions');
+    this.context = { componentParent: this };
+    this.rowSelection = 'multiple';
+    this.objectKeys = Object.getOwnPropertyNames(new Hwconf());
+    this.createColumnDefs();
+    this.gridOptions = <GridOptions>{
+      defaultColDef: {
+        resizable: true,
+        sortable: true,
+        hide: false
+      },
+      columnDefs: this.columnDefs,
+      context: this.context
+    }
+  }
+  ngOnInit() {
+    this.storage.get('HwconfsPage.displayedColumns').then((val) => {
+      let myArray = JSON.parse(val);
+      if (myArray) {
+        this.displayedColumns = myArray.concat(['actions']);
+        this.createColumnDefs();
       }
     });
+    this.objectService.getObjects('hwconf').subscribe(obj => this.rowData = obj);
+  }
+  createColumnDefs() {
+    let columnDefs = [];
+    for (let key of this.objectKeys) {
+      let col = {};
+      col['field'] = key;
+      col['headerName'] = this.languageS.trans(key);
+      col['hide'] = (this.displayedColumns.indexOf(key) == -1);
+      col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
+      switch (key) {
+        case 'name': {
+          col['headerCheckboxSelection'] = true;
+          col['headerCheckboxSelectionFilteredOnly'] = true;
+          col['checkboxSelection'] = true;
+          break;
+        }
+      }
+      columnDefs.push(col);
+    }
+    columnDefs.push({
+      headerName: "",
+      field: 'actions',
+      cellRendererFramework: ActionBTNRenderer
+    });
+    this.columnDefs = columnDefs;
+  }
+  onGridReady(params) {
+    this.gridApi = params.api;
+    this.columnApi = params.columnApi;
+    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
+    this.gridApi.sizeColumnsToFit();
+  }
+  onSelectionChanged() {
+    this.selected = this.gridApi.getSelectedRows();
   }
 
-  ngOnInit() {
-      this.getObjects();
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
+  onQuickFilterChanged() {
+    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById("quickFilter")).value);
+    this.gridApi.doLayout();
+
+  }
+  onResize($event) {
+    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
+    this.sizeAll();
+    this.gridApi.sizeColumnsToFit();
+  }
+  sizeAll() {
+    var allColumnIds = [];
+    this.columnApi.getAllColumns().forEach((column) => {
+      allColumnIds.push(column.getColId());
+    });
+    this.columnApi.autoSizeColumns(allColumnIds);
   }
 
-  getObjects(){
-    this.objectService.getObjects('hwconf')
-    .subscribe(obj => this.dataSource = new MatTableDataSource<Hwconf>(obj));
+  public redirectToDelete = (hwconf: Hwconf) => {
+    this.objectService.deleteObjectDialog(hwconf, 'hwconf')
   }
-
-  public doFilter = (value: string) => {
-    this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected == numRows;
-  }
-
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
-  }
-
   /**
-   * Function to select the columns to show
-   * @param ev 
-   */
-  async openCollums(ev: any) {
-    const modal = await this.modalCtrl.create({
-      component: SelectColumnsComponent,
+ * Open the actions menu with the selected object ids.
+ * @param ev 
+ */
+  async openActions(ev: any) {
+    if (this.selected) {
+      for (let i = 0; i < this.selected.length; i++) {
+        this.objectIds.push(this.selected[i].id);
+      }
+    }
+    const popover = await this.popoverCtrl.create({
+      component: ActionsComponent,
+      event: ev,
       componentProps: {
-        columns: this.objectKeys ,
-        selected: this.displayedColumns,
-        objectPath: "HwconfsPage.displayedColumns"
+        objectType: "hwconf",
+        objectIds: this.objectIds,
+        selection: this.selected
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
-    modal.onDidDismiss().then((dataReturned) => {
-      if (dataReturned.data) {
-         this.displayedColumns =  ['select'].concat(dataReturned.data).concat(['actions']);
-      }
-    });
-    (await modal).present().then((val) => {
-    })
+    (await popover).present();
   }
-  
   async redirectToEdit(ev: Event, hwconf: Hwconf) {
     let action = 'modify';
-    if( hwconf == null ){
+    if (hwconf == null) {
       hwconf = new Hwconf();
       action = 'add';
     }
@@ -108,47 +154,45 @@ export class HwconfsPage implements OnInit {
       componentProps: {
         objectType: "hwconf",
         objectAction: action,
-        object: hwconf
+        object: hwconf,
+        objectKeys: this.objectKeys
       },
-      swipeToClose: true,
       animated: true,
-      backdropDismiss: false
+      swipeToClose: true,
+      showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-          this.ngOnInit();
+        console.log("Object was created or modified", dataReturned.data)
       }
     });
     (await modal).present();
   }
 
-  public redirectToDelete = (hwconf: Hwconf) => {
-    this.objectService.deleteObjectDialog(hwconf,"hwconf");
-  }
-
   /**
-   * Open the actions menu with the selected object ids.
-   * @param ev 
-   */
-  async openActions(ev: any) {
-    for (let i = 0; i < this.selection.selected.length; i++) {
-      this.objectIds.push(this.selection.selected[i].id);
-    }
-    const popover = await this.popoverCtrl.create({
-      component: ActionsComponent,
-      event: ev,
+* Function to select the columns to show
+* @param ev 
+*/
+  async openCollums(ev: any) {
+    const modal = await this.modalCtrl.create({
+      component: SelectColumnsComponent,
       componentProps: {
-        objectType: "hwconf",
-        objectIds: this.objectIds,
-        selection: this.selection.selected
+        columns: this.objectKeys,
+        selected: this.displayedColumns,
+        objectPath: "HwconfsPage.displayedColumns"
       },
       animated: true,
-      showBackdrop: true
+      swipeToClose: true,
+      backdropDismiss: false
     });
-    (await popover).present();
-  }
-  procesModal(ev: Event) {
-    console.log(ev);
-    this.modalCtrl.dismiss();
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        this.displayedColumns = dataReturned.data.concat(['actions']);
+        this.createColumnDefs();
+      }
+    });
+    (await modal).present().then((val) => {
+      console.log("most lett vegrehajtva.")
+    })
   }
 }

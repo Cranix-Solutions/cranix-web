@@ -1,15 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
-import { SelectionModel, isDataSource } from '@angular/cdk/collections';
-import { TranslateService } from '@ngx-translate/core';
-import { PopoverController, ModalController } from '@ionic/angular';
+import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__ } from '@angular/core';
+import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
+import { AlertController, PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
+
 //own modules
-import { GenericObjectService } from '../../../services/generic-object.service';
-import { Device } from 'src/app/shared/models/data-model';
-import { ActionsComponent } from 'src/app/shared/actions/actions.component';
+import { ActionsComponent } from '../../../shared/actions/actions.component';
+import { ActionBTNRenderer } from '../../../pipes/ag-action-renderer';
 import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
+import { GenericObjectService } from '../../../services/generic-object.service';
+import { LanguageService } from '../../../services/language.service';
 import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
+import { Device } from '../../../shared/models/data-model'
+import { HwconfIdCellRenderer } from '../../../pipes/ag-hwconfid-renderer';
+import { RoomIdCellRenderer } from '../../../pipes/ag-roomid-render';
 
 @Component({
   selector: 'cranix-devices',
@@ -17,70 +20,182 @@ import { SelectColumnsComponent } from '../../../shared/select-columns/select-co
   styleUrls: ['./devices.page.scss'],
 })
 export class DevicesPage implements OnInit {
-
-  allSelected: boolean = false;
-  displayedColumns: string[] = ['select', 'name', 'mac', 'ip', 'hwconfId','actions'];
-  objectKeys:  string[]  = [];
-  dataSource: MatTableDataSource<Device>;
-  selection = new SelectionModel<Device>(true, []);
+  objectKeys: string[] = [];
+  displayedColumns: string[] = ['name', 'mac', 'ip', 'hwconfId', 'roomId', 'actions'];
+  sortableColumns: string[] = ['name', 'mac', 'ip', 'hwconfId', 'roomId'];
+  columnDefs = [];
+  gridOptions: GridOptions;
+  gridApi: GridApi;
+  columnApi: ColumnApi;
+  rowSelection;
+  context;
+  selected: Device[];
+  title = 'app';
+  rowData = [];
   objectIds: number[] = [];
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
+    public alertController: AlertController,
     private objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
-    private storage: Storage,
-    public translateService: TranslateService
+    public languageS: LanguageService,
+    private storage: Storage
   ) {
-    this.objectKeys = Object.getOwnPropertyNames( new Device() );
-      this.storage.get('DevicesPage.displayedColumns').then((val) => {
-      let myArray  = JSON.parse(val);
-      if(myArray  ) {
-        this.displayedColumns = ['select'].concat(myArray);
-        this.displayedColumns.push('actions');
+    this.context = { componentParent: this };
+    this.rowSelection = 'multiple';
+    this.objectKeys = Object.getOwnPropertyNames(new Device());
+    this.createColumnDefs();
+    this.gridOptions = <GridOptions>{
+      defaultColDef: {
+        resizable: true,
+        sortable: true,
+        hide: false
+      },
+      columnDefs: this.columnDefs,
+      context: this.context,
+      rowHeight: 35
+    }
+  }
+  ngOnInit() {
+    this.storage.get('DevicesPage.displayedColumns').then((val) => {
+      let myArray = JSON.parse(val);
+      if (myArray) {
+        this.displayedColumns = myArray.concat(['actions']);
+        this.createColumnDefs();
       }
     });
+    this.objectService.getObjects('device').subscribe(obj => this.rowData = obj);
+  }
+  createColumnDefs() {
+    let columnDefs = [];
+    for (let key of this.objectKeys) {
+      let col = {};
+      col['field'] = key;
+      col['headerName'] = this.languageS.trans(key);
+      col['hide'] = (this.displayedColumns.indexOf(key) == -1);
+      col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
+      switch (key) {
+        case 'name': {
+          col['headerCheckboxSelection'] = true;
+          col['headerCheckboxSelectionFilteredOnly'] = true;
+          col['checkboxSelection'] = true;
+          break;
+        }
+        case 'hwconfId': {
+          col['valueGetter'] = function(params) {
+            return params.context['componentParent'].objectService.idToName('hwconf',params.data.hwconfId);
+          }
+          //col['cellRendererFramework'] = HwconfIdCellRenderer;
+          break;
+        }
+        case 'roomId': {
+          col['valueGetter'] = function(params) {
+            return params.context['componentParent'].objectService.idToName('room',params.data.roomId);
+          }
+          //col['cellRendererFramework'] = RoomIdCellRenderer;
+          break;
+        }
+      }
+      columnDefs.push(col);
+    }
+    columnDefs.push({
+      headerName: "",
+      field: 'actions',
+      cellRendererFramework: ActionBTNRenderer
+    });
+    this.columnDefs = columnDefs;
   }
 
-  ngOnInit() {
-      this.getObjects();
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
+  onGridReady(params) {
+    this.gridApi = params.api;
+    this.columnApi = params.columnApi;
+    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
+    this.gridApi.sizeColumnsToFit();
+  }
+  onSelectionChanged() {
+    this.selected = this.gridApi.getSelectedRows();
   }
 
-  getObjects(){
-    this.objectService.getObjects('device')
-    .subscribe(obj => this.dataSource = new MatTableDataSource<Device>(obj));
+  onQuickFilterChanged() {
+    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById("quickFilter")).value);
+    this.gridApi.doLayout();
+
+  }
+  onResize($event) {
+    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
+    this.sizeAll();
+    this.gridApi.sizeColumnsToFit();
+  }
+  sizeAll() {
+    var allColumnIds = [];
+    this.columnApi.getAllColumns().forEach((column) => {
+      allColumnIds.push(column.getColId());
+    });
+    this.columnApi.autoSizeColumns(allColumnIds);
   }
 
-  public doFilter = (value: string) => {
-    this.dataSource.filter = value.trim().toLocaleLowerCase();
+  redirectToDelete(device: Device) {
+    this.objectService.deleteObjectDialog(device, 'device')
   }
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected == numRows;
+  /**
+ * Open the actions menu with the selected object ids.
+ * @param ev 
+ */
+  async openActions(ev: any) {
+    if (this.selected) {
+      for (let i = 0; i < this.selected.length; i++) {
+        this.objectIds.push(this.selected[i].id);
+      }
+    }
+    const popover = await this.popoverCtrl.create({
+      component: ActionsComponent,
+      event: ev,
+      componentProps: {
+        objectType: "device",
+        objectIds: this.objectIds,
+        selection: this.selected
+      },
+      animated: true,
+      showBackdrop: true
+    });
+    (await popover).present();
+  }
+  async redirectToEdit(ev: Event, device: Device) {
+    let action = 'modify';
+    if (device == null) {
+      device = new Device();
+      action = 'add';
+    }
+    const modal = await this.modalCtrl.create({
+      component: ObjectsEditComponent,
+      componentProps: {
+        objectType: "device",
+        objectAction: action,
+        object: device,
+        objectKeys: this.objectKeys
+      },
+      animated: true,
+      swipeToClose: true,
+      showBackdrop: true
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        console.log("Object was created or modified", dataReturned.data)
+      }
+    });
+    (await modal).present();
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
-  }
-
-   /**
-   * Function to select the columns to show
-   * @param ev 
-   */
+  /**
+* Function to select the columns to show
+* @param ev 
+*/
   async openCollums(ev: any) {
     const modal = await this.modalCtrl.create({
       component: SelectColumnsComponent,
       componentProps: {
-        columns: this.objectKeys ,
+        columns: this.objectKeys,
         selected: this.displayedColumns,
         objectPath: "DevicesPage.displayedColumns"
       },
@@ -90,66 +205,12 @@ export class DevicesPage implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-         this.displayedColumns =  ['select'].concat(dataReturned.data).concat(['actions']);
+        this.displayedColumns = dataReturned.data.concat(['actions']);
       }
+      this.createColumnDefs();
     });
     (await modal).present().then((val) => {
       console.log("most lett vegrehajtva.")
     })
-  }
-  async redirectToEdit(ev: Event, device: Device) {
-    let action = 'modify';
-    if( device == null ){
-      device = new Device();
-      action = 'add';
-    }
-    const modal = await this.modalCtrl.create({
-      component: ObjectsEditComponent,
-      componentProps: {
-        objectType: "device",
-        objectAction: action,
-        object: device
-      },
-      swipeToClose: true,
-      animated: true,
-      showBackdrop: true
-    });
-    modal.onDidDismiss().then((dataReturned) => {
-      if (dataReturned.data) {
-          this.ngOnInit();
-      }
-    });
-    (await modal).present();
-  }
-
-  public redirectToDelete = (device: Device) => {
-    this.objectService.deleteObjectDialog(device,"device");
-    console.log("Delete:" + device.name)
-  }
-
-  /**
-   * Open the actions menu with the selected object ids.
-   * @param ev 
-   */
-  async openActions(ev: any) {
-    for (let i = 0; i < this.selection.selected.length; i++) {
-      this.objectIds.push(this.selection.selected[i].id);
-    }
-    const popover = await this.popoverCtrl.create({
-      component: ActionsComponent,
-      event: ev,
-      componentProps: {
-        objectType: "device",
-        objectIds: this.objectIds,
-        selection: this.selection.selected
-      },
-      animated: true,
-      showBackdrop: true
-    });
-    (await popover).present();
-  }
-  procesModal(ev: Event) {
-    console.log(ev);
-    this.modalCtrl.dismiss();
   }
 }

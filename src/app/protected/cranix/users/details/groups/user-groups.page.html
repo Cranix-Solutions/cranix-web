@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>edit</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header color="amber">
+      <ion-row class="ion-align-items-center">
+        <ion-col size=11>
+        <ion-label>{{ 'Modify groups of selected user' | translate}}:  "{{user.uid}}"  ({{user.givenName}} {{user.surName}})
+        </ion-label>
+      </ion-col>
+      </ion-row>
+      </ion-card-header>
+      <ion-card-content>
+      <ion-row class="ion-align-items-center">
+        <ion-col size=5>
+          <ion-label>{{ 'member of groups' | translate }}</ion-label><br>
+          <input matInput placeholder="{{'search' | translate }}" (input)="onMemberFilterChanged()" id="memberFilter">
+        </ion-col>
+        <ion-col></ion-col>
+        <ion-col size=5>
+          <ion-label>{{ 'available groups' | translate }}</ion-label><br>
+          <input matInput placeholder="{{'search' | translate }}" (input)="onNonMemberFilterChanged()"
+            id="nonMemberFilter">
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-align-items-center">
+        <ion-col>
+          <ag-grid-angular style="width: 100%; height: 200px;" class="ag-theme-fresh" [gridOptions]="memberOptions"
+            [rowData]="memberData" [columnDefs]="columnDefs" [context]="context" [rowSelection]="memberSelection"
+            (gridReady)="onMemberReady($event)" (selectionChanged)="onMemberSelectionChanged()" id="memberTable">
+          </ag-grid-angular>
+        </ion-col>
+        <ion-col size=1>
+          <ion-button size="small" (click)="applyChanges()"
+            matTooltip="{{'add remove user to/from the selected groups' | translate }}">
+            <ion-icon slot="icon-only" name="code-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col>
+          <ag-grid-angular style="width: 100%; height: 200px;" class="ag-theme-fresh" [gridOptions]="noMemberOptions"
+            [rowData]="noMemberData" [columnDefs]="columnDefs" [context]="context" [rowSelection]="noMemberSelection"
+            (gridReady)="onNoMemberReady($event)" (selectionChanged)="onNoMemberSelectionChanged()" id="noMemberTable">
+          </ag-grid-angular>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

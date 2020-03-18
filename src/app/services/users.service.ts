@@ -234,6 +234,29 @@ export class UsersService {
 			'Authorization': "Bearer " + this.token
 		});
 		return this.http.get<Group[]>(this.url, { headers: headers });
-
 	}
+
+
+	getUsersAvailableGroups(uid: number){
+		this.url = `${this.hostname}/users/${uid}/availableGroups`
+			console.log(this.url);
+		const headers = new HttpHeaders({
+			'Accept': "application/json",
+			'Authorization': "Bearer " + this.token
+		});
+		return this.http.get<Group[]>(this.url, { headers: headers });
+	}
+
+	setUsersGroups(uid: number, groups: number[]) {
+		const body = groups;
+		this.url = `${this.hostname}/users/${uid}/groups/set`;
+		const headers = new HttpHeaders({
+			'Content-Type': "application/json",
+			'Accept': "application/json",
+			'Authorization': "Bearer " + this.token
+		});
+		//let body2 = JSON.stringify(body);
+		//console.log(body2);
+		return this.http.post<ServerResponse>(this.url, body, { headers: headers });
+	};
 }

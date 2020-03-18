@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { TranslateService  } from '@ngx-translate/core';
 import { RouterModule, Routes } from '@angular/router';
+import { IonicModule } from '@ionic/angular';
 
-import { RoomsPage } from './rooms.page';
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
-import { RoomsService } from 'src/app/services/rooms.service';
+import { PipesModule } from '../../../pipes/pipe-modules';
+import { RoomsPage } from './rooms.page';
 
 const routes: Routes = [
   {
@@ -16,10 +19,12 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    CranixSharedModule,
-    RouterModule.forChild(routes)
+    FormsModule,
+    RouterModule.forChild(routes),
+    IonicModule,
+    CranixSharedModule
   ],
-  declarations: [RoomsPage],
-  providers: [RoomsService ]
+  declarations: [ RoomsPage ],
+  providers: [TranslateService, PipesModule]
 })
 export class RoomsPageModule {}

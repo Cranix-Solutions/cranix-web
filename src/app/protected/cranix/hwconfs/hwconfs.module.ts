@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { TranslateService  } from '@ngx-translate/core';
+import { RouterModule, Routes } from '@angular/router';
+import { IonicModule } from '@ionic/angular';
 
-import { CranixSharedModule } from '../../../shared/cranix-shared.module';
+import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
+import { PipesModule } from '../../../pipes/pipe-modules';
 import { HwconfsPage } from './hwconfs.page';
-import { HwconfsService } from '../../../services/hwconfs.service';
-
 
 const routes: Routes = [
   {
@@ -15,10 +18,13 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    CranixSharedModule,
-    RouterModule.forChild(routes)
+    CommonModule,
+    FormsModule,
+    RouterModule.forChild(routes),
+    IonicModule,
+    CranixSharedModule
   ],
-  declarations: [HwconfsPage],
-  providers:[HwconfsService]
+  declarations: [ HwconfsPage ],
+  providers: [TranslateService, PipesModule]
 })
 export class HwconfsPageModule {}

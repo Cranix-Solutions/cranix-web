@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams, ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 /* import { SplashScreen } from '@ionic-native/splash-screen/ngx'; */
 import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
 //own 
 import { GenericObjectService } from '../../services/generic-object.service';
+import { LanguageService } from '../../services/language.service';
 import { ServerResponse } from '../models/server-models';
 @Component({
   selector: 'cranix-objects-edit',
@@ -14,10 +15,6 @@ import { ServerResponse } from '../models/server-models';
 })
 export class ObjectsEditComponent implements OnInit {
   result: any = {};
-  /**
-   * This hash defines if a key  has defaults
-   */
-  hasDefaults: any = {};
   editForm: FormGroup;
   objectType: string = "";
   object: any = null;
@@ -55,6 +52,7 @@ export class ObjectsEditComponent implements OnInit {
   constructor(
     public formBuilder: FormBuilder,
     public objectService: GenericObjectService,
+    public languageS: LanguageService,
     private navParams: NavParams,
     private modalController: ModalController,
     private splashScreen: SpinnerDialog,
@@ -75,37 +73,11 @@ export class ObjectsEditComponent implements OnInit {
     console.log(this.object);
   }
   ngOnInit() {
-    this.editForm = this.formBuilder.group(this.convertObject());
+    this.editForm = this.formBuilder.group(this.objectService.convertObject(this.object));
   }
 
-  compareFn(a: string, b: string): boolean {
-    return a == b;
-  }
-  /**
-   * Helper script fot the template to detect the type of the variables
-   * @param val 
-   */
-  typeOf(key) {
-    let obj = this.object[key];
-    if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
-      let d = new Date()
-      return "date";
-    }
-    if (typeof obj === 'boolean' && obj) {
-      return "booleanTrue";
-    }
-    if (typeof obj === 'boolean') {
-      return "booleanFalse";
-    }
-    if (this.hiddenAttributes.indexOf(key) != -1) {
-      return "hidden";
-    }
-    if (this.objectAction == 'modify' && this.readOnlyAttributes.indexOf(key) != -1) {
-      return "stringRO";
-    }
-    return "string";
-  }
-
+  
+ 
   closeWindow() {
     this.modalController.dismiss();
   }
@@ -123,7 +95,7 @@ export class ObjectsEditComponent implements OnInit {
           this.objectService.getAllObject(this.objectType);
           const toast = this.toastController.create({
             position: "middle",
-            header: "Success:",
+            header:  this.languageS.trans("Success:"),
             message: serverResponse.value,
             color: "success",
             duration: 5000
@@ -131,12 +103,11 @@ export class ObjectsEditComponent implements OnInit {
           (await toast).present();
           this.modalController.dismiss("succes");
         } else {
-
           const toast = this.toastController.create({
             position: "middle",
-            header: "An Error was accoured:",
+            header:  this.languageS.trans("An Error was accoured:"),
             message: serverResponse.value,
-            color: "danger",
+            color: "warning",
             duration: 6000
           });
           this.editForm.enable();
@@ -145,10 +116,11 @@ export class ObjectsEditComponent implements OnInit {
         }
       },
       async (error) => {
+        console.log(error);
         const toast = this.toastController.create({
           position: "middle",
-          message: "An Server Error is accoured",
-          cssClass: "bar-assertive",
+          message: "A Server Error is accoured:" + error,
+          color: "danger",
           duration: 3000
         });
         this.editForm.enable();
@@ -161,22 +133,7 @@ export class ObjectsEditComponent implements OnInit {
     )
   }
 
-  convertObject() {
-    //TODO introduce checks
-    let output: any = {};
-    for (let key in this.object) {
-      if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
-        let date = new Date(this.object[key]);
-        output[key] = date.toJSON();
-      } else if (this.required[key]) {
-        output[key] = [this.object[key], Validators.compose([Validators.required])];
-      } else {
-        output[key] = this.object[key];
-      }
-    }
-    console.log(output);
-    return output;
-  }
+
 }
 
 

@@ -21,7 +21,8 @@ export class DetailsPage implements OnInit {
 
   ngOnInit() {
     this.ticketId= this.route.snapshot.params.id;
-      this.opbjectS.allObjects['ticket'].forEach((t: Ticket) => {
+      this.opbjectS.allObjects['ticket'].getValue().forEach((t: Ticket) => {
+        console.log(t);
         if (t.id == this.ticketId) {
           this.ticket = t;
         }

@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { TranslateService  } from '@ngx-translate/core';
 import { RouterModule, Routes } from '@angular/router';
+import { IonicModule } from '@ionic/angular';
 
-import { DevicesPage } from './devices.page';
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
-import { DevicesService } from 'src/app/services/devices.service';
+import { PipesModule } from '../../../pipes/pipe-modules';
+import { DevicesPage } from './devices.page';
 
 const routes: Routes = [
   {
@@ -16,12 +19,12 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    CranixSharedModule,
-    RouterModule.forChild(routes)
+    FormsModule,
+    RouterModule.forChild(routes),
+    IonicModule,
+    CranixSharedModule
   ],
-  declarations: [DevicesPage],
-  providers: [
-    DevicesService
-  ]
+  declarations: [ DevicesPage ],
+  providers: [TranslateService, PipesModule]
 })
 export class DevicesPageModule {}
