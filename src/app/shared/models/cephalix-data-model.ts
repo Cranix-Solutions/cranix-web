@@ -46,7 +46,7 @@ export class Institute {
     adminPW: string = '';
     cephalixPW: string = '';
     recDate: any = new Date();
-    customerId: number = 0;
+    cephalixCustomerId: number = 0;
     constructor() {}
 }
 
@@ -87,6 +87,8 @@ export class Repository{
     repositoryType: string = "";
     description: string = "";
     repository: string = "";
+    cephalixInstituteId: number = 0;
+    cephalixCustomerId: number = 0;
     constructor() {}
 }
 
@@ -113,12 +115,24 @@ export class OssCareMessage{
 
 export class DynDns {
     id: number = 0;
-    cephalixinstituteId: number = 0;
+    cephalixInstituteId: number = 0;
     hostname: string = "";
     domain: string = "";
     ip: string = "";
     port: string = "";
     ro: boolean = false;
+    constructor() {}
+}
+
+export class Notice{
+    title:       string = "";
+    noticeType:  string = "";
+    text:        string = "";
+    created:     any    = new Date();
+    reminder:    any    = new Date();
+    workTime:    number = 0;
+    invoiced:    boolean= false;
+    cephalixInstituteId: number = 0;
     constructor() {}
 }
 
@@ -138,11 +152,5 @@ export interface Object {
     ossId: number,
     instituteId: number,
     lastSync: number
-}
-
-export interface Notice{
-    tite: string, 
-    noticeType: string, 
-    text: string
 }
 

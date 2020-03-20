@@ -224,9 +224,14 @@ export class GenericObjectService {
    */
   typeOf(key,object,action) {
     let obj = object[key];
-    if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
-      let d = new Date()
+    if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil' ) {
       return "date";
+    }
+    if (key == 'reminder'  || key == 'created' ) {
+      return "date-time";
+    }
+    if (key == 'text') {
+      return "text";
     }
     if (typeof obj === 'boolean' && obj) {
       return "booleanTrue";
@@ -247,7 +252,7 @@ export class GenericObjectService {
     //TODO introduce checks
     let output: any = {};
     for (let key in object) {
-      if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
+      if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil' || key == 'created' ) {
         let date = new Date(object[key]);
         output[key] = date.toJSON();
       } else if (this.required[key]) {
@@ -256,6 +261,7 @@ export class GenericObjectService {
         output[key] = object[key];
       }
     }
+    console.log("convertObject:");
     console.log(output);
     return output;
   }

@@ -130,7 +130,7 @@ export class UsersPage implements OnInit {
   }
   /**
  * Open the actions menu with the selected object ids.
- * @param ev 
+ * @param ev
  */
   async openActions(ev: any) {
     if (this.selected) {
@@ -151,6 +151,7 @@ export class UsersPage implements OnInit {
     });
     (await popover).present();
   }
+
   async redirectToEdit(ev: Event, user: User) {
     if (user) {
       this.objectService.selectedObject = user;
@@ -179,9 +180,9 @@ export class UsersPage implements OnInit {
   }
 
   /**
-* Function to select the columns to show
-* @param ev 
-*/
+  * Function to select the columns to show
+  * @param ev
+  */
   async openCollums(ev: any) {
     const modal = await this.modalCtrl.create({
       component: SelectColumnsComponent,

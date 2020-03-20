@@ -22,33 +22,6 @@ export class ObjectsEditComponent implements OnInit {
   objectActionTitle: string = "";
   objectAction: string = "";
 
-  readOnlyAttributes: string[] = [
-    'fsQuotaUsed',
-    'msQuotaUsed',
-    'name',
-    'recDate',
-    'role',
-    'uid'
-  ]
-  /**
-   * Attributes which we get but need not be shown
-   */
-  hiddenAttributes: string[] = [
-    'id',
-    'ownerId',
-    'deleted',
-    'saveNext'
-  ]
-  required: any = {
-    'givenName': '*',
-    'groupType': '*',
-    'instituteType': '*',
-    'name': '*',
-    'regCode': '*',
-    'role': '*',
-    'surName': '*'
-  };
-
   constructor(
     public formBuilder: FormBuilder,
     public objectService: GenericObjectService,
@@ -76,8 +49,6 @@ export class ObjectsEditComponent implements OnInit {
     this.editForm = this.formBuilder.group(this.objectService.convertObject(this.object));
   }
 
-  
- 
   closeWindow() {
     this.modalController.dismiss();
   }

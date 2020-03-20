@@ -1,6 +1,7 @@
 import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__, AfterContentInit } from '@angular/core';
 import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
+import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 
 //own modules
@@ -20,7 +21,7 @@ import { Institute } from '../../../shared/models/cephalix-data-model'
 })
 export class InstitutesPage implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['name', 'uuid','locality', 'ipVPN', 'regCode', 'validity', 'actions'];
+  displayedColumns: string[] = ['name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity', 'actions'];
   sortableColumns: string[] = ['uuid', 'name', 'locality', 'ipVPN', 'regCode', 'validity'];
   gridOptions: GridOptions;
   columnDefs = [];
@@ -38,9 +39,10 @@ export class InstitutesPage implements OnInit {
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     public languageS: LanguageService,
+    public route: Router,
     private storage: Storage
   ) {
-  
+
     this.context = { componentParent: this };
     this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new Institute());
@@ -135,7 +137,7 @@ export class InstitutesPage implements OnInit {
   }
   /**
  * Open the actions menu with the selected object ids.
- * @param ev 
+ * @param ev
  */
   async openActions(ev: any) {
     if (this.selected) {
@@ -157,55 +159,55 @@ export class InstitutesPage implements OnInit {
     (await popover).present();
   }
   async redirectToEdit(ev: Event, institute: Institute) {
-    let action = 'modify';
-    if (institute == null) {
-      institute = new Institute();
-      action = 'add';
+    if (institute) {
+      this.objectService.selectedObject = institute;
+      this.route.navigate(['/pages/cephalix/institutes/' + institute.id]);
+    } else {
+      const modal = await this.modalCtrl.create({
+        component: ObjectsEditComponent,
+        componentProps: {
+          objectType: "institute",
+          objectAction: 'add',
+          object: institute,
+          objectKeys: this.objectKeys
+        },
+        animated: true,
+        swipeToClose: true,
+        showBackdrop: true
+      });
+      modal.onDidDismiss().then((dataReturned) => {
+        if (dataReturned.data) {
+          console.log("Object was created or modified", dataReturned.data)
+        }
+      });
+      (await modal).present();
     }
-    const modal = await this.modalCtrl.create({
-      component: ObjectsEditComponent,
-      componentProps: {
-        objectType: "institute",
-        objectAction: action,
-        object: institute,
-        objectKeys: this.objectKeys
-      },
-      animated: true,
-      swipeToClose: true,
-      showBackdrop: true
-    });
-    modal.onDidDismiss().then((dataReturned) => {
-      if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
-      }
-    });
-    (await modal).present();
   }
 
   /**
-* Function to select the columns to show
-* @param ev 
-*/
-  async openCollums(ev: any) {
-    const modal = await this.modalCtrl.create({
-      component: SelectColumnsComponent,
-      componentProps: {
-        columns: this.objectKeys,
-        selected: this.displayedColumns,
-        objectPath: "InstitutesPage.displayedColumns"
-      },
-      animated: true,
-      swipeToClose: true,
-      backdropDismiss: false
-    });
-    modal.onDidDismiss().then((dataReturned) => {
-      if (dataReturned.data) {
-        this.displayedColumns = (dataReturned.data).concat(['actions']);
-        this.createColumnDefs();
-      }
-    });
-    (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
-    })
+  * Function to select the columns to show
+  * @param ev
+  */
+    async openCollums(ev: any) {
+      const modal = await this.modalCtrl.create({
+        component: SelectColumnsComponent,
+        componentProps: {
+          columns: this.objectKeys,
+          selected: this.displayedColumns,
+          objectPath: "InstitutesPage.displayedColumns"
+        },
+        animated: true,
+        swipeToClose: true,
+        backdropDismiss: false
+      });
+      modal.onDidDismiss().then((dataReturned) => {
+        if (dataReturned.data) {
+          this.displayedColumns = (dataReturned.data).concat(['actions']);
+          this.createColumnDefs();
+        }
+      });
+      (await modal).present().then((val) => {
+        console.log("most lett vegrehajtva.")
+      })
+    }
   }
-}
