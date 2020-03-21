@@ -1,0 +1,32 @@
+<cranix-toolbar></cranix-toolbar>
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-row class="ion-align-items-center">
+        <ion-col size="9">
+          <ion-card-title>{{ 'Notices to the selected institute' | translate}}: "{{object.name}}"</ion-card-title>
+        </ion-col>
+        <ion-col size="1">
+        </ion-col>
+        <ion-col size="2">
+          <ion-button size="small" (click)="redirectToAdd($event)"
+            matTooltip="{{'create a new ticket' | translate }}">
+            <ion-icon name="add-circle-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card-header>
+  </ion-card>
+
+  <ion-card *ngFor="let notice of notices">
+    <ion-card-header>
+      <ion-card-title>{{notice.title}}</ion-card-title>
+      <ion-card-subtitle>{{notice.noticeType}} {{ 'created' | translate }} {{ notice.created | date:'yy-MM-dd HH:mm' }}
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <a href="#" class="item-icon-right"><i class="icon ion-minus"></i></a>
+      <pre>{{notice.text}}</pre>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

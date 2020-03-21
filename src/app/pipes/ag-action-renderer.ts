@@ -9,9 +9,6 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
         <button (click)="details()"mat-icon-button matTooltip="{{'edit' | translate }}" style="height:15px;width:15px">
              <ion-icon name="create-outline" style="height:15px;width:15px"></ion-icon>
         </button>
-        <button size="small" mat-icon-button (click)="notes()" matTooltip="{{'notes' | translate }}" style="height:25px;width:25px">
-            <ion-icon  name="menu" style="height:15px;width:15px"></ion-icon>
-        </button>
         <button size="small" mat-icon-button (click)="delete()" matTooltip="{{'delete' | translate }}" style="height:25px;width:25px">
             <ion-icon color="danger" name="trash-outline" style="height:15px;width:15px"></ion-icon>
         </button>` 
@@ -31,10 +28,6 @@ export class ActionBTNRenderer implements ICellRendererAngularComp {
 
     public delete() {
         this.params.context.componentParent.redirectToDelete(this.params.data);
-    }
-
-    public notes() {
-        this.params.context.componentParent.onBTNnotes(this.params.data);
     }
 
     refresh(params: any): boolean {

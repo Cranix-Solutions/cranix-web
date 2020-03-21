@@ -13,7 +13,12 @@ const routes: Routes = [
   {
     path: 'institutes',
     component: InstitutesPage
+  },
+  {
+    path: 'institutes/:id',
+    loadChildren: () => import('./details/institute-details.module').then( m => m.InstituteDetailsPageModule)
   }
+
 ];
 
 @NgModule({
