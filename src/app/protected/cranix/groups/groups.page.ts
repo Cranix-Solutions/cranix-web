@@ -146,29 +146,29 @@ export class GroupsPage implements OnInit {
     (await popover).present();
   }
   async redirectToEdit(ev: Event, group: Group) {
-    let action = 'modify';
-    if (group == null) {
-      group = new Group();
-      action = 'add';
+    if (group) {
+      this.objectService.selectedObject = group;
+      this.route.navigate(['/pages/cranix/groups/' + group.id]);
+    } else {
+      const modal = await this.modalCtrl.create({
+        component: ObjectsEditComponent,
+        componentProps: {
+          objectType: "group",
+          objectAction: "add",
+          object: group,
+          objectKeys: this.objectKeys
+        },
+        animated: true,
+        swipeToClose: true,
+        showBackdrop: true
+      });
+      modal.onDidDismiss().then((dataReturned) => {
+        if (dataReturned.data) {
+          console.log("Object was created or modified", dataReturned.data)
+        }
+      });
+      (await modal).present();
     }
-    const modal = await this.modalCtrl.create({
-      component: ObjectsEditComponent,
-      componentProps: {
-        objectType: "group",
-        objectAction: action,
-        object: group,
-        objectKeys: this.objectKeys
-      },
-      animated: true,
-      swipeToClose: true,
-      showBackdrop: true
-    });
-    modal.onDidDismiss().then((dataReturned) => {
-      if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
-      }
-    });
-    (await modal).present();
   }
 
   /**
