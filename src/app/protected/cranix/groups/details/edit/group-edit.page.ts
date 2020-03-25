@@ -19,7 +19,7 @@ export class GroupEditPage implements OnInit {
     public formBuilder: FormBuilder,
     private objectService: GenericObjectService
   ) { 
-    this.object = this.objectService.selectedObject;
+    this.object = <Group>this.objectService.selectedObject;
     this.objectKeys = Object.getOwnPropertyNames(this.object);
     console.log("GroupEditPage:" + this.object.id);
   }

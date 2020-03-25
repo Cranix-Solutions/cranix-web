@@ -8,7 +8,6 @@
   <ion-card>
     <ion-card-header color="amber">
       <ion-card-title>{{ 'Modify members of selected group' | translate}}: "{{group.name}}" ({{group.groupType | translate}} {{group.description}}
-        {{user.surName}})
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
@@ -16,7 +15,7 @@
         <ion-row>
           <ion-col sizeLg=5 sizeSm=12>
             <ion-item lines="none">
-              <ion-label  position="stacked">{{ 'member of groups' | translate }}</ion-label>
+              <ion-label  position="stacked">{{ 'members of the group' | translate }}</ion-label>
               <ion-input type="text" placeholder="{{'search' | translate }}" (input)="onMemberFilterChanged()"
                 id="memberFilter"></ion-input>
             </ion-item>
@@ -29,14 +28,14 @@
             <ion-item lines="none">
               <ion-label  position="stacked">  </ion-label>
               <ion-button slot="" size="small" (click)="applyChanges()"
-                matTooltip="{{'add remove user to/from the selected groups' | translate }}">
+                matTooltip="{{'add remove selected users to/from the group' | translate }}">
                 <ion-icon slot="icon-only" name="code-outline"></ion-icon>
               </ion-button>
             </ion-item>
           </ion-col>
           <ion-col sizeLg=5 sizeSm=12>
             <ion-item lines="none">
-              <ion-label position="stacked">{{ 'available groups' | translate }}</ion-label>
+              <ion-label position="stacked">{{ 'available members' | translate }}</ion-label>
               <ion-input type="text" placeholder="{{'search' | translate }}" (input)="onNonMemberFilterChanged()" id="nonMemberFilter">
               </ion-input>
             </ion-item>

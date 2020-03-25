@@ -162,6 +162,18 @@ export class GroupsService {
 		return this.http.get<User[]>(this.url, { headers: headers });
 	}
 
+	setGroupMembers(id: number, membersId: number[]) {
+		this.url = `${this.hostname}/groups/${id}/members`;
+		const body = membersId;
+		const headers = new HttpHeaders({
+			'Content-Type': "application/json",
+			'Accept': "application/json",
+			'Authorization': "Bearer " + this.token
+		});
+		//let body2 = JSON.stringify(body);
+		//console.log(body2);
+		return this.http.post<ServerResponse>(this.url, body, { headers: headers });
+	}
 	
 	// PUT Calls
 

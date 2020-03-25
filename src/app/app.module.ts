@@ -23,9 +23,11 @@ import { LanguageService } from './services/language.service';
 
 import { ActionsComponent } from './shared/actions/actions.component';
 import { GenericObjectService } from './services/generic-object.service';
-import { UsersService } from './services/users.service';
+import { GroupsService } from './services/groups.service';
 import { ObjectsEditComponent } from './shared/objects-edit/objects-edit.component';
 import { SelectColumnsComponent } from './shared/select-columns/select-columns.component';
+import { UsersService } from './services/users.service';
+
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -70,6 +72,7 @@ const routes: Routes = [
     })],
   providers: [
     GenericObjectService,
+    GroupsService,
     StatusBar,
     SplashScreen,
     UsersService,

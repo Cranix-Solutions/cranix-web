@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { GenericObjectService } from '../../../../../services/generic-object.service';
 import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
 
 //own stuff
 import { LanguageService } from '../../../../../services/language.service';
-import { GroupService } from '../../../../../services/groups.service';
-import { Group } from '../../../../../shared/models/data-model'
+import { GroupsService } from '../../../../../services/groups.service';
+import { Group, User } from '../../../../../shared/models/data-model'
 
 @Component({
   selector: 'cranix-group-members',
@@ -21,18 +21,19 @@ export class GroupMembersPage implements OnInit {
   noMemberApi;
   memberColumnApi;
   noMemberColumnApi;
-  memberSelected: Group[] =[];
-  noMemberSelected: Group[] =[];
-  memberData: Group[] =[];
-  noMemberData: Group[] =[];
+  memberSelected: User[] =[];
+  noMemberSelected: User[] =[];
+  memberData: User[] =[];
+  noMemberData: User[] =[];
   group;
 
   constructor(
     private objectS: GenericObjectService,
     private languageS: LanguageService,
-    private  userS: GroupService
+    private  groupS: GroupsService
   ) {
-    this.user = this.objectS.selectedObject;
+    this.group = <Group>this.objectS.selectedObject;
+
     this.context = { componentParent: this };
     this.memberOptions = <GridOptions>{
       defaultColDef: {
@@ -46,19 +47,19 @@ export class GroupMembersPage implements OnInit {
     }
     this.columnDefs = [
       {
-        headerName:  this.languageS.trans('name'),
-        field: 'name',
+        headerName:  this.languageS.trans('uid'),
+        field: 'uid',
         headerCheckboxSelection: true,
         headerCheckboxSelectionFilteredOnly: true,
         checkboxSelection: true
       },
       {
-        headerName: this.languageS.trans('description'),
-        field: 'description',
+        headerName: this.languageS.trans('givenName'),
+        field: 'givenName',
       },
       {
-        headerName: this.languageS.trans('groupType'),
-        field: 'groupType',
+        headerName: this.languageS.trans('surName'),
+        field: 'surName',
       }
     ]
     this.noMemberOptions = <GridOptions>{
@@ -74,7 +75,7 @@ export class GroupMembersPage implements OnInit {
   }
 
   ngOnInit() {
-    this.readGroups();
+    this.readMembers();
   }
 
   onMemberReady(params) {
@@ -105,37 +106,37 @@ export class GroupMembersPage implements OnInit {
     this.noMemberApi.doLayout();
   }
   applyChanges() {
-    let groups: number[] = [];
-    let rmGroups: number[] = [];
+    let members: number[] = [];
+    let rmMembers: number[] = [];
     for ( let g of this.noMemberSelected ) {
-      groups.push(g.id);
+      members.push(g.id);
     }
     for(let g of this.memberSelected) {
-      rmGroups.push(g.id);
+      rmMembers.push(g.id);
     }
     
     for( let g of this.memberData ){
-      if( rmGroups.indexOf(g.id) == -1) {
-        groups.push(g.id)
+      if( rmMembers.indexOf(g.id) == -1) {
+        members.push(g.id)
       }
     }
     console.log('groups');
-    console.log(groups);
+    console.log(members);
     this.noMemberSelected = [];
     this.memberSelected = [];
-    let subM = this.userS.setUsersGroups(this.user.id,groups).subscribe(
-      (val) => { this.readGroups() } ,
+    let subM = this.groupS.setGroupMembers(this.group.id,members).subscribe(
+      (val) => { this.readMembers() } ,
       (err)  => { console.log(err)},
       () => { subM.unsubscribe()});
   }
 
-  readGroups() {
-    let subM = this.userS.getUsersGroups(this.user.id).subscribe(
-      (val) => { this.memberData = val } ,
+  readMembers() {
+    let subM = this.groupS.getMembers(this.group.id).subscribe(
+      (val) => { this.memberData = val; console.log(val) } ,
       (err)  => { console.log(err)},
       () => { subM.unsubscribe()});
-    let subNM = this.userS.getUsersAvailableGroups(this.user.id).subscribe(
-      (val) => { this.noMemberData = val } ,
+    let subNM = this.groupS.getAvailiableMembers(this.group.id).subscribe(
+      (val) => { this.noMemberData = val; console.log(val) } ,
       (err)  => { console.log(err)},
       () => { subNM.unsubscribe()})
     }

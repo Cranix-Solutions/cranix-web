@@ -19,7 +19,7 @@ export class UserEditPage implements OnInit {
     public formBuilder: FormBuilder,
     private objectService: GenericObjectService
   ) { 
-    this.object = this.objectService.selectedObject;
+    this.object = <User>this.objectService.selectedObject;
     this.objectKeys = Object.getOwnPropertyNames(this.object);
     console.log("UserEditPage:" + this.object.id);
   }

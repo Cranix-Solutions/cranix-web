@@ -1,11 +1,11 @@
 import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__ } from '@angular/core';
 import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
+import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 
 //own modules
 import { ActionsComponent } from '../../../shared/actions/actions.component';
-import { DateCellRenderer } from '../../../pipes/ag-date-renderer';
 import { ActionBTNRenderer } from '../../../pipes/ag-action-renderer';
 import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from '../../../services/generic-object.service';
@@ -38,6 +38,7 @@ export class GroupsPage implements OnInit {
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     public languageS: LanguageService,
+    public route: Router,
     private storage: Storage
   ) {
     this.context = { componentParent: this };
@@ -51,7 +52,8 @@ export class GroupsPage implements OnInit {
         hide: false
       },
       columnDefs: this.columnDefs,
-      context: this.context
+      context: this.context,
+      rowHeight: 35
     }
   }
   ngOnInit() {
