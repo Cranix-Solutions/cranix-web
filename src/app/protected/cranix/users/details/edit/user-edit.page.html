@@ -18,7 +18,7 @@
       <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
         <ion-grid>
           <ion-row>
-              <ion-col size=3  *ngFor="let key of objectKeys;"  [ngSwitch]="objectService.typeOf(key,object,'edit')">
+              <ion-col size=12 sizeMd=6 sizeLg=4 sizeXl=3 *ngFor="let key of objectKeys;"  [ngSwitch]="objectService.typeOf(key,object,'edit')">
                 <ion-item *ngSwitchCase="'booleanTrue'">
                   <ion-label>{{ key | translate }}</ion-label>
                   <ion-toggle slot="start" formControlName="{{key}}" color="secondary" checked></ion-toggle>
