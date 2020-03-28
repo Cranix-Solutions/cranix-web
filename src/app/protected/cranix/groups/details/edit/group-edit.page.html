@@ -9,8 +9,8 @@
     <ion-card-header color="amber">
       <ion-row class="ion-align-items-center">
         <ion-col size=12>
-          <ion-label color="primary">{{ 'Modify selected group' | translate}}: "{{object.name}}" ({{object.groupType | translate }} {{object.description}})
-          </ion-label>
+          <ion-card-title color="primary">{{ 'Modify selected group' | translate}}: "{{object.name}}" ({{object.groupType | translate }} {{object.description}})
+          </ion-card-title>
         </ion-col>
       </ion-row>
     </ion-card-header>
@@ -18,9 +18,7 @@
       <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
         <ion-grid>
           <ion-row>
-            <div lines="full" class="ion-no-margin ion-no-padding" *ngFor="let key of objectKeys;"
-              [ngSwitch]="objectService.typeOf(key,object,'edit')">
-              <ion-col size=4>
+              <ion-col size=3 ngFor="let key of objectKeys;" [ngSwitch]="objectService.typeOf(key,object,'edit')">
                 <ion-item *ngSwitchCase="'booleanTrue'">
                   <ion-label>{{ key | translate }}</ion-label>
                   <ion-toggle slot="start" formControlName="{{key}}" color="secondary" checked></ion-toggle>
@@ -64,7 +62,6 @@
                   </ion-datetime>
                 </ion-item>
               </ion-col>
-            </div>
           </ion-row>
         </ion-grid>
         <div class="ion-padding ion-text-center">

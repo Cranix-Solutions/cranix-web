@@ -7,24 +7,22 @@
 <ion-content>
   <ion-card>
     <ion-card-header color="amber">
-          <ion-title color="primary">{{ 'Modify selected institute' | translate}}: "{{object.name}}"</ion-title>
+          <ion-card-title color="primary">{{ 'Modify selected institute' | translate}}: "{{object.name}}"</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
-        <ion-grid fixed="true">
+        <ion-grid>
           <ion-row>
-            <div lines="full" class="ion-no-margin ion-no-padding" *ngFor="let key of objectKeys;"
-              [ngSwitch]="objectService.typeOf(key,object,'edit')">
-              <ion-col>
-                <ion-item *ngSwitchCase="'booleanTrue'" lines="none">
+              <ion-col size=3 *ngFor="let key of objectKeys;"  [ngSwitch]="objectService.typeOf(key,object,'edit')">
+                <ion-item *ngSwitchCase="'booleanTrue'">
                   <ion-label>{{ key | translate }}</ion-label>
                   <ion-toggle slot="start" formControlName="{{key}}" color="secondary" checked></ion-toggle>
                 </ion-item>
-                <ion-item *ngSwitchCase="'booleanFalse'" lines="none">
+                <ion-item *ngSwitchCase="'booleanFalse'">
                   <ion-label>{{ key | translate }}</ion-label>
                   <ion-toggle slot="start" formControlName="{{key}}" color="secondary"></ion-toggle>
                 </ion-item>
-                <ion-item *ngSwitchCase="'string'" lines="none">
+                <ion-item *ngSwitchCase="'string'">
                   <ion-label position="stacked">{{ key | translate }}{{objectService.required[key]}}</ion-label>
                   <!--ion-item *ngIf="editForm.controls[key].hasError('required') && editForm.controls[key].touched"-->
                   <ion-label position="stacked"
@@ -42,29 +40,28 @@
                       [required]="objectService.required[key]"></ion-input>
                   </ng-template>
                 </ion-item>
-                <ion-item *ngSwitchCase="'stringRO'" lines="none">
+                <ion-item *ngSwitchCase="'stringRO'">
                   <ion-label position="stacked">{{ key | translate }}</ion-label>
                   <ion-input color="tertiary" type="text" formControlName="{{key}}" value="{{object[key]}}" readonly>
                   </ion-input>
                 </ion-item>
-                <ion-item *ngSwitchCase="'text'" lines="none">
+                <ion-item *ngSwitchCase="'text'">
                   <ion-label position="stacked">{{ key | translate }}</ion-label>
                   <ion-textarea color="tertiary" formControlName="{{key}}" value="{{object[key]}}" >
                   </ion-textarea>
                 </ion-item>
-                <ion-item *ngSwitchCase="'date'" lines="none">
+                <ion-item *ngSwitchCase="'date'">
                   <ion-label>{{ key | translate }}</ion-label>
                   <ion-datetime formControlName="{{key}}" max="2100" value="{{object[key] | date:'yyyy-MM-dd'}}">
                   </ion-datetime>
                 </ion-item>
-                <ion-item *ngSwitchCase="'date-time'" lines="none">
+                <ion-item *ngSwitchCase="'date-time'">
                   <ion-label>{{ key | translate }}</ion-label>
                   <ion-datetime formControlName="{{key}}" max="2100"
                     value="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z'}}">
                   </ion-datetime>
                 </ion-item>
               </ion-col>
-            </div>
           </ion-row>
         </ion-grid>
         <div class="ion-padding ion-text-center">

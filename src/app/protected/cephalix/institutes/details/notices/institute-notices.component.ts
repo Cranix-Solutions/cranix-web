@@ -14,7 +14,6 @@ import { ObjectsEditComponent } from '../../../../../shared/objects-edit/objects
   styleUrls: ['./institute-notices.component.scss'],
 })
 export class InstituteNoticesComponent implements OnInit {
-  objectId: number = 0;
   object: Institute = null;
   objectKeys: string[] = [];
   notices: Notice[] = [];
@@ -25,19 +24,18 @@ export class InstituteNoticesComponent implements OnInit {
     private objectService: GenericObjectService,
     private cephalixService: CephalixService
   ) {
-    this.object = this.objectService.selectedObject;
-
+    this.object = <Institute>this.objectService.selectedObject;
   }
 
   ngOnInit() {
-
+    this.getNotices()
   }
 
   getNotices() {
-    let sub = this.cephalixService.getNoticesOfInst(this.objectId).subscribe(
+    let sub = this.cephalixService.getNoticesOfInst(this.object.id).subscribe(
       (val) => { this.notices = val },
       (err) => {
-        console.log('getNotices' + this.objectId);
+        console.log('getNotices' + this.object.id);
         console.log(err)
       },
       () => { sub.unsubscribe(); })
@@ -45,6 +43,7 @@ export class InstituteNoticesComponent implements OnInit {
 
   async redirectToAdd(ev: Event) {
     let notice = new Notice();
+    notice.cephalixInstituteId = this.object.id;
     const modal = await this.modalCtrl.create({
       component: ObjectsEditComponent,
       componentProps: {
@@ -59,10 +58,9 @@ export class InstituteNoticesComponent implements OnInit {
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
         this.getNotices();
-        console.log("Object was created or modified", dataReturned.data)
+        console.log("Object was created:", dataReturned.data)
       }
     });
     (await modal).present();
   }
-  
 }

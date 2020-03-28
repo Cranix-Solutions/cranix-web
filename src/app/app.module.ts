@@ -22,6 +22,7 @@ import { SystemService } from './services/system.service';
 import { LanguageService } from './services/language.service';
 
 import { ActionsComponent } from './shared/actions/actions.component';
+import { DevicesService } from './services/devices.service';
 import { GenericObjectService } from './services/generic-object.service';
 import { GroupsService } from './services/groups.service';
 import { ObjectsEditComponent } from './shared/objects-edit/objects-edit.component';
@@ -71,6 +72,7 @@ const routes: Routes = [
       }
     })],
   providers: [
+    DevicesService,
     GenericObjectService,
     GroupsService,
     StatusBar,

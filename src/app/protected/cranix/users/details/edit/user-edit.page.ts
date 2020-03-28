@@ -20,8 +20,8 @@ export class UserEditPage implements OnInit {
     private objectService: GenericObjectService
   ) { 
     this.object = <User>this.objectService.selectedObject;
-    this.objectKeys = Object.getOwnPropertyNames(this.object);
-    console.log("UserEditPage:" + this.object.id);
+    this.objectKeys = Object.getOwnPropertyNames(new User());
+    console.log("UserEditPage:" + this.objectKeys);
   }
   ngOnInit() {
     this.editForm = this.formBuilder.group(this.objectService.convertObject(this.object));

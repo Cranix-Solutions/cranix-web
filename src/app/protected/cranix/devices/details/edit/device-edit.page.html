@@ -9,7 +9,7 @@
     <ion-card-header color="amber">
       <ion-row class="ion-align-items-center">
         <ion-col size=12>
-          <ion-card-title color="primary">{{ 'Modify selected user:' | translate}} "{{object.uid}}" ({{object.givenName}} {{object.surName}})
+		<ion-card-title color="primary">{{ 'Modify selected device' | translate}}: "{{object.name}}" {{object.description}} {{ 'room' | translate }}: {{object.roomId | idToName:'room' }}
           </ion-card-title>
         </ion-col>
       </ion-row>
@@ -18,7 +18,7 @@
       <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
         <ion-grid>
           <ion-row>
-              <ion-col size=3  *ngFor="let key of objectKeys;"  [ngSwitch]="objectService.typeOf(key,object,'edit')">
+              <ion-col size=3 *ngFor="let key of objectKeys;" [ngSwitch]="objectService.typeOf(key,object,'edit')">
                 <ion-item *ngSwitchCase="'booleanTrue'">
                   <ion-label>{{ key | translate }}</ion-label>
                   <ion-toggle slot="start" formControlName="{{key}}" color="secondary" checked></ion-toggle>

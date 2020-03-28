@@ -1,5 +1,5 @@
 export class Hwconf {
-	id?: number = 0;
+	id?: number;
 	name: string = "";
 	deviceType: string = "";
 	description: string = "";
@@ -7,7 +7,7 @@ export class Hwconf {
 	constructor(){}
 }
 export class Partition {
-	id?: number = 0;
+	id?: number;
 	description: string = "";
 	format: string = "";
 	joinType: string = "";
@@ -20,19 +20,19 @@ export class Partition {
 }
 
 export class User {
+	id?: number;
 	uid?: string = "";
 	uuid?: string = "";
-	id?: number = 0;
 	surName: string = "";
 	givenName: string = "";
 	birthDay?: any = new Date();
 	password?: string = "";
 	role?: string = "";
 	classes?: string = "";
-	msQuota?: number;
-	fsQuota?: number;
-	msQuotaUsed?: number;
-	fsQuotaUsed?: number;
+	msQuota?: number = 0;
+	fsQuota?: number = 0;
+	msQuotaUsed?: number = 0;
+	fsQuotaUsed?: number = 0;
 	mailAliases?: string[] =[];
 	constructor(){}
 }
@@ -69,7 +69,7 @@ export class ImportUser{
 }
 
 export class AccessInRooms{
-	id?: number = 0;
+	id?: number;
 	accessType: string = "";
 	action?: string = "";
 	roomId: number = 0;
@@ -91,7 +91,7 @@ export class AccessInRooms{
 }
 
 export class Room {
-	id?: number = 0;
+	id?: number;
 	name: string = "";
 	places: number = 0;
 	rows: number = 0;
@@ -109,7 +109,7 @@ export class Room {
 }
 
 export class Group {
-	id?: number = 0;
+	id?: number;
 	name: string = "";
 	description: string = "";
 	groupType: string = "";
@@ -117,14 +117,14 @@ export class Group {
 }
 
 export class SoftwareVersions{
-	id?: number = 0;
+	id?: number;
 	version: string = "";
 	status?: string = "";
 	constructor() { }
 }
 
 export class Software {
-	id?: number = 0;
+	id?: number;
 	description: string = "";
 	manually: boolean = false;
 	name: string = "";
@@ -151,7 +151,7 @@ export class InstallStateDev {
 }
 
 export class License {
-	id?: number = 0;
+	id?: number;
 	softwareId: number = 0;
 	licenseType: string = "";
 	count: number = 0;
@@ -160,7 +160,7 @@ export class License {
 	constructor(){}
 }
 export class Device {
-	id?: number = 0;
+	id?: number;
 	name: string = "";
 	place?: number = 0;
 	row?: number = 0;
@@ -176,7 +176,7 @@ export class Device {
 	constructor(){}
 }
 export class Printer {
-	id?: number = 0;
+	id?: number;
 	name: string = "";
 	devId: number = 0;
 	mac: string = "";
@@ -194,7 +194,7 @@ export class Drivers {
 	constructor(){}
 }
 export class Installation {
-	id?: number = 0;
+	id?: number;
 	description?: string = "";
 	name?: string = "";
 	categoryType?: string = "";
@@ -206,7 +206,7 @@ export class Installation {
 }
 
 export class Permission {
-	id?: number = 0;
+	id?: number;
 	acl: string = "";
 	allowed: boolean = false;
 	userId?: number = 0;
@@ -215,7 +215,7 @@ export class Permission {
 }
 
 export class AccessStatus {
-	id?: number = 0;
+	id?: number;
 	accessType?: string = "";
 	action?: string = "";
 	roomId: any = null;
@@ -237,7 +237,7 @@ export class AccessStatus {
 }
 
 export class Announcenement {
-	id?: number = 0;
+	id?: number;
 	abstract: string = "";
 	issue: string = "";
 	keywords: string = "";
@@ -250,7 +250,7 @@ export class Announcenement {
 }
 
 export class FAQ {
-	id?: number = 0;
+	id?: number;
 	abstract: string = "";
 	issue: string = "";
 	text: string = "";
@@ -260,7 +260,7 @@ export class FAQ {
 }
 
 export class Contact {
-	id?: number = 0;
+	id?: number;
 	email: string = "";
 	issue: string = "";
 	name: string = "";
@@ -271,7 +271,7 @@ export class Contact {
 }
 
 export class AdHocRoom{
-	id?: number = 0;
+	id?: number;
 	name: string = "";
 	places: number = 0;
 	description: string = "";
@@ -324,7 +324,7 @@ export class GuestUsers{
 }
 
 export class Category{
-	id?: number = 0;
+	id?: number;
 	description: string = "";
 	name: string = "";
 	categoryType: string = "";
@@ -347,7 +347,7 @@ export class Category{
 }
 
 export class DHCP {
-	id?: number = 0;
+	id?: number;
 	objectType: string = "";
 	objectId: number = 0;
 	keyword: string = "";

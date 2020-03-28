@@ -14,8 +14,12 @@ import { LanguageService } from './language.service';
 export class GenericObjectService {
   allObjects: any = {};
   selectedObject: any = null;
+
+  /**
+   * The base objects which need to be loaded by the initialisations
+   */
   objects: string[] = [
-    'user', 'group', 'room', 'device', 'institute', 'customer', 'ticket', 'hwconf'
+    'user', 'group', 'room', 'device', 'institute', 'customer', 'ticket', 'hwconf','printer'
   ]
 
   selects: any = {
@@ -23,17 +27,23 @@ export class GenericObjectService {
   }
   initialized: boolean = false;
   enumerates: string[] = [
-    'instituteType', 'groupType', 'deviceType', 'roomType', 'roomControl', 'network', 'accessType', 'role'
+    'instituteType', 'groupType', 'deviceType', 'roomType', 'roomControl', 'network', 'accessType', 'role','noticeType'
   ];
 
+  /**
+   * Attributes which can not be modified
+   */
   readOnlyAttributes: string[] = [
+    'classes',
     'fsQuotaUsed',
+    'ip',
     'msQuotaUsed',
     'name',
+    'ownerName',
     'recDate',
     'role',
-    'classes',
-    'uid'
+    'uid',
+    'wlanIp'
   ]
   /**
    * Attributes which we get but need not be shown
@@ -42,8 +52,12 @@ export class GenericObjectService {
     'id',
     'ownerId',
     'deleted',
-    'saveNext'
+    'saveNext',
+    'cephalixInstituteId'
   ]
+  /**
+   * Required attributes
+   */
   required: any = {
     'givenName': '*',
     'groupType': '*',
@@ -76,6 +90,9 @@ export class GenericObjectService {
         'Accept': "application/json",
         'Authorization': "Bearer " + this.authS.getToken()
       });
+      for (let key of this.objects) {
+        this.getAllObject(key);
+      }
       for (let key of this.enumerates) {
         let url = this.utilsS.hostName() + "/system/enumerates/" + key;
         subs[key] = this.http.get<string[]>(url, { headers: this.headers }).subscribe(
@@ -83,9 +100,7 @@ export class GenericObjectService {
           (err) => { },
           () => { subs[key].unsubscribe() });
       }
-      for (let key of this.objects) {
-        this.getAllObject(key);
-      }
+      
       this.initialized = true;
     }
   }
