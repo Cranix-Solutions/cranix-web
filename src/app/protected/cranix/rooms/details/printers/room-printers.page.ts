@@ -4,34 +4,34 @@ import { ToastController } from '@ionic/angular';
 //own stuff
 import { GenericObjectService } from '../../../../../services/generic-object.service';
 import { LanguageService } from '../../../../../services/language.service';
-import { DevicesService } from '../../../../../services/devices.service';
-import { Printer, Device } from '../../../../../shared/models/data-model'
+import { RoomsService } from '../../../../../services/rooms.service';
+import { Printer, Room } from '../../../../../shared/models/data-model'
 import { ServerResponse } from '../../../../../shared/models/server-models';
 
 @Component({
   selector: 'cranix-group-members',
-  templateUrl: './device-printers.page.html',
-  styleUrls: ['./device-printers.page.scss'],
+  templateUrl: './room-printers.page.html',
+  styleUrls: ['./room-printers.page.scss'],
 })
-export class DevicePrintersPage implements OnInit {
+export class RoomPrintersPage implements OnInit {
   editPrinter;
   noPrinter: Printer = new Printer;
   allDefaultPrinters: Printer[] = [this.noPrinter];
   allPrinters: Printer[] = [];
-  device: Device;
+  room: Room;
   printers = {
     defaultPrinter: 0,
     availablePrinters: []
   }
 
   constructor(
-    private deviceService: DevicesService,
+    private roomService: RoomsService,
     private languageS: LanguageService,
     public formBuilder: FormBuilder,
     private objectService: GenericObjectService,
     private toastController: ToastController
   ) {
-    this.device = <Device>this.objectService.selectedObject;
+    this.room = <Room>this.objectService.selectedObject;
     this.noPrinter.id=0;
     this.noPrinter.name= languageS.trans("No default  printer");
   }
@@ -49,7 +49,7 @@ export class DevicePrintersPage implements OnInit {
   }
 
   readPrinters() {
-    let subM = this.deviceService.getAvailablePrinter(this.device.id).subscribe(
+    let subM = this.roomService.getAvailablePrinter(this.room.id).subscribe(
       (val) => {
         for (let printer of val) {
           this.printers.availablePrinters.push(printer.id);
@@ -57,7 +57,7 @@ export class DevicePrintersPage implements OnInit {
       },
       (err) => { console.log(err) },
       () => { subM.unsubscribe() });
-    let subNM = this.deviceService.getDefaultPrinter(this.device.id).subscribe(
+    let subNM = this.roomService.getDefaultPrinter(this.room.id).subscribe(
       (val) => {
         if (val) {
           this.printers.defaultPrinter = val.id;
@@ -80,7 +80,7 @@ export class DevicePrintersPage implements OnInit {
     };
     console.log(form);
     console.log(printers)
-    let sub = this.deviceService.setPrinters(this.device.id, printers).subscribe(
+    let sub = this.roomService.setPrinters(this.room.id, printers).subscribe(
       async (val) => {
         serverResponse = val;
         if (serverResponse.code == "OK") {

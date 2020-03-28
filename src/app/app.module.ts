@@ -26,6 +26,7 @@ import { DevicesService } from './services/devices.service';
 import { GenericObjectService } from './services/generic-object.service';
 import { GroupsService } from './services/groups.service';
 import { ObjectsEditComponent } from './shared/objects-edit/objects-edit.component';
+import { RoomsService } from './services/rooms.service';
 import { SelectColumnsComponent } from './shared/select-columns/select-columns.component';
 import { UsersService } from './services/users.service';
 
@@ -76,6 +77,7 @@ const routes: Routes = [
     GenericObjectService,
     GroupsService,
     StatusBar,
+    RoomsService,
     SplashScreen,
     UsersService,
     UtilsService,

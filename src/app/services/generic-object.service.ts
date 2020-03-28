@@ -49,11 +49,14 @@ export class GenericObjectService {
    * Attributes which we get but need not be shown
    */
   hiddenAttributes: string[] = [
+    'accessInRooms',
+    'cephalixInstituteId',
+    'deleted',
+    'devices',
     'id',
     'ownerId',
-    'deleted',
     'saveNext',
-    'cephalixInstituteId'
+    'users',
   ]
   /**
    * Required attributes

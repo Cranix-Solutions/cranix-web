@@ -4,26 +4,26 @@ import { FormBuilder } from '@angular/forms';
 
 //Own modules
 import { GenericObjectService } from '../../../../../services/generic-object.service';
-import { Device } from '../../../../../shared/models/data-model';
+import { Room } from '../../../../../shared/models/data-model';
 
 @Component({
-  selector: 'cranix-device-edit',
-  templateUrl: './device-edit.page.html',
-  styleUrls: ['./device-edit.page.scss'],
+  selector: 'cranix-room-edit',
+  templateUrl: './room-edit.page.html',
+  styleUrls: ['./room-edit.page.scss'],
 })
-export class DeviceEditPage implements OnInit {
+export class RoomEditPage implements OnInit {
   editForm;
   objectId: number=0;
-  object: Device = null;
+  object: Room = null;
   objectKeys: string[] = [];
   constructor(
     public translateService: TranslateService,
     public formBuilder: FormBuilder,
     private objectService: GenericObjectService
   ) { 
-    this.object = <Device>this.objectService.selectedObject;
-    this.objectKeys = Object.getOwnPropertyNames(new Device());
-    console.log("DeviceEditPage:" + this.object.id);
+    this.object = <Room>this.objectService.selectedObject;
+    this.objectKeys = Object.getOwnPropertyNames(new Room());
+    console.log("RoomEditPage:" + this.object.id);
   }
   ngOnInit() {
     this.editForm = this.formBuilder.group(this.objectService.convertObject(this.object));

@@ -37,6 +37,11 @@ export class DevicesService {
 		this.url = this.hostname + `/devices/import`;
 		return this.http.post<ServerResponse>(this.url, fd, { headers: this.headers });
 	}
+
+	setPrinters(dId: number, printers: any){
+		this.url = this.hostname + `/devices/${dId}/printers`;
+		return this.http.post<ServerResponse>(this.url, printers, { headers: this.headers });
+	}
 	// GET Calls
 	getDhcp(dId: number) {
 		this.url = `${this.hostname}/devices/${dId}/dhcp`;
@@ -62,11 +67,11 @@ export class DevicesService {
 		this.url = this.hostname + `/devices/${id}`;
 		return this.http.get<Device>(this.url, { headers: this.headers });
 	}
-	getDefPrinter(id: number) {
+	getDefaultPrinter(id: number) {
 		this.url = `${this.hostname}/devices/${id}/defaultPrinter`;
 		return this.http.get<Printer>(this.url, { headers: this.headers });
 	}
-	getAvaiPrinter(id: number) {
+	getAvailablePrinter(id: number) {
 		this.url = `${this.hostname}/devices/${id}/availablePrinters`;
 		return this.http.get<Printer[]>(this.url, { headers: this.headers });
 	}
