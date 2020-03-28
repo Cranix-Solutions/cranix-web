@@ -22,6 +22,7 @@ import { SystemService } from './services/system.service';
 import { LanguageService } from './services/language.service';
 
 import { ActionsComponent } from './shared/actions/actions.component';
+import { CanActivateViaAcls  } from './services/auth-guard.service';
 import { DevicesService } from './services/devices.service';
 import { GenericObjectService } from './services/generic-object.service';
 import { GroupsService } from './services/groups.service';
@@ -74,6 +75,7 @@ const routes: Routes = [
     })],
   providers: [
     DevicesService,
+    CanActivateViaAcls,
     GenericObjectService,
     GroupsService,
     StatusBar,
