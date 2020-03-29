@@ -20,10 +20,17 @@ export class GroupEditPage implements OnInit {
     private objectService: GenericObjectService
   ) { 
     this.object = <Group>this.objectService.selectedObject;
-    this.objectKeys = Object.getOwnPropertyNames(this.object);
-    console.log("GroupEditPage:" + this.object.id);
+    this.objectKeys = Object.getOwnPropertyNames(new Group());
+    console.log("GroupEditPage:");
+    console.log(this.object);
+    console.log(this.objectKeys);
   }
   ngOnInit() {
-    this.editForm = this.formBuilder.group(this.objectService.convertObject(this.object));
+    //this.editForm = this.formBuilder.group(this.objectService.convertObject(this.object));
+    this.editForm = this.formBuilder.group(this.object);
+  }
+  onSubmit(form){
+    form['id'] = this.object.id;
+    this.objectService.modifyObjectDialog(form,"group");
   }
 }

@@ -28,4 +28,8 @@ export class RoomEditPage implements OnInit {
   ngOnInit() {
     this.editForm = this.formBuilder.group(this.objectService.convertObject(this.object));
   }
+  onSubmit(form){
+    form['id'] = this.object.id;
+    this.objectService.modifyObjectDialog(form,"room");
+  }
 }

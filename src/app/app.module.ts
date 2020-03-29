@@ -43,7 +43,7 @@ const routes: Routes = [
     loadChildren: () => import('./public/login/login.module').then( m => m.LoginPageModule)
   },
   { path: 'pages', 
-    canLoad: [CanActivateViaAcls],
+    //canLoad: [CanActivateViaAcls],
     loadChildren: () => import('./protected/protected.module' ).then(m => m.ProtectedPageModule)
   }
 ];
