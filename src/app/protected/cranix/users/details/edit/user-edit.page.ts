@@ -14,19 +14,14 @@ export class UserEditPage implements OnInit {
   objectId: number=0;
   object: User = null;
   objectKeys: string[] = [];
-  trippel: number[] = [];
-  toThree: number[] = [0,1,2];
   constructor(
     public translateService: TranslateService,
     public formBuilder: FormBuilder,
     private objectService: GenericObjectService
   ) { 
-    this.object = this.objectService.selectedObject;
-    this.objectKeys = Object.getOwnPropertyNames(this.object);
-    for( var i = 0; i< Math.ceil(this.objectKeys.length/3); i++) {
-      this.trippel.push(i);
-    }
-    console.log("UserEditPage:" + this.object.id);
+    this.object = <User>this.objectService.selectedObject;
+    this.objectKeys = Object.getOwnPropertyNames(new User());
+    console.log("UserEditPage:" + this.objectKeys);
   }
   ngOnInit() {
     this.editForm = this.formBuilder.group(this.objectService.convertObject(this.object));

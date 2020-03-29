@@ -22,10 +22,15 @@ import { SystemService } from './services/system.service';
 import { LanguageService } from './services/language.service';
 
 import { ActionsComponent } from './shared/actions/actions.component';
+import { CanActivateViaAcls  } from './services/auth-guard.service';
+import { DevicesService } from './services/devices.service';
 import { GenericObjectService } from './services/generic-object.service';
-import { UsersService } from './services/users.service';
+import { GroupsService } from './services/groups.service';
 import { ObjectsEditComponent } from './shared/objects-edit/objects-edit.component';
+import { RoomsService } from './services/rooms.service';
 import { SelectColumnsComponent } from './shared/select-columns/select-columns.component';
+import { UsersService } from './services/users.service';
+
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -69,8 +74,12 @@ const routes: Routes = [
       }
     })],
   providers: [
+    DevicesService,
+    CanActivateViaAcls,
     GenericObjectService,
+    GroupsService,
     StatusBar,
+    RoomsService,
     SplashScreen,
     UsersService,
     UtilsService,

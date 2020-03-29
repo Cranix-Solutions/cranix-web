@@ -1,49 +1,40 @@
 <ion-grid>
-  <ion-row class="ion-justify-content-center">
+  <!--ion-row class="ion-justify-content-center">
         <div class="title">CRANIX IONIC</div>
-  </ion-row>
+  </ion-row-->
   <ion-row class="ion-justify-content-center">
     <ion-col>
-      <ion-card class="ion-text-center"> 
-        <img  src="assets/images/logo/cranix_school.svg" style="height: 250px; width: 250px; padding: 10px">
+      <ion-card class="ion-text-center">
+        <img src="assets/images/logo/cranix_school.svg" style="height: 200px; width: 200px; padding: 10px">
         <ion-card-header class="ion-text-center">
-          <!--ion-item lines="none">
-            <ion-thumbnail-->
-             
-            <!--/ion-thumbnail>
-          </ion-item-->
           <h2>{{ instName | async }}</h2>
         </ion-card-header>
-      <form [formGroup]="authForm" (ngSubmit)="onSubmit(authForm.value)" style="padding: 15px;">
-        <ion-item>
-          <ion-input formControlName="username" type="text" placeholder="{{ 'username' | translate }}"></ion-input>
-        </ion-item>
+        <ion-card-content>
+          <form [formGroup]="authForm" (ngSubmit)="onSubmit(authForm.value)" style="padding: 15px;">
+            <ion-item>
+              <ion-input formControlName="username" type="text" placeholder="{{ 'username' | translate }}"></ion-input>
+            </ion-item>
 
-        <ion-item *ngIf="authForm.controls.username.hasError('required') && authForm.controls.username.touched">
-          <p>{{ 'Sorry, field username is required!' | translate }}</p>
-        </ion-item>
+            <ion-item *ngIf="authForm.controls.username.hasError('required') && authForm.controls.username.touched">
+              <p>{{ 'Sorry, field username is required!' | translate }}</p>
+            </ion-item>
 
-        <ion-item>
-          <ion-input formControlName="password" type="password" placeholder="{{ 'password' | translate }}"></ion-input>
-        </ion-item>
-        <ion-item *ngIf="authForm.controls.password.hasError('required') && authForm.controls.password.touched">
-          <p>{{ 'Sorry, field password is required!' | translate }}</p>
-        </ion-item>
-
-      
-      </form>
-      <ion-row class="ion-text-center">
-        <ion-col>
-             <ion-button full color="primary" [disabled]="!authForm.valid" style="margin-top: 20px;"
-      (click)="submit(authForm.value)">{{ 'login' | translate }}</ion-button>
-        </ion-col>
-     
-      </ion-row>
-        
-    </ion-card>
+            <ion-item>
+              <ion-input formControlName="password" type="password" placeholder="{{ 'password' | translate }}">
+              </ion-input>
+            </ion-item>
+            <ion-item *ngIf="authForm.controls.password.hasError('required') && authForm.controls.password.touched">
+              <p>{{ 'Sorry, field password is required!' | translate }}</p>
+            </ion-item>
+          </form>
+        </ion-card-content>
+        <ion-row class="ion-text-center">
+          <ion-col>
+            <ion-button full color="primary" [disabled]="!authForm.valid" style="margin-top: 20px;"
+              (click)="submit(authForm.value)">{{ 'login' | translate }}</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-card>
     </ion-col>
   </ion-row>
-  <ion-row >
-  </ion-row>
-  
 </ion-grid>

@@ -25,7 +25,7 @@
         <!--ion-item *ngIf="editForm.controls[key].hasError('required') && editForm.controls[key].touched"-->
         <ion-label position="stacked" *ngIf="editForm.controls[key].hasError('required')  && editForm.controls[key].touched">{{ 'This field is required!' | translate }}</ion-label>
         <ng-template [ngIf]="objectService.selects[key]"  [ngIfElse]="elseBlock">
-            <ion-select type="text" formControlName="{{key}}"  [compareWith]="compareFn" [required]="objectService.required[key]">
+            <ion-select type="text" formControlName="{{key}}"  [compareWith]="objectService.compareFn" [required]="objectService.required[key]">
             <ion-select-option *ngFor="let option of  objectService.selects[key]" value="{{option}}">{{option | translate}}</ion-select-option>
           </ion-select>
         </ng-template>

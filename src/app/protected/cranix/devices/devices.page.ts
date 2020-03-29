@@ -1,6 +1,7 @@
 import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__ } from '@angular/core';
 import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
 import { AlertController, PopoverController, ModalController } from '@ionic/angular';
+import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 
 //own modules
@@ -36,10 +37,11 @@ export class DevicesPage implements OnInit {
 
   constructor(
     public alertController: AlertController,
-    private objectService: GenericObjectService,
-    public modalCtrl: ModalController,
-    public popoverCtrl: PopoverController,
     public languageS: LanguageService,
+    public modalCtrl: ModalController,
+    private objectService: GenericObjectService,
+    public popoverCtrl: PopoverController,
+    public route: Router,
     private storage: Storage
   ) {
     this.context = { componentParent: this };
@@ -83,15 +85,15 @@ export class DevicesPage implements OnInit {
           break;
         }
         case 'hwconfId': {
-          col['valueGetter'] = function(params) {
-            return params.context['componentParent'].objectService.idToName('hwconf',params.data.hwconfId);
+          col['valueGetter'] = function (params) {
+            return params.context['componentParent'].objectService.idToName('hwconf', params.data.hwconfId);
           }
           //col['cellRendererFramework'] = HwconfIdCellRenderer;
           break;
         }
         case 'roomId': {
-          col['valueGetter'] = function(params) {
-            return params.context['componentParent'].objectService.idToName('room',params.data.roomId);
+          col['valueGetter'] = function (params) {
+            return params.context['componentParent'].objectService.idToName('room', params.data.roomId);
           }
           //col['cellRendererFramework'] = RoomIdCellRenderer;
           break;
@@ -162,29 +164,29 @@ export class DevicesPage implements OnInit {
     (await popover).present();
   }
   async redirectToEdit(ev: Event, device: Device) {
-    let action = 'modify';
-    if (device == null) {
-      device = new Device();
-      action = 'add';
+    if (device) {
+      this.objectService.selectedObject = device;
+      this.route.navigate(['/pages/cranix/devices/' + device.id]);
+    } else {
+      const modal = await this.modalCtrl.create({
+        component: ObjectsEditComponent,
+        componentProps: {
+          objectType: "device",
+          objectAction: "add",
+          object: device,
+          objectKeys: this.objectKeys
+        },
+        animated: true,
+        swipeToClose: true,
+        showBackdrop: true
+      });
+      modal.onDidDismiss().then((dataReturned) => {
+        if (dataReturned.data) {
+          console.log("Object was created or modified", dataReturned.data)
+        }
+      });
+      (await modal).present();
     }
-    const modal = await this.modalCtrl.create({
-      component: ObjectsEditComponent,
-      componentProps: {
-        objectType: "device",
-        objectAction: action,
-        object: device,
-        objectKeys: this.objectKeys
-      },
-      animated: true,
-      swipeToClose: true,
-      showBackdrop: true
-    });
-    modal.onDidDismiss().then((dataReturned) => {
-      if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
-      }
-    });
-    (await modal).present();
   }
 
   /**

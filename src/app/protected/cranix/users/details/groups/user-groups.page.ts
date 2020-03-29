@@ -5,7 +5,7 @@ import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
 //own stuff
 import { LanguageService } from '../../../../../services/language.service';
 import { UsersService } from '../../../../../services/users.service';
-import { Group } from '../../../../../shared/models/data-model'
+import { Group, User } from '../../../../../shared/models/data-model'
 
 @Component({
   selector: 'cranix-user-groups',
@@ -32,7 +32,7 @@ export class UserGroupsPage implements OnInit {
     private languageS: LanguageService,
     private  userS: UsersService
   ) {
-    this.user = this.objectS.selectedObject;
+    this.user = <User>this.objectS.selectedObject;
     this.context = { componentParent: this };
     this.memberOptions = <GridOptions>{
       defaultColDef: {

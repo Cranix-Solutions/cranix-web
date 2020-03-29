@@ -1,6 +1,7 @@
 import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__ } from '@angular/core';
 import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
+import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 
 //own modules
@@ -39,6 +40,7 @@ export class RoomsPage implements OnInit {
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     public languageS: LanguageService,
+    public route: Router,
     private storage: Storage
   ) {
     this.context = { componentParent: this };
@@ -52,7 +54,8 @@ export class RoomsPage implements OnInit {
         hide: false
       },
       columnDefs: this.columnDefs,
-      context: this.context
+      context: this.context,
+      rowHeight: 35
     }
   }
   ngOnInit() {
@@ -152,29 +155,29 @@ export class RoomsPage implements OnInit {
     (await popover).present();
   }
   async redirectToEdit(ev: Event, room: Room) {
-    let action = 'modify';
-    if (room == null) {
-      room = new Room();
-      action = 'add';
+    if (room) {
+      this.objectService.selectedObject = room;
+      this.route.navigate(['/pages/cranix/room/' + room.id]);
+    } else {
+      const modal = await this.modalCtrl.create({
+        component: ObjectsEditComponent,
+        componentProps: {
+          objectType: "room",
+          objectAction: 'add',
+          object: room,
+          objectKeys: this.objectKeys
+        },
+        animated: true,
+        swipeToClose: true,
+        showBackdrop: true
+      });
+      modal.onDidDismiss().then((dataReturned) => {
+        if (dataReturned.data) {
+          console.log("Object was created or modified", dataReturned.data)
+        }
+      });
+      (await modal).present();
     }
-    const modal = await this.modalCtrl.create({
-      component: ObjectsEditComponent,
-      componentProps: {
-        objectType: "room",
-        objectAction: action,
-        object: room,
-        objectKeys: this.objectKeys
-      },
-      animated: true,
-      swipeToClose: true,
-      showBackdrop: true
-    });
-    modal.onDidDismiss().then((dataReturned) => {
-      if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
-      }
-    });
-    (await modal).present();
   }
 
   /**

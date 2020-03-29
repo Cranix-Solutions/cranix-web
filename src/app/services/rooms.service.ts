@@ -9,102 +9,28 @@ import { AuthenticationService } from './auth.service';
 
 @Injectable()
 export class RoomsService {
-	hostname: string;
-	token: string;
-	url: string;
+        hostname: string;
+        headers: HttpHeaders;
+        token: string;
+        url: string;
 
 
-	allRooms: BehaviorSubject<Room[]> = new BehaviorSubject(undefined);
-	allNetworks: BehaviorSubject<string[]> = new BehaviorSubject(undefined);
-	allRoomTypes: BehaviorSubject<string[]> = new BehaviorSubject(undefined);
-	allRoomControls: BehaviorSubject<string[]> = new BehaviorSubject(undefined);
+        constructor(
+                private utils: UtilsService,
+                private http: HttpClient,
+                private authS: AuthenticationService) {
+                this.hostname = this.utils.hostName();
+                this.token = this.authS.getToken();
+                this.headers = new HttpHeaders({
+                        'Content-Type': "application/json",
+                        'Accept': "application/json",
+                        'Authorization': "Bearer " + this.token
+                });
+        }
 
-	constructor(
-	private utils: UtilsService,
-	private http: HttpClient,
-	private authS: AuthenticationService) {
-		this.hostname = this.utils.hostName();
-		this.token    = this.authS.getToken();
-	}
-
-
-	//Calls for storage
-
-	/*loadInitialData(){
-		Observable.forkJoin(
-			this.getAllRooms(),
-			this.getAllRoomTypes(),
-			this.getAvailiableNetworks(),
-			this.getAllRoomControls()
-		).subscribe(data => {
-			this.allRooms.next(data[0]),
-			this.allRoomTypes.next(data[1]),
-			this.allNetworks.next(data[2]),
-			this.allRoomControls.next(data[3])
-			})
-
-
-	}
-	refreshData(ref: string) {
-		switch (ref) {
-			case "rooms": {
-				this.getAllRooms()
-					.subscribe(res => {
-						this.allRooms.next(res);
-					}
-
-					);
-			}
-		};
-	}
-
-	getSTAllRooms(){
-		return this.allRooms.asObservable();
-	}
-
-	getSTAllRoomsValue(){
-		let rooms = this.allRooms.getValue();
-		return rooms;
-	}
-	getSTAllNetworks(){
-		return this.allNetworks.asObservable();
-	}
-	getSTAllRoomTypes(){
-		return this.allRoomTypes.asObservable();
-	}
-	getSTAllRoomControls(){
-		return this.allRoomControls.asObservable();
-	}*/
-	// POSTS Calls
-	addRoom(newRoom: Room){
-		const body = newRoom;
-
-		// let body2 = JSON.stringify(body)
-		// console.log(body2);
-		this.url = this.hostname + "/rooms/add";
-		const headers = new HttpHeaders({
-			'Content-Type': "application/json",
-			'Accept' : "application/json",
-			'Authorization' : "Bearer " + this.token
-		});
-		//let body2 = JSON.stringify(body);
-		//console.log(body2);
-		//
-		//
-		//
-		//console.log(body);
-		return this.http.post<ServerResponse>(this.url, body, { headers: headers});
-		};
-	modifyRoom(editRoom: Room){
-		const body = editRoom;
-		this.url = this.hostname + "/rooms/modify";
-		const headers = new HttpHeaders({
-			'Content-Type': "application/json",
-			'Accept' : "application/json",
-			'Authorization' : "Bearer " + this.token
-		});
-
-		return this.http.post<ServerResponse>(this.url, body , { headers: headers});
+	setPrinters(dId: number, printers: any){
+                this.url = this.hostname + `/rooms/${dId}/printers`;
+                return this.http.post<ServerResponse>(this.url, printers, { headers: this.headers });
 	}
 
 	addDevice(device: any, room: string){

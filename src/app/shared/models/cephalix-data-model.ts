@@ -1,6 +1,6 @@
 
 export class Customer {
-    id: number = 0;
+    id?: number;
     name: string = '';
     name2: string = '';
     uuid: string = '';
@@ -19,8 +19,8 @@ export class Customer {
 }
 
 export class Institute {
+    id?: number;
     name: string = '';
-    id: number = 0;
     uuid: string = '';
     instituteType: string = '';
     locality: string = '';
@@ -51,7 +51,7 @@ export class Institute {
 }
 
 export class Ticket{
-    id: number = 0;
+    id?: number;
     title: string = "";
     cephalixInstituteId: number = 0;
     ossuserId: number = 0;
@@ -67,7 +67,7 @@ export class Ticket{
 }
 
 export class Article{
-    id: number = 0;
+    id?: number;
     cephalixArticleId: number = 0;
     title: string = "";
     sender: string = "";
@@ -82,7 +82,7 @@ export class Article{
 }
 
 export class Repository{
-    id: number = 0;
+    id?: number;
     name: string = "";
     repositoryType: string = "";
     description: string = "";
@@ -93,7 +93,7 @@ export class Repository{
 }
 
 export class OssCare{
-    id: number = 0;
+    id?: number;
     cephalixInstituteId: number = 0;
     description: string = "";
     access: string = "";
@@ -104,7 +104,7 @@ export class OssCare{
 }
 
 export class OssCareMessage{
-    id: number = 0;
+    id?: number;
     cephalixosscareId: number = 0;
     recDate: any = new Date();
     careMessageType: string = "";
@@ -114,7 +114,7 @@ export class OssCareMessage{
 }
 
 export class DynDns {
-    id: number = 0;
+    id?: number;
     cephalixInstituteId: number = 0;
     hostname: string = "";
     domain: string = "";
@@ -125,6 +125,7 @@ export class DynDns {
 }
 
 export class Notice{
+    id?: number;
     title:       string = "";
     noticeType:  string = "";
     text:        string = "";
@@ -145,7 +146,7 @@ export interface CopyFile {
 }
 
 export interface Object {
-    id: number,
+    id?: number,
     cephalixId: number,
     objectType: string,
     objectName: number,
