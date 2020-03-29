@@ -56,7 +56,8 @@ export class TicketsPage implements OnInit {
         hide: false
       },
       columnDefs: this.columnDefs,
-      context: this.context
+      context: this.context,
+      rowHeight: 35
     }
   }
 
