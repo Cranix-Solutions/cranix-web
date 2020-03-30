@@ -55,6 +55,7 @@ export class GenericObjectService {
     'devices',
     'id',
     'ownerId',
+    'partitions',
     'saveNext',
     'users',
   ]

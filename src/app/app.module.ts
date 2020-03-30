@@ -26,11 +26,12 @@ import { CanActivateViaAcls  } from './services/auth-guard.service';
 import { DevicesService } from './services/devices.service';
 import { GenericObjectService } from './services/generic-object.service';
 import { GroupsService } from './services/groups.service';
+import { HwconfsService } from './services/hwconfs.service';
 import { ObjectsEditComponent } from './shared/objects-edit/objects-edit.component';
 import { RoomsService } from './services/rooms.service';
 import { SelectColumnsComponent } from './shared/select-columns/select-columns.component';
 import { UsersService } from './services/users.service';
-
+import 'ag-grid-enterprise';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -52,7 +53,7 @@ const routes: Routes = [
   declarations: [
      AppComponent,
      ActionsComponent,
-    ObjectsEditComponent,
+     ObjectsEditComponent,
      SelectColumnsComponent],
   entryComponents: [
     ActionsComponent,
@@ -78,6 +79,7 @@ const routes: Routes = [
     CanActivateViaAcls,
     GenericObjectService,
     GroupsService,
+    HwconfsService,
     StatusBar,
     RoomsService,
     SplashScreen,

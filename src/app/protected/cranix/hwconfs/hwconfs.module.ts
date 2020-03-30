@@ -13,6 +13,10 @@ const routes: Routes = [
   {
     path: 'hwconfs',
     component: HwconfsPage
+  },
+  {
+    path: 'hwconfs/:id',
+    loadChildren: () => import('./details/hwconf-details.module').then( m => m.HwconfDetailsPageModule)
   }
 ];
 
