@@ -58,6 +58,10 @@ export class HwconfMembersPage implements OnInit {
       {
         headerName: this.languageS.trans('ip'),
         field: 'ip',
+      },
+      {
+        headerName: this.languageS.trans('mac'),
+        field: 'mac',
       }
     ]
     this.autoGroupColumnDef = { 
