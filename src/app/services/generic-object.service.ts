@@ -19,9 +19,14 @@ export class GenericObjectService {
    * The base objects which need to be loaded by the initialisations
    */
   objects: string[] = [
-    'user', 'group', 'room', 'device', 'institute', 'customer', 'ticket', 'hwconf', 'printer'
+    'user', 'group', 'room', 'device', 'hwconf', 'printer'
   ]
-
+  /**
+   * Object visiable only on cephalix servers.
+   */
+  cephalixObjects: string[] = [
+    'institute', 'customer', 'ticket'
+  ]
   selects: any = {
     'status': ['N', 'A', 'D']
   }
@@ -76,23 +81,25 @@ export class GenericObjectService {
 
   constructor(
     public alertController: AlertController,
-    private authS: AuthenticationService,
+    private authService: AuthenticationService,
     private http: HttpClient,
     private languageS: LanguageService,
     private utilsS: UtilsService,
-    private toastController: ToastController) {
+    private toastController: ToastController) { }
+
+  initialize(force: boolean) {
+    if(this.authService.isAllowed('cephalix.manage')){
+      this.objects = this.objects.concat(this.cephalixObjects);
+    }
     for (let key of this.objects) {
       this.allObjects[key] = new BehaviorSubject([]);
     }
-  }
-
-  initialize(force: boolean) {
     let subs: any = {};
     if (force || !this.initialized) {
       this.headers = new HttpHeaders({
         'Content-Type': "application/json",
         'Accept': "application/json",
-        'Authorization': "Bearer " + this.authS.getToken()
+        'Authorization': "Bearer " + this.authService.getToken()
       });
       for (let key of this.objects) {
         this.getAllObject(key);
@@ -104,7 +111,6 @@ export class GenericObjectService {
           (err) => { },
           () => { subs[key].unsubscribe() });
       }
-
       this.initialized = true;
     }
   }

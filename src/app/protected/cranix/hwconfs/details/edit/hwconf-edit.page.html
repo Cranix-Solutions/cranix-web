@@ -62,6 +62,51 @@
               </ion-item>
             </ion-col>
           </ion-row>
+          <ion-row *ngFor="let part of object.partitions;">
+            <ion-col>
+              <ion-item>
+                <ion-label position="stacked">{{ 'name' | translate}}</ion-label>
+                <ion-input type="text" formControlName="{{part.id}}-name" value="{{part.name}}"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col>
+              <ion-item>
+                <ion-label position="stacked">{{ 'description' | translate}}</ion-label>
+                <ion-input type="text" formControlName="{{part.id}}-desc" value="{{part.description}}"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col>
+              <ion-item>
+                <ion-label position="stacked">{{ 'OS' | translate}}</ion-label>
+                <ion-select type="text" formControlName="{{part.id}}-os" [compareWith]="objectService.compareFn">
+                <ion-select-option *ngFor="let os of  operatingSystems" value="{{os}}">{{os}}</ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-col>
+            <ion-col>
+              <ion-item>
+                <ion-label position="stacked">{{'joinType' | translate}}</ion-label>
+                <ion-select type="text" formControlName="{{part.id}}-join" [compareWith]="objectService.compareFn">
+                <ion-select-option *ngFor="let join of  joinTypes" value="{{join}}">{{join}}</ion-select-option>
+              </ion-select>
+              </ion-item>
+            </ion-col>
+            <ion-col>
+              <ion-item>
+                <ion-label position="stacked">{{'cloneTool' | translate}}</ion-label>
+                <ion-select type="text" formControlName="{{part.id}}-tool" [compareWith]="objectService.compareFn">
+                <ion-select-option *ngFor="let tool of  tools" value="{{tool}}">{{tool}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            </ion-col>
+            <ion-col>
+              <ion-item>
+                <ion-label position="stacked">{{ 'lastCloned' | translate}}</ion-label>
+                <ion-input type="text" value="{{part.lastCloned | date:'yyyy-MM-dd HH:mm:ss Z' }}" readonly>
+                </ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
         </ion-grid>
         <div class="ion-padding ion-text-center">
           <ion-button type="submit" class="ion-no-margin" [disabled]="!editForm.valid">{{ 'apply' | translate }}

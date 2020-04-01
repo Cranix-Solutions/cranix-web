@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
+import { AuthenticationService } from '../services/auth.service';
+
 @Component({
   selector: 'cranix-protected',
   templateUrl: './protected.page.html',
@@ -9,7 +11,8 @@ import { TranslateService } from '@ngx-translate/core';
 export class ProtectedPage implements OnInit {
 
   
-  public appPages = [
+  public appPages = [ ];
+  private defAppPages = [
     {
       title: 'Customers',
       url: '/pages/cephalix/customers',
@@ -54,7 +57,14 @@ export class ProtectedPage implements OnInit {
 
   constructor(
     public translateService: TranslateService,
-  ) { }
+    private authService: AuthenticationService
+  ) { 
+    for( let page of this.defAppPages ) {
+      if( this.authService.isRouteAllowed(page.url)) {
+        this.appPages.push(page);
+      }
+    }
+  }
 
   ngOnInit() {
   }

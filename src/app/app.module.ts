@@ -22,7 +22,7 @@ import { SystemService } from './services/system.service';
 import { LanguageService } from './services/language.service';
 
 import { ActionsComponent } from './shared/actions/actions.component';
-import { CanActivateViaAcls  } from './services/auth-guard.service';
+import { CanActivateViaAcls } from './services/auth-guard.service';
 import { DevicesService } from './services/devices.service';
 import { GenericObjectService } from './services/generic-object.service';
 import { GroupsService } from './services/groups.service';
@@ -41,20 +41,20 @@ const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
     path: 'login',
-    loadChildren: () => import('./public/login/login.module').then( m => m.LoginPageModule)
+    loadChildren: () => import('./public/login/login.module').then(m => m.LoginPageModule)
   },
-  { path: 'pages', 
-    //canLoad: [CanActivateViaAcls],
-    loadChildren: () => import('./protected/protected.module' ).then(m => m.ProtectedPageModule)
+  {
+    path: 'pages',
+    loadChildren: () => import('./protected/protected.module').then(m => m.ProtectedPageModule)
   }
 ];
 
 @NgModule({
   declarations: [
-     AppComponent,
-     ActionsComponent,
-     ObjectsEditComponent,
-     SelectColumnsComponent],
+    AppComponent,
+    ActionsComponent,
+    ObjectsEditComponent,
+    SelectColumnsComponent],
   entryComponents: [
     ActionsComponent,
     ObjectsEditComponent,
@@ -75,8 +75,8 @@ const routes: Routes = [
       }
     })],
   providers: [
-    DevicesService,
     CanActivateViaAcls,
+    DevicesService,
     GenericObjectService,
     GroupsService,
     HwconfsService,
