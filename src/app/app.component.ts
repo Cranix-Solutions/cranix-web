@@ -34,7 +34,7 @@ export class AppComponent {
       this.authS.authenticationState.subscribe(state => {
         if (state) {
           this.genericObjectS.initialize(true);
-          this.router.navigate(['pages/cephalix/institutes']);
+          this.router.navigate(['pages/cranix/users']);
         } else {
           this.router.navigate(['login']);
         }

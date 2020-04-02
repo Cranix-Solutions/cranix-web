@@ -5,23 +5,25 @@ import { TranslateService  } from '@ngx-translate/core';
 import { RouterModule, Routes } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
-import { CanActivateViaAcls } from '../../../services/auth-guard.service';
+import { CanActivateViaAcls } from 'src/app/services/auth-guard.service';
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
-import { PipesModule } from '../../../pipes/pipe-modules';
-import { InstitutesPage } from './institutes.page';
+import { PipesModule } from 'src/app/pipes/pipe-modules';
 
 const routes: Routes = [
   {
     path: 'institutes',
     canActivate: [CanActivateViaAcls],
-    component: InstitutesPage
+    loadChildren: () => import('./lists/institutes-lists.module').then( m => m.InstitutesListsPageModule)
   },
   {
     path: 'institutes/:id',
     canLoad: [CanActivateViaAcls],
     loadChildren: () => import('./details/institute-details.module').then( m => m.InstituteDetailsPageModule)
+  },
+  {
+    path: '',
+    redirectTo: 'all'
   }
-
 ];
 
 @NgModule({
@@ -32,7 +34,7 @@ const routes: Routes = [
     IonicModule,
     CranixSharedModule
   ],
-  declarations: [ InstitutesPage ],
+  declarations: [ ],
   providers: [TranslateService, PipesModule]
 })
 export class InstitutesPageModule {}

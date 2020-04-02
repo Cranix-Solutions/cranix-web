@@ -6,12 +6,14 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
     selector: 'action-cell',
     template: `
       
-        <button (click)="details()"mat-icon-button matTooltip="{{'edit' | translate }}" style="height:15px;width:15px">
+        <ion-button fill="clear" size="small"  (click)="details()" matTooltip="{{'edit' | translate }}">
              <ion-icon name="create-outline" style="height:15px;width:15px"></ion-icon>
-        </button>
-        <button size="small" mat-icon-button (click)="delete()" matTooltip="{{'delete' | translate }}" style="height:25px;width:25px">
+        </ion-button>
+        <ion-button  fill="clear"  size="small" (click)="delete()" matTooltip="{{'delete' | translate }}">
             <ion-icon color="danger" name="trash-outline" style="height:15px;width:15px"></ion-icon>
-        </button>` 
+        </ion-button>
+        <ion-button  fill="clear"  size="small"></ion-button>
+        ` 
 })
 
 export class ActionBTNRenderer implements ICellRendererAngularComp {

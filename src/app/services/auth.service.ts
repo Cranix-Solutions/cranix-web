@@ -151,6 +151,7 @@ export class AuthenticationService {
     isRouteAllowed(route: string) {
         switch (route) {
             case "/pages/cephalix/customers": { return this.isAllowed('customer.manage') }
+	    case "/pages/cephalix/institutes/all": { return this.isAllowed('cephalix.manage') }
             case "/pages/cephalix/institutes": { return this.isAllowed('cephalix.manage') }
             case "/pages/cephalix/tickets": { return this.isAllowed('cephalix.ticket') }
             case "/pages/cranix/devices": { return this.isAllowed('device.manage') }

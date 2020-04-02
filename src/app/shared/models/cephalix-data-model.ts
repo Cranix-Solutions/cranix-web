@@ -80,7 +80,22 @@ export class Article{
     workTime: number = 0;
     constructor() {}
 }
-
+export class InstituteStatus {
+    id?: number;
+    cephalixInstituteId: number = 0;
+    created: any = new Date();
+    runningKernel: string ="";
+    installedKernel: string ="";
+    uptime: string ="";
+    version: string ="";
+    lastUpdate: any =new Date();
+    rootUsage: string ="";
+    srvUsage: string = "";
+    varUsage: string ="";
+    homeUsage: string = "";
+    availableUpdates: string = "";
+    constructor() {}
+}
 export class Repository{
     id?: number;
     name: string = "";

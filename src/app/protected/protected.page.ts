@@ -20,7 +20,7 @@ export class ProtectedPage implements OnInit {
     },
     {
       title: 'Institutes',
-      url: '/pages/cephalix/institutes',
+      url: '/pages/cephalix/institutes/all',
       icon: 'business'
     },
     {
