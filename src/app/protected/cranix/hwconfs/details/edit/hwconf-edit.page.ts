@@ -37,17 +37,30 @@ export class HwconfEditPage implements OnInit {
       }
     }
     for(let part of this.object.partitions ){
-      myObject[part.id+"-name"] = part.name
-      myObject[part.id+"-desc"] = part.description
-      myObject[part.id+"-os"] = part.os
-      myObject[part.id+"-tool"] = part.tool
-      myObject[part.id+"-join"] = part.joinType
+      myObject['part-'+part.id+"-name"] = part.name
+      myObject['part-'+part.id+"-description"] = part.description
+      myObject['part-'+part.id+"-os"] = part.os
+      myObject['part-'+part.id+"-tool"] = part.tool
+      myObject['part-'+part.id+"-joinType"] = part.joinType
     }
     this.editForm = this.formBuilder.group(myObject);
   }
   onSubmit(form) {
     console.log(form);
-    form['id'] = this.object.id;
-    this.objectService.modifyObjectDialog(form, "hwconf");
+    let idToIndex = {};
+    for( let index in this.object.partitions ){
+      idToIndex[this.object.partitions[index].id] = index;
+    }
+    this.object.name=form.name;
+    this.object.description=form.description;
+    this.object.deviceType=form.deviceType;
+    for(let key of Object.getOwnPropertyNames(form) ){
+      let lkey = key.split('-');
+      if(lkey[0] && lkey[0] == 'part') {
+        this.object.partitions[idToIndex[lkey[1]]][lkey[2]] = form[key];
+      }
+    }
+    console.log(this.object);
+    this.objectService.modifyObjectDialog(this.object, "hwconf");
   }
 }

@@ -168,7 +168,7 @@ export class InstitutesPage implements OnInit {
         componentProps: {
           objectType: "institute",
           objectAction: 'add',
-          object: institute,
+          object: new Institute(),
           objectKeys: this.objectKeys
         },
         animated: true,
