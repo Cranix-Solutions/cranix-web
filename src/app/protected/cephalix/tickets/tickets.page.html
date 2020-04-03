@@ -1,5 +1,9 @@
 <cranix-toolbar></cranix-toolbar>
-<ion-row class="header-row"></ion-row>
+<ion-row class="header-row">
+  <ion-col size=6>
+    <ion-title>{{'Edit tickets' | translate}}</ion-title>
+  </ion-col>
+</ion-row>
 <ion-content (window:resize)="onResize($event)">
   <ion-card>
     <ion-card-header>
@@ -24,7 +28,7 @@
       </ion-row>
     </ion-card-header>
     <ion-card-content>
-      <ag-grid-angular style="width: 100%; height: 450px;" class="ag-theme-material" [gridOptions]="gridOptions"
+      <ag-grid-angular style="width: 100%; height: 450px;" class="ag-theme-balham" [gridOptions]="gridOptions"
         [rowData]="rowData" [columnDefs]="columnDefs" [context]="context" [rowSelection]="rowSelection"
         (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged()" id="agGridTable">
       </ag-grid-angular>

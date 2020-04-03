@@ -3,7 +3,10 @@ import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
+import { LicenseManager }  from "ag-grid-enterprise";
 import { environment } from './environments/environment';
+
+LicenseManager.setLicenseKey("##YOUR-LICENSE-KEY###");
 
 if (environment.production) {
   enableProdMode();

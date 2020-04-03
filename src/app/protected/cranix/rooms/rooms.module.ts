@@ -5,6 +5,7 @@ import { TranslateService  } from '@ngx-translate/core';
 import { RouterModule, Routes } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
+import { CanActivateViaAcls } from '../../../services/auth-guard.service';
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { PipesModule } from '../../../pipes/pipe-modules';
 import { RoomsPage } from './rooms.page';
@@ -12,10 +13,12 @@ import { RoomsPage } from './rooms.page';
 const routes: Routes = [
   {
     path: 'rooms',
+    canActivate: [CanActivateViaAcls],
     component: RoomsPage
   },
   {
-    path: 'room/:id',
+    path: 'rooms/:id',
+    canLoad: [CanActivateViaAcls],
     loadChildren: () => import('./details/room-details.module').then( m => m.RoomDetailsPageModule)
   }
 ];

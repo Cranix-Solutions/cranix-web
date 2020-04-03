@@ -8,6 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Customer, Institute, Object, Ticket, Article, Notice, OssCare } from 'src/app/shared/models/cephalix-data-model';
 import { ServerResponse } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from './auth.service';
+import { InstituteStatus } from '../shared/models/cephalix-data-model';
 
 
 export interface InstallSetSync{
@@ -22,8 +23,7 @@ export class CephalixService {
 	token: string;
 	url: string;
 	res: any;
-
-	institutes: BehaviorSubject<Institute[]> = new BehaviorSubject(undefined);
+	headers: any;
 
 	constructor(
 		private utilsS: UtilsService,
@@ -31,31 +31,12 @@ export class CephalixService {
 		private authS:  AuthenticationService)
 		{
 			this.hostname = this.utilsS.hostName();
-			this.token    = this.authS.getToken();
-			this.loadInitialData();
-	}
-
-
-	loadInitialData() {
-		this.getAllInstitutes()
-			.subscribe(data => {
-				this.institutes.next(data);
-			})
-	}
-
-	getSTAllInstitutes() {
-		return this.institutes.asObservable();
-	}
-
-	// POST calls
-	addInstitute(institute: Institute) {
-		this.url = this.hostname + "/institutes/add";
-		const headers = new HttpHeaders({
-			'Content-Type': "application/json",
-			'Accept': "application/json",
-			'Authorization': "Bearer " + this.token
-		});
-		return this.http.post<ServerResponse>(this.url, institute, { headers: headers });
+			this.token          = this.authS.getToken();
+			this.headers     = new HttpHeaders({
+				'Content-Type': "application/json",
+				'Accept' : "application/json",
+				'Authorization' : "Bearer " + this.token
+			});
 	}
 
 	//GET calls
@@ -68,16 +49,12 @@ export class CephalixService {
 		//console.log(headers.getAll('Content-Type') + " " + headers.getAll('Accept') + " " + headers.getAll('Authorization'));
 		return this.http.get(this.url, { headers: headers, responseType: 'text' });
 	}
-	getAllInstitutes(): Observable<Institute[]> {
+	getStatusOfInstitutes(): Observable<InstituteStatus[]> {
 		//	this.hostname = this.utils.hostName();
 		//  this.token = this.token;
-		this.url = this.hostname + `/institutes/all`;
+		this.url = this.hostname + `/institutes/newestStatus`;
 		console.log(this.url);
-		const headers = new HttpHeaders({
-			'Accept': "application/json",
-			'Authorization': "Bearer " + this.token
-		});
-		return this.http.get<Institute[]>(this.url, { headers: headers });
+		return this.http.get<InstituteStatus[]>(this.url, { headers: this.headers });
 	};
 	getAllCustomers(): Observable<Customer[]> {
 		//	this.hostname = this.utils.hostName();
@@ -262,12 +239,7 @@ export class CephalixService {
 	}
 	updateById(instituteId: number){
 		const url = `${this.hostname}/institutes/${instituteId}/update`;
-		const headers = new HttpHeaders({
-			'Content-Type': "application/json",
-			'Accept' : "application/json",
-			'Authorization' : "Bearer " + this.token
-		});
-		return this.http.put<ServerResponse>(url,null ,{ headers: headers });
+		return this.http.put<ServerResponse>(url,null ,{ headers: this.headers });
 	}
 	createConfig(instituteId: number){
 		const url = `${this.hostname}/institutes/${instituteId}/writeConfig`;

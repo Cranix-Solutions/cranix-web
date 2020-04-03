@@ -19,15 +19,20 @@ export class GenericObjectService {
    * The base objects which need to be loaded by the initialisations
    */
   objects: string[] = [
-    'user', 'group', 'room', 'device', 'institute', 'customer', 'ticket', 'hwconf','printer'
+    'user', 'group', 'room', 'device', 'hwconf', 'printer'
   ]
-
+  /**
+   * Object visiable only on cephalix servers.
+   */
+  cephalixObjects: string[] = [
+    'institute', 'customer', 'ticket'
+  ]
   selects: any = {
     'status': ['N', 'A', 'D']
   }
   initialized: boolean = false;
   enumerates: string[] = [
-    'instituteType', 'groupType', 'deviceType', 'roomType', 'roomControl', 'network', 'accessType', 'role','noticeType'
+    'instituteType', 'groupType', 'deviceType', 'roomType', 'roomControl', 'network', 'accessType', 'role', 'noticeType'
   ];
 
   /**
@@ -55,6 +60,7 @@ export class GenericObjectService {
     'devices',
     'id',
     'ownerId',
+    'partitions',
     'saveNext',
     'users',
   ]
@@ -75,23 +81,25 @@ export class GenericObjectService {
 
   constructor(
     public alertController: AlertController,
-    private authS: AuthenticationService,
+    private authService: AuthenticationService,
     private http: HttpClient,
     private languageS: LanguageService,
     private utilsS: UtilsService,
-    private toastController: ToastController) {
+    private toastController: ToastController) { }
+
+  initialize(force: boolean) {
+    if(this.authService.isAllowed('cephalix.manage')){
+      this.objects = this.objects.concat(this.cephalixObjects);
+    }
     for (let key of this.objects) {
       this.allObjects[key] = new BehaviorSubject([]);
     }
-  }
-
-  initialize(force: boolean) {
     let subs: any = {};
     if (force || !this.initialized) {
       this.headers = new HttpHeaders({
         'Content-Type': "application/json",
         'Accept': "application/json",
-        'Authorization': "Bearer " + this.authS.getToken()
+        'Authorization': "Bearer " + this.authService.getToken()
       });
       for (let key of this.objects) {
         this.getAllObject(key);
@@ -103,7 +111,6 @@ export class GenericObjectService {
           (err) => { },
           () => { subs[key].unsubscribe() });
       }
-      
       this.initialized = true;
     }
   }
@@ -163,6 +170,8 @@ export class GenericObjectService {
   }
   modifyObject(object, objectType) {
     const body = object;
+    console.log("modifyObject");
+    console.log(object);
     let url = this.utilsS.hostName() + "/" + objectType + "s/" + object.id;
     return this.http.post<ServerResponse>(url, body, { headers: this.headers })
   }
@@ -212,6 +221,30 @@ export class GenericObjectService {
     await alert.present();
   }
 
+  async modifyObjectDialog(object, objectType) {
+    let name = "";
+    if (objectType == 'user') {
+      name = object.uid + " ( " + object.givenName + " " + object.surName + " )";
+    } else {
+      name = object.name;
+    }
+    let serverResponse: ServerResponse;
+    var a = this.modifyObject(object, objectType).subscribe(
+      (val) => {
+        serverResponse = val;
+        if (serverResponse.code == "OK") {
+          this.getAllObject(objectType);
+          this.okMessage(this.languageS.trans("Object was modified"));
+        } else {
+          this.errorMessage("" + serverResponse.value);
+        }
+      },
+      (err) => {
+        this.errorMessage(this.languageS.trans("An error was accoured"));
+      },
+      () => { a.unsubscribe() }
+    );
+  }
   async errorMessage(message: string) {
     const toast = await this.toastController.create({
       position: "middle",
@@ -240,12 +273,12 @@ export class GenericObjectService {
    * Helper script fot the template to detect the type of the variables
    * @param val 
    */
-  typeOf(key,object,action) {
+  typeOf(key, object, action) {
     let obj = object[key];
-    if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil' ) {
+    if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
       return "date";
     }
-    if (key == 'reminder'  || key == 'created' ) {
+    if (key == 'reminder' || key == 'created') {
       return "date-time";
     }
     if (key == 'text') {
@@ -270,7 +303,7 @@ export class GenericObjectService {
     //TODO introduce checks
     let output: any = {};
     for (let key in object) {
-      if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil' || key == 'created' ) {
+      if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil' || key == 'created') {
         let date = new Date(object[key]);
         output[key] = date.toJSON();
       } else if (this.required[key]) {

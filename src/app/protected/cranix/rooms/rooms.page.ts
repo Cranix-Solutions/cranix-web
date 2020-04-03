@@ -157,7 +157,7 @@ export class RoomsPage implements OnInit {
   async redirectToEdit(ev: Event, room: Room) {
     if (room) {
       this.objectService.selectedObject = room;
-      this.route.navigate(['/pages/cranix/room/' + room.id]);
+      this.route.navigate(['/pages/cranix/rooms/' + room.id]);
     } else {
       const modal = await this.modalCtrl.create({
         component: ObjectsEditComponent,

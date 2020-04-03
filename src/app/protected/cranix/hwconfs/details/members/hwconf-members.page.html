@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>edit</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-row class="header-row">
+  <ion-col size=12>
+    <ion-title>{{ 'Start clone members of selected hwconf:' | translate}} "{{hwconf.name}}" {{hwconf.description}}
+      {{hwconf.deviceType | translate}}
+    </ion-title>
+  </ion-col>
+</ion-row>
+<ion-content>
+  <ion-card>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size=12>
+            <ion-item>
+              <ion-label position="stacked">{{ 'Members of the selected hwconf:' | translate }}</ion-label>
+              <ion-input type="text" placeholder="{{'search' | translate }}" (input)="onMemberFilterChanged()"
+                id="memberFilter"></ion-input>
+            </ion-item>
+            <ag-grid-angular #agGrid style="width: 100%; height: 200px;" class="ag-theme-balham"
+              [gridOptions]="memberOptions" [rowData]="memberData" [columnDefs]="columnDefs" [context]="context"
+              [rowSelection]="memberSelection" (gridReady)="onMemberReady($event)"
+              (selectionChanged)="onMemberSelectionChanged()" id="memberTable" [autoGroupColumnDef]="autoGroupColumnDef">
+            </ag-grid-angular>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

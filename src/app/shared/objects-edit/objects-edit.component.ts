@@ -103,8 +103,6 @@ export class ObjectsEditComponent implements OnInit {
       }
     )
   }
-
-
 }
 
 

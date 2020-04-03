@@ -8,7 +8,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CranixSharedModule } from '../../../../shared/cranix-shared.module';
 import { InstituteDetailsPage } from './institute-details.page';
 import { InstituteEditComponent } from './edit/institute-edit.component';
-import {  InstituteNoticesComponent } from './notices/institute-notices.component';
+import { InstituteNoticesComponent } from './notices/institute-notices.component';
 import { InstituteSyncedObjectsComponent } from './synced-objects/institute-synced-objects.component';
 
 const routes: Routes = [

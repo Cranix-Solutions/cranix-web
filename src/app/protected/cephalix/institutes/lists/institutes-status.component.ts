@@ -5,24 +5,26 @@ import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 
 //own modules
-import { ActionsComponent } from '../../../shared/actions/actions.component';
-import { DateCellRenderer } from '../../../pipes/ag-date-renderer';
-import { ActionBTNRenderer } from '../../../pipes/ag-action-renderer';
-import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
-import { GenericObjectService } from '../../../services/generic-object.service';
-import { LanguageService } from '../../../services/language.service';
-import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
-import { Institute } from '../../../shared/models/cephalix-data-model'
+import { ActionsComponent } from 'src/app/shared/actions/actions.component';
+import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
+import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
+import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { CephalixService } from 'src/app/services/cephalix.service';
+import { LanguageService } from 'src/app/services/language.service';
+import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
+import { Institute, InstituteStatus } from 'src/app/shared/models/cephalix-data-model'
+import { UpdateRenderer } from '../../../../pipes/ag-update-renderer';
 
 @Component({
-  selector: 'cranix-institutes',
-  templateUrl: './institutes.page.html',
-  styleUrls: ['./institutes.page.scss'],
+  selector: 'cranix-institutes-status',
+  templateUrl: './institutes-status.component.html',
+  styleUrls: ['./institutes-status.component.scss'],
 })
-export class InstitutesPage implements OnInit {
+export class InstitutesStatusComponent implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity', 'actions'];
-  sortableColumns: string[] = ['uuid', 'name', 'locality', 'ipVPN', 'regCode', 'validity'];
+  displayedColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel', 'availableUpdates'];
+  sortableColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel', 'availableUpdates'];
   gridOptions: GridOptions;
   columnDefs = [];
   gridApi: GridApi;
@@ -35,6 +37,7 @@ export class InstitutesPage implements OnInit {
   objectIds: number[] = [];
 
   constructor(
+    private cephalixService: CephalixService,
     private objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
@@ -45,7 +48,7 @@ export class InstitutesPage implements OnInit {
 
     this.context = { componentParent: this };
     this.rowSelection = 'multiple';
-    this.objectKeys = Object.getOwnPropertyNames(new Institute());
+    this.objectKeys = Object.getOwnPropertyNames(new InstituteStatus());
     this.createColumnDefs();
     this.gridOptions = <GridOptions>{
       defaultColDef: {
@@ -60,14 +63,18 @@ export class InstitutesPage implements OnInit {
   }
 
   ngOnInit() {
-    this.storage.get('InstitutesPage.displayedColumns').then((val) => {
+    this.storage.get('InstitutesStatusComponent.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
         this.displayedColumns = (myArray).concat(['actions']);
         this.createColumnDefs();
       }
     });
-    this.objectService.getObjects('institute').subscribe(obj => this.rowData = obj);
+    let subs = this.cephalixService.getStatusOfInstitutes().subscribe(
+      (val) => { this.rowData = val },
+      (err) => { console.log(err) },
+      () => { subs.unsubscribe() }
+    )
   }
 
   createColumnDefs() {
@@ -85,12 +92,41 @@ export class InstitutesPage implements OnInit {
           col['checkboxSelection'] = true;
           break;
         }
-        case 'validity': {
-          col['cellRendererFramework'] = DateCellRenderer;
+        case 'lastUpdate': {
+          col['cellRendererFramework'] = DateTimeCellRenderer;
           break;
         }
-        case 'recDate': {
-          col['cellRendererFramework'] = DateCellRenderer;
+        case 'runningKernel': {
+          col['valueGetter'] = function (params) {
+            let index = params.data.runningKernel.indexOf("-default");
+            let run = params.data.runningKernel.substring(0, index);
+            let inst = params.data.installedKernel.substring(0, index);
+            console.log(run)
+            console.log(inst)
+            if (run == inst) {
+              return "OK"
+            } else {
+              return "need reboot"
+            }
+          }
+          break;
+        }
+        case 'installedKernel': {
+          col['hide'] = true;
+          break;
+        }
+        case 'cephalixInstituteId': {
+          col['valueGetter'] = function (params) {
+            return params.context['componentParent'].objectService.idToName('institute', params.data.cephalixInstituteId);
+          }
+          break;
+        }
+        case 'availableUpdates': {
+          col['cellRendererFramework'] = UpdateRenderer;
+          break;
+        }
+        case 'created': {
+          col['cellRendererFramework'] = DateTimeCellRenderer;
           break;
         }
       }
@@ -131,9 +167,13 @@ export class InstitutesPage implements OnInit {
     });
     this.columnApi.autoSizeColumns(allColumnIds);
   }
-
-  public redirectToDelete = (institute: Institute) => {
-    this.objectService.deleteObjectDialog(institute, 'institute')
+//TODO RESPONSE
+  public redirectToUpdate = (cephalixInstituteId: number) => {
+    let sub = this.cephalixService.updateById(cephalixInstituteId).subscribe(
+      (val) => { console.log(val) },
+      (error) => { console.log(error) },
+      () => { sub.unsubscribe(); }
+    );
   }
   /**
  * Open the actions menu with the selected object ids.
@@ -168,7 +208,7 @@ export class InstitutesPage implements OnInit {
         componentProps: {
           objectType: "institute",
           objectAction: 'add',
-          object: institute,
+          object: new Institute(),
           objectKeys: this.objectKeys
         },
         animated: true,
@@ -188,26 +228,26 @@ export class InstitutesPage implements OnInit {
   * Function to select the columns to show
   * @param ev
   */
-    async openCollums(ev: any) {
-      const modal = await this.modalCtrl.create({
-        component: SelectColumnsComponent,
-        componentProps: {
-          columns: this.objectKeys,
-          selected: this.displayedColumns,
-          objectPath: "InstitutesPage.displayedColumns"
-        },
-        animated: true,
-        swipeToClose: true,
-        backdropDismiss: false
-      });
-      modal.onDidDismiss().then((dataReturned) => {
-        if (dataReturned.data) {
-          this.displayedColumns = (dataReturned.data).concat(['actions']);
-          this.createColumnDefs();
-        }
-      });
-      (await modal).present().then((val) => {
-        console.log("most lett vegrehajtva.")
-      })
-    }
+  async openCollums(ev: any) {
+    const modal = await this.modalCtrl.create({
+      component: SelectColumnsComponent,
+      componentProps: {
+        columns: this.objectKeys,
+        selected: this.displayedColumns,
+        objectPath: "InstitutesStatusComponent.displayedColumns"
+      },
+      animated: true,
+      swipeToClose: true,
+      backdropDismiss: false
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        this.displayedColumns = (dataReturned.data).concat(['actions']);
+        this.createColumnDefs();
+      }
+    });
+    (await modal).present().then((val) => {
+      console.log("most lett vegrehajtva.")
+    })
   }
+}

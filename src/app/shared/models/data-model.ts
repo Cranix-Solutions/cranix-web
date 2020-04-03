@@ -3,18 +3,18 @@ export class Hwconf {
 	name: string = "";
 	deviceType: string = "";
 	description: string = "";
-	partitions: Partition[]
+	partitions?: Partition[]
 	constructor(){}
 }
+
 export class Partition {
 	id?: number;
+	name: string = "";
 	description: string = "";
+	os: string = "";
 	format: string = "";
 	joinType: string = "";
-	name: string = "";
-	os: string = "";
 	tool: string = "";
-	devId?: number = 0;
 	lastCloned:number|string = "";
 	constructor(){}
 }
