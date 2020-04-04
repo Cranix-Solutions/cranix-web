@@ -9,6 +9,7 @@ import { CranixSharedModule } from '../../../../shared/cranix-shared.module';
 import { InstituteDetailsPage } from './institute-details.page';
 import { InstituteEditComponent } from './edit/institute-edit.component';
 import { InstituteNoticesComponent } from './notices/institute-notices.component';
+import { InstituteStatusComponent } from './status/institute-status.component';
 import { InstituteSyncedObjectsComponent } from './synced-objects/institute-synced-objects.component';
 
 const routes: Routes = [
@@ -19,6 +20,10 @@ const routes: Routes = [
       {
         path: 'edit',
         component:  InstituteEditComponent
+      },
+      {
+        path: 'status',
+        component: InstituteStatusComponent
       },
       {
         path: 'notices',
@@ -48,6 +53,6 @@ const routes: Routes = [
     CranixSharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [InstituteDetailsPage,InstituteEditComponent,InstituteNoticesComponent,InstituteSyncedObjectsComponent]
+  declarations: [InstituteDetailsPage,InstituteEditComponent,InstituteStatusComponent,InstituteNoticesComponent,InstituteSyncedObjectsComponent]
 })
 export class InstituteDetailsPageModule { }

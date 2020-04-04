@@ -42,9 +42,7 @@ export class InstitutesComponent implements OnInit {
     public route: Router,
     private storage: Storage
   ) {
-
     this.context = { componentParent: this };
-    this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new Institute());
     this.createColumnDefs();
     this.gridOptions = <GridOptions>{
@@ -55,6 +53,7 @@ export class InstitutesComponent implements OnInit {
       },
       columnDefs: this.columnDefs,
       context: this.context,
+      rowSelection: 'multiple',
       rowHeight: 35
     }
   }
@@ -108,7 +107,7 @@ export class InstitutesComponent implements OnInit {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
     (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
-    this.gridApi.sizeColumnsToFit();
+    //this.gridApi.sizeColumnsToFit();
   }
   onSelectionChanged() {
     this.selected = this.gridApi.getSelectedRows();
@@ -122,7 +121,7 @@ export class InstitutesComponent implements OnInit {
   onResize($event) {
     (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
     this.sizeAll();
-    this.gridApi.sizeColumnsToFit();
+    //this.gridApi.sizeColumnsToFit();
   }
   sizeAll() {
     var allColumnIds = [];

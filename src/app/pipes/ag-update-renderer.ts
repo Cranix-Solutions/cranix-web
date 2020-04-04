@@ -7,11 +7,11 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
     template: `
         <ng-template [ngIf]="doUpate" [ngIfElse]="elseBlock">
             <ion-button fill="clear" size="small" (click)="update()" matTooltip="{{ updates }}">
-                 <ion-icon slot="icon-only" color="danger" name="refresh" style="height:15px;width:15px"></ion-icon>
+                 <ion-icon slot="icon-only" color="danger" name="refresh-circle" style="height:20px;width:20px"></ion-icon>
             </ion-button>
         </ng-template>
         <ng-template #elseBlock>
-            <ion-icon  slot="icon-only" color="success" name="checkmark-done" style="height:15px;width:15px"></ion-icon>
+            <ion-icon  slot="icon-only" color="success" name="checkmark-done" style="height:20px;width:20px"></ion-icon>
         </ng-template>
         `
 })

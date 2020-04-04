@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 //Own module
-import { AuthenticationService } from '../../services/auth.service';
+import { AuthenticationService } from 'src/app/services/auth.service';
+import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
   selector: 'cranix-toolbar',
@@ -15,7 +16,8 @@ export class ToolbarComponent implements OnInit {
   instituteName: string = "";
   constructor(
     private authService: AuthenticationService,
-    public alertController: AlertController
+    public alertController: AlertController,
+    private translateService: LanguageService
   ) {
     this.commonName = authService.session.commonName;
     this.roomName        = authService.session.roomName;
@@ -26,11 +28,11 @@ export class ToolbarComponent implements OnInit {
 
   async logOut() {
     const alert = await this.alertController.create({
-      header: 'Confirm!',
-      message: 'Do you realy want to logout?',
+      header:  this.translateService.trans('Confirm!'),
+      message: this.translateService.trans('Do you realy want to logout?'),
       buttons: [
         {
-          text: 'Cancel',
+          text: this.translateService.trans('Cancel'),
           role: 'cancel',
         }, {
           text: 'OK',

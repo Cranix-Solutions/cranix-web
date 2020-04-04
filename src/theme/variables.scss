@@ -121,7 +121,7 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
 }
 .header-row {
   background-color: #FAB90A;
-  height: 80px;
+  height: 45px;
 }
 @media (prefers-color-scheme: dark) {
   /*
