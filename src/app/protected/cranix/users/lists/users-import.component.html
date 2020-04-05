@@ -33,24 +33,20 @@
     </ion-card-content>
   </ion-card>
   <ng-template #oldImports>
-    <ion-card *ngFor="let import of imports">
-      <ion-card-header>
-        <span>Date: {{import.startTime}} <span class="m-20"><em>{{import.role}}</em></span></span>
-      </ion-card-header>
-      <span>indentifier: {{import.identifier}} password: {{import.password}} mustChange: {{import.mustchange}} full:
-        {{import.full}} allClasses: {{import.allClasses}} cleanDirs: {{import.cleanClassDirs}} resetPW:
-        {{import.resetPassword}}</span>
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-buttons collapse="true" slot="end">
-            <ion-button>Click Me</ion-button>
-          </ion-buttons>
-          <mbsc-form-group collapsible #paymentDetails>
-            <mbsc-form-group-title>Payment details</mbsc-form-group-title>
-            <div [innerHTML]="import.result"></div>
-          </mbsc-form-group>
-        </ion-toolbar>
-      </ion-header>
-    </ion-card>
-  </ng-template>
+    <mat-accordion *ngIf="imports">
+      <mat-expansion-panel *ngFor="let import of imports">
+        <mat-expansion-panel-header>
+          <span>Date: {{import.startTime}}  <span class="m-20"><em>{{import.role}}</em></span></span>
+          <ion-button size="small"  (click)="redirectToEdit($event,null)"  matTooltip="{{'create a new institute' | translate }}">
+            <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+          </ion-button>
+          <ion-button size="small"  (click)="redirectToEdit($event,null)"  matTooltip="{{'create a new institute' | translate }}">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-button>
+        </mat-expansion-panel-header>
+        <span>indentifier: {{import.identifier}} password: {{import.password}} mustChange: {{import.mustchange}} full: {{import.full}} allClasses: {{import.allClasses}} cleanDirs: {{import.cleanClassDirs}} resetPW: {{import.resetPassword}}</span>
+        <div [innerHTML]="import.result"></div>
+      </mat-expansion-panel>
+    </mat-accordion>
+    </ng-template>
 </ion-content>
