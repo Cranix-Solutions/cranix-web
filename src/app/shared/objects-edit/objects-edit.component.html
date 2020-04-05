@@ -13,11 +13,11 @@
   <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
     <ion-list lines="full" class="ion-no-margin ion-no-padding" *ngFor="let key of objectKeys" [ngSwitch]="objectService.typeOf(key,object,objectAction)">
       <ion-item *ngSwitchCase="'booleanTrue'">
-        <ion-label>{{ key | translate }}</ion-label>
+        <ion-label position="stacked">{{ key | translate }}</ion-label>
         <ion-toggle slot="end" formControlName="{{key}}" color="secondary" checked></ion-toggle>
       </ion-item>
       <ion-item *ngSwitchCase="'booleanFalse'">
-        <ion-label>{{ key | translate }}</ion-label>
+        <ion-label position="stacked">{{ key | translate }}</ion-label>
         <ion-toggle slot="end" formControlName="{{key}}" color="secondary"></ion-toggle>
       </ion-item>
       <ion-item *ngSwitchCase="'string'">
@@ -43,12 +43,12 @@
         </ion-textarea>
       </ion-item>
       <ion-item *ngSwitchCase="'date'">
-        <ion-label>{{ key | translate }}</ion-label>
+        <ion-label position="stacked">{{ key | translate }}</ion-label>
         <ion-datetime formControlName="{{key}}" cancel-text="{{ 'cancel' | translate }}" displayFormat="YYYY-MM-DD"
           done-text="{{'apply' | translate }}" max="2100" value="{{object[key] | date:'yyyy-MM-dd'}}"></ion-datetime>
       </ion-item>
       <ion-item *ngSwitchCase="'date-time'">
-        <ion-label>{{ key | translate }}</ion-label>
+        <ion-label position="stacked">{{ key | translate }}</ion-label>
         <ion-datetime formControlName="{{key}}" cancel-text="{{ 'cancel' | translate }}" displayFormat="YYYY-MM-DD HH:mm"
           done-text="{{'apply' | translate }}" max="2100" value="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z'}}">
         </ion-datetime>

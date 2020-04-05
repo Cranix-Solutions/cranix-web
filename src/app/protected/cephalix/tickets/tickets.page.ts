@@ -118,8 +118,7 @@ export class TicketsPage implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
-    this.gridApi.sizeColumnsToFit();
+    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
   }
   onSelectionChanged() {
     this.selected = this.gridApi.getSelectedRows();
@@ -131,9 +130,8 @@ export class TicketsPage implements OnInit {
 
   }
   onResize($event) {
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
+    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
     this.sizeAll();
-    this.gridApi.sizeColumnsToFit();
   }
   sizeAll() {
     var allColumnIds = [];

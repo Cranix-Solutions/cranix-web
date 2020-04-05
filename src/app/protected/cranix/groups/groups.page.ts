@@ -97,7 +97,6 @@ export class GroupsPage implements OnInit {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
     (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
-    this.gridApi.sizeColumnsToFit();
   }
   onSelectionChanged() {
     this.selected = this.gridApi.getSelectedRows();
@@ -109,9 +108,8 @@ export class GroupsPage implements OnInit {
 
   }
   onResize($event) {
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
+    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
     this.sizeAll();
-    this.gridApi.sizeColumnsToFit();
   }
   sizeAll() {
     var allColumnIds = [];

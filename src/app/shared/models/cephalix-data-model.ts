@@ -42,12 +42,15 @@ export class Institute {
     ipTrNet: string = '';
     gwTrNet: string = '';
     nmTrNet: string = '';
-    deleted: string = '';
+    deleted;
     adminPW: string = '';
     cephalixPW: string = '';
     recDate: any = new Date();
     cephalixCustomerId: number = 0;
     constructor() {}
+    getName():string {
+        return 'institute';
+    }
 }
 
 export class Ticket{

@@ -14,18 +14,19 @@ import { CephalixService } from 'src/app/services/cephalix.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Institute, InstituteStatus } from 'src/app/shared/models/cephalix-data-model'
-import { UpdateRenderer } from '../../../../pipes/ag-update-renderer';
-import { AuthenticationService } from '../../../../services/auth.service';
+import { UpdateRenderer } from 'src/app/pipes/ag-update-renderer';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
-  selector: 'cranix-institutes-status',
-  templateUrl: './institutes-status.component.html',
-  styleUrls: ['./institutes-status.component.scss'],
+  selector: 'cranix-institute-status',
+  templateUrl: './institute-status.component.html',
+  styleUrls: ['./institute-status.component.scss'],
 })
-export class InstitutesStatusComponent implements OnInit {
+export class InstituteStatusComponent implements OnInit {
+  object: Institute = null;
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel', 'availableUpdates'];
-  sortableColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel', 'availableUpdates'];
+  displayedColumns: string[] = ['created', 'uptime', 'version', 'lastUpdate', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel', 'availableUpdates'];
+  sortableColumns: string[] = ['created', 'uptime', 'version', 'lastUpdate', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel', 'availableUpdates'];
   gridOptions: GridOptions;
   columnDefs = [];
   gridApi: GridApi;
@@ -47,7 +48,7 @@ export class InstitutesStatusComponent implements OnInit {
     public route: Router,
     private storage: Storage
   ) {
-
+    this.object = <Institute>this.objectService.selectedObject;
     this.context = { componentParent: this };
     this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new InstituteStatus());
@@ -72,7 +73,7 @@ export class InstitutesStatusComponent implements OnInit {
         this.createColumnDefs();
       }
     });
-    let subs = this.cephalixService.getStatusOfInstitutes().subscribe(
+    let subs = this.cephalixService.getStatusOfInstitute(this.object.id).subscribe(
       (val) => { this.rowData = val },
       (err) => { console.log(err) },
       () => { subs.unsubscribe() }

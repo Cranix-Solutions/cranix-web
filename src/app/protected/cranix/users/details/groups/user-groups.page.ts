@@ -81,6 +81,7 @@ export class UserGroupsPage implements OnInit {
     this.memberApi = params.api;
     this.memberColumnApi = params.columnApi;
     this.memberApi.sizeColumnsToFit();
+    (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
   }
   onMemberSelectionChanged() {
     this.memberSelected = this.memberApi.getSelectedRows();
@@ -95,6 +96,7 @@ export class UserGroupsPage implements OnInit {
     this.noMemberApi = params.api;
     this.noMemberColumnApi = params.columnApi;
     this.noMemberApi.sizeColumnsToFit();
+    (<HTMLInputElement>document.getElementById("noMemberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
   }
   onNoMemberSelectionChanged() {
     this.noMemberSelected = this.noMemberApi.getSelectedRows();

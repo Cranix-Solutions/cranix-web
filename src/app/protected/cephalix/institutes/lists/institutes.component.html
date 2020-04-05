@@ -1,23 +1,23 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-row class="header-row">
   <ion-col size=6>
-    <ion-title>{{'Edit institutes' | translate}}</ion-title>
+    <ion-title>{{'Manage institutes' | translate}}</ion-title>
   </ion-col>
 </ion-row>
 <ion-content (window:resize)="onResize($event)">
   <ion-card>
     <ion-card-header>
       <ion-row class="ion-align-items-center">
-        <ion-col size="3">
+        <ion-col size="8" sizeLg=3 sizeXl=3>
           <ion-item>
             <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()"
             id="quickFilter">
             </ion-input>
           </ion-item>
         </ion-col>
-        <ion-col size="7">
+        <ion-col size=0 sizeMd=0 sizeLg=6 sizeXl=6>
         </ion-col>
-        <ion-col size="2">
+        <ion-col sizeSm=3 sizeXs=3 size=2>
           <ion-button size="small" (click)="redirectToEdit($event,null)"  matTooltip="{{'create a new institute' | translate }}">
             <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
           </ion-button>

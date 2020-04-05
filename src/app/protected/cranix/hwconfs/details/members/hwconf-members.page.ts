@@ -84,6 +84,7 @@ export class HwconfMembersPage implements OnInit {
   onMemberReady(params) {
     this.memberApi = params.api;
     this.memberColumnApi = params.columnApi;
+    (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
     //this.memberApi.sizeColumnsToFit();
   }
   onMemberSelectionChanged() {
@@ -95,6 +96,18 @@ export class HwconfMembersPage implements OnInit {
     this.memberApi.doLayout();
   }
 
+  onResize($event) {
+    (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
+    this.sizeAll();
+    //this.gridApi.sizeColumnsToFit();
+  }
+  sizeAll() {
+    var allColumnIds = [];
+    this.memberColumnApi.getAllColumns().forEach((column) => {
+      allColumnIds.push(column.getColId());
+    });
+    this.memberColumnApi.autoSizeColumns(allColumnIds);
+  }
   readMembers() {
     let subM = this.hwconfService.getMembers(this.hwconf.id).subscribe(
       (val) => { this.memberData = val; console.log(val) },

@@ -27,6 +27,11 @@ export class GenericObjectService {
   cephalixObjects: string[] = [
     'institute', 'customer', 'ticket'
   ]
+  /**
+   * Default.ini for cephalix
+   */
+  cephalixDefaults: any = {};
+
   selects: any = {
     'status': ['N', 'A', 'D']
   }
@@ -85,31 +90,37 @@ export class GenericObjectService {
     private http: HttpClient,
     private languageS: LanguageService,
     private utilsS: UtilsService,
-    private toastController: ToastController) { }
+    private toastController: ToastController) {
+     }
 
   initialize(force: boolean) {
+    this.headers = new HttpHeaders({
+      'Content-Type': "application/json",
+      'Accept': "application/json",
+      'Authorization': "Bearer " + this.authService.getToken()
+    });
     if(this.authService.isAllowed('cephalix.manage')){
       this.objects = this.objects.concat(this.cephalixObjects);
+      let url = this.utilsS.hostName() + "/institutes/defaults/";
+      let sub = this.http.get<string[]>(url, { headers: this.headers }).subscribe(
+         (val) => { this.cephalixDefaults = val; },
+         (err) => { },
+         () => { sub.unsubscribe() }); 
     }
     for (let key of this.objects) {
       this.allObjects[key] = new BehaviorSubject([]);
     }
     let subs: any = {};
     if (force || !this.initialized) {
-      this.headers = new HttpHeaders({
-        'Content-Type': "application/json",
-        'Accept': "application/json",
-        'Authorization': "Bearer " + this.authService.getToken()
-      });
       for (let key of this.objects) {
         this.getAllObject(key);
       }
       for (let key of this.enumerates) {
         let url = this.utilsS.hostName() + "/system/enumerates/" + key;
-        subs[key] = this.http.get<string[]>(url, { headers: this.headers }).subscribe(
+       subs[key] = this.http.get<string[]>(url, { headers: this.headers }).subscribe(
           (val) => { this.selects[key] = val; },
           (err) => { },
-          () => { subs[key].unsubscribe() });
+          () => { subs[key].unsubscribe() }); 
       }
       this.initialized = true;
     }
@@ -234,12 +245,13 @@ export class GenericObjectService {
         serverResponse = val;
         if (serverResponse.code == "OK") {
           this.getAllObject(objectType);
-          this.okMessage(this.languageS.trans("Object was modified"));
+          this.okMessage(this.languageS.trans( objectType + " was modified"));
         } else {
-          this.errorMessage("" + serverResponse.value);
+          this.errorMessage(this.languageS.trans(serverResponse.value));
         }
       },
       (err) => {
+        console.log(err);
         this.errorMessage(this.languageS.trans("An error was accoured"));
       },
       () => { a.unsubscribe() }
@@ -273,7 +285,7 @@ export class GenericObjectService {
    * Helper script fot the template to detect the type of the variables
    * @param val 
    */
-  typeOf(key, object, action) {
+  typeOf(key: string, object, action: string) {
     let obj = object[key];
     if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
       return "date";
@@ -293,8 +305,14 @@ export class GenericObjectService {
     if (this.hiddenAttributes.indexOf(key) != -1) {
       return "hidden";
     }
+    if( key == 'name' && object.regCode  ) {
+      return 'string';
+    }
     if (action == 'edit' && this.readOnlyAttributes.indexOf(key) != -1) {
       return "stringRO";
+    }
+    if(key.substring(key.length-2) == 'Id') {
+      return "idPipe"
     }
     return "string";
   }
