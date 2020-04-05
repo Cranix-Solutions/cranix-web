@@ -1,12 +1,18 @@
 <cranix-toolbar></cranix-toolbar>
-<ion-row class="header-row"></ion-row>
+<ion-row class="header-row">
+  <ion-col size=6>
+    <ion-title>{{'Manage devices' | translate}}</ion-title>
+  </ion-col>
+</ion-row>
 <ion-content (window:resize)="onResize($event)">
   <ion-card>
     <ion-card-header>
       <ion-row class="ion-align-items-center">
         <ion-col size="3">
-          <input matInput placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()"
-            id="quickFilter">
+          <ion-item>
+            <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="quickFilter">
+            </ion-input>
+          </ion-item>
         </ion-col>
         <ion-col size="7">
         </ion-col>

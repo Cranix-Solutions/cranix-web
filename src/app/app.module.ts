@@ -22,15 +22,16 @@ import { SystemService } from './services/system.service';
 import { LanguageService } from './services/language.service';
 
 import { ActionsComponent } from './shared/actions/actions.component';
-import { CanActivateViaAcls  } from './services/auth-guard.service';
+import { CanActivateViaAcls } from './services/auth-guard.service';
 import { DevicesService } from './services/devices.service';
 import { GenericObjectService } from './services/generic-object.service';
 import { GroupsService } from './services/groups.service';
+import { HwconfsService } from './services/hwconfs.service';
 import { ObjectsEditComponent } from './shared/objects-edit/objects-edit.component';
 import { RoomsService } from './services/rooms.service';
 import { SelectColumnsComponent } from './shared/select-columns/select-columns.component';
 import { UsersService } from './services/users.service';
-
+import 'ag-grid-enterprise';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -40,20 +41,20 @@ const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
     path: 'login',
-    loadChildren: () => import('./public/login/login.module').then( m => m.LoginPageModule)
+    loadChildren: () => import('./public/login/login.module').then(m => m.LoginPageModule)
   },
-  { path: 'pages', 
-    canLoad: [CanActivateViaAcls],
-    loadChildren: () => import('./protected/protected.module' ).then(m => m.ProtectedPageModule)
+  {
+    path: 'pages',
+    loadChildren: () => import('./protected/protected.module').then(m => m.ProtectedPageModule)
   }
 ];
 
 @NgModule({
   declarations: [
-     AppComponent,
-     ActionsComponent,
+    AppComponent,
+    ActionsComponent,
     ObjectsEditComponent,
-     SelectColumnsComponent],
+    SelectColumnsComponent],
   entryComponents: [
     ActionsComponent,
     ObjectsEditComponent,
@@ -74,10 +75,11 @@ const routes: Routes = [
       }
     })],
   providers: [
-    DevicesService,
     CanActivateViaAcls,
+    DevicesService,
     GenericObjectService,
     GroupsService,
+    HwconfsService,
     StatusBar,
     RoomsService,
     SplashScreen,

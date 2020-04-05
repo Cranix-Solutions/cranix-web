@@ -1,6 +1,7 @@
 import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__ } from '@angular/core';
-import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
+import { AllModules } from '@ag-grid-enterprise/all-modules';
 import { PopoverController, ModalController } from '@ionic/angular';
+import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 
 //own modules
@@ -22,10 +23,10 @@ export class HwconfsPage implements OnInit {
   objectKeys: string[] = [];
   displayedColumns: string[] = ['name', 'description', 'deviceType','actions'];
   sortableColumns: string[] = ['name', 'description', 'deviceType'];
-  gridOptions: GridOptions;
+  gridOptions;
   columnDefs = [];
-  gridApi: GridApi;
-  columnApi: ColumnApi;
+  gridApi;
+  columnApi;
   rowSelection;
   context;
   selected: Hwconf[];
@@ -34,24 +35,26 @@ export class HwconfsPage implements OnInit {
   objectIds: number[] = [];
 
   constructor(
+    public languageS: LanguageService,
     private objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
-    public languageS: LanguageService,
+    private route: Router,
     private storage: Storage
   ) {
     this.context = { componentParent: this };
     this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new Hwconf());
     this.createColumnDefs();
-    this.gridOptions = <GridOptions>{
+    this.gridOptions = {
       defaultColDef: {
         resizable: true,
         sortable: true,
         hide: false
       },
       columnDefs: this.columnDefs,
-      context: this.context
+      context: this.context,
+      rowHeight: 35
     }
   }
   ngOnInit() {
@@ -93,7 +96,6 @@ export class HwconfsPage implements OnInit {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
     (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
-    this.gridApi.sizeColumnsToFit();
   }
   onSelectionChanged() {
     this.selected = this.gridApi.getSelectedRows();
@@ -105,9 +107,8 @@ export class HwconfsPage implements OnInit {
 
   }
   onResize($event) {
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
+    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
     this.sizeAll();
-    this.gridApi.sizeColumnsToFit();
   }
   sizeAll() {
     var allColumnIds = [];
@@ -144,29 +145,29 @@ export class HwconfsPage implements OnInit {
     (await popover).present();
   }
   async redirectToEdit(ev: Event, hwconf: Hwconf) {
-    let action = 'modify';
-    if (hwconf == null) {
-      hwconf = new Hwconf();
-      action = 'add';
+  if (hwconf) {
+      this.objectService.selectedObject = hwconf;
+      this.route.navigate(['/pages/cranix/hwconfs/' + hwconf.id]);
+    } else {
+      const modal = await this.modalCtrl.create({
+        component: ObjectsEditComponent,
+        componentProps: {
+          objectType: "hwconf",
+          objectAction: "add",
+          object: hwconf,
+          objectKeys: this.objectKeys
+        },
+        animated: true,
+        swipeToClose: true,
+        showBackdrop: true
+      });
+      modal.onDidDismiss().then((dataReturned) => {
+        if (dataReturned.data) {
+          console.log("Object was created or modified", dataReturned.data)
+        }
+      });
+      (await modal).present();
     }
-    const modal = await this.modalCtrl.create({
-      component: ObjectsEditComponent,
-      componentProps: {
-        objectType: "hwconf",
-        objectAction: action,
-        object: hwconf,
-        objectKeys: this.objectKeys
-      },
-      animated: true,
-      swipeToClose: true,
-      showBackdrop: true
-    });
-    modal.onDidDismiss().then((dataReturned) => {
-      if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
-      }
-    });
-    (await modal).present();
   }
 
   /**

@@ -104,7 +104,6 @@ export class RoomsPage implements OnInit {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
     (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
-    this.gridApi.sizeColumnsToFit();
   }
   onSelectionChanged() {
     this.selected = this.gridApi.getSelectedRows();
@@ -116,9 +115,8 @@ export class RoomsPage implements OnInit {
 
   }
   onResize($event) {
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
+    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
     this.sizeAll();
-    this.gridApi.sizeColumnsToFit();
   }
   sizeAll() {
     var allColumnIds = [];
@@ -157,7 +155,7 @@ export class RoomsPage implements OnInit {
   async redirectToEdit(ev: Event, room: Room) {
     if (room) {
       this.objectService.selectedObject = room;
-      this.route.navigate(['/pages/cranix/room/' + room.id]);
+      this.route.navigate(['/pages/cranix/rooms/' + room.id]);
     } else {
       const modal = await this.modalCtrl.create({
         component: ObjectsEditComponent,

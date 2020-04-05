@@ -1,29 +1,27 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateChild, CanLoad } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateChild, CanLoad, UrlSegment } from '@angular/router';
 //own stuff
 import { AuthenticationService } from './auth.service';
-import { Route } from '@angular/compiler/src/core';
-
 @Injectable()
 export class CanActivateViaAcls implements CanActivate, CanActivateChild,CanLoad {
 
   constructor(private authService: AuthenticationService) {}
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-      console.log('canActivate');
+      /*console.log('canActivate');
       console.log(next);
-      console.log(state);
-    return this.authService.isAuthenticated();
+      console.log(state);*/
+    return this.authService.isRouteAllowed(state.url);
   }
   canActivateChild(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    console.log('canActivate');
+    /*console.log('canActivateChild');
     console.log(next);
-    console.log(state);
+    console.log(state);*/
     return this.authService.isAuthenticated();
   }
-  canLoad(route: Route) {
-    console.log('canActivate');
-   
-    return this.authService.isAuthenticated();
+  canLoad(route, segments: UrlSegment[]) {
+    console.log('canLoad');
+    console.log(route);
+    return this.authService.isRouteAllowed(route.path);
   }
 }

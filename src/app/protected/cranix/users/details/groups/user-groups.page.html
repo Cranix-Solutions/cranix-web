@@ -1,46 +1,55 @@
-<ion-row class="header-row"></ion-row>
 
+<ion-header>
+  <ion-toolbar>
+    <ion-title>edit</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-row class="header-row">
+  <ion-col size=12>
+    <ion-title>{{ 'Modify groups of selected user' | translate}}: "{{user.uid}}" ({{user.givenName}}
+      {{user.surName}})
+    </ion-title>
+  </ion-col>
+</ion-row>
 <ion-content>
   <ion-card>
-    <ion-card-header color="amber">
-      <ion-card-title>{{ 'Modify groups of selected user' | translate}}: "{{user.uid}}" ({{user.givenName}}
-        {{user.surName}})
-      </ion-card-title>
-    </ion-card-header>
     <ion-card-content>
       <ion-grid>
         <ion-row>
-          <ion-col sizeLg=5 sizeSm=12>
-            <ion-item lines="none">
-              <ion-label  position="stacked">{{ 'member of groups' | translate }}</ion-label>
+          <ion-col size=12 sizeMd=12 sizeLg=5 sizeXl=5>
+            <ion-item>
+              <ion-label position="stacked">{{ 'Member of groups:' | translate }}</ion-label>
               <ion-input type="text" placeholder="{{'search' | translate }}" (input)="onMemberFilterChanged()"
                 id="memberFilter"></ion-input>
             </ion-item>
-            <ag-grid-angular style="width: 100%; height: 200px;" class="ag-theme-fresh" [gridOptions]="memberOptions"
+            <ion-item></ion-item>
+            <ag-grid-angular style="width: 100%; height: 200px;" class="ag-theme-balham" [gridOptions]="memberOptions"
               [rowData]="memberData" [columnDefs]="columnDefs" [context]="context" [rowSelection]="memberSelection"
               (gridReady)="onMemberReady($event)" (selectionChanged)="onMemberSelectionChanged()" id="memberTable">
             </ag-grid-angular>
           </ion-col>
-          <ion-col  sizeLg=1 sizeSm=12>
+          <ion-col size=12 sizeMd=12 sizeLg=1 sizeXl=1>
             <ion-item lines="none">
-              <ion-label  position="stacked">  </ion-label>
+              <ion-label position="stacked"> </ion-label>
               <ion-button slot="" size="small" (click)="applyChanges()"
                 matTooltip="{{'add remove user to/from the selected groups' | translate }}">
                 <ion-icon slot="icon-only" name="code-outline"></ion-icon>
               </ion-button>
             </ion-item>
           </ion-col>
-          <ion-col sizeLg=5 sizeSm=12>
-            <ion-item lines="none">
-              <ion-label position="stacked">{{ 'available groups' | translate }}</ion-label>
-              <ion-input type="text" placeholder="{{'search' | translate }}" (input)="onNonMemberFilterChanged()" id="nonMemberFilter">
+          <ion-col size=12 sizeMd=12 sizeLg=5 sizeXl=5>
+            <ion-item>
+              <ion-label position="stacked">{{ 'Available groups:' | translate }}</ion-label>
+              <ion-input type="text" placeholder="{{'search' | translate }}" (input)="onNonMemberFilterChanged()"
+                id="nonMemberFilter">
               </ion-input>
             </ion-item>
-              <ag-grid-angular style="width: 100%; height: 200px;" class="ag-theme-fresh"
-                [gridOptions]="noMemberOptions" [rowData]="noMemberData" [columnDefs]="columnDefs" [context]="context"
-                [rowSelection]="noMemberSelection" (gridReady)="onNoMemberReady($event)"
-                (selectionChanged)="onNoMemberSelectionChanged()" id="noMemberTable">
-              </ag-grid-angular>
+            <ion-item></ion-item>
+            <ag-grid-angular style="width: 100%; height: 200px;" class="ag-theme-balham" [gridOptions]="noMemberOptions"
+              [rowData]="noMemberData" [columnDefs]="columnDefs" [context]="context" [rowSelection]="noMemberSelection"
+              (gridReady)="onNoMemberReady($event)" (selectionChanged)="onNoMemberSelectionChanged()"
+              id="noMemberTable">
+            </ag-grid-angular>
           </ion-col>
         </ion-row>
       </ion-grid>

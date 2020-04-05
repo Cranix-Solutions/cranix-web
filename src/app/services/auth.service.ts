@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 
 //Own modules
 import { UtilsService } from './utils.service';
-import { UserResponse,LoginForm } from 'src/app/shared/models/server-models';
+import { UserResponse, LoginForm } from 'src/app/shared/models/server-models';
 
 @Injectable({
     providedIn: 'root'
@@ -20,6 +20,7 @@ export class AuthenticationService {
     token: string;
     session: UserResponse;
     subscription: any;
+    agGridThema: string = "ag-theme-balham";
 
     constructor(
         private http: HttpClient,
@@ -27,8 +28,8 @@ export class AuthenticationService {
         private plt: Platform,
         private toastController: ToastController,
         private utils: UtilsService,
-        private router: Router 
-        ) {
+        private router: Router
+    ) {
         this.plt.ready().then(() => {
             this.checkSession();
         });
@@ -55,18 +56,18 @@ export class AuthenticationService {
                     this.session = val;
                     this.session['instituteName'] = instituteName;
                     this.authenticationState.next(true);
-               },
-               async (err) => {
-                console.log('error is', err);
-                if (err.status === 401) {
-                    const toast = this.toastController.create({
-                        position: "middle",
-                        message: 'Passwort falsch!',
-                        color: "danger",
-                        duration: 3000
-                    });
-                    (await toast).present(); 
-                }
+                },
+                async (err) => {
+                    console.log('error is', err);
+                    if (err.status === 401) {
+                        const toast = this.toastController.create({
+                            position: "middle",
+                            message: 'Passwort falsch!',
+                            color: "danger",
+                            duration: 3000
+                        });
+                        (await toast).present();
+                    }
                 }, () => {
                     console.log("login call completed" + this.session.role);
                 }
@@ -87,7 +88,7 @@ export class AuthenticationService {
      * Check if the session was created. 
      */
     checkSession() {
-        if(this.session) {
+        if (this.session) {
             this.authenticationState.next(true);
         } else {
             this.authenticationState.next(false);
@@ -97,7 +98,7 @@ export class AuthenticationService {
      * Delivers the token of the session.
      */
     getToken() {
-        if( this.session ) {
+        if (this.session) {
             return this.session.token;
         }
         return null;
@@ -106,7 +107,7 @@ export class AuthenticationService {
     /**
      * Delivers the wohle session array.
      */
-    getSession(){
+    getSession() {
         return this.session;
     }
     /**
@@ -114,7 +115,7 @@ export class AuthenticationService {
      * @returns The list of the owned acl
      */
     getMyAcls() {
-        if( this.session ) {
+        if (this.session) {
             return this.session.acls;
         }
         return null;
@@ -124,16 +125,51 @@ export class AuthenticationService {
      * @param acls Checks if some acls are allowed for the user.
      * @return True or false
      */
-    isAllowed(acls) {
-        for(let acl of acls){
-            if(acl == 'permitall'){
+    areAllowed(acls: string[]) {
+        for (let acl of acls) {
+            if (acl == 'permitall') {
                 return true;
             }
-            if(this.session.acls.indexOf(acl) > 0) {
+            if (this.session.acls.indexOf(acl) > 0) {
                 return true;
             }
         }
-        false
+        return false
+    }
+
+    isAllowed(acl: string) {
+        if (acl == 'permitall') {
+            return true;
+        }
+        return (this.session.acls.indexOf(acl) > 0);
+    }
+
+    /**
+     * Checks if a route is allowed for the session user
+     * @param route The route to check
+     * @returns True or false
+     */
+    isRouteAllowed(route: string) {
+        switch (route) {
+            case "/pages/cephalix/customers": { return this.isAllowed('customer.manage') }
+	        case "/pages/cephalix/institutes/all": { return this.isAllowed('cephalix.manage') }
+            case "/pages/cephalix/institutes": { return this.isAllowed('cephalix.manage') }
+            case "/pages/cephalix/tickets": { return this.isAllowed('cephalix.ticket') }
+            case "/pages/cranix/devices": { return this.isAllowed('device.manage') }
+            case "/pages/cranix/groups": { return this.isAllowed('group.manage') }
+            case "/pages/cranix/hwconfs": { return this.isAllowed('hwconf.manage') }
+            case "/pages/cranix/rooms": { return this.isAllowed('room.manage') }
+            case "/pages/cranix/users": { return this.isAllowed('user.manage') }
+            case "institutes/:id": { return this.isAllowed('cephalix.modify')}
+            case "customers/:id": { return this.isAllowed('customer.modify')}
+            case "tickets/:id": { return this.isAllowed('cephalix.ticket')}
+            case "devices/:id": { return this.isAllowed('device.modify')}
+            case "groups/:id": { return this.isAllowed('group.modify')}
+            case "hwconfs/:id": { return this.isAllowed('hwconf.modify')}
+            case "rooms/:id": { return this.isAllowed('room.modify')}
+            case "users/:id": { return this.isAllowed('user.modify')}
+        }
+        return false;
     }
 }
 

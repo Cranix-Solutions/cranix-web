@@ -42,12 +42,15 @@ export class Institute {
     ipTrNet: string = '';
     gwTrNet: string = '';
     nmTrNet: string = '';
-    deleted: string = '';
+    deleted;
     adminPW: string = '';
     cephalixPW: string = '';
     recDate: any = new Date();
     cephalixCustomerId: number = 0;
     constructor() {}
+    getName():string {
+        return 'institute';
+    }
 }
 
 export class Ticket{
@@ -80,7 +83,22 @@ export class Article{
     workTime: number = 0;
     constructor() {}
 }
-
+export class InstituteStatus {
+    id?: number;
+    cephalixInstituteId: number = 0;
+    created: any = new Date();
+    runningKernel: string ="";
+    installedKernel: string ="";
+    uptime: string ="";
+    version: string ="";
+    lastUpdate: any =new Date();
+    rootUsage: string ="";
+    srvUsage: string = "";
+    varUsage: string ="";
+    homeUsage: string = "";
+    availableUpdates: string = "";
+    constructor() {}
+}
 export class Repository{
     id?: number;
     name: string = "";
