@@ -35,7 +35,7 @@ export class ProtectedPage implements OnInit {
     },
     {
       title: 'Users',
-      url: '/pages/cranix/users',
+      url: '/pages/cranix/users/all',
       icon: 'person'
     },
     {

@@ -1,33 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 
-//own stuff
+//Own stuff
+import { CephalixService } from 'src/app/services/cephalix.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
-import { HwconfsService } from 'src/app/services/hwconfs.service';
-import { Hwconf, Device } from 'src/app/shared/models/data-model';
+import { Institute, SynchronizedObject } from 'src/app/shared/models/cephalix-data-model';
 
 @Component({
-  selector: 'cranix-hwconf-members',
-  templateUrl: './hwconf-members.page.html',
-  styleUrls: ['./hwconf-members.page.scss'],
+  selector: 'cranix-institutes-sync-objects',
+  templateUrl: './institutes-sync-objects.component.html'
 })
-export class HwconfMembersPage implements OnInit {
+export class InstitutesSyncObjectsComponent implements OnInit {
+
   context;
   memberOptions;
   columnDefs = [];
   memberApi;
   memberColumnApi;
-  memberSelected: Device[] = [];
-  memberData: Device[] = [];
+  memberSelected: SynchronizedObject[] = [];
+  memberData: SynchronizedObject[] = [];
   autoGroupColumnDef;
-  hwconf;
+  institute;
+  selectedList: string[] = [];
 
   constructor(
+    private cephalixService: CephalixService,
     private objectService: GenericObjectService,
-    private languageS: LanguageService,
-    private hwconfService: HwconfsService
+    private languageS: LanguageService
   ) {
-    this.hwconf = <Hwconf>this.objectService.selectedObject;
+    this.institute = <Institute>this.objectService.selectedObject;
 
     this.context = { componentParent: this };
     this.memberOptions = {
@@ -42,36 +43,26 @@ export class HwconfMembersPage implements OnInit {
     }
     this.columnDefs = [
       {
-        field: 'roomId',
-        rowGroup: true,
+        field: 'objectType',
+        rowGroup: true, 
         hide: true,
-        valueGetter: function (params) {
-          return params.context['componentParent'].objectService.idToName('room', params.data.roomId);
+        valueGetter: function(params) {
+          return  params.context['componentParent'].languageS.trans(params.data.objectType + "s");
         }
       },
       {
         headerName: this.languageS.trans('name'),
-        field: 'name',
-      },
-      {
-        headerName: this.languageS.trans('ip'),
-        field: 'ip',
-      },
-      {
-        headerName: this.languageS.trans('mac'),
-        field: 'mac',
+        field: 'objectName',
       }
-    ]
+    ];
     this.autoGroupColumnDef = { 
-      headerName: this.languageS.trans('roomId'),
-      field: 'roomId',
-      headerCheckboxSelection: true,
+      headerName: this.languageS.trans('objectType'),
+      field: 'objectType',
+      headerCheckboxSelection: false,
       headerCheckboxSelectionFilteredOnly: true,
       checkboxSelection: true,
-      valueGetter: function (params) {
-        return params.context['componentParent'].objectService.idToName('room', params.data.roomId);
-      },
-      minWidth: 200 
+      valueGetter: function(params) { return " ";   },
+      minWidth: 250 
     };
   }
 
@@ -80,11 +71,12 @@ export class HwconfMembersPage implements OnInit {
   }
 
   onMemberReady(params) {
+
     this.memberApi = params.api;
     this.memberColumnApi = params.columnApi;
     (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
-    //this.memberApi.sizeColumnsToFit();
   }
+
   onMemberSelectionChanged() {
     this.memberSelected = this.memberApi.getSelectedRows();
   }
@@ -96,8 +88,7 @@ export class HwconfMembersPage implements OnInit {
 
   onResize($event) {
     (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
-    this.sizeAll();
-    //this.gridApi.sizeColumnsToFit();
+    //this.sizeAll();
   }
   sizeAll() {
     var allColumnIds = [];
@@ -107,9 +98,10 @@ export class HwconfMembersPage implements OnInit {
     this.memberColumnApi.autoSizeColumns(allColumnIds);
   }
   readMembers() {
-    let subM = this.hwconfService.getMembers(this.hwconf.id).subscribe(
+    let subM = this.cephalixService.getObjectsToSynchronize().subscribe(
       (val) => { this.memberData = val; console.log(val) },
       (err) => { console.log(err) },
       () => { subM.unsubscribe() });
   }
+
 }

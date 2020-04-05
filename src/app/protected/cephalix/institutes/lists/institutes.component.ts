@@ -11,6 +11,7 @@ import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
+import { CephalixService } from 'src/app/services/cephalix.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Institute } from 'src/app/shared/models/cephalix-data-model'
 
@@ -29,12 +30,12 @@ export class InstitutesComponent implements OnInit {
   columnApi: ColumnApi;
   rowSelection;
   context;
-  selected: Institute[];
   title = 'app';
   rowData = [];
   objectIds: number[] = [];
 
   constructor(
+    private cephalixService: CephalixService,
     private objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
@@ -110,7 +111,11 @@ export class InstitutesComponent implements OnInit {
     //this.gridApi.sizeColumnsToFit();
   }
   onSelectionChanged() {
-    this.selected = this.gridApi.getSelectedRows();
+    this.cephalixService.selectedInstitutes = this.gridApi.getSelectedRows();
+    this.cephalixService.selectedList = [];
+    for(let o of this.cephalixService.selectedInstitutes ) {
+      this.cephalixService.selectedList.push(o.name)
+    }
   }
 
   onQuickFilterChanged() {
@@ -121,7 +126,6 @@ export class InstitutesComponent implements OnInit {
   onResize($event) {
     (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
     this.sizeAll();
-    //this.gridApi.sizeColumnsToFit();
   }
   sizeAll() {
     var allColumnIds = [];
@@ -139,10 +143,9 @@ export class InstitutesComponent implements OnInit {
  * @param ev
  */
   async openActions(ev: any) {
-    if (this.selected) {
-      for (let i = 0; i < this.selected.length; i++) {
-        this.objectIds.push(this.selected[i].id);
-      }
+    this.objectIds = [];
+    for (let i = 0; i < this.cephalixService.selectedInstitutes.length; i++) {
+        this.objectIds.push(this.cephalixService.selectedInstitutes[i].id);
     }
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
@@ -150,7 +153,7 @@ export class InstitutesComponent implements OnInit {
       componentProps: {
         objectType: "institute",
         objectIds: this.objectIds,
-        selection: this.selected
+        selection: this.cephalixService.selectedInstitutes
       },
       animated: true,
       showBackdrop: true

@@ -1,0 +1,56 @@
+<cranix-toolbar></cranix-toolbar>
+<ion-row class="header-row">
+  <ion-col size=6>
+    <ion-title>{{'Manage user imports' | translate}}</ion-title>
+  </ion-col>
+</ion-row>
+<ion-content (window:resize)="onResize($event)">
+  <ion-card>
+    <ion-card-header>
+      <ion-row class="ion-align-items-center">
+        <ion-col size="3">
+          <ion-item>
+            <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="quickFilter">
+            </ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="7">
+        </ion-col>
+        <ion-col size="2">
+          <ion-button size="small" (click)="startImport()" matTooltip="{{'Start a new user import' | translate }}">
+            <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card-header>
+  </ion-card>
+  <ion-card *ngIf="runningImport; else oldImports">
+    <ion-card-header>
+      <span>Date: {{runningImport.startTime}} <span class="m-20"><em>{{runningImport.role}}</em></span></span>
+    </ion-card-header>
+    <ion-card-content>
+      <div [innerHTML]="runningImport.result"></div>
+    </ion-card-content>
+  </ion-card>
+  <ng-template #oldImports>
+    <ion-card *ngFor="let import of imports">
+      <ion-card-header>
+        <span>Date: {{import.startTime}} <span class="m-20"><em>{{import.role}}</em></span></span>
+      </ion-card-header>
+      <span>indentifier: {{import.identifier}} password: {{import.password}} mustChange: {{import.mustchange}} full:
+        {{import.full}} allClasses: {{import.allClasses}} cleanDirs: {{import.cleanClassDirs}} resetPW:
+        {{import.resetPassword}}</span>
+      <ion-header collapse="condense">
+        <ion-toolbar>
+          <ion-buttons collapse="true" slot="end">
+            <ion-button>Click Me</ion-button>
+          </ion-buttons>
+          <mbsc-form-group collapsible #paymentDetails>
+            <mbsc-form-group-title>Payment details</mbsc-form-group-title>
+            <div [innerHTML]="import.result"></div>
+          </mbsc-form-group>
+        </ion-toolbar>
+      </ion-header>
+    </ion-card>
+  </ng-template>
+</ion-content>

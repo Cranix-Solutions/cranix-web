@@ -16,6 +16,10 @@ const routes: Routes = [
     component: DeviceDetailsPage,
     children: [
       {
+        path: 'all',
+        redirectTo: '/pages/cranix/devices'
+      },
+      {
         path: 'edit',
         component:  DeviceEditPage
       },

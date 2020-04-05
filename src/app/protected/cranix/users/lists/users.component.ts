@@ -5,21 +5,20 @@ import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 
 //own modules
-import { ActionsComponent } from '../../../shared/actions/actions.component';
-import { DateCellRenderer } from '../../../pipes/ag-date-renderer';
-import { ActionBTNRenderer } from '../../../pipes/ag-action-renderer';
-import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
-import { GenericObjectService } from '../../../services/generic-object.service';
-import { LanguageService } from '../../../services/language.service';
-import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
-import { User } from '../../../shared/models/data-model'
+import { ActionsComponent } from 'src/app/shared/actions/actions.component';
+import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
+import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
+import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { LanguageService } from 'src/app/services/language.service';
+import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
+import { User } from 'src/app/shared/models/data-model'
 
 @Component({
   selector: 'cranix-users',
-  templateUrl: './users.page.html',
-  styleUrls: ['./users.page.scss'],
+  templateUrl: './users.component.html'
 })
-export class UsersPage implements OnInit {
+export class UsersComponent implements OnInit {
   objectKeys: string[] = [];
   displayedColumns: string[] = ['uid', 'uuid', 'givenName', 'surName', 'role', 'classes', 'actions'];
   sortableColumns: string[] = [ 'uid', 'uuid', 'givenName', 'surName', 'role', 'classes' ];
@@ -133,10 +132,9 @@ export class UsersPage implements OnInit {
  * @param ev
  */
   async openActions(ev: any) {
-    if (this.selected) {
-      for (let i = 0; i < this.selected.length; i++) {
-        this.objectIds.push(this.selected[i].id);
-      }
+    this.objectKeys = [];
+    for (let i = 0; i < this.selected.length; i++) {
+      this.objectIds.push(this.selected[i].id);
     }
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
@@ -197,7 +195,8 @@ export class UsersPage implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        this.displayedColumns = ['select'].concat(dataReturned.data).concat(['actions']);
+        this.displayedColumns = (dataReturned.data).concat(['actions']);
+        this.createColumnDefs();
       }
     });
     (await modal).present().then((val) => {
