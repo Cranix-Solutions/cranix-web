@@ -5,13 +5,37 @@
   </ion-col>
 </ion-row>
 <ion-content (window:resize)="onResize($event)">
-  <ion-card>
+  <ion-card *ngIf="runningImport">
     <ion-card-header>
       <ion-row class="ion-align-items-center">
         <ion-col size="3">
           <ion-item>
-            <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="quickFilter">
-            </ion-input>
+            {{'User import is running' | translate}}
+          </ion-item>
+        </ion-col>
+        <ion-col size="7">
+        </ion-col>
+        <ion-col size="2">
+          <ion-button size="small" (click)="stopImport()" matTooltip="{{'Stop the running user import' | translate }}">
+            <ion-icon slot="icon-only" name="stop-circle-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>Date: {{runningImport.startTime}} {{runningImport.role}}</ion-col>
+      </ion-row>
+    </ion-card-header>
+    <ion-card-content>
+      <div [innerHTML]="runningImport.result"></div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="!runningImport">
+    <ion-card-header>
+      <ion-row class="ion-align-items-center">
+        <ion-col size="3">
+          <ion-item>
+            {{'List of old Imports' | translate}}
           </ion-item>
         </ion-col>
         <ion-col size="7">
@@ -24,29 +48,43 @@
       </ion-row>
     </ion-card-header>
   </ion-card>
-  <ion-card *ngIf="runningImport; else oldImports">
-    <ion-card-header>
-      <span>Date: {{runningImport.startTime}} <span class="m-20"><em>{{runningImport.role}}</em></span></span>
-    </ion-card-header>
-    <ion-card-content>
-      <div [innerHTML]="runningImport.result"></div>
-    </ion-card-content>
-  </ion-card>
-  <ng-template #oldImports>
-    <mat-accordion *ngIf="imports">
-      <mat-expansion-panel *ngFor="let import of imports">
-        <mat-expansion-panel-header>
-          <span>Date: {{import.startTime}}  <span class="m-20"><em>{{import.role}}</em></span></span>
-          <ion-button size="small"  (click)="redirectToEdit($event,null)"  matTooltip="{{'create a new institute' | translate }}">
-            <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
-          </ion-button>
-          <ion-button size="small"  (click)="redirectToEdit($event,null)"  matTooltip="{{'create a new institute' | translate }}">
-            <ion-icon slot="icon-only" name="trash"></ion-icon>
-          </ion-button>
-        </mat-expansion-panel-header>
-        <span>indentifier: {{import.identifier}} password: {{import.password}} mustChange: {{import.mustchange}} full: {{import.full}} allClasses: {{import.allClasses}} cleanDirs: {{import.cleanClassDirs}} resetPW: {{import.resetPassword}}</span>
-        <div [innerHTML]="import.result"></div>
-      </mat-expansion-panel>
-    </mat-accordion>
-    </ng-template>
+  <ion-list *ngIf="imports">
+    <ion-item *ngFor="let import of imports">
+      <ion-thumbnail *ngIf="import.test">
+        <ion-icon color="warning" name="sync" style="height:30px;width:30px"></ion-icon>
+      </ion-thumbnail>
+      <ion-thumbnail *ngIf="!import.test">
+        <ion-icon color="success" name="checkmark-done-circle-outline" style="height:30px;width:30px"></ion-icon>
+      </ion-thumbnail>
+      <h3 *ngIf="import.test">{{import.startTime}} {{'Test import' | translate}}</h3>
+      <h3 *ngIf="!import.test">{{import.startTime}}</h3>
+      <ion-label>{{'indentifier' | translate}}: {{import.identifier | translate}}</ion-label>
+      <ion-label *ngIf="import.password"> {{'password' |translate}}: {{import.password}} </ion-label>
+      <ion-label *ngIf="import.mustchange">{{'mustChange' |translate}} </ion-label>
+      <ion-label *ngIf="import.resetPassword">{{'resetPassword' |translate}} </ion-label>
+      <ion-label *ngIf="import.full">{{'full import' |translate}} </ion-label>
+      <ion-label *ngIf="import.allClasses">{{'allClasses' |translate}} </ion-label>
+      <ion-label *ngIf="import.cleanClassDirs">{{'cleanClassDirs' |translate}} </ion-label>
+      <ion-button color="light"  size="small" (click)="showImport($event,import)"
+        matTooltip="{{'Show the import result.' | translate }}">
+        <ion-icon slot="icon-only" color="warning" name="eye-outline"></ion-icon>
+      </ion-button>
+      <ion-button color="light" *ngIf="import.test" size="small" (click)="restartImport(import.startTime)"
+        matTooltip="{{'Start the import as real import not test.' | translate }}">
+        <ion-icon slot="icon-only" color="warning" name="reload"></ion-icon>
+      </ion-button>
+      <ion-button color="light" *ngIf="!import.test" size="small" (click)="downloadImport(import.startTime,'pdf')"
+        matTooltip="{{'Download the password files as pdf files.' | translate }}">
+        <ion-icon slot="icon-only" color="success" name="download"></ion-icon>
+      </ion-button>
+      <ion-button color="light" *ngIf="!import.test" size="small" (click)="downloadImport(import.startTime,'txt')"
+        matTooltip="{{'Download the password files as txt files.' | translate }}">
+        <ion-icon slot="icon-only" color="warning" name="download"></ion-icon>
+      </ion-button>
+      <ion-button color="light" size="small" (click)="deleteImport(import.startTime)"
+        matTooltip="{{'Delete the import.' | translate }}">
+        <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
 </ion-content>

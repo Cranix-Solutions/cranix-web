@@ -37,7 +37,7 @@ export class User {
 	constructor(){}
 }
 export class UsersImport {
-	startTime?: any = new Date();
+	startTime: string;
 	role: string = "";
 	lang: string = "";
 	identifier: string = "";

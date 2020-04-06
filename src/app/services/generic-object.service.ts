@@ -33,7 +33,9 @@ export class GenericObjectService {
   cephalixDefaults: any = {};
 
   selects: any = {
-    'status': ['N', 'A', 'D']
+    'status': ['N', 'A', 'D'],
+    'identifier': ['sn-gn-bd','uuid','uid'],
+    'lang': [ 'DE','EN']
   }
   initialized: boolean = false;
   enumerates: string[] = [
