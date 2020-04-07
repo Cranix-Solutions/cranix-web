@@ -43,7 +43,7 @@ export class UsersImport {
 	identifier: string = "";
 	test: boolean = true;
 	password: string = "";
-	mustchange: boolean = false;
+	mustChange: boolean = false;
 	full: boolean = false;
 	allClasses: boolean = false;
 	cleanClassDirs: boolean = false;

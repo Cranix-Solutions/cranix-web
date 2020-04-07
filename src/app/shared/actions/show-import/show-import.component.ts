@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PopoverController, NavParams } from '@ionic/angular';
+import { ModalController, NavParams } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertController } from '@ionic/angular';
 //Own stuff
@@ -16,8 +16,8 @@ export class ShowImportComponent implements OnInit {
  
   constructor(
     public alertController: AlertController,
+    private modalController: ModalController,
     private navParams: NavParams,
-    private popoverController: PopoverController,
     public translateService: TranslateService
   ) {
     this.import = this.navParams.get('import');
@@ -25,4 +25,7 @@ export class ShowImportComponent implements OnInit {
 
   ngOnInit() {}
 
+  closeWindow(){
+    this.modalController.dismiss();;
+  }
 }
