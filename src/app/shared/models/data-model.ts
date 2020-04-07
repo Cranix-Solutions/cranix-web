@@ -41,7 +41,7 @@ export class UsersImport {
 	role: string = "";
 	lang: string = "";
 	identifier: string = "";
-	test: boolean = false;
+	test: boolean = true;
 	password: string = "";
 	mustchange: boolean = false;
 	full: boolean = false;

@@ -66,6 +66,7 @@ export class GenericObjectService {
     'deleted',
     'devices',
     'id',
+    'identifier',
     'ownerId',
     'partitions',
     'saveNext',
