@@ -20,8 +20,8 @@ import { Customer } from '../../../shared/models/cephalix-data-model'
 })
 export class CustomersPage implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['name', 'uuid',  'locality', 'ipVPN', 'regCode', 'validity', 'actions'];
-  sortableColumns: string[] = [ 'name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity'];
+  displayedColumns: string[] = ['name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity', 'actions'];
+  sortableColumns: string[] = ['name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity'];
   gridOptions: GridOptions;
   columnDefs = [];
   gridApi: GridApi;
@@ -60,8 +60,8 @@ export class CustomersPage implements OnInit {
     this.storage.get('CustomersPage.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
-         this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
-         this.createColumnDefs();
+        this.displayedColumns = ['select'].concat(myArray).concat(['actions']);
+        this.createColumnDefs();
       }
     });
     this.objectService.getObjects('customer').subscribe(obj => this.rowData = obj);
@@ -133,10 +133,9 @@ export class CustomersPage implements OnInit {
  * @param ev 
  */
   async openActions(ev: any) {
-    if (this.selected) {
-      for (let i = 0; i < this.selected.length; i++) {
-        this.objectIds.push(this.selected[i].id);
-      }
+    this.objectKeys = [];
+    for (let i = 0; i < this.selected.length; i++) {
+      this.objectIds.push(this.selected[i].id);
     }
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,

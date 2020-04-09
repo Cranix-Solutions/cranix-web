@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'cranix-institutes-lists',
-  templateUrl: './institutes-lists.page.html'
+  selector: 'cranix-users-lists',
+  templateUrl: './users-lists.page.html'
 })
-export class InstitutesListsPage {
+export class UsersListsPage {
   constructor(
     public translateService: TranslateService
   ) {}

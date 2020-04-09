@@ -10,7 +10,6 @@ import { AuthenticationService } from '../services/auth.service';
 })
 export class ProtectedPage implements OnInit {
 
-  
   public appPages = [ ];
   private defAppPages = [
     {
@@ -35,7 +34,7 @@ export class ProtectedPage implements OnInit {
     },
     {
       title: 'Users',
-      url: '/pages/cranix/users',
+      url: '/pages/cranix/users/all',
       icon: 'person'
     },
     {
@@ -56,8 +55,8 @@ export class ProtectedPage implements OnInit {
   ];
 
   constructor(
-    public translateService: TranslateService,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    public translateService: TranslateService
   ) { 
     for( let page of this.defAppPages ) {
       if( this.authService.isRouteAllowed(page.url)) {
@@ -65,7 +64,6 @@ export class ProtectedPage implements OnInit {
       }
     }
   }
-
   ngOnInit() {
   }
 

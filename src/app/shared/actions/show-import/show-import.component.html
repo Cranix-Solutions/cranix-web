@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-card>
+    <ion-toolbar>
+      <ion-card-title>{{import.startTime}} {{'role' | translate}}: {{import.role | translate}}</ion-card-title>
+      <ion-buttons slot="end">
+        <ion-button fill="clear" size="small" (click)="closeWindow()">
+          <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+    <ion-toolbar>
+      <ion-card-subtitle>
+        {{ 'indentifier' | translate }}: {{import.identifier | translate}};
+        {{'password' | translate}}: "{{import.password}}";
+        {{'mustChange' | translate}}: {{import.mustchange}};
+        {{'full import' | translate}}:  {{import.full}};
+        {{'allClasses' | translate}}: {{import.allClasses}};
+        {{'cleanDirs' | translate}}: {{import.cleanClassDirs}};
+        {{'resetPW' | translate}}:  {{import.resetPassword}};
+        {{'appendBirthdayToPassword' | translate}}: {{import.appendBirthdayToPassword}}
+      </ion-card-subtitle>
+    </ion-toolbar>
+  </ion-card>
+</ion-header>
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>
+        {{'content of the log' | translate}}
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <div [innerHTML]="import.result"></div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

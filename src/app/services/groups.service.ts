@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 import { ServerResponse } from 'src/app/shared/models/server-models';
-import { Group, User, OldImportsUser } from 'src/app/shared/models/data-model';
+import { Group, User } from 'src/app/shared/models/data-model';
 
 @Injectable()
 export class GroupsService {

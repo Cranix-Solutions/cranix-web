@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 import { ServerResponse } from '../shared/models/server-models';
-import { Group, OldImportsUser } from '../shared/models/data-model';
+import { Group, UsersImport } from '../shared/models/data-model';
 
 interface UserList {
 	id: number;
@@ -36,7 +36,7 @@ export class UsersService {
 		private utilsS: UtilsService,
 		private authS: AuthenticationService) {
 		this.hostname = this.utilsS.hostName();
-		this.token    = this.authS.getToken();
+		this.token = this.authS.getToken();
 		this.headers = new HttpHeaders({
 			'Content-Type': "application/json",
 			'Accept': "application/json",
@@ -45,19 +45,32 @@ export class UsersService {
 		this.utilsS.log('Constructor Users completed');
 	};
 
-	removeUserFromGroup(uId: number, gId: number){
+	removeUserFromGroup(uId: number, gId: number) {
 		this.url = this.hostname + `/users/${uId}/${gId}`;
 		return this.http.delete<ServerResponse>(this.url, { headers: this.headers });
 	}
 
-	addUserToGroups(ui: number, groups: any[]){
+	addUserToGroups(ui: number, groups: any[]) {
 		const body = groups;
 		this.url = `${this.hostname}/users/${ui}/groups`;
 		return this.http.post<ServerResponse>(this.url, body, { headers: this.headers });
 	}
-	getUsersGroups(uid: number){
+
+	getAllImports() {
+		this.url = this.hostname + "/users/imports";
+		console.log(this.url);
+		return this.http.get<UsersImport[]>(this.url, { headers: this.headers });
+	}
+
+	getRunningImport() {
+		this.url = `${this.hostname}/users/imports/running`
+		console.log(this.url);
+		return this.http.get<UsersImport>(this.url, { headers: this.headers });
+	}
+
+	getUsersGroups(uid: number) {
 		this.url = `${this.hostname}/users/${uid}/groups`
-			console.log(this.url);
+		console.log(this.url);
 		const headers = new HttpHeaders({
 			'Accept': "application/json",
 			'Authorization': "Bearer " + this.token
@@ -65,9 +78,9 @@ export class UsersService {
 		return this.http.get<Group[]>(this.url, { headers: headers });
 	}
 
-	getUsersAvailableGroups(uid: number){
+	getUsersAvailableGroups(uid: number) {
 		this.url = `${this.hostname}/users/${uid}/availableGroups`
-			console.log(this.url);
+		console.log(this.url);
 		const headers = new HttpHeaders({
 			'Accept': "application/json",
 			'Authorization': "Bearer " + this.token
@@ -81,32 +94,13 @@ export class UsersService {
 		return this.http.post<ServerResponse>(this.url, body, { headers: this.headers });
 	};
 
-	importUsers(imp: FormData){
+	importUsers(imp: FormData) {
 		this.url = this.hostname + `/users/import`;
 		const headers = new HttpHeaders({
-				'Accept' : "application/json",
-				'Authorization' : "Bearer " + this.token
-		});
-		return this.http.post<ServerResponse>(this.url, imp, { headers: headers});
-	}
-
-	getAllImports(){
-		this.url = this.hostname + "/users/imports";
-		console.log(this.url);
-		const headers = new HttpHeaders({
 			'Accept': "application/json",
 			'Authorization': "Bearer " + this.token
 		});
-		return this.http.get<OldImportsUser[]>(this.url, { headers: headers });
+		return this.http.post<ServerResponse>(this.url, imp, { headers: headers });
 	}
 
-	getRunningImport(){
-	this.url = `${this.hostname}/users/imports/running`
-	console.log(this.url);
-		const headers = new HttpHeaders({
-			'Accept': "application/json",
-			'Authorization': "Bearer " + this.token
-		});
-		return this.http.get<OldImportsUser[]>(this.url, { headers: headers });
-	}
 }

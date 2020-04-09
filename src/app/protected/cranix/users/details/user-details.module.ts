@@ -16,6 +16,10 @@ const routes: Routes = [
     component: UserDetailsPage,
     children: [
       {
+        path: 'all',
+        redirectTo: '/pages/cranix/users'
+      },
+      {
         path: 'edit',
         component:  UserEditPage
       },

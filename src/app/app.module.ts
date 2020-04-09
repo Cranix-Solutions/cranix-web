@@ -22,6 +22,7 @@ import { SystemService } from './services/system.service';
 import { LanguageService } from './services/language.service';
 
 import { ActionsComponent } from './shared/actions/actions.component';
+import { ShowImportComponent } from 'src/app/shared/actions/show-import/show-import.component';
 import { CanActivateViaAcls } from './services/auth-guard.service';
 import { DevicesService } from './services/devices.service';
 import { GenericObjectService } from './services/generic-object.service';
@@ -53,10 +54,12 @@ const routes: Routes = [
   declarations: [
     AppComponent,
     ActionsComponent,
+    ShowImportComponent,
     ObjectsEditComponent,
     SelectColumnsComponent],
   entryComponents: [
     ActionsComponent,
+    ShowImportComponent,
     ObjectsEditComponent,
     SelectColumnsComponent],
   imports: [

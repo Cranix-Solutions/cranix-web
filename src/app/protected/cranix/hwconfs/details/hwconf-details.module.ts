@@ -16,6 +16,10 @@ const routes: Routes = [
     component: HwconfDetailsPage,
     children: [
       {
+        path: 'all',
+        redirectTo: '/pages/cranix/hwconfs'
+      },
+      {
         path: 'edit',
         component:  HwconfEditPage
       },

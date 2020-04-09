@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule, Routes } from '@angular/router';
 
 //own modules
-import { CranixSharedModule } from '../../../../shared/cranix-shared.module';
+import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { InstituteDetailsPage } from './institute-details.page';
 import { InstituteEditComponent } from './edit/institute-edit.component';
 import { InstituteNoticesComponent } from './notices/institute-notices.component';
@@ -17,6 +17,10 @@ const routes: Routes = [
     path: '',
     component: InstituteDetailsPage,
     children: [
+      {
+        path: 'all',
+        redirectTo: '/pages/cephalix/institutes/all'
+      },
       {
         path: 'edit',
         component:  InstituteEditComponent

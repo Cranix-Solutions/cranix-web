@@ -5,7 +5,7 @@ import { UtilsService } from './utils.service';
 import { Observable } from 'rxjs/internal/Observable';
 import { BehaviorSubject } from 'rxjs';
 
-import { Customer, Institute, Object, Ticket, Article, Notice, OssCare } from 'src/app/shared/models/cephalix-data-model';
+import { Customer, Institute, Ticket, Article, Notice, OssCare, SynchronizedObject } from 'src/app/shared/models/cephalix-data-model';
 import { ServerResponse } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from './auth.service';
 import { InstituteStatus } from '../shared/models/cephalix-data-model';
@@ -24,6 +24,8 @@ export class CephalixService {
 	url: string;
 	res: any;
 	headers: any;
+	selectedInstitutes: Institute[] = [];
+	selectedList: string[] = [];
 
 	constructor(
 		private utilsS: UtilsService,
@@ -73,11 +75,15 @@ export class CephalixService {
 		console.log(this.url);
 		return this.http.get<Institute>(this.url, { headers: this.headers });
 	}
-
+	getObjectsToSynchronize(){
+		this.url = this.hostname + `/institutes/objects`;
+		console.log(this.url);
+		return this.http.get<SynchronizedObject[]>(this.url, { headers: this.headers });
+	}
 	getSynchronizedObjects(instituteId: number){
 		this.url = this.hostname + `/institutes/${instituteId}/objects`;
 		console.log(this.url);
-		return this.http.get<Object[]>(this.url, { headers: this.headers });
+		return this.http.get<SynchronizedObject[]>(this.url, { headers: this.headers });
 	}
 
 	getArticklesOfTicket(id: number): Observable<Article[]> {

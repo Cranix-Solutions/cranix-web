@@ -1,0 +1,90 @@
+<cranix-toolbar></cranix-toolbar>
+<ion-row class="header-row">
+  <ion-col size=6>
+    <ion-title>{{'Manage user imports' | translate}}</ion-title>
+  </ion-col>
+</ion-row>
+<ion-content (window:resize)="onResize($event)">
+  <ion-card *ngIf="runningImport">
+    <ion-card-header>
+      <ion-row class="ion-align-items-center">
+        <ion-col size="3">
+          <ion-item>
+            {{'User import is running' | translate}}
+          </ion-item>
+        </ion-col>
+        <ion-col size="7">
+        </ion-col>
+        <ion-col size="2">
+          <ion-button size="small" (click)="stopImport()" matTooltip="{{'Stop the running user import' | translate }}">
+            <ion-icon slot="icon-only" name="stop-circle-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card-header>
+  </ion-card>
+  <ion-card *ngIf="!runningImport">
+    <ion-card-header>
+      <ion-row class="ion-align-items-center">
+        <ion-col size="3">
+          <ion-item>
+            {{'List of old Imports' | translate}}
+          </ion-item>
+        </ion-col>
+        <ion-col size="7">
+        </ion-col>
+        <ion-col size="2">
+          <ion-button size="small" (click)="startImport()" matTooltip="{{'Start a new user import' | translate }}">
+            <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card-header>
+  </ion-card>
+  <ion-card *ngIf="runningImport; else oldImports">
+    <ion-card-header>
+      <span>Date: {{runningImport.startTime}} <span class="m-20"><em>{{runningImport.role}}</em></span></span>
+    </ion-card-header>
+    <ion-card-content>
+      <div [innerHTML]="runningImport.result"></div>
+    </ion-card-content>
+  </ion-card>
+  <ng-template #oldImports>
+    <mat-accordion *ngIf="imports">
+      <mat-expansion-panel *ngFor="let import of imports">
+        <mat-expansion-panel-header>
+          <mat-panel-title *ngIf="import.test">
+            <span>{{'Test import' | translate}} Date: {{import.startTime}} <span class="m-20"><em>{{import.role}}</em></span></span>
+          </mat-panel-title>
+          <mat-panel-title *ngIf="!import.test">
+            <span>{{'Import' | translate}} Date: {{import.startTime}} <span class="m-20"><em>{{import.role}}</em></span></span>
+          </mat-panel-title>
+          <mat-panel-description>
+            <ion-button color="light"  *ngIf="import.test" size="small" (click)="restartImport(import.startTime)"
+              matTooltip="{{'Start the import as real import not test.' | translate }}">
+              <ion-icon slot="icon-only" color="warning" name="reload"></ion-icon>
+            </ion-button>
+            <ion-button color="light" *ngIf="!import.test" size="small" (click)="downloadImport(import.startTime,'pdf')"
+              matTooltip="{{'Download the password files as pdf files.' | translate }}">
+              <ion-icon slot="icon-only" color="success" name="download"></ion-icon>
+            </ion-button>
+            <ion-button  color="light"  *ngIf="!import.test" size="small" (click)="downloadImport(import.startTime,'txt')"
+              matTooltip="{{'Download the password files as txt files.' | translate }}">
+              <ion-icon slot="icon-only" color="warning" name="download"></ion-icon>
+            </ion-button>
+            <ion-button  color="light" size="small" (click)="deleteImport(import.startTime)"
+              matTooltip="{{'Delete the import.' | translate }}">
+              <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
+            </ion-button>
+            <ion-button *ngIf="import.test" size="small" fill="clear">
+          </ion-button>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <span>indentifier: {{import.identifier}} password: {{import.password}} mustChange: {{import.mustchange}} full:
+          {{import.full}} allClasses: {{import.allClasses}} cleanDirs: {{import.cleanClassDirs}} resetPW:
+          {{import.resetPassword}}</span>
+        <div [innerHTML]="import.result"></div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </ng-template>
+</ion-content>

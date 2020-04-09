@@ -48,9 +48,6 @@ export class Institute {
     recDate: any = new Date();
     cephalixCustomerId: number = 0;
     constructor() {}
-    getName():string {
-        return 'institute';
-    }
 }
 
 export class Ticket{
@@ -163,13 +160,13 @@ export interface CopyFile {
     file: File
 }
 
-export interface Object {
+export interface SynchronizedObject {
     id?: number,
-    cephalixId: number,
+    instituteId: number,
     objectType: string,
     objectName: number,
+    cephalixId: number,
     ossId: number,
-    instituteId: number,
     lastSync: number
 }
 

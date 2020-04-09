@@ -8,18 +8,21 @@ import { IonicModule } from '@ionic/angular';
 import { CanActivateViaAcls } from '../../../services/auth-guard.service';
 import { CranixSharedModule } from '../../../shared/cranix-shared.module';
 import { PipesModule } from '../../../pipes/pipe-modules';
-import { UsersPage } from './users.page';
 
 const routes: Routes = [
   {
     path: 'users',
     canActivate: [CanActivateViaAcls],
-    component: UsersPage
+    loadChildren: () => import('./lists/users-lists.module').then( m => m.UsersListsPageModule)
   },
   {
     path: 'users/:id',
     canLoad: [CanActivateViaAcls],
     loadChildren: () => import('./details/user-details.module').then( m => m.UserDetailsPageModule)
+  },
+  {
+    path: '',
+    redirectTo: 'all'
   }
 ];
 
@@ -31,7 +34,7 @@ const routes: Routes = [
     IonicModule,
     CranixSharedModule
   ],
-  declarations: [ UsersPage],
+  declarations: [ ],
   providers: [TranslateService, PipesModule]
 })
 export class UsersPageModule {}

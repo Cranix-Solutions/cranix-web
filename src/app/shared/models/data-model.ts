@@ -36,34 +36,19 @@ export class User {
 	mailAliases?: string[] =[];
 	constructor(){}
 }
-export class OldImportsUser{
+export class UsersImport {
+	startTime: string;
 	role: string = "";
 	lang: string = "";
 	identifier: string = "";
-	test: boolean = false;
+	test: boolean = true;
 	password: string = "";
-	mustchange: boolean = false;
-	full: boolean = false;
-	allClasses: boolean = false;
-	cleanClassDirs: boolean = false;
-	resetPassword: boolean = false;
-	startTime: number = 0;
-	result: any;
-	constructor(){}
-}
-export class ImportUser{
-	role: string = "";
-	lang: string = "";
-	identifier: string = "";
-	test: boolean = false;
-	password: string = "";
-	mustchange: boolean = false;
+	mustChange: boolean = false;
 	full: boolean = false;
 	allClasses: boolean = false;
 	cleanClassDirs: boolean = false;
 	resetPassword: boolean = false;
 	appendBirthdayToPassword: boolean = false;
-	startTime?: any = new Date();
 	result?: any = null;
 	constructor(){}
 }
