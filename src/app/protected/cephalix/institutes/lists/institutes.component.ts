@@ -35,8 +35,8 @@ export class InstitutesComponent implements OnInit {
   objectIds: number[] = [];
 
   constructor(
-    private cephalixService: CephalixService,
-    private objectService: GenericObjectService,
+    public cephalixService: CephalixService,
+    public objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     public languageS: LanguageService,

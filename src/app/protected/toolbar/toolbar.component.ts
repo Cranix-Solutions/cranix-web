@@ -15,9 +15,9 @@ export class ToolbarComponent implements OnInit {
   commonName: string = "";
   instituteName: string = "";
   constructor(
-    private authService: AuthenticationService,
+    public authService: AuthenticationService,
     public alertController: AlertController,
-    private translateService: LanguageService
+    public translateService: LanguageService
   ) {
     this.commonName = authService.session.commonName;
     this.roomName        = authService.session.roomName;
@@ -44,4 +44,6 @@ export class ToolbarComponent implements OnInit {
     });
     await alert.present();
   }
+
+  closeWindow() {}
 }

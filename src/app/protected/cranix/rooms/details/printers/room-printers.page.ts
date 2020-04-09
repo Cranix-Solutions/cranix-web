@@ -28,7 +28,7 @@ export class RoomPrintersPage implements OnInit {
     private roomService: RoomsService,
     private languageS: LanguageService,
     public formBuilder: FormBuilder,
-    private objectService: GenericObjectService,
+    public objectService: GenericObjectService,
     private toastController: ToastController
   ) {
     this.room = <Room>this.objectService.selectedObject;

@@ -3,10 +3,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { FormBuilder } from '@angular/forms';
 
 //Own stuff
-import { GenericObjectService } from '../../../../../services/generic-object.service';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
 import { LanguageService } from 'src/app/services/language.service';
-import { Institute } from '../../../../../shared/models/cephalix-data-model';
+import { Institute } from 'src/app/shared/models/cephalix-data-model';
 
 @Component({
   selector: 'cranix-institute-edit',
@@ -19,11 +19,11 @@ export class InstituteEditComponent implements OnInit {
   objectKeys: string[] = [];
   isourl: string ="";
   constructor(
-    private cephalixService: CephalixService,
+    public cephalixService: CephalixService,
     private languageService: LanguageService,
     public translateService: TranslateService,
     public formBuilder: FormBuilder,
-    private objectService: GenericObjectService
+    public objectService: GenericObjectService
   ) {
     this.object = this.objectService.selectedObject;
     if(objectService.cephalixDefaults.createIsoBy && objectService.cephalixDefaults.createIsoBy == 'regCode' ) {
@@ -69,4 +69,7 @@ export class InstituteEditComponent implements OnInit {
       () => { subs.unsubscribe() }
     )
   }
+  delete(ev: Event){
+     this.objectService.deleteObjectDialog(this.object,'institute');
+  }  
 }

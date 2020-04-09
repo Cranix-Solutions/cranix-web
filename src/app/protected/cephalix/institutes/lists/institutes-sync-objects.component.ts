@@ -17,15 +17,15 @@ export class InstitutesSyncObjectsComponent implements OnInit {
   columnDefs = [];
   memberApi;
   memberColumnApi;
-  memberSelected: SynchronizedObject[] = [];
+  memberSelection: SynchronizedObject[] = [];
   memberData: SynchronizedObject[] = [];
   autoGroupColumnDef;
   institute;
   selectedList: string[] = [];
 
   constructor(
-    private cephalixService: CephalixService,
-    private objectService: GenericObjectService,
+    public cephalixService: CephalixService,
+    public objectService: GenericObjectService,
     private languageS: LanguageService
   ) {
     this.institute = <Institute>this.objectService.selectedObject;
@@ -78,7 +78,7 @@ export class InstitutesSyncObjectsComponent implements OnInit {
   }
 
   onMemberSelectionChanged() {
-    this.memberSelected = this.memberApi.getSelectedRows();
+    this.memberSelection = this.memberApi.getSelectedRows();
   }
 
   onMemberFilterChanged() {
@@ -86,7 +86,7 @@ export class InstitutesSyncObjectsComponent implements OnInit {
     this.memberApi.doLayout();
   }
 
-  onResize($event) {
+  onResize(ev: Event) {
     (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
     //this.sizeAll();
   }
@@ -103,5 +103,10 @@ export class InstitutesSyncObjectsComponent implements OnInit {
       (err) => { console.log(err) },
       () => { subM.unsubscribe() });
   }
-
+  startSync(en: Event) {
+  //TODO
+  }
+  stopSync(en: Event) {
+  //TODO
+  }
 }

@@ -37,9 +37,9 @@ export class InstitutesStatusComponent implements OnInit {
   objectIds: number[] = [];
 
   constructor(
-    private authService: AuthenticationService,
-    private cephalixService: CephalixService,
-    private objectService: GenericObjectService,
+    public authService: AuthenticationService,
+    public cephalixService: CephalixService,
+    public objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     public languageS: LanguageService,

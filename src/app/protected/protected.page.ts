@@ -55,7 +55,7 @@ export class ProtectedPage implements OnInit {
   ];
 
   constructor(
-    private authService: AuthenticationService,
+    public authService: AuthenticationService,
     public translateService: TranslateService
   ) { 
     for( let page of this.defAppPages ) {

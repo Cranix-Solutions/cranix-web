@@ -41,7 +41,10 @@ export class ObjectsEditComponent implements OnInit {
       this.objectActionTitle = "Edit " + this.objectType;
       this.objectAction = "Apply";
     }
-    this.objectKeys = Object.getOwnPropertyNames(this.object);
+    this.objectKeys = this.navParams.get('objectKeys');
+    if (!this.objectKeys) {
+      this.objectKeys = Object.getOwnPropertyNames(this.object);
+    }
     console.log(this.objectKeys);
     console.log(this.object);
   }
@@ -66,7 +69,7 @@ export class ObjectsEditComponent implements OnInit {
           this.objectService.getAllObject(this.objectType);
           const toast = this.toastController.create({
             position: "middle",
-            header:  this.languageS.trans("Success:"),
+            header: this.languageS.trans("Success:"),
             message: serverResponse.value,
             color: "success",
             duration: 5000
@@ -76,7 +79,7 @@ export class ObjectsEditComponent implements OnInit {
         } else {
           const toast = this.toastController.create({
             position: "middle",
-            header:  this.languageS.trans("An Error was accoured:"),
+            header: this.languageS.trans("An Error was accoured:"),
             message: serverResponse.value,
             color: "warning",
             duration: 6000
