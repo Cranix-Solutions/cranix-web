@@ -26,7 +26,6 @@ export class LoginPage implements OnInit {
         private systemS: SystemService,
     ) {
         this.instName = this.systemS.getInstituteName();
-      //  this.instName.subscribe((val)=>{ this.instituteName = val});
     }
 
     ngOnInit() {

@@ -48,7 +48,6 @@ export class CephalixService {
 			'Accept': 'text/plain',
 			'Authorization': "Bearer " + this.token
 		});
-		//console.log(headers.getAll('Content-Type') + " " + headers.getAll('Accept') + " " + headers.getAll('Authorization'));
 		return this.http.get(this.url, { headers: headers, responseType: 'text' });
 	}
 	getStatusOfInstitutes(): Observable<InstituteStatus[]> {

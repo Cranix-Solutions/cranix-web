@@ -31,7 +31,11 @@ export class AppComponent {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
       this.languageService.setInitialAppLanguage();
-      this.authS.authenticationState.subscribe(state => {
+      if(sessionStorage.getItem('cephalix_token')){
+        this.authS.authenticationState.next(true);
+        this.authS.token = sessionStorage.getItem('cephalix_token');
+      }
+      this.authS.authenticationState.subscribe(state => { 
         if (state) {
           this.genericObjectS.initialize(true);
           this.router.navigate(['pages/cranix/users/all']);

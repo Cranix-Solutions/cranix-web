@@ -16,19 +16,15 @@ export class UtilsService {
                         }else {
                                 url = `${protocol}//${hostname}/${sessionStorage.getItem('shortName')}`
                         }
-                }else if (hostname == "localhost" && port =="4200"){
-                        url = protocol + "//" + hostname ;
                 } else if (port) {
-                        if (port == "4200"){
-                                port = "10443";
-                        }
                         url = protocol + "//" + hostname + ":" + port + "/api";
                 }
                 else{
                         url = protocol + "//" + hostname + "/api";
-                }
+		}
+		//Test only
                 //url = 'https://5.252.227.69/api';
-                url = 'https://repo.cephalix.eu/api';
+		//url = 'https://repo.cephalix.eu/api';
                 //url = 'https://gif1.bbs1-gifhorn.de:444/api';
 		//url = 'https://172.18.0.2/api';
                 //url = 'https://10.0.0.2:443/api';

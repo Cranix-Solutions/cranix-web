@@ -88,14 +88,12 @@ export class DevicesPage implements OnInit {
           col['valueGetter'] = function (params) {
             return params.context['componentParent'].objectService.idToName('hwconf', params.data.hwconfId);
           }
-          //col['cellRendererFramework'] = HwconfIdCellRenderer;
           break;
         }
         case 'roomId': {
           col['valueGetter'] = function (params) {
             return params.context['componentParent'].objectService.idToName('room', params.data.roomId);
           }
-          //col['cellRendererFramework'] = RoomIdCellRenderer;
           break;
         }
       }
