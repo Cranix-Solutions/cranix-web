@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { GenericObjectService } from '../../../../../services/generic-object.service';
-import { Hwconf } from '../../../../../shared/models/data-model';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { Hwconf } from 'src/app/shared/models/data-model';
 import { FormBuilder } from '@angular/forms';
 
 @Component({
@@ -20,7 +20,7 @@ export class HwconfEditPage implements OnInit {
   constructor(
     public translateService: TranslateService,
     public formBuilder: FormBuilder,
-    private objectService: GenericObjectService
+    public objectService: GenericObjectService
   ) {
     this.object = <Hwconf>this.objectService.selectedObject;
     this.objectKeys = Object.getOwnPropertyNames(new Hwconf());
@@ -62,5 +62,11 @@ export class HwconfEditPage implements OnInit {
     }
     console.log(this.object);
     this.objectService.modifyObjectDialog(this.object, "hwconf");
+  }
+  cleanUp(ev: Event){
+    //TODO
+  }
+  delete(ev: Event){
+     this.objectService.deleteObjectDialog(this.object,'hwconf');
   }
 }

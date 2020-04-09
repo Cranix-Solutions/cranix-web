@@ -17,12 +17,17 @@
         <ion-row class="ion-align-items-center">
           <ion-col size=0 sizeMd=6 sizeLg=10 sizeXl=10></ion-col>
           <ion-col size=12 sizeLg=2 sizeXl=2>
-            <ion-button size="small" type="submit" class="ion-no-margin" [disabled]="!editForm.valid"
+            <ion-button size="small" type="submit" color="success" class="ion-no-margin" [disabled]="!editForm.valid"
               matTooltip="{{'Apply changes' | translate }}">
               <ion-icon slot="icon-only" name="checkmark-done-circle"></ion-icon>
             </ion-button>
-            <ion-button size="small" (click)="cleanUp($event)" matTooltip="{{'Remove arhived images' | translate }}">
+            <ion-button size="small" color="warning" (click)="cleanUp($event)"
+              matTooltip="{{'Remove arhived images' | translate }}">
               <ion-icon slot="icon-only" name="remove-circle"></ion-icon>
+            </ion-button>
+            <ion-button size="small" color="danger" (click)="delete($event)"
+              matTooltip="{{'Delete hwconf' | translate }}">
+              <ion-icon slot="icon-only" name="trash"></ion-icon>
             </ion-button>
           </ion-col>
         </ion-row>

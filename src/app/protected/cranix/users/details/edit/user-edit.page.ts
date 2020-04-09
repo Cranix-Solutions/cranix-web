@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FormBuilder } from '@angular/forms';
 //own stuff
-import { GenericObjectService } from '../../../../../services/generic-object.service';
-import { User } from '../../../../../shared/models/data-model';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { User } from 'src/app/shared/models/data-model';
 
 @Component({
   selector: 'cranix-user-edit',
@@ -18,7 +18,7 @@ export class UserEditPage implements OnInit {
   constructor(
     public translateService: TranslateService,
     public formBuilder: FormBuilder,
-    private objectService: GenericObjectService
+    public objectService: GenericObjectService
   ) { 
     this.object = <User>this.objectService.selectedObject;
     this.objectKeys = Object.getOwnPropertyNames(new User());
@@ -31,5 +31,8 @@ export class UserEditPage implements OnInit {
   onSubmit(form){
     form['id'] = this.object.id;
     this.objectService.modifyObjectDialog(form,"user");
+  }
+  delete(ev: Event){
+     this.objectService.deleteObjectDialog(this.object,'user');
   }
 }

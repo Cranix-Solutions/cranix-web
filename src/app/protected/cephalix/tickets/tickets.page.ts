@@ -37,7 +37,7 @@ export class TicketsPage implements OnInit {
   objectIds: number[] = [];
 
   constructor(
-    private objectService: GenericObjectService,
+    public objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     public languageS: LanguageService,
@@ -176,7 +176,7 @@ export class TicketsPage implements OnInit {
         componentProps: {
           objectType: "ticket",
           objectAction: "add",
-          object: ticket,
+          object: new Ticket(),
           objectKeys: this.objectKeys
         },
         animated: true,

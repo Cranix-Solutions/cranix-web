@@ -78,17 +78,18 @@ export class AccessInRooms{
 export class Room {
 	id?: number;
 	name: string = "";
-	places: number = 0;
-	rows: number = 0;
 	description: string = "";
-	netMask: number = 0;
-	devices?:any = null;
-	users?: User[] = [];
+	hwconfId: number = 0;
+	netMask?: number = 0;
+	devCount?: number = 0;
+	devices?:any ;
+	users?: User[];
 	startIP?: string = "";
 	roomType: string = "";
 	roomControl: string = "";
-	network: string = "";
-	hwconfId: number = 0;
+	network: string;
+	places: number = 0;
+	rows: number = 0;
 	accessInRooms?: AccessInRooms[] = [];
 	constructor(){}
 }

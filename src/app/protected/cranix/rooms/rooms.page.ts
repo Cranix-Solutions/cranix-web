@@ -36,7 +36,7 @@ export class RoomsPage implements OnInit {
   objectIds: number[] = [];
 
   constructor(
-    private objectService: GenericObjectService,
+    public objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     public languageS: LanguageService,
@@ -156,13 +156,21 @@ export class RoomsPage implements OnInit {
       this.objectService.selectedObject = room;
       this.route.navigate(['/pages/cranix/rooms/' + room.id]);
     } else {
+      room = new Room;
+      delete room.network;
+      delete room.netMask;
+      delete room.startIP;
+      room.devCount = 32;
+      //TODO set defaults configurable
+      room.roomControl = 'allTeachers'
+      room.roomType = 'ComputerRoom'
+      room.hwconfId = 4
       const modal = await this.modalCtrl.create({
         component: ObjectsEditComponent,
         componentProps: {
           objectType: "room",
           objectAction: 'add',
-          object: room,
-          objectKeys: this.objectKeys
+          object: room
         },
         animated: true,
         swipeToClose: true,

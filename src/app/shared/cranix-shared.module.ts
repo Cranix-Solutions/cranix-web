@@ -24,6 +24,7 @@ import { AgGridModule } from 'ag-grid-angular';
 import { ActionBTNRenderer } from '../pipes/ag-action-renderer';
 import { DateCellRenderer } from '../pipes/ag-date-renderer';
 import { DateTimeCellRenderer } from '../pipes/ag-datetime-renderer';
+import { GroupIdCellRenderer } from 'src/app/pipes/ag-groupid-renderer';
 import { HwconfIdCellRenderer } from '../pipes/ag-hwconfid-renderer';
 import { RoomIdCellRenderer } from '../pipes/ag-roomid-render';
 import { DeviceIdCellRenderer } from '../pipes/ag-deviceid-renderer';
@@ -38,6 +39,7 @@ import { UserIdToNameCellRenderer } from '../pipes/ag-userid-to-name-renderer';
     DateCellRenderer,
     DateTimeCellRenderer,
     DeviceIdCellRenderer,
+    GroupIdCellRenderer,
     HwconfIdCellRenderer,
     InstituteIdCellRenderer,
     RoomIdCellRenderer,
@@ -53,6 +55,7 @@ import { UserIdToNameCellRenderer } from '../pipes/ag-userid-to-name-renderer';
     DateCellRenderer,
     DateTimeCellRenderer,
     DeviceIdCellRenderer,
+    GroupIdCellRenderer,
     HwconfIdCellRenderer,
     InstituteIdCellRenderer,
     RoomIdCellRenderer,

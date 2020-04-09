@@ -18,14 +18,14 @@ export class InstituteSyncedObjectsComponent implements OnInit {
   columnDefs = [];
   memberApi;
   memberColumnApi;
-  memberSelected: SynchronizedObject[] = [];
+  memberSelection: SynchronizedObject[] = [];
   memberData: SynchronizedObject[] = [];
   autoGroupColumnDef;
   institute;
 
   constructor(
-    private cephalixService: CephalixService,
-    private objectService: GenericObjectService,
+    public cephalixService: CephalixService,
+    public objectService: GenericObjectService,
     private languageS: LanguageService
   ) {
     this.institute = <Institute>this.objectService.selectedObject;
@@ -85,7 +85,7 @@ export class InstituteSyncedObjectsComponent implements OnInit {
   }
 
   onMemberSelectionChanged() {
-    this.memberSelected = this.memberApi.getSelectedRows();
+    this.memberSelection = this.memberApi.getSelectedRows();
   }
 
   onMemberFilterChanged() {

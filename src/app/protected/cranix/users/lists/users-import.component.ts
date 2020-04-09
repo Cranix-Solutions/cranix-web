@@ -22,7 +22,7 @@ export class UsersImportComponent implements OnInit {
   runningImport: UsersImport = null;
 
   constructor(
-    private objectService: GenericObjectService,
+    public objectService: GenericObjectService,
     private usersService: UsersService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
@@ -43,7 +43,11 @@ export class UsersImportComponent implements OnInit {
     )
   }
 
-  async startImport(ev: Event) {
+  async stopImport() {
+    //TODO
+  }
+
+  async startImport() {
       const modal = await this.modalCtrl.create({
         component: ObjectsEditComponent,
         componentProps: {
@@ -74,5 +78,18 @@ export class UsersImportComponent implements OnInit {
       showBackdrop: true
     });
     (await popover).present();
+    }
+
+  onResize(ev:Event) {
   }
+  restartImport(startTime: string) {
+    //TODO
+  }
+  downloadImport(startTime: string,type: string) {
+    //TODO
+  }
+  deleteImport(startTime: string) {
+    //TODO
+  }
+
 }

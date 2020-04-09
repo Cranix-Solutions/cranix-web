@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { GenericObjectService } from '../../../../../services/generic-object.service';
-import { Group } from '../../../../../shared/models/data-model';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { Group } from 'src/app/shared/models/data-model';
 import { FormBuilder } from '@angular/forms';
 
 @Component({
@@ -17,7 +17,7 @@ export class GroupEditPage implements OnInit {
   constructor(
     public translateService: TranslateService,
     public formBuilder: FormBuilder,
-    private objectService: GenericObjectService
+    public objectService: GenericObjectService
   ) { 
     this.object = <Group>this.objectService.selectedObject;
     this.objectKeys = Object.getOwnPropertyNames(new Group());
@@ -33,4 +33,7 @@ export class GroupEditPage implements OnInit {
     form['id'] = this.object.id;
     this.objectService.modifyObjectDialog(form,"group");
   }
+  delete(ev: Event){
+     this.objectService.deleteObjectDialog(this.object,'group');
+  }  
 }

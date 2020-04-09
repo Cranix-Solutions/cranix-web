@@ -34,7 +34,7 @@ export class GroupsPage implements OnInit {
   objectIds: number[] = [];
 
   constructor(
-    private objectService: GenericObjectService,
+    public objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     public languageS: LanguageService,
@@ -154,7 +154,7 @@ export class GroupsPage implements OnInit {
         componentProps: {
           objectType: "group",
           objectAction: "add",
-          object: group,
+          object: new Group(),
           objectKeys: this.objectKeys
         },
         animated: true,
