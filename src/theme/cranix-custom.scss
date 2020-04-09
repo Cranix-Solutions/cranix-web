@@ -1,0 +1,77 @@
+/*
+ * edited styling for ag-grid 
+ *
+ */
+ $grid-breakpoints :(
+    xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px
+  );
+
+ $breakpoints-keys: map-keys($grid-breakpoints);
+ $breakpoints-values: map-values($grid-breakpoints);
+ @for $i from 1 to length($breakpoints-keys)+1 {
+   @if $i < length($breakpoints-keys) {
+     .hidden-#{nth($breakpoints-keys, $i)} {
+       @media (min-width: nth($breakpoints-values, $i)) and (max-width: #{nth($breakpoints-values, $i+1) - 1}) {
+         display: none !important;
+       }
+     }
+   } @else {
+     .hidden-#{nth($breakpoints-keys, $i)} {
+       @media (min-width: nth($breakpoints-values, $i)) {
+         display: none !important;
+       }
+     }
+   }
+ }
+
+ .ag-row .ag-cell {
+    display: flex;
+    //justify-content: center; /* align horizontal */
+    align-items: center;
+    text-overflow: ellipsis;
+}
+
+.ag-theme-material .ag-icon-checkbox-unchecked{    
+    font-size: 15px;
+}
+.ag-theme-material .ag-icon-checkbox-checked{
+    font-size: 15px;
+}
+.ag-theme-material .ag-header-row:first-child .ag-header-cell{
+    padding-left: 4px;
+}
+.ag-theme-material .ag-selection-checkbox:not(.ag-hidden) ~ .ag-cell-value:not(:empty){
+    margin-left: 12px;
+}
+.ag-header-cell-label .ag-header-cell-text{
+    font-size: 12px;
+    margin: auto;
+}
+
+/*
+ * layout for carded-pages
+ *
+ */
+
+#carded {
+ion-card {
+    //flex-grow: 1;
+    height: 93%;
+    display: grid;
+    grid-template-rows: 12%;
+    ion-card-header{
+        grid-row: 1/2;
+        height: 100%;
+    }
+    ion-card-content {
+    grid-row: 2/2;
+    height: 100%;
+    grid-column: 1/1;
+    overflow: hidden;
+    }  
+  }
+}

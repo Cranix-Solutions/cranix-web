@@ -33,7 +33,9 @@ export class GenericObjectService {
   cephalixDefaults: any = {};
 
   selects: any = {
-    'status': ['N', 'A', 'D']
+    'status': ['N', 'A', 'D'],
+    'identifier': ['sn-gn-bd','uuid','uid'],
+    'lang': [ 'DE','EN']
   }
   initialized: boolean = false;
   enumerates: string[] = [
@@ -64,6 +66,7 @@ export class GenericObjectService {
     'deleted',
     'devices',
     'id',
+    'identifier',
     'ownerId',
     'partitions',
     'saveNext',
@@ -91,7 +94,7 @@ export class GenericObjectService {
     private languageS: LanguageService,
     private utilsS: UtilsService,
     private toastController: ToastController) {
-     }
+  }
 
   initialize(force: boolean) {
     this.headers = new HttpHeaders({
@@ -99,13 +102,8 @@ export class GenericObjectService {
       'Accept': "application/json",
       'Authorization': "Bearer " + this.authService.getToken()
     });
-    if(this.authService.isAllowed('cephalix.manage')){
-      this.objects = this.objects.concat(this.cephalixObjects);
-      let url = this.utilsS.hostName() + "/institutes/defaults/";
-      let sub = this.http.get<string[]>(url, { headers: this.headers }).subscribe(
-         (val) => { this.cephalixDefaults = val; },
-         (err) => { },
-         () => { sub.unsubscribe() }); 
+    if (this.authService.isAllowed('cephalix.manage')) {
+      this.initializeCephalixObjects();
     }
     for (let key of this.objects) {
       this.allObjects[key] = new BehaviorSubject([]);
@@ -117,13 +115,32 @@ export class GenericObjectService {
       }
       for (let key of this.enumerates) {
         let url = this.utilsS.hostName() + "/system/enumerates/" + key;
-       subs[key] = this.http.get<string[]>(url, { headers: this.headers }).subscribe(
+        subs[key] = this.http.get<string[]>(url, { headers: this.headers }).subscribe(
           (val) => { this.selects[key] = val; },
           (err) => { },
-          () => { subs[key].unsubscribe() }); 
+          () => { subs[key].unsubscribe() });
       }
       this.initialized = true;
     }
+  }
+
+  initializeCephalixObjects() {
+    this.objects = this.objects.concat(this.cephalixObjects);
+    let url = this.utilsS.hostName() + "/institutes/defaults/";
+    let sub1 = this.http.get<string[]>(url, { headers: this.headers }).subscribe(
+      (val) => { this.cephalixDefaults = val; },
+      (err) => { },
+      () => { sub1.unsubscribe() });
+    url = this.utilsS.hostName() + "/institutes/ayTemplates/";
+    let sub2 = this.http.get<string[]>(url, { headers: this.headers }).subscribe(
+      (val) => { this.selects['ayTemplate'] = val; },
+      (err) => { },
+      () => { sub2.unsubscribe() });
+      url = this.utilsS.hostName() + "/institutes/objects/";
+    let sub3 = this.http.get<string[]>(url, { headers: this.headers }).subscribe(
+      (val) => { this.selects['objects'] = val; },
+      (err) => { },
+      () => { sub3.unsubscribe() });
   }
 
   getAllObject(objectType) {
@@ -245,7 +262,7 @@ export class GenericObjectService {
         serverResponse = val;
         if (serverResponse.code == "OK") {
           this.getAllObject(objectType);
-          this.okMessage(this.languageS.trans( objectType + " was modified"));
+          this.okMessage(this.languageS.trans(objectType + " was modified"));
         } else {
           this.errorMessage(this.languageS.trans(serverResponse.value));
         }
@@ -305,13 +322,13 @@ export class GenericObjectService {
     if (this.hiddenAttributes.indexOf(key) != -1) {
       return "hidden";
     }
-    if( key == 'name' && object.regCode  ) {
+    if (key == 'name' && object.regCode) {
       return 'string';
     }
     if (action == 'edit' && this.readOnlyAttributes.indexOf(key) != -1) {
       return "stringRO";
     }
-    if(key.substring(key.length-2) == 'Id') {
+    if (key.substring(key.length - 2) == 'Id') {
       return "idPipe"
     }
     return "string";

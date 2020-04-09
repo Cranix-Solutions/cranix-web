@@ -16,6 +16,10 @@ const routes: Routes = [
     component: GroupDetailsPage,
     children: [
       {
+        path: 'all',
+        redirectTo: '/pages/cranix/groups'
+      },
+      {
         path: 'edit',
         component:  GroupEditPage
       },

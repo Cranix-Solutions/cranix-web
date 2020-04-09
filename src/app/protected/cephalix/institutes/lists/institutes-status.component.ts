@@ -19,8 +19,7 @@ import { AuthenticationService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'cranix-institutes-status',
-  templateUrl: './institutes-status.component.html',
-  styleUrls: ['./institutes-status.component.scss'],
+  templateUrl: './institutes-status.component.html'
 })
 export class InstitutesStatusComponent implements OnInit {
   objectKeys: string[] = [];
@@ -191,7 +190,7 @@ export class InstitutesStatusComponent implements OnInit {
       component: ActionsComponent,
       event: ev,
       componentProps: {
-        objectType: "institute",
+        objectType: "sync-object",
         objectIds: this.objectIds,
         selection: this.selected
       },

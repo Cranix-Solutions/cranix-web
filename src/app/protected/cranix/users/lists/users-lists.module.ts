@@ -6,27 +6,22 @@ import { RouterModule, Routes } from '@angular/router';
 
 //own modules
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
-import { InstitutesListsPage } from './institutes-lists.page';
-import { InstitutesComponent } from './institutes.component';
-import { InstitutesStatusComponent } from './institutes-status.component';
-import { InstitutesSyncObjectsComponent } from './institutes-sync-objects.component';
+import { UsersListsPage } from './users-lists.page';
+import { UsersComponent } from './users.component';
+import { UsersImportComponent } from './users-import.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: InstitutesListsPage,
+    component: UsersListsPage,
     children: [
       {
         path: 'all',
-        component:  InstitutesComponent
+        component:  UsersComponent
       },
       {
-        path: 'status',
-        component: InstitutesStatusComponent
-      },
-      {
-        path: 'sync',
-        component: InstitutesSyncObjectsComponent
+        path: 'import',
+        component: UsersImportComponent
       },
       {
         path: '',
@@ -48,7 +43,7 @@ const routes: Routes = [
     CranixSharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [InstitutesListsPage,InstitutesComponent,InstitutesStatusComponent,InstitutesSyncObjectsComponent]
+  declarations: [UsersListsPage,UsersComponent,UsersImportComponent]
 })
-export class InstitutesListsPageModule { }
+export class UsersListsPageModule { }
 

@@ -126,10 +126,9 @@ export class HwconfsPage implements OnInit {
  * @param ev 
  */
   async openActions(ev: any) {
-    if (this.selected) {
-      for (let i = 0; i < this.selected.length; i++) {
-        this.objectIds.push(this.selected[i].id);
-      }
+    this.objectKeys = [];
+    for (let i = 0; i < this.selected.length; i++) {
+      this.objectIds.push(this.selected[i].id);
     }
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
