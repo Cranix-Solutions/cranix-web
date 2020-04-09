@@ -1,12 +1,13 @@
 <cranix-toolbar></cranix-toolbar>
-<ion-row class="header-row">
+
+ 
+<!--ion-content (window:resize)="onResize($event)"-->
+<ion-content id="carded">
+  <ion-row >
   <ion-col size=6>
     <ion-title>{{'Manage institutes' | translate}}</ion-title>
   </ion-col>
 </ion-row>
- 
-<!--ion-content (window:resize)="onResize($event)"-->
-<ion-content id="carded">
   <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
     <ion-fab-button>
       <ion-icon name="arrow-forward-circle"></ion-icon>

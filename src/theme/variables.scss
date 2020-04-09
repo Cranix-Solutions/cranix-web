@@ -40,7 +40,6 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
   --ion-color-primary-tint: #4c8dff; 
   **/
   /** cranix primary **/
-
   --ion-color-primary: #3c4252;;
   --ion-color-primary-rgb: 250,185,10;
   --ion-color-primary-contrast: #ffffff;
@@ -119,10 +118,11 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
 }
-.header-row {
+
+/*.header-row {
   background-color: #FAB90A;
   height: 45px;
-}
+}*/
 @media (prefers-color-scheme: dark) {
   /*
    * Dark Colors
