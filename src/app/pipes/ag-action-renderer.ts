@@ -5,14 +5,12 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
 @Component({
     selector: 'action-cell',
     template: `
-      
-        <ion-button fill="clear" size="small"  (click)="details()" matTooltip="{{'edit' | translate }}">
-             <ion-icon name="create-outline" style="height:15px;width:15px"></ion-icon>
+        <ion-button style="padding-horizontal : 2px" fill="clear" size="small" (click)="details()" matTooltip="{{'edit' | translate }}">
+             <ion-icon name="create-outline"></ion-icon>
         </ion-button>
-        <ion-button  fill="clear"  size="small" (click)="delete()" matTooltip="{{'delete' | translate }}">
-            <ion-icon color="danger" name="trash-outline" style="height:15px;width:15px"></ion-icon>
+        <ion-button style="padding-horizontal : 2px" fill="clear"  size="small" (click)="delete()" matTooltip="{{'delete' | translate }}">
+            <ion-icon color="danger" name="trash-outline" ></ion-icon>
         </ion-button>
-        <ion-button  fill="clear"  size="small"></ion-button>
         ` 
 })
 

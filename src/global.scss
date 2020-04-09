@@ -37,3 +37,51 @@
 
 /* Custom */
 //@import "theme/ion-custom.scss"; 
+@import "theme/cranix-custom.scss";
+
+/*.ag-theme-material .ag-icon-checkbox-unchecked{
+    
+    font-size: 15px;
+}
+.ag-theme-material .ag-icon-checkbox-checked{
+    
+    font-size: 15px;
+}
+.ag-theme-material .ag-header-row:first-child .ag-header-cell{
+
+    padding-left: 4px;
+}
+.ag-theme-material .ag-selection-checkbox:not(.ag-hidden) ~ .ag-cell-value:not(:empty){
+    margin-left: 12px;
+}
+.ag-header-cell-label .ag-header-cell-text{
+
+    font-size: 12px;
+    margin: auto;
+}
+
+
+ion-card {
+    //flex-grow: 1;
+    height: 93%;
+    display: grid;
+    grid-template-rows: 12%;
+    ion-card-header{
+        grid-row: 1/2;
+        height: 100%;
+    }
+    ion-card-content {
+    grid-row: 2/2;
+    height: 100%;
+    grid-column: 1/1;
+    overflow: hidden;
+    
+ //   align-content: center;
+}
+    //flex-direction: column;
+    //#display: flex;
+  //flex-direction: column;
+  //justify-content: center;
+    
+  }
+*/

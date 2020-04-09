@@ -54,6 +54,7 @@ export class InstitutesComponent implements OnInit {
       columnDefs: this.columnDefs,
       context: this.context,
       rowSelection: 'multiple',
+     // domLayout: 'autoHeight',
       rowHeight: 35
     }
   }
@@ -77,11 +78,17 @@ export class InstitutesComponent implements OnInit {
       col['headerName'] = this.languageS.trans(key);
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
       col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
+      col['minWidth'] = 110;
+     // col['cellClass'] = 'aggrid-cell-center';
       switch (key) {
         case 'name': {
           col['headerCheckboxSelection'] = true;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
+          col['width'] = 220;
+          col['cellStyle'] = { 'padding-left' : '2px'};
+          col['suppressSizeToFit'] = true;
+          col['pinned'] = 'left';
           break;
         }
         case 'validity': {
@@ -97,7 +104,11 @@ export class InstitutesComponent implements OnInit {
     }
     columnDefs.push({
       headerName: "",
+      width: 100,
+      suppressSizeToFit: true,
+      cellStyle: { 'padding' : '2px', 'line-height' :'36px'},
       field: 'actions',
+      pinned: 'right',
       cellRendererFramework: ActionBTNRenderer
     });
     this.columnDefs = columnDefs;
@@ -106,8 +117,16 @@ export class InstitutesComponent implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
+   // (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
     //this.gridApi.sizeColumnsToFit();
+   /* window.addEventListener('resize', function() {
+      setTimeout(function() {
+        params.api.sizeColumnsToFit();
+        //this.sizeAll();
+      });
+    });*/
+
+    
   }
   onSelectionChanged() {
     this.selected = this.gridApi.getSelectedRows();
@@ -118,10 +137,15 @@ export class InstitutesComponent implements OnInit {
     this.gridApi.doLayout();
 
   }
-  onResize($event) {
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
+  /*onResize($event) {
+   // (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
     this.sizeAll();
-    //this.gridApi.sizeColumnsToFit();
+    this.gridApi.sizeColumnsToFit();
+  }*/
+  onGridSizeChange(params){
+    var allColumns = params.columnApi.getAllColumns();
+    params.api.sizeColumnsToFit();
+
   }
   sizeAll() {
     var allColumnIds = [];
