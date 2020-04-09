@@ -17,11 +17,11 @@
         <ion-row class="ion-align-items-center">
           <ion-col size=0 sizeMd=6 sizeLg=10 sizeXl=10></ion-col>
           <ion-col size=12 sizeLg=2 sizeXl=2>
-            <ion-button size="small" fill="outline" type="submit" class="ion-no-margin" [disabled]="!editForm.valid"
+            <ion-button size="small" type="submit" class="ion-no-margin" [disabled]="!editForm.valid"
               matTooltip="{{'Apply chnages.' | translate }}">
               <ion-icon slot="icon-only" color="success" name="checkmark-done-circle"></ion-icon>
             </ion-button>
-            <ion-button size="small" fill="outline" (click)="delete($event)"
+            <ion-button size="small" (click)="delete($event)"
               matTooltip="{{'Delete room.' | translate }}">
               <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
             </ion-button>
@@ -74,6 +74,18 @@
                   value="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z'}}">
                 </ion-datetime>
               </ion-item>
+              <ion-item *ngSwitchCase="'idPipe'">
+                <ion-label position="stacked">{{ key | translate }}{{objectService.required[key]}}</ion-label>
+                <ion-label position="stacked" *ngIf="editForm.controls[key] && editForm.controls[key].hasError('required')  && editForm.controls[key].touched">{{ 'This field is required!' | translate }}</ion-label>
+                <ng-template [ngIf]="objectService.selects[key]"  [ngIfElse]="elseBlock">
+                    <ion-select type="text" formControlName="{{key}}"  [compareWith]="objectService.compareFn" [required]="objectService.required[key]">
+                    <ion-select-option *ngFor="let option of  objectService.selects[key]" value="{{option}}">{{option | idToName:objectService.idToPipe(key)}}</ion-select-option>
+                  </ion-select>
+                </ng-template>
+                <ng-template #elseBlock>
+                  <ion-input type="text" formControlName="{{key}}" value="{{object[key] | idToName:objectService.idToPipe(key) }}" [required]="objectService.required[key]"></ion-input>
+                </ng-template>
+              </ion-item> 
             </ion-col>
           </ion-row>
         </ion-grid>

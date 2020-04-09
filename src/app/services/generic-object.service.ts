@@ -34,8 +34,9 @@ export class GenericObjectService {
 
   selects: any = {
     'status': ['N', 'A', 'D'],
-    'identifier': ['sn-gn-bd','uuid','uid'],
-    'lang': [ 'DE','EN']
+    'identifier': ['sn-gn-bd', 'uuid', 'uid'],
+    'lang': ['DE', 'EN'],
+    'devCount': [2,4,8,16,32,64,128,256,512,1024,2048,4096]
   }
   initialized: boolean = false;
   enumerates: string[] = [
@@ -67,6 +68,7 @@ export class GenericObjectService {
     'devices',
     'id',
     'identifier',
+    'network',
     'ownerId',
     'partitions',
     'saveNext',
@@ -89,7 +91,7 @@ export class GenericObjectService {
 
   constructor(
     public alertController: AlertController,
-    private authService: AuthenticationService,
+    public authService: AuthenticationService,
     private http: HttpClient,
     private languageS: LanguageService,
     private utilsS: UtilsService,
@@ -136,7 +138,7 @@ export class GenericObjectService {
       (val) => { this.selects['ayTemplate'] = val; },
       (err) => { },
       () => { sub2.unsubscribe() });
-      url = this.utilsS.hostName() + "/institutes/objects/";
+    url = this.utilsS.hostName() + "/institutes/objects/";
     let sub3 = this.http.get<string[]>(url, { headers: this.headers }).subscribe(
       (val) => { this.selects['objects'] = val; },
       (err) => { },
@@ -145,8 +147,14 @@ export class GenericObjectService {
 
   getAllObject(objectType) {
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";
-    let sub = this.http.get<ServerResponse>(url, { headers: this.headers }).subscribe(
-      (val) => { this.allObjects[objectType].next(val) },
+    let sub = this.http.get(url, { headers: this.headers }).subscribe(
+      (val) => {
+        this.allObjects[objectType].next(val);
+	this.selects[objectType + 'Id'] = []
+	for (let obj of <any[]>val) {
+          this.selects[objectType + 'Id'].push(obj.id);
+        }
+      },
       (err) => { console.log('getAllObject', objectType, err); },
       () => {
         sub.unsubscribe();
@@ -188,6 +196,15 @@ export class GenericObjectService {
       }
     }
     return objectId;
+  }
+  idToPipe(idName: string) {
+    if (idName == 'cephalixCustomerId') {
+      return 'customer';
+    }
+    if (idName == 'cephalixInstituteId') {
+      return 'institute';
+    }
+    return idName.substring(0, idName.length - 2)
   }
   addObject(object, objectType) {
     const body = object;
@@ -329,7 +346,7 @@ export class GenericObjectService {
       return "stringRO";
     }
     if (key.substring(key.length - 2) == 'Id') {
-      return "idPipe"
+      return "idPipe";
     }
     return "string";
   }

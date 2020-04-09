@@ -19,7 +19,7 @@ export class DeviceEditPage implements OnInit {
   constructor(
     public translateService: TranslateService,
     public formBuilder: FormBuilder,
-    private objectService: GenericObjectService
+    public objectService: GenericObjectService
   ) { 
     this.object = <Device>this.objectService.selectedObject;
     this.objectKeys = Object.getOwnPropertyNames(new Device());
@@ -32,5 +32,8 @@ export class DeviceEditPage implements OnInit {
   onSubmit(form){
     form['id'] = this.object.id;
     this.objectService.modifyObjectDialog(form,"device");
+  }
+  delete() {
+    this.objectService.deleteObjectDialog(this.object,'device');
   }
 }

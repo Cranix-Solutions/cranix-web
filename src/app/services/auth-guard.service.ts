@@ -5,7 +5,7 @@ import { AuthenticationService } from './auth.service';
 @Injectable()
 export class CanActivateViaAcls implements CanActivate, CanActivateChild,CanLoad {
 
-  constructor(private authService: AuthenticationService) {}
+  constructor(public authService: AuthenticationService) {}
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
       /*console.log('canActivate');

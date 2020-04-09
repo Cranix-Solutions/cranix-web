@@ -10,7 +10,7 @@
           <h2>{{ instName | async }}</h2>
         </ion-card-header>
         <ion-card-content>
-          <form [formGroup]="authForm" (ngSubmit)="onSubmit(authForm.value)" style="padding: 15px;">
+          <form [formGroup]="authForm" style="padding: 15px;">
             <ion-item>
               <ion-input formControlName="username" type="text" placeholder="{{ 'username' | translate }}"></ion-input>
             </ion-item>

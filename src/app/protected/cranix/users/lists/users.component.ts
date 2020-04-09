@@ -27,13 +27,13 @@ export class UsersComponent implements OnInit {
   gridApi: GridApi;
   columnApi: ColumnApi;
   context;
-  selected: User[];
+  selection: User[];
   title = 'app';
   rowData = [];
   objectIds: number[] = [];
 
   constructor(
-    private objectService: GenericObjectService,
+    public objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     public languageS: LanguageService,
@@ -101,7 +101,7 @@ export class UsersComponent implements OnInit {
     this.gridApi.sizeColumnsToFit();
   }
   onSelectionChanged() {
-    this.selected = this.gridApi.getSelectedRows();
+    this.selection = this.gridApi.getSelectedRows();
   }
 
   onQuickFilterChanged() {
@@ -133,8 +133,8 @@ export class UsersComponent implements OnInit {
  */
   async openActions(ev: any) {
     this.objectKeys = [];
-    for (let i = 0; i < this.selected.length; i++) {
-      this.objectIds.push(this.selected[i].id);
+    for (let i = 0; i < this.selection.length; i++) {
+      this.objectIds.push(this.selection[i].id);
     }
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
@@ -142,7 +142,7 @@ export class UsersComponent implements OnInit {
       componentProps: {
         objectType: "user",
         objectIds: this.objectIds,
-        selection: this.selected
+        selection: this.selection
       },
       animated: true,
       showBackdrop: true
@@ -156,13 +156,14 @@ export class UsersComponent implements OnInit {
        this.route.navigate(['/pages/cranix/users/' + user.id]);
     } else {
       user = new User();
+      delete user.msQuotaUsed;
+      delete user.fsQuotaUsed;
       const modal = await this.modalCtrl.create({
         component: ObjectsEditComponent,
         componentProps: {
           objectType: "user",
           objectAction: "add",
-          object: user,
-          objectKeys: this.objectKeys
+          object:  user
         },
         animated: true,
         swipeToClose: true,

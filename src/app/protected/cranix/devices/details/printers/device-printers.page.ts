@@ -28,7 +28,7 @@ export class DevicePrintersPage implements OnInit {
     private deviceService: DevicesService,
     private languageS: LanguageService,
     public formBuilder: FormBuilder,
-    private objectService: GenericObjectService,
+    public objectService: GenericObjectService,
     private toastController: ToastController
   ) {
     this.device = <Device>this.objectService.selectedObject;

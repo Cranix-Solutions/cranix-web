@@ -21,8 +21,8 @@ export class UserGroupsPage implements OnInit {
   noMemberApi;
   memberColumnApi;
   noMemberColumnApi;
-  memberSelected: Group[] =[];
-  noMemberSelected: Group[] =[];
+  memberSelection: Group[] =[];
+  noMemberSelection: Group[] =[];
   memberData: Group[] =[];
   noMemberData: Group[] =[];
   user;
@@ -84,7 +84,7 @@ export class UserGroupsPage implements OnInit {
     (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
   }
   onMemberSelectionChanged() {
-    this.memberSelected = this.memberApi.getSelectedRows();
+    this.memberSelection = this.memberApi.getSelectedRows();
   }
 
   onMemberFilterChanged() {
@@ -99,7 +99,7 @@ export class UserGroupsPage implements OnInit {
     (<HTMLInputElement>document.getElementById("noMemberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
   }
   onNoMemberSelectionChanged() {
-    this.noMemberSelected = this.noMemberApi.getSelectedRows();
+    this.noMemberSelection = this.noMemberApi.getSelectedRows();
   }
 
   onNoMemberFilterChanged() {
@@ -109,10 +109,10 @@ export class UserGroupsPage implements OnInit {
   applyChanges() {
     let groups: number[] = [];
     let rmGroups: number[] = [];
-    for ( let g of this.noMemberSelected ) {
+    for ( let g of this.noMemberSelection ) {
       groups.push(g.id);
     }
-    for(let g of this.memberSelected) {
+    for(let g of this.memberSelection) {
       rmGroups.push(g.id);
     }
     
@@ -123,8 +123,8 @@ export class UserGroupsPage implements OnInit {
     }
     console.log('groups');
     console.log(groups);
-    this.noMemberSelected = [];
-    this.memberSelected = [];
+    this.noMemberSelection = [];
+    this.memberSelection = [];
     let subM = this.userS.setUsersGroups(this.user.id,groups).subscribe(
       (val) => { this.readGroups() } ,
       (err)  => { console.log(err)},

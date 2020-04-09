@@ -11,7 +11,7 @@ import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.
 import { GenericObjectService } from '../../../services/generic-object.service';
 import { LanguageService } from '../../../services/language.service';
 import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
-import { Customer } from '../../../shared/models/cephalix-data-model'
+import { Customer, Institute } from '../../../shared/models/cephalix-data-model'
 
 @Component({
   selector: 'cranix-customers',
@@ -34,7 +34,7 @@ export class CustomersPage implements OnInit {
   objectIds: number[] = [];
 
   constructor(
-    private objectService: GenericObjectService,
+    public objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     public languageS: LanguageService,
@@ -132,23 +132,36 @@ export class CustomersPage implements OnInit {
  * Open the actions menu with the selected object ids.
  * @param ev 
  */
-  async openActions(ev: any) {
-    this.objectKeys = [];
-    for (let i = 0; i < this.selected.length; i++) {
-      this.objectIds.push(this.selected[i].id);
+  async redirectToAddInstitute(ev: any) {
+
+    if (!this.selected) {
+      //TODO Warning
+      return;
     }
-    const popover = await this.popoverCtrl.create({
-      component: ActionsComponent,
-      event: ev,
+    if (this.selected.length > 1) {
+      //TODO Warning
+      return;
+    }
+    let institute = new Institute();
+    institute.cephalixCustomerId = this.selected[0].id;
+    const modal = await this.modalCtrl.create({
+      component: ObjectsEditComponent,
       componentProps: {
-        objectType: "customer",
-        objectIds: this.objectIds,
-        selection: this.selected
+        objectType: "institute",
+        objectAction: "add",
+        object: institute,
+        objectKeys: Object.getOwnPropertyNames(institute)
       },
       animated: true,
+      swipeToClose: true,
       showBackdrop: true
     });
-    (await popover).present();
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        console.log("Object was created or modified", dataReturned.data)
+      }
+    });
+    (await modal).present();
   }
   async redirectToEdit(ev: Event, customer: Customer) {
     let action = 'modify';

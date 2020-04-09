@@ -3,8 +3,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { FormBuilder } from '@angular/forms';
 
 //Own modules
-import { GenericObjectService } from '../../../../../services/generic-object.service';
-import { Room } from '../../../../../shared/models/data-model';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { Room } from 'src/app/shared/models/data-model';
 
 @Component({
   selector: 'cranix-room-edit',
@@ -19,7 +19,7 @@ export class RoomEditPage implements OnInit {
   constructor(
     public translateService: TranslateService,
     public formBuilder: FormBuilder,
-    private objectService: GenericObjectService
+    public objectService: GenericObjectService
   ) { 
     this.object = <Room>this.objectService.selectedObject;
     this.objectKeys = Object.getOwnPropertyNames(new Room());
@@ -32,4 +32,7 @@ export class RoomEditPage implements OnInit {
     form['id'] = this.object.id;
     this.objectService.modifyObjectDialog(form,"room");
   }
+  delete(ev: Event){
+     this.objectService.deleteObjectDialog(this.object,'room');
+  }  
 }

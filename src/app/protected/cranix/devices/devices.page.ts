@@ -39,7 +39,7 @@ export class DevicesPage implements OnInit {
     public alertController: AlertController,
     public languageS: LanguageService,
     public modalCtrl: ModalController,
-    private objectService: GenericObjectService,
+    public objectService: GenericObjectService,
     public popoverCtrl: PopoverController,
     public route: Router,
     private storage: Storage
@@ -167,13 +167,13 @@ export class DevicesPage implements OnInit {
       this.objectService.selectedObject = device;
       this.route.navigate(['/pages/cranix/devices/' + device.id]);
     } else {
+      device = new Device();
       const modal = await this.modalCtrl.create({
         component: ObjectsEditComponent,
         componentProps: {
           objectType: "device",
           objectAction: "add",
-          object: device,
-          objectKeys: this.objectKeys
+          object:  device
         },
         animated: true,
         swipeToClose: true,

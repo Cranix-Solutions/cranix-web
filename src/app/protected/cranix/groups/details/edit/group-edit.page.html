@@ -75,6 +75,18 @@
                   value="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z'}}">
                 </ion-datetime>
               </ion-item>
+              <ion-item *ngSwitchCase="'idPipe'">
+                <ion-label position="stacked">{{ key | translate }}{{objectService.required[key]}}</ion-label>
+                <ion-label position="stacked" *ngIf="editForm.controls[key] && editForm.controls[key].hasError('required')  && editForm.controls[key].touched">{{ 'This field is required!' | translate }}</ion-label>
+                <ng-template [ngIf]="objectService.selects[key]"  [ngIfElse]="elseBlock">
+                    <ion-select type="text" formControlName="{{key}}"  [compareWith]="objectService.compareFn" [required]="objectService.required[key]">
+                    <ion-select-option *ngFor="let option of  objectService.selects[key]" value="{{option}}">{{option | idToName:objectService.idToPipe(key)}}</ion-select-option>
+                  </ion-select>
+                </ng-template>
+                <ng-template #elseBlock>
+                  <ion-input type="text" formControlName="{{key}}" value="{{object[key] | idToName:objectService.idToPipe(key) }}" [required]="objectService.required[key]"></ion-input>
+                </ng-template>
+              </ion-item> 
             </ion-col>
           </ion-row>
         </ion-grid>

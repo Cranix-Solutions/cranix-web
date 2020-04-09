@@ -17,13 +17,13 @@ export class HwconfMembersPage implements OnInit {
   columnDefs = [];
   memberApi;
   memberColumnApi;
-  memberSelected: Device[] = [];
+  memberSelection: Device[] = [];
   memberData: Device[] = [];
   autoGroupColumnDef;
   hwconf;
 
   constructor(
-    private objectService: GenericObjectService,
+    public objectService: GenericObjectService,
     private languageS: LanguageService,
     private hwconfService: HwconfsService
   ) {
@@ -86,7 +86,7 @@ export class HwconfMembersPage implements OnInit {
     //this.memberApi.sizeColumnsToFit();
   }
   onMemberSelectionChanged() {
-    this.memberSelected = this.memberApi.getSelectedRows();
+    this.memberSelection = this.memberApi.getSelectedRows();
   }
 
   onMemberFilterChanged() {

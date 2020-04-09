@@ -36,7 +36,7 @@ export class HwconfsPage implements OnInit {
 
   constructor(
     public languageS: LanguageService,
-    private objectService: GenericObjectService,
+    public objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     private route: Router,
@@ -153,7 +153,7 @@ export class HwconfsPage implements OnInit {
         componentProps: {
           objectType: "hwconf",
           objectAction: "add",
-          object: hwconf,
+          object: new Hwconf(),
           objectKeys: this.objectKeys
         },
         animated: true,

@@ -21,8 +21,8 @@ export class InstituteNoticesComponent implements OnInit {
     public translateService: TranslateService,
     public formBuilder: FormBuilder,
     public modalCtrl: ModalController,
-    private objectService: GenericObjectService,
-    private cephalixService: CephalixService
+    public objectService: GenericObjectService,
+    public cephalixService: CephalixService
   ) {
     this.object = <Institute>this.objectService.selectedObject;
   }

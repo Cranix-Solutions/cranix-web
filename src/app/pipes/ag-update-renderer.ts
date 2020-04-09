@@ -18,9 +18,9 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
 
 export class UpdateRenderer implements ICellRendererAngularComp {
     private params: any;
-    private updates: string = "No Update";
-    private doUpate: boolean = false;
-    private updatesCount: number = 0;
+    public updates: string = "No Update";
+    public doUpate: boolean = false;
+    public updatesCount: number = 0;
 
     agInit(params: any): void {
         this.params = params;
