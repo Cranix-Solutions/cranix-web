@@ -1,10 +1,22 @@
 <cranix-toolbar></cranix-toolbar>
-<ion-row class="header-row">
+
+
+<ion-content id="carded">
+  <ion-row class="header-row">
   <ion-col size=6>
-    <ion-title>{{'Manage devices' | translate}}</ion-title>
+    <ion-title>{{'Manage institutes' | translate}}</ion-title>
   </ion-col>
-</ion-row>
-<ion-content (window:resize)="onResize($event)">
+  </ion-row>
+  <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
+    <ion-fab-button>
+      <ion-icon name="arrow-forward-circle"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="start">
+      <ion-fab-button><ion-icon name="menu" (click)="openActions($event)"></ion-icon></ion-fab-button>
+      <ion-fab-button><ion-icon name="add-circle-outline" (click)="redirectToEdit($event,null)"></ion-icon></ion-fab-button>
+      <ion-fab-button><ion-icon name="apps" (click)="openCollums($event)"></ion-icon></ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
   <ion-card>
     <ion-card-header>
       <ion-row class="ion-align-items-center">
@@ -14,9 +26,7 @@
             </ion-input>
           </ion-item>
         </ion-col>
-        <ion-col size="7">
-        </ion-col>
-        <ion-col size="2">
+        <ion-col offset="6" size="3" class="ion-align-self-center ion-text-end hidden-xs hidden-sm hidden-md">
           <ion-button size="small" (click)="redirectToEdit($event,null)"  matTooltip="{{'create a new institute' | translate }}">
             <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
           </ion-button>
@@ -30,7 +40,7 @@
       </ion-row>
     </ion-card-header>
     <ion-card-content>
-      <ag-grid-angular style="width: 100%; height: 450px;" class="ag-theme-balham" [gridOptions]="gridOptions"
+      <ag-grid-angular style="width: 100%; height: 100%;"class="ag-theme-material" [gridOptions]="gridOptions"
         [rowData]="rowData" [columnDefs]="columnDefs" [context]="context" [rowSelection]="rowSelection"
         (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged()" id="agGridTable">
       </ag-grid-angular>

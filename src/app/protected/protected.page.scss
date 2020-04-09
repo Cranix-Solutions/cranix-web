@@ -1,18 +1,27 @@
 ion-menu {
-    --ion-background-color: var(--ion-color-primary);
-    --ion-text-color: var(--ion-color-primary-contrast);
+   .list-md{
+         padding-top: 0px;
+   }
+   --ion-background-color: var(--ion-color-primary-tint);
+   --ion-text-color: var(--ion-color-primary-contrast);
     max-width: 200px;
-  
+    border-color : var(--ion-color-primary-tint);
+    border-width: 2px;
     ion-toolbar {
-      --background: var(--ion-color-primary);
+      --ion-background-color: var(--ion-color-primary-tint);
     }
     ion-list {/* optional, but it needs when you use gradient as a background color.*/
       background: transparent;
+      //background: var(--ion-color-primary-tint)
     }
     ion-list-header{
+      height: 100%;
         padding: 0px;
-        border-width: 2px;
+        height: 56px;
+        background-color: var(--ion-color-primary);
+        --ion-background-color: var(--ion-color-primary);
         border-color: var(--ion-color-primary-tint);
+        border-width: 2px;
         border-left: none;
         border-right: none;
         border-top: none;
@@ -28,6 +37,7 @@ ion-menu {
     //    border-bottom-width: 2px !important;
     }
     img {
+        padding: 3px;
         object-fit: contain;
     }
    /* ion-list-header{

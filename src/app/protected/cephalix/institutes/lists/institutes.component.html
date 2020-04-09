@@ -3,7 +3,7 @@
  
 <!--ion-content (window:resize)="onResize($event)"-->
 <ion-content id="carded">
-  <ion-row >
+  <ion-row class="header-row">
   <ion-col size=6>
     <ion-title>{{'Manage institutes' | translate}}</ion-title>
   </ion-col>
@@ -22,7 +22,7 @@
 
   <ion-card>
     <ion-card-header>
-      <ion-row class="ion-text-center">
+      <ion-row>
         <ion-col size="3">
           <ion-item>
             <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()"
@@ -32,7 +32,7 @@
         </ion-col>
         <!--ion-col size=0 sizeMd=0 sizeLg=6 sizeXl=6>
         </ion-col-->
-        <ion-col offset="6" size="3" class="ion-align-self-center ion-text-end hidden-xs hidden-sm hidden-md">
+        <ion-col offset="6" size="3" class="ion-text-end hidden-xs hidden-sm hidden-md">
           <ion-button size="small" (click)="redirectToEdit($event,null)"  matTooltip="{{'create a new institute' | translate }}">
             <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
           </ion-button>

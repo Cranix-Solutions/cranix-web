@@ -20,7 +20,7 @@ export class AuthenticationService {
     token: string;
     session: UserResponse;
     subscription: any;
-    agGridThema: string = "ag-theme-balham";
+    agGridThema: string = "ag-theme-material";
 
     constructor(
         private http: HttpClient,
