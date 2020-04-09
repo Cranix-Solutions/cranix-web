@@ -71,13 +71,22 @@ export class InstitutesStatusComponent implements OnInit {
         this.createColumnDefs();
       }
     });
-    let subs = this.cephalixService.getStatusOfInstitutes().subscribe(
+   /* let subs = this.cephalixService.getStatusOfInstitutes().subscribe(
       (val) => { this.rowData = val },
       (err) => { console.log(err) },
       () => { subs.unsubscribe() }
-    )
+    )*/
   }
-
+  ionViewWillEnter(){
+    console.log('WillEnter EVENT')
+    let subs = this.cephalixService.getStatusOfInstitutes().subscribe(
+      (val) => { 
+        console.log('new data in event:', val);
+        this.rowData = val
+       },
+      (err) => { console.log(err) },
+      () => { subs.unsubscribe() } )
+  }
   createColumnDefs() {
     let columnDefs = [];
     for (let key of this.objectKeys) {
