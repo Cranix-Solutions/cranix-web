@@ -46,6 +46,7 @@ export class InstituteUUIDCellRenderer implements ICellRendererAngularComp, OnDe
             .subscribe(
                 async (res) => {
                     this.token = res;
+                    console.log("Get token from:" + this.params.data.uuid )
                     console.log(res);
                     if (!res) {
                         const toast = this.toastController.create({
