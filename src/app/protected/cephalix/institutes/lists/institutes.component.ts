@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage';
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
+import { AuthenticationService } from 'src/app/services/auth.service';
 import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
@@ -45,7 +46,7 @@ export class InstitutesComponent implements OnInit {
     private storage: Storage
   ) {
     this.context = { componentParent: this };
-    this.objectKeys = Object.getOwnPropertyNames(new Institute());
+    this.objectKeys = Object.getOwnPropertyNames( cephalixService.templateInstitute );
     this.createColumnDefs();
     this.gridOptions = <GridOptions>{
       defaultColDef: {
@@ -175,7 +176,7 @@ export class InstitutesComponent implements OnInit {
         componentProps: {
           objectType: "institute",
           objectAction: 'add',
-          object: new Institute(),
+          object: this.cephalixService.templateInstitute,
           objectKeys: this.objectKeys
         },
         animated: true,

@@ -26,6 +26,7 @@ export class CephalixService {
 	headers: any;
 	selectedInstitutes: Institute[] = [];
 	selectedList: string[] = [];
+	templateInstitute = new Institute();
 
 	constructor(
 		private utilsS: UtilsService,
@@ -39,6 +40,9 @@ export class CephalixService {
 				'Accept' : "application/json",
 				'Authorization' : "Bearer " + this.token
 			});
+			if( ! authS.isAllowed('customer.manage') ) {
+				delete this.templateInstitute.cephalixCustomerId;
+			}
 	}
 
 	//GET calls
