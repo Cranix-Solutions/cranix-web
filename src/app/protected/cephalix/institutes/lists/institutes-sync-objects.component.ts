@@ -71,7 +71,6 @@ export class InstitutesSyncObjectsComponent implements OnInit {
   }
 
   onMemberReady(params) {
-
     this.memberApi = params.api;
     this.memberColumnApi = params.columnApi;
     (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
@@ -104,6 +103,15 @@ export class InstitutesSyncObjectsComponent implements OnInit {
       () => { subM.unsubscribe() });
   }
   startSync(en: Event) {
+    for( let institute of this.cephalixService.selectedInstitutes ) {
+    for( let sel of  this.memberSelection ){
+      let sub = this.cephalixService.putObjectToSync(institute.id,sel.objectType,sel.cephalixId)
+      .subscribe(
+        (val) => { console.log("Start sync:")},
+        (err) => { console.log},
+        () => { sub.unsubscribe()})
+    }
+  }
   //TODO
   }
   stopSync(en: Event) {
