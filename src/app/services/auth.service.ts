@@ -75,6 +75,7 @@ export class AuthenticationService {
     }
 
     loadSession() {
+        this.hostname = this.utils.hostName();
         let url = this.hostname + `/sessions`;
         console.log(url);
         let headers     = new HttpHeaders({
@@ -83,7 +84,13 @@ export class AuthenticationService {
             'Authorization' : "Bearer " + this.token
         });
 		let sub = this.http.get<UserResponse>(url, { headers: headers }).subscribe(
-            (val) => { this.session = val },
+            (val) => {
+                console.log("loadSession");
+                this.session = val;
+                console.log(this.session);
+                this.session.instituteName = sessionStorage.getItem('instituteName');
+                this.authenticationState.next(true);
+             },
             (err) => { console.log(err) },
             () => { sub.unsubscribe() }
         );
@@ -100,7 +107,7 @@ export class AuthenticationService {
     }
 
     /**
-     * Check if the session was created. 
+     * Check if the session was created.
      */
     checkSession() {
         if (this.session) {
@@ -136,7 +143,7 @@ export class AuthenticationService {
         return null;
     }
     /**
-     * 
+     *
      * @param acls Checks if some acls are allowed for the user.
      * @return True or false
      */
