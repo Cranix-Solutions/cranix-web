@@ -15,7 +15,7 @@ import { LanguageService } from './services/language.service';
 })
 export class AppComponent {
   constructor(
-    private authS: AuthenticationService,
+    private authService: AuthenticationService,
     private genericObjectS: GenericObjectService,
     private languageService: LanguageService,
     private platform: Platform,
@@ -31,14 +31,13 @@ export class AppComponent {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
       this.languageService.setInitialAppLanguage();
-      if(sessionStorage.getItem('cephalix_token')){
-        this.authS.authenticationState.next(true);
-        this.authS.token = sessionStorage.getItem('cephalix_token');
-        this.authS.loadSession();
-      }
-      this.authS.authenticationState.subscribe(state => { 
+      this.authService.authenticationState.subscribe(state => {
         if (state) {
           this.genericObjectS.initialize(true);
+          this.router.navigate(['pages/cranix/users/all']);
+        } else if (sessionStorage.getItem('cephalix_token')) {
+          this.authService.token = sessionStorage.getItem('cephalix_token');
+          this.authService.loadSession();
           this.router.navigate(['pages/cranix/users/all']);
         } else {
           this.router.navigate(['login']);
