@@ -74,6 +74,21 @@ export class AuthenticationService {
             );
     }
 
+    loadSession() {
+        let url = this.hostname + `/sessions`;
+        console.log(url);
+        let headers     = new HttpHeaders({
+            'Content-Type': "application/json",
+            'Accept' : "application/json",
+            'Authorization' : "Bearer " + this.token
+        });
+		let sub = this.http.get<UserResponse>(url, { headers: headers }).subscribe(
+            (val) => { this.session = val },
+            (err) => { console.log(err) },
+            () => { sub.unsubscribe() }
+        );
+    }
+
     logout() {
         this.authenticationState.next(false);
         this.session = null;

@@ -34,6 +34,7 @@ export class AppComponent {
       if(sessionStorage.getItem('cephalix_token')){
         this.authS.authenticationState.next(true);
         this.authS.token = sessionStorage.getItem('cephalix_token');
+        this.authS.loadSession();
       }
       this.authS.authenticationState.subscribe(state => { 
         if (state) {
