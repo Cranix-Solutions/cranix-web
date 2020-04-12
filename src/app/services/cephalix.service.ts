@@ -31,16 +31,16 @@ export class CephalixService {
 	constructor(
 		private utilsS: UtilsService,
 		private http:   HttpClient,
-		private authS:  AuthenticationService)
+		private authService:  AuthenticationService)
 		{
 			this.hostname = this.utilsS.hostName();
-			this.token          = this.authS.getToken();
+			this.token          = this.authService.getToken();
 			this.headers     = new HttpHeaders({
 				'Content-Type': "application/json",
 				'Accept' : "application/json",
 				'Authorization' : "Bearer " + this.token
 			});
-			if( ! authS.isAllowed('customer.manage') ) {
+			if( ! authService.isAllowed('customer.manage') ) {
 				delete this.templateInstitute.cephalixCustomerId;
 			}
 	}
