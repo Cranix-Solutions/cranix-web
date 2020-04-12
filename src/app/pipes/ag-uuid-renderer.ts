@@ -58,6 +58,7 @@ export class InstituteUUIDCellRenderer implements ICellRendererAngularComp, OnDe
                         (await toast).present();
                     } else {
                         sessionStorage.setItem('shortName', this.params.data.uuid);
+                        sessionStorage.setItem('institueName', this.params.data.name);
                         sessionStorage.setItem('cephalix_token', this.token);
                         if (port) {
                             this.nativeWindow.open(`${protocol}//${hostname}:${port}`);
