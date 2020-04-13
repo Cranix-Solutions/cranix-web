@@ -1,5 +1,6 @@
 #!/bin/bash
 REPO="/home/OSC/home:varkoly:CRANIX-4-2/cranix-web"
+HERE=$( pwd )
 git status
 
 echo -n "Can we build y/n"; read b
