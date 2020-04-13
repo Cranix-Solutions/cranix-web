@@ -22,12 +22,6 @@ export class GenericObjectService {
     'user', 'group', 'room', 'device', 'hwconf', 'printer'
   ]
   /**
-   * Object visiable only on cephalix servers.
-   */
-  cephalixObjects: string[] = [
-    'institute', 'customer', 'ticket'
-  ]
-  /**
    * Default.ini for cephalix
    */
   cephalixDefaults: any = {};
@@ -107,6 +101,12 @@ export class GenericObjectService {
     if (this.authService.isAllowed('cephalix.manage')) {
       this.initializeCephalixObjects();
     }
+    if (this.authService.isAllowed('customer.manage')) {
+      this.objects.push('customer');
+    }
+    if (this.authService.isAllowed('cephalix.ticket')) {
+      this.objects.push('ticket');
+    }
     for (let key of this.objects) {
       this.allObjects[key] = new BehaviorSubject([]);
     }
@@ -127,7 +127,7 @@ export class GenericObjectService {
   }
 
   initializeCephalixObjects() {
-    this.objects = this.objects.concat(this.cephalixObjects);
+    this.objects.push('institute');
     let url = this.utilsS.hostName() + "/institutes/defaults/";
     let sub1 = this.http.get<string[]>(url, { headers: this.headers }).subscribe(
       (val) => { this.cephalixDefaults = val; },
