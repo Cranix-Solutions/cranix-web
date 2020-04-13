@@ -24,6 +24,7 @@ import { LanguageService } from './services/language.service';
 import { ActionsComponent } from './shared/actions/actions.component';
 import { ShowImportComponent } from 'src/app/shared/actions/show-import/show-import.component';
 import { CanActivateViaAcls } from './services/auth-guard.service';
+import { CephalixService } from './services/cephalix.service';
 import { DevicesService } from './services/devices.service';
 import { GenericObjectService } from './services/generic-object.service';
 import { GroupsService } from './services/groups.service';
@@ -79,6 +80,7 @@ const routes: Routes = [
     })],
   providers: [
     CanActivateViaAcls,
+    CephalixService,
     DevicesService,
     GenericObjectService,
     GroupsService,
