@@ -27,7 +27,7 @@ export class UsersComponent implements OnInit {
   gridApi: GridApi;
   columnApi: ColumnApi;
   context;
-  selection: User[];
+  selected: User[];
   title = 'app';
   rowData = [];
   objectIds: number[] = [];
@@ -101,7 +101,7 @@ export class UsersComponent implements OnInit {
     this.gridApi.sizeColumnsToFit();
   }
   onSelectionChanged() {
-    this.selection = this.gridApi.getSelectedRows();
+    this.selected = this.gridApi.getSelectedRows();
   }
 
   onQuickFilterChanged() {
@@ -132,9 +132,13 @@ export class UsersComponent implements OnInit {
  * @param ev
  */
   async openActions(ev: any) {
+    if( !this.selected) {
+      this.objectService.selectObject();
+      return;
+    }
     this.objectKeys = [];
-    for (let i = 0; i < this.selection.length; i++) {
-      this.objectIds.push(this.selection[i].id);
+    for (let i = 0; i < this.selected.length; i++) {
+      this.objectIds.push(this.selected[i].id);
     }
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
@@ -142,7 +146,7 @@ export class UsersComponent implements OnInit {
       componentProps: {
         objectType: "user",
         objectIds: this.objectIds,
-        selection: this.selection
+        selection: this.selected
       },
       animated: true,
       showBackdrop: true
