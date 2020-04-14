@@ -22,12 +22,6 @@ export class GenericObjectService {
     'user', 'group', 'room', 'device', 'hwconf', 'printer'
   ]
   /**
-   * Object visiable only on cephalix servers.
-   */
-  cephalixObjects: string[] = [
-    'institute', 'customer', 'ticket'
-  ]
-  /**
    * Default.ini for cephalix
    */
   cephalixDefaults: any = {};
@@ -36,7 +30,7 @@ export class GenericObjectService {
     'status': ['N', 'A', 'D'],
     'identifier': ['sn-gn-bd', 'uuid', 'uid'],
     'lang': ['DE', 'EN'],
-    'devCount': [2,4,8,16,32,64,128,256,512,1024,2048,4096]
+    'devCount': [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
   }
   initialized: boolean = false;
   enumerates: string[] = [
@@ -107,6 +101,12 @@ export class GenericObjectService {
     if (this.authService.isAllowed('cephalix.manage')) {
       this.initializeCephalixObjects();
     }
+    if (this.authService.isAllowed('customer.manage')) {
+      this.objects.push('customer');
+    }
+    if (this.authService.isAllowed('cephalix.ticket')) {
+      this.objects.push('ticket');
+    }
     for (let key of this.objects) {
       this.allObjects[key] = new BehaviorSubject([]);
     }
@@ -127,7 +127,7 @@ export class GenericObjectService {
   }
 
   initializeCephalixObjects() {
-    this.objects = this.objects.concat(this.cephalixObjects);
+    this.objects.push('institute');
     let url = this.utilsS.hostName() + "/institutes/defaults/";
     let sub1 = this.http.get<string[]>(url, { headers: this.headers }).subscribe(
       (val) => { this.cephalixDefaults = val; },
@@ -150,8 +150,8 @@ export class GenericObjectService {
     let sub = this.http.get(url, { headers: this.headers }).subscribe(
       (val) => {
         this.allObjects[objectType].next(val);
-	this.selects[objectType + 'Id'] = []
-	for (let obj of <any[]>val) {
+        this.selects[objectType + 'Id'] = []
+        for (let obj of <any[]>val) {
           this.selects[objectType + 'Id'].push(obj.id);
         }
       },
@@ -311,7 +311,16 @@ export class GenericObjectService {
     });
     (await toast).present();
   }
-
+  async selectObject() {
+    const toast = await this.toastController.create({
+      position: "middle",
+      message: this.languageS.trans('Please select at last one object!'),
+      cssClass: "bar-assertive",
+      color: "warning",
+      duration: 3000
+    });
+    (await toast).present();
+  }
   compareFn(a: string, b: string): boolean {
     return a == b;
   }

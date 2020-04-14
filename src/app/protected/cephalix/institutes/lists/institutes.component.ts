@@ -6,10 +6,12 @@ import { Storage } from '@ionic/storage';
 
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
-import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
 import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
+import { AuthenticationService } from 'src/app/services/auth.service';
+import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { InstituteUUIDCellRenderer } from 'src/app/pipes/ag-uuid-renderer';
 import { LanguageService } from 'src/app/services/language.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
@@ -44,7 +46,7 @@ export class InstitutesComponent implements OnInit {
     private storage: Storage
   ) {
     this.context = { componentParent: this };
-    this.objectKeys = Object.getOwnPropertyNames(new Institute());
+    this.objectKeys = Object.getOwnPropertyNames( cephalixService.templateInstitute );
     this.createColumnDefs();
     this.gridOptions = <GridOptions>{
       defaultColDef: {
@@ -83,6 +85,10 @@ export class InstitutesComponent implements OnInit {
           col['headerCheckboxSelection'] = true;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
+          break;
+        }
+        case 'uuid': {
+          col['cellRendererFramework'] = InstituteUUIDCellRenderer;
           break;
         }
         case 'validity': {
@@ -143,6 +149,10 @@ export class InstitutesComponent implements OnInit {
  * @param ev
  */
   async openActions(ev: any) {
+    if( !this.cephalixService.selectedInstitutes) {
+      this.objectService.selectObject();
+      return;
+    }
     this.objectIds = [];
     for (let i = 0; i < this.cephalixService.selectedInstitutes.length; i++) {
         this.objectIds.push(this.cephalixService.selectedInstitutes[i].id);
@@ -170,7 +180,7 @@ export class InstitutesComponent implements OnInit {
         componentProps: {
           objectType: "institute",
           objectAction: 'add',
-          object: new Institute(),
+          object: this.cephalixService.templateInstitute,
           objectKeys: this.objectKeys
         },
         animated: true,

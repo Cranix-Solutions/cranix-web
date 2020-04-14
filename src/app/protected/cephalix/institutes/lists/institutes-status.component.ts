@@ -23,8 +23,8 @@ import { AuthenticationService } from '../../../../services/auth.service';
 })
 export class InstitutesStatusComponent implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel', 'availableUpdates'];
-  sortableColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel', 'availableUpdates'];
+  displayedColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'availableUpdates', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel'];
+  sortableColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'availableUpdates', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel'];
   gridOptions: GridOptions;
   columnDefs = [];
   gridApi: GridApi;
@@ -72,7 +72,9 @@ export class InstitutesStatusComponent implements OnInit {
       }
     });
     let subs = this.cephalixService.getStatusOfInstitutes().subscribe(
-      (val) => { this.rowData = val },
+      (val) => {
+        this.rowData = val;
+       },
       (err) => { console.log(err) },
       () => { subs.unsubscribe() }
     )
@@ -87,10 +89,13 @@ export class InstitutesStatusComponent implements OnInit {
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
       col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
       switch (key) {
-        case 'name': {
+        case 'cephalixInstituteId': {
           col['headerCheckboxSelection'] = true;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
+          col['valueGetter'] = function (params) {
+            return params.context['componentParent'].objectService.idToName('institute', params.data.cephalixInstituteId);
+          }
           break;
         }
         case 'lastUpdate': {
@@ -102,8 +107,6 @@ export class InstitutesStatusComponent implements OnInit {
             let index = params.data.runningKernel.indexOf("-default");
             let run = params.data.runningKernel.substring(0, index);
             let inst = params.data.installedKernel.substring(0, index);
-            console.log(run)
-            console.log(inst)
             if (run == inst) {
               return "OK"
             } else {
@@ -114,12 +117,6 @@ export class InstitutesStatusComponent implements OnInit {
         }
         case 'installedKernel': {
           col['hide'] = true;
-          break;
-        }
-        case 'cephalixInstituteId': {
-          col['valueGetter'] = function (params) {
-            return params.context['componentParent'].objectService.idToName('institute', params.data.cephalixInstituteId);
-          }
           break;
         }
         case 'availableUpdates': {

@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams, ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-/* import { SplashScreen } from '@ionic-native/splash-screen/ngx'; */
 import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
 //own 
-import { GenericObjectService } from '../../services/generic-object.service';
-import { LanguageService } from '../../services/language.service';
-import { ServerResponse } from '../models/server-models';
+import { CephalixService }      from 'src/app/services/cephalix.service';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { LanguageService }      from 'src/app/services/language.service';
+import { ServerResponse }       from 'src/app/shared/models/server-models';
 @Component({
   selector: 'cranix-objects-edit',
   templateUrl: './objects-edit.component.html',
@@ -23,6 +23,7 @@ export class ObjectsEditComponent implements OnInit {
   objectAction: string = "";
 
   constructor(
+    public cephalixService: CephalixService,
     public formBuilder: FormBuilder,
     public objectService: GenericObjectService,
     public languageS: LanguageService,
@@ -54,6 +55,21 @@ export class ObjectsEditComponent implements OnInit {
 
   closeWindow() {
     this.modalController.dismiss();
+  }
+
+  setNextDefaults() {
+    let subs = this.cephalixService.getNextDefaults().subscribe(
+      (val) => {
+        for (let key of this.objectKeys) {
+          if (!this.object[key] && val[key]) {
+            this.object[key] = val[key];
+          }
+        }
+        this.ngOnInit();
+      },
+      (err) => { console.log(err) },
+      () => { subs.unsubscribe() }
+    )
   }
 
   onSubmit(object) {

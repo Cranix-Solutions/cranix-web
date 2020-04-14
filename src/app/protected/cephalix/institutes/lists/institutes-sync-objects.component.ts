@@ -44,10 +44,10 @@ export class InstitutesSyncObjectsComponent implements OnInit {
     this.columnDefs = [
       {
         field: 'objectType',
-        rowGroup: true, 
+        rowGroup: true,
         hide: true,
-        valueGetter: function(params) {
-          return  params.context['componentParent'].languageS.trans(params.data.objectType + "s");
+        valueGetter: function (params) {
+          return params.context['componentParent'].languageS.trans(params.data.objectType + "s");
         }
       },
       {
@@ -55,14 +55,14 @@ export class InstitutesSyncObjectsComponent implements OnInit {
         field: 'objectName',
       }
     ];
-    this.autoGroupColumnDef = { 
+    this.autoGroupColumnDef = {
       headerName: this.languageS.trans('objectType'),
       field: 'objectType',
       headerCheckboxSelection: false,
       headerCheckboxSelectionFilteredOnly: true,
       checkboxSelection: true,
-      valueGetter: function(params) { return " ";   },
-      minWidth: 250 
+      valueGetter: function (params) { return " "; },
+      minWidth: 250
     };
   }
 
@@ -71,7 +71,6 @@ export class InstitutesSyncObjectsComponent implements OnInit {
   }
 
   onMemberReady(params) {
-
     this.memberApi = params.api;
     this.memberColumnApi = params.columnApi;
     (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
@@ -104,9 +103,25 @@ export class InstitutesSyncObjectsComponent implements OnInit {
       () => { subM.unsubscribe() });
   }
   startSync(en: Event) {
-  //TODO
+    for (let institute of this.cephalixService.selectedInstitutes) {
+      for (let sel of this.memberSelection) {
+        let sub = this.cephalixService.putObjectToInstitute(institute.id, sel.objectType, sel.cephalixId)
+          .subscribe(
+            (val) => { console.log("Start sync:") },
+            (err) => { console.log },
+            () => { sub.unsubscribe() })
+      }
+    }
   }
   stopSync(en: Event) {
-  //TODO
+    for (let institute of this.cephalixService.selectedInstitutes) {
+      for (let sel of this.memberSelection) {
+        let sub = this.cephalixService.deleteObjectFromInstitute(institute.id, sel.objectType, sel.cephalixId)
+          .subscribe(
+            (val) => { console.log("Stop sync:") },
+            (err) => { console.log },
+            () => { sub.unsubscribe() })
+      }
+    }
   }
 }
