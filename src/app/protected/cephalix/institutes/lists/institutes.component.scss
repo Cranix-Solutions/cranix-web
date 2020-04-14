@@ -1,4 +1,11 @@
-
+name-cell {
+    display: grid;
+    grid-template-columns: 80%;
+    align-items: center;
+    justify-content: flex-start;
+    margin-right: 25px;
+    width: 100%;
+}
 /*ion-card {
     //flex-grow: 1;
     height: 93%;

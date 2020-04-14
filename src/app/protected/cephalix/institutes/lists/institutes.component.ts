@@ -14,6 +14,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Institute } from 'src/app/shared/models/cephalix-data-model'
+import { NameActionRenderer } from 'src/app/pipes/name-action-renderer';
 
 @Component({
   selector: 'cranix-institutes',
@@ -80,7 +81,6 @@ export class InstitutesComponent implements OnInit {
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
       col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
       col['minWidth'] = 110;
-     // col['cellClass'] = 'aggrid-cell-center';
       switch (key) {
         case 'name': {
           col['headerCheckboxSelection'] = true;
@@ -89,7 +89,10 @@ export class InstitutesComponent implements OnInit {
           col['width'] = 220;
           col['cellStyle'] = { 'padding-left' : '2px'};
           col['suppressSizeToFit'] = true;
-          col['pinned'] = 'left';
+          col['pinned'] = 'left';   
+          col['flex'] = '1';   
+          col['colId'] = '1';
+          //col['cellRendererFramework'] = NameActionRenderer; 
           break;
         }
         case 'validity': {
@@ -103,15 +106,28 @@ export class InstitutesComponent implements OnInit {
       }
       columnDefs.push(col);
     }
-    columnDefs.push({
+    let action = {
       headerName: "",
+      width: 100,
+      suppressSizeToFit: true,
+      cellStyle: { 'padding' : '2px', 'line-height' :'36px'},
+      field: 'actions',
+      pinned: 'left',
+      cellRendererFramework: ActionBTNRenderer
+    };
+
+    columnDefs.splice(1,0,action)
+    /*columnDefs.push({
+      headerName: "",
+      colId: 2,
       width: 100,
       suppressSizeToFit: true,
       cellStyle: { 'padding' : '2px', 'line-height' :'36px'},
       field: 'actions',
       pinned: 'right',
       cellRendererFramework: ActionBTNRenderer
-    });
+    });*/
+    console.log('columnsDef', columnDefs);
     this.columnDefs = columnDefs;
   }
 
