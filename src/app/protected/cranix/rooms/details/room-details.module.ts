@@ -9,6 +9,7 @@ import { CranixSharedModule } from '../../../../shared/cranix-shared.module';
 import { RoomDetailsPage } from './room-details.page';
 import { RoomEditPage } from './edit/room-edit.page';
 import { RoomPrintersPage } from './printers/room-printers.page';
+import { RoomDevicesPage } from './devices/room-devices.page';
 
 const routes: Routes = [
   {
@@ -22,6 +23,10 @@ const routes: Routes = [
       {
         path: 'printers',
        component: RoomPrintersPage
+      },
+      {
+        path: 'devices',
+       component: RoomDevicesPage
       },
       {
         path: '',
@@ -43,6 +48,6 @@ const routes: Routes = [
     CranixSharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [RoomDetailsPage,RoomEditPage,RoomPrintersPage]
+  declarations: [RoomDetailsPage,RoomEditPage,RoomDevicesPage,RoomPrintersPage]
 })
 export class RoomDetailsPageModule { }
