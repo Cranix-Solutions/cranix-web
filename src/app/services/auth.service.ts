@@ -87,8 +87,8 @@ export class AuthenticationService {
             (val) => {
                 console.log("loadSession");
                 this.session = val;
-                console.log(this.session);
                 this.session['instituteName'] = sessionStorage.getItem('instituteName');
+                console.log(this.session);
                 this.authenticationState.next(true);
             },
             (err) => { console.log(err) },
