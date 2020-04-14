@@ -25,6 +25,7 @@ export class UsersComponent implements OnInit {
   gridOptions: GridOptions;
   columnDefs = [];
   gridApi: GridApi;
+  rowSelection: 'multiple';
   columnApi: ColumnApi;
   context;
   selected: User[];
