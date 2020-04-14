@@ -34,7 +34,13 @@ export class AppComponent {
       this.authService.authenticationState.subscribe(state => {
         if (state) {
           this.genericObjectS.initialize(true);
-          this.router.navigate(['pages/cranix/users/all']);
+          if( this.authService.isAllowed('cephalix.manage')) {
+            this.router.navigate(['pages/cephalix/institutes/all']);
+          } else if ( this.authService.isAllowed('user.manage') ) {
+            this.router.navigate(['pages/cranix/users/all']);
+          } else {
+            this.router.navigate(['pages/cranix/groups']);
+          }
         } else if (sessionStorage.getItem('cephalix_token')) {
           this.authService.token = sessionStorage.getItem('cephalix_token');
           this.authService.loadSession();
