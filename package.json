@@ -24,6 +24,7 @@
     "@angular/platform-browser": "~8.2.14",
     "@angular/platform-browser-dynamic": "~8.2.14",
     "@angular/router": "~8.2.14",
+    "@babel/compat-data": "7.8.0",
     "@capacitor/core": "1.5.0",
     "@capacitor/ios": "^1.5.2",
     "@ionic-native/core": "^5.23.0",

@@ -74,6 +74,28 @@ export class AuthenticationService {
             );
     }
 
+    loadSession() {
+        this.hostname = this.utils.hostName();
+        let url = this.hostname + `/sessions`;
+        console.log(url);
+        let headers = new HttpHeaders({
+            'Content-Type': "application/json",
+            'Accept': "application/json",
+            'Authorization': "Bearer " + this.token
+        });
+        let sub = this.http.get<UserResponse>(url, { headers: headers }).subscribe(
+            (val) => {
+                console.log("loadSession");
+                this.session = val;
+                this.session['instituteName'] = sessionStorage.getItem('instituteName');
+                console.log(this.session);
+                this.authenticationState.next(true);
+            },
+            (err) => { console.log(err) },
+            () => { sub.unsubscribe() }
+        );
+    }
+
     logout() {
         this.authenticationState.next(false);
         this.session = null;
@@ -85,7 +107,7 @@ export class AuthenticationService {
     }
 
     /**
-     * Check if the session was created. 
+     * Check if the session was created.
      */
     checkSession() {
         if (this.session) {
@@ -121,7 +143,7 @@ export class AuthenticationService {
         return null;
     }
     /**
-     * 
+     *
      * @param acls Checks if some acls are allowed for the user.
      * @return True or false
      */
@@ -159,16 +181,16 @@ export class AuthenticationService {
             case "/pages/cranix/groups": { return this.isAllowed('group.manage') }
             case "/pages/cranix/hwconfs": { return this.isAllowed('hwconf.manage') }
             case "/pages/cranix/rooms": { return this.isAllowed('room.manage') }
-	    case "/pages/cranix/users/all": { return this.isAllowed('user.manage') }
+            case "/pages/cranix/users/all": { return this.isAllowed('user.manage') }
             case "/pages/cranix/users": { return this.isAllowed('user.manage') }
-            case "institutes/:id": { return this.isAllowed('cephalix.modify')}
-            case "customers/:id": { return this.isAllowed('customer.modify')}
-            case "tickets/:id": { return this.isAllowed('cephalix.ticket')}
-            case "devices/:id": { return this.isAllowed('device.modify')}
-            case "groups/:id": { return this.isAllowed('group.modify')}
-            case "hwconfs/:id": { return this.isAllowed('hwconf.modify')}
-            case "rooms/:id": { return this.isAllowed('room.modify')}
-            case "users/:id": { return this.isAllowed('user.modify')}
+            case "institutes/:id": { return this.isAllowed('cephalix.modify') }
+            case "customers/:id": { return this.isAllowed('customer.modify') }
+            case "tickets/:id": { return this.isAllowed('cephalix.ticket') }
+            case "devices/:id": { return this.isAllowed('device.modify') }
+            case "groups/:id": { return this.isAllowed('group.modify') }
+            case "hwconfs/:id": { return this.isAllowed('hwconf.modify') }
+            case "rooms/:id": { return this.isAllowed('room.modify') }
+            case "users/:id": { return this.isAllowed('user.modify') }
         }
         return false;
     }

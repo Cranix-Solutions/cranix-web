@@ -29,6 +29,7 @@ import { HwconfIdCellRenderer } from '../pipes/ag-hwconfid-renderer';
 import { RoomIdCellRenderer } from '../pipes/ag-roomid-render';
 import { DeviceIdCellRenderer } from '../pipes/ag-deviceid-renderer';
 import { InstituteIdCellRenderer } from '../pipes/ag-instituteid-renderer';
+import { InstituteUUIDCellRenderer, WindowRef } from 'src/app/pipes/ag-uuid-renderer';
 import { UpdateRenderer } from '../pipes/ag-update-renderer';
 import { UserIdCellRenderer } from '../pipes/ag-userid-renderer';
 import { UserIdToNameCellRenderer } from '../pipes/ag-userid-to-name-renderer';
@@ -44,6 +45,7 @@ import { NameActionRenderer } from '../pipes/name-action-renderer';
     HwconfIdCellRenderer,
     NameActionRenderer,
     InstituteIdCellRenderer,
+    InstituteUUIDCellRenderer,
     RoomIdCellRenderer,
     UpdateRenderer,
     UserIdCellRenderer,
@@ -60,6 +62,7 @@ import { NameActionRenderer } from '../pipes/name-action-renderer';
     GroupIdCellRenderer,
     HwconfIdCellRenderer,
     InstituteIdCellRenderer,
+    InstituteUUIDCellRenderer,
     RoomIdCellRenderer,
     UpdateRenderer,
     NameActionRenderer,
@@ -106,6 +109,7 @@ import { NameActionRenderer } from '../pipes/name-action-renderer';
     ReactiveFormsModule,
     TranslateModule,
     ToolbarComponent,
-  ]
+  ],
+  providers:[ WindowRef ]
 })
 export class CranixSharedModule { }

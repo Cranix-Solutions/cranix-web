@@ -88,14 +88,12 @@ export class DevicesPage implements OnInit {
           col['valueGetter'] = function (params) {
             return params.context['componentParent'].objectService.idToName('hwconf', params.data.hwconfId);
           }
-          //col['cellRendererFramework'] = HwconfIdCellRenderer;
           break;
         }
         case 'roomId': {
           col['valueGetter'] = function (params) {
             return params.context['componentParent'].objectService.idToName('room', params.data.roomId);
           }
-          //col['cellRendererFramework'] = RoomIdCellRenderer;
           break;
         }
       }
@@ -146,6 +144,10 @@ export class DevicesPage implements OnInit {
  */
   async openActions(ev: any) {
     this.objectKeys = [];
+    if( !this.selected) {
+      this.objectService.selectObject();
+      return;
+    }
     for (let i = 0; i < this.selected.length; i++) {
       this.objectIds.push(this.selected[i].id);
     }

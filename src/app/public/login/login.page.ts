@@ -21,12 +21,11 @@ export class LoginPage implements OnInit {
     instituteName: string = "";
 
     constructor(
-        private authS: AuthenticationService,
+        private authService: AuthenticationService,
         private formBuilder: FormBuilder,
-        private systemS: SystemService,
+        private systemService: SystemService,
     ) {
-        this.instName = this.systemS.getInstituteName();
-      //  this.instName.subscribe((val)=>{ this.instituteName = val});
+        this.instName = this.systemService.getInstituteName();
     }
 
     ngOnInit() {
@@ -38,7 +37,7 @@ export class LoginPage implements OnInit {
 
     submit(user: any): void {
         if (this.authForm.valid) {
-            this.authS.setUpSession(user,  this.instituteName);
+            this.authService.setUpSession(user,  this.instituteName);
         }
     }
 

@@ -2,6 +2,9 @@
   <ion-toolbar>
     <ion-title>{{  objectActionTitle | translate }}</ion-title>
     <ion-buttons slot="end">
+      <ion-button *ngIf="objectType == 'institute'" fill="clear" size="small" (click)="setNextDefaults()" matTooltip="{{'Set the next default values' | translate }}" disabled="{{editForm.disabled}}">
+        <ion-icon slot="icon-only" name="refresh"></ion-icon>
+      </ion-button>
       <ion-button fill="clear" size="small" (click)="closeWindow()" disabled="{{editForm.disabled}}">
         <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
       </ion-button>

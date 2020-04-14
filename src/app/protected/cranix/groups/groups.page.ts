@@ -127,6 +127,10 @@ export class GroupsPage implements OnInit {
  * @param ev 
  */
   async openActions(ev: any) {
+    if( !this.selected) {
+      this.objectService.selectObject();
+      return;
+    }
     this.objectKeys = [];
     for (let i = 0; i < this.selected.length; i++) {
       this.objectIds.push(this.selected[i].id);
