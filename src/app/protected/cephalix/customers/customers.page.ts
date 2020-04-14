@@ -134,8 +134,8 @@ export class CustomersPage implements OnInit {
  */
   async redirectToAddInstitute(ev: any) {
 
-    if (!this.selected) {
-      //TODO Warning
+    if( !this.selected) {
+      this.objectService.selectObject();
       return;
     }
     if (this.selected.length > 1) {

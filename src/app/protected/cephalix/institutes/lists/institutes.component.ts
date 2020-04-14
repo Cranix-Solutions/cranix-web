@@ -149,6 +149,10 @@ export class InstitutesComponent implements OnInit {
  * @param ev
  */
   async openActions(ev: any) {
+    if( !this.cephalixService.selectedInstitutes) {
+      this.objectService.selectObject();
+      return;
+    }
     this.objectIds = [];
     for (let i = 0; i < this.cephalixService.selectedInstitutes.length; i++) {
         this.objectIds.push(this.cephalixService.selectedInstitutes[i].id);

@@ -144,6 +144,10 @@ export class DevicesPage implements OnInit {
  */
   async openActions(ev: any) {
     this.objectKeys = [];
+    if( !this.selected) {
+      this.objectService.selectObject();
+      return;
+    }
     for (let i = 0; i < this.selected.length; i++) {
       this.objectIds.push(this.selected[i].id);
     }

@@ -30,7 +30,7 @@ export class GenericObjectService {
     'status': ['N', 'A', 'D'],
     'identifier': ['sn-gn-bd', 'uuid', 'uid'],
     'lang': ['DE', 'EN'],
-    'devCount': [2,4,8,16,32,64,128,256,512,1024,2048,4096]
+    'devCount': [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
   }
   initialized: boolean = false;
   enumerates: string[] = [
@@ -150,8 +150,8 @@ export class GenericObjectService {
     let sub = this.http.get(url, { headers: this.headers }).subscribe(
       (val) => {
         this.allObjects[objectType].next(val);
-	this.selects[objectType + 'Id'] = []
-	for (let obj of <any[]>val) {
+        this.selects[objectType + 'Id'] = []
+        for (let obj of <any[]>val) {
           this.selects[objectType + 'Id'].push(obj.id);
         }
       },
@@ -311,7 +311,16 @@ export class GenericObjectService {
     });
     (await toast).present();
   }
-
+  async selectObject() {
+    const toast = await this.toastController.create({
+      position: "middle",
+      message: this.languageS.trans('Please select at last one object!'),
+      cssClass: "bar-assertive",
+      color: "warning",
+      duration: 3000
+    });
+    (await toast).present();
+  }
   compareFn(a: string, b: string): boolean {
     return a == b;
   }
