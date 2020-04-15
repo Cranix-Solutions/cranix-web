@@ -5,14 +5,15 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
 @Component({
     selector: 'action-cell',
     template: `
-      
-        <ion-button fill="clear" size="small"  (click)="details()" matTooltip="{{'edit' | translate }}">
-             <ion-icon name="create-outline" style="height:15px;width:15px"></ion-icon>
+        <ion-button style="padding-horizontal : 2px" fill="clear" size="small" (click)="details()" matTooltip="{{'edit' | translate }}">
+             <ion-icon name="build-sharp"></ion-icon>
         </ion-button>
-        <ion-button  fill="clear"  size="small" (click)="delete()" matTooltip="{{'delete' | translate }}">
-            <ion-icon color="danger" name="trash-outline" style="height:15px;width:15px"></ion-icon>
+        <ion-button fill="clear" size="small" (click)="openAction($event)">
+            <ion-icon  name="ellipsis-vertical-sharp" matTooltip="{{'apply actions on the selected objects' | translate }}"></ion-icon> 
         </ion-button>
-        <ion-button  fill="clear"  size="small"></ion-button>
+        <!--ion-button style="padding-horizontal : 2px" fill="clear"  size="small" (click)="delete()" matTooltip="{{'delete' | translate }}">
+            <ion-icon color="danger" name="trash-outline" ></ion-icon>
+        </ion-button-->
         ` 
 })
 
@@ -27,10 +28,12 @@ export class ActionBTNRenderer implements ICellRendererAngularComp {
         console.log("Edit", this.params.data);
         this.params.context.componentParent.redirectToEdit(this.params.data.id, this.params.data);
     }
-
-    public delete() {
-        this.params.context.componentParent.redirectToDelete(this.params.data);
+    public openAction(ev: any){
+        this.params.context.componentParent.openActions(ev)
     }
+   /* public delete() {
+        this.params.context.componentParent.redirectToDelete(this.params.data);
+    }*/
 
     refresh(params: any): boolean {
         return true;

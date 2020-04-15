@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AuthenticationService } from '../services/auth.service';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'cranix-protected',
@@ -56,7 +57,8 @@ export class ProtectedPage implements OnInit {
 
   constructor(
     public authService: AuthenticationService,
-    public translateService: TranslateService
+    public translateService: TranslateService,
+    public menuCtrl: MenuController
   ) { 
     for( let page of this.defAppPages ) {
       if( this.authService.isRouteAllowed(page.url)) {
@@ -67,4 +69,7 @@ export class ProtectedPage implements OnInit {
   ngOnInit() {
   }
 
+  toggleMenu() {
+    this.menuCtrl.toggle(); //Add this method to your button click function
+  }
 }

@@ -16,6 +16,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Institute } from 'src/app/shared/models/cephalix-data-model'
+import { NameActionRenderer } from 'src/app/pipes/name-action-renderer';
 
 @Component({
   selector: 'cranix-institutes',
@@ -57,6 +58,7 @@ export class InstitutesComponent implements OnInit {
       columnDefs: this.columnDefs,
       context: this.context,
       rowSelection: 'multiple',
+     // domLayout: 'autoHeight',
       rowHeight: 35
     }
   }
@@ -80,11 +82,19 @@ export class InstitutesComponent implements OnInit {
       col['headerName'] = this.languageS.trans(key);
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
       col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
+      col['minWidth'] = 110;
       switch (key) {
         case 'name': {
           col['headerCheckboxSelection'] = true;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
+          col['width'] = 220;
+          col['cellStyle'] = { 'padding-left' : '2px', 'padding-right' : '2px'};
+          col['suppressSizeToFit'] = true;
+          col['pinned'] = 'left';   
+          //col['flex'] = '1';   
+          col['colId'] = '1';
+          //col['cellRendererFramework'] = NameActionRenderer; 
           break;
         }
         case 'uuid': {
@@ -102,19 +112,44 @@ export class InstitutesComponent implements OnInit {
       }
       columnDefs.push(col);
     }
-    columnDefs.push({
+    let action = {
       headerName: "",
+      width: 85,
+      suppressSizeToFit: true,
+      cellStyle: { 'padding' : '2px', 'line-height' :'36px'},
       field: 'actions',
+      pinned: 'left',
       cellRendererFramework: ActionBTNRenderer
-    });
+    };
+
+    columnDefs.splice(1,0,action)
+    /*columnDefs.push({
+      headerName: "",
+      colId: 2,
+      width: 100,
+      suppressSizeToFit: true,
+      cellStyle: { 'padding' : '2px', 'line-height' :'36px'},
+      field: 'actions',
+      pinned: 'right',
+      cellRendererFramework: ActionBTNRenderer
+    });*/
+    console.log('columnsDef', columnDefs);
     this.columnDefs = columnDefs;
   }
 
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
+   // (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
     //this.gridApi.sizeColumnsToFit();
+   /* window.addEventListener('resize', function() {
+      setTimeout(function() {
+        params.api.sizeColumnsToFit();
+        //this.sizeAll();
+      });
+    });*/
+
+    
   }
   onSelectionChanged() {
     this.cephalixService.selectedInstitutes = this.gridApi.getSelectedRows();
@@ -129,9 +164,15 @@ export class InstitutesComponent implements OnInit {
     this.gridApi.doLayout();
 
   }
-  onResize($event) {
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
+  /*onResize($event) {
+   // (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
     this.sizeAll();
+    this.gridApi.sizeColumnsToFit();
+  }*/
+  onGridSizeChange(params){
+    var allColumns = params.columnApi.getAllColumns();
+    params.api.sizeColumnsToFit();
+
   }
   sizeAll() {
     var allColumnIds = [];

@@ -82,6 +82,12 @@ export class DevicesPage implements OnInit {
           col['headerCheckboxSelection'] = true;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
+          col['width'] = 220;
+          col['cellStyle'] = { 'padding-left' : '2px'};
+          col['suppressSizeToFit'] = true;
+          col['pinned'] = 'left';   
+          col['flex'] = '1';   
+          col['colId'] = '1';
           break;
         }
         case 'hwconfId': {
@@ -99,11 +105,18 @@ export class DevicesPage implements OnInit {
       }
       columnDefs.push(col);
     }
-    columnDefs.push({
+    let action = {
       headerName: "",
+      width: 100,
+      suppressSizeToFit: true,
+      cellStyle: { 'padding' : '2px', 'line-height' :'36px'},
       field: 'actions',
+      pinned: 'left',
       cellRendererFramework: ActionBTNRenderer
-    });
+    };
+
+    columnDefs.splice(1,0,action)
+
     this.columnDefs = columnDefs;
   }
 

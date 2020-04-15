@@ -33,6 +33,7 @@ import { InstituteUUIDCellRenderer, WindowRef } from 'src/app/pipes/ag-uuid-rend
 import { UpdateRenderer } from '../pipes/ag-update-renderer';
 import { UserIdCellRenderer } from '../pipes/ag-userid-renderer';
 import { UserIdToNameCellRenderer } from '../pipes/ag-userid-to-name-renderer';
+import { NameActionRenderer } from '../pipes/name-action-renderer';
 
 @NgModule({
   declarations: [ 
@@ -42,6 +43,7 @@ import { UserIdToNameCellRenderer } from '../pipes/ag-userid-to-name-renderer';
     DeviceIdCellRenderer,
     GroupIdCellRenderer,
     HwconfIdCellRenderer,
+    NameActionRenderer,
     InstituteIdCellRenderer,
     InstituteUUIDCellRenderer,
     RoomIdCellRenderer,
@@ -63,6 +65,7 @@ import { UserIdToNameCellRenderer } from '../pipes/ag-userid-to-name-renderer';
     InstituteUUIDCellRenderer,
     RoomIdCellRenderer,
     UpdateRenderer,
+    NameActionRenderer,
     UserIdCellRenderer,
     UserIdToNameCellRenderer
   ]),

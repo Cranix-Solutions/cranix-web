@@ -9,8 +9,8 @@ export class UtilsService {
                 var hostname = window.location.hostname;
                 var protocol = window.location.protocol;
                 var port     = window.location.port;
-                var url      = '';
-                if (sessionStorage.getItem('shortName')){
+                var url      = 'https://repo.cephalix.eu/api';
+                /*if (sessionStorage.getItem('shortName')){
                         if(port){
                                 url = `${protocol}//${hostname}:${port}/${sessionStorage.getItem('shortName')}`
                         }else {
@@ -22,7 +22,7 @@ export class UtilsService {
                 else{
                         url = protocol + "//" + hostname + "/api";
 		}
-                console.log("From utils: " + url);
+                console.log("From utils: " + url);*/
                 return url ;
         }
         public log(args) {
