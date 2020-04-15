@@ -89,10 +89,10 @@ export class InstitutesComponent implements OnInit {
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
           col['width'] = 220;
-          col['cellStyle'] = { 'padding-left' : '2px'};
+          col['cellStyle'] = { 'padding-left' : '2px', 'padding-right' : '2px'};
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';   
-          col['flex'] = '1';   
+          //col['flex'] = '1';   
           col['colId'] = '1';
           //col['cellRendererFramework'] = NameActionRenderer; 
           break;
@@ -114,7 +114,7 @@ export class InstitutesComponent implements OnInit {
     }
     let action = {
       headerName: "",
-      width: 100,
+      width: 85,
       suppressSizeToFit: true,
       cellStyle: { 'padding' : '2px', 'line-height' :'36px'},
       field: 'actions',

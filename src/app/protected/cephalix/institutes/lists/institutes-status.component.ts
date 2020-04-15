@@ -77,7 +77,7 @@ export class InstitutesStatusComponent implements OnInit {
        },
       (err) => { console.log(err) },
       () => { subs.unsubscribe() }
-    )*/
+    )
   }
   ionViewWillEnter(){
     console.log('WillEnter EVENT')
