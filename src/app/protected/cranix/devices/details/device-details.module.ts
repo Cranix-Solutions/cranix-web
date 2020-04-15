@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule, Routes } from '@angular/router';
 
 //own modules
-import { CranixSharedModule } from '../../../../shared/cranix-shared.module';
+import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { DeviceDetailsPage } from './device-details.page';
 import { DeviceEditPage } from './edit/device-edit.page';
 import { DevicePrintersPage } from './printers/device-printers.page';

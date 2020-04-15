@@ -16,24 +16,24 @@ import {
   MatSortModule,
   MatTooltipModule,
 } from "@angular/material";
-import { ToolbarComponent } from '../protected/toolbar/toolbar.component';
+import { ToolbarComponent } from 'src/app/protected/toolbar/toolbar.component';
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
-import { PipesModule } from '../pipes/pipe-modules';
+import { PipesModule } from 'src/app/pipes/pipe-modules';
 import { AgGridModule } from 'ag-grid-angular';
-import { ActionBTNRenderer } from '../pipes/ag-action-renderer';
-import { DateCellRenderer } from '../pipes/ag-date-renderer';
-import { DateTimeCellRenderer } from '../pipes/ag-datetime-renderer';
+import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
+import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
+import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
 import { GroupIdCellRenderer } from 'src/app/pipes/ag-groupid-renderer';
-import { HwconfIdCellRenderer } from '../pipes/ag-hwconfid-renderer';
-import { RoomIdCellRenderer } from '../pipes/ag-roomid-render';
-import { DeviceIdCellRenderer } from '../pipes/ag-deviceid-renderer';
-import { InstituteIdCellRenderer } from '../pipes/ag-instituteid-renderer';
+import { HwconfIdCellRenderer } from 'src/app/pipes/ag-hwconfid-renderer';
+import { RoomIdCellRenderer } from 'src/app/pipes/ag-roomid-render';
+import { DeviceIdCellRenderer } from 'src/app/pipes/ag-deviceid-renderer';
+import { InstituteIdCellRenderer } from 'src/app/pipes/ag-instituteid-renderer';
 import { InstituteUUIDCellRenderer, WindowRef } from 'src/app/pipes/ag-uuid-renderer';
-import { UpdateRenderer } from '../pipes/ag-update-renderer';
-import { UserIdCellRenderer } from '../pipes/ag-userid-renderer';
-import { UserIdToNameCellRenderer } from '../pipes/ag-userid-to-name-renderer';
-import { NameActionRenderer } from '../pipes/name-action-renderer';
+import { UpdateRenderer } from 'src/app/pipes/ag-update-renderer';
+import { UserIdCellRenderer } from 'src/app/pipes/ag-userid-renderer';
+import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-renderer';
+import { NameActionRenderer } from 'src/app/pipes/name-action-renderer';
 
 @NgModule({
   declarations: [ 

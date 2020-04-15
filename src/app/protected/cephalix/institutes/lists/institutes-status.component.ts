@@ -14,8 +14,8 @@ import { CephalixService } from 'src/app/services/cephalix.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Institute, InstituteStatus } from 'src/app/shared/models/cephalix-data-model'
-import { UpdateRenderer } from '../../../../pipes/ag-update-renderer';
-import { AuthenticationService } from '../../../../services/auth.service';
+import { UpdateRenderer } from 'src/app/pipes/ag-update-renderer';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'cranix-institutes-status',

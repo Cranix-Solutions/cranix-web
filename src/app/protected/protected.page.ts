@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
-import { AuthenticationService } from '../services/auth.service';
+import { AuthenticationService } from 'src/app/services/auth.service';
 import { MenuController } from '@ionic/angular';
 
 @Component({

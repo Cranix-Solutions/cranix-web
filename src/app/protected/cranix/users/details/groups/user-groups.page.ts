@@ -3,9 +3,9 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
 
 //own stuff
-import { LanguageService } from '../../../../../services/language.service';
-import { UsersService } from '../../../../../services/users.service';
-import { Group, User } from '../../../../../shared/models/data-model'
+import { LanguageService } from 'src/app/services/language.service';
+import { UsersService } from 'src/app/services/users.service';
+import { Group, User } from 'src/app/shared/models/data-model'
 
 @Component({
   selector: 'cranix-user-groups',

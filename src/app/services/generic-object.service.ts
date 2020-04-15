@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
-import { ServerResponse } from '../shared/models/server-models';
 import { AlertController, ToastController } from '@ionic/angular';
 import { Validators } from '@angular/forms';
 // own modules
+import { ServerResponse } from 'src/app/shared/models/server-models';
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 import { LanguageService } from './language.service';

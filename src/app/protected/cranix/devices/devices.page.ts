@@ -5,15 +5,15 @@ import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 
 //own modules
-import { ActionsComponent } from '../../../shared/actions/actions.component';
-import { ActionBTNRenderer } from '../../../pipes/ag-action-renderer';
-import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
-import { GenericObjectService } from '../../../services/generic-object.service';
-import { LanguageService } from '../../../services/language.service';
-import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
-import { Device } from '../../../shared/models/data-model'
-import { HwconfIdCellRenderer } from '../../../pipes/ag-hwconfid-renderer';
-import { RoomIdCellRenderer } from '../../../pipes/ag-roomid-render';
+import { ActionsComponent } from 'src/app/shared/actions/actions.component';
+import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
+import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { LanguageService } from 'src/app/services/language.service';
+import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
+import { Device } from 'src/app/shared/models/data-model'
+import { HwconfIdCellRenderer } from 'src/app/pipes/ag-hwconfid-renderer';
+import { RoomIdCellRenderer } from 'src/app/pipes/ag-roomid-render';
 
 @Component({
   selector: 'cranix-devices',

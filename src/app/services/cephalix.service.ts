@@ -8,7 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Customer, Institute, Ticket, Article, Notice, OssCare, SynchronizedObject } from 'src/app/shared/models/cephalix-data-model';
 import { ServerResponse } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from './auth.service';
-import { InstituteStatus } from '../shared/models/cephalix-data-model';
+import { InstituteStatus } from 'src/app/shared/models/cephalix-data-model';
 
 
 export interface InstallSetSync{

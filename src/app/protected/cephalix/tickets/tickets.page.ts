@@ -6,15 +6,15 @@ import { Router } from '@angular/router';
 
 
 //own modules
-import { ActionsComponent } from '../../../shared/actions/actions.component';
-import { DateCellRenderer } from '../../../pipes/ag-date-renderer';
-import { InstituteIdCellRenderer  } from '../../../pipes/ag-instituteid-renderer';
-import { ActionBTNRenderer } from '../../../pipes/ag-action-renderer';
-import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
-import { GenericObjectService } from '../../../services/generic-object.service';
-import { LanguageService } from '../../../services/language.service';
-import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
-import { Ticket } from '../../../shared/models/cephalix-data-model'
+import { ActionsComponent } from 'src/app/shared/actions/actions.component';
+import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
+import { InstituteIdCellRenderer  } from 'src/app/pipes/ag-instituteid-renderer';
+import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
+import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { LanguageService } from 'src/app/services/language.service';
+import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
+import { Ticket } from 'src/app/shared/models/cephalix-data-model'
 
 @Component({
   selector: 'cranix-tickets',

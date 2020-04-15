@@ -5,13 +5,13 @@ import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 
 //own modules
-import { ActionsComponent } from '../../../shared/actions/actions.component';
-import { ActionBTNRenderer } from '../../../pipes/ag-action-renderer';
-import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
-import { GenericObjectService } from '../../../services/generic-object.service';
-import { LanguageService } from '../../../services/language.service';
-import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
-import { Group } from '../../../shared/models/data-model'
+import { ActionsComponent } from 'src/app/shared/actions/actions.component';
+import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
+import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { LanguageService } from 'src/app/services/language.service';
+import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
+import { Group } from 'src/app/shared/models/data-model'
 
 @Component({
   selector: 'cranix-groups',
@@ -47,9 +47,9 @@ export class GroupsPage implements OnInit {
     this.createColumnDefs();
     this.gridOptions = <GridOptions>{
       defaultColDef: {
-        resizable: true,
-        sortable: true,
-        hide: false
+	resizable: true,
+	sortable: true,
+	hide: false
       },
       columnDefs: this.columnDefs,
       context: this.context,
@@ -60,8 +60,8 @@ export class GroupsPage implements OnInit {
     this.storage.get('GroupsPage.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
-        this.displayedColumns = myArray.concat(['actions']);
-        this.createColumnDefs();
+	this.displayedColumns = myArray.concat(['actions']);
+	this.createColumnDefs();
       }
     });
     this.objectService.getObjects('group').subscribe(obj => this.rowData = obj);
@@ -76,12 +76,12 @@ export class GroupsPage implements OnInit {
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
       col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
       switch (key) {
-        case 'name': {
-          col['headerCheckboxSelection'] = true;
-          col['headerCheckboxSelectionFilteredOnly'] = true;
-          col['checkboxSelection'] = true;
-          break;
-        }
+	case 'name': {
+	  col['headerCheckboxSelection'] = true;
+	  col['headerCheckboxSelectionFilteredOnly'] = true;
+	  col['checkboxSelection'] = true;
+	  break;
+	}
       }
       columnDefs.push(col);
     }
@@ -123,9 +123,9 @@ export class GroupsPage implements OnInit {
     this.objectService.deleteObjectDialog(group, 'group')
   }
   /**
- * Open the actions menu with the selected object ids.
- * @param ev 
- */
+  * Open the actions menu with the selected object ids.
+  * @param ev
+  */
   async openActions(ev: any) {
     if( !this.selected) {
       this.objectService.selectObject();
@@ -175,9 +175,9 @@ export class GroupsPage implements OnInit {
   }
 
   /**
-* Function to select the columns to show
-* @param ev 
-*/
+   * Function to select the columns to show
+   * @param ev
+  */
   async openCollums(ev: any) {
     const modal = await this.modalCtrl.create({
       component: SelectColumnsComponent,

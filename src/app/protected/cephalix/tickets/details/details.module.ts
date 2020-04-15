@@ -6,7 +6,7 @@ import { DetailsPageRoutingModule } from './details-routing.module';
 import { DetailsPage } from './details.page';
 import { TranslateService } from '@ngx-translate/core';
 
-import {CranixSharedModule} from '../../../../shared/cranix-shared.module';
+import {CranixSharedModule} from 'src/app/shared/cranix-shared.module';
 
 @NgModule({
   imports: [

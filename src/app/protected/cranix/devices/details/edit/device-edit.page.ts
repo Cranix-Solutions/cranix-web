@@ -3,8 +3,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { FormBuilder } from '@angular/forms';
 
 //Own modules
-import { GenericObjectService } from '../../../../../services/generic-object.service';
-import { Device } from '../../../../../shared/models/data-model';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { Device } from 'src/app/shared/models/data-model';
 
 @Component({
   selector: 'cranix-device-edit',

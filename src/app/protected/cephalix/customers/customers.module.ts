@@ -5,9 +5,9 @@ import { TranslateService  } from '@ngx-translate/core';
 import { RouterModule, Routes } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
-import { CanActivateViaAcls } from '../../../services/auth-guard.service';
+import { CanActivateViaAcls } from 'src/app/services/auth-guard.service';
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
-import { PipesModule } from '../../../pipes/pipe-modules';
+import { PipesModule } from 'src/app/pipes/pipe-modules';
 import { CustomersPage } from './customers.page';
 
 const routes: Routes = [

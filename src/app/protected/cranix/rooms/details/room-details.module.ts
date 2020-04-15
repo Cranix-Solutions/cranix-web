@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule, Routes } from '@angular/router';
 
 //own modules
-import { CranixSharedModule } from '../../../../shared/cranix-shared.module';
+import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { RoomDetailsPage } from './room-details.page';
 import { RoomEditPage } from './edit/room-edit.page';
 import { RoomPrintersPage } from './printers/room-printers.page';
