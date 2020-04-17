@@ -340,3 +340,10 @@ export class DHCP {
 	value: string = "";
 	constructor(){}
 }
+
+export class Setting {
+	agGridThema: string = "";
+	lang: string = "";
+    password: string = "";
+    constructor() {}
+}

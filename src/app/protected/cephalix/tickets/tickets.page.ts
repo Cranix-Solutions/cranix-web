@@ -8,13 +8,13 @@ import { Router } from '@angular/router';
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
-import { InstituteIdCellRenderer  } from 'src/app/pipes/ag-instituteid-renderer';
 import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Ticket } from 'src/app/shared/models/cephalix-data-model'
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'cranix-tickets',
@@ -23,7 +23,7 @@ import { Ticket } from 'src/app/shared/models/cephalix-data-model'
 })
 export class TicketsPage implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['title', 'cephalixInstituteId', 'recDate', 'ticketStatus', 'actions'];
+  displayedColumns: string[] = ['title', 'cephalixInstituteId', 'recDate', 'ticketStatus'];
   sortableColumns: string[] = ['title', 'cephalixInstituteId', 'recDate', 'ticketStatus'];
   gridOptions: GridOptions;
   columnDefs = [];
@@ -37,6 +37,7 @@ export class TicketsPage implements OnInit {
   objectIds: number[] = [];
 
   constructor(
+    public authService: AuthenticationService,
     public objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
@@ -73,8 +74,8 @@ export class TicketsPage implements OnInit {
   }
 
   instituteIdToName(params) {
-        console.log(Object.getOwnPropertyNames(params));
-        return this.objectService.idToName('institute',params.id);
+    console.log(Object.getOwnPropertyNames(params));
+    return this.objectService.idToName('institute', params.id);
   }
 
   createColumnDefs() {
@@ -85,19 +86,23 @@ export class TicketsPage implements OnInit {
       col['headerName'] = this.languageS.trans(key);
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
       col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
+      col['minWidth'] = 110;
       switch (key) {
         case 'title': {
           col['headerCheckboxSelection'] = true;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
+          col['width'] = 220;
+          col['cellStyle'] = { 'padding-left': '2px', 'padding-right': '2px' };
+          col['suppressSizeToFit'] = true;
+          col['pinned'] = 'left';
+          col['colId'] = '1';
           break;
         }
         case 'cephalixInstituteId': {
-          col['valueGetter'] = function(params) {
-            return params.context['componentParent'].objectService.idToName('institute',params.data.cephalixInstituteId);
+          col['valueGetter'] = function (params) {
+            return params.context['componentParent'].objectService.idToName('institute', params.data.cephalixInstituteId);
           }
-          //col['valueFormatter'] =  this.instituteIdToName; 
-          //col['cellRendererFramework'] = InstituteIdCellRenderer;
           break;
         }
         case 'recDate': {
@@ -107,11 +112,16 @@ export class TicketsPage implements OnInit {
       }
       columnDefs.push(col);
     }
-    columnDefs.push({
+    let action = {
       headerName: "",
+      width: 85,
+      suppressSizeToFit: true,
+      cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
+      pinned: 'left',
       cellRendererFramework: ActionBTNRenderer
-    });
+    };
+    columnDefs.splice(1, 0, action)
     this.columnDefs = columnDefs;
   }
 
@@ -148,14 +158,18 @@ export class TicketsPage implements OnInit {
  * Open the actions menu with the selected object ids.
  * @param ev 
  */
-  async openActions(ev: any) {
-    if( !this.selected) {
+  async openActions(ev: any, objId: number) {
+    if (!this.selected && !objId) {
       this.objectService.selectObject();
       return;
     }
     this.objectKeys = [];
-    for (let i = 0; i < this.selected.length; i++) {
-      this.objectIds.push(this.selected[i].id);
+    if (objId) {
+      this.objectIds.push(objId);
+    } else {
+      for (let i = 0; i < this.selected.length; i++) {
+        this.objectIds.push(this.selected[i].id);
+      }
     }
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,

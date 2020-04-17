@@ -77,6 +77,9 @@ export class ObjectsEditComponent implements OnInit {
     let serverResponse: ServerResponse;
     this.splashScreen.show();
     console.log("onSubmit", object);
+    if(this.objectType == 'setting' ) {
+      return  this.modalController.dismiss(object);
+    }
     let subs = this.objectService.applyAction(object, this.objectType, this.objectAction).subscribe(
       async (val) => {
         serverResponse = val;

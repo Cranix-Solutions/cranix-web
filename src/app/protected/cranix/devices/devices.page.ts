@@ -12,8 +12,7 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Device } from 'src/app/shared/models/data-model'
-import { HwconfIdCellRenderer } from 'src/app/pipes/ag-hwconfid-renderer';
-import { RoomIdCellRenderer } from 'src/app/pipes/ag-roomid-render';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'cranix-devices',
@@ -22,7 +21,7 @@ import { RoomIdCellRenderer } from 'src/app/pipes/ag-roomid-render';
 })
 export class DevicesPage implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['name', 'mac', 'ip', 'hwconfId', 'roomId', 'actions'];
+  displayedColumns: string[] = ['name', 'mac', 'ip', 'hwconfId', 'roomId'];
   sortableColumns: string[] = ['name', 'mac', 'ip', 'hwconfId', 'roomId'];
   columnDefs = [];
   gridOptions: GridOptions;
@@ -36,6 +35,7 @@ export class DevicesPage implements OnInit {
   objectIds: number[] = [];
 
   constructor(
+    public authService: AuthenticationService,
     public alertController: AlertController,
     public languageS: LanguageService,
     public modalCtrl: ModalController,

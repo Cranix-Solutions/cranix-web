@@ -14,6 +14,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Room } from 'src/app/shared/models/data-model'
 import { HwconfIdCellRenderer } from 'src/app/pipes/ag-hwconfid-renderer';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'cranix-rooms',
@@ -36,6 +37,7 @@ export class RoomsPage implements OnInit {
   objectIds: number[] = [];
 
   constructor(
+    public authService: AuthenticationService,
     public objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,

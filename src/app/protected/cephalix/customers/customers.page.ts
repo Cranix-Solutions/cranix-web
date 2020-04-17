@@ -12,6 +12,7 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Customer, Institute } from 'src/app/shared/models/cephalix-data-model'
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'cranix-customers',
@@ -20,7 +21,7 @@ import { Customer, Institute } from 'src/app/shared/models/cephalix-data-model'
 })
 export class CustomersPage implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity', 'actions'];
+  displayedColumns: string[] = ['name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity'];
   sortableColumns: string[] = ['name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity'];
   gridOptions: GridOptions;
   columnDefs = [];
@@ -34,6 +35,7 @@ export class CustomersPage implements OnInit {
   objectIds: number[] = [];
 
   constructor(
+    public authService: AuthenticationService,
     public objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
@@ -75,11 +77,17 @@ export class CustomersPage implements OnInit {
       col['headerName'] = this.languageS.trans(key);
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
       col['sortable'] = (this.displayedColumns.indexOf(key) == -1);
+      col['minWidth'] = 110;
       switch (key) {
         case 'name': {
           col['headerCheckboxSelection'] = true;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
+          col['width'] = 220;
+          col['cellStyle'] = { 'padding-left' : '2px', 'padding-right' : '2px'};
+          col['suppressSizeToFit'] = true;
+          col['pinned'] = 'left'; 
+          col['colId'] = '1';
           break;
         }
         case 'recDate': {
@@ -89,11 +97,16 @@ export class CustomersPage implements OnInit {
       }
       columnDefs.push(col);
     }
-    columnDefs.push({
+    let action = {
       headerName: "",
+      width: 85,
+      suppressSizeToFit: true,
+      cellStyle: { 'padding' : '2px', 'line-height' :'36px'},
       field: 'actions',
+      pinned: 'left',
       cellRendererFramework: ActionBTNRenderer
-    });
+    };
+    columnDefs.splice(1,0,action)
     this.columnDefs = columnDefs;
   }
 

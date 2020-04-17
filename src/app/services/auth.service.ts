@@ -52,6 +52,9 @@ export class AuthenticationService {
         this.subscription = this.login(user)
             .subscribe(
                 (val) => {
+                    this.storage.get('agGridThema').then((val) => {
+                        this.agGridThema = val;
+                      });
                     console.log('login respons is', val);
                     this.session = val;
                     this.session['instituteName'] = instituteName;

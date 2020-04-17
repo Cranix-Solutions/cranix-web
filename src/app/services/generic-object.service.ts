@@ -27,10 +27,11 @@ export class GenericObjectService {
   cephalixDefaults: any = {};
 
   selects: any = {
-    'status': ['N', 'A', 'D'],
+    'agGridThema': ['ag-theme-alpine','ag-theme-alpine-dark','ag-theme-balham','ag-theme-balham-dark','ag-theme-material'],
+    'devCount': [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096],
     'identifier': ['sn-gn-bd', 'uuid', 'uid'],
     'lang': ['DE', 'EN'],
-    'devCount': [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
+    'status': ['N', 'A', 'D']
   }
   initialized: boolean = false;
   enumerates: string[] = [

@@ -6,6 +6,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { GroupsService } from 'src/app/services/groups.service';
 import { Group, User } from 'src/app/shared/models/data-model'
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'cranix-group-members',
@@ -28,6 +29,7 @@ export class GroupMembersPage implements OnInit {
   group;
 
   constructor(
+    public authService: AuthenticationService,
     private objectS: GenericObjectService,
     private languageS: LanguageService,
     private  groupS: GroupsService

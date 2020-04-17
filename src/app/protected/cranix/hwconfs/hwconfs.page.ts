@@ -13,6 +13,7 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Hwconf } from 'src/app/shared/models/data-model'
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'cranix-hwconfs',
@@ -35,6 +36,7 @@ export class HwconfsPage implements OnInit {
   objectIds: number[] = [];
 
   constructor(
+    public authService: AuthenticationService,
     public languageS: LanguageService,
     public objectService: GenericObjectService,
     public modalCtrl: ModalController,
