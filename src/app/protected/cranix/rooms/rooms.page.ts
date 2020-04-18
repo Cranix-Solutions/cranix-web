@@ -23,8 +23,8 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 })
 export class RoomsPage implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = [ 'name', 'description', 'roomType', 'roomControl', 'hwconfId', 'actions'];
-  sortableColumns: string[] = ['name', 'description', 'roomType', 'roomControl', 'hwconfId' ];
+  displayedColumns: string[] = ['name', 'description', 'roomType', 'roomControl', 'hwconfId', 'actions'];
+  sortableColumns: string[] = ['name', 'description', 'roomType', 'roomControl', 'hwconfId'];
   gridOptions: GridOptions;
   columnDefs = [];
   gridApi: GridApi;
@@ -34,7 +34,6 @@ export class RoomsPage implements OnInit {
   selected: Room[];
   title = 'app';
   rowData = [];
-  objectIds: number[] = [];
 
   constructor(
     public authService: AuthenticationService,
@@ -83,11 +82,17 @@ export class RoomsPage implements OnInit {
           col['headerCheckboxSelection'] = true;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
+          col['width'] = 220;
+          col['cellStyle'] = { 'padding-left': '2px' };
+          col['suppressSizeToFit'] = true;
+          col['pinned'] = 'left';
+          col['flex'] = '1';
+          col['colId'] = '1';
           break;
         }
         case 'hwconfId': {
-          col['valueGetter'] = function(params) {
-            return params.context['componentParent'].objectService.idToName('hwconf',params.data.hwconfId);
+          col['valueGetter'] = function (params) {
+            return params.context['componentParent'].objectService.idToName('hwconf', params.data.hwconfId);
           }
           //col['cellRendererFramework'] = HwconfIdCellRenderer;
           break;
@@ -95,11 +100,16 @@ export class RoomsPage implements OnInit {
       }
       columnDefs.push(col);
     }
-    columnDefs.push({
+    let action = {
       headerName: "",
+      width: 100,
+      suppressSizeToFit: true,
+      cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
+      pinned: 'left',
       cellRendererFramework: ActionBTNRenderer
-    });
+    };
+    columnDefs.splice(1, 0, action);
     this.columnDefs = columnDefs;
   }
   onGridReady(params) {
@@ -135,21 +145,25 @@ export class RoomsPage implements OnInit {
  * Open the actions menu with the selected object ids.
  * @param ev 
  */
-  async openActions(ev: any) {
-    if( !this.selected) {
+  async openActions(ev: any, objId: number) {
+    if (!this.selected && !objId) {
       this.objectService.selectObject();
       return;
     }
-    this.objectKeys = [];
-    for (let i = 0; i < this.selected.length; i++) {
-      this.objectIds.push(this.selected[i].id);
+    let objectIds = [];
+    if (objId) {
+      objectIds.push(objId)
+    } else {
+      for (let i = 0; i < this.selected.length; i++) {
+        objectIds.push(this.selected[i].id);
+      }
     }
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
       event: ev,
       componentProps: {
         objectType: "room",
-        objectIds: this.objectIds,
+        objectIds: objectIds,
         selection: this.selected
       },
       animated: true,

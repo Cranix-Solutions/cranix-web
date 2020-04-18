@@ -22,7 +22,7 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 export class UsersComponent implements OnInit {
   objectKeys: string[] = [];
   displayedColumns: string[] = ['uid', 'uuid', 'givenName', 'surName', 'role', 'classes', 'actions'];
-  sortableColumns: string[] = [ 'uid', 'uuid', 'givenName', 'surName', 'role', 'classes' ];
+  sortableColumns: string[] = ['uid', 'uuid', 'givenName', 'surName', 'role', 'classes'];
   gridOptions: GridOptions;
   columnDefs = [];
   gridApi: GridApi;
@@ -32,7 +32,6 @@ export class UsersComponent implements OnInit {
   selected: User[];
   title = 'app';
   rowData = [];
-  objectIds: number[] = [];
 
   constructor(
     public authService: AuthenticationService,
@@ -81,6 +80,12 @@ export class UsersComponent implements OnInit {
           col['headerCheckboxSelection'] = true;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
+          col['width'] = 220;
+          col['cellStyle'] = { 'padding-left': '2px' };
+          col['suppressSizeToFit'] = true;
+          col['pinned'] = 'left';
+          col['flex'] = '1';
+          col['colId'] = '1';
           break;
         }
         case 'birthDay': {
@@ -90,11 +95,16 @@ export class UsersComponent implements OnInit {
       }
       columnDefs.push(col);
     }
-    columnDefs.push({
+    let action = {
       headerName: "",
+      width: 100,
+      suppressSizeToFit: true,
+      cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
+      pinned: 'left',
       cellRendererFramework: ActionBTNRenderer
-    });
+    };
+    columnDefs.splice(1, 0, action);
     this.columnDefs = columnDefs;
   }
   onGridReady(params) {
@@ -134,21 +144,25 @@ export class UsersComponent implements OnInit {
  * Open the actions menu with the selected object ids.
  * @param ev
  */
-  async openActions(ev: any) {
-    if( !this.selected) {
+  async openActions(ev: any, objId: number) {
+    if (!this.selected && !objId) {
       this.objectService.selectObject();
       return;
     }
-    this.objectKeys = [];
-    for (let i = 0; i < this.selected.length; i++) {
-      this.objectIds.push(this.selected[i].id);
+    let objectIds = [];
+    if (objId) {
+      objectIds.push(objId)
+    } else {
+      for (let i = 0; i < this.selected.length; i++) {
+        objectIds.push(this.selected[i].id);
+      }
     }
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
       event: ev,
       componentProps: {
         objectType: "user",
-        objectIds: this.objectIds,
+        objectIds: objectIds,
         selection: this.selected
       },
       animated: true,
@@ -160,7 +174,7 @@ export class UsersComponent implements OnInit {
   async redirectToEdit(ev: Event, user: User) {
     if (user) {
       this.objectService.selectedObject = user;
-       this.route.navigate(['/pages/cranix/users/' + user.id]);
+      this.route.navigate(['/pages/cranix/users/' + user.id]);
     } else {
       user = new User();
       delete user.msQuotaUsed;
@@ -170,7 +184,7 @@ export class UsersComponent implements OnInit {
         componentProps: {
           objectType: "user",
           objectAction: "add",
-          object:  user
+          object: user
         },
         animated: true,
         swipeToClose: true,

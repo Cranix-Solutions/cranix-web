@@ -21,7 +21,7 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 })
 export class GroupsPage implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['name', 'description', 'roomControl', 'hwconfId','actions'];
+  displayedColumns: string[] = ['name', 'description', 'roomControl', 'hwconfId', 'actions'];
   sortableColumns: string[] = ['name', 'description', 'roomControl', 'hwconfId'];
   gridOptions: GridOptions;
   columnDefs = [];
@@ -32,7 +32,6 @@ export class GroupsPage implements OnInit {
   selected: Group[];
   title = 'app';
   rowData = [];
-  objectIds: number[] = [];
 
   constructor(
     public authService: AuthenticationService,
@@ -49,9 +48,9 @@ export class GroupsPage implements OnInit {
     this.createColumnDefs();
     this.gridOptions = <GridOptions>{
       defaultColDef: {
-	resizable: true,
-	sortable: true,
-	hide: false
+        resizable: true,
+        sortable: true,
+        hide: false
       },
       columnDefs: this.columnDefs,
       context: this.context,
@@ -62,8 +61,8 @@ export class GroupsPage implements OnInit {
     this.storage.get('GroupsPage.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
-	this.displayedColumns = myArray.concat(['actions']);
-	this.createColumnDefs();
+        this.displayedColumns = myArray.concat(['actions']);
+        this.createColumnDefs();
       }
     });
     this.objectService.getObjects('group').subscribe(obj => this.rowData = obj);
@@ -78,20 +77,31 @@ export class GroupsPage implements OnInit {
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
       col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
       switch (key) {
-	case 'name': {
-	  col['headerCheckboxSelection'] = true;
-	  col['headerCheckboxSelectionFilteredOnly'] = true;
-	  col['checkboxSelection'] = true;
-	  break;
-	}
+        case 'name': {
+          col['headerCheckboxSelection'] = true;
+          col['headerCheckboxSelectionFilteredOnly'] = true;
+          col['checkboxSelection'] = true;
+          col['width'] = 220;
+          col['cellStyle'] = { 'padding-left': '2px' };
+          col['suppressSizeToFit'] = true;
+          col['pinned'] = 'left';
+          col['flex'] = '1';
+          col['colId'] = '1';
+          break;
+        }
       }
       columnDefs.push(col);
     }
-    columnDefs.push({
+    let action = {
       headerName: "",
+      width: 100,
+      suppressSizeToFit: true,
+      cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
+      pinned: 'left',
       cellRendererFramework: ActionBTNRenderer
-    });
+    };
+    columnDefs.splice(1, 0, action)
     this.columnDefs = columnDefs;
   }
 
@@ -128,21 +138,25 @@ export class GroupsPage implements OnInit {
   * Open the actions menu with the selected object ids.
   * @param ev
   */
-  async openActions(ev: any) {
-    if( !this.selected) {
+  async openActions(ev: any, objId: number) {
+    if (!this.selected && !objId) {
       this.objectService.selectObject();
       return;
     }
-    this.objectKeys = [];
-    for (let i = 0; i < this.selected.length; i++) {
-      this.objectIds.push(this.selected[i].id);
+    let objectIds = [];
+    if (objId) {
+      objectIds.push(objId)
+    } else {
+      for (let i = 0; i < this.selected.length; i++) {
+        objectIds.push(this.selected[i].id);
+      }
     }
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
       event: ev,
       componentProps: {
         objectType: "group",
-        objectIds: this.objectIds,
+        objectIds: objectIds,
         selection: this.selected
       },
       animated: true,

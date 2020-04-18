@@ -34,7 +34,6 @@ export class InstitutesComponent implements OnInit {
   context;
   title = 'app';
   rowData = [];
-  objectIds: number[] = [];
 
   constructor(
     public authService: AuthenticationService,
@@ -167,12 +166,12 @@ export class InstitutesComponent implements OnInit {
       this.objectService.selectObject();
       return;
     }
-    this.objectIds = [];
+    let objectIds = [];
     if (objId) {
-      this.objectIds.push(objId)
+      objectIds.push(objId)
     } else {
       for (let i = 0; i < this.cephalixService.selectedInstitutes.length; i++) {
-        this.objectIds.push(this.cephalixService.selectedInstitutes[i].id);
+        objectIds.push(this.cephalixService.selectedInstitutes[i].id);
       }
     }
     const popover = await this.popoverCtrl.create({
@@ -180,7 +179,7 @@ export class InstitutesComponent implements OnInit {
       event: ev,
       componentProps: {
         objectType: "institute",
-        objectIds: this.objectIds,
+        objectIds: objectIds,
         selection: this.cephalixService.selectedInstitutes
       },
       animated: true,

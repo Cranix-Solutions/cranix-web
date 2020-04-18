@@ -32,7 +32,6 @@ export class DevicesPage implements OnInit {
   selected: Device[];
   title = 'app';
   rowData = [];
-  objectIds: number[] = [];
 
   constructor(
     public authService: AuthenticationService,
@@ -83,10 +82,10 @@ export class DevicesPage implements OnInit {
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
           col['width'] = 220;
-          col['cellStyle'] = { 'padding-left' : '2px'};
+          col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
-          col['pinned'] = 'left';   
-          col['flex'] = '1';   
+          col['pinned'] = 'left';
+          col['flex'] = '1';
           col['colId'] = '1';
           break;
         }
@@ -109,14 +108,12 @@ export class DevicesPage implements OnInit {
       headerName: "",
       width: 100,
       suppressSizeToFit: true,
-      cellStyle: { 'padding' : '2px', 'line-height' :'36px'},
+      cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
       pinned: 'left',
       cellRendererFramework: ActionBTNRenderer
     };
-
-    columnDefs.splice(1,0,action)
-
+    columnDefs.splice(1, 0, action);
     this.columnDefs = columnDefs;
   }
 
@@ -155,21 +152,25 @@ export class DevicesPage implements OnInit {
  * Open the actions menu with the selected object ids.
  * @param ev 
  */
-  async openActions(ev: any) {
-    this.objectKeys = [];
-    if( !this.selected) {
+  async openActions(ev: any, objId: number) {
+    if (!this.selected && !objId) {
       this.objectService.selectObject();
       return;
     }
-    for (let i = 0; i < this.selected.length; i++) {
-      this.objectIds.push(this.selected[i].id);
+    let objectIds = [];
+    if (objId) {
+      objectIds.push(objId)
+    } else {
+      for (let i = 0; i < this.selected.length; i++) {
+        objectIds.push(this.selected[i].id);
+      }
     }
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
       event: ev,
       componentProps: {
         objectType: "device",
-        objectIds: this.objectIds,
+        objectIds: objectIds,
         selection: this.selected
       },
       animated: true,
@@ -188,7 +189,7 @@ export class DevicesPage implements OnInit {
         componentProps: {
           objectType: "device",
           objectAction: "add",
-          object:  device
+          object: device
         },
         animated: true,
         swipeToClose: true,
