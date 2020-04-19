@@ -5,6 +5,7 @@ import { AlertController, ToastController } from '@ionic/angular';
 import { Validators } from '@angular/forms';
 // own modules
 import { ServerResponse } from 'src/app/shared/models/server-models';
+import { Package } from 'src/app/shared/models/data-model';
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 import { LanguageService } from './language.service';
@@ -14,6 +15,7 @@ import { LanguageService } from './language.service';
 export class GenericObjectService {
   allObjects: any = {};
   selectedObject: any = null;
+  packagesAvailable: Package[] = [];
 
   /**
    * The base objects which need to be loaded by the initialisations
@@ -27,7 +29,7 @@ export class GenericObjectService {
   cephalixDefaults: any = {};
 
   selects: any = {
-    'agGridThema': ['ag-theme-alpine','ag-theme-alpine-dark','ag-theme-balham','ag-theme-balham-dark','ag-theme-material'],
+    'agGridThema': ['ag-theme-alpine', 'ag-theme-alpine-dark', 'ag-theme-balham', 'ag-theme-balham-dark', 'ag-theme-material'],
     'devCount': [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096],
     'identifier': ['sn-gn-bd', 'uuid', 'uid'],
     'lang': ['DE', 'EN'],
@@ -123,6 +125,9 @@ export class GenericObjectService {
           (err) => { },
           () => { subs[key].unsubscribe() });
       }
+      if( this.authService.isAllowed('software.download')) {
+        this.getSoftwaresToDowload();
+      }
       this.initialized = true;
     }
   }
@@ -145,7 +150,17 @@ export class GenericObjectService {
       (err) => { },
       () => { sub3.unsubscribe() });
   }
-
+  getSoftwaresToDowload() {
+    let url = this.utilsS.hostName() + "/softwares/available";
+    console.log(url);
+    let sub = this.http.get<Package[]>(url, { headers: this.headers }).subscribe(
+      (val) => {
+        this.packagesAvailable = val;
+        console.log(val);
+      },
+      (err) => { console.log(err) },
+      () => { sub.unsubscribe() });
+  }
   getAllObject(objectType) {
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";
     let sub = this.http.get(url, { headers: this.headers }).subscribe(

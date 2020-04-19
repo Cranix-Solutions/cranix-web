@@ -1,0 +1,25 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-title>{{  'Select softwares to download' | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" size="small" (click)="closeWindow()">
+        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content fullscreen>
+  <!--form (ngSubmit)="processModal(event)"-->
+  <!-- form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)"-->
+    <ion-list lines="full" class="ion-no-margin ion-no-padding" *ngFor="let package of objectService.packagesAvailable">
+      <ion-item>
+        <!-- ion-checkbox slot="start" formControlName="{{package.name}}" color="secondary"></ion-checkbox -->
+        <ion-checkbox slot="start"  color="secondary"></ion-checkbox>
+        <ion-label>{{package.name}} {{ package.version}}</ion-label>
+      </ion-item>
+    </ion-list>
+    <div class="ion-padding">
+      <ion-button expand="block" type="submit" class="ion-no-margin">{{ "OK" | translate }}</ion-button>
+    </div>
+  <!-- /form -->
+</ion-content>

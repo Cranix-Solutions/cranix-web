@@ -1,3 +1,5 @@
+import { SoftwareStatusComponent } from 'src/app/protected/cranix/softwares/status/software-status.component';
+
 export class Hwconf {
 	id?: number;
 	name: string = "";
@@ -102,6 +104,11 @@ export class Group {
 	constructor() { }
 }
 
+export class Package{
+	name: string="";
+	version: string = "";
+	constructor() { }
+}
 export class SoftwareVersions{
 	id?: number;
 	version: string = "";
@@ -111,12 +118,26 @@ export class SoftwareVersions{
 
 export class Software {
 	id?: number;
-	description: string = "";
-	manually: boolean = false;
 	name: string = "";
+	description: string = "";
 	weight: number = 0;
 	version?: string = "";
-	softwareVersions: SoftwareVersions = new SoftwareVersions();
+	manually: boolean;
+	softwareVersions: SoftwareVersions;
+	constructor() { }
+}
+
+export class SoftwareStatus{
+	id: number    = 0;
+	status: string = "";
+	softwareversionId?: number;
+	deviceId?: number;
+	roomName: string ="";
+	deviceName: string= "";
+	softwareName: string = ""; 
+	manually: boolean;
+	softwareId: number; 
+	version: string;
 	constructor() { }
 }
 

@@ -6,7 +6,6 @@ import { Storage } from '@ionic/storage';
 
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
-import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
 import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';

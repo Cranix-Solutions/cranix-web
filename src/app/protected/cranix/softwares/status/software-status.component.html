@@ -1,17 +1,12 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-row class="header-row">
   <ion-col size=12>
-    <ion-title  matTooltip="{{ cephalixService.selectedList }}">{{ 'Define synchronisation of objects:' | translate}}</ion-title>
+    <ion-title>{{ 'Software installation status:' | translate}}</ion-title>
   </ion-col>
 </ion-row>
 <ion-content (window:resize)="onResize($event)">
   <ion-card>
     <ion-card-header>
-      <ion-row *ngIf="cephalixService.selectedInstitutes.length == 0">
-        <ion-col size=12>
-          <ion-label color="danger">{{'You have to select some institutes to be able to use this site.'}}</ion-label>
-        </ion-col>
-      </ion-row>
       <ion-row class="ion-align-items-center">
         <ion-col size="3">
           <ion-item>
@@ -23,11 +18,11 @@
         </ion-col>
         <ion-col>
           <ion-button size="small" (click)="startSync($event)"
-            matTooltip="{{'Start  synchronisation of selected objects to the selected institutes.' | translate }} {{ cephalixService.selectedList }}">
+            matTooltip="{{'Start  synchronisation of selected objects to the selected institutes.' | translate }}">
             <ion-icon slot="icon-only" color="success" name="power"></ion-icon>
           </ion-button>
           <ion-button size="small" (click)="stopSync($event)"
-            matTooltip="{{'Stop  synchronisation of selected objects to the selected institutes.' | translate }}  {{ cephalixService.selectedList }}">
+            matTooltip="{{'Stop  synchronisation of selected objects to the selected institutes.' | translate }}">
             <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
           </ion-button>
         </ion-col>
