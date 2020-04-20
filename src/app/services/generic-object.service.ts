@@ -92,7 +92,7 @@ export class GenericObjectService {
     private http: HttpClient,
     private languageS: LanguageService,
     private utilsS: UtilsService,
-    private toastController: ToastController) {
+    public toastController: ToastController) {
   }
 
   initialize(force: boolean) {

@@ -18,8 +18,7 @@ import { Software } from 'src/app/shared/models/data-model';
 })
 export class SoftwarePackagesComponent implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['name', 'description', 'roomControl', 'hwconfId', 'actions'];
-  sortableColumns: string[] = ['name', 'description', 'roomControl', 'hwconfId'];
+  displayedColumns: string[] = ['name', 'description','version', 'weight'];
   gridOptions: GridOptions;
   columnDefs = [];
   gridApi: GridApi;
@@ -71,7 +70,6 @@ export class SoftwarePackagesComponent implements OnInit {
       col['field'] = key;
       col['headerName'] = this.languageS.trans(key);
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
-      col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
       switch (key) {
         case 'name': {
           col['headerCheckboxSelection'] = true;
@@ -83,6 +81,12 @@ export class SoftwarePackagesComponent implements OnInit {
           col['pinned'] = 'left';
           col['flex'] = '1';
           col['colId'] = '1';
+          break;
+        }
+        case 'version': {
+          col['valueGetter'] =  function (params) {
+            return params.softwareVersions[0].version;
+          }
           break;
         }
       }
@@ -112,7 +116,6 @@ export class SoftwarePackagesComponent implements OnInit {
   onQuickFilterChanged() {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById("quickFilter")).value);
     this.gridApi.doLayout();
-
   }
   onResize($event) {
     (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
@@ -132,7 +135,7 @@ export class SoftwarePackagesComponent implements OnInit {
 
   /**
 * Function to select the columns to show
-* @param ev 
+* @param ev
 */
   async downloadSoftwares(ev: any) {
     const modal = await this.modalCtrl.create({

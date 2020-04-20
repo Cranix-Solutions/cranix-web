@@ -87,6 +87,8 @@ export class SoftwareStatusComponent implements OnInit {
       },
       {
         field: 'deviceName',
+        rowGroup: true,
+        hide: true,
         headerName: this.languageS.trans('device'),
       },
       {
@@ -102,7 +104,8 @@ export class SoftwareStatusComponent implements OnInit {
         headerName: this.languageS.trans('status')
       }
     ];
-    this.autoGroupColumnDef = {
+    this.autoGroupColumnDef = { minWidth: 250 };
+    /* this.autoGroupColumnDef = {
       headerName: this.languageS.trans('room'),
       field: 'roomName',
       headerCheckboxSelection: false,
@@ -110,7 +113,7 @@ export class SoftwareStatusComponent implements OnInit {
       checkboxSelection: true,
       valueGetter: function (params) { return " "; },
       minWidth: 250
-    };
+    }; */
   }
 
 }

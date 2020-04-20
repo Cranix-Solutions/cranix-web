@@ -123,7 +123,7 @@ export class Software {
 	weight: number = 0;
 	version?: string = "";
 	manually: boolean;
-	softwareVersions: SoftwareVersions;
+	softwareVersions: SoftwareVersions[];
 	constructor() { }
 }
 

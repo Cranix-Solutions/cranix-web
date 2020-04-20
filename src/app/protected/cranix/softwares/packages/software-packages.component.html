@@ -13,6 +13,7 @@
     <ion-fab-list side="start">
       <ion-fab-button><ion-icon name="cloud-download" (click)="downloadSoftwares($event)"></ion-icon></ion-fab-button>
       <ion-fab-button><ion-icon name="add-circle-outline" (click)="redirectToEdit($event,null)"></ion-icon></ion-fab-button>
+      <ion-fab-button><ion-icon name="refresh-outline" (click)="readInstallableSoftware($event,null)"></ion-icon></ion-fab-button>
     </ion-fab-list>
   </ion-fab>
   <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="quickFilter"showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
@@ -29,8 +30,11 @@
           <ion-button size="small" (click)="downloadSoftwares($event)" matTooltip="{{'Download software packages.' | translate }}" >
             <ion-icon slot="icon-only" name="cloud-download"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="redirectToEdit($event,null)"  matTooltip="{{'create a new group' | translate }}">
+          <ion-button size="small" (click)="redirectToEdit($event,null)"  matTooltip="{{'Create a new software package' | translate }}">
             <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+          </ion-button>
+          <ion-button size="small" (click)="readInstallableSoftware()"  matTooltip="{{'Refresh package list.' | translate }}">
+            <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
           </ion-button>
         </ion-col>
       </ion-row>
