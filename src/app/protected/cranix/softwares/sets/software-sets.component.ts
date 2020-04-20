@@ -15,12 +15,12 @@ import { Installation } from 'src/app/shared/models/data-model';
 })
 export class SoftwareSetsComponent implements OnInit {
   context;
-  memberOptions;
+  softwareSetOptions;
   columnDefs = [];
-  memberApi;
-  memberColumnApi;
-  memberSelection: Installation[] = [];
-  memberData: Installation[] = [];
+  softwareSetApi;
+  softwareSetColumnApi;
+  softwareSetSelection: Installation[] = [];
+  softwareSetData: Installation[] = [];
   autoGroupColumnDef;
   institute;
   selectedList: string[] = [];
@@ -32,7 +32,7 @@ export class SoftwareSetsComponent implements OnInit {
     private languageS: LanguageService
     ) {
     this.context = { componentParent: this };
-    this.memberOptions = {
+    this.softwareSetOptions = {
       defaultColDef: {
         resizable: true,
         sortable: true,
@@ -48,35 +48,35 @@ export class SoftwareSetsComponent implements OnInit {
     this.createColumnDefs();
     this.readMembers();
   }
-  onMemberReady(params) {
-    this.memberApi = params.api;
-    this.memberColumnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
+  softwareSetReady(params) {
+    this.softwareSetApi = params.api;
+    this.softwareSetColumnApi = params.columnApi;
+    (<HTMLInputElement>document.getElementById("softwareSetTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
   }
 
   onMemberSelectionChanged() {
-    this.memberSelection = this.memberApi.getSelectedRows();
+    this.softwareSetSelection = this.softwareSetApi.getSelectedRows();
   }
 
-  onMemberFilterChanged() {
-    this.memberApi.setQuickFilter((<HTMLInputElement>document.getElementById("memberFilter")).value);
-    this.memberApi.doLayout();
+  setFilterChanged() {
+    this.softwareSetApi.setQuickFilter((<HTMLInputElement>document.getElementById("softwareSetFilter")).value);
+    this.softwareSetApi.doLayout();
   }
 
   onResize(ev: Event) {
-    (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
+    (<HTMLInputElement>document.getElementById("softwareSetTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
     //this.sizeAll();
   }
   sizeAll() {
     var allColumnIds = [];
-    this.memberColumnApi.getAllColumns().forEach((column) => {
+    this.softwareSetColumnApi.getAllColumns().forEach((column) => {
       allColumnIds.push(column.getColId());
     });
-    this.memberColumnApi.autoSizeColumns(allColumnIds);
+    this.softwareSetColumnApi.autoSizeColumns(allColumnIds);
   }
   readMembers() {
     let subM = this.softwareService.getSoftwareStatus().subscribe(
-      (val) => { this.memberData = val; console.log(val) },
+      (val) => { this.softwareSetData = val; console.log(val) },
       (err) => { console.log(err) },
       () => { subM.unsubscribe() });
   }
