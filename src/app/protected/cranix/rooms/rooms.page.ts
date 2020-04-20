@@ -11,8 +11,7 @@ import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.c
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
-import { Room } from 'src/app/shared/models/data-model'
-import { HwconfIdCellRenderer } from 'src/app/pipes/ag-hwconfid-renderer';
+import { Room } from 'src/app/shared/models/data-model';
 import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({

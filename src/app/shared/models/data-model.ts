@@ -1,4 +1,3 @@
-import { SoftwareStatusComponent } from 'src/app/protected/cranix/softwares/status/software-status.component';
 
 export class Hwconf {
 	id?: number;
@@ -202,8 +201,8 @@ export class Drivers {
 }
 export class Installation {
 	id?: number;
-	description?: string = "";
 	name?: string = "";
+	description?: string = "";
 	categoryType?: string = "";
 	deviceIds?: number[] = [];
 	roomIds?: number[] = [];

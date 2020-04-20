@@ -9,6 +9,7 @@ import { CranixSharedModule }        from 'src/app/shared/cranix-shared.module';
 import { SoftwaresPage }             from './softwares.page';
 import { SoftwareStatusComponent }   from './status/software-status.component';
 import { SoftwareSetsComponent }     from './sets/software-sets.component';
+import { AddSoftwareSetComponent }     from './add-software-set/add-software-set.component';
 import { SoftwarePackagesComponent } from './packages/software-packages.component';
 
 const routes: Routes = [
@@ -29,14 +30,18 @@ const routes: Routes = [
        component: SoftwareSetsComponent
       },
       {
+        path: 'add-set',
+       component: AddSoftwareSetComponent
+      },
+      {
         path: '',
-        redirectTo: 'status'
+        redirectTo: 'sets'
       }
     ]
   },
   {
     path: 'softwares',
-    redirectTo: 'status'
+    redirectTo: 'sets'
   }
 ];
 
@@ -48,6 +53,6 @@ const routes: Routes = [
     CranixSharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [SoftwaresPage,SoftwareStatusComponent,SoftwarePackagesComponent,SoftwareSetsComponent]
+  declarations: [SoftwaresPage,SoftwareStatusComponent,SoftwarePackagesComponent,SoftwareSetsComponent,AddSoftwareSetComponent]
 })
 export class SoftwaresPageModule { }

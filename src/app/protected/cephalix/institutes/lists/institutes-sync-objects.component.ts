@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 //Own stuff
+import { AuthenticationService } from 'src/app/services/auth.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
@@ -24,6 +25,7 @@ export class InstitutesSyncObjectsComponent implements OnInit {
   selectedList: string[] = [];
 
   constructor(
+    public authService:     AuthenticationService,
     public cephalixService: CephalixService,
     public objectService: GenericObjectService,
     private languageS: LanguageService

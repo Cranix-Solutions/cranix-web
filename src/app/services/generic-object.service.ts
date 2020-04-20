@@ -152,13 +152,13 @@ export class GenericObjectService {
   }
   getSoftwaresToDowload() {
     let url = this.utilsS.hostName() + "/softwares/available";
-    console.log(url);
     let sub = this.http.get<Package[]>(url, { headers: this.headers }).subscribe(
       (val) => {
         this.packagesAvailable = val;
-        console.log(val);
       },
-      (err) => { console.log(err) },
+      (err) => { 
+        console.log('getSoftwaresToDowload');
+        console.log(err) },
       () => { sub.unsubscribe() });
   }
   getAllObject(objectType) {
@@ -197,7 +197,6 @@ export class GenericObjectService {
   }
 
   idToName(objectType, objectId) {
-    console.log(objectType, objectId);
     for (let obj of this.allObjects[objectType].getValue()) {
       if (obj.id === objectId) {
         return obj.name;
@@ -225,19 +224,14 @@ export class GenericObjectService {
   addObject(object, objectType) {
     const body = object;
     let url = this.utilsS.hostName() + "/" + objectType + "s/add";
-    console.log(objectType);
-    console.log(object);
     return this.http.post<ServerResponse>(url, body, { headers: this.headers });
   }
   modifyObject(object, objectType) {
     const body = object;
-    console.log("modifyObject");
-    console.log(object);
     let url = this.utilsS.hostName() + "/" + objectType + "s/" + object.id;
     return this.http.post<ServerResponse>(url, body, { headers: this.headers })
   }
   deleteObject(object, objectType) {
-    const body = object;
     let url = this.utilsS.hostName() + "/" + objectType + "s/" + object.id;
     return this.http.delete<ServerResponse>(url, { headers: this.headers })
   }
@@ -301,6 +295,8 @@ export class GenericObjectService {
         }
       },
       (err) => {
+        console.log("ERROR: modifyObjectDialog" )
+        console.log(object)
         console.log(err);
         this.errorMessage(this.languageS.trans("An error was accoured"));
       },
@@ -389,8 +385,6 @@ export class GenericObjectService {
         output[key] = object[key];
       }
     }
-    console.log("convertObject:");
-    console.log(output);
     return output;
   }
 }

@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 import { ServerResponse } from 'src/app/shared/models/server-models';
-import { SoftwareStatus, Software } from 'src/app/shared/models/data-model';
+import { Installation, SoftwareStatus, Software } from 'src/app/shared/models/data-model';
 
 
 @Injectable()
@@ -47,6 +47,11 @@ export class SoftwareService {
 		return this.http.get<Software[]>(this.url, { headers: this.headers });
 	}
 
+	getInstallationsSets(){
+		this.url = this.hostname + "/softwares/installation";
+		console.log(this.url);
+		return this.http.get<Installation[]>(this.url, { headers: this.headers });
+	}
 	downloadSoftwares(packages: string[]){
 		this.url = this.hostname + "/softwares/download";
 		console.log(this.url);
