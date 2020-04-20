@@ -75,7 +75,7 @@ export class SoftwareSetsComponent implements OnInit {
     this.softwareSetColumnApi.autoSizeColumns(allColumnIds);
   }
   readMembers() {
-    let subM = this.softwareService.getSoftwareStatus().subscribe(
+    let subM = this.softwareService.getInstallationsSets().subscribe(
       (val) => { this.softwareSetData = val; console.log(val) },
       (err) => { console.log(err) },
       () => { subM.unsubscribe() });
@@ -102,19 +102,35 @@ export class SoftwareSetsComponent implements OnInit {
       },
       {
         field: 'softwares',
+        width: 50,
         headerName: this.languageS.trans('softwares'),
+        valueGetter: function (params) {
+          return params.softwareIds.lenght;
+        }
       },
       {
         field: 'hwconfs',
+        width: 50,
         headerName: this.languageS.trans('hwconfs'),
+        valueGetter: function (params) {
+          return params.hwconfIds.lenght;
+        }
       },
       {
         field: 'rooms',
+        width: 50,
         headerName: this.languageS.trans('rooms'),
+        valueGetter: function (params) {
+          return params.roomIds.lenght;
+        }
       },
       {
         field: 'devices',
-        headerName: this.languageS.trans('devices')
+        width: 50,
+        headerName: this.languageS.trans('devices'),
+        valueGetter: function (params) {
+          return params.deviceIds.lenght;
+        }
       }
     ];
   }

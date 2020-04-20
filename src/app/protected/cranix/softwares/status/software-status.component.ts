@@ -93,7 +93,7 @@ export class SoftwareStatusComponent implements OnInit {
       },
       {
         field: 'softwareName',
-        headerName: this.languageS.trans('device'),
+        headerName: this.languageS.trans('software'),
       },
       {
         field: 'version',
@@ -104,7 +104,10 @@ export class SoftwareStatusComponent implements OnInit {
         headerName: this.languageS.trans('status')
       }
     ];
-    this.autoGroupColumnDef = { minWidth: 250 };
+    this.autoGroupColumnDef = {
+      headerName: this.languageS.trans('rooms') + " " + this.languageS.trans('devices'),
+      minWidth: 250
+    };
     /* this.autoGroupColumnDef = {
       headerName: this.languageS.trans('room'),
       field: 'roomName',
