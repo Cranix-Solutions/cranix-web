@@ -45,12 +45,12 @@ export class SoftwareSetsComponent implements OnInit {
    }
   ngOnInit() {
     this.createColumnDefs();
+    this.readMembers();
   }
   softwareSetReady(params) {
     this.softwareSetApi = params.api;
     this.softwareSetColumnApi = params.columnApi;
     (<HTMLInputElement>document.getElementById("softwareSetTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
-    this.readMembers();
   }
 
   onMemberSelectionChanged() {
@@ -79,7 +79,6 @@ export class SoftwareSetsComponent implements OnInit {
         this.softwareSetData = val;
         console.log("softwareSets")
         console.log(val);
-        setTimeout(function(){this.softwareSetApi.refreshView(),0})
        },
       (err) => { console.log(err) },
       () => { subM.unsubscribe() });
@@ -133,7 +132,7 @@ export class SoftwareSetsComponent implements OnInit {
         width: 100,
         headerName: this.languageS.trans('devices'),
         valueGetter: function (params) {
-          return params.deviceIds.lenght;
+          return params.data.deviceIds.lenght;
         }
       }
     ];
