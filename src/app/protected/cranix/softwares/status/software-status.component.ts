@@ -21,6 +21,7 @@ export class SoftwareStatusComponent implements OnInit {
   autoGroupColumnDef;
   institute;
   selectedList: string[] = [];
+  rowGroupPanelShow="always";
 
   constructor(
     public authService: AuthenticationService,
@@ -93,14 +94,20 @@ export class SoftwareStatusComponent implements OnInit {
       },
       {
         field: 'softwareName',
+        enablePivot: true,
+        enableRowGroup: true,
         headerName: this.languageS.trans('software'),
       },
       {
         field: 'version',
+        enablePivot: true,
+        enableRowGroup: true,
         headerName: this.languageS.trans('version'),
       },
       {
         field: 'status',
+        enablePivot: true,
+        enableRowGroup: true,
         headerName: this.languageS.trans('status')
       }
     ];

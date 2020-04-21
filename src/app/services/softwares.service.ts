@@ -48,7 +48,7 @@ export class SoftwareService {
 	}
 
 	getInstallationsSets(){
-		this.url = this.hostname + "/softwares/installation";
+		this.url = this.hostname + "/softwares/installations";
 		console.log(this.url);
 		return this.http.get<Installation[]>(this.url, { headers: this.headers });
 	}

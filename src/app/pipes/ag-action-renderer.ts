@@ -20,7 +20,7 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
 export class ActionBTNRenderer implements ICellRendererAngularComp {
     private params: any;
 
-    agInit(params: any): void {
+    agInit(params: any ): void {
         this.params = params;
     }
 

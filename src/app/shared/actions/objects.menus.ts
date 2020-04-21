@@ -46,6 +46,30 @@ export const  groupMenu = [
 ]
 
 export const  instituteMenu = [
+  {
+    "name": "Update",
+    "enabled": true,
+    "icon":"trending-up-outline",
+    "action": "serverUpdate"
+  },
+  {
+    "name": "Upload file",
+    "enabled": true,
+    "icon":"cloud-upload-outline",
+    "action": "serverUploadFile"
+  },
+  {
+    "name": "Restart",
+    "enabled": true,
+    "icon":"cloud-upload-outline",
+    "action": "serverReboot"
+  },
+  {
+    "name": "Shutdown",
+    "enabled": true,
+    "icon":"power-outline",
+    "action": "serverShutdown"
+  },
 ]
 
 export const  roomMenu = [

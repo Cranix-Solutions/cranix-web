@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
 //Own stuff
-import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { DownloadSoftwaresComponent } from 'src/app/shared/actions/download-softwares/download-softwares.component';
+import { EditBTNRenderer } from 'src/app/pipes/ag-edit-renderer';
 import { LanguageService } from 'src/app/services/language.service';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
@@ -57,12 +57,20 @@ export class SoftwarePackagesComponent implements OnInit {
     this.readInstallableSoftware();
   }
 
-  readInstallableSoftware() {
+  async readInstallableSoftware() {
     let subM = this.softwareService.getInstallableSoftwares().subscribe(
-      (val) => { this.rowData = val; console.log(val) },
+      (val) => { 
+        this.rowData = val;
+        console.log(val);
+        this.gridApi.redrawRows();
+       },
       (err) => { console.log(err) },
       () => { subM.unsubscribe() });
+      await this.sleep(3000);
   }
+  sleep(milliseconds) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+ }
   createColumnDefs() {
     let columnDefs = [];
     for (let key of this.objectKeys) {
@@ -85,7 +93,7 @@ export class SoftwarePackagesComponent implements OnInit {
         }
         case 'version': {
           col['valueGetter'] =  function (params) {
-            return params.softwareVersions[0].version;
+            return params.data.softwareVersions[0].version;
           }
           break;
         }
@@ -99,7 +107,7 @@ export class SoftwarePackagesComponent implements OnInit {
       cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
       pinned: 'left',
-      cellRendererFramework: ActionBTNRenderer
+      cellRendererFramework: EditBTNRenderer
     };
     columnDefs.splice(1, 0, action)
     this.columnDefs = columnDefs;
