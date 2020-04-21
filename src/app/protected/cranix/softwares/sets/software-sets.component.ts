@@ -43,14 +43,13 @@ export class SoftwareSetsComponent implements OnInit {
       rowSelection: 'multiple'
     }
    }
-
   ngOnInit() {
     this.createColumnDefs();
-    this.readMembers();
   }
   softwareSetReady(params) {
     this.softwareSetApi = params.api;
     this.softwareSetColumnApi = params.columnApi;
+    this.readMembers();
     (<HTMLInputElement>document.getElementById("softwareSetTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
   }
 
