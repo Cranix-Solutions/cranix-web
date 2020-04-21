@@ -49,8 +49,8 @@ export class SoftwareSetsComponent implements OnInit {
   softwareSetReady(params) {
     this.softwareSetApi = params.api;
     this.softwareSetColumnApi = params.columnApi;
-    this.readMembers();
     (<HTMLInputElement>document.getElementById("softwareSetTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
+    this.readMembers();
   }
 
   onMemberSelectionChanged() {
@@ -77,8 +77,9 @@ export class SoftwareSetsComponent implements OnInit {
     let subM = this.softwareService.getInstallationsSets().subscribe(
       (val) => {
         this.softwareSetData = val;
+        console.log("softwareSets")
         console.log(val);
-        this.softwareSetApi.redrawRows();
+        setTimeout(function(){this.softwareSetApi.refreshView(),0})
        },
       (err) => { console.log(err) },
       () => { subM.unsubscribe() });
@@ -105,31 +106,31 @@ export class SoftwareSetsComponent implements OnInit {
       },
       {
         field: 'softwares',
-        width: 50,
+        width: 100,
         headerName: this.languageS.trans('softwares'),
         valueGetter: function (params) {
-          return params.softwareIds.lenght;
+          return params.data.softwareIds.lenght;
         }
       },
       {
         field: 'hwconfs',
-        width: 50,
+        width: 100,
         headerName: this.languageS.trans('hwconfs'),
         valueGetter: function (params) {
-          return params.hwconfIds.lenght;
+          return params.data.hwconfIds.lenght;
         }
       },
       {
         field: 'rooms',
-        width: 50,
+        width: 100,
         headerName: this.languageS.trans('rooms'),
         valueGetter: function (params) {
-          return params.roomIds.lenght;
+          return params.data.roomIds.lenght;
         }
       },
       {
         field: 'devices',
-        width: 50,
+        width: 100,
         headerName: this.languageS.trans('devices'),
         valueGetter: function (params) {
           return params.deviceIds.lenght;
