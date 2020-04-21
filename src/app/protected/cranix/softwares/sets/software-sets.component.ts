@@ -76,7 +76,11 @@ export class SoftwareSetsComponent implements OnInit {
   }
   readMembers() {
     let subM = this.softwareService.getInstallationsSets().subscribe(
-      (val) => { this.softwareSetData = val; console.log(val) },
+      (val) => {
+        this.softwareSetData = val;
+        console.log(val);
+        this.softwareSetApi.redrawRows();
+       },
       (err) => { console.log(err) },
       () => { subM.unsubscribe() });
   }
