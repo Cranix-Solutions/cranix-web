@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 //Own stuff
-import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
 import { AuthenticationService } from 'src/app/services/auth.service';
+import { EditBTNRenderer } from 'src/app/pipes/ag-edit-renderer';
 import { LanguageService } from 'src/app/services/language.service';
 import { SoftwareService } from 'src/app/services/softwares.service'
 import { Installation } from 'src/app/shared/models/data-model';
@@ -97,7 +97,7 @@ export class SoftwareSetsComponent implements OnInit {
         cellStyle: { 'padding': '2px', 'line-height': '36px' },
         field: 'actions',
         pinned: 'left',
-        cellRendererFramework: ActionBTNRenderer
+        cellRendererFramework: EditBTNRenderer
       },
       {
         field: 'description',
