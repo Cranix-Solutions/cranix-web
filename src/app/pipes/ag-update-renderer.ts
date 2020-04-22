@@ -11,7 +11,7 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
             </ion-button>
         </ng-template>
         <ng-template #elseBlock>
-            <ion-icon  slot="icon-only" color="success" name="checkmark-done" style="height:20px;width:20px"></ion-icon>
+            <ion-icon  slot="icon-only" color="success" name="checkmark-sharp" style="height:20px;width:20px"></ion-icon>
         </ng-template>
         `
 })

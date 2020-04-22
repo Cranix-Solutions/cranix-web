@@ -1,7 +1,11 @@
-<ion-header translucent>
+<form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
+  <ion-header translucent>
   <ion-toolbar>
     <ion-title>{{  'Select columns to show' | translate }}</ion-title>
     <ion-buttons slot="end">
+      <ion-button type="submit" class="ion-no-margin">
+        <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+      </ion-button>
       <ion-button fill="clear" size="small" (click)="closeWindow()">
         <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
       </ion-button>
@@ -9,16 +13,11 @@
   </ion-toolbar>
 </ion-header>
 <ion-content fullscreen>
-  <!--form (ngSubmit)="processModal(event)"-->
-  <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
     <ion-list lines="full" class="ion-no-margin ion-no-padding" *ngFor="let key of columns">
       <ion-item>
         <ion-label>{{ key | translate }}</ion-label>
         <ion-checkbox slot="start" formControlName="{{key}}" color="secondary" checked="this.selected.indexOf(key) != -1"></ion-checkbox>
       </ion-item>
     </ion-list>
-    <div class="ion-padding">
-      <ion-button expand="block" type="submit" class="ion-no-margin">{{ "OK" | translate }}</ion-button>
-    </div>
-  </form>
 </ion-content>
+</form>
