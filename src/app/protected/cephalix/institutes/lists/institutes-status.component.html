@@ -1,5 +1,4 @@
 <cranix-toolbar></cranix-toolbar>
-
 <ion-content id="carded">
   <ion-row class="header-row">
   <ion-col>
@@ -11,10 +10,7 @@
     <ion-icon name="arrow-forward-circle"></ion-icon>
   </ion-fab-button>
   <ion-fab-list side="start">
-    <ion-fab-button><ion-icon name="menu" (click)="openActions($event)"></ion-icon></ion-fab-button>
-    <ion-fab-button><ion-icon name="add-circle-outline" (click)="redirectToEdit($event,null)"></ion-icon></ion-fab-button>
     <ion-fab-button><ion-icon name="apps" (click)="openCollums($event)"></ion-icon></ion-fab-button>
-
   </ion-fab-list>
 </ion-fab>
 
@@ -29,12 +25,6 @@
           </ion-item>
         </ion-col>
         <ion-col offset="6" size="3" class="ion-align-self-center ion-text-end hidden-xs hidden-sm hidden-md">
-          <ion-button size="small" (click)="redirectToEdit($event,null)"  matTooltip="{{'create a new institute' | translate }}">
-            <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
-          </ion-button>
-          <ion-button size="small" (click)="openActions($event)" matTooltip="{{'apply actions on the selected objects' | translate }}" >
-            <ion-icon slot="icon-only" name="menu"></ion-icon>
-          </ion-button>
           <ion-button size="small" (click)="openCollums($event)" matTooltip="{{'select the columns to show' | translate }}">
             <ion-icon slot="icon-only" name="apps"></ion-icon>
           </ion-button>

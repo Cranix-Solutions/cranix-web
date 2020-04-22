@@ -74,20 +74,20 @@ export class InstitutesStatusComponent implements OnInit {
     let subs = this.cephalixService.getStatusOfInstitutes().subscribe(
       (val) => {
         this.rowData = val;
-       },
+      },
       (err) => { console.log(err) },
       () => { subs.unsubscribe() }
     )
   }
-  ionViewWillEnter(){
+  ionViewWillEnter() {
     console.log('WillEnter EVENT')
     let subs = this.cephalixService.getStatusOfInstitutes().subscribe(
-      (val) => { 
+      (val) => {
         console.log('new data in event:', val);
         this.rowData = val
-       },
+      },
       (err) => { console.log(err) },
-      () => { subs.unsubscribe() } )
+      () => { subs.unsubscribe() })
   }
   createColumnDefs() {
     let columnDefs = [];
@@ -139,11 +139,6 @@ export class InstitutesStatusComponent implements OnInit {
       }
       columnDefs.push(col);
     }
-    columnDefs.push({
-      headerName: "",
-      field: 'actions',
-      cellRendererFramework: ActionBTNRenderer
-    });
     this.columnDefs = columnDefs;
   }
 
@@ -174,7 +169,7 @@ export class InstitutesStatusComponent implements OnInit {
     });
     this.columnApi.autoSizeColumns(allColumnIds);
   }
-//TODO RESPONSE
+  //TODO RESPONSE
   public redirectToUpdate = (cephalixInstituteId: number) => {
     let sub = this.cephalixService.updateById(cephalixInstituteId).subscribe(
       (val) => { console.log(val) },

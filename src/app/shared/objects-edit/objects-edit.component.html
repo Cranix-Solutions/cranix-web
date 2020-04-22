@@ -1,18 +1,22 @@
-<ion-header translucent>
-  <ion-toolbar>
-    <ion-title>{{  objectActionTitle | translate }}</ion-title>
-    <ion-buttons slot="end">
-      <ion-button *ngIf="objectType == 'institute'" fill="clear" size="small" (click)="setNextDefaults()" matTooltip="{{'Set the next default values' | translate }}" disabled="{{editForm.disabled}}">
-        <ion-icon slot="icon-only" name="refresh"></ion-icon>
-      </ion-button>
-      <ion-button fill="clear" size="small" (click)="closeWindow()" disabled="{{editForm.disabled}}">
-        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-<ion-content fullscreen>
-  <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
+<form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
+  <ion-header translucent>
+    <ion-toolbar>
+      <ion-title>{{  objectActionTitle | translate }}</ion-title>
+      <ion-buttons slot="end">
+        <ion-button *ngIf="objectType == 'institute'" fill="clear" size="small" (click)="setNextDefaults()"
+          matTooltip="{{'Set the next default values' | translate }}" disabled="{{editForm.disabled}}">
+          <ion-icon slot="icon-only" name="refresh"></ion-icon>
+        </ion-button>
+        <ion-button type="submit" class="ion-no-margin">
+          <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" size="small" (click)="closeWindow()" disabled="{{editForm.disabled}}">
+          <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen>
     <ion-list lines="full" class="ion-no-margin ion-no-padding">
       <div *ngFor=" let key of objectKeys" [ngSwitch]="objectService.typeOf(key,object,objectAction)">
         <ion-item *ngSwitchCase="'booleanTrue'">
@@ -82,9 +86,5 @@
         </ion-item>
       </div>
     </ion-list>
-    <div class="ion-padding ion-text-center">
-      <ion-button type="submit" class="ion-no-margin" [disabled]="!editForm.valid">{{ objectAction | translate }}
-      </ion-button>
-    </div>
-  </form>
-</ion-content>
+  </ion-content>
+</form>
