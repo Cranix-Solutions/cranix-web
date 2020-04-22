@@ -10,8 +10,6 @@ const LNG_KEY = 'SELECTED_LANGUAGE';
 export class LanguageService {
   language = 'de';
   translations = {};
-
-
   constructor(
     private translate: TranslateService,
     private storage: Storage,
@@ -40,10 +38,11 @@ export class LanguageService {
     ];
   }
 
-  setLanguage(lng) {
-    this.translate.use(lng);
-    this.language = lng;
-    this.storage.set(LNG_KEY, lng);
+  setLanguage(lng: string) {
+    let lang = lng.toLowerCase();
+    this.translate.use(lang);
+    this.language = lang;
+    this.storage.set(LNG_KEY, lang);
   }
 
   trans(val: string) {

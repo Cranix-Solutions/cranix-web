@@ -14,6 +14,7 @@ import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-col
 import { Device, Room } from 'src/app/shared/models/data-model'
 import { HwconfIdCellRenderer } from 'src/app/pipes/ag-hwconfid-renderer';
 import { RoomIdCellRenderer } from 'src/app/pipes/ag-roomid-render';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'cranix-room-devices',
@@ -37,6 +38,7 @@ export class RoomDevicesPage implements OnInit {
   objectIds: number[] = [];
 
   constructor(
+    public authService: AuthenticationService,
     public alertController: AlertController,
     public languageS: LanguageService,
     public modalCtrl: ModalController,

@@ -6,9 +6,9 @@ import { Observable } from 'rxjs/internal/Observable';
 import { BehaviorSubject } from 'rxjs';
 
 import { Customer, Institute, Ticket, Article, Notice, OssCare, SynchronizedObject } from 'src/app/shared/models/cephalix-data-model';
-import { ServerResponse } from 'src/app/shared/models/server-models';
+import { ServerResponse, OssActionMap } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from './auth.service';
-import { InstituteStatus } from '../shared/models/cephalix-data-model';
+import { InstituteStatus } from 'src/app/shared/models/cephalix-data-model';
 
 
 export interface InstallSetSync{
@@ -136,6 +136,11 @@ export class CephalixService {
 	}
 
 	//POST
+	applyAction(actionMap: OssActionMap ){
+		this.url = this.hostname + `/institutes/applyAction`;
+		console.log(this.url);
+		return this.http.post<ServerResponse>(this.url,actionMap, { headers: this.headers});
+	}
 	addNoticeToInst(id: number, note: Notice){
 		this.url = this.hostname + `/institutes/${id}/notices`;
 		return this.http.post<ServerResponse>(this.url,note, { headers: this.headers});

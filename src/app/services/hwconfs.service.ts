@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 import { UtilsService } from './utils.service';
-import { Device, Hwconf } from '../shared/models/data-model';
-import { ServerResponse } from '../shared/models/server-models';
+import { Device, Hwconf } from 'src/app/shared/models/data-model';
+import { ServerResponse } from 'src/app/shared/models/server-models';
 import { Observable } from 'rxjs/internal/Observable';
 import { BehaviorSubject } from 'rxjs';
 import { AuthenticationService } from './auth.service';

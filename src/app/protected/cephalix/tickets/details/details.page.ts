@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 //own 
-import { Ticket, Article } from '../../../../shared/models/cephalix-data-model';
-import { GenericObjectService } from './../../../../services/generic-object.service';
-import { CephalixService } from './../../../../services/cephalix.service';
+import { Ticket, Article } from 'src/app/shared/models/cephalix-data-model';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { CephalixService } from 'src/app/services/cephalix.service';
 @Component({
   selector: 'cranix-details',
   templateUrl: './details.page.html',

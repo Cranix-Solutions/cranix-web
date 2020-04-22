@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { GenericObjectService } from '../services/generic-object.service'
+import { GenericObjectService } from 'src/app/services/generic-object.service'
 @Pipe({
   name: 'userIdToUid'
 })

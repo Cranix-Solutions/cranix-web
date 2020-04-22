@@ -3,8 +3,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { UtilsService } from './utils.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Room, AccessStatus, Printer, DHCP, Hwconf } from '../shared/models/data-model';
-import { ServerResponse } from '../shared/models/server-models';
+import { Room, AccessStatus, Printer, DHCP, Hwconf } from 'src/app/shared/models/data-model';
+import { ServerResponse } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from './auth.service';
 
 @Injectable()

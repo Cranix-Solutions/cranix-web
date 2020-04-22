@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/internal/Observable';
 import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Device, InstallStateDev, Printer, DHCP } from '../shared/models/data-model';
+import { Device, InstallStateDev, Printer, DHCP } from 'src/app/shared/models/data-model';
 import { UtilsService } from './utils.service';
 import { ServerResponse } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from './auth.service';

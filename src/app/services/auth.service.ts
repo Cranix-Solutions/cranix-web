@@ -52,6 +52,9 @@ export class AuthenticationService {
         this.subscription = this.login(user)
             .subscribe(
                 (val) => {
+                    this.storage.get('agGridThema').then((val) => {
+                        this.agGridThema = val;
+                      });
                     console.log('login respons is', val);
                     this.session = val;
                     this.session['instituteName'] = instituteName;
@@ -183,6 +186,7 @@ export class AuthenticationService {
             case "/pages/cranix/rooms": { return this.isAllowed('room.manage') }
             case "/pages/cranix/users/all": { return this.isAllowed('user.manage') }
             case "/pages/cranix/users": { return this.isAllowed('user.manage') }
+            case "/pages/cranix/softwares": { return this.isAllowed('software.manage') }
             case "institutes/:id": { return this.isAllowed('cephalix.modify') }
             case "customers/:id": { return this.isAllowed('customer.modify') }
             case "tickets/:id": { return this.isAllowed('cephalix.ticket') }

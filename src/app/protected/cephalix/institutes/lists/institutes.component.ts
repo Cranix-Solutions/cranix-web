@@ -16,7 +16,6 @@ import { LanguageService } from 'src/app/services/language.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Institute } from 'src/app/shared/models/cephalix-data-model'
-import { NameActionRenderer } from 'src/app/pipes/name-action-renderer';
 
 @Component({
   selector: 'cranix-institutes',
@@ -25,7 +24,7 @@ import { NameActionRenderer } from 'src/app/pipes/name-action-renderer';
 })
 export class InstitutesComponent implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity', 'actions'];
+  displayedColumns: string[] = ['name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity'];
   sortableColumns: string[] = ['uuid', 'name', 'locality', 'ipVPN', 'regCode', 'validity'];
   gridOptions: GridOptions;
   columnDefs = [];
@@ -35,9 +34,9 @@ export class InstitutesComponent implements OnInit {
   context;
   title = 'app';
   rowData = [];
-  objectIds: number[] = [];
 
   constructor(
+    public authService: AuthenticationService,
     public cephalixService: CephalixService,
     public objectService: GenericObjectService,
     public modalCtrl: ModalController,
@@ -47,7 +46,7 @@ export class InstitutesComponent implements OnInit {
     private storage: Storage
   ) {
     this.context = { componentParent: this };
-    this.objectKeys = Object.getOwnPropertyNames( cephalixService.templateInstitute );
+    this.objectKeys = Object.getOwnPropertyNames(cephalixService.templateInstitute);
     this.createColumnDefs();
     this.gridOptions = <GridOptions>{
       defaultColDef: {
@@ -58,7 +57,7 @@ export class InstitutesComponent implements OnInit {
       columnDefs: this.columnDefs,
       context: this.context,
       rowSelection: 'multiple',
-     // domLayout: 'autoHeight',
+      // domLayout: 'autoHeight',
       rowHeight: 35
     }
   }
@@ -89,12 +88,10 @@ export class InstitutesComponent implements OnInit {
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
           col['width'] = 220;
-          col['cellStyle'] = { 'padding-left' : '2px', 'padding-right' : '2px'};
+          col['cellStyle'] = { 'padding-left': '2px', 'padding-right': '2px' };
           col['suppressSizeToFit'] = true;
-          col['pinned'] = 'left';   
-          //col['flex'] = '1';   
+          col['pinned'] = 'left';
           col['colId'] = '1';
-          //col['cellRendererFramework'] = NameActionRenderer; 
           break;
         }
         case 'uuid': {
@@ -116,23 +113,13 @@ export class InstitutesComponent implements OnInit {
       headerName: "",
       width: 85,
       suppressSizeToFit: true,
-      cellStyle: { 'padding' : '2px', 'line-height' :'36px'},
+      cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
       pinned: 'left',
       cellRendererFramework: ActionBTNRenderer
     };
 
-    columnDefs.splice(1,0,action)
-    /*columnDefs.push({
-      headerName: "",
-      colId: 2,
-      width: 100,
-      suppressSizeToFit: true,
-      cellStyle: { 'padding' : '2px', 'line-height' :'36px'},
-      field: 'actions',
-      pinned: 'right',
-      cellRendererFramework: ActionBTNRenderer
-    });*/
+    columnDefs.splice(1, 0, action)
     console.log('columnsDef', columnDefs);
     this.columnDefs = columnDefs;
   }
@@ -140,21 +127,11 @@ export class InstitutesComponent implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-   // (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
-    //this.gridApi.sizeColumnsToFit();
-   /* window.addEventListener('resize', function() {
-      setTimeout(function() {
-        params.api.sizeColumnsToFit();
-        //this.sizeAll();
-      });
-    });*/
-
-    
   }
   onSelectionChanged() {
     this.cephalixService.selectedInstitutes = this.gridApi.getSelectedRows();
     this.cephalixService.selectedList = [];
-    for(let o of this.cephalixService.selectedInstitutes ) {
+    for (let o of this.cephalixService.selectedInstitutes) {
       this.cephalixService.selectedList.push(o.name)
     }
   }
@@ -162,14 +139,9 @@ export class InstitutesComponent implements OnInit {
   onQuickFilterChanged() {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById("quickFilter")).value);
     this.gridApi.doLayout();
-
   }
-  /*onResize($event) {
-   // (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
-    this.sizeAll();
-    this.gridApi.sizeColumnsToFit();
-  }*/
-  onGridSizeChange(params){
+
+  onGridSizeChange(params) {
     var allColumns = params.columnApi.getAllColumns();
     params.api.sizeColumnsToFit();
 
@@ -189,21 +161,25 @@ export class InstitutesComponent implements OnInit {
  * Open the actions menu with the selected object ids.
  * @param ev
  */
-  async openActions(ev: any) {
-    if( !this.cephalixService.selectedInstitutes) {
+  async openActions(ev: any, objId: number) {
+    if (!this.cephalixService.selectedInstitutes && !objId) {
       this.objectService.selectObject();
       return;
     }
-    this.objectIds = [];
-    for (let i = 0; i < this.cephalixService.selectedInstitutes.length; i++) {
-        this.objectIds.push(this.cephalixService.selectedInstitutes[i].id);
+    let objectIds = [];
+    if (objId) {
+      objectIds.push(objId)
+    } else {
+      for (let i = 0; i < this.cephalixService.selectedInstitutes.length; i++) {
+        objectIds.push(this.cephalixService.selectedInstitutes[i].id);
+      }
     }
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
       event: ev,
       componentProps: {
         objectType: "institute",
-        objectIds: this.objectIds,
+        objectIds: objectIds,
         selection: this.cephalixService.selectedInstitutes
       },
       animated: true,
@@ -241,26 +217,26 @@ export class InstitutesComponent implements OnInit {
   * Function to select the columns to show
   * @param ev
   */
-    async openCollums(ev: any) {
-      const modal = await this.modalCtrl.create({
-        component: SelectColumnsComponent,
-        componentProps: {
-          columns: this.objectKeys,
-          selected: this.displayedColumns,
-          objectPath: "InstitutesComponent.displayedColumns"
-        },
-        animated: true,
-        swipeToClose: true,
-        backdropDismiss: false
-      });
-      modal.onDidDismiss().then((dataReturned) => {
-        if (dataReturned.data) {
-          this.displayedColumns = (dataReturned.data).concat(['actions']);
-          this.createColumnDefs();
-        }
-      });
-      (await modal).present().then((val) => {
-        console.log("most lett vegrehajtva.")
-      })
-    }
+  async openCollums(ev: any) {
+    const modal = await this.modalCtrl.create({
+      component: SelectColumnsComponent,
+      componentProps: {
+        columns: this.objectKeys,
+        selected: this.displayedColumns,
+        objectPath: "InstitutesComponent.displayedColumns"
+      },
+      animated: true,
+      swipeToClose: true,
+      backdropDismiss: false
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        this.displayedColumns = (dataReturned.data).concat(['actions']);
+        this.createColumnDefs();
+      }
+    });
+    (await modal).present().then((val) => {
+      console.log("most lett vegrehajtva.")
+    })
   }
+}

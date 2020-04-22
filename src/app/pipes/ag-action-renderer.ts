@@ -20,7 +20,7 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
 export class ActionBTNRenderer implements ICellRendererAngularComp {
     private params: any;
 
-    agInit(params: any): void {
+    agInit(params: any ): void {
         this.params = params;
     }
 
@@ -29,7 +29,7 @@ export class ActionBTNRenderer implements ICellRendererAngularComp {
         this.params.context.componentParent.redirectToEdit(this.params.data.id, this.params.data);
     }
     public openAction(ev: any){
-        this.params.context.componentParent.openActions(ev)
+        this.params.context.componentParent.openActions(ev, this.params.data.id )
     }
    /* public delete() {
         this.params.context.componentParent.redirectToDelete(this.params.data);

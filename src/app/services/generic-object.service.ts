@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
-import { ServerResponse } from '../shared/models/server-models';
 import { AlertController, ToastController } from '@ionic/angular';
 import { Validators } from '@angular/forms';
 // own modules
+import { ServerResponse } from 'src/app/shared/models/server-models';
+import { Package } from 'src/app/shared/models/data-model';
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 import { LanguageService } from './language.service';
@@ -14,6 +15,7 @@ import { LanguageService } from './language.service';
 export class GenericObjectService {
   allObjects: any = {};
   selectedObject: any = null;
+  packagesAvailable: Package[] = [];
 
   /**
    * The base objects which need to be loaded by the initialisations
@@ -27,10 +29,11 @@ export class GenericObjectService {
   cephalixDefaults: any = {};
 
   selects: any = {
-    'status': ['N', 'A', 'D'],
+    'agGridThema': ['ag-theme-alpine', 'ag-theme-alpine-dark', 'ag-theme-balham', 'ag-theme-balham-dark', 'ag-theme-material'],
+    'devCount': [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096],
     'identifier': ['sn-gn-bd', 'uuid', 'uid'],
     'lang': ['DE', 'EN'],
-    'devCount': [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
+    'status': ['N', 'A', 'D']
   }
   initialized: boolean = false;
   enumerates: string[] = [
@@ -89,7 +92,7 @@ export class GenericObjectService {
     private http: HttpClient,
     private languageS: LanguageService,
     private utilsS: UtilsService,
-    private toastController: ToastController) {
+    public toastController: ToastController) {
   }
 
   initialize(force: boolean) {
@@ -122,6 +125,9 @@ export class GenericObjectService {
           (err) => { },
           () => { subs[key].unsubscribe() });
       }
+      if( this.authService.isAllowed('software.download')) {
+        this.getSoftwaresToDowload();
+      }
       this.initialized = true;
     }
   }
@@ -144,7 +150,17 @@ export class GenericObjectService {
       (err) => { },
       () => { sub3.unsubscribe() });
   }
-
+  getSoftwaresToDowload() {
+    let url = this.utilsS.hostName() + "/softwares/available";
+    let sub = this.http.get<Package[]>(url, { headers: this.headers }).subscribe(
+      (val) => {
+        this.packagesAvailable = val;
+      },
+      (err) => { 
+        console.log('getSoftwaresToDowload');
+        console.log(err) },
+      () => { sub.unsubscribe() });
+  }
   getAllObject(objectType) {
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";
     let sub = this.http.get(url, { headers: this.headers }).subscribe(
@@ -181,7 +197,6 @@ export class GenericObjectService {
   }
 
   idToName(objectType, objectId) {
-    console.log(objectType, objectId);
     for (let obj of this.allObjects[objectType].getValue()) {
       if (obj.id === objectId) {
         return obj.name;
@@ -209,19 +224,14 @@ export class GenericObjectService {
   addObject(object, objectType) {
     const body = object;
     let url = this.utilsS.hostName() + "/" + objectType + "s/add";
-    console.log(objectType);
-    console.log(object);
     return this.http.post<ServerResponse>(url, body, { headers: this.headers });
   }
   modifyObject(object, objectType) {
     const body = object;
-    console.log("modifyObject");
-    console.log(object);
     let url = this.utilsS.hostName() + "/" + objectType + "s/" + object.id;
     return this.http.post<ServerResponse>(url, body, { headers: this.headers })
   }
   deleteObject(object, objectType) {
-    const body = object;
     let url = this.utilsS.hostName() + "/" + objectType + "s/" + object.id;
     return this.http.delete<ServerResponse>(url, { headers: this.headers })
   }
@@ -285,6 +295,8 @@ export class GenericObjectService {
         }
       },
       (err) => {
+        console.log("ERROR: modifyObjectDialog" )
+        console.log(object)
         console.log(err);
         this.errorMessage(this.languageS.trans("An error was accoured"));
       },
@@ -373,8 +385,6 @@ export class GenericObjectService {
         output[key] = object[key];
       }
     }
-    console.log("convertObject:");
-    console.log(output);
     return output;
   }
 }

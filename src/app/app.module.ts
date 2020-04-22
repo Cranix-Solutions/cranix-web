@@ -17,6 +17,7 @@ import { ErrorHandler, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 //own modules 
 import { CranixSharedModule } from './shared/cranix-shared.module';
+import { DownloadSoftwaresComponent } from 'src/app/shared/actions/download-softwares/download-softwares.component';
 import { UtilsService } from './services/utils.service';
 import { SystemService } from './services/system.service';
 import { LanguageService } from './services/language.service';
@@ -31,6 +32,7 @@ import { GroupsService } from './services/groups.service';
 import { HwconfsService } from './services/hwconfs.service';
 import { ObjectsEditComponent } from './shared/objects-edit/objects-edit.component';
 import { RoomsService } from './services/rooms.service';
+import { SoftwareService } from './services/softwares.service';
 import { SelectColumnsComponent } from './shared/select-columns/select-columns.component';
 import { UsersService } from './services/users.service';
 import 'ag-grid-enterprise';
@@ -55,11 +57,13 @@ const routes: Routes = [
   declarations: [
     AppComponent,
     ActionsComponent,
+    DownloadSoftwaresComponent,
     ShowImportComponent,
     ObjectsEditComponent,
     SelectColumnsComponent],
   entryComponents: [
     ActionsComponent,
+    DownloadSoftwaresComponent,
     ShowImportComponent,
     ObjectsEditComponent,
     SelectColumnsComponent],
@@ -87,6 +91,7 @@ const routes: Routes = [
     HwconfsService,
     StatusBar,
     RoomsService,
+    SoftwareService,
     SplashScreen,
     UsersService,
     UtilsService,

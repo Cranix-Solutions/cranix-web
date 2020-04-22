@@ -37,4 +37,12 @@ export interface ServerResponse {
 
 }
 
+export class OssActionMap {
+	objectIds: number[] = [];
+	booleanValue: boolean= true;
+	longValue: number= 0;
+	name: string = "";
+	stringValue  = "";
+}
+
 export const TOKEN = 'cranix-token';

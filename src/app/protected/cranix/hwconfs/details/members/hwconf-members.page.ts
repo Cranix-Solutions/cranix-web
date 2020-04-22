@@ -5,6 +5,7 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { HwconfsService } from 'src/app/services/hwconfs.service';
 import { Hwconf, Device } from 'src/app/shared/models/data-model';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'cranix-hwconf-members',
@@ -23,6 +24,7 @@ export class HwconfMembersPage implements OnInit {
   hwconf;
 
   constructor(
+    public authService: AuthenticationService,
     public objectService: GenericObjectService,
     private languageS: LanguageService,
     private hwconfService: HwconfsService

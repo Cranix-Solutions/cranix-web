@@ -5,13 +5,14 @@ import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 
 //own modules
-import { ActionsComponent } from '../../../shared/actions/actions.component';
-import { ActionBTNRenderer } from '../../../pipes/ag-action-renderer';
-import { ObjectsEditComponent } from '../../../shared/objects-edit/objects-edit.component';
-import { GenericObjectService } from '../../../services/generic-object.service';
-import { LanguageService } from '../../../services/language.service';
-import { SelectColumnsComponent } from '../../../shared/select-columns/select-columns.component';
-import { Group } from '../../../shared/models/data-model'
+import { ActionsComponent } from 'src/app/shared/actions/actions.component';
+import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
+import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { LanguageService } from 'src/app/services/language.service';
+import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
+import { Group } from 'src/app/shared/models/data-model'
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'cranix-groups',
@@ -20,7 +21,7 @@ import { Group } from '../../../shared/models/data-model'
 })
 export class GroupsPage implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['name', 'description', 'roomControl', 'hwconfId','actions'];
+  displayedColumns: string[] = ['name', 'description', 'roomControl', 'hwconfId', 'actions'];
   sortableColumns: string[] = ['name', 'description', 'roomControl', 'hwconfId'];
   gridOptions: GridOptions;
   columnDefs = [];
@@ -31,9 +32,9 @@ export class GroupsPage implements OnInit {
   selected: Group[];
   title = 'app';
   rowData = [];
-  objectIds: number[] = [];
 
   constructor(
+    public authService: AuthenticationService,
     public objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
@@ -80,16 +81,27 @@ export class GroupsPage implements OnInit {
           col['headerCheckboxSelection'] = true;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
+          col['width'] = 220;
+          col['cellStyle'] = { 'padding-left': '2px' };
+          col['suppressSizeToFit'] = true;
+          col['pinned'] = 'left';
+          col['flex'] = '1';
+          col['colId'] = '1';
           break;
         }
       }
       columnDefs.push(col);
     }
-    columnDefs.push({
+    let action = {
       headerName: "",
+      width: 100,
+      suppressSizeToFit: true,
+      cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
+      pinned: 'left',
       cellRendererFramework: ActionBTNRenderer
-    });
+    };
+    columnDefs.splice(1, 0, action)
     this.columnDefs = columnDefs;
   }
 
@@ -123,24 +135,28 @@ export class GroupsPage implements OnInit {
     this.objectService.deleteObjectDialog(group, 'group')
   }
   /**
- * Open the actions menu with the selected object ids.
- * @param ev 
- */
-  async openActions(ev: any) {
-    if( !this.selected) {
+  * Open the actions menu with the selected object ids.
+  * @param ev
+  */
+  async openActions(ev: any, objId: number) {
+    if (!this.selected && !objId) {
       this.objectService.selectObject();
       return;
     }
-    this.objectKeys = [];
-    for (let i = 0; i < this.selected.length; i++) {
-      this.objectIds.push(this.selected[i].id);
+    let objectIds = [];
+    if (objId) {
+      objectIds.push(objId)
+    } else {
+      for (let i = 0; i < this.selected.length; i++) {
+        objectIds.push(this.selected[i].id);
+      }
     }
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
       event: ev,
       componentProps: {
         objectType: "group",
-        objectIds: this.objectIds,
+        objectIds: objectIds,
         selection: this.selected
       },
       animated: true,
@@ -175,9 +191,9 @@ export class GroupsPage implements OnInit {
   }
 
   /**
-* Function to select the columns to show
-* @param ev 
-*/
+   * Function to select the columns to show
+   * @param ev
+  */
   async openCollums(ev: any) {
     const modal = await this.modalCtrl.create({
       component: SelectColumnsComponent,

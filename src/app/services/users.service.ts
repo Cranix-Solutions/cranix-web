@@ -4,8 +4,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 //own modules
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
-import { ServerResponse } from '../shared/models/server-models';
-import { Group, UsersImport } from '../shared/models/data-model';
+import { ServerResponse } from 'src/app/shared/models/server-models';
+import { Group, UsersImport } from 'src/app/shared/models/data-model';
 
 interface UserList {
 	id: number;

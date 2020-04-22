@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ToastController } from '@ionic/angular';
 //own stuff
-import { GenericObjectService } from '../../../../../services/generic-object.service';
-import { LanguageService } from '../../../../../services/language.service';
-import { RoomsService } from '../../../../../services/rooms.service';
-import { Printer, Room } from '../../../../../shared/models/data-model'
-import { ServerResponse } from '../../../../../shared/models/server-models';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { LanguageService } from 'src/app/services/language.service';
+import { RoomsService } from 'src/app/services/rooms.service';
+import { Printer, Room } from 'src/app/shared/models/data-model'
+import { ServerResponse } from 'src/app/shared/models/server-models';
 
 @Component({
   selector: 'cranix-group-members',

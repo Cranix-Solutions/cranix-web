@@ -2,50 +2,61 @@
 
 <ion-content id="carded">
   <ion-row class="header-row">
-  <ion-col size=6>
-    <ion-title>{{'Manage rooms' | translate}}</ion-title>
-  </ion-col>
-</ion-row>
-<ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
-  <ion-fab-button>
-    <ion-icon name="arrow-forward-circle"></ion-icon>
-  </ion-fab-button>
-  <ion-fab-list side="start">
-    <ion-fab-button><ion-icon name="menu" (click)="openActions($event)"></ion-icon></ion-fab-button>
-    <ion-fab-button><ion-icon name="add-circle-outline" (click)="redirectToEdit($event,null)"></ion-icon></ion-fab-button>
-    <ion-fab-button><ion-icon name="apps" (click)="openCollums($event)"></ion-icon></ion-fab-button>
+    <ion-col size=6>
+      <ion-title>{{'Manage rooms' | translate}}</ion-title>
+    </ion-col>
+  </ion-row>
+  <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
+    <ion-fab-button>
+      <ion-icon name="arrow-forward-circle"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="start">
+      <ion-fab-button>
+        <ion-icon name="ellipsis-vertical-sharp" (click)="openActions($event,null)"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="add-circle-outline" (click)="redirectToEdit($event,null)"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="apps" (click)="openCollums($event)"></ion-icon>
+      </ion-fab-button>
 
-  </ion-fab-list>
-</ion-fab>
-<ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="quickFilter"showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
+    </ion-fab-list>
+  </ion-fab>
+  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="quickFilter"
+    showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
 
   <ion-card>
-    <ion-card-header  class="hidden-xs hidden-sm hidden-md">
-            <ion-row class="ion-align-items-center">
+    <ion-card-header class="hidden-xs hidden-sm hidden-md">
+      <ion-row class="ion-align-items-center">
         <ion-col size="3">
           <ion-item>
             <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="quickFilter">
             </ion-input>
           </ion-item>
         </ion-col>
-   
-        <ion-col offset="6" size="3" class="ion-text-end hidden-xs hidden-sm hidden-md">     
-               <ion-button size="small" (click)="redirectToEdit($event,null)"  matTooltip="{{'create a new institute' | translate }}">
+
+        <ion-col offset="6" size="3" class="ion-text-end hidden-xs hidden-sm hidden-md">
+          <ion-button size="small" (click)="redirectToEdit($event,null)"
+            matTooltip="{{'create a new institute' | translate }}">
             <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="openActions($event)" matTooltip="{{'apply actions on the selected objects' | translate }}" >
-            <ion-icon slot="icon-only" name="menu"></ion-icon>
+          <ion-button size="small" (click)="openActions($event,null)"
+            matTooltip="{{'apply actions on the selected objects' | translate }}">
+            <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="openCollums($event)" matTooltip="{{'select the columns to show' | translate }}">
+          <ion-button size="small" (click)="openCollums($event)"
+            matTooltip="{{'select the columns to show' | translate }}">
             <ion-icon slot="icon-only" name="apps"></ion-icon>
           </ion-button>
         </ion-col>
       </ion-row>
     </ion-card-header>
     <ion-card-content>
-      <ag-grid-angular style="width: 100%; height: 450px;" class="ag-theme-balham" [gridOptions]="gridOptions"
-        [rowData]="rowData" [columnDefs]="columnDefs" [context]="context" [rowSelection]="rowSelection"
-        (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged()" id="agGridTable">
+      <ag-grid-angular style="width: 100%; height: 450px;" class="{{authService.agGridThema}}"
+        [gridOptions]="gridOptions" [rowData]="rowData" [columnDefs]="columnDefs" [context]="context"
+        [rowSelection]="rowSelection" (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged()"
+        id="agGridTable">
       </ag-grid-angular>
     </ion-card-content>
   </ion-card>
