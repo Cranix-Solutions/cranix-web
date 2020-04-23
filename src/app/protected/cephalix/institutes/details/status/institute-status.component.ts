@@ -7,14 +7,12 @@ import { Storage } from '@ionic/storage';
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
-import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Institute, InstituteStatus } from 'src/app/shared/models/cephalix-data-model'
-import { UpdateRenderer } from 'src/app/pipes/ag-update-renderer';
 import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
@@ -69,7 +67,6 @@ export class InstituteStatusComponent implements OnInit {
     this.storage.get('InstitutesStatusComponent.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
-        this.displayedColumns = (myArray).concat(['actions']);
         this.createColumnDefs();
       }
     });
@@ -100,6 +97,7 @@ export class InstituteStatusComponent implements OnInit {
           break;
         }
         case 'runningKernel': {
+          col['width'] = 100;
           col['valueGetter'] = function (params) {
             let index = params.data.runningKernel.indexOf("-default");
             let run = params.data.runningKernel.substring(0, index);
@@ -119,13 +117,11 @@ export class InstituteStatusComponent implements OnInit {
           break;
         }
         case 'cephalixInstituteId': {
-          col['valueGetter'] = function (params) {
-            return params.context['componentParent'].objectService.idToName('institute', params.data.cephalixInstituteId);
-          }
+          col['hide'] = true;
           break;
         }
         case 'availableUpdates': {
-          col['cellRendererFramework'] = UpdateRenderer;
+          col['hide'] = true;
           break;
         }
         case 'created': {
@@ -135,11 +131,6 @@ export class InstituteStatusComponent implements OnInit {
       }
       columnDefs.push(col);
     }
-    columnDefs.push({
-      headerName: "",
-      field: 'actions',
-      cellRendererFramework: ActionBTNRenderer
-    });
     this.columnDefs = columnDefs;
   }
 
@@ -153,8 +144,8 @@ export class InstituteStatusComponent implements OnInit {
     this.selected = this.gridApi.getSelectedRows();
   }
 
-  onQuickFilterChanged() {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById("quickFilter")).value);
+  onQuickFilterChanged(quickFilter) {
+    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.doLayout();
 
   }
@@ -245,7 +236,6 @@ export class InstituteStatusComponent implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        this.displayedColumns = (dataReturned.data).concat(['actions']);
         this.createColumnDefs();
       }
     });

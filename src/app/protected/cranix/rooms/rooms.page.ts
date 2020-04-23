@@ -119,8 +119,8 @@ export class RoomsPage implements OnInit {
     this.selected = this.gridApi.getSelectedRows();
   }
 
-  onQuickFilterChanged() {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById("quickFilter")).value);
+  onQuickFilterChanged(quickFilter) {
+    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.doLayout();
 
   }

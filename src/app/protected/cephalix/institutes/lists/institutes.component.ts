@@ -136,8 +136,8 @@ export class InstitutesComponent implements OnInit {
     }
   }
 
-  onQuickFilterChanged() {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById("quickFilter")).value);
+  onQuickFilterChanged(quickFilter) {
+    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.doLayout();
   }
 
