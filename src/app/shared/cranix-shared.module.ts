@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AgChartsAngularModule } from 'ag-charts-angular';
 import {
   MatDatepickerModule,
   MatNativeDateModule,
@@ -54,6 +55,7 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
     ToolbarComponent,
   ],
   imports: [
+    AgChartsAngularModule,
   CommonModule,
   AgGridModule.withComponents( [
     ActionBTNRenderer, 
@@ -90,6 +92,7 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
   PipesModule,
   TranslateModule,
   ], exports: [
+    AgChartsAngularModule,
     CommonModule,
     AgGridModule,
     FormsModule,

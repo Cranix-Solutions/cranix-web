@@ -369,6 +369,9 @@ export class GenericObjectService {
     if (key.substring(key.length - 2) == 'Id') {
       return "idPipe";
     }
+    if( key.substring(key.length - 4) == 'File' ) {
+      return 'file';
+    }
     return "string";
   }
 

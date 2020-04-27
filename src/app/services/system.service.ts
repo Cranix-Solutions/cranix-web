@@ -4,8 +4,6 @@ import { HttpClient, HttpHeaders, HttpParams, HttpClientModule } from '@angular/
 import { UtilsService } from './utils.service';
 import { AuthenticationService} from './auth.service';
 
-import { BehaviorSubject } from 'rxjs';
-
 @Injectable()
 export class SystemService {
 
@@ -18,10 +16,13 @@ export class SystemService {
     constructor(
 		private http: HttpClient,
 		private utilsS: UtilsService,
-		private authS: AuthenticationService) {
-
+		private authService: AuthenticationService) {
+		this.initModule();
+    }
+	
+	initModule() {
 		this.hostname = this.utilsS.hostName();
-		this.token          = this.authS.getToken();
+		this.token          = this.authService.getToken();
 		this.headers     = new HttpHeaders({
 			'Content-Type': "application/json",
 			'Accept' : "application/json",
@@ -31,14 +32,12 @@ export class SystemService {
 			'Accept' : "text/plain",
 			'Authorization' : "Bearer " + this.token
 		});
-		
-    }
-	
+	}
 	    
     getStatus(){
 		this.url = this.hostname + `/system/status`;
 		console.log(this.url);
-		return this.http.get<Hash>(this.url, { headers: this.headers});
+		return this.http.get(this.url, { headers: this.headers});
 	}
 
     restartJob(jobId: number){
@@ -63,6 +62,12 @@ export class SystemService {
 		this.url = this.hostname + `/system/type`;
 		console.log(this.url);
 		return this.http.get(this.url,{ headers: this.textHeaders, responseType: 'text'  });
+	}
+
+	update(){
+		this.url = this.hostname + `/system/update`;
+		console.log(this.url);
+		return this.http.put(this.url, null,{ headers: this.headers});
 	}
 
 }
