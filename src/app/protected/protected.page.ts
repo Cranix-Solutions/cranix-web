@@ -57,6 +57,11 @@ export class ProtectedPage implements OnInit {
       title: 'Softwares',
       url: '/pages/cranix/softwares',
       icon: 'laptop'
+    },
+    {
+      title: 'System',
+      url: '/pages/cranix/system',
+      icon: 'settings'
     }
   ];
 

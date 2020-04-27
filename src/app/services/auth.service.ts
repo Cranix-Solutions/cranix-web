@@ -188,6 +188,7 @@ export class AuthenticationService {
             case "/pages/cranix/rooms": { return this.isAllowed('room.manage') }
             case "/pages/cranix/users/all": { return this.isAllowed('user.manage') }
             case "/pages/cranix/users": { return this.isAllowed('user.manage') }
+            case "/pages/cranix/system": { return this.isAllowed('system.status') }
             case "/pages/cranix/softwares": { return this.isAllowed('software.manage') }
             case "institutes/:id": { return this.isAllowed('cephalix.modify') }
             case "customers/:id": { return this.isAllowed('customer.modify') }

@@ -21,6 +21,9 @@ export class ObjectsEditComponent implements OnInit {
   objectKeys: string[] = [];
   objectActionTitle: string = "";
   objectAction: string = "";
+  pickerOptions = {
+    keyboardClose: false
+  }
 
   constructor(
     public cephalixService: CephalixService,

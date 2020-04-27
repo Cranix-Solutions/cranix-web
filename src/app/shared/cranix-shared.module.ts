@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-  MatTableModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
   MatStepperModule,
   MatButtonModule,
   MatCheckboxModule,
@@ -71,7 +72,8 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
   ]),
   FormsModule,
   IonicModule,
-  MatTableModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
   MatStepperModule,
   MatButtonModule,
   MatCheckboxModule,
@@ -92,7 +94,8 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
     AgGridModule,
     FormsModule,
     IonicModule,
-    MatTableModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     MatStepperModule,
     MatButtonModule,
     MatCheckboxModule,
