@@ -5,7 +5,6 @@ import { UtilsService } from './utils.service';
 import { AuthenticationService} from './auth.service';
 
 import { BehaviorSubject } from 'rxjs';
-import { Hash } from 'crypto';
 
 @Injectable()
 export class SystemService {
