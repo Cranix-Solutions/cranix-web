@@ -15,6 +15,7 @@ import { UsersService } from 'src/app/services/users.service';
   styleUrls: ['./objects-edit.component.scss'],
 })
 export class ObjectsEditComponent implements OnInit {
+  formData: FormData = new FormData();
   fileToUpload: File = null;
   result: any = {};
   editForm: FormGroup;
@@ -126,22 +127,24 @@ export class ObjectsEditComponent implements OnInit {
     )
   }
   userImport(object) {
-    let formData: FormData = new FormData();
-    formData.append('file', this.fileToUpload, this.fileToUpload.name);
-    formData.append('role', object.role);
-    formData.append('lang', object.lang);
-    formData.append('identifier', object.identifier);
-    formData.append('test', object.test);
-    formData.append('password', object.password);
-    formData.append('mustchange', object.mustchange);
-    formData.append('full', object.full);
-    formData.append('allClasses', object.allClasses);
-    formData.append('cleanClassDirs', object.cleanClassDirs);
-    formData.append('resetPassword', object.resetPassword);
-    formData.append('appendBirthdayToPassword', object.appendBirthdayToPassword);
-    console.log(formData)
+    this.formData.append('file', this.fileToUpload, this.fileToUpload.name);
+    this.formData.append('role', object.role);
+    this.formData.append('lang', object.lang);
+    this.formData.append('identifier', object.identifier);
+    this.formData.append('test', object.test.toString());
+    this.formData.append('password', object.password);
+    this.formData.append('mustChange', object.mustChange.toString());
+    this.formData.append('full', object.full.toString());
+    this.formData.append('allClasses', object.allClasses.toString());
+    this.formData.append('cleanClassDirs', object.cleanClassDirs.toString());
+    this.formData.append('resetPassword', object.resetPassword.toString());
+    this.formData.append('appendBirthdayToPassword', object.appendBirthdayToPassword.toString());
+    console.log(this.formData)
+    console.log(object.test);
+    console.log(object.password);
+    console.log(this.formData.get("role"))
     let serverResponse: ServerResponse;
-    let subs = this.usersService.importUsers(formData).subscribe(
+    let subs = this.usersService.importUsers(this.formData).subscribe(
       async (val) => {
         serverResponse = val;
         console.log(val);
