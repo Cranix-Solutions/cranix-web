@@ -29,7 +29,7 @@ export class DevicesPage implements OnInit {
   columnApi: ColumnApi;
   rowSelection;
   context;
-  selected: Device[];
+  selected: Device[] = [];
   title = 'app';
   rowData = [];
 
@@ -153,7 +153,7 @@ export class DevicesPage implements OnInit {
  * @param ev 
  */
   async openActions(ev: any, objId: number) {
-    if (!this.selected && !objId) {
+    if (this.selected.length == 0 && !objId) {
       this.objectService.selectObject();
       return;
     }
@@ -205,7 +205,7 @@ export class DevicesPage implements OnInit {
   }
 
   /**
-* Function to select the columns to show
+* Function to Select the columns to show
 * @param ev 
 */
   async openCollums(ev: any) {

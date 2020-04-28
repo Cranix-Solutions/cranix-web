@@ -29,7 +29,7 @@ export class CustomersPage implements OnInit {
   columnApi: ColumnApi;
   rowSelection;
   context;
-  selected: Customer[];
+  selected: Customer[] = [];
   title = 'app';
   rowData = [];
   objectIds: number[] = [];
@@ -203,7 +203,7 @@ export class CustomersPage implements OnInit {
   }
 
   /**
-* Function to select the columns to show
+* Function to Select the columns to show
 * @param ev 
 */
   async openCollums(ev: any) {

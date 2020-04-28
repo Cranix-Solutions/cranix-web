@@ -29,7 +29,7 @@ export class GroupsPage implements OnInit {
   columnApi: ColumnApi;
   rowSelection;
   context;
-  selected: Group[];
+  selected: Group[] = [];
   title = 'app';
   rowData = [];
 
@@ -139,7 +139,7 @@ export class GroupsPage implements OnInit {
   * @param ev
   */
   async openActions(ev: any, objId: number) {
-    if (!this.selected && !objId) {
+    if (this.selected.length == 0 && !objId) {
       this.objectService.selectObject();
       return;
     }
@@ -191,7 +191,7 @@ export class GroupsPage implements OnInit {
   }
 
   /**
-   * Function to select the columns to show
+   * Function to Select the columns to show
    * @param ev
   */
   async openCollums(ev: any) {

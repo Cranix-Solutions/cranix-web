@@ -4,16 +4,18 @@ import { TranslateService } from '@ngx-translate/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
 //own 
-import { CephalixService }      from 'src/app/services/cephalix.service';
+import { CephalixService } from 'src/app/services/cephalix.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
-import { LanguageService }      from 'src/app/services/language.service';
-import { ServerResponse }       from 'src/app/shared/models/server-models';
+import { LanguageService } from 'src/app/services/language.service';
+import { ServerResponse } from 'src/app/shared/models/server-models';
+import { UsersService } from 'src/app/services/users.service';
 @Component({
   selector: 'cranix-objects-edit',
   templateUrl: './objects-edit.component.html',
   styleUrls: ['./objects-edit.component.scss'],
 })
 export class ObjectsEditComponent implements OnInit {
+  fileToUpload: File = null;
   result: any = {};
   editForm: FormGroup;
   objectType: string = "";
@@ -33,6 +35,7 @@ export class ObjectsEditComponent implements OnInit {
     private navParams: NavParams,
     private modalController: ModalController,
     private splashScreen: SpinnerDialog,
+    private usersService: UsersService,
     public translateService: TranslateService,
     public toastController: ToastController
   ) {
@@ -77,51 +80,85 @@ export class ObjectsEditComponent implements OnInit {
 
   onSubmit(object) {
     this.editForm.disable();
-    let serverResponse: ServerResponse;
     this.splashScreen.show();
     console.log("onSubmit", object);
-    if(this.objectType == 'setting' ) {
-      return  this.modalController.dismiss(object);
+    if (this.objectType == 'setting') {
+      return this.modalController.dismiss(object);
     }
+    switch (this.objectType) {
+      case 'userImport': {
+        this.userImport(object);
+        break;
+      }
+      default: {
+        this.defaultAcion(object);
+      }
+    }
+  }
+  handleFileInput(files: FileList) {
+    this.fileToUpload = files.item(0);
+    console.log(this.fileToUpload)
+  }
+  defaultAcion(object) {
+    let serverResponse: ServerResponse;
     let subs = this.objectService.applyAction(object, this.objectType, this.objectAction).subscribe(
       async (val) => {
         serverResponse = val;
         console.log(val);
         if (serverResponse.code == "OK") {
           this.objectService.getAllObject(this.objectType);
-          const toast = this.toastController.create({
-            position: "middle",
-            header: this.languageS.trans("Success:"),
-            message: serverResponse.value,
-            color: "success",
-            duration: 5000
-          });
-          (await toast).present();
+          this.objectService.okMessage("Success:");
           this.modalController.dismiss("succes");
         } else {
-          const toast = this.toastController.create({
-            position: "middle",
-            header: this.languageS.trans("An Error was accoured:"),
-            message: serverResponse.value,
-            color: "warning",
-            duration: 6000
-          });
+          this.objectService.errorMessage("An error is accoured");
           this.editForm.enable();
           this.splashScreen.hide();
-          (await toast).present();
         }
       },
       async (error) => {
-        console.log(error);
-        const toast = this.toastController.create({
-          position: "middle",
-          message: "A Server Error is accoured:" + error,
-          color: "danger",
-          duration: 3000
-        });
+        this.objectService.errorMessage("A Server Error is accoured:" + error);
         this.editForm.enable();
         this.splashScreen.hide();
-        (await toast).present();
+      },
+      () => {
+        subs.unsubscribe();
+      }
+    )
+  }
+  userImport(object) {
+    let formData: FormData = new FormData();
+    formData.append('file', this.fileToUpload, this.fileToUpload.name);
+    formData.append('role', object.role);
+    formData.append('lang', object.lang);
+    formData.append('identifier', object.identifier);
+    formData.append('test', object.test);
+    formData.append('password', object.password);
+    formData.append('mustchange', object.mustchange);
+    formData.append('full', object.full);
+    formData.append('allClasses', object.allClasses);
+    formData.append('cleanClassDirs', object.cleanClassDirs);
+    formData.append('resetPassword', object.resetPassword);
+    formData.append('appendBirthdayToPassword', object.appendBirthdayToPassword);
+    console.log(formData)
+    let serverResponse: ServerResponse;
+    let subs = this.usersService.importUsers(formData).subscribe(
+      async (val) => {
+        serverResponse = val;
+        console.log(val);
+        if (serverResponse.code == "OK") {
+          this.objectService.getAllObject(this.objectType);
+          this.objectService.okMessage("Success:");
+          this.modalController.dismiss("succes");
+        } else {
+          this.objectService.errorMessage("An error is accoured");
+          this.editForm.enable();
+          this.splashScreen.hide();
+        }
+      },
+      async (error) => {
+        this.objectService.errorMessage("A Server Error is accoured:" + error);
+        this.editForm.enable();
+        this.splashScreen.hide();
       },
       () => {
         subs.unsubscribe();

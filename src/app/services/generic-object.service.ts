@@ -64,7 +64,6 @@ export class GenericObjectService {
     'deleted',
     'devices',
     'id',
-    'identifier',
     'network',
     'ownerId',
     'partitions',
