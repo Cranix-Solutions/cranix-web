@@ -8,9 +8,7 @@
     <ion-title>{{ 'Modify selected institute:' | translate}} "{{object.name}}"</ion-title>
   </ion-col>
   <ion-col size=3></ion-col>
-
 </ion-row>
-
 <ion-content>
   <ion-card>
     <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">

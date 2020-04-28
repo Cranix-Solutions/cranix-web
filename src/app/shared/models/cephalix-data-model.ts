@@ -89,11 +89,11 @@ export class InstituteStatus {
     uptime: string ="";
     version: string ="";
     lastUpdate: any =new Date();
+    availableUpdates: string = "";
     rootUsage: string ="";
     srvUsage: string = "";
     varUsage: string ="";
     homeUsage: string = "";
-    availableUpdates: string = "";
     constructor() {}
 }
 export class Repository{

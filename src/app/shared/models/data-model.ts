@@ -51,6 +51,7 @@ export class UsersImport {
 	resetPassword: boolean = false;
 	appendBirthdayToPassword: boolean = false;
 	result?: any = null;
+	importFile: any;
 	constructor(){}
 }
 

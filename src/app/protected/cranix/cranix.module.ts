@@ -5,6 +5,7 @@ import { HwconfsPageModule } from './hwconfs/hwconfs.module';
 import { GroupsPageModule } from './groups/groups.module';
 import { RoomsPageModule } from  './rooms/rooms.module';
 import { SoftwaresPageModule } from './softwares/softwares.module';
+import { SystemPageModule } from './system/system.module';
 import { UsersPageModule } from './users/users.module';
 
 
@@ -18,6 +19,7 @@ import { UsersPageModule } from './users/users.module';
     GroupsPageModule,
     RoomsPageModule,
     SoftwaresPageModule,
+    SystemPageModule,
     UsersPageModule
   ]
 })

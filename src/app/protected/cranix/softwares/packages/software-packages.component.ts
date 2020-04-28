@@ -121,8 +121,8 @@ export class SoftwarePackagesComponent implements OnInit {
     this.selected = this.gridApi.getSelectedRows();
   }
 
-  onQuickFilterChanged() {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById("quickFilter")).value);
+  onQuickFilterChanged(quickFilter) {
+    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.doLayout();
   }
   onResize($event) {
@@ -142,9 +142,9 @@ export class SoftwarePackagesComponent implements OnInit {
   }
 
   /**
-* Function to select the columns to show
-* @param ev
-*/
+   * Function to select the software packages to download
+   * @param ev
+   */
   async downloadSoftwares(ev: any) {
     const modal = await this.modalCtrl.create({
       component: DownloadSoftwaresComponent,
@@ -163,7 +163,7 @@ export class SoftwarePackagesComponent implements OnInit {
       }
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
+      console.log("downloadSoftwares executed.")
     })
   }
   async redirectToEdit(ev: Event, software: Software) {

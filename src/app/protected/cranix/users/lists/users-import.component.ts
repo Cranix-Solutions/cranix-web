@@ -48,13 +48,15 @@ export class UsersImportComponent implements OnInit {
   }
 
   async startImport() {
+    let userImport = new UsersImport();
+    userImport.importFile = "";
+    userImport.result = null;
       const modal = await this.modalCtrl.create({
         component: ObjectsEditComponent,
         componentProps: {
           objectType: "userImport",
           objectAction: "add",
-          object: new UsersImport(),
-          objectKeys: Object.getOwnPropertyNames(new UsersImport())
+          object:  userImport
         },
         animated: true,
         swipeToClose: true,

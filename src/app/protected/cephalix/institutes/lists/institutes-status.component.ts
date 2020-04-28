@@ -7,7 +7,6 @@ import { Storage } from '@ionic/storage';
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
-import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
@@ -67,27 +66,26 @@ export class InstitutesStatusComponent implements OnInit {
     this.storage.get('InstitutesStatusComponent.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
-        this.displayedColumns = (myArray).concat(['actions']);
         this.createColumnDefs();
       }
     });
     let subs = this.cephalixService.getStatusOfInstitutes().subscribe(
       (val) => {
         this.rowData = val;
-       },
+      },
       (err) => { console.log(err) },
       () => { subs.unsubscribe() }
     )
   }
-  ionViewWillEnter(){
+  ionViewWillEnter() {
     console.log('WillEnter EVENT')
     let subs = this.cephalixService.getStatusOfInstitutes().subscribe(
-      (val) => { 
+      (val) => {
         console.log('new data in event:', val);
         this.rowData = val
-       },
+      },
       (err) => { console.log(err) },
-      () => { subs.unsubscribe() } )
+      () => { subs.unsubscribe() })
   }
   createColumnDefs() {
     let columnDefs = [];
@@ -102,6 +100,7 @@ export class InstitutesStatusComponent implements OnInit {
           col['headerCheckboxSelection'] = true;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
+          col['width'] = 220;
           col['valueGetter'] = function (params) {
             return params.context['componentParent'].objectService.idToName('institute', params.data.cephalixInstituteId);
           }
@@ -112,6 +111,7 @@ export class InstitutesStatusComponent implements OnInit {
           break;
         }
         case 'runningKernel': {
+          col['width'] = 100;
           col['valueGetter'] = function (params) {
             let index = params.data.runningKernel.indexOf("-default");
             let run = params.data.runningKernel.substring(0, index);
@@ -129,6 +129,7 @@ export class InstitutesStatusComponent implements OnInit {
           break;
         }
         case 'availableUpdates': {
+          col['width'] = 100;
           col['cellRendererFramework'] = UpdateRenderer;
           break;
         }
@@ -139,11 +140,6 @@ export class InstitutesStatusComponent implements OnInit {
       }
       columnDefs.push(col);
     }
-    columnDefs.push({
-      headerName: "",
-      field: 'actions',
-      cellRendererFramework: ActionBTNRenderer
-    });
     this.columnDefs = columnDefs;
   }
 
@@ -157,8 +153,8 @@ export class InstitutesStatusComponent implements OnInit {
     this.selected = this.gridApi.getSelectedRows();
   }
 
-  onQuickFilterChanged() {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById("quickFilter")).value);
+  onQuickFilterChanged(quickFilter) {
+    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.doLayout();
 
   }
@@ -174,7 +170,7 @@ export class InstitutesStatusComponent implements OnInit {
     });
     this.columnApi.autoSizeColumns(allColumnIds);
   }
-//TODO RESPONSE
+  //TODO RESPONSE
   public redirectToUpdate = (cephalixInstituteId: number) => {
     let sub = this.cephalixService.updateById(cephalixInstituteId).subscribe(
       (val) => { console.log(val) },
@@ -249,7 +245,6 @@ export class InstitutesStatusComponent implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        this.displayedColumns = (dataReturned.data).concat(['actions']);
         this.createColumnDefs();
       }
     });

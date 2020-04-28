@@ -1,20 +1,28 @@
-<ion-header translucent>
-  <ion-toolbar>
-    <ion-title>{{  objectActionTitle | translate }}</ion-title>
-    <ion-buttons slot="end">
-      <ion-button *ngIf="objectType == 'institute'" fill="clear" size="small" (click)="setNextDefaults()" matTooltip="{{'Set the next default values' | translate }}" disabled="{{editForm.disabled}}">
-        <ion-icon slot="icon-only" name="refresh"></ion-icon>
-      </ion-button>
-      <ion-button fill="clear" size="small" (click)="closeWindow()" disabled="{{editForm.disabled}}">
-        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-<ion-content fullscreen>
-  <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
+<form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
+  <ion-header translucent>
+    <ion-toolbar>
+      <ion-title>{{  objectActionTitle | translate }}</ion-title>
+      <ion-buttons slot="end">
+        <ion-button *ngIf="objectType == 'institute'" fill="clear" size="small" (click)="setNextDefaults()"
+          matTooltip="{{'Set the next default values' | translate }}" disabled="{{editForm.disabled}}">
+          <ion-icon slot="icon-only" name="refresh"></ion-icon>
+        </ion-button>
+        <ion-button type="submit" class="ion-no-margin">
+          <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" size="small" (click)="closeWindow()" disabled="{{editForm.disabled}}">
+          <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen>
     <ion-list lines="full" class="ion-no-margin ion-no-padding">
       <div *ngFor=" let key of objectKeys" [ngSwitch]="objectService.typeOf(key,object,objectAction)">
+        <ion-item *ngSwitchCase="'file'">
+          <ion-label position="stacked">{{ key | translate }}</ion-label>
+          <input type="file" formControlName="{{key}}" >
+        </ion-item>
         <ion-item *ngSwitchCase="'booleanTrue'">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
           <ion-toggle slot="end" formControlName="{{key}}" color="secondary" checked></ion-toggle>
@@ -52,15 +60,37 @@
         </ion-item>
         <ion-item *ngSwitchCase="'date'">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
-          <ion-datetime formControlName="{{key}}" cancel-text="{{ 'cancel' | translate }}" displayFormat="YYYY-MM-DD"
-            done-text="{{'apply' | translate }}" max="2100" value="{{object[key] | date:'yyyy-MM-dd'}}"></ion-datetime>
+          <!-- label *ngSwitchCase="'date'">
+            {{ key | translate }}
+            <input [owlDateTime]="dt1">
+            <span class="trigger" [owlDateTimeTrigger]="dt1">
+              <i class="fas fa-calendar-alt"></i>
+            </span>
+            <owl-date-time #dt1></owl-date-time>
+          </label -->
+          <!--mat-form-field appearance="standard">
+            <mat-label>{{ key | translate }}</mat-label>
+            <input matInput formControlName="{{key}}" [matDatepicker]="picker">
+            <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field -->
+          <!-- ion-input formControlName="{{key}}" type="text" value="{{object[key] | date:'yyyy-MM-dd'}}"></ion-input -->
+          <ion-datetime formControlName="{{key}}" cancelText="{{ 'cancel' | translate }}" displayFormat="YYYY-MM-DD"
+            doneText="{{'apply' | translate }}" max="2100" value="{{object[key] | date:'yyyy-MM-dd'}}"
+            pickerOptions="pickerOptions"></ion-datetime>
         </ion-item>
         <ion-item *ngSwitchCase="'date-time'">
-          <ion-label position="stacked">{{ key | translate }}</ion-label>
-          <ion-datetime formControlName="{{key}}" cancel-text="{{ 'cancel' | translate }}"
+          <mat-form-field fxFlexOffset="2" fxFlex="32">
+            <ion-label position="stacked">{{ key | translate }}</ion-label>
+            <ion-input matInput formControlName="{{key}}" [matDatepicker]="picker">
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            </ion-input>
+          </mat-form-field>
+          <!-- ion-datetime formControlName="{{key}}" cancel-text="{{ 'cancel' | translate }}"
             displayFormat="YYYY-MM-DD HH:mm" done-text="{{'apply' | translate }}" max="2100"
             value="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z'}}">
-          </ion-datetime>
+          </ion-datetime -->
         </ion-item>
         <ion-item *ngSwitchCase="'idPipe'">
           <ion-label position="stacked">{{ key | translate }}{{objectService.required[key]}}</ion-label>
@@ -82,9 +112,5 @@
         </ion-item>
       </div>
     </ion-list>
-    <div class="ion-padding ion-text-center">
-      <ion-button type="submit" class="ion-no-margin" [disabled]="!editForm.valid">{{ objectAction | translate }}
-      </ion-button>
-    </div>
-  </form>
-</ion-content>
+  </ion-content>
+</form>

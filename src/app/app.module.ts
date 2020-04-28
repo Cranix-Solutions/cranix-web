@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { AgChartsAngularModule } from 'ag-charts-angular';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy, Routes, RouterModule } from '@angular/router';
 
@@ -14,6 +15,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { IonicStorageModule } from '@ionic/storage';
 import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
 import { ErrorHandler, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 
 //own modules 
 import { CranixSharedModule } from './shared/cranix-shared.module';
@@ -68,9 +71,12 @@ const routes: Routes = [
     ObjectsEditComponent,
     SelectColumnsComponent],
   imports: [
+    AgChartsAngularModule,
     BrowserModule,
-    IonicModule.forRoot(),
     BrowserAnimationsModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
+    IonicModule.forRoot(),
     RouterModule.forRoot(routes),
     HttpClientModule,
     CranixSharedModule,

@@ -17,11 +17,11 @@
         <ion-row class="ion-align-items-center">
           <ion-col size=0 sizeMd=6 sizeLg=10 sizeXl=10></ion-col>
           <ion-col size=12 sizeLg=2 sizeXl=2>
-            <ion-button size="small" fill="outline" type="submit" class="ion-no-margin" [disabled]="!editForm.valid"
+            <ion-button size="small"type="submit" class="ion-no-margin" [disabled]="!editForm.valid"
               matTooltip="{{'Apply chnages.' | translate }}">
               <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
             </ion-button>
-            <ion-button size="small" fill="outline" (click)="delete()"
+            <ion-button size="small" (click)="delete()"
               matTooltip="{{'Delete group.' | translate }}">
               <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
             </ion-button>
