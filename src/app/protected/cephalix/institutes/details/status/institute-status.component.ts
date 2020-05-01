@@ -219,7 +219,7 @@ export class InstituteStatusComponent implements OnInit {
   }
 
   /**
-  * Function to select the columns to show
+  * Function to Select the columns to show
   * @param ev
   */
   async openCollums(ev: any) {

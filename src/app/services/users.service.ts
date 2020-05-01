@@ -100,6 +100,9 @@ export class UsersService {
 			'Accept': "application/json",
 			'Authorization': "Bearer " + this.token
 		});
+		console.log(this.url)
+		console.log(headers)
+		console.log(imp.get('file'))
 		return this.http.post<ServerResponse>(this.url, imp, { headers: headers });
 	}
 

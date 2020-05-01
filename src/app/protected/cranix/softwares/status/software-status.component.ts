@@ -56,8 +56,8 @@ export class SoftwareStatusComponent implements OnInit {
     this.memberSelection = this.memberApi.getSelectedRows();
   }
 
-  onMemberFilterChanged() {
-    this.memberApi.setQuickFilter((<HTMLInputElement>document.getElementById("memberFilter")).value);
+  onQuickFilterChanged(quickFilter) {
+    this.memberApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.memberApi.doLayout();
   }
 

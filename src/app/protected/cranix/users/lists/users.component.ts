@@ -29,7 +29,7 @@ export class UsersComponent implements OnInit {
   rowSelection: 'multiple';
   columnApi: ColumnApi;
   context;
-  selected: User[];
+  selected: User[] = [];
   title = 'app';
   rowData = [];
 
@@ -145,7 +145,7 @@ export class UsersComponent implements OnInit {
  * @param ev
  */
   async openActions(ev: any, objId: number) {
-    if (!this.selected && !objId) {
+    if (this.selected.length == 0 && !objId) {
       this.objectService.selectObject();
       return;
     }
@@ -179,6 +179,7 @@ export class UsersComponent implements OnInit {
       user = new User();
       delete user.msQuotaUsed;
       delete user.fsQuotaUsed;
+      delete user.mailAliases;
       const modal = await this.modalCtrl.create({
         component: ObjectsEditComponent,
         componentProps: {
@@ -200,7 +201,7 @@ export class UsersComponent implements OnInit {
   }
 
   /**
-  * Function to select the columns to show
+  * Function to Select the columns to show
   * @param ev
   */
   async openCollums(ev: any) {

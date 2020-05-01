@@ -1,16 +1,18 @@
 <cranix-toolbar></cranix-toolbar>
+<ion-content id="carded">
 <ion-row class="header-row">
-  <ion-col size=12>
+  <ion-col size=6>
     <ion-title>{{ 'Software installation status:' | translate}}</ion-title>
   </ion-col>
 </ion-row>
-<ion-content (window:resize)="onResize($event)">
+<ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('quickFilterMD')" id="quickFilterMD"
+showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
   <ion-card>
-    <ion-card-header>
-      <ion-row class="ion-align-items-center">
+    <ion-card-header class="hidden-xs hidden-sm hidden-md">
+      <ion-row class="hidden-xs hidden-sm hidden-md">
         <ion-col size="3">
           <ion-item>
-            <ion-input placeholder="{{'search' | translate }}" (input)="onMemberFilterChanged()" id="memberFilter">
+            <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('quickFilter')" id="memberFilter">
             </ion-input>
           </ion-item>
         </ion-col>
