@@ -162,7 +162,7 @@ export class InstitutesComponent implements OnInit {
  * @param ev
  */
   async openActions(ev: any, objId: number) {
-    if (!this.cephalixService.selectedInstitutes && !objId) {
+    if (this.cephalixService.selectedInstitutes.length ==0  && !objId) {
       this.objectService.selectObject();
       return;
     }
@@ -214,7 +214,7 @@ export class InstitutesComponent implements OnInit {
   }
 
   /**
-  * Function to select the columns to show
+  * Function to Select the columns to show
   * @param ev
   */
   async openCollums(ev: any) {

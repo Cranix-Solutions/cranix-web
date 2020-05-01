@@ -30,7 +30,7 @@ export class HwconfsPage implements OnInit {
   columnApi;
   rowSelection;
   context;
-  selected: Hwconf[];
+  selected: Hwconf[] = [];
   title = 'app';
   rowData = [];
   constructor(
@@ -137,7 +137,7 @@ export class HwconfsPage implements OnInit {
  * @param ev 
  */
 async openActions(ev: any, objId: number) {
-  if (!this.selected && !objId) {
+  if (this.selected.length == 0 && !objId) {
     this.objectService.selectObject();
     return;
   }
@@ -189,7 +189,7 @@ async openActions(ev: any, objId: number) {
   }
 
   /**
-* Function to select the columns to show
+* Function to Select the columns to show
 * @param ev 
 */
   async openCollums(ev: any) {

@@ -7,7 +7,7 @@
           matTooltip="{{'Set the next default values' | translate }}" disabled="{{editForm.disabled}}">
           <ion-icon slot="icon-only" name="refresh"></ion-icon>
         </ion-button>
-        <ion-button type="submit" class="ion-no-margin">
+        <ion-button type="submit" class="ion-no-margin" [disabled]="!editForm.valid">
           <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
         </ion-button>
         <ion-button fill="clear" size="small" (click)="closeWindow()" disabled="{{editForm.disabled}}">
@@ -20,8 +20,8 @@
     <ion-list lines="full" class="ion-no-margin ion-no-padding">
       <div *ngFor=" let key of objectKeys" [ngSwitch]="objectService.typeOf(key,object,objectAction)">
         <ion-item *ngSwitchCase="'file'">
-          <ion-label position="stacked">{{ key | translate }}</ion-label>
-          <input type="file" formControlName="{{key}}" >
+          <ion-label position="stacked">{{ key | translate }}{{objectService.required[key]}}</ion-label>
+          <input type="file" formControlName="{{key}}"  (change)="handleFileInput($event.target.files)">
         </ion-item>
         <ion-item *ngSwitchCase="'booleanTrue'">
           <ion-label position="stacked">{{ key | translate }}</ion-label>

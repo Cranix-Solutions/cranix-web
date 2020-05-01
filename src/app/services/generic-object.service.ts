@@ -64,7 +64,6 @@ export class GenericObjectService {
     'deleted',
     'devices',
     'id',
-    'identifier',
     'network',
     'ownerId',
     'partitions',
@@ -77,7 +76,9 @@ export class GenericObjectService {
   required: any = {
     'givenName': '*',
     'groupType': '*',
+    'identifier':"*",
     'instituteType': '*',
+    'importFile': "*",
     'name': '*',
     'regCode': '*',
     'role': '*',
@@ -125,7 +126,7 @@ export class GenericObjectService {
           (err) => { },
           () => { subs[key].unsubscribe() });
       }
-      if( this.authService.isAllowed('software.download')) {
+      if (this.authService.isAllowed('software.download')) {
         this.getSoftwaresToDowload();
       }
       this.initialized = true;
@@ -156,9 +157,10 @@ export class GenericObjectService {
       (val) => {
         this.packagesAvailable = val;
       },
-      (err) => { 
+      (err) => {
         console.log('getSoftwaresToDowload');
-        console.log(err) },
+        console.log(err)
+      },
       () => { sub.unsubscribe() });
   }
   getAllObject(objectType) {
@@ -295,7 +297,7 @@ export class GenericObjectService {
         }
       },
       (err) => {
-        console.log("ERROR: modifyObjectDialog" )
+        console.log("ERROR: modifyObjectDialog")
         console.log(object)
         console.log(err);
         this.errorMessage(this.languageS.trans("An error was accoured"));
@@ -369,7 +371,7 @@ export class GenericObjectService {
     if (key.substring(key.length - 2) == 'Id') {
       return "idPipe";
     }
-    if( key.substring(key.length - 4) == 'File' ) {
+    if (key.substring(key.length - 4) == 'File') {
       return 'file';
     }
     return "string";

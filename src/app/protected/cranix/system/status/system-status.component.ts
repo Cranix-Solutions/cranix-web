@@ -43,8 +43,8 @@ export class SystemStatusComponent implements OnInit {
             legend: { enabled: false },
             title: { text: this.languageService.trans(key)},
             autoSize: false,
-            with: 200,
-            height: 200
+            width: 250,
+            height: 220
           };
           this.systemStatus[key]['series'] = this.series;
           this.systemStatus[key]['data'] = val[key];

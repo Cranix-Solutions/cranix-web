@@ -1,6 +1,7 @@
 <cranix-toolbar></cranix-toolbar>
+<ion-content id="carded">
 <ion-row class="header-row">
-  <ion-col size=12>
+  <ion-col size=6>
     <ion-title>{{ 'Manage software installation sets:' | translate}}</ion-title>
   </ion-col>
 </ion-row>
@@ -15,7 +16,6 @@
   </ion-fab-list>
 </ion-fab>
 <ion-searchbar placeholder="{{'search' | translate }}" (input)="setFilterChanged()" id="softwareSetFilter"showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
-<ion-content>
   <ion-card>
     <ion-card-header class="hidden-xs hidden-sm hidden-md">
       <ion-row class="hidden-xs hidden-sm hidden-md">

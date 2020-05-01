@@ -31,7 +31,7 @@ export class TicketsPage implements OnInit {
   columnApi: ColumnApi;
   rowSelection;
   context;
-  selected: Ticket[];
+  selected: Ticket[] = [];
   title = 'app';
   rowData = [];
   objectIds: number[] = [];
@@ -159,7 +159,7 @@ export class TicketsPage implements OnInit {
  * @param ev 
  */
   async openActions(ev: any, objId: number) {
-    if (!this.selected && !objId) {
+    if (this.selected.length == 0  && !objId) {
       this.objectService.selectObject();
       return;
     }
@@ -211,7 +211,7 @@ export class TicketsPage implements OnInit {
   }
 
   /**
-* Function to select the columns to show
+* Function to Select the columns to show
 * @param ev 
 */
   async openCollums(ev: any) {

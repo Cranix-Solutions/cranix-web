@@ -8,7 +8,7 @@ import { Storage } from '@ionic/storage';
 import { ShowImportComponent } from 'src/app/shared/actions/show-import/show-import.component';
 import { UsersService } from 'src/app/services/users.service';
 import { LanguageService } from 'src/app/services/language.service';
-import { User,  UsersImport } from 'src/app/shared/models/data-model';
+import { User, UsersImport } from 'src/app/shared/models/data-model';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 
@@ -17,7 +17,7 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
   templateUrl: './users-import.component.html'
 })
 export class UsersImportComponent implements OnInit {
-  objectKeys: string[] = [ ];
+  objectKeys: string[] = [];
   imports: UsersImport[] = [];
   runningImport: UsersImport = null;
 
@@ -28,7 +28,7 @@ export class UsersImportComponent implements OnInit {
     public popoverCtrl: PopoverController,
     public languageS: LanguageService,
     public route: Router
-  ) {  }
+  ) { }
 
   ngOnInit() {
     let subs = this.usersService.getAllImports().subscribe(
@@ -50,27 +50,27 @@ export class UsersImportComponent implements OnInit {
   async startImport() {
     let userImport = new UsersImport();
     userImport.importFile = "";
-    userImport.result = null;
-      const modal = await this.modalCtrl.create({
-        component: ObjectsEditComponent,
-        componentProps: {
-          objectType: "userImport",
-          objectAction: "add",
-          object:  userImport
-        },
-        animated: true,
-        swipeToClose: true,
-        showBackdrop: true
-      });
-      modal.onDidDismiss().then((dataReturned) => {
-        if (dataReturned.data) {
-          console.log("Object was created or modified", dataReturned.data)
-        }
-      });
-      (await modal).present();
+    delete userImport.result;
+    const modal = await this.modalCtrl.create({
+      component: ObjectsEditComponent,
+      componentProps: {
+        objectType: "userImport",
+        objectAction: "add",
+        object: userImport
+      },
+      animated: true,
+      swipeToClose: true,
+      showBackdrop: true
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        console.log("Object was created or modified", dataReturned.data)
+      }
+    });
+    (await modal).present();
   }
 
-  async showImport(ev:Event, userImport: UsersImport){
+  async showImport(ev: Event, userImport: UsersImport) {
     const popover = await this.modalCtrl.create({
       component: ShowImportComponent,
       componentProps: {
@@ -80,14 +80,14 @@ export class UsersImportComponent implements OnInit {
       showBackdrop: true
     });
     (await popover).present();
-    }
+  }
 
-  onResize(ev:Event) {
+  onResize(ev: Event) {
   }
   restartImport(startTime: string) {
     //TODO
   }
-  downloadImport(startTime: string,type: string) {
+  downloadImport(startTime: string, type: string) {
     //TODO
   }
   deleteImport(startTime: string) {
