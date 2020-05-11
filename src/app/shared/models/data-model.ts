@@ -292,13 +292,14 @@ export class AdHocRoom{
 }
 
 export class SupportTicket{
+	firstname: string = "";
+	lastname: string = "";
 	email: string = "";
 	subject: string = "";
 	description: string = "";
+	text?: string = "";
 	regcode: string = "";
 	product: string = "";
-	firstname: string = "";
-	lastname: string = "";
 	company: string = "";
 	supporttype?: string = "";
 	regcodeValidUntil?: number = 0;

@@ -38,7 +38,16 @@
 /* Custom */
 //@import "theme/ion-custom.scss"; 
 @import "theme/cranix-custom.scss";
-
+/*
+:root {
+  ion-tab-button.tab-selected {
+    ion-icon,
+    ion-label {
+      color           : var(--ion-color-secondary) !important;
+      --ion-color-base: var(--ion-color-secondary) !important;
+    }
+  }
+}*/
 /*.ag-theme-material .ag-icon-checkbox-unchecked{
     
     font-size: 15px;
