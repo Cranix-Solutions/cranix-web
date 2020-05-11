@@ -1,10 +1,14 @@
 import { cloneDeep } from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import * as agCharts from 'ag-charts-community';
-
+import { ModalController } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
+//Own stuff
+import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { SystemService } from 'src/app/services/system.service';
 import { LanguageService } from 'src/app/services/language.service';
+import { SupportTicket } from 'src/app/shared/models/data-model';
 
 @Component({
   selector: 'cranix-system-status',
@@ -13,35 +17,46 @@ import { LanguageService } from 'src/app/services/language.service';
 })
 export class SystemStatusComponent implements OnInit {
 
+  mySupport = new SupportTicket();
   objectKeys: string[];
   systemStatus: any;
   series = [
-      {
-        type: 'pie',
-        angleKey: 'count',
-        labelKey: 'name'
-      }
-    ];
-    options;
+    {
+      type: 'pie',
+      angleKey: 'count',
+      labelKey: 'name'
+    }
+  ];
+  options;
 
   constructor(
     public genericObject: GenericObjectService,
     public languageService: LanguageService,
+    public modalCtrl: ModalController,
+    public storage: Storage,
     public systemService: SystemService
   ) {
     this.systemService.initModule();
   }
 
-  ngOnInit() { 
+  ngOnInit() {
+    this.storage.get('System.Status.mySupport').then((val) => {
+      let myTmp = JSON.parse(val);
+      if (myTmp) {
+        this.mySupport = myTmp;
+        this.mySupport['subject'] = "";
+        this.mySupport['text'] = "";
+      }
+    });
     this.systemStatus = {};
     let subM = this.systemService.getStatus().subscribe(
       (val) => {
         this.systemStatus = {};
-        this.objectKeys= Object.keys(val);
+        this.objectKeys = Object.keys(val);
         for (let key of Object.keys(val)) {
-          this.systemStatus[key] = {  
+          this.systemStatus[key] = {
             legend: { enabled: false },
-            title: { text: this.languageService.trans(key)},
+            title: { text: this.languageService.trans(key) },
             autoSize: false,
             width: 250,
             height: 220
@@ -56,7 +71,7 @@ export class SystemStatusComponent implements OnInit {
   }
 
 
-  update(ev: Event){
+  update(ev: Event) {
     let subM = this.systemService.update().subscribe(
       (val) => {
         console.log(this.systemStatus);
@@ -64,7 +79,39 @@ export class SystemStatusComponent implements OnInit {
       (err) => { console.log(err) },
       () => { subM.unsubscribe() });
   }
-  restart(ev: Event){}
-  shutDown(ev: Event) {}
+  restart(ev: Event) { }
+  shutDown(ev: Event) { }
 
+  async support(ev: Event) {
+    delete this.mySupport.description;
+    delete this.mySupport.regcode;
+    delete this.mySupport.product;
+    delete this.mySupport.company;
+    delete this.mySupport.supporttype;
+    delete this.mySupport.regcodeValidUntil;
+    delete this.mySupport.status;
+    delete this.mySupport.requestDate;
+    delete this.mySupport.ticketno;
+    delete this.mySupport.ticketResponseInfo;
+    const modal = await this.modalCtrl.create({
+      component: ObjectsEditComponent,
+      componentProps: {
+        objectType: "support",
+        objectAction: 'add',
+        object: this.mySupport
+      },
+      animated: true,
+      swipeToClose: true,
+      showBackdrop: true
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        delete dataReturned.data.subject;
+        delete dataReturned.data.text;
+        console.log("Object was created or modified", dataReturned.data);
+        this.storage.set('System.Status.mySupport', JSON.stringify(dataReturned.data));
+      }
+    });
+    (await modal).present();
+  }
 }

@@ -10,6 +10,7 @@
       <ion-icon name="arrow-forward-circle"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="start">
+      <ion-fab-button><ion-icon name="help" (click)="support($event)"></ion-icon></ion-fab-button>
       <ion-fab-button><ion-icon name="trending-up" (click)="update($event)"></ion-icon></ion-fab-button>
       <ion-fab-button><ion-icon name="refresh" (click)="restart($event)"></ion-icon></ion-fab-button>
       <ion-fab-button><ion-icon color="danger" name="power" (click)="shutDown($event)"></ion-icon></ion-fab-button>
@@ -21,6 +22,9 @@
         <ion-col size="3">
         </ion-col>
         <ion-col offset="6" size="3" class="ion-text-end hidden-xs hidden-sm hidden-md">
+          <ion-button size="small" (click)="support($event)"  matTooltip="{{'Create a support request.' | translate }}">
+            <ion-icon slot="icon-only" name="help"></ion-icon>
+          </ion-button>
           <ion-button size="small" (click)="update($event)"  matTooltip="{{'Update the server.' | translate }}">
             <ion-icon slot="icon-only" name="trending-up"></ion-icon>
           </ion-button>
