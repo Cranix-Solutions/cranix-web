@@ -117,6 +117,14 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+  ion-tab-button.tab-selected {
+    ion-icon,
+    ion-label {
+      color  : var(--ion-color-secondary) !important;
+      --ion-color-base: var(--ion-color-secondary) !important;
+    }
+  }
 }
 
 /*.header-row {
