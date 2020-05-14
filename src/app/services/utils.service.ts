@@ -24,8 +24,9 @@ export class UtilsService {
 		}
 		//Test only
                 //url = 'https://5.252.227.69/api';
-		url = 'https://repo.cephalix.eu/api';
-                //url = 'https://gif1.bbs1-gifhorn.de:444/api';
+                //url = 'https://repo.cephalix.eu/api';
+                url = 'https://test-cephalix.cephalix.eu/api';
+                //url = 'http://localhost/api';
 		//url = 'https://172.18.0.2/api';
                 //url = 'https://10.0.0.2:443/api';
                 //url = 'https://admin.schule6314.ch/api';
