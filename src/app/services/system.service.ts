@@ -1,8 +1,10 @@
 import { Injectable, OnInit } from '@angular/core';
 // import { HttpClientModule } from '@angular/common/http';
 import { HttpClient, HttpHeaders, HttpParams, HttpClientModule } from '@angular/common/http';
+//Own Stuff
 import { UtilsService } from './utils.service';
 import { AuthenticationService} from './auth.service';
+import { SystemConfig } from 'src/app/shared/models/data-model';
 
 @Injectable()
 export class SystemService {
@@ -70,4 +72,9 @@ export class SystemService {
 		return this.http.put(this.url, null,{ headers: this.headers});
 	}
 
+	getSystemConfiguration() {
+		this.url = this.hostname + `/system/configuration`;
+		console.log(this.url);
+		return this.http.get<SystemConfig[]>(this.url,{ headers: this.headers });	
+	}
 }

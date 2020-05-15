@@ -369,3 +369,11 @@ export class Setting {
     password: string = "";
     constructor() {}
 }
+
+export class SystemConfig {
+	path: string = "";
+	readOnly: string = "";
+	type: string = "string";
+	key: string = "";
+	value: string = "";
+}
