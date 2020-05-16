@@ -5,23 +5,23 @@ import { HttpClient, HttpHeaders, HttpParams, HttpClientModule } from '@angular/
 import { UtilsService } from './utils.service';
 import { AuthenticationService} from './auth.service';
 import { SystemConfig } from 'src/app/shared/models/data-model';
+import { ServerResponse } from 'src/app/shared/models/server-models';
 
 @Injectable()
 export class SystemService {
 
 	headers: HttpHeaders;
 	textHeaders: HttpHeaders;
-    hostname: string;
+	hostname: string;
 	token: string;
 	url: string;
 
-    constructor(
+	constructor(
 		private http: HttpClient,
 		private utilsS: UtilsService,
 		private authService: AuthenticationService) {
 		this.initModule();
-    }
-	
+	}
 	initModule() {
 		this.hostname = this.utilsS.hostName();
 		this.token          = this.authService.getToken();
@@ -35,14 +35,14 @@ export class SystemService {
 			'Authorization' : "Bearer " + this.token
 		});
 	}
-	    
-    getStatus(){
+
+	getStatus(){
 		this.url = this.hostname + `/system/status`;
 		console.log(this.url);
 		return this.http.get(this.url, { headers: this.headers});
 	}
 
-    restartJob(jobId: number){
+	restartJob(jobId: number){
 		this.url = this.hostname + `/system/jobs/${jobId}/restart`;
 		console.log(this.url);
 		return this.http.put(this.url, null,{ headers: this.headers});
@@ -75,6 +75,16 @@ export class SystemService {
 	getSystemConfiguration() {
 		this.url = this.hostname + `/system/configuration`;
 		console.log(this.url);
-		return this.http.get<SystemConfig[]>(this.url,{ headers: this.headers });	
+		return this.http.get<SystemConfig[]>(this.url,{ headers: this.headers });
+	}
+
+	setSystemConfigValue(key,value){
+		this.url = this.hostname + `/system/configuration`;
+		console.log(this.url);
+		let tmp = {
+			"key": key,
+			"value": value
+		}
+		return this.http.post<ServerResponse>(this.url,tmp, { headers: this.headers });
 	}
 }

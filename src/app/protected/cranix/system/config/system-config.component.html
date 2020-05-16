@@ -12,8 +12,8 @@
   <ion-card>
     <ion-card-header>
       <ion-segment (ionChange)="segmentChanged($event)">
-        <ion-segment-button value="Basis">
-          <ion-label>{{'Basis configuration' | translate}}</ion-label>
+        <ion-segment-button value="Basic">
+          <ion-label>{{'Base configuration' | translate}}</ion-label>
         </ion-segment-button>
         <ion-segment-button value="Settings">
           <ion-label>{{'Settings' | translate}}</ion-label>
@@ -25,13 +25,35 @@
     </ion-card-header>
     <ion-card-content>
       <ion-grid>
-        <div *ngFor="let config of configs" [ngSwitch]="config.type">
+        <div *ngFor="let config of configs">
           <ion-row *ngIf="config.path == toShow">
             <ion-col size=4>
-              <ion-label>{{config.key}}</ion-label>
+              <ion-item matTooltip="{{config.help | translate}}">
+                <ion-label>{{config.key}}</ion-label>
+              </ion-item>
             </ion-col>
             <ion-col size=6>
-              <ion-label>{{config.value}}</ion-label>
+              <ion-item *ngIf="config.type == 'yesno'">
+                <ion-toggle slot="start" color="secondary" checked="{{config.value == 'yes'}}"
+                  disabled="{{config.readOnly == 'yes'}}" (ionChange)="togle(config.key,$event.detail.checked)">
+                </ion-toggle>
+              </ion-item>
+              <ion-item *ngIf="config.type == 'string'">
+                <ion-input type="text" value="{{config.value}}" disabled="{{config.readOnly == 'yes'}}"
+                  id="{{config.key}}"></ion-input>
+                <ion-button *ngIf="config.readOnly == 'no'" slot="end" fill="clear" size="small"
+                  (click)="save(config.key)">
+                  <ion-icon slot="icon-only" color="success" name="save"></ion-icon>
+                </ion-button>
+              </ion-item>
+              <ion-item *ngIf="config.type.substring(0,3) == 'int'">
+                <ion-input type="text" value="{{config.value}}" disabled="{{config.readOnly == 'yes'}}"
+                  id="{{config.key}}"></ion-input>
+                <ion-button *ngIf="config.readOnly == 'no'" slot="end" fill="clear" size="small"
+                  (click)="save(config.key)">
+                  <ion-icon slot="icon-only" color="success" name="save"></ion-icon>
+                </ion-button>
+              </ion-item>
             </ion-col>
           </ion-row>
         </div>
