@@ -38,6 +38,14 @@
 /* Custom */
 //@import "theme/ion-custom.scss"; 
 @import "theme/cranix-custom.scss";
+
+@media only screen and (min-width: 768px) and (min-height: 768px) {
+  .modal-wrapper {
+    --height: 80%;
+    --width : 70%;
+  }
+}
+
 /*
 :root {
   ion-tab-button.tab-selected {
