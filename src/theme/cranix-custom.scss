@@ -115,8 +115,8 @@ $breakpoints-values: map-values($grid-breakpoints);
     }
   }
 
-  @media only screen and (min-width: 769px) {
 
+  @media only screen and (min-width: 769px) {
     ion-card {
       //flex-grow: 1;
       height            : 93%;

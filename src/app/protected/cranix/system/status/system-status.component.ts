@@ -1,6 +1,4 @@
-import { cloneDeep } from 'lodash';
 import { Component, OnInit } from '@angular/core';
-import * as agCharts from 'ag-charts-community';
 import { ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 //Own stuff
@@ -98,7 +96,7 @@ export class SystemStatusComponent implements OnInit {
       componentProps: {
         objectType: "support",
         objectAction: 'add',
-        object: this.mySupport
+        object: this.mySupport,
       },
       animated: true,
       swipeToClose: true,
