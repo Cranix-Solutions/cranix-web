@@ -134,6 +134,7 @@
     "groupType": "Art der Gruppe",
     "gwTrNet": "Standardroute in Transportnetz",
     "gymnasium":"Gymnaisum",
+    "hwconfs": "Gerätekonfigurationen",
     "hwconf": "Gerätekonfiguration",
     "hwconfId": "Gerätekonfiguration",
     "id": "Technisches ID",

@@ -5,12 +5,12 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule, Routes } from '@angular/router';
 
 //own modules
-import { CranixSharedModule }        from 'src/app/shared/cranix-shared.module';
-import { SoftwaresPage }             from './softwares.page';
-import { SoftwareStatusComponent }   from './status/software-status.component';
-import { SoftwareSetsComponent }     from './sets/software-sets.component';
-import { AddSoftwareSetComponent }     from './add-software-set/add-software-set.component';
-import { SoftwarePackagesComponent } from './packages/software-packages.component';
+import { CranixSharedModule }            from 'src/app/shared/cranix-shared.module';
+import { SoftwaresPage }                 from './softwares.page';
+import { SoftwareStatusComponent }       from './status/software-status.component';
+import { InstallationSetsComponent }     from './sets/installation-sets.component';
+import { SoftwarePackagesComponent }     from './packages/software-packages.component';
+import { EditInstallationSetComponent }  from './edit-set/edit-installation-set.component';
 
 const routes: Routes = [
   {
@@ -27,11 +27,11 @@ const routes: Routes = [
       },
       {
         path: 'sets',
-       component: SoftwareSetsComponent
+       component: InstallationSetsComponent
       },
       {
-        path: 'add-set',
-       component: AddSoftwareSetComponent
+        path: 'edit-set',
+       component: EditInstallationSetComponent
       },
       {
         path: '',
@@ -53,6 +53,6 @@ const routes: Routes = [
     CranixSharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [SoftwaresPage,SoftwareStatusComponent,SoftwarePackagesComponent,SoftwareSetsComponent,AddSoftwareSetComponent]
+  declarations: [SoftwaresPage,SoftwareStatusComponent,SoftwarePackagesComponent,InstallationSetsComponent,EditInstallationSetComponent]
 })
 export class SoftwaresPageModule { }
