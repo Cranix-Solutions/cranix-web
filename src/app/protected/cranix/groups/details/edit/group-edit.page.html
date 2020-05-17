@@ -5,7 +5,7 @@
 </ion-header>
 <ion-row class="header-row">
   <ion-col size=12>
-    <ion-title color="primary">{{ 'Modify selected group' | translate}}: "{{object.name}}"
+    <ion-title color="primary">{{ 'Modify selected group:' | translate}} "{{object.name}}"
       {{object.groupType | translate }} {{object.description}}
     </ion-title>
   </ion-col>
@@ -17,11 +17,11 @@
         <ion-row class="ion-align-items-center">
           <ion-col size=0 sizeMd=6 sizeLg=10 sizeXl=10></ion-col>
           <ion-col size=12 sizeLg=2 sizeXl=2>
-            <ion-button size="small" fill="outline" type="submit" class="ion-no-margin" [disabled]="!editForm.valid"
+            <ion-button size="small" type="submit" class="ion-no-margin" [disabled]="!editForm.valid"
               matTooltip="{{'Apply chnages.' | translate }}">
               <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
             </ion-button>
-            <ion-button size="small" fill="outline" (click)="delete($event)"
+            <ion-button size="small" (click)="delete($event)"
               matTooltip="{{'Delete group.' | translate }}">
               <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
             </ion-button>

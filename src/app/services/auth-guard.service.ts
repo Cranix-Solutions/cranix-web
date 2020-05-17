@@ -22,6 +22,8 @@ export class CanActivateViaAcls implements CanActivate, CanActivateChild,CanLoad
   canLoad(route, segments: UrlSegment[]) {
     console.log('canLoad');
     console.log(route);
-    return this.authService.isRouteAllowed(route.path);
+    let allowed = this.authService.isRouteAllowed(route.path);
+    console.log(allowed);
+    return allowed;
   }
 }

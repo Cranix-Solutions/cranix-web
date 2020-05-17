@@ -95,7 +95,9 @@ export class ObjectsEditComponent implements OnInit {
         this.defaultAcion(object);
       }
     }
+    return this.modalController.dismiss(object);
   }
+
   handleFileInput(files: FileList) {
     this.fileToUpload = files.item(0);
     console.log(this.fileToUpload)
