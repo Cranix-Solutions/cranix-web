@@ -15,11 +15,6 @@ const routes: Routes = [
     path: 'rooms',
     canActivate: [CanActivateViaAcls],
     component: RoomsPage
-  },
-  {
-    path: 'rooms/:id',
-    canLoad: [CanActivateViaAcls],
-    loadChildren: () => import('./details/room-details.module').then( m => m.RoomDetailsPageModule)
   }
 ];
 

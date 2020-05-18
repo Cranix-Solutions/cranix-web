@@ -44,6 +44,14 @@
     --height: 85%;
     --width : 70%;
   }
+  .medium-modal .modal-wrapper {
+    --height: 85%;
+    --width : 600px;
+  }
+  .small-modal .modal-wrapper {
+    --height: 400px;
+    --width : 600px;
+  }
 }
 
 /*

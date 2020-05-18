@@ -128,6 +128,10 @@ export class ObjectsEditComponent implements OnInit {
       }
     )
   }
+  deleteObject() {
+    this.objectService.deleteObjectDialog(this.object,this.objectType);
+    this.modalController.dismiss("succes");
+  }
   userImport(object) {
     this.formData.append('file', this.fileToUpload, this.fileToUpload.name);
     this.formData.append('role', object.role);

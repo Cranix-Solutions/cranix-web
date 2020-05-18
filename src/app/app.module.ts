@@ -38,6 +38,10 @@ import { RoomsService } from './services/rooms.service';
 import { SoftwareService } from './services/softwares.service';
 import { SelectColumnsComponent } from './shared/select-columns/select-columns.component';
 import { UsersService } from './services/users.service';
+import { GroupMembersPage } from 'src/app/protected/cranix/groups/details/members/group-members.page'
+import { UserGroupsPage } from 'src/app/protected/cranix/users/details/groups/user-groups.page';
+import { RoomPrintersPage } from 'src/app/protected/cranix/rooms/details/printers/room-printers.page';
+import { DevicePrintersPage } from 'src/app/protected/cranix/devices/details/printers/device-printers.page';
 import 'ag-grid-enterprise';
 
 export function createTranslateLoader(http: HttpClient) {
@@ -63,12 +67,20 @@ const routes: Routes = [
     DownloadSoftwaresComponent,
     ShowImportComponent,
     ObjectsEditComponent,
+    DevicePrintersPage,
+    GroupMembersPage,
+    UserGroupsPage,
+    RoomPrintersPage,
     SelectColumnsComponent],
   entryComponents: [
     ActionsComponent,
     DownloadSoftwaresComponent,
     ShowImportComponent,
     ObjectsEditComponent,
+    DevicePrintersPage,
+    GroupMembersPage,
+    UserGroupsPage,
+    RoomPrintersPage,
     SelectColumnsComponent],
   imports: [
     AgChartsAngularModule,

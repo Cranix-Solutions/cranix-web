@@ -3,16 +3,18 @@ import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
+import { TranslateService } from '@ngx-translate/core';
 
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
-import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
+import { GroupActionBTNRenderer } from 'src/app/pipes/ag-group-renderer';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Group } from 'src/app/shared/models/data-model'
 import { AuthenticationService } from 'src/app/services/auth.service';
+import { GroupMembersPage  } from './details/members/group-members.page';
 
 @Component({
   selector: 'cranix-groups',
@@ -40,7 +42,8 @@ export class GroupsPage implements OnInit {
     public popoverCtrl: PopoverController,
     public languageS: LanguageService,
     public route: Router,
-    private storage: Storage
+    private storage: Storage,
+    public translateService: TranslateService
   ) {
     this.context = { componentParent: this };
     this.rowSelection = 'multiple';
@@ -81,7 +84,7 @@ export class GroupsPage implements OnInit {
           col['headerCheckboxSelection'] = true;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
-          col['width'] = 220;
+          col['width'] = 150;
           col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
@@ -94,12 +97,12 @@ export class GroupsPage implements OnInit {
     }
     let action = {
       headerName: "",
-      width: 100,
+      width: 150,
       suppressSizeToFit: true,
       cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
       pinned: 'left',
-      cellRendererFramework: ActionBTNRenderer
+      cellRendererFramework: GroupActionBTNRenderer
     };
     columnDefs.splice(1, 0, action)
     this.columnDefs = columnDefs;
@@ -164,30 +167,45 @@ export class GroupsPage implements OnInit {
     });
     (await popover).present();
   }
+  async redirectToMembers(ev: Event, group: Group) {
+    this.objectService.selectedObject = group;
+    const modal = await this.modalCtrl.create({
+      component: GroupMembersPage,
+      animated: true,
+      swipeToClose: true,
+      showBackdrop: true
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        console.log("Object was created or modified", dataReturned.data)
+      }
+    });
+    (await modal).present();
+  }
   async redirectToEdit(ev: Event, group: Group) {
-    if (group) {
-      this.objectService.selectedObject = group;
-      this.route.navigate(['/pages/cranix/groups/' + group.id]);
-    } else {
-      const modal = await this.modalCtrl.create({
-        component: ObjectsEditComponent,
-        componentProps: {
-          objectType: "group",
-          objectAction: "add",
-          object: new Group(),
-          objectKeys: this.objectKeys
-        },
-        animated: true,
-        swipeToClose: true,
-        showBackdrop: true
-      });
-      modal.onDidDismiss().then((dataReturned) => {
-        if (dataReturned.data) {
-          console.log("Object was created or modified", dataReturned.data)
-        }
-      });
-      (await modal).present();
+    let action = 'modify';
+    if (!group) {
+      group = new Group();
+      action = 'add';
     }
+    const modal = await this.modalCtrl.create({
+      component: ObjectsEditComponent,
+      cssClass: 'medium-modal',
+      componentProps: {
+        objectType: "group",
+        objectAction: action,
+        object: group
+      },
+      animated: true,
+      swipeToClose: true,
+      showBackdrop: true
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        console.log("Object was created or modified", dataReturned.data)
+      }
+    });
+    (await modal).present();
   }
 
   /**

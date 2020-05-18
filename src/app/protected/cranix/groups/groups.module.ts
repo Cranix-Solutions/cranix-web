@@ -15,11 +15,6 @@ const routes: Routes = [
     path: 'groups',
     canActivate: [CanActivateViaAcls],
     component: GroupsPage
-  },
-  {
-    path: 'groups/:id',
-    canLoad: [CanActivateViaAcls],
-    loadChildren: () => import('./details/group-details.module').then( m => m.GroupDetailsPageModule)
   }
 ];
 

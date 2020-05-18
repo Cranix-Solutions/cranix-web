@@ -1,7 +1,7 @@
 <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
   <ion-header translucent>
     <ion-toolbar>
-      <ion-title>{{  objectActionTitle | translate }}</ion-title>
+      <ion-title>{{  objectActionTitle | translate }}</ion-title> 
       <ion-buttons slot="end">
         <ion-button *ngIf="objectType == 'institute'" fill="clear" size="small" (click)="setNextDefaults()"
           matTooltip="{{'Set the next default values' | translate }}" disabled="{{editForm.disabled}}">
@@ -9,6 +9,9 @@
         </ion-button>
         <ion-button type="submit" class="ion-no-margin" [disabled]="!editForm.valid">
           <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+        </ion-button>
+        <ion-button *ngIf="objectAction == 'modify'" fill="clear" size="small" (click)="deleteObject()" disabled="{{editForm.disabled}}">
+          <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
         </ion-button>
         <ion-button fill="clear" size="small" (click)="closeWindow()" disabled="{{editForm.disabled}}">
           <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
