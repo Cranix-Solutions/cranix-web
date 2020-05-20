@@ -1,4 +1,9 @@
 {
+    "supporttype": "Art der Supportanfrage",
+    "Error": "Fehlerbericht",
+    "FeatureRequest":"Featureanfrage",
+    "Feedback":"Rückmeldung (Lob)",
+    "ProductOrder":"Bestellung",
     "Base configuration":"Grundkofigartion",
     "Settings":"Einstellungen",
     "Backup":"Backup",

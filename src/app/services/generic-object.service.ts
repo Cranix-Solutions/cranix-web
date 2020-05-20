@@ -31,11 +31,12 @@ export class GenericObjectService {
   cephalixDefaults: any = {};
 
   selects: any = {
-    'agGridThema': ['ag-theme-alpine', 'ag-theme-alpine-dark', 'ag-theme-balham', 'ag-theme-balham-dark', 'ag-theme-material'],
+    'agGridThema': ['ag-theme-alpine',  'ag-theme-balham', 'ag-theme-material'],
     'devCount': [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096],
     'identifier': ['sn-gn-bd', 'uuid', 'uid'],
     'lang': ['DE', 'EN'],
-    'status': ['N', 'A', 'D']
+    'status': ['N', 'A', 'D'],
+    'supporttype':[ 'Error', 'FeatureRequest', 'Feedback', 'ProductOrder'  ]
   }
   initialized: boolean = false;
   enumerates: string[] = [

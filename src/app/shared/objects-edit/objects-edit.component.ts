@@ -3,12 +3,14 @@ import { ModalController, NavParams, ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
-//own 
+//own
 import { CephalixService } from 'src/app/services/cephalix.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { ServerResponse } from 'src/app/shared/models/server-models';
 import { UsersService } from 'src/app/services/users.service';
+import { SystemService } from 'src/app/services/system.service';
+import { SupportTicket } from '../models/data-model';
 @Component({
   selector: 'cranix-objects-edit',
   templateUrl: './objects-edit.component.html',
@@ -37,6 +39,7 @@ export class ObjectsEditComponent implements OnInit {
     private modalController: ModalController,
     private splashScreen: SpinnerDialog,
     private usersService: UsersService,
+    private systemService: SystemService,
     public translateService: TranslateService,
     public toastController: ToastController
   ) {
@@ -91,6 +94,10 @@ export class ObjectsEditComponent implements OnInit {
         this.userImport(object);
         break;
       }
+      case 'support': {
+        object['description'] = object.text;
+        delete object.text;
+      }
       default: {
         this.defaultAcion(object);
       }
@@ -131,6 +138,31 @@ export class ObjectsEditComponent implements OnInit {
   deleteObject() {
     this.objectService.deleteObjectDialog(this.object,this.objectType);
     this.modalController.dismiss("succes");
+  }
+  supportRequest(object: SupportTicket) {
+    let supportResponse: SupportTicket;
+    let subs = this.systemService.createSupportRequest(object).subscribe(
+      async (val) => {
+        supportResponse = val;
+        console.log(val);
+        let message = this.languageS.trans(supportResponse.ticketResponseInfo);
+        if (supportResponse.status == "OK") {
+          message = message + " #"  + supportResponse.ticketno;
+          this.objectService.okMessage(message);
+          this.modalController.dismiss("succes");
+        } else {
+          this.objectService.errorMessage(message);
+          this.splashScreen.hide();
+        }
+      },
+      async (error) => {
+        this.objectService.errorMessage("A Server Error is accoured:"+ error.toString());
+        this.splashScreen.hide();
+      },
+      () => {
+        subs.unsubscribe();
+      }
+    )
   }
   userImport(object) {
     this.formData.append('file', this.fileToUpload, this.fileToUpload.name);
