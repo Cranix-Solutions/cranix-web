@@ -1,10 +1,10 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>{{ 'Modify groups of selected user' | translate}}: "{{user.uid}}" ({{user.givenName}}
+    <ion-title>{{ 'Modify groups of selected user:' | translate}} "{{user.uid}}" ({{user.givenName}}
       {{user.surName}})
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button class="ion-no-margin" matTooltip="{{'add remove user to/from the selected groups' | translate }}" (click)="applyChanges()">
+      <ion-button class="ion-no-margin" matTooltip="{{'Add remove user to/from the selected groups.' | translate }}" (click)="applyChanges()">
         <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
       </ion-button>
       <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss()">
@@ -19,8 +19,9 @@
       <ion-grid>
         <ion-row>
           <ion-col size=12 sizeMd=12 sizeLg=6 sizeXl=6>
+            <ion-title matTooltip="{{'Select the groups the user must be removed from.' | translate}}">{{ 'Member of groups:' | translate }}</ion-title>
             <ion-item>
-              <ion-label position="stacked">{{ 'Member of groups:' | translate }}</ion-label>
+              <!--ion-label position="stacked">{{ 'Member of groups:' | translate }}</ion-label-->
               <ion-input type="text" placeholder="{{'search' | translate }}" (input)="onMemberFilterChanged()"
                 id="memberFilter"></ion-input>
             </ion-item>
@@ -31,8 +32,8 @@
             </ag-grid-angular>
           </ion-col>
           <ion-col size=12 sizeMd=12 sizeLg=6 sizeXl=6>
+            <ion-title matTooltip="{{'Select the groups into  the user must be added.'| translate}}">{{ 'Available groups:' | translate }}</ion-title>
             <ion-item>
-              <ion-label position="stacked">{{ 'Available groups:' | translate }}</ion-label>
               <ion-input type="text" placeholder="{{'search' | translate }}" (input)="onNoMemberFilterChanged()"
                 id="nonMemberFilter">
               </ion-input>

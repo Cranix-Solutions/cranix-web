@@ -49,21 +49,13 @@ export class SoftwareStatusComponent implements OnInit {
   onMemberReady(params) {
     this.memberApi = params.api;
     this.memberColumnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
   }
-
   onMemberSelectionChanged() {
     this.memberSelection = this.memberApi.getSelectedRows();
   }
-
   onQuickFilterChanged(quickFilter) {
     this.memberApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.memberApi.doLayout();
-  }
-
-  onResize(ev: Event) {
-    (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
-    //this.sizeAll();
   }
   sizeAll() {
     var allColumnIds = [];

@@ -11,8 +11,8 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
         <ion-button style="padding-horizontal : 2px" fill="clear" size="small" (click)="groups()" matTooltip="{{'groups' | translate }}">
              <ion-icon name="people"></ion-icon>
         </ion-button>
-        <ion-button fill="clear" size="small" (click)="openAction($event)">
-            <ion-icon  name="ellipsis-vertical-sharp" matTooltip="{{'Apply actions on the selected objects' | translate }}"></ion-icon> 
+        <ion-button fill="clear" size="small" (click)="openAction($event)" matTooltip="{{'Apply actions on the selected objects' | translate }}">
+            <ion-icon  name="ellipsis-vertical-sharp"></ion-icon> 
         </ion-button>
         <!--ion-button style="padding-horizontal : 2px" fill="clear"  size="small" (click)="delete()" matTooltip="{{'delete' | translate }}">
             <ion-icon color="danger" name="trash-outline" ></ion-icon>
