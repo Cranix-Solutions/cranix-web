@@ -15,11 +15,6 @@ const routes: Routes = [
     path: 'devices',
     canActivate: [CanActivateViaAcls],
     component: DevicesPage
-  },
-  {
-  path: 'devices/:id',
-    canLoad: [CanActivateViaAcls],
-    loadChildren: () => import('./details/device-details.module').then( m => m.DeviceDetailsPageModule)
   }
 ];
 

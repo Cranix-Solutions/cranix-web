@@ -113,7 +113,6 @@ export class CustomersPage implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
     this.gridApi.sizeColumnsToFit();
   }
   onSelectionChanged() {
@@ -124,11 +123,6 @@ export class CustomersPage implements OnInit {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.doLayout();
 
-  }
-  onResize($event) {
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
-    this.sizeAll();
-    this.gridApi.sizeColumnsToFit();
   }
   sizeAll() {
     var allColumnIds = [];

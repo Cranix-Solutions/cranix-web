@@ -1,48 +1,35 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>edit</ion-title>
-  </ion-toolbar>
-</ion-header>
-<ion-row class="header-row">
-  <ion-col size=12>
-    <ion-title color="primary">{{ 'Modify printers selected device' | translate}}: "{{device.name}}"
-      {{ 'room' | translate }}: {{device.roomId | idToName:'room' }}
-    </ion-title>
-  </ion-col>
-</ion-row>
-<ion-content>
-  <ion-grid>
-    <ion-row class="ion-justify-content-center">
-      <ion-col size=0 sizeMd=0 sizeLg=4 sizeXl=4></ion-col>
-      <ion-col size=12 sizeMd=12 sizeLg=4 sizeXl=4>
-        <ion-card>
-          <ion-card-content>
-            <form [formGroup]="editPrinter" (ngSubmit)="onSubmit(editPrinter.value)">
-              <ion-list>
-                <ion-item>
-                  <ion-label>{{"Default Printer" | translate}}</ion-label>
-                  <ion-select type="text" [compareWith]="objectService.compareFn" formControlName="defaultPrinter">
-                    <ion-select-option *ngFor="let printer of allDefaultPrinters" value="{{printer.id}}">
-                      {{ printer.name }}</ion-select-option>
-                  </ion-select>
-                </ion-item>
-                <ion-item>
-                  <ion-label>{{"Available Printers" | translate}}</ion-label>
-                  <ion-select type="text" [(value)]="printers.availablePrinters" multiple="true"
-                    [compareWith]="objectService.compareFn" formControlName="availablePrinters">
-                    <ion-select-option *ngFor="let printer of allPrinters" value="{{printer.id}}">{{ printer.name }}
-                    </ion-select-option>
-                  </ion-select>
-                </ion-item>
-              </ion-list>
-              <div class="ion-padding ion-text-center">
-                <ion-button type="submit" class="ion-no-margin">{{ 'apply' | translate }}</ion-button>
-              </div>
-            </form>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-      <ion-col size=0 sizeMd=0 sizeLg=4 sizeXl=4></ion-col>
-    </ion-row>
-  </ion-grid>
-</ion-content>
+<form [formGroup]="editPrinter" (ngSubmit)="onSubmit(editPrinter.value)">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title color="primary">{{ 'Modify printers selected device' | translate}}: "{{device.name}}"
+      </ion-title>
+      <ion-buttons slot="end">
+        <ion-button type="submit" class="ion-no-margin" >
+          <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss()">
+          <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen>
+    <ion-list lines="full" class="ion-no-margin ion-no-padding">
+      <ion-item>
+        <ion-label>{{"Default Printer" | translate}}</ion-label>
+        <ion-select type="text" [compareWith]="objectService.compareFn" formControlName="defaultPrinter">
+          <ion-select-option *ngFor="let printer of allDefaultPrinters" value="{{printer.id}}">
+            {{ printer.name }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{"Available Printers" | translate}}</ion-label>
+        <ion-select type="text" [(value)]="printers.availablePrinters" multiple="true"
+          [compareWith]="objectService.compareFn" formControlName="availablePrinters">
+          <ion-select-option *ngFor="let printer of allPrinters" value="{{printer.id}}">{{ printer.name }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</form>

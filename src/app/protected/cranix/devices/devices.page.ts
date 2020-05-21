@@ -6,13 +6,14 @@ import { Storage } from '@ionic/storage';
 
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
-import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
+import { DeviceActionBTNRenderer } from 'src/app/pipes/ag-device-renderer';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Device } from 'src/app/shared/models/data-model'
 import { AuthenticationService } from 'src/app/services/auth.service';
+import { DevicePrintersPage } from './details/printers/device-printers.page';
 
 @Component({
   selector: 'cranix-devices',
@@ -20,6 +21,7 @@ import { AuthenticationService } from 'src/app/services/auth.service';
   styleUrls: ['./devices.page.scss'],
 })
 export class DevicesPage implements OnInit {
+  selectedRoom;
   objectKeys: string[] = [];
   displayedColumns: string[] = ['name', 'mac', 'ip', 'hwconfId', 'roomId'];
   sortableColumns: string[] = ['name', 'mac', 'ip', 'hwconfId', 'roomId'];
@@ -66,8 +68,28 @@ export class DevicesPage implements OnInit {
         this.createColumnDefs();
       }
     });
-    this.objectService.getObjects('device').subscribe(obj => this.rowData = obj);
+    if( this.objectService.selectedRoom ) {
+      this.selectedRoom = this.objectService.selectedRoom;
+      delete this.objectService.selectedRoom;
+      this.objectService.getObjects('device').subscribe(obj => 
+        { this.rowData = [];
+          for( let dev of obj  ) {
+            if( dev.roomId == this.selectedRoom.id ){
+              this.rowData.push(dev);
+            }
+          }
+        }
+       );
+    } else {
+      this.objectService.getObjects('device').subscribe(obj => this.rowData = obj);
+      delete this.selectedRoom;
+    }
+    delete this.objectService.selectedObject;
   }
+  public ngAfterViewInit() {
+    while(document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
+  }
+
   createColumnDefs() {
     let columnDefs = [];
     for (let key of this.objectKeys) {
@@ -81,7 +103,7 @@ export class DevicesPage implements OnInit {
           col['headerCheckboxSelection'] = true;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
-          col['width'] = 220;
+          col['width'] = 120;
           col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
@@ -106,12 +128,12 @@ export class DevicesPage implements OnInit {
     }
     let action = {
       headerName: "",
-      width: 100,
+      width: 200,
       suppressSizeToFit: true,
       cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
       pinned: 'left',
-      cellRendererFramework: ActionBTNRenderer
+      cellRendererFramework: DeviceActionBTNRenderer
     };
     columnDefs.splice(1, 0, action);
     this.columnDefs = columnDefs;
@@ -120,7 +142,6 @@ export class DevicesPage implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
     this.gridApi.sizeColumnsToFit();
   }
   onSelectionChanged() {
@@ -131,11 +152,6 @@ export class DevicesPage implements OnInit {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.doLayout();
 
-  }
-  onResize($event) {
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
-    this.sizeAll();
-    this.gridApi.sizeColumnsToFit();
   }
   sizeAll() {
     var allColumnIds = [];
@@ -179,31 +195,50 @@ export class DevicesPage implements OnInit {
     (await popover).present();
   }
   async redirectToEdit(ev: Event, device: Device) {
-    if (device) {
-      this.objectService.selectedObject = device;
-      this.route.navigate(['/pages/cranix/devices/' + device.id]);
-    } else {
+    let action = "modify";
+    if (!device) {
       device = new Device();
-      const modal = await this.modalCtrl.create({
-        component: ObjectsEditComponent,
-        componentProps: {
-          objectType: "device",
-          objectAction: "add",
-          object: device
-        },
-        animated: true,
-        swipeToClose: true,
-        showBackdrop: true
-      });
-      modal.onDidDismiss().then((dataReturned) => {
-        if (dataReturned.data) {
-          console.log("Object was created or modified", dataReturned.data)
-        }
-      });
-      (await modal).present();
+      action = "add";
     }
+    const modal = await this.modalCtrl.create({
+      component: ObjectsEditComponent,
+      cssClass: "medium-modal",
+      componentProps: {
+        objectType: "device",
+        objectAction: action,
+        object: device
+      },
+      animated: true,
+      swipeToClose: true,
+      showBackdrop: true
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        console.log("Object was created or modified", dataReturned.data)
+      }
+    });
+    (await modal).present();
   }
 
+  async setPrinters(device: Device) {
+    this.objectService.selectedObject = device;
+    const modal = await this.modalCtrl.create({
+      component: DevicePrintersPage,
+      cssClass: "small-modal",
+      animated: true,
+      swipeToClose: true,
+      backdropDismiss: false
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        this.displayedColumns = dataReturned.data.concat(['actions']);
+      }
+      this.createColumnDefs();
+    });
+    (await modal).present().then((val) => {
+      console.log("most lett vegrehajtva.")
+    })
+  }
   /**
 * Function to Select the columns to show
 * @param ev 

@@ -106,20 +106,13 @@ export class HwconfsPage implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
   }
   onSelectionChanged() {
     this.selected = this.gridApi.getSelectedRows();
   }
-
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.doLayout();
-
-  }
-  onResize($event) {
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
-    this.sizeAll();
   }
   sizeAll() {
     var allColumnIds = [];

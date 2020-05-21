@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 import { ServerResponse } from 'src/app/shared/models/server-models';
-import { Installation, SoftwareStatus, Software } from 'src/app/shared/models/data-model';
+import { Category, Device, Hwconf, Room, SoftwareStatus, Software } from 'src/app/shared/models/data-model';
 
 
 @Injectable()
@@ -14,6 +14,7 @@ export class SoftwareService {
 	url: string;
 	token: string;
 	headers: HttpHeaders;
+	selectedInstallationSet: Category;
 
 	constructor(
 		private http: HttpClient,
@@ -27,34 +28,63 @@ export class SoftwareService {
 			'Authorization': "Bearer " + this.token
 		});
 		this.utilsS.log('Constructor Users completed');
-    };
-    
+	};
+
 	getSoftwareStatus() {
 		this.url = this.hostname + "/softwares/status";
 		console.log(this.url);
 		return this.http.get<SoftwareStatus[]>(this.url, { headers: this.headers });
 	}
-	
-	getInstallableSoftwares(){
+
+	getInstallableSoftwares() {
 		this.url = this.hostname + "/softwares/allInstallable";
 		console.log(this.url);
 		return this.http.get<Software[]>(this.url, { headers: this.headers });
 	}
 
-	getAvailableSoftwares(){
+	getAvailableSoftwares() {
 		this.url = this.hostname + "/softwares/available";
 		console.log(this.url);
 		return this.http.get<Software[]>(this.url, { headers: this.headers });
 	}
 
-	getInstallationsSets(){
+	getInstallationsSets() {
 		this.url = this.hostname + "/softwares/installations";
 		console.log(this.url);
-		return this.http.get<Installation[]>(this.url, { headers: this.headers });
+		return this.http.get<Category[]>(this.url, { headers: this.headers });
 	}
-	downloadSoftwares(packages: string[]){
+	downloadSoftwares(packages: string[]) {
 		this.url = this.hostname + "/softwares/download";
 		console.log(this.url);
 		return this.http.post<ServerResponse>(this.url, packages, { headers: this.headers });
+	}
+
+	addInstallationsSets(installationSet: Category) {
+		this.url = this.hostname + "/softwares/installations";
+		console.log(this.url);
+		return this.http.post<ServerResponse>(this.url, installationSet, { headers: this.headers });
+	}
+
+	getDevicesInSet(id: number) {
+		this.url = `${this.hostname}/softwares/installations/${id}/devices`;
+		console.log(this.url);
+		return this.http.get<Device[]>(this.url, { headers: this.headers });
+	}
+
+	getRoomsInSet(id: number) {
+		this.url = `${this.hostname}/softwares/installations/${id}/rooms`;
+		console.log(this.url);
+		return this.http.get<Room[]>(this.url, { headers: this.headers });
+	}
+
+	getSoftwareInSet(id: number) {
+		this.url = `${this.hostname}/softwares/installations/${id}/softwares`;
+		console.log(this.url);
+		return this.http.get<Software[]>(this.url, { headers: this.headers });
+	}
+	getHWConfsInSet(id: number) {
+		this.url = `${this.hostname}/softwares/installations/${id}/hwconfs`;
+		console.log(this.url);
+		return this.http.get<Hwconf[]>(this.url, { headers: this.headers });
 	}
 }

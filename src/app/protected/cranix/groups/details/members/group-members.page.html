@@ -1,50 +1,42 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>edit</ion-title>
+    <ion-title>{{ 'Modify members of selected group:' | translate}} "{{group.name}}"
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button type="submit" class="ion-no-margin"  (click)="applyChanges()">
+        <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss()">
+        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-row class="header-row">
-  <ion-col size=12>
-    <ion-title>{{ 'Modify members of selected group:' | translate}} "{{group.name}}" {{group.description}}
-      {{group.groupType | translate}}
-    </ion-title>
-  </ion-col>
-</ion-row>
-
 <ion-content>
   <ion-card>
     <ion-card-content>
       <ion-grid>
         <ion-row>
-          <ion-col size=12 sizeMd=12 sizeLg=5 sizeXl=5>
+          <ion-col size=12 sizeMd=12 sizeLg=6 sizeXl=6>
+            <ion-title matTooltip="{{'Select the users to remove from the group.'|translate}}">{{ 'Members of the group:' | translate }}</ion-title>
             <ion-item>
-              <ion-label position="stacked">{{ 'Members of the group:' | translate }}</ion-label>
               <ion-input type="text" placeholder="{{'search' | translate }}" (input)="onMemberFilterChanged()"
                 id="memberFilter"></ion-input>
             </ion-item>
-            <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.agGridThema}}" [gridOptions]="memberOptions"
-              [rowData]="memberData" [columnDefs]="columnDefs" [context]="context" [rowSelection]="memberSelection"
+            <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.agGridThema}}"
+              [rowData]="memberData" [columnDefs]="columnDefs" rowSelection="multiple" rowMultiSelectWithClick="true" 
               (gridReady)="onMemberReady($event)" (selectionChanged)="onMemberSelectionChanged()" id="memberTable">
             </ag-grid-angular>
           </ion-col>
-          <ion-col size=12 sizeMd=12 sizeLg=1 sizeXl=1>
-            <ion-item lines="none">
-              <ion-label position="stacked"> </ion-label>
-              <ion-button slot="" size="small" (click)="applyChanges()"
-                matTooltip="{{'add remove selected users to/from the group' | translate }}">
-                <ion-icon slot="icon-only" name="code-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-          </ion-col>
-          <ion-col size=12 sizeMd=12 sizeLg=5 sizeXl=5>
+          <ion-col size=12 sizeMd=12 sizeLg=6 sizeXl=6>
+            <ion-title matTooltip="{{'Select the users to add to the group.'|translate}}">{{ 'Available members:' | translate }}</ion-title>
             <ion-item>
-              <ion-label position="stacked">{{ 'Available members:' | translate }}</ion-label>
               <ion-input type="text" placeholder="{{'search' | translate }}" (input)="onNoMemberFilterChanged()"
                 id="nonMemberFilter">
               </ion-input>
             </ion-item>
-            <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.agGridThema}}" [gridOptions]="noMemberOptions"
-              [rowData]="noMemberData" [columnDefs]="columnDefs" [context]="context" [rowSelection]="noMemberSelection"
+            <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.agGridThema}}"
+              [rowData]="noMemberData" [columnDefs]="columnDefs" rowSelection="multiple" rowMultiSelectWithClick="true" 
               (gridReady)="onNoMemberReady($event)" (selectionChanged)="onNoMemberSelectionChanged()"
               id="noMemberTable">
             </ag-grid-angular>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { ToastController } from '@ionic/angular';
+import { ToastController, ModalController } from '@ionic/angular';
 //own stuff
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
@@ -9,7 +9,7 @@ import { Printer, Room } from 'src/app/shared/models/data-model'
 import { ServerResponse } from 'src/app/shared/models/server-models';
 
 @Component({
-  selector: 'cranix-group-members',
+  selector: 'cranix-room-printers',
   templateUrl: './room-printers.page.html',
   styleUrls: ['./room-printers.page.scss'],
 })
@@ -28,6 +28,7 @@ export class RoomPrintersPage implements OnInit {
     private roomService: RoomsService,
     private languageS: LanguageService,
     public formBuilder: FormBuilder,
+    public modalCtrl: ModalController,
     public objectService: GenericObjectService,
     private toastController: ToastController
   ) {

@@ -6,13 +6,14 @@ import { Storage } from '@ionic/storage';
 
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
-import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
+import { RoomActionBTNRenderer } from 'src/app/pipes/ag-room-renderer';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Room } from 'src/app/shared/models/data-model';
 import { AuthenticationService } from 'src/app/services/auth.service';
+import { RoomPrintersPage } from './details/printers/room-printers.page';
 
 @Component({
   selector: 'cranix-rooms',
@@ -66,6 +67,10 @@ export class RoomsPage implements OnInit {
       }
     });
     this.objectService.getObjects('room').subscribe(obj => this.rowData = obj);
+    delete this.objectService.selectedObject;
+  }
+  public ngAfterViewInit() {
+    while(document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
   }
   createColumnDefs() {
     let columnDefs = [];
@@ -80,7 +85,7 @@ export class RoomsPage implements OnInit {
           col['headerCheckboxSelection'] = true;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
-          col['width'] = 220;
+          col['width'] = 150;
           col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
@@ -100,12 +105,12 @@ export class RoomsPage implements OnInit {
     }
     let action = {
       headerName: "",
-      width: 100,
+      width: 230,
       suppressSizeToFit: true,
       cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
       pinned: 'left',
-      cellRendererFramework: ActionBTNRenderer
+      cellRendererFramework: RoomActionBTNRenderer
     };
     columnDefs.splice(1, 0, action);
     this.columnDefs = columnDefs;
@@ -113,20 +118,13 @@ export class RoomsPage implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
   }
   onSelectionChanged() {
     this.selected = this.gridApi.getSelectedRows();
   }
-
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.doLayout();
-
-  }
-  onResize($event) {
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
-    this.sizeAll();
   }
   sizeAll() {
     var allColumnIds = [];
@@ -135,7 +133,6 @@ export class RoomsPage implements OnInit {
     });
     this.columnApi.autoSizeColumns(allColumnIds);
   }
-
   public redirectToDelete = (room: Room) => {
     this.objectService.deleteObjectDialog(room, 'room')
   }
@@ -170,9 +167,9 @@ export class RoomsPage implements OnInit {
     (await popover).present();
   }
   async redirectToEdit(ev: Event, room: Room) {
+    let action = "add";
     if (room) {
       this.objectService.selectedObject = room;
-      this.route.navigate(['/pages/cranix/rooms/' + room.id]);
     } else {
       room = new Room;
       delete room.network;
@@ -183,26 +180,46 @@ export class RoomsPage implements OnInit {
       room.roomControl = 'allTeachers'
       room.roomType = 'ComputerRoom'
       room.hwconfId = 4
-      const modal = await this.modalCtrl.create({
-        component: ObjectsEditComponent,
-        componentProps: {
-          objectType: "room",
-          objectAction: 'add',
-          object: room
-        },
-        animated: true,
-        swipeToClose: true,
-        showBackdrop: true
-      });
-      modal.onDidDismiss().then((dataReturned) => {
-        if (dataReturned.data) {
-          console.log("Object was created or modified", dataReturned.data)
-        }
-      });
-      (await modal).present();
+      action = 'modify';
     }
+    const modal = await this.modalCtrl.create({
+      component: ObjectsEditComponent,
+      cssClass: 'medium-modal',
+      componentProps: {
+        objectType: "room",
+        objectAction: action,
+        object: room
+      },
+      animated: true,
+      swipeToClose: true,
+      showBackdrop: true
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        console.log("Object was created or modified", dataReturned.data)
+      }
+    });
+    (await modal).present();
   }
-
+  async setPrinters(room: Room) {
+    this.objectService.selectedObject = room;
+    const modal = await this.modalCtrl.create({
+      component: RoomPrintersPage,
+      cssClass: "small-modal",
+      animated: true,
+      swipeToClose: true,
+      backdropDismiss: false
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        this.displayedColumns = dataReturned.data.concat(['actions']);
+      }
+      this.createColumnDefs();
+    });
+    (await modal).present().then((val) => {
+      console.log("most lett vegrehajtva.")
+    })
+  }
   /**
 * Function to Select the columns to show
 * @param ev 

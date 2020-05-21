@@ -85,7 +85,6 @@ export class SystemStatusComponent implements OnInit {
     delete this.mySupport.regcode;
     delete this.mySupport.product;
     delete this.mySupport.company;
-    delete this.mySupport.supporttype;
     delete this.mySupport.regcodeValidUntil;
     delete this.mySupport.status;
     delete this.mySupport.requestDate;
@@ -93,6 +92,7 @@ export class SystemStatusComponent implements OnInit {
     delete this.mySupport.ticketResponseInfo;
     const modal = await this.modalCtrl.create({
       component: ObjectsEditComponent,
+      cssClass: 'medium-modal',
       componentProps: {
         objectType: "support",
         objectAction: 'add',
