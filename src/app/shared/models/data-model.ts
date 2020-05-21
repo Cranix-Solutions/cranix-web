@@ -295,13 +295,13 @@ export class SupportTicket {
 	firstname: string = "";
 	lastname: string = "";
 	email: string = "";
+	supporttype: string = "Error";
 	subject: string = "";
 	description: string = "";
 	text?: string = "";
 	regcode: string = "";
 	product: string = "";
 	company: string = "";
-	supporttype?: string = "";
 	regcodeValidUntil?: number = 0;
 	status?: string = "";
 	requestDate?: number = 0;

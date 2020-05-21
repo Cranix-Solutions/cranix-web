@@ -15,13 +15,13 @@
     <ion-fab-button><ion-icon name="refresh-outline" (click)="applyState()"></ion-icon></ion-fab-button>
   </ion-fab-list>
 </ion-fab>
-<ion-searchbar placeholder="{{'search' | translate }}" (input)="setFilterChanged()" id="softwareSetFilter"showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
+<ion-searchbar placeholder="{{'search' | translate }}" (input)="setFilterChanged()" id="installationSetFilter"showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
   <ion-card>
     <ion-card-header class="hidden-xs hidden-sm hidden-md">
       <ion-row class="hidden-xs hidden-sm hidden-md">
         <ion-col size="3" class="ion-align-items-center">
           <ion-item>
-            <ion-input placeholder="{{'search' | translate }}" (input)="setFilterChanged()" id="softwareSetFilter">
+            <ion-input placeholder="{{'search' | translate }}" (input)="setFilterChanged()" id="installationSetFilter">
             </ion-input>
           </ion-item>
         </ion-col>
@@ -39,9 +39,9 @@
       </ion-row>
     </ion-card-header>
     <ion-card-content>
-      <ag-grid-angular #agGrid style="width: 100%; height: 200px;" class="{{authService.agGridThema}}" [gridOptions]="softwareSetOptions"
-        [rowData]="softwareSetData" [columnDefs]="columnDefs" [context]="context" [rowSelection]="softwareSetSelection"
-        (gridReady)="softwareSetReady($event)" (selectionChanged)="onMemberSelectionChanged()" id="softwareSetTable"
+      <ag-grid-angular #agGrid style="width: 100%; height: 200px;" class="{{authService.agGridThema}}" [gridOptions]="installationSetOptions"
+        [rowData]="installationSetData" [columnDefs]="columnDefs" [context]="context" [rowSelection]="installationSetSelection"
+        (gridReady)="installationSetReady($event)" (selectionChanged)="onMemberSelectionChanged()" id="installationSetTable"
         [autoGroupColumnDef]="autoGroupColumnDef">
       </ag-grid-angular>
     </ion-card-content>

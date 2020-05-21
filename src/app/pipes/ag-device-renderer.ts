@@ -8,16 +8,19 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
         <ion-button style="padding-horizontal : 2px" fill="clear" size="small" (click)="details()" matTooltip="{{'edit' | translate }}">
              <ion-icon name="build-sharp"></ion-icon>
         </ion-button>
+        <ion-button style="padding-horizontal : 2px" fill="clear"  size="small" (click)="setPrinters()" matTooltip="{{'Set printers' | translate }}">
+            <ion-icon name="print" ></ion-icon>
+        </ion-button>
+        <ion-button style="padding-horizontal : 2px" fill="clear"  size="small" (click)="setDhcp()" matTooltip="{{'Set DHCP parameter' | translate }}">
+            <ion-icon color="danger" name="server" ></ion-icon>
+        </ion-button>
         <ion-button fill="clear" size="small" (click)="openAction($event)" matTooltip="{{'Apply actions on the selected objects' | translate }}">
             <ion-icon  name="ellipsis-vertical-sharp"></ion-icon> 
         </ion-button>
-        <!--ion-button style="padding-horizontal : 2px" fill="clear"  size="small" (click)="delete()" matTooltip="{{'delete' | translate }}">
-            <ion-icon color="danger" name="trash-outline" ></ion-icon>
-        </ion-button-->
         ` 
 })
 
-export class ActionBTNRenderer implements ICellRendererAngularComp {
+export class DeviceActionBTNRenderer implements ICellRendererAngularComp {
     private params: any;
 
     agInit(params: any ): void {
@@ -31,9 +34,12 @@ export class ActionBTNRenderer implements ICellRendererAngularComp {
     public openAction(ev: any){
         this.params.context.componentParent.openActions(ev, this.params.data.id )
     }
-   /* public delete() {
-        this.params.context.componentParent.redirectToDelete(this.params.data);
-    }*/
+    public setPrinters() {
+        this.params.context.componentParent.setPrinters(this.params.data);
+    }
+    public setDhcp() {
+        this.params.context.componentParent.setDhcp(this.params.data);
+    }
 
     refresh(params: any): boolean {
         return true;

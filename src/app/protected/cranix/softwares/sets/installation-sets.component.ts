@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { PopoverController, ModalController } from '@ionic/angular';
 
 //Own stuff
 import { AuthenticationService } from 'src/app/services/auth.service';
@@ -7,32 +8,34 @@ import { EditBTNRenderer } from 'src/app/pipes/ag-edit-renderer';
 import { LanguageService } from 'src/app/services/language.service';
 import { SoftwareService } from 'src/app/services/softwares.service'
 import { Installation } from 'src/app/shared/models/data-model';
+import { EditInstallationSetComponent } from 'src/app/protected/cranix/softwares/edit-set/edit-installation-set.component';
 
 @Component({
-  selector: 'cranix-software-sets',
-  templateUrl: './software-sets.component.html',
-  styleUrls: ['./software-sets.component.scss'],
+  selector: 'cranix-installation-sets',
+  templateUrl: './installation-sets.component.html',
+  styleUrls: ['./installation-sets.component.scss'],
 })
-export class SoftwareSetsComponent implements OnInit {
+export class InstallationSetsComponent implements OnInit {
   context;
-  softwareSetOptions;
+  installationSetOptions;
   columnDefs = [];
-  softwareSetApi;
-  softwareSetColumnApi;
-  softwareSetSelection: Installation[] = [];
-  softwareSetData: Installation[] = [];
+  installationSetApi;
+  installationSetColumnApi;
+  installationSetSelection: Installation[] = [];
+  installationSetData: Installation[] = [];
   autoGroupColumnDef;
   institute;
   selectedList: string[] = [];
 
   constructor(
     public authService: AuthenticationService,
+    public modalCtrl: ModalController,
     public router: Router,
     public softwareService: SoftwareService,
     private languageS: LanguageService
     ) {
     this.context = { componentParent: this };
-    this.softwareSetOptions = {
+    this.installationSetOptions = {
       defaultColDef: {
         resizable: true,
         sortable: true,
@@ -47,37 +50,37 @@ export class SoftwareSetsComponent implements OnInit {
     this.createColumnDefs();
     this.readMembers();
   }
-  softwareSetReady(params) {
-    this.softwareSetApi = params.api;
-    this.softwareSetColumnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("softwareSetTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
+  installationSetReady(params) {
+    this.installationSetApi = params.api;
+    this.installationSetColumnApi = params.columnApi;
+    (<HTMLInputElement>document.getElementById("installationSetTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
   }
 
   onMemberSelectionChanged() {
-    this.softwareSetSelection = this.softwareSetApi.getSelectedRows();
+    this.installationSetSelection = this.installationSetApi.getSelectedRows();
   }
 
   setFilterChanged() {
-    this.softwareSetApi.setQuickFilter((<HTMLInputElement>document.getElementById("softwareSetFilter")).value);
-    this.softwareSetApi.doLayout();
+    this.installationSetApi.setQuickFilter((<HTMLInputElement>document.getElementById("installationSetFilter")).value);
+    this.installationSetApi.doLayout();
   }
 
   onResize(ev: Event) {
-    (<HTMLInputElement>document.getElementById("softwareSetTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
+    (<HTMLInputElement>document.getElementById("installationSetTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
     //this.sizeAll();
   }
   sizeAll() {
     var allColumnIds = [];
-    this.softwareSetColumnApi.getAllColumns().forEach((column) => {
+    this.installationSetColumnApi.getAllColumns().forEach((column) => {
       allColumnIds.push(column.getColId());
     });
-    this.softwareSetColumnApi.autoSizeColumns(allColumnIds);
+    this.installationSetColumnApi.autoSizeColumns(allColumnIds);
   }
   readMembers() {
     let subM = this.softwareService.getInstallationsSets().subscribe(
       (val) => {
-        this.softwareSetData = val;
-        console.log("softwareSets")
+        this.installationSetData = val;
+        console.log("installationSets")
         console.log(val);
        },
       (err) => { console.log(err) },
@@ -137,8 +140,23 @@ export class SoftwareSetsComponent implements OnInit {
       }
     ];
   }
-  addSet(){
-    this.router.navigate(['/pages/cranix/softwares/add-set']);
+  async addSet(){
+    const modal = await this.modalCtrl.create({
+      component: EditInstallationSetComponent,
+      componentProps: {
+        objectType: "room",
+        objectAction: 'add'
+      },
+      animated: true,
+      swipeToClose: true,
+      showBackdrop: true
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        console.log("Object was created or modified", dataReturned.data)
+      }
+    });
+    (await modal).present();
   }
   writeConfig(){
     //TODO

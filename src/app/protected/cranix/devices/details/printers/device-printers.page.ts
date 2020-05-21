@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { ToastController } from '@ionic/angular';
+import { ToastController, ModalController } from '@ionic/angular';
 //own stuff
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
@@ -9,7 +9,7 @@ import { Printer, Device } from 'src/app/shared/models/data-model'
 import { ServerResponse } from 'src/app/shared/models/server-models';
 
 @Component({
-  selector: 'cranix-group-members',
+  selector: 'cranix-device-printers',
   templateUrl: './device-printers.page.html',
   styleUrls: ['./device-printers.page.scss'],
 })
@@ -29,6 +29,7 @@ export class DevicePrintersPage implements OnInit {
     private languageS: LanguageService,
     public formBuilder: FormBuilder,
     public objectService: GenericObjectService,
+    public modalCtrl: ModalController,
     private toastController: ToastController
   ) {
     this.device = <Device>this.objectService.selectedObject;

@@ -8,6 +8,9 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
         <ion-button style="padding-horizontal : 2px" fill="clear" size="small" (click)="details()" matTooltip="{{'edit' | translate }}">
              <ion-icon name="build-sharp"></ion-icon>
         </ion-button>
+        <ion-button style="padding-horizontal : 2px" fill="clear" size="small" (click)="members()" matTooltip="{{'Members of the group:' | translate }}">
+             <ion-icon name="people-circle"></ion-icon>
+        </ion-button>
         <ion-button fill="clear" size="small" (click)="openAction($event)" matTooltip="{{'Apply actions on the selected objects' | translate }}">
             <ion-icon  name="ellipsis-vertical-sharp"></ion-icon> 
         </ion-button>
@@ -17,7 +20,7 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
         ` 
 })
 
-export class ActionBTNRenderer implements ICellRendererAngularComp {
+export class GroupActionBTNRenderer implements ICellRendererAngularComp {
     private params: any;
 
     agInit(params: any ): void {
@@ -25,8 +28,10 @@ export class ActionBTNRenderer implements ICellRendererAngularComp {
     }
 
     public details() {
-        console.log("Edit", this.params.data);
         this.params.context.componentParent.redirectToEdit(this.params.data.id, this.params.data);
+    }
+    public members() {
+        this.params.context.componentParent.redirectToMembers(this.params.data.id, this.params.data);
     }
     public openAction(ev: any){
         this.params.context.componentParent.openActions(ev, this.params.data.id )

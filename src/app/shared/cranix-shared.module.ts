@@ -24,8 +24,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { PipesModule } from 'src/app/pipes/pipe-modules';
 import { AgGridModule } from 'ag-grid-angular';
 import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
+import { GroupActionBTNRenderer } from 'src/app/pipes/ag-group-renderer';
+import { UserActionBTNRenderer } from 'src/app/pipes/ag-user-renderer';
 import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
 import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
+import { RoomActionBTNRenderer } from 'src/app/pipes/ag-room-renderer';
+import { DeviceActionBTNRenderer } from 'src/app/pipes/ag-device-renderer';
 import { EditBTNRenderer } from 'src/app/pipes/ag-edit-renderer';
 import { GroupIdCellRenderer } from 'src/app/pipes/ag-groupid-renderer';
 import { HwconfIdCellRenderer } from 'src/app/pipes/ag-hwconfid-renderer';
@@ -43,13 +47,17 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
     DateCellRenderer,
     DateTimeCellRenderer,
     DeviceIdCellRenderer,
+    DeviceActionBTNRenderer,
     EditBTNRenderer, 
     GroupIdCellRenderer,
+    GroupActionBTNRenderer,
     HwconfIdCellRenderer,
     InstituteIdCellRenderer,
     InstituteUUIDCellRenderer,
+    RoomActionBTNRenderer,
     RoomIdCellRenderer,
     UpdateRenderer,
+    UserActionBTNRenderer,
     UserIdCellRenderer,
     UserIdToNameCellRenderer,
     ToolbarComponent,
@@ -62,13 +70,17 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
     DateCellRenderer,
     DateTimeCellRenderer,
     DeviceIdCellRenderer,
+    DeviceActionBTNRenderer,
     EditBTNRenderer, 
     GroupIdCellRenderer,
+    GroupActionBTNRenderer,
     HwconfIdCellRenderer,
     InstituteIdCellRenderer,
     InstituteUUIDCellRenderer,
     RoomIdCellRenderer,
+    RoomActionBTNRenderer,
     UpdateRenderer,
+    UserActionBTNRenderer,
     UserIdCellRenderer,
     UserIdToNameCellRenderer
   ]),

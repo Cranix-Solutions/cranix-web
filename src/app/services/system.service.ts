@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders, HttpParams, HttpClientModule } from '@angular/
 //Own Stuff
 import { UtilsService } from './utils.service';
 import { AuthenticationService} from './auth.service';
-import { SystemConfig } from 'src/app/shared/models/data-model';
+import { SystemConfig, SupportTicket } from 'src/app/shared/models/data-model';
 import { ServerResponse } from 'src/app/shared/models/server-models';
 
 @Injectable()
@@ -86,5 +86,11 @@ export class SystemService {
 			"value": value
 		}
 		return this.http.post<ServerResponse>(this.url,tmp, { headers: this.headers });
+	}
+
+	createSupportRequest(support){
+		this.url = this.hostname + `/support/create`;
+		console.log(this.url);
+		return this.http.post<SupportTicket>(this.url,support, { headers: this.headers });
 	}
 }

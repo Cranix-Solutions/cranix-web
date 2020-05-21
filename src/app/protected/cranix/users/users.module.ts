@@ -16,11 +16,6 @@ const routes: Routes = [
     loadChildren: () => import('./lists/users-lists.module').then( m => m.UsersListsPageModule)
   },
   {
-    path: 'users/:id',
-    canLoad: [CanActivateViaAcls],
-    loadChildren: () => import('./details/user-details.module').then( m => m.UserDetailsPageModule)
-  },
-  {
     path: '',
     redirectTo: 'all'
   }

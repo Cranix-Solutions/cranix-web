@@ -144,8 +144,8 @@ export class InstitutesComponent implements OnInit {
   onGridSizeChange(params) {
     var allColumns = params.columnApi.getAllColumns();
     params.api.sizeColumnsToFit();
-
   }
+
   sizeAll() {
     var allColumnIds = [];
     this.columnApi.getAllColumns().forEach((column) => {

@@ -2,7 +2,8 @@
 <ion-content id="carded">
   <ion-row class="header-row">
   <ion-col size=6>
-    <ion-title>{{'Manage devices' | translate}}</ion-title>
+    <ion-title *ngIf="!selectedRoom">{{'Manage devices' | translate}}</ion-title>
+    <ion-title *ngIf="selectedRoom">{{'Manage devices in selected room:' | translate}}  {{selectedRoom.name}}</ion-title>
   </ion-col>
   </ion-row>
   <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
@@ -26,8 +27,11 @@
           </ion-item>
         </ion-col>
         <ion-col offset="6" size="3" class="ion-align-self-center ion-text-end hidden-xs hidden-sm hidden-md">
-          <ion-button size="small" (click)="redirectToEdit($event,null)"  matTooltip="{{'Create a new device' | translate }}">
+          <ion-button *ngIf="selectedRoom" size="small" (click)="redirectToEdit($event,null)"  matTooltip="{{'Create a new device in the selected room.' | translate }}">
             <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+          </ion-button>
+          <ion-button size="small" (click)="openActions($event,null)" matTooltip="{{'Create a new printer.' | translate }}" >
+            <ion-icon slot="icon-only" color="success" name="print"></ion-icon>
           </ion-button>
           <ion-button size="small" (click)="openActions($event,null)" matTooltip="{{'Apply actions on the selected objects' | translate }}" >
             <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
@@ -39,7 +43,7 @@
       </ion-row>
     </ion-card-header>
     <ion-card-content>
-      <ag-grid-angular style="width: 100%; height:  450px;"class="{{authService.agGridThema}}" [gridOptions]="gridOptions"
+      <ag-grid-angular style="width: 100%; height:  100%;"class="{{authService.agGridThema}}" [gridOptions]="gridOptions"
         [rowData]="rowData" [columnDefs]="columnDefs" [context]="context" [rowSelection]="rowSelection"
         (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged()" id="agGridTable">
       </ag-grid-angular>

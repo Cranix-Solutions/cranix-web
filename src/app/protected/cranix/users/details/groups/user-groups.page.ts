@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
-import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
+import { ModalController } from '@ionic/angular';
 
 //own stuff
 import { LanguageService } from 'src/app/services/language.service';
@@ -14,9 +14,6 @@ import { AuthenticationService } from 'src/app/services/auth.service';
   styleUrls: ['./user-groups.page.scss'],
 })
 export class UserGroupsPage implements OnInit {
-  context;
-  memberOptions;
-  noMemberOptions;
   columnDefs = [];
   memberApi;
   noMemberApi;
@@ -32,47 +29,29 @@ export class UserGroupsPage implements OnInit {
     public authService: AuthenticationService,
     private objectS: GenericObjectService,
     private languageS: LanguageService,
+    public modalCtrl: ModalController,
     private  userS: UsersService
   ) {
     this.user = <User>this.objectS.selectedObject;
-    this.context = { componentParent: this };
-    this.memberOptions = <GridOptions>{
-      defaultColDef: {
-        resizable: true,
-        sortable: true,
-        hide: false
-      },
-      columnDefs: this.columnDefs,
-      context: this.context,
-      rowSelection: 'multiple'
-    }
     this.columnDefs = [
       {
         headerName:  this.languageS.trans('name'),
+        sortable: true,
         field: 'name',
         headerCheckboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true,
-        checkboxSelection: true
+        headerCheckboxSelectionFilteredOnly: true
       },
       {
         headerName: this.languageS.trans('description'),
+        sortable: true,
         field: 'description',
       },
       {
         headerName: this.languageS.trans('groupType'),
+        sortable: true,
         field: 'groupType',
       }
     ]
-    this.noMemberOptions = <GridOptions>{
-      defaultColDef: {
-        resizable: true,
-        sortable: true,
-        hide: false
-      },
-      columnDefs: this.columnDefs,
-      context: this.context,
-      rowSelection: 'multiple'
-    }
   }
 
   ngOnInit() {
@@ -83,7 +62,7 @@ export class UserGroupsPage implements OnInit {
     this.memberApi = params.api;
     this.memberColumnApi = params.columnApi;
     this.memberApi.sizeColumnsToFit();
-    (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
+    (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
   }
   onMemberSelectionChanged() {
     this.memberSelection = this.memberApi.getSelectedRows();
@@ -98,7 +77,7 @@ export class UserGroupsPage implements OnInit {
     this.noMemberApi = params.api;
     this.noMemberColumnApi = params.columnApi;
     this.noMemberApi.sizeColumnsToFit();
-    (<HTMLInputElement>document.getElementById("noMemberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
+    (<HTMLInputElement>document.getElementById("noMemberTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
   }
   onNoMemberSelectionChanged() {
     this.noMemberSelection = this.noMemberApi.getSelectedRows();
