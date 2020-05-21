@@ -23,7 +23,7 @@ export class UtilsService {
                         url = protocol + "//" + hostname + "/api";
 		}
 		//Test only
-                url = 'https://test-cephalix.cephalix.eu/api';
+		url = 'https://test-cephalix.cephalix.eu/api';
 		//url = 'https://repo.cephalix.eu/api';
                 //url = 'https://gif1.bbs1-gifhorn.de:444/api';
 		//url = 'https://172.18.0.2/api';
