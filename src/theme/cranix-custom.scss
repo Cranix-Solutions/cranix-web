@@ -89,15 +89,10 @@ $breakpoints-values: map-values($grid-breakpoints);
       //flex-grow: 1;
       height: 93%;
 
-      // display: grid;
+       display: grid;
       // grid-template-rows: 12%;
       ion-card-header {
-        grid-row       : 1/2;
-        height         : 0%;
-        /* border-style: ridge;
-        border-top     : none;
-        border-left    : none;
-        border-right   : none;*/
+        display : none; 
       }
 
       ion-card-content {

@@ -41,7 +41,7 @@
     <ion-card-content>
       <ag-grid-angular style="width: 100%; height: 100%;"class="{{authService.agGridThema}}" [gridOptions]="gridOptions"
         [rowData]="rowData" [columnDefs]="columnDefs" [context]="context" [rowSelection]="rowSelection"
-        (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged()" id="agGridTable">
+        (gridReady)="onGridReady($event)" (gridSizeChanged)="onGridSizeChange($event)" (selectionChanged)="onSelectionChanged()" id="agGridTable">
       </ag-grid-angular>
     </ion-card-content>
   </ion-card>

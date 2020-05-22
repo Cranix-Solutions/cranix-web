@@ -111,6 +111,7 @@ export class GroupsPage implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
+    this.sizeAll();
   }
   onSelectionChanged() {
     this.selected = this.gridApi.getSelectedRows();
@@ -120,12 +121,27 @@ export class GroupsPage implements OnInit {
     this.gridApi.doLayout();
 
   }
+  onGridSizeChange(params) {
+   /* var allColumns = params.columnApi.getAllColumns();
+    params.api.sizeColumnsToFit();*/
+    this.sizeAll();
+  }
+
   sizeAll() {
-    var allColumnIds = [];
+   /* var allColumnIds = [];
     this.columnApi.getAllColumns().forEach((column) => {
       allColumnIds.push(column.getColId());
     });
-    this.columnApi.autoSizeColumns(allColumnIds);
+    this.columnApi.autoSizeColumns(allColumnIds);*/
+
+    this.gridApi.sizeColumnsToFit();
+    window.addEventListener('resize', function() {
+      setTimeout(function() {
+        this.gridApi.sizeColumnsToFit();
+      });
+    });
+
+    this.gridApi.sizeColumnsToFit();
   }
 
   public redirectToDelete = (group: Group) => {
