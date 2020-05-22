@@ -21,7 +21,7 @@
       </ion-row>
     </ion-card-header>
     <ion-card-content>
-      <ag-grid-angular #agGrid style="width: 100%; height: 200px;" class="{{authService.agGridThema}}" [gridOptions]="memberOptions"
+      <ag-grid-angular #agGrid style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}" [gridOptions]="memberOptions"
         [rowData]="memberData" [columnDefs]="columnDefs" [context]="context" [rowSelection]="memberSelection"
         (gridReady)="onMemberReady($event)" (selectionChanged)="onMemberSelectionChanged()" id="memberTable"
         [autoGroupColumnDef]="autoGroupColumnDef">

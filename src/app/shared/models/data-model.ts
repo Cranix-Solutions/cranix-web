@@ -363,10 +363,12 @@ export class DHCP {
 	constructor() { }
 }
 
-export class Setting {
-	agGridThema: string = "";
+export class Settings {
+	agGridThema: string = "ag-theme-blaham";
 	lang: string = "";
-	password: string = "";
+	errorMessageDuration: number = 10;
+	okMessageDuration: number = 10;
+	warningMessageDuration: number = 6;
 	constructor() { }
 }
 

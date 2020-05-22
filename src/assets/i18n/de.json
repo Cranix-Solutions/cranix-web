@@ -1,4 +1,10 @@
 {
+    "Edit settings":"Oberfläche anpassen.",
+    "agGridThema":"Tabellenstil",
+    "errorMessageDuration":"Dauer der Fehlermeldungen in Sekunden",
+    "okMessageDuration":"Dauer der Erfolgsmeldungen in Sekunden",
+    "warningMessageDuration":"Dauer der Warnmeldungen in Sekunden",
+    "The MAC address '%s' will be used allready by '%s'.":"Die MAC-Adresse '%s' wird von Gerät '%s' benutzt.",
     "Add device": "Gerät anlegen",
     "Add group": "Gruppe anlegen",
     "Add hwconf": "Gerätekonfiguration anlegen",

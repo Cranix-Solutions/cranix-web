@@ -10,7 +10,7 @@
         <ion-button type="submit" class="ion-no-margin" [disabled]="!editForm.valid">
           <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
         </ion-button>
-        <ion-button *ngIf="objectAction == 'modify'" fill="clear" size="small" (click)="deleteObject()" disabled="{{editForm.disabled}}">
+        <ion-button *ngIf="objectAction == 'modify' && objectType != 'settings'" fill="clear" size="small" (click)="deleteObject()" disabled="{{editForm.disabled}}">
           <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
         </ion-button>
         <ion-button fill="clear" size="small" (click)="closeWindow()" disabled="{{editForm.disabled}}">

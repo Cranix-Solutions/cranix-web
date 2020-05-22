@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 //Own modules
 import { UtilsService } from './utils.service';
 import { UserResponse, LoginForm } from 'src/app/shared/models/server-models';
+import { Settings } from '../shared/models/data-model';
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +21,7 @@ export class AuthenticationService {
     token: string;
     session: UserResponse;
     subscription: any;
-    agGridThema: string = "ag-theme-material";
+    settings: Settings = new Settings();
 
     constructor(
         private http: HttpClient,
@@ -52,9 +53,9 @@ export class AuthenticationService {
         this.subscription = this.login(user)
             .subscribe(
                 (val) => {
-                    this.storage.get('agGridThema').then((val) => {
+                    this.storage.get('myCranixSettings').then((val) => {
                         if (val && val != "") {
-                            this.agGridThema = val;
+                            this.settings = JSON.parse(val);
                         }
                     });
                     console.log('login respons is', val);
