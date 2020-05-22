@@ -97,6 +97,8 @@ export class ObjectsEditComponent implements OnInit {
       case 'support': {
         object['description'] = object.text;
         delete object.text;
+        this.supportRequest(object);
+        break;
       }
       default: {
         this.defaultAcion(object);

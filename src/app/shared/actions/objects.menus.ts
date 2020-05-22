@@ -1,174 +1,141 @@
 export const deviceMenu = [
   {
-    "name": "Wol",
     "enabled": true,
-    "icon":"alarm-outline",
+    "icon":"alarm",
     "action": "wol"
   },
   {
-    "name": "Shutdown",
     "enabled": true,
-    "icon":"alarm-outline",
+    "icon":"power",
     "action": "shutdown"
   },
   {
-    "name": "Reboot",
     "enabled": true,
-    "icon":"alarm-outline",
+    "icon":"refresh",
     "action": "reboot"
   },
   {
-    "name": "Open",
     "enabled": true,
-    "icon":"alarm-outline",
+    "icon":"alarm",
     "action": "open"
   },
-  {
-    "name": "Close",
-    "enabled": true,
-    "icon":"alarm-outline",
+  { "enabled": true,
+    "icon":"alarm",
     "action": "close"
   },
-  {
-    "name": "Logout",
-    "enabled": true,
-    "icon":"alarm-outline",
+  { "enabled": true,
+    "icon":"walkt",
     "action": "logout"
   }]
 
 export const  groupMenu = [
   {
-    "name": "Import",
     "enabled": true,
-    "icon":"receipt-outline",
+    "icon":"receipt",
     "action": "import"
   },
 ]
 
 export const  instituteMenu = [
   {
-    "name": "Update",
     "enabled": true,
-    "icon":"trending-up-outline",
+    "icon":"trending-up",
     "action": "serverUpdate"
   },
   {
-    "name": "Upload file",
     "enabled": true,
-    "icon":"cloud-upload-outline",
+    "icon":"cloud-upload",
     "action": "serverUploadFile"
   },
   {
-    "name": "Restart",
     "enabled": true,
-    "icon":"cloud-upload-outline",
+    "icon":"refresh",
     "action": "serverReboot"
   },
   {
-    "name": "Shutdown",
     "enabled": true,
-    "icon":"power-outline",
+    "icon":"power",
     "action": "serverShutdown"
   },
 ]
 
 export const  roomMenu = [
   {
-    "name": "Wol",
     "enabled": true,
-    "icon":"alarm-outline",
+    "icon":"alarm",
     "action": "wol"
   },
   {
-    "name": "Shutdown",
     "enabled": true,
-    "icon":"alarm-outline",
+    "icon":"power",
     "action": "shutdown"
   },
   {
-    "name": "Reboot",
     "enabled": true,
-    "icon":"alarm-outline",
+    "icon":"refresh",
     "action": "reboot"
   },
   {
-    "name": "Open",
     "enabled": true,
-    "icon":"alarm-outline",
+    "icon":"alarm",
     "action": "open"
   },
   {
-    "name": "Close",
     "enabled": true,
-    "icon":"alarm-outline",
+    "icon":"alarm",
     "action": "close"
   },
   {
-    "name": "Logout",
     "enabled": true,
-    "icon":"alarm-outline",
+    "icon":"walk",
     "action": "logout"
   },
   {
-    "name": "Import Rooms",
     "enabled": true,
-    "icon":"receipt-outline",
+    "icon":"receipt",
     "action": "importRooms"
-  },
-  {
-    "name": "Import Devices",
-    "enabled": true,
-    "icon":"receipt-outline",
-    "action": "importRooms"
-  },
+  }
 ]
 
-export const userMenu = [{
-    "name": "Chnage Password",
-    "icon":"key-outline",
+export const userMenu = [
+  {
+    "icon":"key",
     "enabled": true,
     "action": "changePassword"
   },
   {
-    "name": "Remove Profile",
     "enabled": true,
-    "icon":"cut-outline",
+    "icon":"cut",
     "action": "removeProfiles"
   },
   {
-    "name": "Login Enable/Disable",
     "enabled": true,
-    "icon":"stop-circle-sharp",
+    "icon":"stop-circle",
     "action": "disableLogin"
   },
   {
-    "name": "Internet Enable/Disable",
     "enabled": true,
-    "icon":"stop-circle-sharp",
+    "icon":"cloud-offline",
     "action": "disableInternet"
   },
   {
-    "name": "Mandatory Profile",
     "enabled": true,
-    "icon":"file-tray-full-outline",
+    "icon":"file-tray",
     "action": "mandatoryProfile"
   },
   {
-    "name": "Copy Template",
     "enabled": true,
-    "icon":"file-tray-full-outline",
+    "icon":"file-tray",
     "action": "copyTemplate"
   },
   {
-    "name": "Filesystem Quota",
     "enabled": true,
-    "icon":"file-tray-full-outline",
+    "icon":"file-tray-full",
     "action": "setFilesystemQuota"
   },
   {
-    "name": "Mailsystem Quota",
     "enabled": true,
-    "icon":"file-tray-full-outline",
+    "icon":"mail",
     "action": "setMailSystemQuota"
   }
 ];
