@@ -14,7 +14,7 @@ import { SupportTicket } from '../models/data-model';
 @Component({
   selector: 'cranix-objects-edit',
   templateUrl: './objects-edit.component.html',
-  styleUrls: ['./objects-edit.component.scss'],
+  //styleUrls: ['./objects-edit.component.scss'],
 })
 export class ObjectsEditComponent implements OnInit {
   formData: FormData = new FormData();

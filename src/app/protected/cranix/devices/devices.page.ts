@@ -14,6 +14,7 @@ import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-col
 import { Device } from 'src/app/shared/models/data-model'
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { DevicePrintersPage } from './details/printers/device-printers.page';
+import { AddDeviceComponent } from './add-device/add-device.component';
 
 @Component({
   selector: 'cranix-devices',
@@ -68,18 +69,18 @@ export class DevicesPage implements OnInit {
         this.createColumnDefs();
       }
     });
-    if( this.objectService.selectedRoom ) {
+    if (this.objectService.selectedRoom) {
       this.selectedRoom = this.objectService.selectedRoom;
       delete this.objectService.selectedRoom;
-      this.objectService.getObjects('device').subscribe(obj => 
-        { this.rowData = [];
-          for( let dev of obj  ) {
-            if( dev.roomId == this.selectedRoom.id ){
-              this.rowData.push(dev);
-            }
+      this.objectService.getObjects('device').subscribe(obj => {
+      this.rowData = [];
+        for (let dev of obj) {
+          if (dev.roomId == this.selectedRoom.id) {
+            this.rowData.push(dev);
           }
         }
-       );
+      }
+      );
     } else {
       this.objectService.getObjects('device').subscribe(obj => this.rowData = obj);
       delete this.selectedRoom;
@@ -87,7 +88,7 @@ export class DevicesPage implements OnInit {
     delete this.objectService.selectedObject;
   }
   public ngAfterViewInit() {
-    while(document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
+    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
   }
 
   createColumnDefs() {
@@ -250,6 +251,31 @@ export class DevicesPage implements OnInit {
         columns: this.objectKeys,
         selected: this.displayedColumns,
         objectPath: "DevicesPage.displayedColumns"
+      },
+      animated: true,
+      swipeToClose: true,
+      backdropDismiss: false
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        this.displayedColumns = dataReturned.data.concat(['actions']);
+      }
+      this.createColumnDefs();
+    });
+    (await modal).present().then((val) => {
+      console.log("most lett vegrehajtva.")
+    })
+  }
+
+  addPrinter(ev: Event) {
+
+  }
+  async addDevice(ev: Event) {
+    const modal = await this.modalCtrl.create({
+      component: AddDeviceComponent,
+      cssClass: 'medium-modal',
+      componentProps: {
+        room: this.selectedRoom
       },
       animated: true,
       swipeToClose: true,

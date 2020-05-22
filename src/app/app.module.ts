@@ -42,6 +42,7 @@ import { GroupMembersPage } from 'src/app/protected/cranix/groups/details/member
 import { UserGroupsPage } from 'src/app/protected/cranix/users/details/groups/user-groups.page';
 import { RoomPrintersPage } from 'src/app/protected/cranix/rooms/details/printers/room-printers.page';
 import { DevicePrintersPage } from 'src/app/protected/cranix/devices/details/printers/device-printers.page';
+import { AddDeviceComponent } from 'src/app/protected/cranix/devices/add-device/add-device.component';
 import 'ag-grid-enterprise';
 
 export function createTranslateLoader(http: HttpClient) {
@@ -62,6 +63,7 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
+    AddDeviceComponent,
     AppComponent,
     ActionsComponent,
     DownloadSoftwaresComponent,
@@ -73,6 +75,7 @@ const routes: Routes = [
     RoomPrintersPage,
     SelectColumnsComponent],
   entryComponents: [
+    AddDeviceComponent,
     ActionsComponent,
     DownloadSoftwaresComponent,
     ShowImportComponent,
@@ -101,6 +104,7 @@ const routes: Routes = [
       }
     })],
   providers: [
+    AddDeviceComponent,
     CanActivateViaAcls,
     CephalixService,
     DevicesService,

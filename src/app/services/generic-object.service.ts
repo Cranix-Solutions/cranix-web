@@ -201,6 +201,15 @@ export class GenericObjectService {
     }
   }
 
+  getObjectById(objectType, objectId) {
+    for (let obj of this.allObjects[objectType].getValue()) {
+      if (obj.id === objectId) {
+        return obj;
+      }
+    }
+    return null;
+  }
+
   idToName(objectType, objectId) {
     for (let obj of this.allObjects[objectType].getValue()) {
       if (obj.id === objectId) {
