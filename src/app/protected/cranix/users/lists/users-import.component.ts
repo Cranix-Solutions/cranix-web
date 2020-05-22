@@ -14,7 +14,9 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 
 @Component({
   selector: 'cranix-users-import',
-  templateUrl: './users-import.component.html'
+  templateUrl: './users-import.component.html',
+  styleUrls: ['./user-import.component.scss'],
+
 })
 export class UsersImportComponent implements OnInit {
   objectKeys: string[] = [];
@@ -91,6 +93,9 @@ export class UsersImportComponent implements OnInit {
     //TODO
   }
   deleteImport(startTime: string) {
+    //TODO
+  }
+  refreshRunningImport(){
     //TODO
   }
 
