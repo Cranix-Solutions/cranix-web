@@ -19,11 +19,14 @@ export class AddPrinterComponent implements OnInit {
   printerNames = {};
   room: Room;
   name: string = "";
-  printer: Printer;
+  printer: Printer = new Printer();
+  driverFile;
+  models = {};
+  manufacturers: string[] = [];
 
   constructor(
     public authService: AuthenticationService,
-    public printerService: PrintersService,
+    public printersService: PrintersService,
     public languageS: LanguageService,
     public modalCtrl: ModalController,
     private navParams: NavParams,
@@ -32,12 +35,17 @@ export class AddPrinterComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.room = this.navParams.get('room');
-    if (this.room) {
-      this.initValues(this.room.id);
-    } else {
-      this.initValues(null);
-    }
+    let subs = this.printersService.getDrivers().subscribe(
+      (val) => { 
+        this.models = val 
+        for( let key of Object.keys(this.models) ){
+          this.manufacturers.push(key);
+        }
+      },
+      (err) => { console.log(err) },
+      () => { subs.unsubscribe() }
+    )
+    this.initValues(1);
   }
 
   public ngAfterViewInit() {
@@ -62,7 +70,6 @@ export class AddPrinterComponent implements OnInit {
       )
       this.room = this.objectService.getObjectById('room', id);
       console.log(this.room);
-      this.printer.hwconfId = this.room.hwconfId;
       this.printer.roomId = this.room.id;
     }
     if( this.authService.session.mac ) {
@@ -70,10 +77,8 @@ export class AddPrinterComponent implements OnInit {
     }
   }
   onSubmit(printer: Printer) {
-    let printers: Printer[] = [];
-    printers.push(printer);
-    console.log(printers);
-    let subs = this.roomService.addPrinter(printers, this.room.id).subscribe(
+    let a:any;
+    let subs = this.printersService.add(a).subscribe(
       (val) => {
         if (val.code == "OK") {
           this.objectService.getAllObject('printers');
@@ -90,10 +95,14 @@ export class AddPrinterComponent implements OnInit {
       () => { subs.unsubscribe() }
     )
   }
-  ipChanged(ev) {
-    this.printer.name = this.printerNames[ev];
-  }
+  
   roomChanged(ev) {
     this.initValues(parseInt(ev));
+  }
+  handleFileInput(files: FileList) {
+    this.driverFile = files.item(0);
+  }
+  manufacturerChanged(ev){
+    this.printer.model="";
   }
 }

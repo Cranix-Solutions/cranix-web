@@ -185,14 +185,19 @@ export class Device {
 export class Printer {
 	id?: number;
 	name: string = "";
-	devId: number = 0;
+	ip: string = "";
+	deviceName: string = "";
+	manufacturer: string = "";
+	model: string = "";
 	mac: string = "";
 	roomId: number = 0;
-	model: string = "";
 	windowsDriver: boolean = false;
 	state: string = "";
 	acceptingJobs: boolean = false;
 	activeJobs: number = 0;
+	inventary: string = "";
+	serial: string ="";
+	driverFile: any = "";
 	constructor() { }
 }
 export class Drivers {
