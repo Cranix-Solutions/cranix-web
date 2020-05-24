@@ -39,6 +39,8 @@ export class LoginPage implements OnInit {
         if (this.authForm.valid) {
             this.authService.setUpSession(user,  this.instituteName);
         }
+        console.log("settings");
+        console.log(this.authService.settings);
     }
 
     ngOnDestroy() {
