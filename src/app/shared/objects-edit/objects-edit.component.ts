@@ -165,19 +165,20 @@ export class ObjectsEditComponent implements OnInit {
     )
   }
   userImport(object) {
-    this.formData.append('file', this.fileToUpload, this.fileToUpload.name);
-    this.formData.append('role', object.role);
-    this.formData.append('lang', object.lang);
-    this.formData.append('identifier', object.identifier);
-    this.formData.append('test', object.test.toString());
-    this.formData.append('password', object.password);
-    this.formData.append('mustChange', object.mustChange.toString());
-    this.formData.append('full', object.full.toString());
-    this.formData.append('allClasses', object.allClasses.toString());
-    this.formData.append('cleanClassDirs', object.cleanClassDirs.toString());
-    this.formData.append('resetPassword', object.resetPassword.toString());
-    this.formData.append('appendBirthdayToPassword', object.appendBirthdayToPassword.toString());
-    console.log(this.formData)
+    let formData: FormData = new FormData();
+    formData.append('file', this.fileToUpload, this.fileToUpload.name);
+    formData.append('role', object.role);
+    formData.append('lang', object.lang);
+    formData.append('identifier', object.identifier);
+    formData.append('test', object.test.toString());
+    formData.append('password', object.password);
+    formData.append('mustChange', object.mustChange.toString());
+    formData.append('full', object.full.toString());
+    formData.append('allClasses', object.allClasses.toString());
+    formData.append('cleanClassDirs', object.cleanClassDirs.toString());
+    formData.append('resetPassword', object.resetPassword.toString());
+    formData.append('appendBirthdayToPassword', object.appendBirthdayToPassword.toString());
+    console.log(formData)
     console.log(object.test);
     console.log(object.password);
     console.log(this.formData.get("role"))

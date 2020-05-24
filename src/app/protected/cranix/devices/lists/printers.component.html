@@ -12,6 +12,7 @@
     <ion-fab-list side="start">
       <ion-fab-button><ion-icon name="ellipsis-vertical-sharp" (click)="openActions($event,null)"></ion-icon></ion-fab-button>
       <ion-fab-button><ion-icon name="add-circle-outline" (click)="addDevice($event)"></ion-icon></ion-fab-button>
+      <ion-fab-button><ion-icon name="print-outline" (click)="addPrinter($event)" disabled></ion-icon></ion-fab-button>
       <ion-fab-button><ion-icon name="apps" (click)="openCollums($event)"></ion-icon></ion-fab-button>
     </ion-fab-list>
   </ion-fab>
@@ -29,7 +30,7 @@
           <ion-button size="small" (click)="addDevice($event)"  matTooltip="{{'Create a new printer device.' | translate }}">
             <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="addPrinter($event)" matTooltip="{{'Create a new printer queue.' | translate }}" >
+          <ion-button size="small" (click)="addPrinter($event)" matTooltip="{{'Create a new printer queue.' | translate }}" disabled>
             <ion-icon slot="icon-only" name="print"></ion-icon>
           </ion-button>
           <ion-button size="small" (click)="openActions($event,null)" matTooltip="{{'Apply actions on the selected objects' | translate }}" >
