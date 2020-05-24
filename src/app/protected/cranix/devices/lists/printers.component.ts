@@ -5,15 +5,17 @@ import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 
 //own modules
+
+import { AuthenticationService } from 'src/app/services/auth.service';
+import { AddPrinterComponent } from './../add-printer/add-printer.component';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
-import { DeviceActionBTNRenderer } from 'src/app/pipes/ag-device-renderer';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
+import { PrinterActionBTNRenderer } from 'src/app/pipes/ag-printer-renderer';
+import { PrintersService } from 'src/app/services/printers.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Device, Printer } from 'src/app/shared/models/data-model'
-import { AuthenticationService } from 'src/app/services/auth.service';
-import { AddPrinterComponent } from './../add-printer/add-printer.component';
 import { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
 
 @Component({
@@ -24,7 +26,7 @@ import { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
 export class PrintersComponent implements OnInit {
   selectedRoom;
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['name', 'model', 'deviceName','acceptingJobs','activeJobs', 'windowsDriver'];
+  displayedColumns: string[] = ['name', 'model', 'deviceName', 'acceptingJobs', 'activeJobs', 'windowsDriver'];
   sortableColumns: string[] = this.displayedColumns;
   columnDefs = [];
   gridOptions: GridOptions;
@@ -43,6 +45,7 @@ export class PrintersComponent implements OnInit {
     public modalCtrl: ModalController,
     public objectService: GenericObjectService,
     public popoverCtrl: PopoverController,
+    public printersService: PrintersService,
     public route: Router,
     private storage: Storage
   ) {
@@ -89,7 +92,7 @@ export class PrintersComponent implements OnInit {
           col['headerCheckboxSelection'] = true;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
-          col['width'] = 120;
+          col['width'] = 170;
           col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
@@ -98,10 +101,12 @@ export class PrintersComponent implements OnInit {
           break;
         }
         case 'windowsDriver': {
+          col['cellStyle'] = { 'justify-content': "center" };
           col['cellRendererFramework'] = YesNoBTNRenderer
           break;
         }
         case 'acceptingJobs': {
+          col['cellStyle'] = { 'justify-content': "center" };
           col['cellRendererFramework'] = YesNoBTNRenderer
           break;
         }
@@ -110,12 +115,12 @@ export class PrintersComponent implements OnInit {
     }
     let action = {
       headerName: "",
-      width: 200,
+      width: 100,
       suppressSizeToFit: true,
       cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
       pinned: 'left',
-      cellRendererFramework: DeviceActionBTNRenderer
+      cellRendererFramework: PrinterActionBTNRenderer
     };
     columnDefs.splice(1, 0, action);
     this.columnDefs = columnDefs;
@@ -212,7 +217,7 @@ export class PrintersComponent implements OnInit {
       componentProps: {
         columns: this.objectKeys,
         selected: this.displayedColumns,
-        objectPath: "PrinterssComponent.displayedColumns"
+        objectPath: "PrintersComponent.displayedColumns"
       },
       animated: true,
       swipeToClose: true,
@@ -252,5 +257,43 @@ export class PrintersComponent implements OnInit {
     (await modal).present().then((val) => {
       console.log("most lett vegrehajtva.")
     })
+  }
+
+  reset(id: number) {
+    let subs = this.printersService.reset(id).subscribe(
+      (val) => {
+        if (val.code == "OK") {
+          this.objectService.getAllObject('printer');
+          this.objectService.okMessage(this.languageS.transResponse(val));
+          this.modalCtrl.dismiss();
+        } else {
+          this.objectService.errorMessage(this.languageS.transResponse(val));
+        }
+      },
+      (error) => {
+        this.objectService.errorMessage("ServerError" + error);
+        console.log(error);
+      },
+      () => { subs.unsubscribe() }
+    )
+  }
+
+  toggle(id: number, what: string, yesno: boolean) {
+    let subs = this.printersService.toggle(id,what,yesno).subscribe(
+      (val) => {
+        if (val.code == "OK") {
+          this.objectService.getAllObject('printer');
+          this.objectService.okMessage(this.languageS.transResponse(val));
+          this.modalCtrl.dismiss();
+        } else {
+          this.objectService.errorMessage(this.languageS.transResponse(val));
+        }
+      },
+      (error) => {
+        this.objectService.errorMessage("ServerError" + error);
+        console.log(error);
+      },
+      () => { subs.unsubscribe() }
+    )
   }
 }

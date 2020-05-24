@@ -34,6 +34,7 @@ import { DeviceActionBTNRenderer } from 'src/app/pipes/ag-device-renderer';
 import { EditBTNRenderer } from 'src/app/pipes/ag-edit-renderer';
 import { GroupIdCellRenderer } from 'src/app/pipes/ag-groupid-renderer';
 import { HwconfIdCellRenderer } from 'src/app/pipes/ag-hwconfid-renderer';
+import { PrinterActionBTNRenderer } from 'src/app/pipes/ag-printer-renderer';
 import { RoomIdCellRenderer } from 'src/app/pipes/ag-roomid-render';
 import { DeviceIdCellRenderer } from 'src/app/pipes/ag-deviceid-renderer';
 import { InstituteIdCellRenderer } from 'src/app/pipes/ag-instituteid-renderer';
@@ -55,6 +56,7 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
     HwconfIdCellRenderer,
     InstituteIdCellRenderer,
     InstituteUUIDCellRenderer,
+    PrinterActionBTNRenderer,
     RoomActionBTNRenderer,
     RoomIdCellRenderer,
     UpdateRenderer,
@@ -79,6 +81,7 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
     HwconfIdCellRenderer,
     InstituteIdCellRenderer,
     InstituteUUIDCellRenderer,
+    PrinterActionBTNRenderer,
     RoomIdCellRenderer,
     RoomActionBTNRenderer,
     UpdateRenderer,

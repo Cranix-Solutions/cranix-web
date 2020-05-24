@@ -23,6 +23,7 @@ export class AddPrinterComponent implements OnInit {
   driverFile;
   models = {};
   manufacturers: string[] = [];
+  submitted = false;
 
   constructor(
     public authService: AuthenticationService,
@@ -36,11 +37,9 @@ export class AddPrinterComponent implements OnInit {
 
   ngOnInit() {
     let subs = this.printersService.getDrivers().subscribe(
-      (val) => { 
-        this.models = val 
-        for( let key of Object.keys(this.models) ){
-          this.manufacturers.push(key);
-        }
+      (val) => {
+        this.models = val;
+        this.manufacturers = Object.keys(this.models).sort();
       },
       (err) => { console.log(err) },
       () => { subs.unsubscribe() }
@@ -72,37 +71,57 @@ export class AddPrinterComponent implements OnInit {
       console.log(this.room);
       this.printer.roomId = this.room.id;
     }
-    if( this.authService.session.mac ) {
+    if (this.authService.session.mac) {
       this.printer.mac = this.authService.session.mac;
     }
   }
   onSubmit(printer: Printer) {
-    let a:any;
-    let subs = this.printersService.add(a).subscribe(
+
+    this.submitted = true;
+    let formData: FormData = new FormData();
+    if (this.driverFile) {
+      formData.append('file', this.driverFile, this.driverFile.name);
+    } else if (printer.model) {
+      formData.append('model', printer.model);
+    } else {
+      this.objectService.errorMessage(
+        this.languageS.trans('You have to set either the model of the printer or upload a ppd driver file.')
+      );
+      return;
+    }
+    formData.append('ip', printer.ip);
+    formData.append('name', printer.name);
+    formData.append('mac', printer.mac);
+    formData.append('roomId', printer.roomId.toString());
+    formData.append('windowsDriver', "true");
+    let subs = this.printersService.add(formData).subscribe(
       (val) => {
+        this.objectService.getAllObject('printer');
+        this.objectService.getAllObject('device');
         if (val.code == "OK") {
-          this.objectService.getAllObject('printers');
           this.objectService.okMessage(this.languageS.transResponse(val));
           this.modalCtrl.dismiss();
         } else {
           this.objectService.errorMessage(this.languageS.transResponse(val));
+          this.submitted=false;
         }
       },
       (err) => {
-         this.objectService.errorMessage("ServerError" + err);
-         console.log(err);
-         },
+        this.objectService.errorMessage("ServerError" + err);
+        this.submitted=false;
+        console.log(err);
+      },
       () => { subs.unsubscribe() }
     )
   }
-  
+
   roomChanged(ev) {
     this.initValues(parseInt(ev));
   }
   handleFileInput(files: FileList) {
     this.driverFile = files.item(0);
   }
-  manufacturerChanged(ev){
-    this.printer.model="";
+  manufacturerChanged(ev) {
+    this.printer.model = "";
   }
 }

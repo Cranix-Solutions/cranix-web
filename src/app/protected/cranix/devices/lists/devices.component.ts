@@ -267,9 +267,6 @@ export class DevicesComponent implements OnInit {
     })
   }
 
-  addPrinter(ev: Event) {
-
-  }
   async addDevice(ev: Event) {
     const modal = await this.modalCtrl.create({
       component: AddDeviceComponent,
@@ -280,12 +277,6 @@ export class DevicesComponent implements OnInit {
       animated: true,
       swipeToClose: true,
       backdropDismiss: false
-    });
-    modal.onDidDismiss().then((dataReturned) => {
-      if (dataReturned.data) {
-        this.displayedColumns = dataReturned.data.concat(['actions']);
-      }
-      this.createColumnDefs();
     });
     (await modal).present().then((val) => {
       console.log("most lett vegrehajtva.")

@@ -76,7 +76,7 @@ export class AddDeviceComponent implements OnInit {
     let subs = this.roomService.addDevice(devices, this.room.id).subscribe(
       (val) => {
         if (val.code == "OK") {
-          this.objectService.getAllObject('devices');
+          this.objectService.getAllObject('device');
           this.objectService.okMessage(this.languageS.transResponse(val));
           this.modalCtrl.dismiss();
         } else {

@@ -369,7 +369,7 @@ export class DHCP {
 }
 
 export class Settings {
-	agGridThema: string = "ag-theme-blaham";
+	agGridThema: string = "ag-theme-alpine";
 	lang: string = "";
 	errorMessageDuration: number = 10;
 	okMessageDuration: number = 10;
