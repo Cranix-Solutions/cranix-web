@@ -1,0 +1,68 @@
+<form #addDeviceFrom="ngForm" (ngSubmit)="onSubmit(addDeviceFrom.value)">
+  <ion-header translucent>
+    <ion-toolbar>
+      <ion-title>{{  'Add device' | translate }}</ion-title>
+      <ion-buttons slot="end">
+        <ion-button type="submit" class="ion-no-margin">
+          <ion-icon slot="icon-only" color="success" name="checkmark-sharp" [disabled]="!addDeviceFrom.valid"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss()">
+          <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen>
+    <ion-list lines="full">
+      <ion-item>
+        <ion-label position="stacked">{{'roomId'| translate}}</ion-label>
+        <ion-select type="text" [(ngModel)]="device.roomId" name="roomId" (ngModelChange)="roomChanged($event)" required [compareWith]="objectService.compareFn">
+          <ion-select-option *ngFor="let id of objectService.selects['roomId']" value="{{id}}">{{id | idToName:'room'}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{'ip'| translate}}</ion-label>
+        <ion-select type="text"  [(ngModel)]="device.ip" name="ip" (ngModelChange)="ipChanged($event)" required [disabled]="!room">
+          <ion-select-option *ngFor="let ip of  ipAdresses" value="{{ip}}">{{ip}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{'name'|translate}}</ion-label>
+        <ion-input type="text" text-right [(ngModel)]="device.name" name="name" required [disabled]="!room"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{'hwconfId'| translate}}</ion-label>
+        <ion-select [(ngModel)]="device.hwconfId" name="hwconfId" required [compareWith]="objectService.compareFn" [disabled]="!room">
+          <ion-select-option *ngFor="let hw of objectService.selects['hwconfId']" value="{{hw}}">
+            {{hw | idToName:'hwconf'}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{'mac'|translate}}</ion-label>
+        <ion-input type="text" [(ngModel)]="device.mac" name="mac" required="true" [disabled]="!room"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{'wlanMac'|translate}}</ion-label>
+        <ion-input type="text"  [(ngModel)]="device.wlanMac" name="wlanMac" [disabled]="!room"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{'serial'|translate}}</ion-label>
+        <ion-input type="text"  [(ngModel)]="device.serial" name="serial" [disabled]="!room"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{'inventary'|translate}}</ion-label>
+        <ion-input type="text"  [(ngModel)]="device.inventary" name="inventary" [disabled]="!room"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{'row'|translate}}</ion-label>
+        <ion-input type="text"  [(ngModel)]="device.row" name="row" [disabled]="!room"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{'place'|translate}}</ion-label>
+        <ion-input type="text"  [(ngModel)]="device.place" name="place" [disabled]="!room"></ion-input>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</form>

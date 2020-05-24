@@ -10,10 +10,10 @@ import { ServerResponse } from 'src/app/shared/models/server-models';
 
 @Component({
   selector: 'cranix-device-printers',
-  templateUrl: './device-printers.page.html',
-  styleUrls: ['./device-printers.page.scss'],
+  templateUrl: './device-printers.component.html',
+  styleUrls: ['./device-printers.component.scss'],
 })
-export class DevicePrintersPage implements OnInit {
+export class DevicePrintersComponent implements OnInit {
   editPrinter;
   noPrinter: Printer = new Printer;
   allDefaultPrinters: Printer[] = [this.noPrinter];

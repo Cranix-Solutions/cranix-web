@@ -24,6 +24,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { PipesModule } from 'src/app/pipes/pipe-modules';
 import { AgGridModule } from 'ag-grid-angular';
 import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
+import  { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
 import { GroupActionBTNRenderer } from 'src/app/pipes/ag-group-renderer';
 import { UserActionBTNRenderer } from 'src/app/pipes/ag-user-renderer';
 import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
@@ -61,6 +62,7 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
     UserIdCellRenderer,
     UserIdToNameCellRenderer,
     ToolbarComponent,
+    YesNoBTNRenderer
   ],
   imports: [
     AgChartsAngularModule,
@@ -82,7 +84,8 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
     UpdateRenderer,
     UserActionBTNRenderer,
     UserIdCellRenderer,
-    UserIdToNameCellRenderer
+    UserIdToNameCellRenderer,
+    YesNoBTNRenderer
   ]),
   FormsModule,
   IonicModule,

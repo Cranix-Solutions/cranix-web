@@ -8,13 +8,16 @@ import { IonicModule } from '@ionic/angular';
 import { CanActivateViaAcls } from 'src/app/services/auth-guard.service';
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { PipesModule } from 'src/app/pipes/pipe-modules';
-import { DevicesPage } from './devices.page';
 
 const routes: Routes = [
   {
     path: 'devices',
     canActivate: [CanActivateViaAcls],
-    component: DevicesPage
+    loadChildren: () => import('./lists/devices-lists.module').then( m => m.DevicesListsModule)
+  },
+  {
+    path:        '',
+    redirectTo: 'all'
   }
 ];
 
@@ -26,7 +29,7 @@ const routes: Routes = [
     IonicModule,
     CranixSharedModule
   ],
-  declarations: [ DevicesPage ],
+  declarations: [ ],
   providers: [TranslateService, PipesModule]
 })
 export class DevicesPageModule {}
