@@ -43,17 +43,20 @@ export class GroupMembersPage implements OnInit {
         field: 'uid',
         sortable: true,
         headerCheckboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true
+        headerCheckboxSelectionFilteredOnly: true,
+        suppressMenu : true
       },
       {
         headerName: this.languageS.trans('givenName'),
         sortable: true,
         field: 'givenName',
+        suppressMenu : true
       },
       {
         headerName: this.languageS.trans('surName'),
         sortable: true,
         field: 'surName',
+        suppressMenu : true
       }
     ]
   }

@@ -2,7 +2,7 @@
 <ion-content id="carded">
   <ion-row class="header-row">
     <ion-col>
-      <ion-title slot="start">{{'Manage institutes' | translate}}</ion-title>
+      <ion-title>{{'Manage institutes' | translate}}</ion-title>
     </ion-col>
   </ion-row>
   <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
@@ -33,9 +33,9 @@
             </ion-input>
           </ion-item>
         </ion-col>
-        <button (click)="sizeToFit()">SizeToFit</button>
+        <!--button (click)="sizeToFit()">SizeToFit</button>
         <button (click)="sizeAll(true)">AutoSize skip true</button>
-        <button (click)="sizeAll(false)">AutoSize skip false</button>
+        <button (click)="sizeAll(false)">AutoSize skip false</button-->
         <ion-col offset="6" size="3" class="ion-text-end hidden-xs hidden-sm hidden-md">
           <ion-button size="small" (click)="redirectToEdit($event,null)"
             matTooltip="{{'Create a new institute' | translate }}">
