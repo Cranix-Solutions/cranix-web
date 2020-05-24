@@ -14,11 +14,12 @@ export class WindowRef {
 }
 @Component({
     selector: 'uuid-cell',
-    template: `
+    template: `<div class="uuid-flex">
     <ion-button color="secondary" fill="clear" size="small"  (click)="routeSchool()" matTooltip="{{'Connect the institute in a separate window.' | translate }}">
     <ion-icon name="create-outline" style="height:15px;width:15px"></ion-icon>
     </ion-button>
     {{ params.data.uuid }}
+    </div>
     `
 })
 export class InstituteUUIDCellRenderer implements ICellRendererAngularComp, OnDestroy {
