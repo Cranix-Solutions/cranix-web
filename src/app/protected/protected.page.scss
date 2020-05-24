@@ -7,9 +7,10 @@ ion-menu {
     max-width: 200px;
     border-color : var(--ion-color-primary-tint);
     border-width: 2px;
-    ion-toolbar {
+ /*  maybe remove next merge 
+     ion-toolbar {
       --ion-background-color: var(--ion-color-primary-tint);
-    }
+    }*/
     ion-list {/* optional, but it needs when you use gradient as a background color.*/
       background: transparent;
       //background: var(--ion-color-primary-tint)

@@ -6,6 +6,9 @@ ion-list {
 ion-list-header {
     font-size: 16px;
 }
-/* ion-item {
-    font-size: 14px;
-} */
+ion-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 36px;
+}

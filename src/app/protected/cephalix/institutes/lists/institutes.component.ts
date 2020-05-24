@@ -52,7 +52,8 @@ export class InstitutesComponent implements OnInit {
       defaultColDef: {
         resizable: true,
         sortable: true,
-        hide: false
+        hide: false,
+        suppressMenu : true
       },
       columnDefs: this.columnDefs,
       context: this.context,
@@ -88,14 +89,19 @@ export class InstitutesComponent implements OnInit {
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = true;
           col['width'] = 220;
+          col['flex'] = '1';
+
           col['cellStyle'] = { 'padding-left': '2px', 'padding-right': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
           col['colId'] = '1';
+       
+       //   col['cellRendererFramework'] = ActionBTNRenderer;
           break;
         }
         case 'uuid': {
           col['cellRendererFramework'] = InstituteUUIDCellRenderer;
+          col['cellStyle'] = {'padding-left' : '2px'}
           break;
         }
         case 'validity': {
@@ -109,9 +115,12 @@ export class InstitutesComponent implements OnInit {
       }
       columnDefs.push(col);
     }
-    let action = {
+    let check = {
       headerName: "",
       width: 85,
+   //   headerCheckboxSelection: true,
+   //   headerCheckboxSelectionFilteredOnly: true,
+   //   checkboxSelection : true,
       suppressSizeToFit: true,
       cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
@@ -119,7 +128,7 @@ export class InstitutesComponent implements OnInit {
       cellRendererFramework: ActionBTNRenderer
     };
 
-    columnDefs.splice(1, 0, action)
+    columnDefs.splice(1, 0, check)
     console.log('columnsDef', columnDefs);
     this.columnDefs = columnDefs;
   }
@@ -127,6 +136,8 @@ export class InstitutesComponent implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
+    params.columnApi.autoSizeColumns();
+   // this.sizeAll();
   }
   onSelectionChanged() {
     this.cephalixService.selectedInstitutes = this.gridApi.getSelectedRows();
@@ -144,14 +155,21 @@ export class InstitutesComponent implements OnInit {
   onGridSizeChange(params) {
     var allColumns = params.columnApi.getAllColumns();
     params.api.sizeColumnsToFit();
+    params.columnApi.autoSizeColumns();
+    //this.sizeAll();
   }
 
-  sizeAll() {
+  sizeAll(skip) {
     var allColumnIds = [];
     this.columnApi.getAllColumns().forEach((column) => {
       allColumnIds.push(column.getColId());
     });
-    this.columnApi.autoSizeColumns(allColumnIds);
+    //this.gridApi.sizeColumnsToFit();
+    this.columnApi.autoSizeColumns(allColumnIds, skip);
+  }
+
+  sizeToFit() {
+    this.gridApi.sizeColumnsToFit();
   }
 
   public redirectToDelete = (institute: Institute) => {

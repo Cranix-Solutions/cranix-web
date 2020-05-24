@@ -2,10 +2,10 @@
   <ion-list-header> # {{'Selected Items: ' | translate }} {{ count }}</ion-list-header>
   <ion-list>
     <div *ngFor="let item of menu">
-      <ion-item *ngIf="item.enabled" (click)="messages(item.action)">
-        <ion-avatar>
-          <ion-icon size="large" name="{{ item.icon }}"></ion-icon>
-        </ion-avatar>
+      <ion-item button  *ngIf="item.enabled" (click)="messages(item.action)">
+        <!--ion-avatar-->
+          <ion-icon slot="start" size="small" name="{{ item.icon }}"></ion-icon>
+        <!--/ion-avatar-->
         <ion-label>{{ item.action | translate }}</ion-label>
       </ion-item>
     </div>

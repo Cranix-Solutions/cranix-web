@@ -50,7 +50,8 @@ export class HwconfsPage implements OnInit {
       defaultColDef: {
         resizable: true,
         sortable: true,
-        hide: false
+        hide: false,
+        suppressMenu : true
       },
       columnDefs: this.columnDefs,
       context: this.context,

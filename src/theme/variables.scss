@@ -47,12 +47,12 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
   --ion-color-primary-shade: #5C616F;
   --ion-color-primary-tint: #2D323E;
 
-  --ion-color-cranix-black: #FAB90A;
+/*  --ion-color-cranix-black: #FAB90A;
   --ion-color-cranix-black-rgb: 60,66,82;
   --ion-color-cranix-black-contrast: #ffffff;
   --ion-color-cranix-black-contrast-rgb: 255,255,255;
   --ion-color-cranix-black-shade: #353a48;
-  --ion-color-cranix-black-tint: #505563;
+  --ion-color-cranix-black-tint: #505563;*/
   
   /** secondary **/
   --ion-color-secondary: #FAB90A;
@@ -131,11 +131,11 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
   background-color: #FAB90A;
   height: 45px;
 }*/
-@media (prefers-color-scheme: dark) {
+/*@media (prefers-color-scheme: dark) {
   /*
    * Dark Colors
    * -------------------------------------------
-   */
+   *
 
   body {
     --ion-color-primary: #428cff;
@@ -205,7 +205,7 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
   /*
    * iOS Dark Theme
    * -------------------------------------------
-   */
+   *
 
   .ios body {
     --ion-background-color: #000000;
@@ -244,7 +244,7 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
   /*
    * Material Design Dark Theme
    * -------------------------------------------
-   */
+   *
 
   .md body {
     --ion-background-color: #121212;
@@ -282,5 +282,6 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
     --color: white;
   }
 }
+*/
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

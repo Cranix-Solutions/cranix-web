@@ -50,7 +50,8 @@ export class UsersComponent implements OnInit {
       defaultColDef: {
         resizable: true,
         sortable: true,
-        hide: false
+        hide: false,
+        suppressMenu : true
       },
       columnDefs: this.columnDefs,
       context: this.context,
@@ -111,8 +112,9 @@ export class UsersComponent implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
+  //  (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
     this.gridApi.sizeColumnsToFit();
+    this.sizeAll();
   }
   onSelectionChanged() {
     this.selected = this.gridApi.getSelectedRows();
