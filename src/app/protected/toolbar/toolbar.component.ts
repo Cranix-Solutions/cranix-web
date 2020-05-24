@@ -5,7 +5,7 @@ import { Storage } from '@ionic/storage';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
-import { Setting } from 'src/app/shared/models/data-model';
+import { Settings } from 'src/app/shared/models/data-model';
 
 @Component({
   selector: 'cranix-toolbar',
@@ -51,15 +51,14 @@ export class ToolbarComponent implements OnInit {
   }
 
   async retirectToSettings(ev: Event) {
-      let setting = new Setting;
-      setting.agGridThema = this.authService.agGridThema;
-      setting.lang = this.translateService.language.toUpperCase();
+      let settings  =  this.authService.settings;
+      settings.lang = this.translateService.language.toUpperCase();
       const modal = await this.modalConroller.create({
         component: ObjectsEditComponent,
         componentProps: {
-          objectType: "setting",
+          objectType: "settings",
           objectAction: "modify",
-          object:  setting
+          object:  settings
         },
         animated: true,
         swipeToClose: true,
@@ -67,8 +66,8 @@ export class ToolbarComponent implements OnInit {
       });
       modal.onDidDismiss().then((dataReturned) => {
         if (dataReturned.data) {
-          this.authService.agGridThema = dataReturned.data.agGridThema;
-          this.storage.set("agGridThema",dataReturned.data.agGridThema);
+          this.authService.settings = dataReturned.data;
+          this.storage.set("myCranixSettings",JSON.stringify(dataReturned.data));
           this.translateService.setLanguage( dataReturned.data.lang );
           console.log("Object was created or modified", dataReturned.data)
         }

@@ -11,20 +11,21 @@ import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.c
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
-import { Device } from 'src/app/shared/models/data-model'
+import { Device, Printer } from 'src/app/shared/models/data-model'
 import { AuthenticationService } from 'src/app/services/auth.service';
-import { DevicePrintersPage } from './details/printers/device-printers.page';
+import { AddPrinterComponent } from './../add-printer/add-printer.component';
+import { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
 
 @Component({
-  selector: 'cranix-devices',
-  templateUrl: './devices.page.html',
-  styleUrls: ['./devices.page.scss'],
+  selector: 'cranix-printers',
+  templateUrl: './printers.component.html',
+  styleUrls: ['./printers.component.scss'],
 })
-export class DevicesPage implements OnInit {
+export class PrintersComponent implements OnInit {
   selectedRoom;
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['name', 'mac', 'ip', 'hwconfId', 'roomId'];
-  sortableColumns: string[] = ['name', 'mac', 'ip', 'hwconfId', 'roomId'];
+  displayedColumns: string[] = ['name', 'model', 'deviceName','acceptingJobs','activeJobs', 'windowsDriver'];
+  sortableColumns: string[] = this.displayedColumns;
   columnDefs = [];
   gridOptions: GridOptions;
   gridApi: GridApi;
@@ -47,7 +48,7 @@ export class DevicesPage implements OnInit {
   ) {
     this.context = { componentParent: this };
     this.rowSelection = 'multiple';
-    this.objectKeys = Object.getOwnPropertyNames(new Device());
+    this.objectKeys = Object.getOwnPropertyNames(new Printer());
     this.createColumnDefs();
     this.gridOptions = <GridOptions>{
       defaultColDef: {
@@ -61,33 +62,18 @@ export class DevicesPage implements OnInit {
     }
   }
   ngOnInit() {
-    this.storage.get('DevicesPage.displayedColumns').then((val) => {
+    this.storage.get('PrintersComponent.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
         this.displayedColumns = myArray.concat(['actions']);
         this.createColumnDefs();
       }
     });
-    if( this.objectService.selectedRoom ) {
-      this.selectedRoom = this.objectService.selectedRoom;
-      delete this.objectService.selectedRoom;
-      this.objectService.getObjects('device').subscribe(obj => 
-        { this.rowData = [];
-          for( let dev of obj  ) {
-            if( dev.roomId == this.selectedRoom.id ){
-              this.rowData.push(dev);
-            }
-          }
-        }
-       );
-    } else {
-      this.objectService.getObjects('device').subscribe(obj => this.rowData = obj);
-      delete this.selectedRoom;
-    }
+    this.objectService.getObjects('printer').subscribe(obj => this.rowData = obj);
     delete this.objectService.selectedObject;
   }
   public ngAfterViewInit() {
-    while(document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
+    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
   }
 
   createColumnDefs() {
@@ -111,16 +97,12 @@ export class DevicesPage implements OnInit {
           col['colId'] = '1';
           break;
         }
-        case 'hwconfId': {
-          col['valueGetter'] = function (params) {
-            return params.context['componentParent'].objectService.idToName('hwconf', params.data.hwconfId);
-          }
+        case 'windowsDriver': {
+          col['cellRendererFramework'] = YesNoBTNRenderer
           break;
         }
-        case 'roomId': {
-          col['valueGetter'] = function (params) {
-            return params.context['componentParent'].objectService.idToName('room', params.data.roomId);
-          }
+        case 'acceptingJobs': {
+          col['cellRendererFramework'] = YesNoBTNRenderer
           break;
         }
       }
@@ -220,11 +202,18 @@ export class DevicesPage implements OnInit {
     (await modal).present();
   }
 
-  async setPrinters(device: Device) {
-    this.objectService.selectedObject = device;
+  /**
+* Function to Select the columns to show
+* @param ev 
+*/
+  async openCollums(ev: any) {
     const modal = await this.modalCtrl.create({
-      component: DevicePrintersPage,
-      cssClass: "small-modal",
+      component: SelectColumnsComponent,
+      componentProps: {
+        columns: this.objectKeys,
+        selected: this.displayedColumns,
+        objectPath: "PrinterssComponent.displayedColumns"
+      },
       animated: true,
       swipeToClose: true,
       backdropDismiss: false
@@ -239,17 +228,16 @@ export class DevicesPage implements OnInit {
       console.log("most lett vegrehajtva.")
     })
   }
-  /**
-* Function to Select the columns to show
-* @param ev 
-*/
-  async openCollums(ev: any) {
+
+  addPrinter(ev: Event) {
+
+  }
+  async addDevice(ev: Event) {
     const modal = await this.modalCtrl.create({
-      component: SelectColumnsComponent,
+      component: AddPrinterComponent,
+      cssClass: 'medium-modal',
       componentProps: {
-        columns: this.objectKeys,
-        selected: this.displayedColumns,
-        objectPath: "DevicesPage.displayedColumns"
+        room: this.selectedRoom
       },
       animated: true,
       swipeToClose: true,

@@ -14,7 +14,7 @@ import { SupportTicket } from '../models/data-model';
 @Component({
   selector: 'cranix-objects-edit',
   templateUrl: './objects-edit.component.html',
-  styleUrls: ['./objects-edit.component.scss'],
+  //styleUrls: ['./objects-edit.component.scss'],
 })
 export class ObjectsEditComponent implements OnInit {
   formData: FormData = new FormData();
@@ -86,7 +86,7 @@ export class ObjectsEditComponent implements OnInit {
     this.editForm.disable();
     this.splashScreen.show();
     console.log("onSubmit", object);
-    if (this.objectType == 'setting') {
+    if (this.objectType == 'settings') {
       return this.modalController.dismiss(object);
     }
     switch (this.objectType) {
@@ -119,10 +119,10 @@ export class ObjectsEditComponent implements OnInit {
         console.log(val);
         if (serverResponse.code == "OK") {
           this.objectService.getAllObject(this.objectType);
-          this.objectService.okMessage("Success:");
+          this.objectService.okMessage(this.languageS.transResponse(serverResponse));
           this.modalController.dismiss("succes");
         } else {
-          this.objectService.errorMessage("An error is accoured");
+          this.objectService.errorMessage(this.languageS.transResponse(serverResponse));
           this.editForm.enable();
           this.splashScreen.hide();
         }
@@ -142,18 +142,16 @@ export class ObjectsEditComponent implements OnInit {
     this.modalController.dismiss("succes");
   }
   supportRequest(object: SupportTicket) {
-    let supportResponse: SupportTicket;
     let subs = this.systemService.createSupportRequest(object).subscribe(
       async (val) => {
-        supportResponse = val;
+        console.log("supportRequest");
         console.log(val);
-        let message = this.languageS.trans(supportResponse.ticketResponseInfo);
-        if (supportResponse.status == "OK") {
-          message = message + " #"  + supportResponse.ticketno;
-          this.objectService.okMessage(message);
+        if (val.code == "OK") {
+          this.objectService.okMessage(this.languageS.transResponse(val));
           this.modalController.dismiss("succes");
         } else {
-          this.objectService.errorMessage(message);
+          this.objectService.errorMessage(this.languageS.transResponse(val));
+          this.editForm.enable();
           this.splashScreen.hide();
         }
       },

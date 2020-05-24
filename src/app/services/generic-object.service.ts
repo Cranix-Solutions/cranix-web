@@ -201,6 +201,15 @@ export class GenericObjectService {
     }
   }
 
+  getObjectById(objectType, objectId) {
+    for (let obj of this.allObjects[objectType].getValue()) {
+      if (obj.id === objectId) {
+        return obj;
+      }
+    }
+    return null;
+  }
+
   idToName(objectType, objectId) {
     for (let obj of this.allObjects[objectType].getValue()) {
       if (obj.id === objectId) {
@@ -314,7 +323,17 @@ export class GenericObjectService {
       message: message,
       cssClass: "bar-assertive",
       color: "danger",
-      duration: 3000
+      duration: this.authService.settings.errorMessageDuration * 1000,
+      buttons: [
+        {
+          text: "",
+          role: "cancel",
+          icon: "close",
+          handler: () => {
+            toast.dismiss();
+          }
+        }
+      ]
     });
     (await toast).present();
   }
@@ -324,7 +343,17 @@ export class GenericObjectService {
       message: message,
       cssClass: "bar-assertive",
       color: "success",
-      duration: 3000
+      duration: this.authService.settings.okMessageDuration * 1000,
+      buttons: [
+        {
+          text: "",
+          role: "cancel",
+          icon: "close",
+          handler: () => {
+            toast.dismiss();
+          }
+        }
+      ]
     });
     (await toast).present();
   }
@@ -334,7 +363,17 @@ export class GenericObjectService {
       message: this.languageS.trans('Please select at last one object!'),
       cssClass: "bar-assertive",
       color: "warning",
-      duration: 3000
+      duration:  this.authService.settings.warningMessageDuration * 1000,
+      buttons: [
+        {
+          text: "",
+          role: "cancel",
+          icon: "close",
+          handler: () => {
+            toast.dismiss();
+          }
+        }
+      ]
     });
     (await toast).present();
   }

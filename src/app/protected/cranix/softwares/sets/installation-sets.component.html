@@ -39,7 +39,7 @@
       </ion-row>
     </ion-card-header>
     <ion-card-content>
-      <ag-grid-angular #agGrid style="width: 100%; height: 200px;" class="{{authService.agGridThema}}" [gridOptions]="installationSetOptions"
+      <ag-grid-angular #agGrid style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}" [gridOptions]="installationSetOptions"
         [rowData]="installationSetData" [columnDefs]="columnDefs" [context]="context" [rowSelection]="installationSetSelection"
         (gridReady)="installationSetReady($event)" (selectionChanged)="onMemberSelectionChanged()" id="installationSetTable"
         [autoGroupColumnDef]="autoGroupColumnDef">

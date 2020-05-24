@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { DeviceMembersPage } from './device-members.page';
+import { DevicePrintersComponent } from './device-printers.component';
 
-describe('DeviceMembersPage', () => {
-  let component: DeviceMembersPage;
-  let fixture: ComponentFixture<DeviceMembersPage>;
+describe('DevicePrintersComponent', () => {
+  let component: DevicePrintersComponent;
+  let fixture: ComponentFixture<DevicePrintersComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DeviceMembersPage ],
+      declarations: [ DevicePrintersComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DeviceMembersPage);
+    fixture = TestBed.createComponent(DevicePrintersComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

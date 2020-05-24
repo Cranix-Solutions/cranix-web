@@ -23,7 +23,7 @@
               <ion-input type="text" placeholder="{{'search' | translate }}" (input)="onMemberFilterChanged()"
                 id="memberFilter"></ion-input>
             </ion-item>
-            <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.agGridThema}}"
+            <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}"
               [rowData]="memberData" [columnDefs]="columnDefs" rowSelection="multiple" rowMultiSelectWithClick="true" 
               (gridReady)="onMemberReady($event)" (selectionChanged)="onMemberSelectionChanged()" id="memberTable">
             </ag-grid-angular>
@@ -35,7 +35,7 @@
                 id="nonMemberFilter">
               </ion-input>
             </ion-item>
-            <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.agGridThema}}"
+            <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}"
               [rowData]="noMemberData" [columnDefs]="columnDefs" rowSelection="multiple" rowMultiSelectWithClick="true" 
               (gridReady)="onNoMemberReady($event)" (selectionChanged)="onNoMemberSelectionChanged()"
               id="noMemberTable">

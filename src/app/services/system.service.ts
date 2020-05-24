@@ -91,6 +91,6 @@ export class SystemService {
 	createSupportRequest(support){
 		this.url = this.hostname + `/support/create`;
 		console.log(this.url);
-		return this.http.post<SupportTicket>(this.url,support, { headers: this.headers });
+		return this.http.post<ServerResponse>(this.url,support, { headers: this.headers });
 	}
 }
