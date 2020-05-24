@@ -45,7 +45,8 @@ import { RoomPrintersPage } from 'src/app/protected/cranix/rooms/details/printer
 import { DevicePrintersComponent } from 'src/app/protected/cranix/devices/details/printers/device-printers.component';
 import { AddDeviceComponent } from 'src/app/protected/cranix/devices/add-device/add-device.component';
 import { AddPrinterComponent } from 'src/app/protected/cranix/devices/add-printer/add-printer.component';
-import 'ag-grid-enterprise';
+//import 'ag-grid-enterprise';
+import '@ag-grid-enterprise/all-modules'
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');

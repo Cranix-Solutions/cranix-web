@@ -1,7 +1,7 @@
 {
   "name": "cranix-web",
   "version": "0.0.1",
-  "author": "Helmtuh & Peter Varkoly",
+  "author": "Helmuth & Peter Varkoly",
   "homepage": "https://cranix-solutions.de",
   "scripts": {
     "ng": "ng",

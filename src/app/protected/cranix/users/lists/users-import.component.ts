@@ -15,7 +15,7 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 @Component({
   selector: 'cranix-users-import',
   templateUrl: './users-import.component.html',
-  styleUrls: ['./user-import.component.scss'],
+ // styleUrls: ['./user-import.component.scss'],
 
 })
 export class UsersImportComponent implements OnInit {

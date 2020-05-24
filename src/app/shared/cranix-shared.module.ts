@@ -22,6 +22,7 @@ import { ToolbarComponent } from 'src/app/protected/toolbar/toolbar.component';
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { PipesModule } from 'src/app/pipes/pipe-modules';
+//import { AgGridModule } from 'ag-grid-angular';
 import { AgGridModule } from 'ag-grid-angular';
 import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
 import  { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
