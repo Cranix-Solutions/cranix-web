@@ -61,6 +61,9 @@ export class GroupMembersPage implements OnInit {
   ngOnInit() {
     this.readMembers();
   }
+  public ngAfterViewInit() {
+    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
+  }
 
   onMemberReady(params) {
     this.memberApi = params.api;

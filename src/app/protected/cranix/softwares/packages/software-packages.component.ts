@@ -56,6 +56,9 @@ export class SoftwarePackagesComponent implements OnInit {
     this.createColumnDefs();
     this.readInstallableSoftware();
   }
+  public ngAfterViewInit() {
+    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
+  }
 
   async readInstallableSoftware() {
     let subM = this.softwareService.getInstallableSoftwares().subscribe(

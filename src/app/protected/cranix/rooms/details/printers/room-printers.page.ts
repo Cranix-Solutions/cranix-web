@@ -48,6 +48,9 @@ export class RoomPrintersPage implements OnInit {
       console.log(this.printers);
       this.editPrinter = this.formBuilder.group(this.printers);
   }
+  public ngAfterViewInit() {
+    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
+  }
 
   readPrinters() {
     let subM = this.roomService.getAvailablePrinter(this.room.id).subscribe(

@@ -50,6 +50,10 @@ export class InstallationSetsComponent implements OnInit {
     this.createColumnDefs();
     this.readMembers();
   }
+  public ngAfterViewInit() {
+    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
+  }
+
   installationSetReady(params) {
     this.installationSetApi = params.api;
     this.installationSetColumnApi = params.columnApi;

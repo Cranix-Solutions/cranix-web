@@ -76,6 +76,9 @@ export class InstituteStatusComponent implements OnInit {
       () => { subs.unsubscribe() }
     )
   }
+  public ngAfterViewInit() {
+    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
+  }
 
   createColumnDefs() {
     let columnDefs = [];

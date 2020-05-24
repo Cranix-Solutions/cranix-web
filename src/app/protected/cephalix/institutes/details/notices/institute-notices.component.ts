@@ -31,6 +31,10 @@ export class InstituteNoticesComponent implements OnInit {
     this.getNotices()
   }
 
+  public ngAfterViewInit() {
+    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
+  }
+
   getNotices() {
     let sub = this.cephalixService.getNoticesOfInst(this.object.id).subscribe(
       (val) => { this.notices = val },

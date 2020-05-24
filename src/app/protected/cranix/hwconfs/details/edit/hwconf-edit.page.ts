@@ -45,6 +45,10 @@ export class HwconfEditPage implements OnInit {
     }
     this.editForm = this.formBuilder.group(myObject);
   }
+  public ngAfterViewInit() {
+    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
+  }
+
   onSubmit(form) {
     console.log(form);
     let idToIndex = {};

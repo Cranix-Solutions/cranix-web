@@ -101,6 +101,10 @@ export class EditInstallationSetComponent implements OnInit {
 
     }
   }
+  public ngAfterViewInit() {
+    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
+  }
+
   segmentChanged(event) {
     this.toShow = event.detail.value;
   }
