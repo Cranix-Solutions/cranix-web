@@ -4,7 +4,7 @@ import { ModalController } from '@ionic/angular';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
-import { Software, Hwconf, Room, Device, Category } from 'src/app/shared/models/data-model';
+import { Software, Hwconf, Room, Device, Category, Installation } from 'src/app/shared/models/data-model';
 import { SoftwareService } from 'src/app/services/softwares.service';
 @Component({
   selector: 'cranix-edit-installation-set',
@@ -257,5 +257,34 @@ export class EditInstallationSetComponent implements OnInit {
   }
   closeWindow() {
     this.modalController.dismiss();
+  }
+
+  onSubmit(installationSet: Category) {
+
+    installationSet.deviceIds = [];
+    for( let dev of this.devices ){
+      installationSet.deviceIds.push(dev.id)
+    }
+    installationSet.roomIds = [];
+    for( let room of this.rooms ){
+      installationSet.deviceIds.push(room.id)
+    }
+    installationSet.hwconfIds = [];
+    for( let hwconf of this.hwconfs ){
+      installationSet.deviceIds.push(hwconf.id)
+    }
+    installationSet.softwareIds = [];
+    for( let software of this.softwares ){
+      installationSet.deviceIds.push(software.id)
+    }
+    if (this.softwareService.selectedInstallationSet) {
+
+    } else {
+      let subs = this.softwareService.addInstallationsSets(installationSet).subscribe(
+        (val) => { },
+        (err) => { },
+        () => { subs.unsubscribe(); }
+      )
+    }
   }
 }

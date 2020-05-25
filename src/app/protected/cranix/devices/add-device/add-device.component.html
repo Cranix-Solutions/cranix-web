@@ -3,8 +3,8 @@
     <ion-toolbar>
       <ion-title>{{  'Add device' | translate }}</ion-title>
       <ion-buttons slot="end">
-        <ion-button type="submit" class="ion-no-margin">
-          <ion-icon slot="icon-only" color="success" name="checkmark-sharp" [disabled]="!addDeviceFrom.valid"></ion-icon>
+        <ion-button type="submit" class="ion-no-margin" [disabled]="!addDeviceFrom.valid" >
+          <ion-icon slot="icon-only" color="success" name="checkmark-sharp" ></ion-icon>
         </ion-button>
         <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss()">
           <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
