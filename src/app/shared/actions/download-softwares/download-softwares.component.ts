@@ -35,7 +35,6 @@ export class DownloadSoftwaresComponent implements OnInit {
     this.columns = [{
       field: 'name',
       headerName: this.languageS.trans('name'),
-      checkboxSelection: true
     }, {
       field: 'version',
       headerName: this.languageS.trans('version'),

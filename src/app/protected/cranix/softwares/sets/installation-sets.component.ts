@@ -7,7 +7,7 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 import { EditBTNRenderer } from 'src/app/pipes/ag-edit-renderer';
 import { LanguageService } from 'src/app/services/language.service';
 import { SoftwareService } from 'src/app/services/softwares.service'
-import { Installation } from 'src/app/shared/models/data-model';
+import { Installation, Category } from 'src/app/shared/models/data-model';
 import { EditInstallationSetComponent } from 'src/app/protected/cranix/softwares/edit-set/edit-installation-set.component';
 
 @Component({
@@ -49,6 +49,7 @@ export class InstallationSetsComponent implements OnInit {
   ngOnInit() {
     this.createColumnDefs();
     this.readMembers();
+    this.softwareService.readInstallableSoftwares();
   }
   public ngAfterViewInit() {
     while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
@@ -112,44 +113,52 @@ export class InstallationSetsComponent implements OnInit {
       },
       {
         field: 'softwares',
-        width: 100,
+        suppressMenu : true,
         headerName: this.languageS.trans('softwares'),
         valueGetter: function (params) {
-          return params.data.softwareIds.lenght;
+          console.log(params.data.softwareIds.length);
+          return params.data.softwareIds.length;
         }
       },
       {
         field: 'hwconfs',
-        width: 100,
+        suppressMenu : true,
         headerName: this.languageS.trans('hwconfs'),
         valueGetter: function (params) {
-          return params.data.hwconfIds.lenght;
+          return params.data.hwconfIds.length;
         }
       },
       {
         field: 'rooms',
-        width: 100,
+        suppressMenu : true,
         headerName: this.languageS.trans('rooms'),
         valueGetter: function (params) {
-          return params.data.roomIds.lenght;
+          return params.data.roomIds.length;
         }
       },
       {
         field: 'devices',
-        width: 100,
+        suppressMenu : true,
         headerName: this.languageS.trans('devices'),
         valueGetter: function (params) {
-          return params.data.deviceIds.lenght;
+          return params.data.deviceIds.length;
         }
       }
     ];
   }
-  async addSet(){
+  async addEditSet(installation: Category){
+    let action=  "add"
+    if( installation ) {
+      this.softwareService.selectedInstallationSet = installation;
+      action = "edit";
+    } else {
+      this.softwareService.selectedInstallationSet = null;
+    }
     const modal = await this.modalCtrl.create({
       component: EditInstallationSetComponent,
       componentProps: {
-        objectType: "room",
-        objectAction: 'add'
+        objectAction:  action,
+        installation: installation
       },
       animated: true,
       swipeToClose: true,

@@ -13,11 +13,11 @@ import { SoftwareService } from 'src/app/services/softwares.service';
 })
 export class EditInstallationSetComponent implements OnInit {
 
+  submitted: boolean = false;
   context;
   installationSet: Category = new Category();
   softwares: Software[] = [];
   softwaresApi;
-  availableSoftwares: Software[] = [];
   availableSoftwaresApi;
   hwconfs: Hwconf[] = [];
   hwconfsApi;
@@ -40,65 +40,72 @@ export class EditInstallationSetComponent implements OnInit {
   constructor(
     public authService: AuthenticationService,
     public objectService: GenericObjectService,
-    public languageService: LanguageService,
-    private modalController: ModalController,
+    public languageS: LanguageService,
+    private modalCtrl: ModalController,
     public softwareService: SoftwareService
   ) {
     this.deviceColumnDefs = [
       {
-        headerName: this.languageService.trans('devices'),
+        headerName: this.languageS.trans('devices'),
         field: 'name',
-        sortable: true,
-        headerCheckboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true
+        sortable: true
       }];
     this.hwconfColumnDefs = [
       {
-        headerName: this.languageService.trans('hwconfs'),
+        headerName: this.languageS.trans('hwconfs'),
         field: 'name',
-        sortable: true,
-        headerCheckboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true
+        sortable: true
       }];
 
     this.roomColumnDefs = [
       {
-        headerName: this.languageService.trans('rooms'),
+        headerName: this.languageS.trans('rooms'),
         field: 'name',
-        sortable: true,
-        headerCheckboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true
+        sortable: true
       }];
     this.softwareColumnDefs = [
       {
-        headerName: this.languageService.trans('softwares'),
+        headerName: this.languageS.trans('softwares'),
         field: 'name',
-        sortable: true,
-        headerCheckboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true
+        sortable: true
       }];
     this.context = { componentParent: this };
   }
 
   ngOnInit() {
-    let sub = this.softwareService.getInstallableSoftwares().subscribe(
-      (obj) => { this.availableSoftwares = obj },
-      (err) => { console.log(err) },
-      () => { sub.unsubscribe() }
-    );
-    this.objectService.getObjects('hwconf').subscribe(obj => {
-      for (let tmp of obj) {
-        console.log(tmp);
-        if (tmp.deviceType == 'FatClient') {
-          this.availableHwconfs.push(tmp);
-        }
+    this.submitted = false;
+
+    for (let tmp of this.objectService.allObjects['hwconf'].getValue()) {
+      if (tmp.deviceType == 'FatClient') {
+        this.availableHwconfs.push(tmp);
       }
     }
-    );
-    this.objectService.getObjects('room').subscribe(obj => this.availableRooms = obj);
-    this.objectService.getObjects('device').subscribe(obj => this.availableDevices = obj);
+    this.availableRooms = this.objectService.allObjects['room'].getValue();
+    for (let tmp of this.objectService.allObjects['device'].getValue()) {
+      let tmpHwconf = this.objectService.getObjectById('hwconf', tmp.hwconfId);
+      if (tmpHwconf.deviceType == 'FatClient') {
+        this.availableDevices.push(tmp);
+      }
+    }
+    //Now we edit an installation set. Let's read it!
     if (this.softwareService.selectedInstallationSet) {
-
+      for (let id of this.softwareService.selectedInstallationSet.softwareIds) {
+        for (let sw of this.softwareService.availableSoftwares) {
+          if (sw.id == id) {
+            this.softwares.push(sw);
+          }
+        }
+      }
+      this.installationSet = this.softwareService.selectedInstallationSet;
+      for (let id of this.installationSet.hwconfIds) {
+        this.hwconfs.push(this.objectService.getObjectById('hwconf', id));
+      }
+      for (let id of this.installationSet.roomIds) {
+        this.rooms.push(this.objectService.getObjectById('room', id));
+      }
+      for (let id of this.installationSet.deviceIds) {
+        this.devices.push(this.objectService.getObjectById('device', id));
+      }
     }
   }
   public ngAfterViewInit() {
@@ -256,34 +263,46 @@ export class EditInstallationSetComponent implements OnInit {
     this.devicesApi.doLayout();
   }
   closeWindow() {
-    this.modalController.dismiss();
+    this.modalCtrl.dismiss();
   }
 
+  delete() {
+    //TODO
+  }
   onSubmit(installationSet: Category) {
-
+    this.submitted = true;
     installationSet.deviceIds = [];
-    for( let dev of this.devices ){
+    for (let dev of this.devices) {
       installationSet.deviceIds.push(dev.id)
     }
     installationSet.roomIds = [];
-    for( let room of this.rooms ){
-      installationSet.deviceIds.push(room.id)
+    for (let room of this.rooms) {
+      installationSet.roomIds.push(room.id)
     }
     installationSet.hwconfIds = [];
-    for( let hwconf of this.hwconfs ){
-      installationSet.deviceIds.push(hwconf.id)
+    for (let hwconf of this.hwconfs) {
+      installationSet.hwconfIds.push(hwconf.id)
     }
     installationSet.softwareIds = [];
-    for( let software of this.softwares ){
-      installationSet.deviceIds.push(software.id)
+    for (let software of this.softwares) {
+      installationSet.softwareIds.push(software.id)
     }
     if (this.softwareService.selectedInstallationSet) {
 
     } else {
       let subs = this.softwareService.addInstallationsSets(installationSet).subscribe(
-        (val) => { },
+        (val) => {
+          if (val.code == "OK") {
+            this.objectService.okMessage(this.languageS.transResponse(val));
+          } else {
+            this.objectService.errorMessage(this.languageS.transResponse(val));
+          }
+        },
         (err) => { },
-        () => { subs.unsubscribe(); }
+        () => {
+          this.submitted = false;
+          subs.unsubscribe();
+        }
       )
     }
   }

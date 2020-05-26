@@ -235,6 +235,7 @@ export class GenericObjectService {
     }
     return idName.substring(0, idName.length - 2)
   }
+
   addObject(object, objectType) {
     const body = object;
     let url = this.utilsS.hostName() + "/" + objectType + "s/add";
