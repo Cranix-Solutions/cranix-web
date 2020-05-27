@@ -60,8 +60,12 @@ export class SoftwareService {
 		return this.http.post<ServerResponse>(this.url, packages, { headers: this.headers });
 	}
 
-	addInstallationsSets(installationSet: Category) {
-		this.url = this.hostname + "/softwares/installations";
+	addModifyInstallationsSets(installationSet: Category) {
+		if( installationSet.id ) {
+			this.url = this.hostname + "/softwares/installations/" +installationSet.id  ;
+		} else {
+			this.url = this.hostname + "/softwares/installations";
+		}
 		console.log(this.url);
 		return this.http.post<ServerResponse>(this.url, installationSet, { headers: this.headers });
 	}

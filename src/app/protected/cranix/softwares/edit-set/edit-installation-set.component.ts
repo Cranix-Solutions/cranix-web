@@ -267,8 +267,9 @@ export class EditInstallationSetComponent implements OnInit {
   }
 
   delete() {
-    //TODO
+    this.objectService.deleteObjectDialog(this.softwareService.selectedInstallationSet, "category");
   }
+  
   onSubmit(installationSet: Category) {
     this.submitted = true;
     installationSet.deviceIds = [];
@@ -287,23 +288,26 @@ export class EditInstallationSetComponent implements OnInit {
     for (let software of this.softwares) {
       installationSet.softwareIds.push(software.id)
     }
+    this.objectService.requestSent();
     if (this.softwareService.selectedInstallationSet) {
-
-    } else {
-      let subs = this.softwareService.addInstallationsSets(installationSet).subscribe(
-        (val) => {
-          if (val.code == "OK") {
-            this.objectService.okMessage(this.languageS.transResponse(val));
-          } else {
-            this.objectService.errorMessage(this.languageS.transResponse(val));
-          }
-        },
-        (err) => { },
-        () => {
-          this.submitted = false;
-          subs.unsubscribe();
-        }
-      )
+      installationSet.id = this.softwareService.selectedInstallationSet.id;
     }
+    let subs = this.softwareService.addModifyInstallationsSets(installationSet).subscribe(
+      (val) => {
+        if (val.code == "OK") {
+          this.objectService.okMessage(this.languageS.transResponse(val));
+          this.modalCtrl.dismiss();
+        } else {
+          this.objectService.errorMessage(this.languageS.transResponse(val));
+        }
+      },
+      (err) => {
+        this.objectService.errorMessage(err);
+      },
+      () => {
+        this.submitted = false;
+        subs.unsubscribe();
+      }
+    )
   }
 }
