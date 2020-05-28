@@ -36,6 +36,7 @@ import { HwconfsService } from './services/hwconfs.service';
 import { ObjectsEditComponent } from './shared/objects-edit/objects-edit.component';
 import { RoomsService } from './services/rooms.service';
 import { SoftwareService } from './services/softwares.service';
+import { SecurityService } from './services/security-service';
 import { SelectColumnsComponent } from './shared/select-columns/select-columns.component';
 import { UsersService } from './services/users.service';
 import { PrintersService } from './services/printers.service';
@@ -119,6 +120,7 @@ const routes: Routes = [
     StatusBar,
     RoomsService,
     SoftwareService,
+    SecurityService,
     SplashScreen,
     UsersService,
     UtilsService,

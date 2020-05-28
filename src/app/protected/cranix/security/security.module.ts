@@ -25,7 +25,7 @@ const routes: Routes = [
         component:  ProxyComponent
       },
       {
-        path: 'room-access',
+        path: 'access',
         component:  RoomAccessComponent
       },
       {

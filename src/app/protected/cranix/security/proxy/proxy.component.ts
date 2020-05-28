@@ -7,8 +7,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProxyComponent implements OnInit {
 
+  segment='basic';
+
   constructor() { }
 
   ngOnInit() {}
+  segmentChanged(event) {
+    this.segment = event.detail.value;
+  }
+
+  addEditPositiveList(positiveList) {
+    //TODO
+  }
+  writeConfig() {
+    //TODO
+  }
+  restartProxy() {
+    //TODO
+  }
 
 }

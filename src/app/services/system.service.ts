@@ -78,6 +78,7 @@ export class SystemService {
 		return this.http.get<SystemConfig[]>(this.url,{ headers: this.headers });
 	}
 
+	
 	setSystemConfigValue(key,value){
 		this.url = this.hostname + `/system/configuration`;
 		console.log(this.url);
