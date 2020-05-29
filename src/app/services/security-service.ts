@@ -32,7 +32,13 @@ export class SecurityService {
 			'Authorization' : "Bearer " + this.token
         });
     }
-	getIncomingRules() {
+    getProxyBasic() {
+		this.url = this.hostname + `/system/proxy/basic`;
+		console.log(this.url);
+        return this.http.get<any[]>(this.url,{ headers: this.headers });
+    }
+
+    getIncomingRules() {
 		this.url = this.hostname + `/system/firewall/incomingRules`;
 		console.log(this.url);
         return this.http.get<IncomingRules>(this.url,{ headers: this.headers });

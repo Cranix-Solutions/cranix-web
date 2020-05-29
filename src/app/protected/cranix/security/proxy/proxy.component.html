@@ -51,6 +51,18 @@
       </ion-row>
     </ion-card-header>
     <ion-card-content>
+     <ag-grid-angular nfIf="columnDefs"
+        style="width: 100%; height: 100%;"
+        class="{{authService.settings.agGridThema}}"
+        [rowData]="proxyData"
+        [gridOptions]="proxyOptions" 
+        [columnDefs]="columnDefs"
+        [context]="context"
+        rowSelection="multiple"
+        (gridReady)="proxyGridReady($event)"
+        (selectionChanged)="proxySelectionChanged()"
+        id="proxyGridTable">
+      </ag-grid-angular>
     </ion-card-content>
   </ion-card>
 </ion-content>
