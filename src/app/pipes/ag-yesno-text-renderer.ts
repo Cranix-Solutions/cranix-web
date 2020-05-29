@@ -5,10 +5,11 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
 @Component({
     selector: 'yesno-cell-text',
     template: `
-        <ion-button style="padding-horizontal : 2px" fill="clear" size="small" (click)="toggle($event)" matTooltip="{{'Togle yes no' | translate }}">
+        <ion-checkbox [checked]="params.value == 'true'" color="success" (ionChange)="toggle($event)" ></ion-checkbox>
+        <!-- ion-button style="padding-horizontal : 2px" fill="clear" size="small" (click)="toggle($event)" matTooltip="{{'Togle yes no' | translate }}">
              <ion-icon *ngIf="params.value == 'true'" name="checkmark-sharp" color="success"></ion-icon>
              <ion-icon *ngIf="params.value == 'false'" name="close" color="danger"></ion-icon>
-        </ion-button>
+        </ion-button -->
         ` 
 })
 
@@ -28,11 +29,12 @@ export class YesNoTextBTNRenderer implements ICellRendererAngularComp {
        } else {
           value = 'false';
        }
+       console.log(event)
        console.log(this.params.context.componentParent.proxyData[index][field]);
        this.params.context.componentParent.proxyData[index][field] = value;  
        console.log(this.params.context.componentParent.proxyData[index][field]);
-       var params = { force: true };
-       this.params.context.componentParent.proxyApi.refreshCells(params);
+       //var params = { force: true };
+       //this.params.context.componentParent.proxyApi.refreshCells(params);
     }
     refresh(params: any): boolean {
         return false;
