@@ -1,4 +1,8 @@
 {
+    "Create installation set":"Installationsset erstellen",
+    "Edit installation set":"Installationsset bearbeiten",
+    "Overwiev":"Übersicht",
+    "Select objects":"Objekte auswählen",
     "Add device": "Gerät anlegen",
     "Add group": "Gruppe anlegen",
     "Add hwconf": "Gerätekonfiguration anlegen",

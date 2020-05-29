@@ -235,6 +235,7 @@ export class GenericObjectService {
     }
     return idName.substring(0, idName.length - 2)
   }
+
   addObject(object, objectType) {
     const body = object;
     let url = this.utilsS.hostName() + "/" + objectType + "s/add";
@@ -357,10 +358,10 @@ export class GenericObjectService {
     });
     (await toast).present();
   }
-  async selectObject() {
+  async warningMessage(message) {
     const toast = await this.toastController.create({
       position: "middle",
-      message: this.languageS.trans('Please select at last one object!'),
+      message: message,
       cssClass: "bar-assertive",
       color: "warning",
       duration:  this.authService.settings.warningMessageDuration * 1000,
@@ -376,6 +377,12 @@ export class GenericObjectService {
       ]
     });
     (await toast).present();
+  }
+  selectObject() {
+    return this.warningMessage(this.languageS.trans('Please select at last one object!'));
+  }
+  requestSent() {
+    return this.warningMessage(this.languageS.trans('Request was sent. Please be patient!'));
   }
   compareFn(a: string, b: string): boolean {
     return a == b;

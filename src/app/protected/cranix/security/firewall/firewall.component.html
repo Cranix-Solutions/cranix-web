@@ -1,0 +1,163 @@
+<cranix-toolbar></cranix-toolbar>
+<ion-content id="carded">
+  <ion-row class="header-row">
+    <ion-col size=6>
+      <ion-title>{{ 'Manage firewall configuration' | translate}}</ion-title>
+    </ion-col>
+  </ion-row>
+  <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
+    <ion-fab-button>
+      <ion-icon name="arrow-forward-circle"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="start">
+      <ion-fab-button *ngIf="segment == 'out'" (click)="addOutgoinRule()">
+        <ion-icon name="add-circle-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button *ngIf="segment == 'remote'" (click)="addForwardRule()">
+        <ion-icon name="add-circle-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="restartFirewall()">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="stopFirewall()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+  <ion-card>
+    <ion-card-header>
+      <ion-row>
+        <ion-col size="12" size-lg="6" size-xl="6">
+          <ion-segment (ionChange)="segmentChanged($event)">
+            <ion-segment-button value="in">
+              <ion-label>{{'Incomming rules' | translate}}</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="out">
+              <ion-label>{{'Outgoing rules' | translate}}</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="remote">
+              <ion-label>{{'REmote access' | translate}}</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+        </ion-col>
+        <ion-col offset="3" size="3" class="ion-align-self-center ion-text-end hidden-xs hidden-sm hidden-md">
+          <ion-button *ngIf="segment == 'out'" size="small" (click)="addOutgoinRule()"
+            matTooltip="{{'Add outgoing rule.' | translate }}">
+            <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+          </ion-button>
+          <ion-button *ngIf="segment == 'remote'" size="small" (click)="addForwardRule()"
+            matTooltip="{{'Add remote access rule.' | translate }}">
+            <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+          </ion-button>
+          <ion-button size="small" (click)="restartFirewall()" matTooltip="{{'Restart firewall.' | translate }}">
+            <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+          </ion-button>
+          <ion-button size="small" (click)="stopFirewall()" matTooltip="{{'Stop firewall.' | translate }}">
+            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card-header>
+    <ion-card-content>
+      <form #incomingForm="ngForm" (ngSubmit)="applyIncomingRules(incomingForm.value)">
+        <ion-grid *ngIf="segment == 'in'">
+          <ion-row>
+            <ion-col size=2>
+              <ion-item>
+                <ion-label>{{ 'ssh access' | translate }}</ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col size=1>
+              <ion-item lines="none">
+                <ion-toggle slot="start" color="secondary" checked="{{incoming.ssh}}" [(ngModel)]="incoming.ssh"
+                  name="ssh">
+                </ion-toggle>
+              </ion-item>
+            </ion-col>
+            <ion-col offset=6 size=1>
+              <ion-button type="submit" class="ion-no-margin" matTooltip="{{'Apply changes.' | translate }}">
+                <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size=2>
+              <ion-item>
+                <ion-label>{{'admin access' | translate}}</ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col size=1>
+              <ion-item lines="none">
+                <ion-toggle slot="start" color="secondary" checked="{{incoming.admin}}" [(ngModel)]="incoming.admin"
+                  name="admin">
+                </ion-toggle>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size=2>
+              <ion-item>
+                <ion-label>{{'https access' | translate}}</ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col size=1>
+              <ion-item lines="none">
+                <ion-toggle slot="start" color="secondary" checked="{{incoming.https}}" [(ngModel)]="incoming.https"
+                  name="https">
+                </ion-toggle>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size=2>
+              <ion-item>
+                <ion-label>{{'rdesktop access' | translate}}</ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col size=1>
+              <ion-item lines="none">
+                <ion-toggle slot="start" color="secondary" checked="{{incoming.rdesktop}}"
+                  [(ngModel)]="incoming.rdesktop" name="rdesktop">
+                </ion-toggle>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size=2>
+              <ion-item>
+                <ion-label>{{'open other ports' | translate}}</ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col size=10>
+              <ion-item>
+                <ion-input type="text" value="{{incoming.other}}" [(ngModel)]="incoming.other" name="other">
+                </ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+      <ag-grid-angular *ngIf="segment == 'out'" 
+        style="width: 100%; height: 100%;"
+        class="{{authService.settings.agGridThema}}"
+        [rowData]="outData"
+        [gridOptions]="outOptions" 
+        [context]="context"
+        rowSelection="multiple"
+        (gridReady)="outGridReady($event)"
+        (selectionChanged)="outSelectionChanged()"
+        id="outGridTable">
+      </ag-grid-angular>
+      <ag-grid-angular *ngIf="segment == 'remote'" 
+        style="width: 100%; height: 100%;"
+        class="{{authService.settings.agGridThema}}"
+        [rowData]="remoteData"
+        [gridOptions]="remoteOptions" 
+        [context]="context"
+        rowSelection="multiple"
+        (gridReady)="remoteGridReady($event)"
+        (selectionChanged)="remoteSelectionChanged()"
+        id="outGridTable"></ag-grid-angular>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

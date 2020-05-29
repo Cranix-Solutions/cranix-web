@@ -10,27 +10,31 @@ import { CephalixService } from 'src/app/services/cephalix.service';
   styleUrls: ['./details.page.scss'],
 })
 export class DetailsPage implements OnInit {
- ticketId: number;
- ticket: Ticket;
- articles: Article[] = [new Article()];
+  ticketId: number;
+  ticket: Ticket;
+  articles: Article[] = [new Article()];
   constructor(
     private route: ActivatedRoute,
-    private opbjectS : GenericObjectService,
+    private opbjectS: GenericObjectService,
     private cephlixS: CephalixService
   ) { }
 
   ngOnInit() {
-    this.ticketId= this.route.snapshot.params.id;
-      this.opbjectS.allObjects['ticket'].getValue().forEach((t: Ticket) => {
-        console.log(t);
-        if (t.id == this.ticketId) {
-          this.ticket = t;
-        }
-      });
-      let sub = this.cephlixS.getArticklesOfTicket(this.ticketId).subscribe(
-        (val)=>{ this.articles = val},
-        (error) => { this.articles.push(new  Article()); },
-        () => { sub.unsubscribe()}
-        );
+    this.ticketId = this.route.snapshot.params.id;
+    this.opbjectS.allObjects['ticket'].getValue().forEach((t: Ticket) => {
+      console.log(t);
+      if (t.id == this.ticketId) {
+        this.ticket = t;
       }
+    });
+    let sub = this.cephlixS.getArticklesOfTicket(this.ticketId).subscribe(
+      (val) => { this.articles = val },
+      (error) => { this.articles.push(new Article()); },
+      () => { sub.unsubscribe() }
+    );
+  }
+  public ngAfterViewInit() {
+    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
+  }
+
 }

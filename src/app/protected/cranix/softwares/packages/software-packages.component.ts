@@ -18,7 +18,7 @@ import { Software } from 'src/app/shared/models/data-model';
 })
 export class SoftwarePackagesComponent implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['name', 'description','version', 'weight'];
+  displayedColumns: string[] = ['name', 'description', 'version', 'weight'];
   gridOptions: GridOptions;
   columnDefs = [];
   gridApi: GridApi;
@@ -56,21 +56,17 @@ export class SoftwarePackagesComponent implements OnInit {
     this.createColumnDefs();
     this.readInstallableSoftware();
   }
+  public ngAfterViewInit() {
+    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
+  }
 
   async readInstallableSoftware() {
-    let subM = this.softwareService.getInstallableSoftwares().subscribe(
-      (val) => { 
-        this.rowData = val;
-        console.log(val);
-        this.gridApi.redrawRows();
-       },
-      (err) => { console.log(err) },
-      () => { subM.unsubscribe() });
-      await this.sleep(3000);
+    this.softwareService.readInstallableSoftwares();
+    await this.sleep(3000);
   }
   sleep(milliseconds) {
     return new Promise(resolve => setTimeout(resolve, milliseconds));
- }
+  }
   createColumnDefs() {
     let columnDefs = [];
     for (let key of this.objectKeys) {
@@ -92,7 +88,7 @@ export class SoftwarePackagesComponent implements OnInit {
           break;
         }
         case 'version': {
-          col['valueGetter'] =  function (params) {
+          col['valueGetter'] = function (params) {
             return params.data.softwareVersions[0].version;
           }
           break;
@@ -148,6 +144,7 @@ export class SoftwarePackagesComponent implements OnInit {
   async downloadSoftwares(ev: any) {
     const modal = await this.modalCtrl.create({
       component: DownloadSoftwaresComponent,
+      cssClass: "medium-modal",
       componentProps: {
         columns: this.objectKeys,
         selected: this.displayedColumns

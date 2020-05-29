@@ -153,7 +153,7 @@ export class AuthenticationService {
      * @param acls Checks if some acls are allowed for the user.
      * @return True or false
      */
-    areAllowed(acls: string[]) {
+    isOneOfAllowed(acls: string[]) {
         for (let acl of acls) {
             if (acl == 'permitall') {
                 return true;
@@ -192,6 +192,7 @@ export class AuthenticationService {
             case "/pages/cranix/users": { return this.isAllowed('user.manage') }
             case "/pages/cranix/system": { return this.isAllowed('system.status') }
             case "/pages/cranix/softwares": { return this.isAllowed('software.manage') }
+            case "/pages/cranix/security": { return this.isOneOfAllowed(['system.firewall','system.proxy']) }
             case "institutes/:id": { return this.isAllowed('cephalix.modify') }
             case "customers/:id": { return this.isAllowed('customer.modify') }
             case "tickets/:id": { return this.isAllowed('cephalix.ticket') }

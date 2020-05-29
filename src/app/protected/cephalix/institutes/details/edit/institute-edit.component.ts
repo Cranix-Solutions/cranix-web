@@ -37,6 +37,9 @@ export class InstituteEditComponent implements OnInit {
   ngOnInit() {
     this.editForm = this.formBuilder.group(this.objectService.convertObject(this.object));
   }
+  public ngAfterViewInit() {
+    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
+  }
   onSubmit(form) {
     form['id'] = this.object.id;
     this.objectService.modifyObjectDialog(form, "institute");

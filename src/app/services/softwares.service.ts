@@ -15,6 +15,7 @@ export class SoftwareService {
 	token: string;
 	headers: HttpHeaders;
 	selectedInstallationSet: Category;
+	availableSoftwares: Software[];
 
 	constructor(
 		private http: HttpClient,
@@ -59,8 +60,12 @@ export class SoftwareService {
 		return this.http.post<ServerResponse>(this.url, packages, { headers: this.headers });
 	}
 
-	addInstallationsSets(installationSet: Category) {
-		this.url = this.hostname + "/softwares/installations";
+	addModifyInstallationsSets(installationSet: Category) {
+		if( installationSet.id ) {
+			this.url = this.hostname + "/softwares/installations/" +installationSet.id  ;
+		} else {
+			this.url = this.hostname + "/softwares/installations";
+		}
 		console.log(this.url);
 		return this.http.post<ServerResponse>(this.url, installationSet, { headers: this.headers });
 	}
@@ -86,5 +91,15 @@ export class SoftwareService {
 		this.url = `${this.hostname}/softwares/installations/${id}/hwconfs`;
 		console.log(this.url);
 		return this.http.get<Hwconf[]>(this.url, { headers: this.headers });
+	}
+
+	readInstallableSoftwares() {
+		let sub = this.getInstallableSoftwares().subscribe(
+			(obj) => {
+				this.availableSoftwares = obj
+			},
+			(err) => { console.log(err) },
+			() => { sub.unsubscribe() }
+		);
 	}
 }
