@@ -107,7 +107,7 @@ export class FirewallComponent implements OnInit {
     }
   }
 
-  applyIncomingRules(incomming: IncomingRules) {
+  applyIncomingRules() {
     //TODO
   }
   addOutgoinRule() {

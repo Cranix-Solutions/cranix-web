@@ -104,7 +104,7 @@ export class ObjectsEditComponent implements OnInit {
         this.defaultAcion(object);
       }
     }
-    return this.modalController.dismiss(object);
+    //return this.modalController.dismiss(object);
   }
 
   handleFileInput(files: FileList) {
@@ -139,7 +139,7 @@ export class ObjectsEditComponent implements OnInit {
   }
   deleteObject() {
     this.objectService.deleteObjectDialog(this.object,this.objectType);
-    this.modalController.dismiss("succes");
+    //this.modalController.dismiss("succes");
   }
   supportRequest(object: SupportTicket) {
     let subs = this.systemService.createSupportRequest(object).subscribe(

@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { SecurityService } from 'src/app/services/security-service';
-import { YesNoTextBTNRenderer } from 'src/app/pipes/ag-yesno-text-renderer';
+import { CheckBoxBTNRenderer } from 'src/app/pipes/ag-checkbox-renderer';
 
 @Component({
   selector: 'cranix-proxy',
@@ -45,13 +45,14 @@ export class ProxyComponent implements OnInit {
       console.log(this.proxyData);
       for( let key of Object.getOwnPropertyNames(val[0]) ) {
          let col = {};
-         if( key != "name" ) {
+	 if( key != "name" ) {
+	   col['cellStyle'] = { 'justify-content': "center" };
 	   col['field'] = key;
-	   col['width'] = 100;
+	   col['minWidth'] = 100;
 	   col['sortable'] = false;
 	   col['suppressMenu'] = true;
 	   col['headerName'] = this.languageS.trans(key);
-	   col['cellRendererFramework'] = YesNoTextBTNRenderer;
+	   col['cellRendererFramework'] = CheckBoxBTNRenderer;
 	   this.columnDefs.push(col);
 	 }
       }

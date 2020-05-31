@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { Validators } from '@angular/forms';
 // own modules
 import { ServerResponse } from 'src/app/shared/models/server-models';
@@ -96,6 +96,7 @@ export class GenericObjectService {
     private http: HttpClient,
     private languageS: LanguageService,
     private utilsS: UtilsService,
+    private modalCtrl: ModalController,
     public toastController: ToastController) {
   }
 
@@ -274,7 +275,8 @@ export class GenericObjectService {
                 serverResponse = val;
                 if (serverResponse.code == "OK") {
                   this.getAllObject(objectType);
-                  this.okMessage(this.languageS.trans("Object was deleted"));
+		  this.okMessage(this.languageS.trans("Object was deleted"));
+		  this.modalCtrl.dismiss("success");
                 } else {
                   this.errorMessage("" + serverResponse.value);
                 }
