@@ -31,12 +31,12 @@ export class GenericObjectService {
   cephalixDefaults: any = {};
 
   selects: any = {
-    'agGridThema': ['ag-theme-alpine',  'ag-theme-balham', 'ag-theme-material'],
+    'agGridThema': ['ag-theme-alpine', 'ag-theme-balham', 'ag-theme-material'],
     'devCount': [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096],
     'identifier': ['sn-gn-bd', 'uuid', 'uid'],
     'lang': ['DE', 'EN'],
     'status': ['N', 'A', 'D'],
-    'supporttype':[ 'Error', 'FeatureRequest', 'Feedback', 'ProductOrder'  ]
+    'supporttype': ['Error', 'FeatureRequest', 'Feedback', 'ProductOrder']
   }
   initialized: boolean = false;
   enumerates: string[] = [
@@ -79,7 +79,7 @@ export class GenericObjectService {
   required: any = {
     'givenName': '*',
     'groupType': '*',
-    'identifier':"*",
+    'identifier': "*",
     'instituteType': '*',
     'importFile': "*",
     'name': '*',
@@ -275,8 +275,8 @@ export class GenericObjectService {
                 serverResponse = val;
                 if (serverResponse.code == "OK") {
                   this.getAllObject(objectType);
-		  this.okMessage(this.languageS.trans("Object was deleted"));
-		  this.modalCtrl.dismiss("success");
+                  this.okMessage(this.languageS.trans("Object was deleted"));
+                  this.modalCtrl.dismiss("success");
                 } else {
                   this.errorMessage("" + serverResponse.value);
                 }
@@ -366,7 +366,7 @@ export class GenericObjectService {
       message: message,
       cssClass: "bar-assertive",
       color: "warning",
-      duration:  this.authService.settings.warningMessageDuration * 1000,
+      duration: this.authService.settings.warningMessageDuration * 1000,
       buttons: [
         {
           text: "",

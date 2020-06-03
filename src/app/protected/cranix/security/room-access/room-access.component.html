@@ -1,5 +1,4 @@
-<cranix-toolbar></cranix-toolbar>
-<ion-content id="carded">
+<ion-content id=carded>
   <ion-row class="header-row">
     <ion-col size=6>
       <ion-title>{{ 'Manage access in the rooms' | translate}}</ion-title>
@@ -11,7 +10,7 @@
     </ion-fab-button>
     <ion-fab-list side="start">
       <ion-fab-button *ngIf="segment == 'list'" (click)="addStatus()">
-        <ion-icon name="add-circle" ></ion-icon>
+        <ion-icon name="add-circle"></ion-icon>
       </ion-fab-button>
       <ion-fab-button (click)="restartFirewall()">
         <ion-icon name="refresh"></ion-icon>
@@ -36,14 +35,37 @@
             matTooltip="{{'Add new room access status.' | translate }}">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="restartFirewall()"
-            matTooltip="{{'Restart firewall.' | translate }}">
+          <ion-button *ngIf="segment == 'list'" size="small" (click)="delete()"
+            matTooltip="{{'Delete selected access rules' | translate }}">
+            <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+          </ion-button>
+          <ion-button *ngIf="segment == 'list'" size="small" (click)="createColumDef()"
+          matTooltip="{{'Change grouping of the table.' | translate }}">
+          <ion-icon slot="icon-only" name="list"></ion-icon>
+        </ion-button>
+          <ion-button size="small" (click)="restartFirewall()" matTooltip="{{'Restart firewall.' | translate }}">
             <ion-icon slot="icon-only" name="refresh"></ion-icon>
           </ion-button>
         </ion-col>
       </ion-row>
     </ion-card-header>
     <ion-card-content>
+      <ag-grid-angular *ngIf="segment == 'list'" 
+       #accessGrid
+        style="width: 100%; height: 100%;"
+        id="accessGridTable"
+        class="{{authService.settings.agGridThema}}"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [autoGroupColumnDef]="autoGroupColumnDef"
+        [animateRows]="true"
+        [rowData]="accessData"
+        [context]="context"
+        rowSelection="multiple"
+        [deltaColumnMode]="true"
+        (gridReady)="accessGridReady($event)"
+        >
+      </ag-grid-angular>
     </ion-card-content>
   </ion-card>
 </ion-content>

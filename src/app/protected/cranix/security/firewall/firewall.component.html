@@ -1,4 +1,3 @@
-<cranix-toolbar></cranix-toolbar>
 <ion-content id="carded">
   <ion-row class="header-row">
     <ion-col size=6>
@@ -36,7 +35,7 @@
               <ion-label>{{'Outgoing rules' | translate}}</ion-label>
             </ion-segment-button>
             <ion-segment-button value="remote">
-              <ion-label>{{'REmote access' | translate}}</ion-label>
+              <ion-label>{{'Remote access' | translate}}</ion-label>
             </ion-segment-button>
           </ion-segment>
         </ion-col>
@@ -63,7 +62,7 @@
       </ion-row>
     </ion-card-header>
     <ion-card-content>
-      <ion-grid *ngIf="segment == 'in'">
+      <ion-grid *ngIf="segment == 'in' && incoming">
         <ion-row>
           <ion-col size=2>
             <ion-item>
@@ -72,8 +71,7 @@
           </ion-col>
           <ion-col size=2>
             <ion-item lines="none">
-              <ion-toggle slot="start" color="secondary" checked="{{incoming.ssh}}" [(ngModel)]="incoming.ssh"
-                name="ssh">
+              <ion-toggle slot="start" color="secondary" checked="{{incoming.ssh}}">
               </ion-toggle>
             </ion-item>
           </ion-col>
@@ -86,8 +84,7 @@
           </ion-col>
           <ion-col size=2>
             <ion-item lines="none">
-              <ion-toggle slot="start" color="secondary" checked="{{incoming.admin}}" [(ngModel)]="incoming.admin"
-                name="admin">
+              <ion-toggle slot="start" color="secondary" checked="{{incoming.admin}}">
               </ion-toggle>
             </ion-item>
           </ion-col>
@@ -100,8 +97,7 @@
           </ion-col>
           <ion-col size=2>
             <ion-item lines="none">
-              <ion-toggle slot="start" color="secondary" checked="{{incoming.https}}" [(ngModel)]="incoming.https"
-                name="https">
+              <ion-toggle slot="start" color="secondary" checked="{{incoming.https}}">
               </ion-toggle>
             </ion-item>
           </ion-col>
@@ -114,8 +110,7 @@
           </ion-col>
           <ion-col size=10>
             <ion-item lines="none">
-              <ion-toggle slot="start" color="secondary" checked="{{incoming.rdesktop}}"
-                [(ngModel)]="incoming.rdesktop" name="rdesktop">
+              <ion-toggle slot="start" color="secondary" checked="{{incoming.rdesktop}}">
               </ion-toggle>
             </ion-item>
           </ion-col>
@@ -134,27 +129,15 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-      <ag-grid-angular *ngIf="segment == 'out'"
-        style="width: 100%; height: 100%;"
-        class="{{authService.settings.agGridThema}}"
-        [rowData]="outData"
-        [gridOptions]="outOptions"
-        [context]="context"
-        rowSelection="multiple"
-        (gridReady)="outGridReady($event)"
-        (selectionChanged)="outSelectionChanged()"
+      <ag-grid-angular *ngIf="segment == 'out'" style="width: 100%; height: 100%;"
+        class="{{authService.settings.agGridThema}}" [rowData]="outData" [gridOptions]="outOptions" [context]="context"
+        rowSelection="multiple" (gridReady)="outGridReady($event)" (selectionChanged)="outSelectionChanged()"
         id="outGridTable">
       </ag-grid-angular>
-      <ag-grid-angular *ngIf="segment == 'remote'"
-        style="width: 100%; height: 100%;"
-        class="{{authService.settings.agGridThema}}"
-        [rowData]="remoteData"
-        [gridOptions]="remoteOptions"
-        [context]="context"
-        rowSelection="multiple"
-        (gridReady)="remoteGridReady($event)"
-        (selectionChanged)="remoteSelectionChanged()"
-        id="outGridTable"></ag-grid-angular>
+      <ag-grid-angular *ngIf="segment == 'remote'" style="width: 100%; height: 100%;"
+        class="{{authService.settings.agGridThema}}" [rowData]="remoteData" [gridOptions]="remoteOptions"
+        [context]="context" rowSelection="multiple" (gridReady)="remoteGridReady($event)"
+        (selectionChanged)="remoteSelectionChanged()" id="outGridTable"></ag-grid-angular>
     </ion-card-content>
   </ion-card>
 </ion-content>

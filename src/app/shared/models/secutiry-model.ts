@@ -25,3 +25,25 @@ export class RemoteAccessRule {
     constructor() { }
 }
 
+export class AccessInRoom  {
+    id?: number; 
+    roomId: number = 0;
+    pointInTime: string ="06:00";
+    accessType: string ="DEF";
+    action: string =null;
+    login: boolean = false;
+    portal: boolean = false;
+    printing: boolean = false;
+    direct: boolean = false;
+    proxy: boolean = false;
+    monday: boolean = true;
+    thursday: boolean = true;
+    wednesday: boolean = true;
+    tuesday: boolean = true;
+    friday: boolean = true;
+    saturday: boolean = true;
+    sunday: boolean = true;
+    holiday: boolean = true;
+    constructor() { }
+}
+

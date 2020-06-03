@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders, HttpParams, HttpClientModule } from '@angular/
 import { UtilsService } from './utils.service';
 import { AuthenticationService} from './auth.service';
 import { ServerResponse } from 'src/app/shared/models/server-models';
-import { IncomingRules, OutgoingRule, RemoteAccessRule  } from '../shared/models/secutiry-model';
+import { AccessInRoom, IncomingRules, OutgoingRule, RemoteAccessRule  } from '../shared/models/secutiry-model';
 
 @Injectable()
 export class SecurityService {
@@ -31,7 +31,14 @@ export class SecurityService {
 			'Accept' : "text/plain",
 			'Authorization' : "Bearer " + this.token
         });
-    }
+	}
+	
+	getAllAccess() {
+		this.url = this.hostname + `/rooms/accessList`;
+		console.log(this.url);
+        return this.http.get<AccessInRoom[]>(this.url,{ headers: this.headers });
+	}
+
     getProxyBasic() {
 		this.url = this.hostname + `/system/proxy/basic`;
 		console.log(this.url);
