@@ -7,6 +7,8 @@ import { RoomIdCellRenderer } from 'src/app/pipes/ag-roomid-render';
 import { AccessInRoom } from 'src/app/shared/models/secutiry-model';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import 'ag-grid-enterprise';
+import { ModalController } from '@ionic/angular';
+import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 
 @Component({
   selector: 'cranix-room-access',
@@ -29,6 +31,7 @@ export class RoomAccessComponent implements OnInit {
   constructor(
     public authService: AuthenticationService,
     private languageS: LanguageService,
+    public modalCtrl: ModalController,
     public objectService: GenericObjectService,
     public securityService: SecurityService
   ) {
@@ -122,7 +125,32 @@ export class RoomAccessComponent implements OnInit {
   accessSelectionChanged() {
     this.accessSelected = this.accessApi.getSelectedRows();
   }
-
+  async redirectToAddEdit(ev: Event, accesInRoom: AccessInRoom) {
+    let action = "add";
+    if (accesInRoom) {
+      this.objectService.selectedObject = accesInRoom;
+    } else {
+      accesInRoom = new AccessInRoom();
+    }
+    const modal = await this.modalCtrl.create({
+      component: ObjectsEditComponent,
+      cssClass: 'medium-modal',
+      componentProps: {
+        objectType: "access",
+        objectAction: action,
+        object: accesInRoom
+      },
+      animated: true,
+      swipeToClose: true,
+      showBackdrop: true
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        console.log("Object was created or modified", dataReturned.data)
+      }
+    });
+    (await modal).present();
+  }
   restartFirewall() {
 
   }

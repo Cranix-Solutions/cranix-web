@@ -31,6 +31,7 @@ export class GenericObjectService {
   cephalixDefaults: any = {};
 
   selects: any = {
+    'action': ['wol', 'reboot', 'shutdown', 'logout'],
     'agGridThema': ['ag-theme-alpine', 'ag-theme-balham', 'ag-theme-material'],
     'devCount': [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096],
     'identifier': ['sn-gn-bd', 'uuid', 'uid'],
@@ -47,6 +48,7 @@ export class GenericObjectService {
    * Attributes which can not be modified
    */
   readOnlyAttributes: string[] = [
+    'accessType',
     'classes',
     'fsQuotaUsed',
     'ip',

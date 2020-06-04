@@ -13,14 +13,14 @@ import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Room } from 'src/app/shared/models/data-model';
 import { AuthenticationService } from 'src/app/services/auth.service';
-import { RoomPrintersPage } from './details/printers/room-printers.page';
+import { RoomPrintersPage } from '../details/printers/room-printers.page';
 
 @Component({
   selector: 'cranix-rooms',
-  templateUrl: './rooms.page.html',
-  styleUrls: ['./rooms.page.scss'],
+  templateUrl: './rooms.component.html',
+  styleUrls: ['./rooms.component.scss'],
 })
-export class RoomsPage implements OnInit {
+export class RoomsComponent implements OnInit {
   objectKeys: string[] = [];
   displayedColumns: string[] = ['name', 'description', 'roomType', 'roomControl', 'hwconfId', 'actions'];
   sortableColumns: string[] = ['name', 'description', 'roomType', 'roomControl', 'hwconfId'];
@@ -60,7 +60,7 @@ export class RoomsPage implements OnInit {
     }
   }
   ngOnInit() {
-    this.storage.get('RoomsPage.displayedColumns').then((val) => {
+    this.storage.get('RoomsComponent.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
         this.displayedColumns = myArray.concat(['actions']);
@@ -171,6 +171,7 @@ export class RoomsPage implements OnInit {
     let action = "add";
     if (room) {
       this.objectService.selectedObject = room;
+      action = 'modify';
     } else {
       room = new Room;
       delete room.network;
@@ -181,7 +182,6 @@ export class RoomsPage implements OnInit {
       room.roomControl = 'allTeachers'
       room.roomType = 'ComputerRoom'
       room.hwconfId = 4
-      action = 'modify';
     }
     const modal = await this.modalCtrl.create({
       component: ObjectsEditComponent,
@@ -231,7 +231,7 @@ export class RoomsPage implements OnInit {
       componentProps: {
         columns: this.objectKeys,
         selected: this.displayedColumns,
-        objectPath: "RoomsPage.displayedColumns"
+        objectPath: "RoomsComponent.displayedColumns"
       },
       animated: true,
       swipeToClose: true,

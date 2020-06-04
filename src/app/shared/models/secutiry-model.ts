@@ -41,9 +41,9 @@ export class AccessInRoom  {
     wednesday: boolean = true;
     tuesday: boolean = true;
     friday: boolean = true;
-    saturday: boolean = true;
-    sunday: boolean = true;
-    holiday: boolean = true;
+    saturday: boolean = false;
+    sunday: boolean = false;
+    holiday: boolean = false;
     constructor() { }
 }
 

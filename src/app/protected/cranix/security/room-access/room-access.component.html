@@ -9,7 +9,7 @@
       <ion-icon name="arrow-forward-circle"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="start">
-      <ion-fab-button *ngIf="segment == 'list'" (click)="addStatus()">
+      <ion-fab-button *ngIf="segment == 'list'" (click)="redirectToAddEdit($event,null)">
         <ion-icon name="add-circle"></ion-icon>
       </ion-fab-button>
       <ion-fab-button (click)="restartFirewall()">
@@ -31,13 +31,13 @@
           </ion-segment>
         </ion-col>
         <ion-col offset="3" size="3" class="ion-align-self-center ion-text-end hidden-xs hidden-sm hidden-md">
-          <ion-button *ngIf="segment == 'list'" size="small" (click)="addStatus()"
+          <ion-button *ngIf="segment == 'list'" size="small" (click)="redirectToAddEdit($event,null)"
             matTooltip="{{'Add new room access status.' | translate }}">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
           <ion-button *ngIf="segment == 'list'" size="small" (click)="delete()"
             matTooltip="{{'Delete selected access rules' | translate }}">
-            <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
           </ion-button>
           <ion-button *ngIf="segment == 'list'" size="small" (click)="createColumDef()"
           matTooltip="{{'Change grouping of the table.' | translate }}">
