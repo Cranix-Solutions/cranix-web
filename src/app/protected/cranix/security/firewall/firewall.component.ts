@@ -85,9 +85,11 @@ export class FirewallComponent implements OnInit {
       }
       case 'out': {
         this.securityService.applyChange(this.securityService.outgoingRules,'outgoingRules');
+        break;
       }
       case 'remote': {
-        this.securityService.applyChange(this.securityService.remoteRules,'remoteRules');
+        this.securityService.applyChange(this.securityService.remoteRules,'remoteAccessRules');
+        break;
       }
     }
   }
@@ -124,7 +126,6 @@ export class FirewallComponent implements OnInit {
     console.log(newRules);
     this.securityService.outgoingRules = newRules;
     this.outApi.setRowData(newRules);
-    //this.securityService.applyChange(this.outData, 'outgoingRules');
   }
   async addRemoteRule() {
     const modal = await this.modalCtrl.create({
@@ -155,7 +156,6 @@ export class FirewallComponent implements OnInit {
     console.log(newRules);
     this.securityService.remoteRules = newRules;
     this.remoteApi.setRowData(newRules);
-    //this.securityService.applyChange(this.outData, 'outgoingRules');
   }
   restartFirewall() {
     this.objectService.requestSent();
