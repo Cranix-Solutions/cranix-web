@@ -48,6 +48,8 @@ import { AddDeviceComponent } from 'src/app/protected/cranix/devices/add-device/
 import { AddPrinterComponent } from 'src/app/protected/cranix/devices/add-printer/add-printer.component';
 //import 'ag-grid-enterprise';
 import '@ag-grid-enterprise/all-modules'
+import { AddOutgoingRuleComponent } from './protected/cranix/security/firewall/add-rules/add-outgoing-rule.component';
+import { AddRemoteRuleComponent } from './protected/cranix/security/firewall/add-rules/add-remote-rule.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -68,7 +70,9 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AddDeviceComponent,
+    AddOutgoingRuleComponent,
     AddPrinterComponent,
+    AddRemoteRuleComponent,
     AppComponent,
     ActionsComponent,
     DownloadSoftwaresComponent,
@@ -81,7 +85,9 @@ const routes: Routes = [
     SelectColumnsComponent],
   entryComponents: [
     AddDeviceComponent,
+    AddOutgoingRuleComponent,
     AddPrinterComponent,
+    AddRemoteRuleComponent,
     ActionsComponent,
     DownloadSoftwaresComponent,
     ShowImportComponent,
@@ -111,6 +117,8 @@ const routes: Routes = [
     })],
   providers: [
     AddDeviceComponent,
+    AddOutgoingRuleComponent,
+    AddRemoteRuleComponent,
     CanActivateViaAcls,
     CephalixService,
     DevicesService,

@@ -322,6 +322,7 @@ export class GenericObjectService {
       () => { a.unsubscribe() }
     );
   }
+
   async errorMessage(message: string) {
     const toast = await this.toastController.create({
       position: "middle",

@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { IncomingRules, OutgoingRule } from 'src/app/shared/models/secutiry-model';
+import { IncomingRules, OutgoingRule, RemoteRule } from 'src/app/shared/models/secutiry-model';
 import { LanguageService } from 'src/app/services/language.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { SecurityService } from 'src/app/services/security-service';
+import { ModalController } from '@ionic/angular';
+import { AddOutgoingRuleComponent } from './add-rules/add-outgoing-rule.component';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { AddRemoteRuleComponent } from './add-rules/add-remote-rule.component';
 
 @Component({
   selector: 'cranix-firewall',
@@ -11,10 +15,9 @@ import { SecurityService } from 'src/app/services/security-service';
 })
 export class FirewallComponent implements OnInit {
   segment: string = "in";
-  outData: any[] = [];
-  remoteData: any[] = [];
-  outOptions;
-  remoteOptions;
+  defaultColDef;
+  outColumnDefs;
+  remoteColumnDefs;
   context;
   outApi;
   outColumnApi;
@@ -22,99 +25,135 @@ export class FirewallComponent implements OnInit {
   remoteApi;
   remoteColumnApi;
   remoteSelected;
-  incoming;
 
   constructor(
     public authService: AuthenticationService,
     private languageS: LanguageService,
+    public objectService: GenericObjectService,
+    public modalCtrl: ModalController,
     public securityService: SecurityService
   ) {
     this.context = { componentParent: this };
-    this.outOptions = {
-      defaultColDef: {
-        resizable: true,
-        sortable: true,
-        hide: false,
-        suppressMenu: true
+    this.defaultColDef = {
+      resizable: true,
+      sortable: true,
+      hide: false,
+      suppressMenu: true
+    };
+    this.outColumnDefs = [
+      {
+        field: 'name',
+        headerName: this.languageS.trans('name'),
+        checkboxSelection: true,
       },
-      columnDefs: [
-        {
-          field: 'name',
-          headerName: this.languageS.trans('name'),
-          checkboxSelection: true,
-        },
-        { field: 'type', headerName: this.languageS.trans('type') },
-        { field: 'dest', headerName: this.languageS.trans('dest') },
-        { field: 'prot', headerName: this.languageS.trans('prot') },
-        { field: 'port', headerName: this.languageS.trans('port') }
-      ],
-      context: this.context,
-      rowSelection: 'multiple',
-      rowHeight: 35
-    }
-    this.remoteOptions = {
-      defaultColDef: {
-        resizable: true,
-        sortable: true,
-        hide: false,
-        suppressMenu: true
+      { field: 'type', headerName: this.languageS.trans('type') },
+      { field: 'dest', headerName: this.languageS.trans('dest') },
+      { field: 'prot', headerName: this.languageS.trans('prot') },
+      { field: 'port', headerName: this.languageS.trans('port') }
+    ];
+    this.remoteColumnDefs = [
+      {
+        field: 'name',
+        headerName: this.languageS.trans('name'),
+        checkboxSelection: true,
       },
-      columnDefs:[
-        {
-          field: 'name',
-          headerName: this.languageS.trans('name'),
-          checkboxSelection: true,
-        },
-        { field: 'ext', headerName: this.languageS.trans('external port') },
-        { field: 'port', headerName: this.languageS.trans('internal port') }
-      ],
-      context: this.context,
-      rowSelection: 'multiple',
-      rowHeight: 35
-    }
+      { field: 'ext', headerName: this.languageS.trans('external port') },
+      { field: 'port', headerName: this.languageS.trans('internal port') }
+    ];
   }
 
   ngOnInit() {
-    this.readDatas();
+    this.securityService.readDatas();
   }
   segmentChanged(event) {
     this.segment = event.detail.value;
-    this.readDatas();
   }
-  readDatas() {
+
+  applyChanges() {
     switch (this.segment) {
       case 'in': {
-        let sub1 = this.securityService.getIncomingRules().subscribe(
-          (val) => { this.incoming = val; },
-          (err) => { console.log(err) },
-          () => { sub1.unsubscribe(); }
-        ); break;
+        this.securityService.incomingRules.ssh = (<HTMLInputElement>document.getElementById('incoming-ssh')).checked;
+        this.securityService.incomingRules.admin = (<HTMLInputElement>document.getElementById('incoming-admin')).checked;
+        this.securityService.incomingRules.https = (<HTMLInputElement>document.getElementById('incoming-https')).checked;
+        this.securityService.incomingRules.rdesktop = (<HTMLInputElement>document.getElementById('incoming-rdesktop')).checked;
+        this.securityService.incomingRules.other = (<HTMLInputElement>document.getElementById('incoming-other')).value;
+        this.securityService.applyChange(this.securityService.incomingRules, 'incomingRules');
+        break;
       }
       case 'out': {
-        let sub2 = this.securityService.getOutgoingRules().subscribe(
-          (val) => { this.outData = val; },
-          (err) => { console.log(err) },
-          () => { sub2.unsubscribe(); }
-        ); break;
+        this.securityService.applyChange(this.securityService.outgoingRules,'outgoingRules');
       }
       case 'remote': {
-        let sub2 = this.securityService.getRemoteAccessRules().subscribe(
-          (val) => { this.remoteData = val; },
-          (err) => { console.log(err) },
-          () => { sub2.unsubscribe(); }
-        ); break;
+        this.securityService.applyChange(this.securityService.remoteRules,'remoteRules');
       }
     }
   }
 
-  applyIncomingRules() {
+  /**
+   * Add a new outgoin rule
+   */
+  async addOutgoinRule() {
+    const modal = await this.modalCtrl.create({
+      component: AddOutgoingRuleComponent,
+      cssClass: 'medium-modal',
+      animated: true,
+      swipeToClose: true,
+      backdropDismiss: false
+    });
+    modal.onDidDismiss().then((val) => {
+      if (val.data) {
+        console.log(this.securityService.outgoingRules);
+        this.outApi.setRowData(this.securityService.outgoingRules);
+      }
+    });
+    (await modal).present();
+  }
+  /**
+   * Delets a rule
+   */
+  deleteOutgoinRule() {
+    let newRules: OutgoingRule[] = [];
+    for (let rule of this.securityService.outgoingRules) {
+      if (this.outSelected.indexOf(rule) == -1) {
+        newRules.push(rule);
+      }
+    }
+    console.log(newRules);
+    this.securityService.outgoingRules = newRules;
+    this.outApi.setRowData(newRules);
+    //this.securityService.applyChange(this.outData, 'outgoingRules');
+  }
+  async addRemoteRule() {
+    const modal = await this.modalCtrl.create({
+      component: AddRemoteRuleComponent,
+      cssClass: 'medium-modal',
+      animated: true,
+      swipeToClose: true,
+      backdropDismiss: false
+    });
+    modal.onDidDismiss().then((val) => {
+      if (val.data) {
+        console.log(this.securityService.outgoingRules);
+        this.remoteApi.setRowData(this.securityService.remoteRules);
+      }
+    });
+    (await modal).present();
     //TODO
   }
-  addOutgoinRule() {
-    //TODO
-  }
-  addForwardRule() {
-    //TODO
+  /**
+   * Delets a rule
+   */
+  deleteRemoteRule() {
+    let newRules: RemoteRule[] = [];
+    for (let rule of this.securityService.remoteRules) {
+      if (this.remoteSelected.indexOf(rule) == -1) {
+        newRules.push(rule);
+      }
+    }
+    console.log(newRules);
+    this.securityService.remoteRules = newRules;
+    this.remoteApi.setRowData(newRules);
+    //this.securityService.applyChange(this.outData, 'outgoingRules');
   }
   restartFirewall() {
     //TODO

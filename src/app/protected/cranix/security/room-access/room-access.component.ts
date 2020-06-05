@@ -67,8 +67,8 @@ export class RoomAccessComponent implements OnInit {
           col['cellRendererFramework'] = RoomIdCellRenderer;
           if (this.grouping == 'roomId') {
             col['checkboxSelection'] = true;
-            col['rowGroup'] = true,
-              col['hide'] = true;
+            col['rowGroup'] = true;
+            col['hide'] = true;
             col['valueGetter'] = function (params) {
               return params.context['componentParent'].objectService.idToName("room", params.data.roomId);
             }
@@ -101,9 +101,25 @@ export class RoomAccessComponent implements OnInit {
       this.columnDefs.push(col);
     }
     switch (this.grouping) {
-      case '': { this.grouping = 'roomId'; break }
-      case 'roomId': { this.grouping = 'pointInTime'; break }
-      case 'pointInTime': { this.grouping = ''; break }
+      case '': {
+        this.grouping = 'roomId';
+        break
+      }
+      case 'roomId': {
+        this.autoGroupColumnDef = {
+          headerName: this.languageS.trans('roomId'),
+          minWidth: 150
+        };
+        this.grouping = 'pointInTime';
+        break
+      }
+      case 'pointInTime': {
+        this.autoGroupColumnDef = {
+          headerName: this.languageS.trans('pointInTime'),
+          minWidth: 150
+        };
+        this.grouping = ''; break
+      }
     }
   }
   segmentChanged(event) {
@@ -120,7 +136,8 @@ export class RoomAccessComponent implements OnInit {
   accessGridReady(params) {
     this.accessApi = params.api;
     this.accessColumnApi = params.columnApi;
-    console.log("accessGridReady");
+    console.log(this.accessApi);
+    console.log(this.accessColumnApi);
   }
   accessSelectionChanged() {
     this.accessSelected = this.accessApi.getSelectedRows();

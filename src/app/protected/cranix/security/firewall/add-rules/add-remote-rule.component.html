@@ -1,0 +1,33 @@
+<form #addRule="ngForm" (ngSubmit)="addRemoteRule(addRule.value)">
+  <ion-header translucent>
+    <ion-toolbar>
+      <ion-title>{{  'Add remote acces firewall rule' | translate }}</ion-title>
+      <ion-buttons slot="end">
+        <ion-button type="submit" class="ion-no-margin" [disabled]="!addRule.valid">
+          <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss()">
+          <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen>
+    <ion-list lines="full">
+      <ion-item>
+        <ion-label position="stacked">{{'external port'| translate}}</ion-label>
+        <ion-input type="text" [(ngModel)]="rule.ext" name="ext" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{'device'| translate}}</ion-label>
+        <ion-select type="text" [(ngModel)]="rule.id" name="id" required>
+          <ion-select-option *ngFor="let obj of  deviceIps" value="{{obj.key}}">{{obj.name}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{'dest'|translate}}</ion-label>
+        <ion-input type="text" [(ngModel)]="rule.port" name="port"></ion-input>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</form>

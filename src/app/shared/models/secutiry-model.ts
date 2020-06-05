@@ -8,16 +8,16 @@ export class IncomingRules {
 }
 
 export class OutgoingRule {
-    id?: number;
+    id?: number = 0;
     type: string = "room";
     name: string="";
     dest: string ="0/0";
     prot: string = "tcp";
-    port: string = "all";
+    port: string = "";
     constructor() { }
 }
 
-export class RemoteAccessRule {
+export class RemoteRule {
     id?: number;
     name: string="";
     ext: string="";
