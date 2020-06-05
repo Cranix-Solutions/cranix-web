@@ -1,3 +1,4 @@
+<cranix-toolbar></cranix-toolbar>
 <ion-content id="carded">
   <ion-row class="header-row">
     <ion-col size=6>
@@ -9,11 +10,20 @@
       <ion-icon name="arrow-forward-circle"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="start">
+      <ion-fab-button size="small" (click)="applyChanges()">
+        <ion-icon slot="icon-only" name="checkmark-sharp"></ion-icon>
+      </ion-fab-button>
       <ion-fab-button *ngIf="segment == 'out'" (click)="addOutgoinRule()">
         <ion-icon name="add-circle-outline"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button *ngIf="segment == 'remote'" (click)="addForwardRule()">
+      <ion-fab-button *ngIf="segment == 'out'" (click)="deleteOutgoinRule()">
         <ion-icon name="add-circle-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button *ngIf="segment == 'remote'" size="small" (click)="addRemoteRule()">
+        <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button *ngIf="segment == 'remote'" size="small" (click)="deleteRemoteRule()">
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
       </ion-fab-button>
       <ion-fab-button (click)="restartFirewall()">
         <ion-icon name="refresh-outline"></ion-icon>
@@ -29,13 +39,16 @@
         <ion-col size="12" size-lg="6" size-xl="6">
           <ion-segment (ionChange)="segmentChanged($event)">
             <ion-segment-button value="in">
-              <ion-label>{{'Incomming rules' | translate}}</ion-label>
+              <ion-label class="hidden-xs hidden-sm">{{'Incomming rules' | translate}}</ion-label>
+              <ion-icon name="log-in"></ion-icon>
             </ion-segment-button>
             <ion-segment-button value="out">
-              <ion-label>{{'Outgoing rules' | translate}}</ion-label>
+              <ion-label class="hidden-xs hidden-sm">{{'Outgoing rules' | translate}}</ion-label>
+              <ion-icon name="log-out"></ion-icon>
             </ion-segment-button>
             <ion-segment-button value="remote">
-              <ion-label>{{'Remote access' | translate}}</ion-label>
+              <ion-label class="hidden-xs hidden-sm">{{'Remote access' | translate}}</ion-label>
+              <ion-icon name="shuffle"></ion-icon>
             </ion-segment-button>
           </ion-segment>
         </ion-col>

@@ -81,7 +81,6 @@ export class SecurityService {
         let serverResponse = val;
         if (serverResponse.code == "OK") {
           this.objectService.okMessage(this.languageS.trans(serverResponse.value));
-          this.modalCtrl.dismiss("success");
         } else {
           this.objectService.errorMessage("" + serverResponse.value);
         }

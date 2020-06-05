@@ -343,6 +343,15 @@ export class GenericObjectService {
     });
     (await toast).present();
   }
+
+  responseMessage(resp: ServerResponse) {
+    if (resp.code == 'OK ') {
+      return this.okMessage(this.languageS.transResponse(resp));
+    } else {
+      return this.errorMessage(this.languageS.transResponse(resp));
+    }
+  }
+
   async okMessage(message: string) {
     const toast = await this.toastController.create({
       position: "middle",

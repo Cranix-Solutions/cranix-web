@@ -7,6 +7,7 @@ import { ModalController } from '@ionic/angular';
 import { AddOutgoingRuleComponent } from './add-rules/add-outgoing-rule.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { AddRemoteRuleComponent } from './add-rules/add-remote-rule.component';
+import { SystemService } from 'src/app/services/system.service';
 
 @Component({
   selector: 'cranix-firewall',
@@ -31,7 +32,8 @@ export class FirewallComponent implements OnInit {
     private languageS: LanguageService,
     public objectService: GenericObjectService,
     public modalCtrl: ModalController,
-    public securityService: SecurityService
+    public securityService: SecurityService,
+    public systemService: SystemService
   ) {
     this.context = { componentParent: this };
     this.defaultColDef = {
@@ -70,6 +72,7 @@ export class FirewallComponent implements OnInit {
   }
 
   applyChanges() {
+    this.objectService.requestSent();
     switch (this.segment) {
       case 'in': {
         this.securityService.incomingRules.ssh = (<HTMLInputElement>document.getElementById('incoming-ssh')).checked;
@@ -133,12 +136,11 @@ export class FirewallComponent implements OnInit {
     });
     modal.onDidDismiss().then((val) => {
       if (val.data) {
-        console.log(this.securityService.outgoingRules);
+        console.log(this.securityService.remoteRules);
         this.remoteApi.setRowData(this.securityService.remoteRules);
       }
     });
     (await modal).present();
-    //TODO
   }
   /**
    * Delets a rule
@@ -156,10 +158,20 @@ export class FirewallComponent implements OnInit {
     //this.securityService.applyChange(this.outData, 'outgoingRules');
   }
   restartFirewall() {
-    //TODO
+    this.objectService.requestSent();
+    let sub = this.systemService.applyServiceState('SuSEfirewall2','running','restart').subscribe(
+      (val) => { this.objectService.responseMessage(val)},
+      (err) => { this.objectService.errorMessage(err)},
+      () => {sub.unsubscribe()}
+      );
   }
   stopFirewall() {
-    //TODO
+    this.objectService.requestSent();
+    let sub = this.systemService.applyServiceState('SuSEfirewall2','running','false').subscribe(
+      (val) => { this.objectService.responseMessage(val)},
+      (err) => { this.objectService.errorMessage(err)},
+      () => {sub.unsubscribe()}
+      );
   }
   outGridReady(params) {
     this.outApi = params.api;
