@@ -92,7 +92,7 @@
           <ion-col size=2>
             <ion-item lines="none">
               <ion-checkbox slot="start" color="secondary" checked="{{securityService.incomingRules.ssh}}"
-                id="incoming-ssh">
+                id="incoming-ssh" (ionChange)="incomingChanged()">
               </ion-checkbox>
             </ion-item>
           </ion-col>
@@ -106,7 +106,7 @@
           <ion-col size=2>
             <ion-item lines="none">
               <ion-checkbox slot="start" color="secondary" checked="{{securityService.incomingRules.admin}}"
-                id="incoming-admin">
+                id="incoming-admin" (ionChange)="incomingChanged()">
               </ion-checkbox>
             </ion-item>
           </ion-col>
@@ -120,7 +120,7 @@
           <ion-col size=2>
             <ion-item lines="none">
               <ion-checkbox slot="start" color="secondary" checked="{{securityService.incomingRules.https}}"
-                id="incoming-https">
+                id="incoming-https"  (ionChange)="incomingChanged()">
               </ion-checkbox>
             </ion-item>
           </ion-col>
@@ -134,7 +134,7 @@
           <ion-col size=9>
             <ion-item lines="none">
               <ion-checkbox slot="start" color="secondary" checked="{{securityService.incomingRules.rdesktop}}"
-                id="incoming-rdesktop">
+                id="incoming-rdesktop" (ionChange)="incomingChanged()">
               </ion-checkbox>
             </ion-item>
           </ion-col>
@@ -147,7 +147,7 @@
           </ion-col>
           <ion-col size=10>
             <ion-item>
-              <ion-input type="text" value="{{securityService.incomingRules.other}}" id="incoming-other">
+              <ion-input type="text" value="{{securityService.incomingRules.other}}" id="incoming-other" (ionChange)="incomingChanged()">
               </ion-input>
             </ion-item>
           </ion-col>

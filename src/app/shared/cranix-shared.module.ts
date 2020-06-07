@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AgChartsAngularModule } from 'ag-charts-angular';
 import {
   MatTooltipModule,
+  MatIconModule
 } from "@angular/material";
 import { ToolbarComponent } from 'src/app/protected/toolbar/toolbar.component';
 import { IonicModule } from '@ionic/angular';
@@ -83,6 +84,7 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
   FormsModule,
   IonicModule,
   MatTooltipModule,
+  MatIconModule,
   ReactiveFormsModule,
   PipesModule,
   TranslateModule,
@@ -93,6 +95,7 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
     FormsModule,
     IonicModule,
     MatTooltipModule,
+    MatIconModule,
     PipesModule,
     ReactiveFormsModule,
     TranslateModule,

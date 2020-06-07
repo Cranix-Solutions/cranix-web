@@ -1,6 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpClientModule } from '@angular/common/http';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
+import { CanDeactivate } from '@angular/router';
 
 //Own Stuff
 import { UtilsService } from './utils.service';
@@ -21,6 +22,9 @@ export class SecurityService {
   incomingRules: IncomingRules;
   outgoingRules: OutgoingRule[];
   remoteRules: RemoteRule[];
+  public outgoinChanged: boolean = false;
+  public incomingChanged: boolean = false;
+  public remoteChanged: boolean = false;
 
   constructor(
     private authService: AuthenticationService,
@@ -111,3 +115,29 @@ export class SecurityService {
   }
 }
 
+
+@Injectable()
+export class FirewallCanDeactivate implements CanDeactivate<SecurityService> {
+  constructor(
+    public languageS: LanguageService,
+    public securityService: SecurityService
+  ) { }
+  canDeactivate(securityService: SecurityService) {
+    if ( this.securityService.outgoinChanged  ) {
+      return window.confirm(
+        this.languageS.trans('The outgoing rules was changed but not saved. Do you really want to cancel?')
+      );
+    }
+    if ( this.securityService.remoteChanged  ) {
+      return window.confirm(
+        this.languageS.trans('The remote rules was changed but not saved. Do you really want to cancel?')
+      );
+    }
+    if ( this.securityService.incomingChanged  ) {
+      return window.confirm(
+        this.languageS.trans('The incomming rules was changed but not saved. Do you really want to cancel?')
+      );
+    }
+    return true;
+  }
+}

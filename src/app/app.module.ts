@@ -50,6 +50,7 @@ import { AddPrinterComponent } from 'src/app/protected/cranix/devices/add-printe
 import '@ag-grid-enterprise/all-modules'
 import { AddOutgoingRuleComponent } from './protected/cranix/security/firewall/add-rules/add-outgoing-rule.component';
 import { AddRemoteRuleComponent } from './protected/cranix/security/firewall/add-rules/add-remote-rule.component';
+import { FirewallCanDeactivate } from 'src/app/services/security-service'
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -122,6 +123,7 @@ const routes: Routes = [
     CanActivateViaAcls,
     CephalixService,
     DevicesService,
+    FirewallCanDeactivate,
     GenericObjectService,
     GroupsService,
     HwconfsService,

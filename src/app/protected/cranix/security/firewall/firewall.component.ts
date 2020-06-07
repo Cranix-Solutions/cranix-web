@@ -65,30 +65,37 @@ export class FirewallComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log("readData called");
     this.securityService.readDatas();
   }
+
   segmentChanged(event) {
     this.segment = event.detail.value;
   }
-
+  incomingChanged() {
+    this.securityService.incomingRules.ssh = (<HTMLInputElement>document.getElementById('incoming-ssh')).checked;
+    this.securityService.incomingRules.admin = (<HTMLInputElement>document.getElementById('incoming-admin')).checked;
+    this.securityService.incomingRules.https = (<HTMLInputElement>document.getElementById('incoming-https')).checked;
+    this.securityService.incomingRules.rdesktop = (<HTMLInputElement>document.getElementById('incoming-rdesktop')).checked;
+    this.securityService.incomingRules.other = (<HTMLInputElement>document.getElementById('incoming-other')).value;
+    this.securityService.incomingChanged = true;
+  }
   applyChanges() {
     this.objectService.requestSent();
     switch (this.segment) {
       case 'in': {
-        this.securityService.incomingRules.ssh = (<HTMLInputElement>document.getElementById('incoming-ssh')).checked;
-        this.securityService.incomingRules.admin = (<HTMLInputElement>document.getElementById('incoming-admin')).checked;
-        this.securityService.incomingRules.https = (<HTMLInputElement>document.getElementById('incoming-https')).checked;
-        this.securityService.incomingRules.rdesktop = (<HTMLInputElement>document.getElementById('incoming-rdesktop')).checked;
-        this.securityService.incomingRules.other = (<HTMLInputElement>document.getElementById('incoming-other')).value;
         this.securityService.applyChange(this.securityService.incomingRules, 'incomingRules');
+        this.securityService.incomingChanged = false;
         break;
       }
       case 'out': {
-        this.securityService.applyChange(this.securityService.outgoingRules,'outgoingRules');
+        this.securityService.applyChange(this.securityService.outgoingRules, 'outgoingRules');
+        this.securityService.outgoinChanged = false;
         break;
       }
       case 'remote': {
-        this.securityService.applyChange(this.securityService.remoteRules,'remoteAccessRules');
+        this.securityService.applyChange(this.securityService.remoteRules, 'remoteAccessRules');
+        this.securityService.remoteChanged = false;
         break;
       }
     }
@@ -109,6 +116,7 @@ export class FirewallComponent implements OnInit {
       if (val.data) {
         console.log(this.securityService.outgoingRules);
         this.outApi.setRowData(this.securityService.outgoingRules);
+        this.securityService.outgoinChanged = true;
       }
     });
     (await modal).present();
@@ -124,6 +132,7 @@ export class FirewallComponent implements OnInit {
       }
     }
     console.log(newRules);
+    this.securityService.outgoinChanged = true;
     this.securityService.outgoingRules = newRules;
     this.outApi.setRowData(newRules);
   }
@@ -139,6 +148,7 @@ export class FirewallComponent implements OnInit {
       if (val.data) {
         console.log(this.securityService.remoteRules);
         this.remoteApi.setRowData(this.securityService.remoteRules);
+        this.securityService.remoteChanged = true;
       }
     });
     (await modal).present();
@@ -156,22 +166,23 @@ export class FirewallComponent implements OnInit {
     console.log(newRules);
     this.securityService.remoteRules = newRules;
     this.remoteApi.setRowData(newRules);
+    this.securityService.remoteChanged = true;
   }
   restartFirewall() {
     this.objectService.requestSent();
-    let sub = this.systemService.applyServiceState('SuSEfirewall2','running','restart').subscribe(
-      (val) => { this.objectService.responseMessage(val)},
-      (err) => { this.objectService.errorMessage(err)},
-      () => {sub.unsubscribe()}
-      );
+    let sub = this.systemService.applyServiceState('SuSEfirewall2', 'running', 'restart').subscribe(
+      (val) => { this.objectService.responseMessage(val) },
+      (err) => { this.objectService.errorMessage(err) },
+      () => { sub.unsubscribe() }
+    );
   }
   stopFirewall() {
     this.objectService.requestSent();
-    let sub = this.systemService.applyServiceState('SuSEfirewall2','running','false').subscribe(
-      (val) => { this.objectService.responseMessage(val)},
-      (err) => { this.objectService.errorMessage(err)},
-      () => {sub.unsubscribe()}
-      );
+    let sub = this.systemService.applyServiceState('SuSEfirewall2', 'running', 'false').subscribe(
+      (val) => { this.objectService.responseMessage(val) },
+      (err) => { this.objectService.errorMessage(err) },
+      () => { sub.unsubscribe() }
+    );
   }
   outGridReady(params) {
     this.outApi = params.api;
