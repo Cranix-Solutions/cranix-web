@@ -37,9 +37,9 @@ export class AccessInRoom  {
     direct: boolean = false;
     proxy: boolean = false;
     monday: boolean = true;
-    thursday: boolean = true;
-    wednesday: boolean = true;
     tuesday: boolean = true;
+    wednesday: boolean = true;
+    thursday: boolean = true;
     friday: boolean = true;
     saturday: boolean = false;
     sunday: boolean = false;
