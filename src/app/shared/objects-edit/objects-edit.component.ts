@@ -85,6 +85,7 @@ export class ObjectsEditComponent implements OnInit {
   onSubmit(object) {
     this.editForm.disable();
     this.splashScreen.show();
+    this.objectService.requestSent();
     console.log("onSubmit", object);
     if (this.objectType == 'settings') {
       return this.modalController.dismiss(object);
