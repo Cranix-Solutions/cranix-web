@@ -197,6 +197,7 @@ export class UsersComponent implements OnInit {
       delete user.msQuotaUsed;
       delete user.fsQuotaUsed;
       delete user.mailAliases;
+      action = 'add';
     }
     const modal = await this.modalCtrl.create({
       component: ObjectsEditComponent,
