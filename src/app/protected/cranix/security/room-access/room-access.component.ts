@@ -6,9 +6,11 @@ import { SecurityService } from 'src/app/services/security-service';
 import { RoomIdCellRenderer } from 'src/app/pipes/ag-roomid-render';
 import { AccessInRoom } from 'src/app/shared/models/secutiry-model';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
-import 'ag-grid-enterprise';
+import { AllModules } from '@ag-grid-enterprise/all-modules';
+import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
 import { ModalController } from '@ionic/angular';
-import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
+import {  AddEditRoomAccessComponent } from './add-edit-room-access/add-edit-room-access.component';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'cranix-room-access',
@@ -27,6 +29,7 @@ export class RoomAccessComponent implements OnInit {
   autoGroupColumnDef;
   defaultColDef;
   grouping = '';
+  modules = [ AllModules, RowGroupingModule ];
 
   constructor(
     public authService: AuthenticationService,
@@ -106,18 +109,20 @@ export class RoomAccessComponent implements OnInit {
         break
       }
       case 'roomId': {
+        this.grouping = 'pointInTime';
         this.autoGroupColumnDef = {
           headerName: this.languageS.trans('roomId'),
           minWidth: 150
         };
-        this.grouping = 'pointInTime';
-        break
+	//this.accessApi.setAutoGroupColumnDef(this.autoGroupColumnDef);
+        break;
       }
       case 'pointInTime': {
         this.autoGroupColumnDef = {
           headerName: this.languageS.trans('pointInTime'),
           minWidth: 150
         };
+	//this.accessApi.setAutoGroupColumnDef(this.autoGroupColumnDef);
         this.grouping = ''; break
       }
     }
@@ -150,7 +155,7 @@ export class RoomAccessComponent implements OnInit {
       accesInRoom = new AccessInRoom();
     }
     const modal = await this.modalCtrl.create({
-      component: ObjectsEditComponent,
+      component:     AddEditRoomAccessComponent,
       cssClass: 'medium-modal',
       componentProps: {
         objectType: "access",
@@ -163,7 +168,8 @@ export class RoomAccessComponent implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
+        console.log("Object was created or modified or deleted", dataReturned.data)
+        this.readDatas();
       }
     });
     (await modal).present();
@@ -172,9 +178,12 @@ export class RoomAccessComponent implements OnInit {
 
   }
 
-  addStatus() {
-
-  }
-
-  delete() { }
+  delete() {
+    this.accessSelected = this.accessApi.getSelectedRows();
+    for( let obj of this.accessSelected ){
+      this.securityService.deleteAccessInRoom(obj.id);
+      setTimeout(() => {  console.log("World!"); }, 1000);
+    }
+    this.readDatas();
+   }
 }

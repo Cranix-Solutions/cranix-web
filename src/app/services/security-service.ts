@@ -96,6 +96,47 @@ export class SecurityService {
     );
   }
 
+  addAccessInRoom(accessInRoom: AccessInRoom) {
+    this.url = this.hostname + "/rooms/" + accessInRoom.roomId + "/accessList";
+    console.log(this.url);
+    this.objectService.requestSent();
+    let sub =  this.http.post<ServerResponse>(this.url, accessInRoom, { headers: this.headers }).subscribe(
+      (val) => {
+        let serverResponse = val;
+        if (serverResponse.code == "OK") {
+          this.objectService.okMessage(this.languageS.transResponse(serverResponse));
+          this.modalCtrl.dismiss("success");
+        } else {
+          this.objectService.errorMessage("" + serverResponse.value);
+        }
+      },
+      (err) => {
+        this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
+      },
+      () => { sub.unsubscribe() }
+    );
+  }
+  
+  deleteAccessInRoom(id: number) {
+    this.url = this.hostname + "/rooms/accessList/" + id;
+    console.log(this.url);
+    this.objectService.requestSent();
+    let sub =  this.http.delete<ServerResponse>(this.url,  { headers: this.headers }).subscribe(
+      (val) => {
+        let serverResponse = val;
+        if (serverResponse.code == "OK") {
+          this.objectService.okMessage(this.languageS.transResponse(serverResponse));
+        } else {
+          this.objectService.errorMessage("" + serverResponse.value);
+        }
+      },
+      (err) => {
+        this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
+      },
+      () => { sub.unsubscribe() }
+    );
+  }
+
   readDatas() {
     let sub1 = this.getIncomingRules().subscribe(
       (val) => { this.incomingRules = val; },

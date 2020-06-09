@@ -40,9 +40,9 @@
             <ion-icon slot="icon-only" name="trash"></ion-icon>
           </ion-button>
           <ion-button *ngIf="segment == 'list'" size="small" (click)="createColumDef()"
-          matTooltip="{{'Change grouping of the table.' | translate }}">
-          <ion-icon slot="icon-only" name="list"></ion-icon>
-        </ion-button>
+            matTooltip="{{'Change grouping of the table.' | translate }}">
+            <ion-icon slot="icon-only" name="list"></ion-icon>
+          </ion-button>
           <ion-button size="small" (click)="restartFirewall()" matTooltip="{{'Restart firewall.' | translate }}">
             <ion-icon slot="icon-only" name="refresh"></ion-icon>
           </ion-button>
@@ -51,20 +51,20 @@
     </ion-card-header>
     <ion-card-content>
       <ag-grid-angular *ngIf="segment == 'list'" 
-       #accessGrid
-        style="width: 100%; height: 100%;"
+        #accessGrid style="width: 100%; height: 100%;"
         id="accessGridTable"
         class="{{authService.settings.agGridThema}}"
+        [modules]="modules"
+        rowMultiSelectWithClick="true"
+        rowSelection="multiple"
         [columnDefs]="columnDefs"
         [defaultColDef]="defaultColDef"
         [autoGroupColumnDef]="autoGroupColumnDef"
         [animateRows]="true"
         [rowData]="accessData"
         [context]="context"
-        rowSelection="multiple"
         [deltaColumnMode]="true"
-        (gridReady)="accessGridReady($event)"
-        >
+        (gridReady)="accessGridReady($event)">
       </ag-grid-angular>
     </ion-card-content>
   </ion-card>
