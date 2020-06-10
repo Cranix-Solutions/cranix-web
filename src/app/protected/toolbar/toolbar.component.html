@@ -5,6 +5,9 @@
     </ion-buttons>
     <ion-title>{{authService.session.commonName}}  {{authService.session.instituteName}} {{authService.session.roomName}}</ion-title>
     <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="objectService.initialize(true)" matTooltip="{{ 'Refresh all objects' | translate }}">
+        <ion-icon color="tertiary" name="refresh"></ion-icon>
+      </ion-button>
       <ion-button fill="clear" (click)="closeWindow()">
         <ion-badge color="secondary" slot="end">118k</ion-badge>
       </ion-button>

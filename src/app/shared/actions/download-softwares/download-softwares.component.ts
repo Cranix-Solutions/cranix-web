@@ -7,6 +7,7 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { Package } from 'src/app/shared/models/data-model';
 import { ServerResponse } from 'src/app/shared/models/server-models';
 import { LanguageService } from 'src/app/services/language.service';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'cranix-download-softwares',
@@ -22,6 +23,7 @@ export class DownloadSoftwaresComponent implements OnInit {
   title = 'app';
   packages: Package[] = [];
   constructor(
+    public authService: AuthenticationService,
     public objectService: GenericObjectService,
     private softwareService: SoftwareService,
     public modalController: ModalController,

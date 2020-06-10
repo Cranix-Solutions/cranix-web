@@ -36,23 +36,23 @@
   <ion-card>
     <ion-card-header>
       <ion-row>
-        <ion-col size="12" size-lg="6" size-xl="6">
-          <ion-segment (ionChange)="segmentChanged($event)">
-            <ion-segment-button value="in">
+        <ion-col size="12" size-lg="8" size-xl="">
+          <ion-segment scrollable="true" (ionChange)="segmentChanged($event)" color="secondary" value="in">
+            <ion-segment-button value="in" layout="icon-start">
               <ion-label class="hidden-xs hidden-sm">{{'Incoming rules' | translate}}</ion-label>
               <ion-icon name="log-in"></ion-icon>
             </ion-segment-button>
-            <ion-segment-button value="out">
+            <ion-segment-button value="out" layout="icon-end">
               <ion-label class="hidden-xs hidden-sm">{{'Outgoing rules' | translate}}</ion-label>
               <ion-icon name="log-out"></ion-icon>
             </ion-segment-button>
-            <ion-segment-button value="remote">
+            <ion-segment-button value="remote" layout="icon-start">
               <ion-label class="hidden-xs hidden-sm">{{'Remote access' | translate}}</ion-label>
               <ion-icon name="shuffle"></ion-icon>
             </ion-segment-button>
           </ion-segment>
         </ion-col>
-        <ion-col offset="2" size="4" class="ion-align-self-center ion-text-end hidden-xs hidden-sm hidden-md">
+        <ion-col  size="4" class="ion-align-self-center ion-text-end hidden-xs hidden-sm hidden-md">
           <ion-button size="small" (click)="applyChanges()" matTooltip="{{'Apply changes.' | translate }}">
             <ion-icon slot="icon-only" name="checkmark-sharp"></ion-icon>
           </ion-button>
@@ -154,14 +154,16 @@
         </ion-row>
       </ion-grid>
       <ag-grid-angular *ngIf="segment == 'out'" style="width: 100%; height: 100%;"
-        class="{{authService.settings.agGridThema}}" [rowData]="securityService.outgoingRules"
-        [columnDefs]="outColumnDefs" [defaultColDef]="defaultColDef" [context]="context" rowSelection="multiple"
+        class="{{authService.settings.agGridThema}}" [rowData]="securityService.outgoingRules" 
+        [columnDefs]="outColumnDefs" [defaultColDef]="defaultColDef" [context]="context" rowSelection="multiple" 
+        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
         (gridReady)="outGridReady($event)" (selectionChanged)="outSelectionChanged()" [deltaColumnMode]="true"
         id="outGridTable">
       </ag-grid-angular>
       <ag-grid-angular *ngIf="segment == 'remote'" style="width: 100%; height: 100%;"
         class="{{authService.settings.agGridThema}}" [rowData]="securityService.remoteRules"
-        [columnDefs]="remoteColumnDefs" [context]="context" rowSelection="multiple"
+        [columnDefs]="remoteColumnDefs" [context]="context" rowSelection="multiple" 
+        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
         (gridReady)="remoteGridReady($event)" (selectionChanged)="remoteSelectionChanged()" id="remoteGridTable">
       </ag-grid-angular>
     </ion-card-content>
