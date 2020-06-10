@@ -1,4 +1,3 @@
-<cranix-toolbar></cranix-toolbar>
 <ion-content id="carded">
   <ion-row class="header-row">
     <ion-col size=6>
@@ -30,7 +29,7 @@
               <ion-label>{{'Basic configuration' | translate}}</ion-label>
             </ion-segment-button>
             <ion-segment-button value="positive">
-              <ion-label>{{'Positiv lists' | translate}}</ion-label>
+              <ion-label>{{'Positive lists' | translate}}</ion-label>
             </ion-segment-button>
           </ion-segment>
         </ion-col>
@@ -51,6 +50,18 @@
       </ion-row>
     </ion-card-header>
     <ion-card-content>
+     <ag-grid-angular
+        style="width: 100%; height: 100%;"
+        class="{{authService.settings.agGridThema}}"
+        [rowData]="proxyData"
+        [gridOptions]="proxyOptions" 
+        [columnDefs]="columnDefs"
+        [context]="context"
+        rowSelection="multiple"
+        (gridReady)="proxyGridReady($event)"
+        (selectionChanged)="proxySelectionChanged()"
+        id="proxyGridTable">
+      </ag-grid-angular>
     </ion-card-content>
   </ion-card>
 </ion-content>

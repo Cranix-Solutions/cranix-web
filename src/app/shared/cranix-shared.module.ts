@@ -3,29 +3,17 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AgChartsAngularModule } from 'ag-charts-angular';
 import {
-  MatDatepickerModule,
-  MatNativeDateModule,
-  MatStepperModule,
-  MatButtonModule,
-  MatCheckboxModule,
-  MatExpansionModule,
-  MatFormFieldModule,
-  MatInputModule,
-  MatOptionModule,
-  MatSelectModule,
-  MatIconModule,
-  MatPaginatorModule,
-  MatSortModule,
   MatTooltipModule,
+  MatIconModule
 } from "@angular/material";
 import { ToolbarComponent } from 'src/app/protected/toolbar/toolbar.component';
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { PipesModule } from 'src/app/pipes/pipe-modules';
-//import { AgGridModule } from 'ag-grid-angular';
 import { AgGridModule } from 'ag-grid-angular';
 import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
-import  { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
+import { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
+import { CheckBoxBTNRenderer } from 'src/app/pipes/ag-checkbox-renderer';
 import { GroupActionBTNRenderer } from 'src/app/pipes/ag-group-renderer';
 import { UserActionBTNRenderer } from 'src/app/pipes/ag-user-renderer';
 import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
@@ -65,7 +53,8 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
     UserIdCellRenderer,
     UserIdToNameCellRenderer,
     ToolbarComponent,
-    YesNoBTNRenderer
+    YesNoBTNRenderer,
+    CheckBoxBTNRenderer
   ],
   imports: [
     AgChartsAngularModule,
@@ -89,24 +78,13 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
     UserActionBTNRenderer,
     UserIdCellRenderer,
     UserIdToNameCellRenderer,
-    YesNoBTNRenderer
+    YesNoBTNRenderer,
+    CheckBoxBTNRenderer,
   ]),
   FormsModule,
   IonicModule,
-  MatDatepickerModule,
-  MatNativeDateModule,
-  MatStepperModule,
-  MatButtonModule,
-  MatCheckboxModule,
-  MatExpansionModule,
-  MatFormFieldModule,
-  MatInputModule,
-  MatOptionModule,
-  MatSelectModule,
-  MatIconModule,
-  MatPaginatorModule,
-  MatSortModule,
   MatTooltipModule,
+  MatIconModule,
   ReactiveFormsModule,
   PipesModule,
   TranslateModule,
@@ -116,20 +94,8 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
     AgGridModule,
     FormsModule,
     IonicModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatStepperModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatExpansionModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatOptionModule,
-    MatSelectModule,
-    MatIconModule,
-    MatPaginatorModule,
-    MatSortModule,
     MatTooltipModule,
+    MatIconModule,
     PipesModule,
     ReactiveFormsModule,
     TranslateModule,

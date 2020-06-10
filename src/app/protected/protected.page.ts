@@ -46,7 +46,7 @@ export class ProtectedPage implements OnInit {
     {
       title: 'Rooms',
       url: '/pages/cranix/rooms',
-      icon: 'home'
+      icon: 'room'
     },
     {
       title: 'Devices',

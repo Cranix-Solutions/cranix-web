@@ -48,6 +48,7 @@ export class InstitutesSyncObjectsComponent implements OnInit {
         field: 'objectType',
         rowGroup: true,
         hide: true,
+        cellStyle: { 'justify-content': "left" },
         valueGetter: function (params) {
           return params.context['componentParent'].languageS.trans(params.data.objectType + "s");
         }
@@ -63,6 +64,7 @@ export class InstitutesSyncObjectsComponent implements OnInit {
       headerCheckboxSelection: false,
       headerCheckboxSelectionFilteredOnly: true,
       checkboxSelection: true,
+      cellStyle: { 'justify-content': "left" },
       valueGetter: function (params) { return " "; },
       minWidth: 250
     };

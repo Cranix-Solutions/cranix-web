@@ -180,16 +180,17 @@ export class AuthenticationService {
     isRouteAllowed(route: string) {
         switch (route) {
             case "/pages/cephalix/customers": { return this.isAllowed('customer.manage') }
-            case "/pages/cephalix/institutes/all": { return this.isAllowed('cephalix.manage') }
             case "/pages/cephalix/institutes": { return this.isAllowed('cephalix.manage') }
+            case "/pages/cephalix/institutes/all": { return this.isAllowed('cephalix.manage') }
             case "/pages/cephalix/tickets": { return this.isAllowed('cephalix.ticket') }
-            case "/pages/cranix/devices/all": { return this.isAllowed('device.manage') }
             case "/pages/cranix/devices": { return this.isAllowed('device.manage') }
+            case "/pages/cranix/devices/all": { return this.isAllowed('device.manage') }
             case "/pages/cranix/groups": { return this.isAllowed('group.manage') }
             case "/pages/cranix/hwconfs": { return this.isAllowed('hwconf.manage') }
             case "/pages/cranix/rooms": { return this.isAllowed('room.manage') }
-            case "/pages/cranix/users/all": { return this.isAllowed('user.manage') }
+	    case "/pages/cranix/rooms/all": { return this.isAllowed('room.manage') }
             case "/pages/cranix/users": { return this.isAllowed('user.manage') }
+            case "/pages/cranix/users/all": { return this.isAllowed('user.manage') }
             case "/pages/cranix/system": { return this.isAllowed('system.status') }
             case "/pages/cranix/softwares": { return this.isAllowed('software.manage') }
             case "/pages/cranix/security": { return this.isOneOfAllowed(['system.firewall','system.proxy']) }

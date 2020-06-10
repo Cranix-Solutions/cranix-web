@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { RoomsPage } from './rooms.page';
+import { AddRemoteRuleComponent } from './add-remote-rule.component';
 
-describe('RoomsPage', () => {
-  let component: RoomsPage;
-  let fixture: ComponentFixture<RoomsPage>;
+describe('AddRemoteRuleComponent', () => {
+  let component: AddRemoteRuleComponent;
+  let fixture: ComponentFixture<AddRemoteRuleComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RoomsPage ],
+      declarations: [ AddRemoteRuleComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(RoomsPage);
+    fixture = TestBed.createComponent(AddRemoteRuleComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

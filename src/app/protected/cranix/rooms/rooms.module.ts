@@ -8,13 +8,16 @@ import { IonicModule } from '@ionic/angular';
 import { CanActivateViaAcls } from 'src/app/services/auth-guard.service';
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { PipesModule } from 'src/app/pipes/pipe-modules';
-import { RoomsPage } from './rooms.page';
 
 const routes: Routes = [
   {
     path: 'rooms',
     canActivate: [CanActivateViaAcls],
-    component: RoomsPage
+    loadChildren: () => import('./lists/rooms-lists.module').then( m => m.RoomsListsModule)
+  },
+  {
+    path:        '',
+    redirectTo: 'all'
   }
 ];
 
@@ -26,7 +29,7 @@ const routes: Routes = [
     IonicModule,
     CranixSharedModule
   ],
-  declarations: [ RoomsPage ],
+  declarations: [ ],
   providers: [TranslateService, PipesModule]
 })
 export class RoomsPageModule {}

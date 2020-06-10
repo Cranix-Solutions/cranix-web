@@ -1,0 +1,65 @@
+<form #addEditRoomAccess="ngForm" (ngSubmit)="onSubmit(addEditRoomAccess.value)">
+  <ion-header translucent>
+    <ion-toolbar>
+      <ion-title>{{  objectActionTitle | translate }}</ion-title>
+      <ion-buttons slot="end">
+        <ion-button type="submit" class="ion-no-margin" [disabled]="!addEditRoomAccess.valid">
+          <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+        </ion-button>
+        <ion-button *ngIf="objectAction == 'modify'" fill="clear" size="small" (click)="deleteObject()">
+          <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" size="small" (click)="closeWindow()">
+          <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen>
+    <ion-list lines="full" class="ion-no-margin ion-no-padding">
+      <div *ngFor=" let key of objectKeys">
+        <ion-item *ngIf="key == 'roomId'">
+          <ion-label position="stacked">{{'roomId'| translate}}</ion-label>
+          <ion-select type="text" [(ngModel)]="roomAccess.roomId" name="roomId" required
+            [compareWith]="objectService.compareFn">
+            <ion-select-option *ngFor="let id of objectService.selects['roomId']" value="{{id}}">
+              {{id | idToName:'room'}}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item *ngIf="key == 'accessType'">
+          <ion-label position="stacked">{{'accessType'| translate}}</ion-label>
+          <ion-select type="text" [(ngModel)]="roomAccess.accessType" name="accessType" required [compareWith]="objectService.compareFn">
+            <ion-select-option *ngFor="let accessType of objectService.selects['accessType']" value="{{accessType}}">
+              {{accessType | translate}}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item *ngIf="key == 'action'">
+          <ion-label position="stacked">{{'action'| translate}}</ion-label>
+          <ion-select type="text" [(ngModel)]="roomAccess.action" name="action" required [compareWith]="objectService.compareFn" [disabled]="roomAccess.accessType != 'ACT'">
+            <ion-select-option *ngFor="let action of objectService.selects['action']" value="{{action}}">
+              {{action | translate}}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item *ngIf="key == 'pointInTime'">
+          <ion-label position="stacked">{{ key | translate }}</ion-label>
+          <ion-input type="text" [(ngModel)]="roomAccess.pointInTime" name="pointInTime" [disabled]="roomAccess.accessType == 'DEF'"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="key == 'login' || key == 'portal' || key == 'printing' || key == 'proxy' || key == 'direct'"
+          [disabled]="roomAccess.accessType == 'ACT'">
+          <ion-label position="stacked">{{ key | translate }}</ion-label>
+          <ion-checkbox slot="end" [(ngModel)]="roomAccess[key]" name="{{key}}" color="secondary" checked>
+          </ion-checkbox>
+        </ion-item>
+        <ion-item
+          *ngIf="key == 'monday' || key == 'tuesday' || key == 'wednesday' || key == 'thursday' || key == 'friday' || key == 'saturday' || key == 'sunday' || key == 'holiday'"
+          [disabled]="roomAccess.accessType == 'DEF'">
+          <ion-label position="stacked">{{ key | translate }}</ion-label>
+          <ion-checkbox slot="end" [(ngModel)]="roomAccess[key]" name="{{key}}" color="secondary"></ion-checkbox>
+        </ion-item>
+      </div>
+    </ion-list>
+  </ion-content>
+</form>
