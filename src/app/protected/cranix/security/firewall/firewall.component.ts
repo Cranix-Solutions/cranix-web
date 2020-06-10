@@ -45,8 +45,7 @@ export class FirewallComponent implements OnInit {
     this.outColumnDefs = [
       {
         field: 'name',
-        headerName: this.languageS.trans('name'),
-        checkboxSelection: true,
+        headerName: this.languageS.trans('name')
       },
       { field: 'type', headerName: this.languageS.trans('type') },
       { field: 'dest', headerName: this.languageS.trans('dest') },
@@ -56,8 +55,7 @@ export class FirewallComponent implements OnInit {
     this.remoteColumnDefs = [
       {
         field: 'name',
-        headerName: this.languageS.trans('name'),
-        checkboxSelection: true,
+        headerName: this.languageS.trans('name')
       },
       { field: 'ext', headerName: this.languageS.trans('external port') },
       { field: 'port', headerName: this.languageS.trans('internal port') }

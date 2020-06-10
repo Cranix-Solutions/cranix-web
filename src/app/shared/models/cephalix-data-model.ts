@@ -107,7 +107,7 @@ export class Repository{
     constructor() {}
 }
 
-export class OssCare{
+export class CrxCare{
     id?: number;
     cephalixInstituteId: number = 0;
     description: string = "";

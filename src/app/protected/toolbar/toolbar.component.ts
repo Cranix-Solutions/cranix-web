@@ -6,6 +6,7 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { Settings } from 'src/app/shared/models/data-model';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
 
 @Component({
   selector: 'cranix-toolbar',
@@ -22,6 +23,7 @@ export class ToolbarComponent implements OnInit {
     public alertController: AlertController,
     public storage: Storage,
     public translateService: LanguageService,
+    public objectService: GenericObjectService,
     public modalConroller: ModalController
   ) {
     this.commonName = authService.session.commonName;
@@ -29,7 +31,8 @@ export class ToolbarComponent implements OnInit {
     this.instituteName  = authService.session.instituteName;
   }
 
-  ngOnInit() { }
+  ngOnInit() { 
+  }
 
   async logOut(ev: Event) {
     const alert = await this.alertController.create({
