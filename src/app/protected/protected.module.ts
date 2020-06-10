@@ -14,6 +14,9 @@ const routes: Routes = [
         },
         { path: 'cranix',
           loadChildren: () => import('./cranix/cranix.module').then(m => m.CranixModule)
+        },{
+          path: 'edu',
+          loadChildren: () => import('./edu/edu.module').then(m => m.EduModule)
         }
     ]
   }

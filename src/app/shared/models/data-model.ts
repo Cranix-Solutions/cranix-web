@@ -386,3 +386,30 @@ export class SystemConfig {
 	help: string = "";
 	constructor() { }
 }
+export interface SmartRoom{
+    id?: number, 
+    name: string, 
+    description: string, 
+    validFrom?: number, 
+    validUntil?: number,
+    ownerId?: number, 
+    deviceIds?: number[],
+    hwConfIds?: number [],
+    roomIds?: number [],
+    userIds?: number [],
+    groupIds?: number [],
+    announcementIds?: number [],
+  }
+
+export interface SmartRoomStatus{
+    userId: number, 
+    deviceId: number
+}
+
+export interface PositivListObj{
+    id?: number,
+    description: string,
+    name: string,
+    subject: string,
+    domains: string
+}
