@@ -37,7 +37,7 @@ export interface ServerResponse {
 
 }
 
-export class OssActionMap {
+export class CrxActionMap {
 	objectIds: number[] = [];
 	booleanValue: boolean= true;
 	longValue: number= 0;

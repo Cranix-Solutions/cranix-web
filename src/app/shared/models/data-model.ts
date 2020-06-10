@@ -374,6 +374,9 @@ export class Settings {
 	errorMessageDuration: number = 10;
 	okMessageDuration: number = 10;
 	warningMessageDuration: number = 6;
+	rowMultiSelectWithClick: boolean = true;
+	checkboxSelection: boolean = true;
+	headerCheckboxSelection: boolean = true;
 	constructor() { }
 }
 

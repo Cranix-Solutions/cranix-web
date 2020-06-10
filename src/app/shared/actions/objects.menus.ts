@@ -1,60 +1,86 @@
 export const deviceMenu = [
   {
     "enabled": true,
-    "icon":"alarm",
+    "icon":"power",
+    "color":"success",
     "action": "wol"
   },
   {
     "enabled": true,
     "icon":"power",
+    "color":"danger",
     "action": "shutdown"
   },
   {
     "enabled": true,
     "icon":"refresh",
+    "color":"danger",
     "action": "reboot"
   },
   {
     "enabled": true,
-    "icon":"alarm",
+    "icon":"lock-open",
+    "color":"success",
     "action": "open"
   },
   { "enabled": true,
-    "icon":"alarm",
+    "icon":"lock-closed",
+    "color":"danger",
     "action": "close"
   },
   { "enabled": true,
-    "icon":"walkt",
+    "icon":"log-out",
+    "color":"danger",
     "action": "logout"
   }]
 
 export const  groupMenu = [
+]
+
+export const hwconfMenu = [
   {
     "enabled": true,
-    "icon":"receipt",
-    "action": "import"
+    "icon":"power",
+    "color":"success",
+    "action": "startClone"
   },
+  {
+    "enabled": true,
+    "icon":"power",
+    "color":"danger",
+    "action": "stopClone"
+  },
+  {
+    "enabled": true,
+    "icon":"cut",
+    "color":"danger",
+    "action": "cleanUp"
+    }
 ]
 
 export const  instituteMenu = [
   {
     "enabled": true,
     "icon":"trending-up",
+    "color":"seconary",
     "action": "serverUpdate"
   },
   {
     "enabled": true,
     "icon":"cloud-upload",
+    "color":"danger",
     "action": "serverUploadFile"
   },
   {
     "enabled": true,
     "icon":"refresh",
+    "color":"danger",
     "action": "serverReboot"
   },
   {
     "enabled": true,
     "icon":"power",
+    "color":"danger",
     "action": "serverShutdown"
   },
 ]
@@ -62,80 +88,101 @@ export const  instituteMenu = [
 export const  roomMenu = [
   {
     "enabled": true,
-    "icon":"alarm",
+    "icon":"power",
+    "color":"success",
     "action": "wol"
   },
   {
     "enabled": true,
     "icon":"power",
+    "color":"danger",
     "action": "shutdown"
   },
   {
     "enabled": true,
     "icon":"refresh",
+    "color":"danger",
     "action": "reboot"
   },
   {
     "enabled": true,
-    "icon":"alarm",
+    "icon":"lock-open",
+    "color":"success",
     "action": "open"
   },
   {
     "enabled": true,
-    "icon":"alarm",
+    "icon":"lock-closed",
+    "color":"danger",
     "action": "close"
   },
   {
     "enabled": true,
-    "icon":"walk",
+    "icon":"log-out",
+    "color":"danger",
     "action": "logout"
-  },
-  {
-    "enabled": true,
-    "icon":"receipt",
-    "action": "importRooms"
   }
 ]
 
 export const userMenu = [
   {
-    "icon":"key",
     "enabled": true,
+    "icon":"key",
+    "color":"secondary",
     "action": "changePassword"
   },
   {
     "enabled": true,
     "icon":"cut",
+    "color":"secondary",
     "action": "removeProfiles"
   },
   {
     "enabled": true,
-    "icon":"stop-circle",
+    "icon":"log-in",
+    "color":"danger",
     "action": "disableLogin"
   },
   {
     "enabled": true,
+    "icon":"log-in",
+    "color":"success",
+    "action": "enableLogin"
+  },
+  {
+    "enabled": true,
     "icon":"cloud-offline",
+    "color":"danger",
     "action": "disableInternet"
   },
   {
     "enabled": true,
+    "icon":"cloud-done",
+    "color":"success",
+    "action": "enableInternet"
+  },
+  {
+    "enabled": true,
     "icon":"file-tray",
+    "color":"secondary",
     "action": "mandatoryProfile"
   },
   {
     "enabled": true,
     "icon":"file-tray",
+    "color":"danger",
     "action": "copyTemplate"
   },
   {
     "enabled": true,
     "icon":"file-tray-full",
+    "color":"secondary",
     "action": "setFilesystemQuota"
   },
   {
     "enabled": true,
     "icon":"mail",
+    "color":"secondary",
     "action": "setMailSystemQuota"
   }
 ];

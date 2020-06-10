@@ -5,8 +5,8 @@ import { UtilsService } from './utils.service';
 import { Observable } from 'rxjs/internal/Observable';
 import { BehaviorSubject } from 'rxjs';
 
-import { Customer, Institute, Ticket, Article, Notice, OssCare, SynchronizedObject } from 'src/app/shared/models/cephalix-data-model';
-import { ServerResponse, OssActionMap } from 'src/app/shared/models/server-models';
+import { Customer, Institute, Ticket, Article, Notice, CrxCare, SynchronizedObject } from 'src/app/shared/models/cephalix-data-model';
+import { ServerResponse, CrxActionMap } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from './auth.service';
 import { InstituteStatus } from 'src/app/shared/models/cephalix-data-model';
 
@@ -125,18 +125,18 @@ export class CephalixService {
 		console.log(this.url);
 		return this.http.get<Notice[]>(this.url, { headers: this.headers });
 	}
-	getOssCaerOfInst(id: number){
+	getCrxCaerOfInst(id: number){
 		this.url = this.hostname + `/customers/institutes/${id}/osscare`;
 		console.log(this.url);
 		const headers = new HttpHeaders({
 			'Accept': "application/json",
 			'Authorization': "Bearer " + this.token
 		});
-		return this.http.get<OssCare[]>(this.url, { headers: this.headers });
+		return this.http.get<CrxCare[]>(this.url, { headers: this.headers });
 	}
 
 	//POST
-	applyAction(actionMap: OssActionMap ){
+	applyAction(actionMap: CrxActionMap ){
 		this.url = this.hostname + `/institutes/applyAction`;
 		console.log(this.url);
 		return this.http.post<ServerResponse>(this.url,actionMap, { headers: this.headers});
@@ -149,7 +149,7 @@ export class CephalixService {
 		this.url = this.hostname + `/institutes/copyFile`;
 		return this.http.post<ServerResponse>(this.url,fd, { headers: this.headers});
 	}
-	setOssCareToInst(id: number, ossCare: OssCare){
+	setCrxCareToInst(id: number, ossCare: CrxCare){
 		this.url = this.hostname + `/customers/institutes/${id}/osscare`;
 		return this.http.post<ServerResponse>(this.url,ossCare, { headers: this.headers});
 	}

@@ -25,7 +25,8 @@ showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
         [rowData]="memberData" [columnDefs]="columnDefs" [context]="context" [rowSelection]="memberSelection"
         (gridReady)="onMemberReady($event)" (selectionChanged)="onMemberSelectionChanged()" id="memberTable"
         [rowGroupPanelShow]="rowGroupPanelShow"
-        [autoGroupColumnDef]="autoGroupColumnDef">
+        [autoGroupColumnDef]="autoGroupColumnDef"
+	[rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick">
       </ag-grid-angular>
     </ion-card-content>
   </ion-card>

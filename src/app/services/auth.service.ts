@@ -55,7 +55,12 @@ export class AuthenticationService {
                 (val) => {
                     this.storage.get('myCranixSettings').then((val) => {
                         if (val && val != "") {
-                            this.settings = JSON.parse(val);
+				let tmp = JSON.parse(val);
+				for( let key in Object.getOwnPropertyNames(this.settings) ) {
+					if( key in tmp ) {
+						this.settings[key] = tmp[key];
+					}
+				}
                         }
                     });
                     console.log('login respons is', val);

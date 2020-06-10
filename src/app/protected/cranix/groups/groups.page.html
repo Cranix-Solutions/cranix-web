@@ -40,7 +40,9 @@
     </ion-card-header>
     <ion-card-content>
       <ag-grid-angular style="width: 100%; height: 100%;"class="{{authService.settings.agGridThema}}" [gridOptions]="gridOptions"
-        [rowData]="rowData" [columnDefs]="columnDefs" [context]="context" [rowSelection]="rowSelection"
+        [rowData]="rowData" [columnDefs]="columnDefs" [context]="context"
+        rowSelection="multiple"
+        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
         (gridReady)="onGridReady($event)" (gridSizeChanged)="onGridSizeChange($event)" (selectionChanged)="onSelectionChanged()" id="agGridTable">
       </ag-grid-angular>
     </ion-card-content>

@@ -169,6 +169,10 @@ export class GenericObjectService {
       },
       () => { sub.unsubscribe() });
   }
+  /**
+   * Loads the object of type 'objectType' from the server
+   * @param objectType 
+   */
   getAllObject(objectType) {
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";
     let sub = this.http.get(url, { headers: this.headers }).subscribe(

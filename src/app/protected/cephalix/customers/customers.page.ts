@@ -27,7 +27,6 @@ export class CustomersPage implements OnInit {
   columnDefs = [];
   gridApi: GridApi;
   columnApi: ColumnApi;
-  rowSelection;
   context;
   selected: Customer[] = [];
   title = 'app';
@@ -55,8 +54,6 @@ export class CustomersPage implements OnInit {
       rowHeight: 35
     }
     this.context = { componentParent: this };
-    this.rowSelection = 'multiple';
-
   }
   ngOnInit() {
     this.storage.get('CustomersPage.displayedColumns').then((val) => {

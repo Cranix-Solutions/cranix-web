@@ -4,10 +4,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { AlertController } from '@ionic/angular';
 //Own stuff
-import { userMenu, groupMenu, roomMenu, deviceMenu, instituteMenu } from './objects.menus';
-import { OssActionMap, ServerResponse } from 'src/app/shared/models/server-models';
+import { userMenu, groupMenu, roomMenu, deviceMenu, instituteMenu, hwconfMenu } from './objects.menus';
+import { CrxActionMap, ServerResponse } from 'src/app/shared/models/server-models';
 import { LanguageService } from 'src/app/services/language.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { UtilsService } from 'src/app/services/utils.service';
+import { AuthenticationService } from 'src/app/services/auth.service';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
 
 
 @Component({
@@ -16,12 +20,8 @@ import { CephalixService } from 'src/app/services/cephalix.service';
   styleUrls: ['./actions.component.scss'],
 })
 export class ActionsComponent implements OnInit {
-
-
-  actionFunction: Function;
-  actionMap: OssActionMap = new OssActionMap();
   objectIds: number[] = [];
-  selection: any[]= [];
+  selection: any[] = [];
   columns: string[] = [];
   count: number = 0;
   objectType: string = '';
@@ -31,6 +31,7 @@ export class ActionsComponent implements OnInit {
     "name": "CSV Export",
     "icon": "download-outline",
     "action": "csv-export",
+    "color": "secondary",
     "enabled": true
   }]
 
@@ -38,8 +39,12 @@ export class ActionsComponent implements OnInit {
     "name": "Delete",
     "enabled": true,
     "icon": "trash",
+    "color": "danger",
     "action": "delete"
   }]
+  token: string;
+  hostname: string;
+  headers: HttpHeaders;
 
   constructor(
     public alertController: AlertController,
@@ -47,12 +52,20 @@ export class ActionsComponent implements OnInit {
     private popoverController: PopoverController,
     public translateService: TranslateService,
     private languageService: LanguageService,
-    private cephalixService: CephalixService
-    
-  ) {
+    public objectService: GenericObjectService,
+    private http: HttpClient,
+    private utilsS: UtilsService,
+    private authS: AuthenticationService) {
+    this.hostname = this.utilsS.hostName();
+    this.token = this.authS.getToken();
+    this.headers = new HttpHeaders({
+      'Content-Type': "application/json",
+      'Accept': "application/json",
+      'Authorization': "Bearer " + this.token
+    });
     this.objectType = this.navParams.get('objectType');
-    this.objectIds     = this.navParams.get('objectIds');
-    this.selection      = this.navParams.get('selection');
+    this.objectIds = this.navParams.get('objectIds');
+    this.selection = this.navParams.get('selection');
     if (this.objectIds) {
       this.count = this.objectIds.length;
     }
@@ -66,9 +79,10 @@ export class ActionsComponent implements OnInit {
       this.menu = this.commonMenu.concat(deviceMenu).concat(this.commonLastMenu);
     } else if (this.objectType == "institute") {
       this.menu = this.commonMenu.concat(instituteMenu).concat(this.commonLastMenu);
-      this.actionFunction = this.cephalixService.applyAction;
     } else if (this.objectType == "group") {
       this.menu = this.commonMenu.concat(groupMenu).concat(this.commonLastMenu);
+    } else if (this.objectType == "hwconf") {
+      this.menu = this.commonMenu.concat(hwconfMenu).concat(this.commonLastMenu);
     }
   }
 
@@ -80,28 +94,28 @@ export class ActionsComponent implements OnInit {
     this.popoverController.dismiss();
   }
 
- async messages(ev: string) {
+  async messages(ev: string) {
     console.log(ev);
     switch (ev) {
       case 'csv-export': {
         let header: string[] = [];
-        new AngularCsv(this.selection, this.objectType , { showLabels: true, headers: Object.getOwnPropertyNames(this.selection[0])});
+        new AngularCsv(this.selection, this.objectType, { showLabels: true, headers: Object.getOwnPropertyNames(this.selection[0]) });
         this.popoverController.dismiss();
         break;
       }
-      default : {
+      default: {
         const alert = await this.alertController.create({
           header: this.languageService.trans(ev),
           buttons: [
             {
-              text: 'Cancel',
+              text: this.languageService.trans('Cancel'),
               role: 'cancel',
               cssClass: 'secondary',
               handler: (blah) => {
                 console.log('Confirm Cancel: blah');
               }
             }, {
-              text: 'Okay',
+              text: this.languageService.trans('OK'),
               handler: () => {
                 this.executeAction(ev)
                 console.log('Confirm Okay');
@@ -109,26 +123,33 @@ export class ActionsComponent implements OnInit {
             }
           ]
         });
-        alert.onDidDismiss().then(() => this.popoverController.dismiss() );
+        alert.onDidDismiss().then(() => this.popoverController.dismiss());
         await alert.present();
         break;
       }
     }
   }
 
-  executeAction(action: string){
-    this.actionMap.name = action;
-    this.actionMap.objectIds = this.objectIds;
-    switch(this.objectType){
-       case 'institute': {
-        let sub = this.cephalixService.applyAction(this.actionMap).subscribe(
-          (val) => { console.log('OK')},
-          (err) => { console.log("ERR")},
-          () => { sub.unsubscribe(); }
-          )
-       }
-    }
-    
+  executeAction(action: string) {
+    let actionMap = new CrxActionMap;
+    actionMap.name = action;
+    actionMap.objectIds = this.objectIds;
+    this.objectService.requestSent();
+    let url = this.hostname + "/" + this.objectType + "s/applyAction"
+    console.log("Execute Action")
+    console.log(url)
+    console.log(actionMap)
+    let sub = this.http.post<ServerResponse[]>(url, actionMap, { headers: this.headers }).subscribe(
+      (val) => { 
+        let response = this.languageService.trans("List of the results:");
+        for(let resp of val ){
+          response = response + "<br>" + this.languageService.transResponse(resp);
+        }
+        this.objectService.getAllObject(this.objectType);
+        this.objectService.okMessage(response) },
+      (err) => { this.objectService.errorMessage(err) },
+      () => { sub.unsubscribe(); }
+    )
   }
 }
 
