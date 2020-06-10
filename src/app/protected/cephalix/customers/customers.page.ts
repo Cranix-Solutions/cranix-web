@@ -80,9 +80,6 @@ export class CustomersPage implements OnInit {
       col['minWidth'] = 110;
       switch (key) {
         case 'name': {
-          col['headerCheckboxSelection'] = true;
-          col['headerCheckboxSelectionFilteredOnly'] = true;
-          col['checkboxSelection'] = true;
           col['width'] = 220;
           col['cellStyle'] = { 'padding-left' : '2px', 'padding-right' : '2px'};
           col['suppressSizeToFit'] = true;

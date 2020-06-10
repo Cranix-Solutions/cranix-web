@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { Validators } from '@angular/forms';
 // own modules
 import { ServerResponse } from 'src/app/shared/models/server-models';
@@ -31,12 +31,13 @@ export class GenericObjectService {
   cephalixDefaults: any = {};
 
   selects: any = {
-    'agGridThema': ['ag-theme-alpine',  'ag-theme-balham', 'ag-theme-material'],
+    'action': ['wol', 'reboot', 'shutdown', 'logout'],
+    'agGridThema': ['ag-theme-alpine', 'ag-theme-balham', 'ag-theme-material'],
     'devCount': [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096],
     'identifier': ['sn-gn-bd', 'uuid', 'uid'],
     'lang': ['DE', 'EN'],
     'status': ['N', 'A', 'D'],
-    'supporttype':[ 'Error', 'FeatureRequest', 'Feedback', 'ProductOrder'  ]
+    'supporttype': ['Error', 'FeatureRequest', 'Feedback', 'ProductOrder']
   }
   initialized: boolean = false;
   enumerates: string[] = [
@@ -47,6 +48,7 @@ export class GenericObjectService {
    * Attributes which can not be modified
    */
   readOnlyAttributes: string[] = [
+    'accessType',
     'classes',
     'fsQuotaUsed',
     'ip',
@@ -79,7 +81,7 @@ export class GenericObjectService {
   required: any = {
     'givenName': '*',
     'groupType': '*',
-    'identifier':"*",
+    'identifier': "*",
     'instituteType': '*',
     'importFile': "*",
     'name': '*',
@@ -96,6 +98,7 @@ export class GenericObjectService {
     private http: HttpClient,
     private languageS: LanguageService,
     private utilsS: UtilsService,
+    private modalCtrl: ModalController,
     public toastController: ToastController) {
   }
 
@@ -275,6 +278,7 @@ export class GenericObjectService {
                 if (serverResponse.code == "OK") {
                   this.getAllObject(objectType);
                   this.okMessage(this.languageS.trans("Object was deleted"));
+                  this.modalCtrl.dismiss("success");
                 } else {
                   this.errorMessage("" + serverResponse.value);
                 }
@@ -318,6 +322,7 @@ export class GenericObjectService {
       () => { a.unsubscribe() }
     );
   }
+
   async errorMessage(message: string) {
     const toast = await this.toastController.create({
       position: "middle",
@@ -338,6 +343,15 @@ export class GenericObjectService {
     });
     (await toast).present();
   }
+
+  responseMessage(resp: ServerResponse) {
+    if (resp.code == 'OK ') {
+      return this.okMessage(this.languageS.transResponse(resp));
+    } else {
+      return this.errorMessage(this.languageS.transResponse(resp));
+    }
+  }
+
   async okMessage(message: string) {
     const toast = await this.toastController.create({
       position: "middle",
@@ -364,7 +378,7 @@ export class GenericObjectService {
       message: message,
       cssClass: "bar-assertive",
       color: "warning",
-      duration:  this.authService.settings.warningMessageDuration * 1000,
+      duration: this.authService.settings.warningMessageDuration * 1000,
       buttons: [
         {
           text: "",

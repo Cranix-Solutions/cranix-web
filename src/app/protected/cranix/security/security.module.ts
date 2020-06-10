@@ -10,6 +10,7 @@ import { SecurityPage }                  from './security.page';
 import { FirewallComponent }             from './firewall/firewall.component';
 import { ProxyComponent }                from './proxy/proxy.component';
 import { RoomAccessComponent }           from './room-access/room-access.component';
+import { FirewallCanDeactivate } from 'src/app/services/security-service';
 
 const routes: Routes = [
   {
@@ -18,6 +19,7 @@ const routes: Routes = [
     children: [
       {
         path: 'firewall',
+        canDeactivate: [FirewallCanDeactivate],
         component: FirewallComponent
       },
       {

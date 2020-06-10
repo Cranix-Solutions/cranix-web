@@ -46,8 +46,11 @@ import { RoomPrintersPage } from 'src/app/protected/cranix/rooms/details/printer
 import { DevicePrintersComponent } from 'src/app/protected/cranix/devices/details/printers/device-printers.component';
 import { AddDeviceComponent } from 'src/app/protected/cranix/devices/add-device/add-device.component';
 import { AddPrinterComponent } from 'src/app/protected/cranix/devices/add-printer/add-printer.component';
-//import 'ag-grid-enterprise';
-import '@ag-grid-enterprise/all-modules'
+//import '@ag-grid-enterprise/all-modules'
+import { AddOutgoingRuleComponent } from './protected/cranix/security/firewall/add-rules/add-outgoing-rule.component';
+import { AddRemoteRuleComponent } from './protected/cranix/security/firewall/add-rules/add-remote-rule.component';
+import { AddEditRoomAccessComponent } from 'src/app/protected/cranix/security/room-access/add-edit-room-access/add-edit-room-access.component';
+import { FirewallCanDeactivate } from 'src/app/services/security-service'
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -68,7 +71,10 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AddDeviceComponent,
+    AddEditRoomAccessComponent,
+    AddOutgoingRuleComponent,
     AddPrinterComponent,
+    AddRemoteRuleComponent,
     AppComponent,
     ActionsComponent,
     DownloadSoftwaresComponent,
@@ -81,7 +87,10 @@ const routes: Routes = [
     SelectColumnsComponent],
   entryComponents: [
     AddDeviceComponent,
+    AddEditRoomAccessComponent,
+    AddOutgoingRuleComponent,
     AddPrinterComponent,
+    AddRemoteRuleComponent,
     ActionsComponent,
     DownloadSoftwaresComponent,
     ShowImportComponent,
@@ -111,9 +120,13 @@ const routes: Routes = [
     })],
   providers: [
     AddDeviceComponent,
+    AddEditRoomAccessComponent,
+    AddOutgoingRuleComponent,
+    AddRemoteRuleComponent,
     CanActivateViaAcls,
     CephalixService,
     DevicesService,
+    FirewallCanDeactivate,
     GenericObjectService,
     GroupsService,
     HwconfsService,

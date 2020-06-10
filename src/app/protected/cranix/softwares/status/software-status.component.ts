@@ -80,13 +80,15 @@ export class SoftwareStatusComponent implements OnInit {
         field: 'roomName',
         rowGroup: true,
         hide: true,
-        headerName: this.languageS.trans('room')
+        headerName: this.languageS.trans('room'),
+        cellStyle: { 'justify-content': "left" }
       },
       {
         field: 'deviceName',
         rowGroup: true,
         hide: true,
         headerName: this.languageS.trans('device'),
+        cellStyle: { 'justify-content': "left" }
       },
       {
         field: 'softwareName',

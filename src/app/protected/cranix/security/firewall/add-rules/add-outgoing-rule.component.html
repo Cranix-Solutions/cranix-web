@@ -1,0 +1,54 @@
+<form #addRule="ngForm" (ngSubmit)="addOutRule(addRule.value)">
+  <ion-header translucent>
+    <ion-toolbar>
+      <ion-title>{{  'Add outgoing firewall rule' | translate }}</ion-title>
+      <ion-buttons slot="end">
+        <ion-button type="submit" class="ion-no-margin" [disabled]="!addRule.valid">
+          <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss()">
+          <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen>
+    <ion-list lines="full">
+      <ion-item>
+        <ion-label position="stacked">{{'Rule type'| translate}}</ion-label>
+        <ion-select type="text" [(ngModel)]="rule.type" name="type">
+          <ion-select-option value="room">{{'room'| translate}}</ion-select-option>
+          <ion-select-option value="device">{{'device'| translate}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="rule.type == 'room'">
+        <ion-label position="stacked">{{'Room'| translate}}</ion-label>
+        <ion-select type="text" [(ngModel)]="rule.id" name="id" required>
+          <ion-select-option *ngFor="let obj of  roomIps" value="{{obj.key}}">{{obj.name}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="rule.type == 'device'">
+        <ion-label position="stacked">{{'Device'| translate}}</ion-label>
+        <ion-select type="text" [(ngModel)]="rule.id" name="id" required>
+          <ion-select-option *ngFor="let obj of  deviceIps" value="{{obj.key}}">{{obj.name}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{'dest'|translate}}</ion-label>
+        <ion-input type="text" [(ngModel)]="rule.dest" name="dest"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{'Protocol'|translate}}</ion-label>
+        <ion-select type="text" [(ngModel)]="rule.prot" name="prot">
+          <ion-select-option value="all">{{'all'| translate}}</ion-select-option>
+          <ion-select-option value="tcp">{{'TCP'| translate}}</ion-select-option>
+          <ion-select-option value="udp">{{'UDP'| translate}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{'Port'|translate}}</ion-label>
+        <ion-input type="text" [(ngModel)]="rule.port" name="port" [disabled]="rule.prot == 'all'" [required]="rule.prot != 'all'"></ion-input>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</form>
