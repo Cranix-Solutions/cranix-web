@@ -89,9 +89,9 @@ export class TicketsPage implements OnInit {
       col['minWidth'] = 110;
       switch (key) {
         case 'title': {
-          col['headerCheckboxSelection'] = true;
+          col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
-          col['checkboxSelection'] = true;
+          col['checkboxSelection'] = this.authService.settings.checkboxSelection;
           col['width'] = 220;
           col['cellStyle'] = { 'padding-left': '2px', 'padding-right': '2px' };
           col['suppressSizeToFit'] = true;

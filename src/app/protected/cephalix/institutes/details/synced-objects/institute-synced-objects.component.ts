@@ -68,9 +68,9 @@ export class InstituteSyncedObjectsComponent implements OnInit {
       valueGetter: function(params) {
         return  params.context['componentParent'].languageS.trans(params.data.objectType);
       },
-      headerCheckboxSelection: true,
+      headerCheckboxSelection: this.authService.settings.headerCheckboxSelection,
       headerCheckboxSelectionFilteredOnly: true,
-      checkboxSelection: true,
+      checkboxSelection: this.authService.settings.checkboxSelection,
       minWidth: 200 
     };
   }

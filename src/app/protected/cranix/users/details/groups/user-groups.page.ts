@@ -38,8 +38,9 @@ export class UserGroupsPage implements OnInit {
         headerName:  this.languageS.trans('name'),
         sortable: true,
         field: 'name',
-        headerCheckboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true
+        headerCheckboxSelection: this.authService.settings.headerCheckboxSelection,
+	headerCheckboxSelectionFilteredOnly: true,
+	checkboxSelection: this.authService.settings.checkboxSelection
       },
       {
         headerName: this.languageS.trans('description'),

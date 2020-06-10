@@ -61,9 +61,9 @@ export class InstitutesSyncObjectsComponent implements OnInit {
     this.autoGroupColumnDef = {
       headerName: this.languageS.trans('objectType'),
       field: 'objectType',
-      headerCheckboxSelection: false,
+      headerCheckboxSelection: this.authService.settings.headerCheckboxSelection,
       headerCheckboxSelectionFilteredOnly: true,
-      checkboxSelection: true,
+      checkboxSelection: this.authService.settings.checkboxSelection,
       cellStyle: { 'justify-content': "left" },
       valueGetter: function (params) { return " "; },
       minWidth: 250

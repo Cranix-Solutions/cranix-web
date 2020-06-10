@@ -42,8 +42,9 @@ export class GroupMembersPage implements OnInit {
         headerName:  this.languageS.trans('uid'),
         field: 'uid',
         sortable: true,
-        headerCheckboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true,
+        headerCheckboxSelection: this.authService.settings.headerCheckboxSelection,
+	headerCheckboxSelectionFilteredOnly: true,
+	checkboxSelection: this.authService.settings.checkboxSelection,
         suppressMenu : true
       },
       {

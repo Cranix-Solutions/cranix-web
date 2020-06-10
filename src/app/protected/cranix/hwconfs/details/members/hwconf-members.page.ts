@@ -68,9 +68,9 @@ export class HwconfMembersPage implements OnInit {
     this.autoGroupColumnDef = { 
       headerName: this.languageS.trans('roomId'),
       field: 'roomId',
-      headerCheckboxSelection: true,
+      headerCheckboxSelection: this.authService.settings.headerCheckboxSelection,
       headerCheckboxSelectionFilteredOnly: true,
-      checkboxSelection: true,
+      checkboxSelection: this.authService.settings.checkboxSelection,
       valueGetter: function (params) {
         return params.context['componentParent'].objectService.idToName('room', params.data.roomId);
       },

@@ -58,6 +58,7 @@ export class ToolbarComponent implements OnInit {
       settings.lang = this.translateService.language.toUpperCase();
       const modal = await this.modalConroller.create({
         component: ObjectsEditComponent,
+        cssClass: 'medium-modal',
         componentProps: {
           objectType: "settings",
           objectAction: "modify",
