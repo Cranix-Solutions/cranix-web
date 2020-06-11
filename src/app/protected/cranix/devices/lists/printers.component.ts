@@ -202,7 +202,7 @@ export class PrintersComponent implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
+        this.authService.log("Object was created or modified", dataReturned.data)
       }
     });
     (await modal).present();
@@ -231,7 +231,7 @@ export class PrintersComponent implements OnInit {
       this.createColumnDefs();
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
+      this.authService.log("most lett vegrehajtva.")
     })
   }
 
@@ -256,7 +256,7 @@ export class PrintersComponent implements OnInit {
       this.createColumnDefs();
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
+      this.authService.log("most lett vegrehajtva.")
     })
   }
 
@@ -273,7 +273,7 @@ export class PrintersComponent implements OnInit {
       },
       (error) => {
         this.objectService.errorMessage("ServerError" + error);
-        console.log(error);
+        this.authService.log(error);
       },
       () => { subs.unsubscribe() }
     )
@@ -292,7 +292,7 @@ export class PrintersComponent implements OnInit {
       },
       (error) => {
         this.objectService.errorMessage("ServerError" + error);
-        console.log(error);
+        this.authService.log(error);
       },
       () => { subs.unsubscribe() }
     )

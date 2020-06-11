@@ -368,18 +368,6 @@ export class DHCP {
 	constructor() { }
 }
 
-export class Settings {
-	agGridThema: string = "ag-theme-alpine";
-	lang: string = "";
-	errorMessageDuration: number = 10;
-	okMessageDuration: number = 10;
-	warningMessageDuration: number = 6;
-	rowMultiSelectWithClick: boolean = true;
-	checkboxSelection: boolean = true;
-	headerCheckboxSelection: boolean = true;
-	constructor() { }
-}
-
 export class SystemConfig {
 	path: string = "";
 	readOnly: string = "";

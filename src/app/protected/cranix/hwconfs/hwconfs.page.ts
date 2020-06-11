@@ -175,7 +175,7 @@ async openActions(ev: any, objId: number) {
       });
       modal.onDidDismiss().then((dataReturned) => {
         if (dataReturned.data) {
-          console.log("Object was created or modified", dataReturned.data)
+          this.authService.log("Object was created or modified", dataReturned.data)
         }
       });
       (await modal).present();
@@ -205,7 +205,7 @@ async openActions(ev: any, objId: number) {
       }
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
+      this.authService.log("most lett vegrehajtva.")
     })
   }
 }

@@ -22,7 +22,7 @@ export class InstallationSetsComponent implements OnInit {
   installationSetApi;
   installationSetColumnApi;
   installationSetSelection: Installation[] = [];
-  installationSetData: Installation[] = [];
+  installationSetData:      Installation[] = [];
   autoGroupColumnDef;
   institute;
   selectedList: string[] = [];
@@ -85,10 +85,10 @@ export class InstallationSetsComponent implements OnInit {
     let subM = this.softwareService.getInstallationsSets().subscribe(
       (val) => {
         this.installationSetData = val;
-        console.log("installationSets")
-        console.log(val);
+        this.authService.log("installationSets")
+        this.authService.log(val);
        },
-      (err) => { console.log(err) },
+      (err) => { this.authService.log(err) },
       () => { subM.unsubscribe() });
   }
   createColumnDefs() {
@@ -116,7 +116,6 @@ export class InstallationSetsComponent implements OnInit {
         suppressMenu : true,
         headerName: this.languageS.trans('softwares'),
         valueGetter: function (params) {
-          console.log(params.data.softwareIds.length);
           return params.data.softwareIds.length;
         }
       },
@@ -166,7 +165,7 @@ export class InstallationSetsComponent implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
+        this.authService.log("Object was created or modified", dataReturned.data)
       }
     });
     (await modal).present();

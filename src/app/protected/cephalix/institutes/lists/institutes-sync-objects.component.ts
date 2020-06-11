@@ -102,8 +102,8 @@ export class InstitutesSyncObjectsComponent implements OnInit {
   }
   readMembers() {
     let subM = this.cephalixService.getObjectsToSynchronize().subscribe(
-      (val) => { this.memberData = val; console.log(val) },
-      (err) => { console.log(err) },
+      (val) => { this.memberData = val; this.authService.log(val) },
+      (err) => { this.authService.log(err) },
       () => { subM.unsubscribe() });
   }
   startSync(en: Event) {
@@ -111,8 +111,8 @@ export class InstitutesSyncObjectsComponent implements OnInit {
       for (let sel of this.memberSelection) {
         let sub = this.cephalixService.putObjectToInstitute(institute.id, sel.objectType, sel.cephalixId)
           .subscribe(
-            (val) => { console.log("Start sync:") },
-            (err) => { console.log },
+            (val) => { this.authService.log("Start sync:") },
+            (err) => { this.authService.log },
             () => { sub.unsubscribe() })
       }
     }
@@ -122,8 +122,8 @@ export class InstitutesSyncObjectsComponent implements OnInit {
       for (let sel of this.memberSelection) {
         let sub = this.cephalixService.deleteObjectFromInstitute(institute.id, sel.objectType, sel.cephalixId)
           .subscribe(
-            (val) => { console.log("Stop sync:") },
-            (err) => { console.log },
+            (val) => { this.authService.log("Stop sync:") },
+            (err) => { this.authService.log },
             () => { sub.unsubscribe() })
       }
     }

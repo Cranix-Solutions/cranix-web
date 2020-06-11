@@ -15,22 +15,22 @@ export class GroupsService {
 	url: string;
 	token: string;
 	headers: HttpHeaders;
-	
+
 	constructor(
 		private utilsS: UtilsService,
 		private http: HttpClient,
-		private authS: AuthenticationService) {		
+		private authService: AuthenticationService) {
 			this.hostname = this.utilsS.hostName();
-			this.token          = this.authS.getToken();
-			this.headers     = new HttpHeaders({
+			this.token    = this.authService.getToken();
+			this.headers  = new HttpHeaders({
 				'Content-Type': "application/json",
 				'Accept': "application/json",
 				'Authorization': "Bearer " + this.token
 			});
-			this.utilsS.log('Constructor Users completed');
+			this.authService.log('Constructor Users completed');
 	}
 
-	
+
 	importGroups(fd: FormData){
 		this.url = this.hostname + `/groups/import`;
 		return this.http.post<ServerResponse>(this.url,fd, { headers: this.headers});
@@ -56,7 +56,7 @@ export class GroupsService {
 		const body = membersId;
 		return this.http.post<ServerResponse>(this.url, body, { headers: this.headers });
 	}
-	
+
 	// PUT Calls
 	putUserToGroup(ui: number, gi: number){
 		this.url = `${this.hostname}/groups/${gi}/${ui}`;

@@ -5,8 +5,8 @@ import { Storage } from '@ionic/storage';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
-import { Settings } from 'src/app/shared/models/data-model';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { Settings } from 'src/app/shared/models/server-models';
 
 @Component({
   selector: 'cranix-toolbar',
@@ -73,7 +73,7 @@ export class ToolbarComponent implements OnInit {
           this.authService.settings = dataReturned.data;
           this.storage.set("myCranixSettings",JSON.stringify(dataReturned.data));
           this.translateService.setLanguage( dataReturned.data.lang );
-          console.log("Object was created or modified", dataReturned.data)
+          this.authService.log("Object was created or modified", dataReturned.data)
         }
       });
       (await modal).present();

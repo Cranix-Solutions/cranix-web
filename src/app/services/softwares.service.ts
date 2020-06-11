@@ -20,15 +20,15 @@ export class SoftwareService {
 	constructor(
 		private http: HttpClient,
 		private utilsS: UtilsService,
-		private authS: AuthenticationService) {
+		private authService: AuthenticationService) {
 		this.hostname = this.utilsS.hostName();
-		this.token = this.authS.getToken();
+		this.token = this.authService.getToken();
 		this.headers = new HttpHeaders({
 			'Content-Type': "application/json",
 			'Accept': "application/json",
 			'Authorization': "Bearer " + this.token
 		});
-		this.utilsS.log('Constructor Users completed');
+		this.authService.log('Constructor Users completed');
 	};
 
 	getSoftwareStatus() {

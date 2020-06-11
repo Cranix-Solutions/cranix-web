@@ -112,8 +112,8 @@ export class InstituteSyncedObjectsComponent implements OnInit {
   }
   readMembers() {
     let subM = this.cephalixService.getSynchronizedObjects(this.institute.id).subscribe(
-      (val) => { this.memberData = val; console.log(val) },
-      (err) => { console.log(err) },
+      (val) => { this.memberData = val; this.authService.log(val) },
+      (err) => { this.authService.log(err) },
       () => { subM.unsubscribe() });
   }
 

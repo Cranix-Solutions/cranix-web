@@ -72,7 +72,7 @@ export class InstituteStatusComponent implements OnInit {
     });
     let subs = this.cephalixService.getStatusOfInstitute(this.object.id).subscribe(
       (val) => { this.rowData = val },
-      (err) => { console.log(err) },
+      (err) => { this.authService.log(err) },
       () => { subs.unsubscribe() }
     )
   }
@@ -105,8 +105,8 @@ export class InstituteStatusComponent implements OnInit {
             let index = params.data.runningKernel.indexOf("-default");
             let run = params.data.runningKernel.substring(0, index);
             let inst = params.data.installedKernel.substring(0, index);
-            console.log(run)
-            console.log(inst)
+            this.authService.log(run)
+            this.authService.log(inst)
             if (run == inst) {
               return "OK"
             } else {
@@ -167,8 +167,8 @@ export class InstituteStatusComponent implements OnInit {
 //TODO RESPONSE
   public redirectToUpdate = (cephalixInstituteId: number) => {
     let sub = this.cephalixService.updateById(cephalixInstituteId).subscribe(
-      (val) => { console.log(val) },
-      (error) => { console.log(error) },
+      (val) => { this.authService.log(val) },
+      (error) => { this.authService.log(error) },
       () => { sub.unsubscribe(); }
     );
   }
@@ -214,7 +214,7 @@ export class InstituteStatusComponent implements OnInit {
       });
       modal.onDidDismiss().then((dataReturned) => {
         if (dataReturned.data) {
-          console.log("Object was created or modified", dataReturned.data)
+          this.authService.log("Object was created or modified", dataReturned.data)
         }
       });
       (await modal).present();
@@ -243,7 +243,7 @@ export class InstituteStatusComponent implements OnInit {
       }
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
+      this.authService.log("most lett vegrehajtva.")
     })
   }
 }

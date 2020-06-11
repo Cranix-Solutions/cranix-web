@@ -160,7 +160,7 @@ export class SoftwarePackagesComponent implements OnInit {
       }
     });
     (await modal).present().then((val) => {
-      console.log("downloadSoftwares executed.")
+      this.authService.log("downloadSoftwares executed.")
     })
   }
   async redirectToEdit(ev: Event, software: Software) {
@@ -182,7 +182,7 @@ export class SoftwarePackagesComponent implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
+        this.authService.log("Object was created or modified", dataReturned.data)
       }
     });
     (await modal).present();

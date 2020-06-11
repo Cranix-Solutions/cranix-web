@@ -129,7 +129,7 @@ export class InstitutesComponent implements OnInit {
     };
 
     columnDefs.splice(1, 0, check)
-    console.log('columnsDef', columnDefs);
+    this.authService.log('columnsDef', columnDefs);
     this.columnDefs = columnDefs;
   }
 
@@ -224,7 +224,7 @@ export class InstitutesComponent implements OnInit {
       });
       modal.onDidDismiss().then((dataReturned) => {
         if (dataReturned.data) {
-          console.log("Object was created or modified", dataReturned.data)
+          this.authService.log("Object was created or modified", dataReturned.data)
         }
       });
       (await modal).present();
@@ -254,7 +254,7 @@ export class InstitutesComponent implements OnInit {
       }
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
+      this.authService.log("most lett vegrehajtva.")
     })
   }
 }

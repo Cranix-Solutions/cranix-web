@@ -21,7 +21,7 @@
   <ion-content fullscreen>
     <ion-card>
       <ion-card-header>
-        <ion-segment (ionChange)="segmentChanged($event)" [disabled]="submitted">
+        <ion-segment (ionChange)="segmentChanged($event)" [disabled]="submitted" color="secondary" value="overview">
           <ion-segment-button value="overview">
             <ion-label>{{'Overwiev' | translate}}</ion-label>
           </ion-segment-button>

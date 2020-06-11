@@ -73,18 +73,18 @@ export class InstitutesStatusComponent implements OnInit {
       (val) => {
         this.rowData = val;
       },
-      (err) => { console.log(err) },
+      (err) => { this.authService.log(err) },
       () => { subs.unsubscribe() }
     )
   }
   ionViewWillEnter() {
-    console.log('WillEnter EVENT')
+    this.authService.log('WillEnter EVENT')
     let subs = this.cephalixService.getStatusOfInstitutes().subscribe(
       (val) => {
-        console.log('new data in event:', val);
+        this.authService.log('new data in event:', val);
         this.rowData = val
       },
-      (err) => { console.log(err) },
+      (err) => { this.authService.log(err) },
       () => { subs.unsubscribe() })
   }
   createColumnDefs() {
@@ -173,8 +173,8 @@ export class InstitutesStatusComponent implements OnInit {
   //TODO RESPONSE
   public redirectToUpdate = (cephalixInstituteId: number) => {
     let sub = this.cephalixService.updateById(cephalixInstituteId).subscribe(
-      (val) => { console.log(val) },
-      (error) => { console.log(error) },
+      (val) => { this.authService.log(val) },
+      (error) => { this.authService.log(error) },
       () => { sub.unsubscribe(); }
     );
   }
@@ -220,7 +220,7 @@ export class InstitutesStatusComponent implements OnInit {
       });
       modal.onDidDismiss().then((dataReturned) => {
         if (dataReturned.data) {
-          console.log("Object was created or modified", dataReturned.data)
+          this.authService.log("Object was created or modified", dataReturned.data)
         }
       });
       (await modal).present();
@@ -249,7 +249,7 @@ export class InstitutesStatusComponent implements OnInit {
       }
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
+      this.authService.log("most lett vegrehajtva.")
     })
   }
 }

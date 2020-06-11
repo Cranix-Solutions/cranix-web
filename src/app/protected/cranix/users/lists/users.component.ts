@@ -126,8 +126,8 @@ export class UsersComponent implements OnInit {
   }
 
   onResize($event) {
-    console.log("window");
-    console.log(window);
+    this.authService.log("window");
+    this.authService.log(window);
     (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
     this.sizeAll();
     this.gridApi.sizeColumnsToFit();
@@ -184,7 +184,7 @@ export class UsersComponent implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
+        this.authService.log("Object was created or modified", dataReturned.data)
       }
     });
     (await modal).present();
@@ -213,7 +213,7 @@ export class UsersComponent implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
+        this.authService.log("Object was created or modified", dataReturned.data)
       }
     });
     (await modal).present();
@@ -242,7 +242,7 @@ export class UsersComponent implements OnInit {
       }
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
+      this.authService.log("most lett vegrehajtva.")
     })
   }
 }

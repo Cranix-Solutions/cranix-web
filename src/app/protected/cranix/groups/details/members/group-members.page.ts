@@ -113,24 +113,24 @@ export class GroupMembersPage implements OnInit {
         members.push(g.id)
       }
     }
-    console.log('groups');
-    console.log(members);
+    this.authService.log('groups');
+    this.authService.log(members);
     this.noMemberSelection = [];
     this.memberSelection = [];
     let subM = this.groupS.setGroupMembers(this.group.id,members).subscribe(
       (val) => { this.readMembers() } ,
-      (err)  => { console.log(err)},
+      (err)  => { this.authService.log(err)},
       () => { subM.unsubscribe()});
   }
 
   readMembers() {
     let subM = this.groupS.getMembers(this.group.id).subscribe(
-      (val) => { this.memberData = val; console.log(val) } ,
-      (err)  => { console.log(err)},
+      (val) => { this.memberData = val; this.authService.log(val) } ,
+      (err)  => { this.authService.log(err)},
       () => { subM.unsubscribe()});
     let subNM = this.groupS.getAvailiableMembers(this.group.id).subscribe(
-      (val) => { this.noMemberData = val; console.log(val) } ,
-      (err)  => { console.log(err)},
+      (val) => { this.noMemberData = val; this.authService.log(val) } ,
+      (err)  => { this.authService.log(err)},
       () => { subNM.unsubscribe()})
     }
 }

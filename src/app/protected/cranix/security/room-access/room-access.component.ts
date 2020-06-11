@@ -134,15 +134,15 @@ export class RoomAccessComponent implements OnInit {
   readDatas() {
     let sub = this.securityService.getAllAccess().subscribe(
       (val) => { this.accessData = val },
-      (err) => { console.log(err) },
+      (err) => { this.authService.log(err) },
       () => { sub.unsubscribe(); }
     );
   }
   accessGridReady(params) {
     this.accessApi = params.api;
     this.accessColumnApi = params.columnApi;
-    console.log(this.accessApi);
-    console.log(this.accessColumnApi);
+    this.authService.log(this.accessApi);
+    this.authService.log(this.accessColumnApi);
   }
   accessSelectionChanged() {
     this.accessSelected = this.accessApi.getSelectedRows();
@@ -168,7 +168,7 @@ export class RoomAccessComponent implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        console.log("Object was created or modified or deleted", dataReturned.data)
+        this.authService.log("Object was created or modified or deleted", dataReturned.data)
         this.readDatas();
       }
     });
@@ -182,7 +182,7 @@ export class RoomAccessComponent implements OnInit {
     this.accessSelected = this.accessApi.getSelectedRows();
     for( let obj of this.accessSelected ){
       this.securityService.deleteAccessInRoom(obj.id);
-      setTimeout(() => {  console.log("World!"); }, 1000);
+      setTimeout(() => {  this.authService.log("World!"); }, 1000);
     }
     this.readDatas();
    }

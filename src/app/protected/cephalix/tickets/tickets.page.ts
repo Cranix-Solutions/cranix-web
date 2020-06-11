@@ -73,11 +73,6 @@ export class TicketsPage implements OnInit {
     this.objectService.getObjects('ticket').subscribe(obj => this.rowData = obj);
   }
 
-  instituteIdToName(params) {
-    console.log(Object.getOwnPropertyNames(params));
-    return this.objectService.idToName('institute', params.id);
-  }
-
   createColumnDefs() {
     let columnDefs = [];
     for (let key of this.objectKeys) {
@@ -203,7 +198,7 @@ export class TicketsPage implements OnInit {
       });
       modal.onDidDismiss().then((dataReturned) => {
         if (dataReturned.data) {
-          console.log("Object was created or modified", dataReturned.data)
+          this.authService.log("Object was created or modified", dataReturned.data)
         }
       });
       (await modal).present();
@@ -233,7 +228,7 @@ export class TicketsPage implements OnInit {
       }
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
+      this.authService.log("most lett vegrehajtva.")
     })
   }
 }

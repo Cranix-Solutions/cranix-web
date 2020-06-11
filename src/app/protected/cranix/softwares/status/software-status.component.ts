@@ -70,8 +70,8 @@ export class SoftwareStatusComponent implements OnInit {
   }
   readMembers() {
     let subM = this.softwareService.getSoftwareStatus().subscribe(
-      (val) => { this.memberData = val; console.log(val) },
-      (err) => { console.log(err) },
+      (val) => { this.memberData = val; this.authService.log(val) },
+      (err) => { this.authService.log(err) },
       () => { subM.unsubscribe() });
   }
   roomDeviceGrouping() {
