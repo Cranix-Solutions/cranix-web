@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PopoverController, NavParams } from '@ionic/angular';
+import { PopoverController, NavParams, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { AlertController } from '@ionic/angular';
@@ -7,11 +7,11 @@ import { AlertController } from '@ionic/angular';
 import { userMenu, groupMenu, roomMenu, deviceMenu, instituteMenu, hwconfMenu } from './objects.menus';
 import { CrxActionMap, ServerResponse } from 'src/app/shared/models/server-models';
 import { LanguageService } from 'src/app/services/language.service';
-import { CephalixService } from 'src/app/services/cephalix.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { SetpasswordComponent } from './setpassword/setpassword.component';
 
 
 @Component({
@@ -48,6 +48,7 @@ export class ActionsComponent implements OnInit {
 
   constructor(
     public alertController: AlertController,
+    public modalController: ModalController,
     private navParams: NavParams,
     private popoverController: PopoverController,
     public translateService: TranslateService,
@@ -96,11 +97,34 @@ export class ActionsComponent implements OnInit {
 
   async messages(ev: string) {
     console.log(ev);
+    let actionMap = new CrxActionMap;
+    actionMap.name = ev;
+    actionMap.objectIds = this.objectIds;
     switch (ev) {
       case 'csv-export': {
         let header: string[] = [];
         new AngularCsv(this.selection, this.objectType, { showLabels: true, headers: Object.getOwnPropertyNames(this.selection[0]) });
         this.popoverController.dismiss();
+        break;
+      }
+      case 'setPassword': {
+        this.popoverController.dismiss();
+        const modal = await this.modalController.create({
+          component: SetpasswordComponent,
+          cssClass: 'small-modal',
+          animated: true,
+          swipeToClose: true,
+          showBackdrop: true
+        });
+        modal.onDidDismiss().then((dataReturned) => {
+          this.authS.log(dataReturned.data)
+          if (dataReturned.data) {
+            actionMap.stringValue = dataReturned.data.password;
+            actionMap.booleanValue = dataReturned.data.mustChnage;
+            this.executeAction(actionMap);
+          }
+        });
+        (await modal).present();
         break;
       }
       default: {
@@ -117,7 +141,7 @@ export class ActionsComponent implements OnInit {
             }, {
               text: this.languageService.trans('OK'),
               handler: () => {
-                this.executeAction(ev)
+                this.executeAction(actionMap);
                 console.log('Confirm Okay');
               }
             }
@@ -130,23 +154,21 @@ export class ActionsComponent implements OnInit {
     }
   }
 
-  executeAction(action: string) {
-    let actionMap = new CrxActionMap;
-    actionMap.name = action;
-    actionMap.objectIds = this.objectIds;
+  executeAction(actionMap: CrxActionMap) {
     this.objectService.requestSent();
     let url = this.hostname + "/" + this.objectType + "s/applyAction"
     console.log("Execute Action")
     console.log(url)
     console.log(actionMap)
     let sub = this.http.post<ServerResponse[]>(url, actionMap, { headers: this.headers }).subscribe(
-      (val) => { 
+      (val) => {
         let response = this.languageService.trans("List of the results:");
-        for(let resp of val ){
+        for (let resp of val) {
           response = response + "<br>" + this.languageService.transResponse(resp);
         }
         this.objectService.getAllObject(this.objectType);
-        this.objectService.okMessage(response) },
+        this.objectService.okMessage(response)
+      },
       (err) => { this.objectService.errorMessage(err) },
       () => { sub.unsubscribe(); }
     )

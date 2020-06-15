@@ -167,7 +167,8 @@ export class UsersComponent implements OnInit {
         objectType: "user",
         objectIds: objectIds,
         selection: this.selected
-      },
+	},
+      translucent: true,
       animated: true,
       showBackdrop: true
     });

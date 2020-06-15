@@ -55,7 +55,10 @@ export class AuthenticationService {
 		    // Load settings from the local storage
                     this.storage.get('myCranixSettings').then((myCranixSettings) => {
                         if(myCranixSettings && myCranixSettings != "") {
+				console.log("myCranixSettings");
+				console.log(myCranixSettings);
 				let myCranixSettingsHash = JSON.parse(myCranixSettings);
+				console.log(myCranixSettingsHash);
 				for( let key in Object.getOwnPropertyNames(this.settings) ) {
 					if( myCranixSettingsHash.hasOwnProperty(key) ) {
 						this.settings[key] = myCranixSettingsHash[key];

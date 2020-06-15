@@ -129,7 +129,7 @@ export const userMenu = [
     "enabled": true,
     "icon":"key",
     "color":"secondary",
-    "action": "changePassword"
+    "action": "setPassword"
   },
   {
     "enabled": true,
