@@ -186,3 +186,48 @@ export const userMenu = [
     "action": "setMailSystemQuota"
   }
 ];
+
+export const devActionMenu = [
+  {
+    "enabled" : true,
+    "icon"    : "lock-open",
+    "color"   : "secondary",
+    "action"  : "devicesUnlock"
+  },
+  {
+    "enabled" : true,
+    "icon"    : "lock-closed",
+    "color"   : "secondary",
+    "action"  : "devicesLock"
+  },
+  {
+    "enabled" : true,
+    "icon"    : "exit",
+    "color"   : "secondary",
+    "action"  : "devicesLogout"
+  },
+  {
+    "enabled" : true,
+    "icon"    : "play",
+    "color"   : "secondary",
+    "action"  : "devicesWOL"
+  },
+  {
+    "enabled" : true,
+    "icon"    : "refresh",
+    "color"   : "secondary",
+    "action"  : "devicesRestart"
+  },
+  {
+    "enabled" : true,
+    "icon"    : "stop",
+    "color"   : "secondary",
+    "action"  : "devicesShutdown"
+  },
+  {
+    "enabled" : true,
+    "icon"    : "eye",
+    "color"   : "secondary",
+    "action"  : "setPassword"
+  }
+];

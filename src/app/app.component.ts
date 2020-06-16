@@ -34,6 +34,7 @@ export class AppComponent {
       this.authService.authenticationState.subscribe(state => {
         if (state) {
           this.genericObjectS.initialize(true);
+          
           if( this.authService.isAllowed('cephalix.manage')) {
             this.router.navigate(['pages/cephalix/institutes/all']);
           } else if ( this.authService.isAllowed('user.manage') ) {

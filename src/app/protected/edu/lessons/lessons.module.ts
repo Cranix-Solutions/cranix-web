@@ -10,17 +10,25 @@ import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { PipesModule } from 'src/app/pipes/pipe-modules';
 import { LessonsPage } from './lessons.page';
 import { EductaionService } from 'src/app/services/education.service';
+import { RoomControlComponent } from './tabs/room-control/room-control.component';
+import { RoomDevComponent } from './tabs/room-control/device/roomdev.component';
 
 const routes: Routes = [
   {
     path: 'lessons',
     canActivate: [CanActivateViaAcls],
-    component: LessonsPage
+    component: LessonsPage,
+    children: [
+      {
+        path: 'roomcontrol',
+        component:RoomControlComponent
+      }
+    ]
     //loadChildren: () => import('./lessons.module').then( m => m.LessonsModule)
   },
   {
     path: '',
-    redirectTo: 'lessons'
+    redirectTo: 'lessons/roomcontrol'
   }
 ];
 
@@ -32,7 +40,7 @@ const routes: Routes = [
     IonicModule,
     CranixSharedModule
   ],
-  declarations: [LessonsPage],
+  declarations: [LessonsPage,RoomControlComponent,RoomDevComponent],
   providers: [TranslateService, PipesModule,EductaionService]
 })
 export class LessonsModule {}

@@ -416,3 +416,24 @@ export interface PositivListObj{
     subject: string,
     domains: string
 }
+
+export interface AccessStatus {
+	id?: number,
+	accessType?: string,
+	action?: string,
+	roomId: any,
+	monday?: boolean,
+	tuesday?: boolean,
+	wednesday?: boolean,
+	thursday?: boolean,
+	friday?: boolean,
+	saturday?: boolean,
+	sunday?: boolean,
+	holiday?: boolean,
+	direct: boolean,
+	login: boolean,
+	portal: boolean,
+	printing: boolean,
+	proxy: boolean,
+	pointInTime?: string
+}

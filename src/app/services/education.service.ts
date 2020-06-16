@@ -41,7 +41,15 @@ export class EductaionService{
 	
 	}
 
-
+	// powerFunction 
+	
+	applyPower(type: string,id: number, action: string){
+		if(type == "room"){
+			return this.actionOnRoom(id,action)
+		}else {
+			return this.actionOnDevice(id,action)
+		}
+	}
 	// Calls on positiv list
 
 	//POST

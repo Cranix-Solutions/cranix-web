@@ -66,6 +66,8 @@ export class AuthenticationService {
                     console.log('login respons is', val);
                     this.session = val;
                     this.session['instituteName'] = instituteName;
+                    this.session['roomId'] = val.roomId;
+                    this.session['roomName'] = val.roomName;
                     this.authenticationState.next(true);
                 },
                 async (err) => {
@@ -199,7 +201,7 @@ export class AuthenticationService {
             case "/pages/cranix/system": { return this.isAllowed('system.status') }
             case "/pages/cranix/softwares": { return this.isAllowed('software.manage') }
             case "/pages/cranix/security": { return this.isOneOfAllowed(['system.firewall','system.proxy']) }
-            case "/pages/edu/lessons": { return this.isAllowed('education.rooms') }
+            case "/pages/edu/lessons/roomcontrol": { return this.isAllowed('education.rooms') }
             case "institutes/:id": { return this.isAllowed('cephalix.modify') }
             case "customers/:id": { return this.isAllowed('customer.modify') }
             case "tickets/:id": { return this.isAllowed('cephalix.ticket') }

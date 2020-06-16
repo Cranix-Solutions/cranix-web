@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { AlertController } from '@ionic/angular';
 //Own stuff
-import { userMenu, groupMenu, roomMenu, deviceMenu, instituteMenu, hwconfMenu } from './objects.menus';
+import { userMenu, groupMenu, roomMenu, deviceMenu, instituteMenu, hwconfMenu, devActionMenu } from './objects.menus';
 import { CrxActionMap, ServerResponse } from 'src/app/shared/models/server-models';
 import { LanguageService } from 'src/app/services/language.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
@@ -83,7 +83,7 @@ export class ActionsComponent implements OnInit {
       this.menu = this.commonMenu.concat(groupMenu).concat(this.commonLastMenu);
     } else if (this.objectType == "hwconf") {
       this.menu = this.commonMenu.concat(hwconfMenu).concat(this.commonLastMenu);
-    }
+    } 
   }
 
   ngOnInit() {
@@ -103,6 +103,30 @@ export class ActionsComponent implements OnInit {
         this.popoverController.dismiss();
         break;
       }
+     /* case 'devices*':{
+        const alert = await this.alertController.create({
+          header: this.languageService.trans(ev),
+          buttons: [
+            {
+              text: this.languageService.trans('Cancel'),
+              role: 'cancel',
+              cssClass: 'secondary',
+              handler: (blah) => {
+                console.log('Confirm Cancel: blah');
+              }
+            }, {
+              text: this.languageService.trans('OK'),
+              handler: () => {
+                this.devicesAction(ev)
+                console.log('Confirm Okay');
+              }
+            }
+          ]
+        });
+        alert.onDidDismiss().then(() => this.popoverController.dismiss());
+        await alert.present();
+        break;
+      }*/
       default: {
         const alert = await this.alertController.create({
           header: this.languageService.trans(ev),
@@ -151,5 +175,6 @@ export class ActionsComponent implements OnInit {
       () => { sub.unsubscribe(); }
     )
   }
+
 }
 

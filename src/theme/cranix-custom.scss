@@ -117,6 +117,12 @@ $breakpoints-values: map-values($grid-breakpoints);
  * layout for carded-pages
  *
  */
+#roomcontrol{
+  ion-content{
+    padding-top: 60px;
+  }
+ 
+}
 
 #carded {
   margin-top  : 5px;
