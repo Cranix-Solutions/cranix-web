@@ -10,7 +10,7 @@ fi
 cp src/app/services/utils.service.ts-notest src/app/services/utils.service.ts
 ionic build --prod
 echo -n "Can we checkin y/n "; read b
-if [ $b != "y" ]; then
+if [ "${b}" != "y" ]; then
 	exit
 fi
 cd www

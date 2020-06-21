@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
+import { isDevMode } from '@angular/core';
+
 
 @Injectable()
 export class UtilsService {
-
-	public debug: boolean = false;
 
         public hostName(): string{
                 var hostname = window.location.hostname;
@@ -34,6 +34,13 @@ export class UtilsService {
                 //url = 'https://192.168.2.81:444/api';
                 console.log("From utils: " + url);
                 return url ;
+        }
+        public log(args) {
+                var dev = isDevMode();
+                //console.log(dev);
+                if (dev) {
+                        console.log(args);
+                }
         }
 }
 
