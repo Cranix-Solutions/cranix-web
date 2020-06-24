@@ -30,19 +30,7 @@ export class InstitutesSyncObjectsComponent implements OnInit {
     public objectService: GenericObjectService,
     private languageS: LanguageService
   ) {
-    this.institute = <Institute>this.objectService.selectedObject;
-
     this.context = { componentParent: this };
-    this.memberOptions = {
-      defaultColDef: {
-        resizable: true,
-        sortable: true,
-        hide: false
-      },
-      columnDefs: this.columnDefs,
-      context: this.context,
-      rowSelection: 'multiple'
-    }
     this.columnDefs = [
       {
         field: 'objectType',
@@ -60,12 +48,6 @@ export class InstitutesSyncObjectsComponent implements OnInit {
     ];
     this.autoGroupColumnDef = {
       headerName: this.languageS.trans('objectType'),
-      field: 'objectType',
-      headerCheckboxSelection: this.authService.settings.headerCheckboxSelection,
-      headerCheckboxSelectionFilteredOnly: true,
-      checkboxSelection: this.authService.settings.checkboxSelection,
-      cellStyle: { 'justify-content': "left" },
-      valueGetter: function (params) { return " "; },
       minWidth: 250
     };
   }
@@ -78,10 +60,6 @@ export class InstitutesSyncObjectsComponent implements OnInit {
     this.memberApi = params.api;
     this.memberColumnApi = params.columnApi;
     (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
-  }
-
-  onMemberSelectionChanged() {
-    this.memberSelection = this.memberApi.getSelectedRows();
   }
 
   onMemberFilterChanged() {
@@ -107,6 +85,8 @@ export class InstitutesSyncObjectsComponent implements OnInit {
       () => { subM.unsubscribe() });
   }
   startSync(en: Event) {
+    this.memberSelection = this.memberApi.getSelectedRows();
+    this.objectService.requestSent();
     for (let institute of this.cephalixService.selectedInstitutes) {
       for (let sel of this.memberSelection) {
         let sub = this.cephalixService.putObjectToInstitute(institute.id, sel.objectType, sel.cephalixId)
@@ -118,6 +98,8 @@ export class InstitutesSyncObjectsComponent implements OnInit {
     }
   }
   stopSync(en: Event) {
+    this.memberSelection = this.memberApi.getSelectedRows();
+    this.objectService.requestSent();
     for (let institute of this.cephalixService.selectedInstitutes) {
       for (let sel of this.memberSelection) {
         let sub = this.cephalixService.deleteObjectFromInstitute(institute.id, sel.objectType, sel.cephalixId)

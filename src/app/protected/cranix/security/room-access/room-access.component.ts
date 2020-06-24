@@ -66,7 +66,6 @@ export class RoomAccessComponent implements OnInit {
       col['field'] = key;
       switch (key) {
         case "roomId": {
-          col['sortable'] = true;
           col['cellRendererFramework'] = RoomIdCellRenderer;
           if (this.grouping == 'roomId') {
             col['checkboxSelection'] = true;
@@ -79,23 +78,15 @@ export class RoomAccessComponent implements OnInit {
           break;
         }
         case "pointInTime": {
-          col['sortable'] = true;
           if (this.grouping == 'pointInTime') {
             col['checkboxSelection'] = true;
             col['rowGroup'] = true,
-              col['hide'] = true;
+            col['hide'] = true;
           }
           break;
         }
-        case "action": {
-          col['sortable'] = true;
-          break;
-        }
-        case "accessType": {
-          col['sortable'] = true;
-          break;
-        }
         default: {
+          col['sortable'] = false;
           col['minWidth'] = 70;
           col['maxWidth'] = 100;
           col['cellRendererFramework'] = CheckBoxBTNRenderer;
@@ -143,9 +134,6 @@ export class RoomAccessComponent implements OnInit {
     this.accessColumnApi = params.columnApi;
     this.authService.log(this.accessApi);
     this.authService.log(this.accessColumnApi);
-  }
-  accessSelectionChanged() {
-    this.accessSelected = this.accessApi.getSelectedRows();
   }
   async redirectToAddEdit(ev: Event, accesInRoom: AccessInRoom) {
     let action = "add";
