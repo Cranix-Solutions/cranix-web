@@ -10,7 +10,6 @@ import { AllModules } from '@ag-grid-enterprise/all-modules';
 import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
 import { ModalController } from '@ionic/angular';
 import {  AddEditRoomAccessComponent } from './add-edit-room-access/add-edit-room-access.component';
-import { throwError } from 'rxjs';
 
 @Component({
   selector: 'cranix-room-access',

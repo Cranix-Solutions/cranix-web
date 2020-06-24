@@ -19,6 +19,18 @@ export const deviceMenu = [
   },
   {
     "enabled": true,
+    "icon":"logo-buffer",
+    "color":"success",
+    "action": "startclone"
+  },
+  {
+    "enabled": true,
+    "icon":"logo-buffer",
+    "color":"danger",
+    "action": "stopclone"
+  },
+  {
+    "enabled": true,
     "icon":"lock-open",
     "color":"success",
     "action": "open"
@@ -40,15 +52,15 @@ export const  groupMenu = [
 export const hwconfMenu = [
   {
     "enabled": true,
-    "icon":"power",
+    "icon":"logo-buffer",
     "color":"success",
-    "action": "startClone"
+    "action": "startclone"
   },
   {
     "enabled": true,
-    "icon":"power",
+    "icon":"logo-buffer",
     "color":"danger",
-    "action": "stopClone"
+    "action": "stopclone"
   },
   {
     "enabled": true,
@@ -103,6 +115,18 @@ export const  roomMenu = [
     "icon":"refresh",
     "color":"danger",
     "action": "reboot"
+  },
+  {
+    "enabled": true,
+    "icon":"logo-buffer",
+    "color":"success",
+    "action": "startclone"
+  },
+  {
+    "enabled": true,
+    "icon":"logo-buffer",
+    "color":"danger",
+    "action": "stopclone"
   },
   {
     "enabled": true,

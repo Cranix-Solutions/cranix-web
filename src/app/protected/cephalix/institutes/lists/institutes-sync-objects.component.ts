@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { AllModules } from '@ag-grid-enterprise/all-modules';
+import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
 
 //Own stuff
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
-import { Institute, SynchronizedObject } from 'src/app/shared/models/cephalix-data-model';
+import { SynchronizedObject } from 'src/app/shared/models/cephalix-data-model';
 
 @Component({
   selector: 'cranix-institutes-sync-objects',
@@ -14,15 +16,14 @@ import { Institute, SynchronizedObject } from 'src/app/shared/models/cephalix-da
 export class InstitutesSyncObjectsComponent implements OnInit {
 
   context;
-  memberOptions;
   columnDefs = [];
   memberApi;
   memberColumnApi;
   memberSelection: SynchronizedObject[] = [];
   memberData: SynchronizedObject[] = [];
   autoGroupColumnDef;
+  modules = [ AllModules, RowGroupingModule ];
   institute;
-  selectedList: string[] = [];
 
   constructor(
     public authService:     AuthenticationService,
@@ -59,7 +60,6 @@ export class InstitutesSyncObjectsComponent implements OnInit {
   onMemberReady(params) {
     this.memberApi = params.api;
     this.memberColumnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
   }
 
   onMemberFilterChanged() {
@@ -67,10 +67,6 @@ export class InstitutesSyncObjectsComponent implements OnInit {
     this.memberApi.doLayout();
   }
 
-  onResize(ev: Event) {
-    (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
-    //this.sizeAll();
-  }
   sizeAll() {
     var allColumnIds = [];
     this.memberColumnApi.getAllColumns().forEach((column) => {
@@ -85,10 +81,9 @@ export class InstitutesSyncObjectsComponent implements OnInit {
       () => { subM.unsubscribe() });
   }
   startSync(en: Event) {
-    this.memberSelection = this.memberApi.getSelectedRows();
     this.objectService.requestSent();
     for (let institute of this.cephalixService.selectedInstitutes) {
-      for (let sel of this.memberSelection) {
+      for (let sel of this.memberApi.getSelectedRows()) {
         let sub = this.cephalixService.putObjectToInstitute(institute.id, sel.objectType, sel.cephalixId)
           .subscribe(
             (val) => { this.authService.log("Start sync:") },
@@ -98,10 +93,9 @@ export class InstitutesSyncObjectsComponent implements OnInit {
     }
   }
   stopSync(en: Event) {
-    this.memberSelection = this.memberApi.getSelectedRows();
     this.objectService.requestSent();
     for (let institute of this.cephalixService.selectedInstitutes) {
-      for (let sel of this.memberSelection) {
+      for (let sel of this.memberApi.getSelectedRows()) {
         let sub = this.cephalixService.deleteObjectFromInstitute(institute.id, sel.objectType, sel.cephalixId)
           .subscribe(
             (val) => { this.authService.log("Stop sync:") },
