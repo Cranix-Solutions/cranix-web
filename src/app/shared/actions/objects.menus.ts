@@ -49,6 +49,9 @@ export const deviceMenu = [
 export const  groupMenu = [
 ]
 
+export const  printerMenu = [
+]
+
 export const hwconfMenu = [
   {
     "enabled": true,
