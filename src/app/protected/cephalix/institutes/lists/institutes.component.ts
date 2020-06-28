@@ -26,11 +26,10 @@ export class InstitutesComponent implements OnInit {
   objectKeys: string[] = [];
   displayedColumns: string[] = ['name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity'];
   sortableColumns: string[] = ['uuid', 'name', 'locality', 'ipVPN', 'regCode', 'validity'];
-  gridOptions: GridOptions;
   columnDefs = [];
+  defaultColDef = {};
   gridApi: GridApi;
   columnApi: ColumnApi;
-  rowSelection;
   context;
   title = 'app';
   rowData = [];
@@ -48,19 +47,12 @@ export class InstitutesComponent implements OnInit {
     this.context = { componentParent: this };
     this.objectKeys = Object.getOwnPropertyNames(cephalixService.templateInstitute);
     this.createColumnDefs();
-    this.gridOptions = <GridOptions>{
-      defaultColDef: {
+    this.defaultColDef = {
         resizable: true,
         sortable: true,
         hide: false,
         suppressMenu : true
-      },
-      columnDefs: this.columnDefs,
-      context: this.context,
-      rowSelection: 'multiple',
-      // domLayout: 'autoHeight',
-      rowHeight: 35
-    }
+      };
   }
 
   ngOnInit() {

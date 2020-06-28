@@ -1,5 +1,5 @@
-import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__ } from '@angular/core';
-import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
+import { Component, OnInit} from '@angular/core';
+import { GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
@@ -21,16 +21,14 @@ import { RoomPrintersPage } from '../details/printers/room-printers.page';
   styleUrls: ['./rooms.component.scss'],
 })
 export class RoomsComponent implements OnInit {
-  objectKeys: string[] = [];
+  objectKeys: string[] = Object.getOwnPropertyNames(new Room());
   displayedColumns: string[] = ['name', 'description', 'roomType', 'roomControl', 'hwconfId', 'actions'];
   sortableColumns: string[] = ['name', 'description', 'roomType', 'roomControl', 'hwconfId'];
-  gridOptions: GridOptions;
   columnDefs = [];
   gridApi: GridApi;
   columnApi: ColumnApi;
-  rowSelection;
+  defaultColDef = {};
   context;
-  selected: Room[] = [];
   title = 'app';
   rowData = [];
 
@@ -44,20 +42,13 @@ export class RoomsComponent implements OnInit {
     private storage: Storage
   ) {
     this.context = { componentParent: this };
-    this.rowSelection = 'multiple';
-    this.objectKeys = Object.getOwnPropertyNames(new Room());
     this.createColumnDefs();
-    this.gridOptions = <GridOptions>{
-      defaultColDef: {
+    this.defaultColDef = {
         resizable: true,
         sortable: true,
         hide: false,
         suppressMenu : true
-      },
-      columnDefs: this.columnDefs,
-      context: this.context,
-      rowHeight: 35
-    }
+      }
   }
   ngOnInit() {
     this.storage.get('RoomsComponent.displayedColumns').then((val) => {
@@ -119,9 +110,6 @@ export class RoomsComponent implements OnInit {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
   }
-  onSelectionChanged() {
-    this.selected = this.gridApi.getSelectedRows();
-  }
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.doLayout();
@@ -141,7 +129,8 @@ export class RoomsComponent implements OnInit {
  * @param ev 
  */
   async openActions(ev: any, objId: number) {
-    if (this.selected.length == 0 && !objId) {
+    let selected = this.gridApi.getSelectedRows();
+    if (selected.length == 0 && !objId) {
       this.objectService.selectObject();
       return;
     }
@@ -149,8 +138,8 @@ export class RoomsComponent implements OnInit {
     if (objId) {
       objectIds.push(objId)
     } else {
-      for (let i = 0; i < this.selected.length; i++) {
-        objectIds.push(this.selected[i].id);
+      for ( let obj of selected ) {
+        objectIds.push( obj.id);
       }
     }
     const popover = await this.popoverCtrl.create({
@@ -159,21 +148,25 @@ export class RoomsComponent implements OnInit {
       componentProps: {
         objectType: "room",
         objectIds: objectIds,
-        selection: this.selected
+        selection: selected
       },
       animated: true,
       showBackdrop: true
     });
     (await popover).present();
   }
+  
   async redirectToEdit(ev: Event, room: Room) {
-    let action = "add";
+    let action = "";
     if (room) {
+      delete room.accessInRooms;
       this.objectService.selectedObject = room;
       action = 'modify';
     } else {
+      action = "add";
       room = new Room;
-      delete room.network;
+      room.network = this.objectService.selects['network'][0];
+      delete room.accessInRooms;
       delete room.netMask;
       delete room.startIP;
       room.devCount = 32;
@@ -220,7 +213,7 @@ export class RoomsComponent implements OnInit {
       this.authService.log("most lett vegrehajtva.")
     })
   }
-  /**
+/**
 * Function to Select the columns to show
 * @param ev 
 */

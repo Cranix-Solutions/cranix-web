@@ -25,13 +25,12 @@ export class GroupsPage implements OnInit {
   objectKeys: string[] = [];
   displayedColumns: string[] = ['name', 'description', 'roomControl', 'hwconfId', 'actions'];
   sortableColumns: string[] = ['name', 'description', 'roomControl', 'hwconfId'];
-  gridOptions: GridOptions;
   columnDefs = [];
+  defaultColDef = {};
   gridApi: GridApi;
   columnApi: ColumnApi;
   rowSelection;
   context;
-  selected: Group[] = [];
   title = 'app';
   rowData = [];
 
@@ -49,17 +48,12 @@ export class GroupsPage implements OnInit {
     this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new Group());
     this.createColumnDefs();
-    this.gridOptions = <GridOptions>{
-      defaultColDef: {
+    this.defaultColDef = {
         resizable: true,
         sortable: true,
         hide: false,
         suppressMenu : true
-      },
-      columnDefs: this.columnDefs,
-      context: this.context,
-      rowHeight: 35
-    }
+      }
   }
   ngOnInit() {
     this.storage.get('GroupsPage.displayedColumns').then((val) => {
@@ -114,9 +108,7 @@ export class GroupsPage implements OnInit {
     this.columnApi = params.columnApi;
     this.sizeAll();
   }
-  onSelectionChanged() {
-    this.selected = this.gridApi.getSelectedRows();
-  }
+
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.doLayout();
@@ -153,7 +145,8 @@ export class GroupsPage implements OnInit {
   * @param ev
   */
   async openActions(ev: any, objId: number) {
-    if (this.selected.length == 0 && !objId) {
+    let selected = this.gridApi.getSelectedRows();
+    if ( selected.length == 0 && !objId) {
       this.objectService.selectObject();
       return;
     }
@@ -161,8 +154,8 @@ export class GroupsPage implements OnInit {
     if (objId) {
       objectIds.push(objId)
     } else {
-      for (let i = 0; i < this.selected.length; i++) {
-        objectIds.push(this.selected[i].id);
+      for (let i = 0; i < selected.length; i++) {
+        objectIds.push(selected[i].id);
       }
     }
     const popover = await this.popoverCtrl.create({
@@ -171,7 +164,7 @@ export class GroupsPage implements OnInit {
       componentProps: {
         objectType: "group",
         objectIds: objectIds,
-        selection: this.selected
+        selection: selected
       },
       animated: true,
       showBackdrop: true

@@ -24,13 +24,12 @@ export class UsersComponent implements OnInit {
   objectKeys: string[] = [];
   displayedColumns: string[] = ['uid', 'uuid', 'givenName', 'surName', 'role', 'classes', 'actions'];
   sortableColumns: string[] = ['uid', 'uuid', 'givenName', 'surName', 'role', 'classes'];
-  gridOptions: GridOptions;
   columnDefs = [];
+  defaultColDef = {};
   gridApi: GridApi;
   rowSelection: 'multiple';
   columnApi: ColumnApi;
   context;
-  selected: User[] = [];
   title = 'app';
   rowData = [];
 
@@ -46,18 +45,12 @@ export class UsersComponent implements OnInit {
     this.context = { componentParent: this };
     this.objectKeys = Object.getOwnPropertyNames(new User());
     this.createColumnDefs();
-    this.gridOptions = <GridOptions>{
-      defaultColDef: {
+    this.defaultColDef = {
         resizable: true,
         sortable: true,
         hide: false,
         suppressMenu : true
-      },
-      columnDefs: this.columnDefs,
-      context: this.context,
-      rowSelection: 'multiple',
-      rowHeight: 35
-    }
+      }
   }
   ngOnInit() {
     this.storage.get('UsersPage.displayedColumns').then((val) => {
@@ -116,9 +109,6 @@ export class UsersComponent implements OnInit {
     this.gridApi.sizeColumnsToFit();
     this.sizeAll();
   }
-  onSelectionChanged() {
-    this.selected = this.gridApi.getSelectedRows();
-  }
 
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
@@ -148,7 +138,8 @@ export class UsersComponent implements OnInit {
  * @param ev
  */
   async openActions(ev: any, objId: number) {
-    if (this.selected.length == 0 && !objId) {
+    let selected = this.gridApi.getSelectedRows();
+    if (selected.length == 0 && !objId) {
       this.objectService.selectObject();
       return;
     }
@@ -156,8 +147,8 @@ export class UsersComponent implements OnInit {
     if (objId) {
       objectIds.push(objId)
     } else {
-      for (let i = 0; i < this.selected.length; i++) {
-        objectIds.push(this.selected[i].id);
+      for (let i = 0; i < selected.length; i++) {
+        objectIds.push(selected[i].id);
       }
     }
     const popover = await this.popoverCtrl.create({
@@ -166,7 +157,7 @@ export class UsersComponent implements OnInit {
       componentProps: {
         objectType: "user",
         objectIds: objectIds,
-        selection: this.selected
+        selection: selected
 	},
       translucent: true,
       animated: true,

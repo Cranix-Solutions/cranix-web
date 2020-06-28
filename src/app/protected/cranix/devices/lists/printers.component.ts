@@ -34,7 +34,6 @@ export class PrintersComponent implements OnInit {
   columnApi: ColumnApi;
   rowSelection;
   context;
-  selected: Device[] = [];
   title = 'app';
   rowData = [];
 
@@ -132,9 +131,6 @@ export class PrintersComponent implements OnInit {
     this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
-  onSelectionChanged() {
-    this.selected = this.gridApi.getSelectedRows();
-  }
 
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
@@ -149,15 +145,16 @@ export class PrintersComponent implements OnInit {
     this.columnApi.autoSizeColumns(allColumnIds);
   }
 
-  redirectToDelete(device: Device) {
-    this.objectService.deleteObjectDialog(device, 'device')
+  redirectToDelete(printer: Printer) {
+    this.objectService.deleteObjectDialog(printer, 'printer')
   }
   /**
  * Open the actions menu with the selected object ids.
  * @param ev 
  */
   async openActions(ev: any, objId: number) {
-    if (this.selected.length == 0 && !objId) {
+    let selected = this.gridApi.getSelectedRows();
+    if ( selected.length == 0 && !objId) {
       this.objectService.selectObject();
       return;
     }
@@ -165,36 +162,37 @@ export class PrintersComponent implements OnInit {
     if (objId) {
       objectIds.push(objId)
     } else {
-      for (let i = 0; i < this.selected.length; i++) {
-        objectIds.push(this.selected[i].id);
+      for (let i = 0; i < selected.length; i++) {
+        objectIds.push(selected[i].id);
       }
     }
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
       event: ev,
       componentProps: {
-        objectType: "device",
+        objectType: "printer",
         objectIds: objectIds,
-        selection: this.selected
+        selection: selected
       },
       animated: true,
       showBackdrop: true
     });
     (await popover).present();
   }
-  async redirectToEdit(ev: Event, device: Device) {
+
+  async redirectToEdit(ev: Event, printer: Printer) {
     let action = "modify";
-    if (!device) {
-      device = new Device();
+    if (!printer) {
+      printer = new Printer();
       action = "add";
     }
     const modal = await this.modalCtrl.create({
       component: ObjectsEditComponent,
       cssClass: "medium-modal",
       componentProps: {
-        objectType: "device",
+        objectType: "printer",
         objectAction: action,
-        object: device
+        object: printer
       },
       animated: true,
       swipeToClose: true,

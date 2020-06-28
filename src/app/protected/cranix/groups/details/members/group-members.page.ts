@@ -43,8 +43,8 @@ export class GroupMembersPage implements OnInit {
         field: 'uid',
         sortable: true,
         headerCheckboxSelection: this.authService.settings.headerCheckboxSelection,
-	headerCheckboxSelectionFilteredOnly: true,
-	checkboxSelection: this.authService.settings.checkboxSelection,
+	      headerCheckboxSelectionFilteredOnly: true,
+	      checkboxSelection: this.authService.settings.checkboxSelection,
         suppressMenu : true
       },
       {

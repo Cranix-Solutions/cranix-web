@@ -24,13 +24,12 @@ export class InstitutesStatusComponent implements OnInit {
   objectKeys: string[] = [];
   displayedColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'availableUpdates', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel'];
   sortableColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'availableUpdates', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel'];
-  gridOptions: GridOptions;
   columnDefs = [];
+  defaultColDef = {};
   gridApi: GridApi;
   columnApi: ColumnApi;
   rowSelection;
   context;
-  selected: Institute[];
   title = 'app';
   rowData = [];
   objectIds: number[] = [];
@@ -50,16 +49,11 @@ export class InstitutesStatusComponent implements OnInit {
     this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new InstituteStatus());
     this.createColumnDefs();
-    this.gridOptions = <GridOptions>{
-      defaultColDef: {
+    this.defaultColDef = {
         resizable: true,
         sortable: true,
         hide: false
-      },
-      columnDefs: this.columnDefs,
-      context: this.context,
-      rowHeight: 35
-    }
+      };
   }
 
   ngOnInit() {
@@ -149,9 +143,6 @@ export class InstitutesStatusComponent implements OnInit {
     (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
     this.gridApi.sizeColumnsToFit();
   }
-  onSelectionChanged() {
-    this.selected = this.gridApi.getSelectedRows();
-  }
 
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
@@ -183,9 +174,9 @@ export class InstitutesStatusComponent implements OnInit {
  * @param ev
  */
   async openActions(ev: any) {
-    if (this.selected) {
-      for (let i = 0; i < this.selected.length; i++) {
-        this.objectIds.push(this.selected[i].id);
+    if (this.gridApi.getSelectedRows().length > 0 ) {
+      for (let i = 0; i <  this.gridApi.getSelectedRows().length; i++) {
+        this.objectIds.push(this.gridApi.getSelectedRows()[i].id);
       }
     }
     const popover = await this.popoverCtrl.create({
@@ -194,7 +185,7 @@ export class InstitutesStatusComponent implements OnInit {
       componentProps: {
         objectType: "sync-object",
         objectIds: this.objectIds,
-        selection: this.selected
+        selection: this.gridApi.getSelectedRows()
       },
       animated: true,
       showBackdrop: true

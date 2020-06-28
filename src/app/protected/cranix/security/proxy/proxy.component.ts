@@ -83,7 +83,7 @@ export class ProxyComponent implements OnInit {
     this.proxySelected = this.proxyApi.getSelectedRows();
   }
 
-  addEditPositiveList(positiveList) {
+  redirectToEdit(event,positiveList) {
     //TODO
   }
   writeConfig() {

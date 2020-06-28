@@ -25,14 +25,15 @@ showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
         id="softwareStatusTable"
         style="width: 100%; height: 100%;"
         class="{{authService.settings.agGridThema}}"
-        [gridOptions]="memberOptions"
+        rowHeight="{{authService.settings.rowHeight}}"
+        rowSelection="multiple"
+        [context]="context"
         [rowData]="memberData"
         [columnDefs]="columnDefs"
-        [context]="context"
-        rowSelection="multiple"
-        (gridReady)="onMemberReady($event)"
+        [defaultColDef]="defaultColDef"
         [autoGroupColumnDef]="autoGroupColumnDef"
-	      [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick">
+        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
+        (gridReady)="onMemberReady($event)">
       </ag-grid-angular>
     </ion-card-content>
   </ion-card>

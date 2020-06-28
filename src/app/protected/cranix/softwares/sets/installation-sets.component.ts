@@ -19,13 +19,13 @@ export class InstallationSetsComponent implements OnInit {
   context;
   installationSetOptions;
   columnDefs = [];
+  defaultColDef = {};
   installationSetApi;
   installationSetColumnApi;
   installationSetSelection: Installation[] = [];
   installationSetData:      Installation[] = [];
   autoGroupColumnDef;
   institute;
-  selectedList: string[] = [];
 
   constructor(
     public authService: AuthenticationService,
@@ -35,16 +35,11 @@ export class InstallationSetsComponent implements OnInit {
     private languageS: LanguageService
     ) {
     this.context = { componentParent: this };
-    this.installationSetOptions = {
-      defaultColDef: {
+    this.defaultColDef = {
         resizable: true,
         sortable: true,
         hide: false
-      },
-      columnDefs: this.columnDefs,
-      context: this.context,
-      rowSelection: 'multiple'
-    }
+      };
    }
   ngOnInit() {
     this.createColumnDefs();
@@ -145,7 +140,7 @@ export class InstallationSetsComponent implements OnInit {
       }
     ];
   }
-  async addEditSet(installation: Category){
+  async redirectToEdit(event,installation: Category){
     let action=  "add"
     if( installation ) {
       this.softwareService.selectedInstallationSet = installation;
