@@ -23,7 +23,7 @@ export class GenericObjectService {
    * The base objects which need to be loaded by the initialisations
    */
   objects: string[] = [
-    'user', 'group', 'room', 'device', 'hwconf', 'printer'
+    'user', 'group', 'room', 'device', 'hwconf', 'printer','adhocroom'
   ]
   /**
    * Default.ini for cephalix
@@ -48,15 +48,19 @@ export class GenericObjectService {
    * Attributes which can not be modified
    */
   readOnlyAttributes: string[] = [
+    'id',
     'accessType',
     'classes',
+    'devCount',
     'fsQuotaUsed',
     'ip',
     'msQuotaUsed',
     'name',
+    'network',
     'ownerName',
     'recDate',
     'role',
+    'startIp',
     'uid',
     'wlanIp'
   ]
@@ -68,7 +72,6 @@ export class GenericObjectService {
     'cephalixInstituteId',
     'deleted',
     'devices',
-    'id',
     'network',
     'ownerId',
     'partitions',
@@ -171,7 +174,7 @@ export class GenericObjectService {
   }
   /**
    * Loads the object of type 'objectType' from the server
-   * @param objectType 
+   * @param objectType
    */
   getAllObject(objectType) {
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";
@@ -233,6 +236,13 @@ export class GenericObjectService {
     }
     return objectId;
   }
+
+  /**
+   * Converts the id name to the object name:
+   *  roomId -> room
+   *  roomIds -> room
+   * @param idName
+   */
   idToPipe(idName: string) {
     if (idName == 'cephalixCustomerId') {
       return 'customer';
@@ -240,7 +250,13 @@ export class GenericObjectService {
     if (idName == 'cephalixInstituteId') {
       return 'institute';
     }
-    return idName.substring(0, idName.length - 2)
+    if (idName.substring(idName.length - 2) == 'Id' )
+    {
+      return idName.substring(0, idName.length - 2)
+    }
+    if( idName.substring(idName.length - 3) == 'Ids' )  {
+      return idName.substring(0, idName.length - 3)
+    }
   }
 
   addObject(object, objectType) {
@@ -407,7 +423,7 @@ export class GenericObjectService {
   }
   /**
    * Helper script fot the template to detect the type of the variables
-   * @param val 
+   * @param val
    */
   typeOf(key: string, object, action: string) {
     let obj = object[key];
@@ -426,7 +442,7 @@ export class GenericObjectService {
     if (typeof obj === 'boolean') {
       return "booleanFalse";
     }
-    if (this.hiddenAttributes.indexOf(key) != -1) {
+    if ( action == "edit" && this.hiddenAttributes.indexOf(key) != -1) {
       return "hidden";
     }
     if (key == 'name' && object.regCode) {
@@ -435,8 +451,11 @@ export class GenericObjectService {
     if (action == 'edit' && this.readOnlyAttributes.indexOf(key) != -1) {
       return "stringRO";
     }
-    if (key.substring(key.length - 2) == 'Id') {
+    if (key.substring(key.length - 2) == 'Id' ) {
       return "idPipe";
+    }
+    if( key.substring(key.length - 3) == 'Ids' )  {
+      return "idsPipe";
     }
     if (key.substring(key.length - 4) == 'File') {
       return 'file';
