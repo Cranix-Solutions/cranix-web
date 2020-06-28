@@ -282,18 +282,14 @@ export class Contact {
 	constructor() { }
 }
 
-export class AdHocRoom {
-	id?: number;
-	name: string = "";
-	places: number = 0;
-	description: string = "";
-	netMask: number = 0;
-	startIP?: string = "";
-	roomType?: string = "";
-	roomControl?: string = "";
-	network?: string = "";
+export class AdHocRoom extends Room {
+	devicesProUser?: number = 1;
+	devCount: number = 0;
 	studentsOnly: boolean = false;
-	constructor() { }
+	groupIds: number[]=[];
+	userIds?: number[] = [];
+	users?: User[] = [];
+	groups?: Group[] = [];
 }
 
 export class SupportTicket {
