@@ -144,7 +144,7 @@ export class InstallationSetsComponent implements OnInit {
     let action=  "add"
     if( installation ) {
       this.softwareService.selectedInstallationSet = installation;
-      action = "edit";
+      action = "modify";
     } else {
       this.softwareService.selectedInstallationSet = null;
     }

@@ -163,7 +163,7 @@ export class AdhocComponent implements OnInit {
       delete adhocroom.startIP;
       delete adhocroom.hwconfId;
       this.objectService.selectedObject = adhocroom;
-      action = 'edit';
+      action = 'modify';
     } else {
       action = "add";
       adhocroom = new AdHocRoom;

@@ -442,13 +442,13 @@ export class GenericObjectService {
     if (typeof obj === 'boolean') {
       return "booleanFalse";
     }
-    if ( action == "edit" && this.hiddenAttributes.indexOf(key) != -1) {
+    if ( action == 'modify' && this.hiddenAttributes.indexOf(key) != -1) {
       return "hidden";
     }
     if (key == 'name' && object.regCode) {
       return 'string';
     }
-    if (action == 'edit' && this.readOnlyAttributes.indexOf(key) != -1) {
+    if (action == 'modify' && this.readOnlyAttributes.indexOf(key) != -1) {
       return "stringRO";
     }
     if (key.substring(key.length - 2) == 'Id' ) {

@@ -164,7 +164,7 @@ export class SoftwarePackagesComponent implements OnInit {
     })
   }
   async redirectToEdit(ev: Event, software: Software) {
-    let action = 'edit';
+    let action = 'modify';
     if (!software) {
       software = new Software();
       action = 'add';
