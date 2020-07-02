@@ -67,6 +67,16 @@ export class ProtectedPage implements OnInit {
       title: 'Security',
       url: '/pages/cranix/security',
       icon: 'security'
+    },
+    {
+      title: 'MyGroups',
+      url: '/pages/cranix/mygroups',
+      icon: "people"
+    },
+    {
+      title: 'MyUsers',
+      url: '/pages/cranix/myusers',
+      icon: "person"
     }
   ];
 

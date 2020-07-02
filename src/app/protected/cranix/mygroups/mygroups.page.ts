@@ -1,9 +1,11 @@
-import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__ } from '@angular/core';
-import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
+import { Component, OnInit  } from '@angular/core';
+import { GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
+import { AllModules } from '@ag-grid-enterprise/all-modules';
+import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
 
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
@@ -11,20 +13,17 @@ import { GroupActionBTNRenderer } from 'src/app/pipes/ag-group-renderer';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
-import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Group } from 'src/app/shared/models/data-model'
 import { AuthenticationService } from 'src/app/services/auth.service';
-import { GroupMembersPage  } from './details/members/group-members.page';
+import { GroupMembersPage  } from '../groups/details/members/group-members.page';
 
 @Component({
-  selector: 'cranix-groups',
-  templateUrl: './groups.page.html',
-  styleUrls: ['./groups.page.scss'],
+  selector: 'cranix-mygroups',
+  templateUrl: './mygroups.page.html',
+  styleUrls: ['./mygroups.page.scss'],
 })
-export class GroupsPage implements OnInit {
+export class MyGroupsPage implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['name', 'description', 'roomControl', 'hwconfId', 'actions'];
-  sortableColumns: string[] = ['name', 'description', 'roomControl', 'hwconfId'];
   columnDefs = [];
   defaultColDef = {};
   gridApi: GridApi;
@@ -33,6 +32,8 @@ export class GroupsPage implements OnInit {
   context;
   title = 'app';
   rowData = [];
+  modules = [ AllModules, RowGroupingModule ];
+  autoGroupColumnDef;
 
   constructor(
     public authService: AuthenticationService,
@@ -56,58 +57,55 @@ export class GroupsPage implements OnInit {
       }
   }
   ngOnInit() {
-    this.storage.get('GroupsPage.displayedColumns').then((val) => {
-      let myArray = JSON.parse(val);
-      if (myArray) {
-        this.displayedColumns = myArray.concat(['actions']);
-        this.createColumnDefs();
-      }
-    });
-    this.objectService.getObjects('group').subscribe(obj => this.rowData = obj);
+    this.objectService.getObjects('education/group').subscribe(obj => this.rowData = obj);
   }
 
   createColumnDefs() {
-     this.columnDefs = [];
-     let action = {
-      headerName: "",
-      width: 150,
-      suppressSizeToFit: true,
-      cellStyle: { 'padding': '2px', 'line-height': '36px' },
-      field: 'actions',
-      pinned: 'left',
-      cellRendererFramework: GroupActionBTNRenderer
-    };
-    for (let key of this.objectKeys) {
-      let col = {};
-      col['field'] = key;
-      col['headerName'] = this.languageS.trans(key);
-      col['hide'] = (this.displayedColumns.indexOf(key) == -1);
-      col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
-      switch (key) {
-        case 'name': {
-          col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
-          col['headerCheckboxSelectionFilteredOnly'] = true;
-          col['checkboxSelection'] = this.authService.settings.checkboxSelection;
-          col['width'] = 150;
-          col['cellStyle'] = { 'padding-left': '2px' };
-          col['suppressSizeToFit'] = true;
-          col['pinned'] = 'left';
-          col['flex'] = '1';
-          col['colId'] = '1';
-          this.columnDefs.push(col);
-          this.columnDefs.push(action);
-          continue;
-          break;
+    this.columnDefs = [
+      {
+        field: 'groupType',
+        width: 150,
+        headerName: this.languageS.trans('groupType'),
+        sortable: false,
+        rowGroup: false,
+        hide: true,
+        valueGetter: function (params) {
+          return params.context['componentParent'].languageS.trans(params.data.groupType);
         }
+      },
+      {
+        field: 'name',
+        headerCheckboxSelectionFilteredOnly: true,
+        checkboxSelection: this.authService.settings.checkboxSelection,
+        width: 150,
+        sortable: true,
+        cellStyle: { 'padding-left': '2px' },
+        suppressSizeToFit: true,
+      },
+      {
+        headerName: "",
+        width: 150,
+        suppressSizeToFit: true,
+        cellStyle: { 'padding': '2px', 'line-height': '36px' },
+        field: 'actions',
+        cellRendererFramework: GroupActionBTNRenderer
+      },
+      {
+        field: 'description',
+        sortable: true,
+        headerName: this.languageS.trans('description')
       }
-      this.columnDefs.push(col);
-    }
+    ];
+    this.autoGroupColumnDef = {
+      headerName: this.languageS.trans('groupType'),
+      minWidth: 150
+    };
   }
-
+    
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-    this.sizeAll();
+    //this.sizeAll();
   }
 
   onQuickFilterChanged(quickFilter) {
@@ -115,19 +113,8 @@ export class GroupsPage implements OnInit {
     this.gridApi.doLayout();
 
   }
-  onGridSizeChange(params) {
-   /* var allColumns = params.columnApi.getAllColumns();
-    params.api.sizeColumnsToFit();*/
-    this.sizeAll();
-  }
 
   sizeAll() {
-   /* var allColumnIds = [];
-    this.columnApi.getAllColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.columnApi.autoSizeColumns(allColumnIds);*/
-
     this.gridApi.sizeColumnsToFit();
     window.addEventListener('resize', function() {
       setTimeout(function() {
@@ -211,32 +198,5 @@ export class GroupsPage implements OnInit {
       }
     });
     (await modal).present();
-  }
-
-  /**
-   * Function to Select the columns to show
-   * @param ev
-  */
-  async openCollums(ev: any) {
-    const modal = await this.modalCtrl.create({
-      component: SelectColumnsComponent,
-      componentProps: {
-        columns: this.objectKeys,
-        selected: this.displayedColumns,
-        objectPath: "GroupsPage.displayedColumns"
-      },
-      animated: true,
-      swipeToClose: true,
-      backdropDismiss: false
-    });
-    modal.onDidDismiss().then((dataReturned) => {
-      if (dataReturned.data) {
-        this.displayedColumns = dataReturned.data.concat(['actions']);
-        this.createColumnDefs();
-      }
-    });
-    (await modal).present().then((val) => {
-      this.authService.log("most lett vegrehajtva.")
-    })
   }
 }

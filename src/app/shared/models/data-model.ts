@@ -1,6 +1,6 @@
 
 export class Hwconf {
-	id?: number;
+	id?: number = 0;
 	name: string = "";
 	deviceType: string = "";
 	description: string = "";

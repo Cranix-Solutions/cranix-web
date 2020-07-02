@@ -79,7 +79,7 @@ export class RoomAccessComponent implements OnInit {
         case "pointInTime": {
           if (this.grouping == 'pointInTime') {
             col['checkboxSelection'] = true;
-            col['rowGroup'] = true,
+            col['rowGroup'] = true;
             col['hide'] = true;
           }
           break;
@@ -104,7 +104,7 @@ export class RoomAccessComponent implements OnInit {
           headerName: this.languageS.trans('roomId'),
           minWidth: 150
         };
-	//this.accessApi.setAutoGroupColumnDef(this.autoGroupColumnDef);
+	this.accessApi.setAutoGroupColumnDef(this.autoGroupColumnDef);
         break;
       }
       case 'pointInTime': {
@@ -112,7 +112,7 @@ export class RoomAccessComponent implements OnInit {
           headerName: this.languageS.trans('pointInTime'),
           minWidth: 150
         };
-	//this.accessApi.setAutoGroupColumnDef(this.autoGroupColumnDef);
+	this.accessApi.setAutoGroupColumnDef(this.autoGroupColumnDef);
         this.grouping = ''; break
       }
     }

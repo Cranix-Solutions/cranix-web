@@ -22,9 +22,9 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 })
 export class HwconfsPage implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['name', 'description', 'deviceType','actions'];
+  displayedColumns: string[] = ['name', 'description', 'deviceType', 'actions'];
   sortableColumns: string[] = ['name', 'description', 'deviceType'];
-  gridOptions;
+  defaultColDef = {};
   columnDefs = [];
   gridApi;
   columnApi;
@@ -46,16 +46,11 @@ export class HwconfsPage implements OnInit {
     this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new Hwconf());
     this.createColumnDefs();
-    this.gridOptions = {
-      defaultColDef: {
-        resizable: true,
-        sortable: true,
-        hide: false,
-        suppressMenu : true
-      },
-      columnDefs: this.columnDefs,
-      context: this.context,
-      rowHeight: 35
+    this.defaultColDef = {
+      resizable: true,
+      sortable: true,
+      hide: false,
+      suppressMenu: true
     }
   }
   ngOnInit() {
@@ -69,7 +64,16 @@ export class HwconfsPage implements OnInit {
     this.objectService.getObjects('hwconf').subscribe(obj => this.rowData = obj);
   }
   createColumnDefs() {
-    let columnDefs = [];
+    this.columnDefs = [];
+    let action = {
+      headerName: "",
+      width: 100,
+      suppressSizeToFit: true,
+      cellStyle: { 'padding': '2px', 'line-height': '36px' },
+      field: 'actions',
+      pinned: 'left',
+      cellRendererFramework: ActionBTNRenderer
+    };
     for (let key of this.objectKeys) {
       let col = {};
       col['field'] = key;
@@ -87,29 +91,17 @@ export class HwconfsPage implements OnInit {
           col['pinned'] = 'left';
           col['flex'] = '1';
           col['colId'] = '1';
-          break;
+          this.columnDefs.push(col);
+          this.columnDefs.push(action);
+          continue;
         }
       }
-      columnDefs.push(col);
+      this.columnDefs.push(col);
     }
-    let action = {
-      headerName: "",
-      width: 100,
-      suppressSizeToFit: true,
-      cellStyle: { 'padding': '2px', 'line-height': '36px' },
-      field: 'actions',
-      pinned: 'left',
-      cellRendererFramework: ActionBTNRenderer
-    };
-    columnDefs.splice(1, 0, action);
-    this.columnDefs = columnDefs;
   }
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-  }
-  onSelectionChanged() {
-    this.selected = this.gridApi.getSelectedRows();
   }
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
@@ -130,19 +122,20 @@ export class HwconfsPage implements OnInit {
  * Open the actions menu with the selected object ids.
  * @param ev 
  */
-async openActions(ev: any, objId: number) {
-  if (this.selected.length == 0 && !objId) {
-    this.objectService.selectObject();
-    return;
-  }
-  let objectIds = [];
-  if (objId) {
-    objectIds.push(objId)
-  } else {
-    for (let i = 0; i < this.selected.length; i++) {
-      objectIds.push(this.selected[i].id);
+  async openActions(ev: any, objId: number) {
+    this.selected = this.gridApi.getSelectedRows();
+    if (this.selected.length == 0 && !objId) {
+      this.objectService.selectObject();
+      return;
     }
-  }
+    let objectIds = [];
+    if (objId) {
+      objectIds.push(objId)
+    } else {
+      for (let i = 0; i < this.selected.length; i++) {
+        objectIds.push(this.selected[i].id);
+      }
+    }
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
       event: ev,
@@ -156,8 +149,9 @@ async openActions(ev: any, objId: number) {
     });
     (await popover).present();
   }
+
   async redirectToEdit(ev: Event, hwconf: Hwconf) {
-  if (hwconf) {
+    if (hwconf) {
       this.objectService.selectedObject = hwconf;
       this.route.navigate(['/pages/cranix/hwconfs/' + hwconf.id]);
     } else {

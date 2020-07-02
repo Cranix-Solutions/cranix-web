@@ -32,7 +32,6 @@ export class UtilsService {
                 //url = 'https://pcs.dnsuser.de:10444/api';
                 //url = 'https://192.168.2.80:444/api';
                 //url = 'https://192.168.2.81:444/api';
-                console.log("From utils: " + url);
                 return url ;
         }
         public log(args) {

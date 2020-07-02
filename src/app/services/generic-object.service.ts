@@ -23,7 +23,7 @@ export class GenericObjectService {
    * The base objects which need to be loaded by the initialisations
    */
   objects: string[] = [
-    'user', 'group', 'room', 'device', 'hwconf', 'printer','adhocroom'
+    'user', 'group', 'room', 'device', 'hwconf', 'printer','adhocroom','education/user','education/group'
   ]
   /**
    * Default.ini for cephalix
