@@ -22,10 +22,10 @@ export class GroupMembersPage implements OnInit {
   noMemberApi;
   memberColumnApi;
   noMemberColumnApi;
-  memberSelection: User[] =[];
-  noMemberSelection: User[] =[];
-  memberData: User[] =[];
-  noMemberData: User[] =[];
+  memberSelection: User[] = [];
+  noMemberSelection: User[] = [];
+  memberData: User[] = [];
+  noMemberData: User[] = [];
   group;
 
   constructor(
@@ -33,31 +33,41 @@ export class GroupMembersPage implements OnInit {
     private objectS: GenericObjectService,
     public modalCtrl: ModalController,
     private languageS: LanguageService,
-    private  groupS: GroupsService,
+    private groupS: GroupsService,
     public translateServices: TranslateService
   ) {
     this.group = <Group>this.objectS.selectedObject;
     this.columnDefs = [
       {
-        headerName:  this.languageS.trans('uid'),
+        headerName: this.languageS.trans('uid'),
         field: 'uid',
         sortable: true,
         headerCheckboxSelection: this.authService.settings.headerCheckboxSelection,
-	      headerCheckboxSelectionFilteredOnly: true,
-	      checkboxSelection: this.authService.settings.checkboxSelection,
-        suppressMenu : true
+        headerCheckboxSelectionFilteredOnly: true,
+        checkboxSelection: this.authService.settings.checkboxSelection,
+        suppressMenu: true
       },
+      {
+        headerName: this.languageS.trans('role'),
+        sortable: true,
+        resizable: true,
+        field: 'role',
+        suppressMenu: true
+      },
+
       {
         headerName: this.languageS.trans('givenName'),
         sortable: true,
+        resizable: true,
         field: 'givenName',
-        suppressMenu : true
+        suppressMenu: true
       },
       {
         headerName: this.languageS.trans('surName'),
         sortable: true,
+        resizable: true,
         field: 'surName',
-        suppressMenu : true
+        suppressMenu: true
       }
     ]
   }
@@ -101,15 +111,15 @@ export class GroupMembersPage implements OnInit {
   applyChanges() {
     let members: number[] = [];
     let rmMembers: number[] = [];
-    for ( let g of this.noMemberSelection ) {
+    for (let g of this.noMemberSelection) {
       members.push(g.id);
     }
-    for(let g of this.memberSelection) {
+    for (let g of this.memberSelection) {
       rmMembers.push(g.id);
     }
-    
-    for( let g of this.memberData ){
-      if( rmMembers.indexOf(g.id) == -1) {
+
+    for (let g of this.memberData) {
+      if (rmMembers.indexOf(g.id) == -1) {
         members.push(g.id)
       }
     }
@@ -117,20 +127,29 @@ export class GroupMembersPage implements OnInit {
     this.authService.log(members);
     this.noMemberSelection = [];
     this.memberSelection = [];
-    let subM = this.groupS.setGroupMembers(this.group.id,members).subscribe(
-      (val) => { this.readMembers() } ,
-      (err)  => { this.authService.log(err)},
-      () => { subM.unsubscribe()});
+    this.objectS.requestSent();
+    let subM = this.groupS.setGroupMembers(this.group.id, members).subscribe(
+      (val) => {
+        this.objectS.responseMessage(val);
+        this.readMembers()
+      },
+      (err) => {
+        this.objectS.errorMessage(
+          this.languageS.trans("A server error accoured.")
+        )
+        this.authService.log(err)
+      },
+      () => { subM.unsubscribe() });
   }
 
   readMembers() {
     let subM = this.groupS.getMembers(this.group.id).subscribe(
-      (val) => { this.memberData = val; this.authService.log(val) } ,
-      (err)  => { this.authService.log(err)},
-      () => { subM.unsubscribe()});
+      (val) => { this.memberData = val; this.authService.log(val) },
+      (err) => { this.authService.log(err) },
+      () => { subM.unsubscribe() });
     let subNM = this.groupS.getAvailiableMembers(this.group.id).subscribe(
-      (val) => { this.noMemberData = val; this.authService.log(val) } ,
-      (err)  => { this.authService.log(err)},
-      () => { subNM.unsubscribe()})
-    }
+      (val) => { this.noMemberData = val; this.authService.log(val) },
+      (err) => { this.authService.log(err) },
+      () => { subNM.unsubscribe() })
+  }
 }

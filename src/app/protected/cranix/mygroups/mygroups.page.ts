@@ -1,4 +1,4 @@
-import { Component, OnInit  } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
@@ -15,7 +15,7 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { Group } from 'src/app/shared/models/data-model'
 import { AuthenticationService } from 'src/app/services/auth.service';
-import { GroupMembersPage  } from '../groups/details/members/group-members.page';
+import { GroupMembersPage } from '../groups/details/members/group-members.page';
 
 @Component({
   selector: 'cranix-mygroups',
@@ -32,8 +32,9 @@ export class MyGroupsPage implements OnInit {
   context;
   title = 'app';
   rowData = [];
-  modules = [ AllModules, RowGroupingModule ];
+  modules = [AllModules, RowGroupingModule];
   autoGroupColumnDef;
+  grouping = "group"
 
   constructor(
     public authService: AuthenticationService,
@@ -47,20 +48,29 @@ export class MyGroupsPage implements OnInit {
   ) {
     this.context = { componentParent: this };
     this.rowSelection = 'multiple';
-    this.objectKeys = Object.getOwnPropertyNames(new Group());
-    this.createColumnDefs();
     this.defaultColDef = {
-        resizable: true,
-        sortable: true,
-        hide: false,
-        suppressMenu : true
-      }
+      resizable: true,
+      sortable: true,
+      hide: false,
+      suppressMenu: true
+    }
   }
   ngOnInit() {
-    this.objectService.getObjects('education/group').subscribe(obj => this.rowData = obj);
+    this.groupColumnDefs();
   }
 
-  createColumnDefs() {
+
+  toggleColumnDef() {
+    if (this.grouping == "user") {
+      this.grouping = "group"
+      this.groupColumnDefs();
+    } else {
+      this.grouping = "user"
+      this.userColumnDefs();
+    }
+  }
+
+  groupColumnDefs() {
     this.columnDefs = [
       {
         field: 'groupType',
@@ -96,12 +106,63 @@ export class MyGroupsPage implements OnInit {
         headerName: this.languageS.trans('description')
       }
     ];
+    this.objectService.getObjects('education/group').subscribe(obj => this.rowData = obj);
     this.autoGroupColumnDef = {
       headerName: this.languageS.trans('groupType'),
       minWidth: 150
     };
   }
-    
+
+  userColumnDefs() {
+    this.columnDefs = [
+      /*      {
+              field: 'groupType',
+              width: 150,
+              headerName: this.languageS.trans('groupType'),
+              sortable: false,
+              rowGroup: true,
+              hide: true,
+              valueGetter: function (params) {
+                return params.context['componentParent'].languageS.trans(params.data.groupType);
+              }
+            },*/
+      {
+        field: 'groupName',
+        headerCheckboxSelectionFilteredOnly: true,
+        checkboxSelection: this.authService.settings.checkboxSelection,
+        width: 150,
+        hide: true,
+        rowGroup: true,
+        cellStyle: { 'padding-left': '2px' },
+        suppressSizeToFit: true,
+      },
+      {
+        field: 'uid',
+        sortable: true,
+        headerName: this.languageS.trans('uid'),
+        headerCheckboxSelectionFilteredOnly: true,
+        headerCheckboxSelection: true,
+        checkboxSelection: this.authService.settings.checkboxSelection,
+      },
+      {
+        field: 'givenName',
+        sortable: true,
+        headerName: this.languageS.trans('givenName')
+      },
+      {
+        field: 'surName',
+        sortable: true,
+        headerName: this.languageS.trans('surName')
+      }
+    ];
+    this.autoGroupColumnDef = {
+      headerName: this.languageS.trans('group'),
+      sortable: true,
+      minWidth: 250
+    };
+    this.objectService.getObjects('education/user').subscribe(obj => this.rowData = obj);
+  }
+
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
@@ -116,8 +177,8 @@ export class MyGroupsPage implements OnInit {
 
   sizeAll() {
     this.gridApi.sizeColumnsToFit();
-    window.addEventListener('resize', function() {
-      setTimeout(function() {
+    window.addEventListener('resize', function () {
+      setTimeout(function () {
         this.gridApi.sizeColumnsToFit();
       });
     });
@@ -134,7 +195,7 @@ export class MyGroupsPage implements OnInit {
   */
   async openActions(ev: any, objId: number) {
     let selected = this.gridApi.getSelectedRows();
-    if ( selected.length == 0 && !objId) {
+    if (selected.length == 0 && !objId) {
       this.objectService.selectObject();
       return;
     }
@@ -150,7 +211,7 @@ export class MyGroupsPage implements OnInit {
       component: ActionsComponent,
       event: ev,
       componentProps: {
-        objectType: "group",
+        objectType: "education/" + this.grouping,
         objectIds: objectIds,
         selection: selected
       },
@@ -159,6 +220,13 @@ export class MyGroupsPage implements OnInit {
     });
     (await popover).present();
   }
+
+  /**
+   * Function to add or edit a group.
+   * Group is null a new group will be created.
+   * @param ev 
+   * @param group 
+   */
   async redirectToMembers(ev: Event, group: Group) {
     this.objectService.selectedObject = group;
     const modal = await this.modalCtrl.create({
@@ -180,11 +248,13 @@ export class MyGroupsPage implements OnInit {
       group = new Group();
       action = 'add';
     }
+    delete group.groupType;
+    delete group.id;
     const modal = await this.modalCtrl.create({
       component: ObjectsEditComponent,
       cssClass: 'medium-modal',
       componentProps: {
-        objectType: "group",
+        objectType: "education/group",
         objectAction: action,
         object: group
       },

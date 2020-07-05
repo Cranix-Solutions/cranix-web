@@ -42,17 +42,29 @@ export class GroupsService {
 	}
 
 	getMembers(id: number): Observable<User[]>{
-		this.url = `${this.hostname}/groups/${id}/members`;
+		if( this.authService.isAllowed("group.manage")) {
+			this.url = `${this.hostname}/groups/${id}/members`;
+		} else {
+			this.url = `${this.hostname}/education/groups/${id}/members`;
+		}
 		return this.http.get<User[]>(this.url, { headers: this.headers });
 	}
 
 	getAvailiableMembers(id: number): Observable<User[]>{
-		this.url = `${this.hostname}/groups/${id}/availableMembers`;
+		if( this.authService.isAllowed("group.manage")) {
+			this.url = `${this.hostname}/groups/${id}/availableMembers`;
+		} else {
+			this.url = `${this.hostname}/education/groups/${id}/availableMembers`;
+		}
 		return this.http.get<User[]>(this.url, { headers: this.headers });
 	}
 
 	setGroupMembers(id: number, membersId: number[]) {
-		this.url = `${this.hostname}/groups/${id}/members`;
+		if( this.authService.isAllowed("group.modify")) {
+			this.url = `${this.hostname}/groups/${id}/members`;
+		} else {
+			this.url = `${this.hostname}/education/groups/${id}/members`;
+		}
 		const body = membersId;
 		return this.http.post<ServerResponse>(this.url, body, { headers: this.headers });
 	}

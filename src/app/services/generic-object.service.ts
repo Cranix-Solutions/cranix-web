@@ -236,7 +236,14 @@ export class GenericObjectService {
     }
     return objectId;
   }
-
+  idToFulName(objectId) {
+    for (let obj of this.allObjects['user'].getValue()) {
+      if (obj.id === objectId) {
+        return obj.surName + ", " + obj.givenName;
+      }
+    }
+    return objectId;
+  }
   /**
    * Converts the id name to the object name:
    *  roomId -> room

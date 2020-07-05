@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { AlertController } from '@ionic/angular';
 //Own stuff
-import { userMenu, groupMenu, roomMenu, deviceMenu, instituteMenu, hwconfMenu, printerMenu  } from './objects.menus';
+import { userMenu, groupMenu, roomMenu, deviceMenu, instituteMenu, hwconfMenu, printerMenu, studentMenu  } from './objects.menus';
 import { CrxActionMap, ServerResponse } from 'src/app/shared/models/server-models';
 import { LanguageService } from 'src/app/services/language.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -72,6 +72,8 @@ export class ActionsComponent implements OnInit {
     }
     if (this.objectType == "user") {
       this.menu = this.commonMenu.concat(userMenu).concat(this.commonLastMenu);
+    } else if (this.objectType == "education/user" || this.objectType == "education/group" ) {
+      this.menu = this.commonMenu.concat(studentMenu);
     } else if (this.objectType == "group") {
       this.menu = this.commonMenu.concat(groupMenu).concat(this.commonLastMenu);
     } else if (this.objectType == "room") {
@@ -93,6 +95,12 @@ export class ActionsComponent implements OnInit {
     console.log("ActionsComponent" + this.objectIds);
   }
 
+  adaptMenu(){
+    //TODO
+    for( let m of this.menu ) {
+
+    }
+  }
   closePopover() {
     this.popoverController.dismiss();
   }
@@ -168,7 +176,9 @@ export class ActionsComponent implements OnInit {
         for (let resp of val) {
           response = response + "<br>" + this.languageService.transResponse(resp);
         }
-        this.objectService.getAllObject(this.objectType);
+        if( actionMap.name == 'delete ' ) {
+          this.objectService.getAllObject(this.objectType);
+        }
         this.objectService.okMessage(response)
       },
       (err) => { this.objectService.errorMessage(err) },

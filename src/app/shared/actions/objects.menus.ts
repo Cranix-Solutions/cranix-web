@@ -213,3 +213,67 @@ export const userMenu = [
     "action": "setMailSystemQuota"
   }
 ];
+
+
+export const studentMenu = [
+  {
+    "enabled": true,
+    "icon":"key",
+    "color":"secondary",
+    "action": "setPassword"
+  },
+  {
+    "enabled": true,
+    "icon":"cut",
+    "color":"secondary",
+    "action": "removeProfiles"
+  },
+  {
+    "enabled": true,
+    "icon":"log-in",
+    "color":"danger",
+    "action": "disableLogin"
+  },
+  {
+    "enabled": true,
+    "icon":"log-in",
+    "color":"success",
+    "action": "enableLogin"
+  },
+  {
+    "enabled": true,
+    "icon":"cloud-offline",
+    "color":"danger",
+    "action": "disableInternet"
+  },
+  {
+    "enabled": true,
+    "icon":"cloud-done",
+    "color":"success",
+    "action": "enableInternet"
+  },
+  {
+    "enabled": true,
+    "icon":"file-tray",
+    "color":"secondary",
+    "action": "mandatoryProfile"
+  },
+  {
+    "enabled": true,
+    "icon":"file-tray",
+    "color":"danger",
+    "action": "copyTemplate"
+  },
+  {
+    "enabled": true,
+    "icon":"file-tray-full",
+    "color":"secondary",
+    "action": "setFilesystemQuota"
+  },
+  {
+    "enabled": true,
+    "icon":"mail",
+    "color":"secondary",
+    "action": "setMailSystemQuota"
+  }
+];

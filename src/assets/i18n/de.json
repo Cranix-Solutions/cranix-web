@@ -1,4 +1,14 @@
 {
+    "MyGroups":"Meine Gruppen",
+    "Request was sent. Please be patient!": "Die Anfrage wurde gesendet. Bitte warten!",
+    "The windows profile of '%s' was removed.":"Das Windowsprofil von '%s' wurde gelöscht.",
+    "The windows profile of '%s' was froozen.":"Das Windowsprofil von '%s' wurde eingefroren.",
+    "The '%s' was disabled.":"Der Benutzer '%s' wurde deaktiviert.",
+    "The '%s' was enabled.":"Der Benutzer '%s' wurde aktiviert.",
+    "Surfing is for '%s' disabled.":"Das Surfen ist für '%s' verboten.",
+    "Surfing is for '%s' enabled.":"Das Surfen ist für '%s' erlaubt.",
+    "education/group":"Projektgruppe",
+    "List of the results:":"Liste der Rückmeldungen",
     "Actual status": "Aktueller Status",
     "Add device": "Gerät anlegen",
     "Add group": "Gruppe anlegen",
@@ -327,5 +337,5 @@
     "wol": "einschalten",
     "workSchool": "Berufschule",
     "workTime": "Erfasste Arbeitszeit in Minuten",
-    "workgroup": "Arbeitsgruppe"
+    "workgroup": "Projektsgruppe"
 }
