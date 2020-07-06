@@ -1,6 +1,6 @@
 
 export class Hwconf {
-	id?: number;
+	id?: number = 0;
 	name: string = "";
 	deviceType: string = "";
 	description: string = "";
@@ -282,18 +282,14 @@ export class Contact {
 	constructor() { }
 }
 
-export class AdHocRoom {
-	id?: number;
-	name: string = "";
-	places: number = 0;
-	description: string = "";
-	netMask: number = 0;
-	startIP?: string = "";
-	roomType?: string = "";
-	roomControl?: string = "";
-	network?: string = "";
+export class AdHocRoom extends Room {
+	devicesProUser?: number = 1;
+	devCount: number = 0;
 	studentsOnly: boolean = false;
-	constructor() { }
+	groupIds: number[]=[];
+	userIds?: number[] = [];
+	users?: User[] = [];
+	groups?: Group[] = [];
 }
 
 export class SupportTicket {
@@ -365,18 +361,6 @@ export class DHCP {
 	objectId: number = 0;
 	keyword: string = "";
 	value: string = "";
-	constructor() { }
-}
-
-export class Settings {
-	agGridThema: string = "ag-theme-alpine";
-	lang: string = "";
-	errorMessageDuration: number = 10;
-	okMessageDuration: number = 10;
-	warningMessageDuration: number = 6;
-	rowMultiSelectWithClick: boolean = true;
-	checkboxSelection: boolean = true;
-	headerCheckboxSelection: boolean = true;
 	constructor() { }
 }
 

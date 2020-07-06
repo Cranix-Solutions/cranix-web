@@ -38,8 +38,9 @@ export class UserGroupsPage implements OnInit {
         headerName:  this.languageS.trans('name'),
         sortable: true,
         field: 'name',
-        headerCheckboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true
+        headerCheckboxSelection: this.authService.settings.headerCheckboxSelection,
+        headerCheckboxSelectionFilteredOnly: true,
+        checkboxSelection: this.authService.settings.checkboxSelection
       },
       {
         headerName: this.languageS.trans('description'),
@@ -102,24 +103,24 @@ export class UserGroupsPage implements OnInit {
         groups.push(g.id)
       }
     }
-    console.log('groups');
-    console.log(groups);
+    this.authService.log('groups');
+    this.authService.log(groups);
     this.noMemberSelection = [];
     this.memberSelection = [];
     let subM = this.userS.setUsersGroups(this.user.id,groups).subscribe(
       (val) => { this.readGroups() } ,
-      (err)  => { console.log(err)},
+      (err)  => { this.authService.log(err)},
       () => { subM.unsubscribe()});
   }
 
   readGroups() {
     let subM = this.userS.getUsersGroups(this.user.id).subscribe(
       (val) => { this.memberData = val } ,
-      (err)  => { console.log(err)},
+      (err)  => { this.authService.log(err)},
       () => { subM.unsubscribe()});
     let subNM = this.userS.getUsersAvailableGroups(this.user.id).subscribe(
       (val) => { this.noMemberData = val } ,
-      (err)  => { console.log(err)},
+      (err)  => { this.authService.log(err)},
       () => { subNM.unsubscribe()})
     }
 }

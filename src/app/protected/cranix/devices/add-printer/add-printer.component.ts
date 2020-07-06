@@ -41,7 +41,7 @@ export class AddPrinterComponent implements OnInit {
         this.models = val;
         this.manufacturers = Object.keys(this.models).sort();
       },
-      (err) => { console.log(err) },
+      (err) => { this.authService.log(err) },
       () => { subs.unsubscribe() }
     )
     this.initValues(1);
@@ -53,7 +53,7 @@ export class AddPrinterComponent implements OnInit {
   initValues(id: number) {
     this.printer = new Printer();
     if (id) {
-      console.log(id);
+      this.authService.log(id);
       this.ipAdresses = [];
       this.printerNames = {};
       let sub = this.roomService.getAvailiableIPs(id).subscribe(
@@ -64,11 +64,11 @@ export class AddPrinterComponent implements OnInit {
             this.printerNames[b[0]] = b[1];
           }
         },
-        (err) => { console.log(err) },
+        (err) => { this.authService.log(err) },
         () => { sub.unsubscribe() }
       )
       this.room = this.objectService.getObjectById('room', id);
-      console.log(this.room);
+      this.authService.log(this.room);
       this.printer.roomId = this.room.id;
     }
     if (this.authService.session.mac) {
@@ -109,7 +109,7 @@ export class AddPrinterComponent implements OnInit {
       (err) => {
         this.objectService.errorMessage("ServerError" + err);
         this.submitted=false;
-        console.log(err);
+        this.authService.log(err);
       },
       () => { subs.unsubscribe() }
     )

@@ -7,6 +7,7 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { Institute } from 'src/app/shared/models/cephalix-data-model';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'cranix-institute-edit',
@@ -19,6 +20,7 @@ export class InstituteEditComponent implements OnInit {
   objectKeys: string[] = [];
   isourl: string ="";
   constructor(
+    public authService: AuthenticationService,
     public cephalixService: CephalixService,
     private languageService: LanguageService,
     public translateService: TranslateService,
@@ -31,7 +33,11 @@ export class InstituteEditComponent implements OnInit {
     } else {
       this.isourl = this.object.uuid;
     }
-    this.objectKeys = Object.getOwnPropertyNames(new Institute());
+    let institute = new Institute();
+    if( ! this.authService.isAllowed("customer.manage") ){
+      delete institute.cephalixCustomerId;
+    }
+    this.objectKeys = Object.getOwnPropertyNames(institute);
     console.log("InstituteEditComponent:" + this.object.id);
   }
   ngOnInit() {
@@ -60,6 +66,7 @@ export class InstituteEditComponent implements OnInit {
   }
 
   writeConfig() {
+    this.objectService.requestSent();
     let subs = this.cephalixService.writeConfig(this.object.id).subscribe(
       (serverResponse) => {
         if (serverResponse.code == "OK") {

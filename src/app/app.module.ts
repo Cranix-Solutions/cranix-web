@@ -51,6 +51,7 @@ import { AddOutgoingRuleComponent } from './protected/cranix/security/firewall/a
 import { AddRemoteRuleComponent } from './protected/cranix/security/firewall/add-rules/add-remote-rule.component';
 import { AddEditRoomAccessComponent } from 'src/app/protected/cranix/security/room-access/add-edit-room-access/add-edit-room-access.component';
 import { FirewallCanDeactivate } from 'src/app/services/security-service'
+import { SetpasswordComponent } from 'src/app/shared/actions/setpassword/setpassword.component'
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -84,7 +85,9 @@ const routes: Routes = [
     GroupMembersPage,
     UserGroupsPage,
     RoomPrintersPage,
-    SelectColumnsComponent],
+    SelectColumnsComponent,
+    SetpasswordComponent
+  ],
   entryComponents: [
     AddDeviceComponent,
     AddEditRoomAccessComponent,
@@ -99,7 +102,8 @@ const routes: Routes = [
     GroupMembersPage,
     UserGroupsPage,
     RoomPrintersPage,
-    SelectColumnsComponent],
+    SelectColumnsComponent,
+    SetpasswordComponent],
   imports: [
     AgChartsAngularModule,
     BrowserModule,

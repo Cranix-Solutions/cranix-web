@@ -42,7 +42,7 @@ export class ProxyComponent implements OnInit {
 	 suppressMenu: true,
 	 sortable: true
       }];
-      console.log(this.proxyData);
+      this.authService.log(this.proxyData);
       for( let key of Object.getOwnPropertyNames(val[0]) ) {
          let col = {};
 	 if( key != "name" ) {
@@ -56,7 +56,7 @@ export class ProxyComponent implements OnInit {
 	   this.columnDefs.push(col);
 	 }
       }
-      console.log(this.columnDefs);
+      this.authService.log(this.columnDefs);
     });
   }
 
@@ -70,20 +70,20 @@ export class ProxyComponent implements OnInit {
     return new Promise((resolve, reject) => {
     this.securityService.getProxyBasic().subscribe(
       (val) => { resolve(val) },
-      (err) => { console.log(err) }
+      (err) => { this.authService.log(err) }
       )
       });
   }
   proxyGridReady(params) {
     this.proxyApi = params.api;
     this.proxyColumnApi = params.columnApi;
-    console.log("proxyGridReady");
+    this.authService.log("proxyGridReady");
   }
   proxySelectionChanged() {
     this.proxySelected = this.proxyApi.getSelectedRows();
   }
 
-  addEditPositiveList(positiveList) {
+  redirectToEdit(event,positiveList) {
     //TODO
   }
   writeConfig() {

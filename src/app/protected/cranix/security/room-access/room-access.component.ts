@@ -10,7 +10,6 @@ import { AllModules } from '@ag-grid-enterprise/all-modules';
 import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
 import { ModalController } from '@ionic/angular';
 import {  AddEditRoomAccessComponent } from './add-edit-room-access/add-edit-room-access.component';
-import { throwError } from 'rxjs';
 
 @Component({
   selector: 'cranix-room-access',
@@ -66,7 +65,6 @@ export class RoomAccessComponent implements OnInit {
       col['field'] = key;
       switch (key) {
         case "roomId": {
-          col['sortable'] = true;
           col['cellRendererFramework'] = RoomIdCellRenderer;
           if (this.grouping == 'roomId') {
             col['checkboxSelection'] = true;
@@ -79,23 +77,15 @@ export class RoomAccessComponent implements OnInit {
           break;
         }
         case "pointInTime": {
-          col['sortable'] = true;
           if (this.grouping == 'pointInTime') {
             col['checkboxSelection'] = true;
-            col['rowGroup'] = true,
-              col['hide'] = true;
+            col['rowGroup'] = true;
+            col['hide'] = true;
           }
           break;
         }
-        case "action": {
-          col['sortable'] = true;
-          break;
-        }
-        case "accessType": {
-          col['sortable'] = true;
-          break;
-        }
         default: {
+          col['sortable'] = false;
           col['minWidth'] = 70;
           col['maxWidth'] = 100;
           col['cellRendererFramework'] = CheckBoxBTNRenderer;
@@ -114,7 +104,7 @@ export class RoomAccessComponent implements OnInit {
           headerName: this.languageS.trans('roomId'),
           minWidth: 150
         };
-	//this.accessApi.setAutoGroupColumnDef(this.autoGroupColumnDef);
+	this.accessApi.setAutoGroupColumnDef(this.autoGroupColumnDef);
         break;
       }
       case 'pointInTime': {
@@ -122,7 +112,7 @@ export class RoomAccessComponent implements OnInit {
           headerName: this.languageS.trans('pointInTime'),
           minWidth: 150
         };
-	//this.accessApi.setAutoGroupColumnDef(this.autoGroupColumnDef);
+	this.accessApi.setAutoGroupColumnDef(this.autoGroupColumnDef);
         this.grouping = ''; break
       }
     }
@@ -134,18 +124,15 @@ export class RoomAccessComponent implements OnInit {
   readDatas() {
     let sub = this.securityService.getAllAccess().subscribe(
       (val) => { this.accessData = val },
-      (err) => { console.log(err) },
+      (err) => { this.authService.log(err) },
       () => { sub.unsubscribe(); }
     );
   }
   accessGridReady(params) {
     this.accessApi = params.api;
     this.accessColumnApi = params.columnApi;
-    console.log(this.accessApi);
-    console.log(this.accessColumnApi);
-  }
-  accessSelectionChanged() {
-    this.accessSelected = this.accessApi.getSelectedRows();
+    this.authService.log(this.accessApi);
+    this.authService.log(this.accessColumnApi);
   }
   async redirectToAddEdit(ev: Event, accesInRoom: AccessInRoom) {
     let action = "add";
@@ -168,7 +155,7 @@ export class RoomAccessComponent implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        console.log("Object was created or modified or deleted", dataReturned.data)
+        this.authService.log("Object was created or modified or deleted", dataReturned.data)
         this.readDatas();
       }
     });
@@ -182,7 +169,7 @@ export class RoomAccessComponent implements OnInit {
     this.accessSelected = this.accessApi.getSelectedRows();
     for( let obj of this.accessSelected ){
       this.securityService.deleteAccessInRoom(obj.id);
-      setTimeout(() => {  console.log("World!"); }, 1000);
+      setTimeout(() => {  this.authService.log("World!"); }, 1000);
     }
     this.readDatas();
    }

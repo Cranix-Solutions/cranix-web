@@ -68,9 +68,9 @@ export class HwconfMembersPage implements OnInit {
     this.autoGroupColumnDef = { 
       headerName: this.languageS.trans('roomId'),
       field: 'roomId',
-      headerCheckboxSelection: true,
+      headerCheckboxSelection: this.authService.settings.headerCheckboxSelection,
       headerCheckboxSelectionFilteredOnly: true,
-      checkboxSelection: true,
+      checkboxSelection: this.authService.settings.checkboxSelection,
       valueGetter: function (params) {
         return params.context['componentParent'].objectService.idToName('room', params.data.roomId);
       },
@@ -114,8 +114,8 @@ export class HwconfMembersPage implements OnInit {
   }
   readMembers() {
     let subM = this.hwconfService.getMembers(this.hwconf.id).subscribe(
-      (val) => { this.memberData = val; console.log(val) },
-      (err) => { console.log(err) },
+      (val) => { this.memberData = val; this.authService.log(val) },
+      (err) => { this.authService.log(err) },
       () => { subM.unsubscribe() });
   }
 }

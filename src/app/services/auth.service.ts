@@ -2,13 +2,14 @@ import { BehaviorSubject } from 'rxjs';
 import { HttpClient, HttpHeaders, } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Platform, ToastController } from '@ionic/angular';
-import { Storage } from '@ionic/storage';
-import { Router } from '@angular/router';
+import { Storage }   from '@ionic/storage';
+import { Router }    from '@angular/router';
+import { isDevMode } from '@angular/core';
+
 
 //Own modules
 import { UtilsService } from './utils.service';
-import { UserResponse, LoginForm } from 'src/app/shared/models/server-models';
-import { Settings } from '../shared/models/data-model';
+import { UserResponse, LoginForm, Settings } from 'src/app/shared/models/server-models';
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +21,6 @@ export class AuthenticationService {
     url: string;
     token: string;
     session: UserResponse;
-    subscription: any;
     settings: Settings = new Settings();
 
     constructor(
@@ -28,7 +28,7 @@ export class AuthenticationService {
         private storage: Storage,
         private plt: Platform,
         private toastController: ToastController,
-        private utils: UtilsService,
+        private utilsS: UtilsService,
         private router: Router
     ) {
         this.plt.ready().then(() => {
@@ -38,7 +38,7 @@ export class AuthenticationService {
 
     login(user: LoginForm) {
         console.log("auth.services.login called:")
-        this.hostname = this.utils.hostName();
+        this.hostname = this.utilsS.hostName();
         this.url = this.hostname + "/sessions/create";
         const headers = new HttpHeaders({
             'Content-Type': "application/json",
@@ -50,19 +50,22 @@ export class AuthenticationService {
     setUpSession(user: LoginForm, instituteName: string) {
         this.session = null;
         this.authenticationState.next(false);
-        this.subscription = this.login(user)
-            .subscribe(
-                (val) => {
-                    this.storage.get('myCranixSettings').then((val) => {
-                        if (val && val != "") {
-				let tmp = JSON.parse(val);
+	let subscription = this.login(user).subscribe(
+		(val) => {
+		    // Load settings from the local storage
+                    this.storage.get('myCranixSettings').then((myCranixSettings) => {
+                        if(myCranixSettings && myCranixSettings != "") {
+				console.log("myCranixSettings");
+				console.log(myCranixSettings);
+				let myCranixSettingsHash = JSON.parse(myCranixSettings);
+				console.log(myCranixSettingsHash);
 				for( let key in Object.getOwnPropertyNames(this.settings) ) {
-					if( key in tmp ) {
-						this.settings[key] = tmp[key];
+					if( myCranixSettingsHash.hasOwnProperty(key) ) {
+						this.settings[key] = myCranixSettingsHash[key];
 					}
 				}
                         }
-                    });
+		    });
                     console.log('login respons is', val);
                     this.session = val;
                     this.session['instituteName'] = instituteName;
@@ -78,15 +81,17 @@ export class AuthenticationService {
                             duration: 3000
                         });
                         (await toast).present();
-                    }
-                }, () => {
+		    }
+		},
+		() => {
+		    subscription.unsubscribe();
                     console.log("login call completed" + this.session.role);
                 }
             );
     }
 
-    loadSession() {
-        this.hostname = this.utils.hostName();
+    public loadSession() {
+        this.hostname = this.utilsS.hostName();
         let url = this.hostname + `/sessions`;
         console.log(url);
         let headers = new HttpHeaders({
@@ -107,20 +112,20 @@ export class AuthenticationService {
         );
     }
 
-    logout() {
+    public logout() {
         this.authenticationState.next(false);
         this.session = null;
         this.router.navigate(['/']);
     }
 
-    isAuthenticated() {
+    public isAuthenticated() {
         return this.authenticationState.value;
     }
 
     /**
      * Check if the session was created.
      */
-    checkSession() {
+    public checkSession() {
         if (this.session) {
             this.authenticationState.next(true);
         } else {
@@ -130,7 +135,7 @@ export class AuthenticationService {
     /**
      * Delivers the token of the session.
      */
-    getToken() {
+    public getToken() {
         if (this.session) {
             return this.session.token;
         }
@@ -140,14 +145,14 @@ export class AuthenticationService {
     /**
      * Delivers the wohle session array.
      */
-    getSession() {
+    public getSession() {
         return this.session;
     }
     /**
      * Delivers the list of the acls assigned to the user
      * @returns The list of the owned acl
      */
-    getMyAcls() {
+    public getMyAcls() {
         if (this.session) {
             return this.session.acls;
         }
@@ -158,7 +163,7 @@ export class AuthenticationService {
      * @param acls Checks if some acls are allowed for the user.
      * @return True or false
      */
-    isOneOfAllowed(acls: string[]) {
+    public isOneOfAllowed(acls: string[]) {
         for (let acl of acls) {
             if (acl == 'permitall') {
                 return true;
@@ -170,7 +175,7 @@ export class AuthenticationService {
         return false
     }
 
-    isAllowed(acl: string) {
+    public isAllowed(acl: string) {
         if (acl == 'permitall') {
             return true;
         }
@@ -182,7 +187,7 @@ export class AuthenticationService {
      * @param route The route to check
      * @returns True or false
      */
-    isRouteAllowed(route: string) {
+    public isRouteAllowed(route: string) {
         switch (route) {
             case "/pages/cephalix/customers": { return this.isAllowed('customer.manage') }
             case "/pages/cephalix/institutes": { return this.isAllowed('cephalix.manage') }
@@ -199,6 +204,8 @@ export class AuthenticationService {
             case "/pages/cranix/system": { return this.isAllowed('system.status') }
             case "/pages/cranix/softwares": { return this.isAllowed('software.manage') }
             case "/pages/cranix/security": { return this.isOneOfAllowed(['system.firewall','system.proxy']) }
+            case "/pages/cranix/mygroups": { return this.isAllowed('education.groups') }
+            case "/pages/cranix/myusers": { return this.isAllowed('education.users') }
             case "institutes/:id": { return this.isAllowed('cephalix.modify') }
             case "customers/:id": { return this.isAllowed('customer.modify') }
             case "tickets/:id": { return this.isAllowed('cephalix.ticket') }
@@ -209,6 +216,12 @@ export class AuthenticationService {
             case "users/:id": { return this.isAllowed('user.modify') }
         }
         return false;
+   }
+
+    public log(arg1, ...args){
+        if( this.settings.debug || isDevMode() ) {
+            console.log(arguments)
+	}
     }
 }
 

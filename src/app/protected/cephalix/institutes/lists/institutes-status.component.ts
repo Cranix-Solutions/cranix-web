@@ -24,13 +24,12 @@ export class InstitutesStatusComponent implements OnInit {
   objectKeys: string[] = [];
   displayedColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'availableUpdates', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel'];
   sortableColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'availableUpdates', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel'];
-  gridOptions: GridOptions;
   columnDefs = [];
+  defaultColDef = {};
   gridApi: GridApi;
   columnApi: ColumnApi;
   rowSelection;
   context;
-  selected: Institute[];
   title = 'app';
   rowData = [];
   objectIds: number[] = [];
@@ -50,16 +49,11 @@ export class InstitutesStatusComponent implements OnInit {
     this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new InstituteStatus());
     this.createColumnDefs();
-    this.gridOptions = <GridOptions>{
-      defaultColDef: {
+    this.defaultColDef = {
         resizable: true,
         sortable: true,
         hide: false
-      },
-      columnDefs: this.columnDefs,
-      context: this.context,
-      rowHeight: 35
-    }
+      };
   }
 
   ngOnInit() {
@@ -73,18 +67,18 @@ export class InstitutesStatusComponent implements OnInit {
       (val) => {
         this.rowData = val;
       },
-      (err) => { console.log(err) },
+      (err) => { this.authService.log(err) },
       () => { subs.unsubscribe() }
     )
   }
   ionViewWillEnter() {
-    console.log('WillEnter EVENT')
+    this.authService.log('WillEnter EVENT')
     let subs = this.cephalixService.getStatusOfInstitutes().subscribe(
       (val) => {
-        console.log('new data in event:', val);
+        this.authService.log('new data in event:', val);
         this.rowData = val
       },
-      (err) => { console.log(err) },
+      (err) => { this.authService.log(err) },
       () => { subs.unsubscribe() })
   }
   createColumnDefs() {
@@ -97,9 +91,9 @@ export class InstitutesStatusComponent implements OnInit {
       col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
       switch (key) {
         case 'cephalixInstituteId': {
-          col['headerCheckboxSelection'] = true;
+          col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
-          col['checkboxSelection'] = true;
+          col['checkboxSelection'] = this.authService.settings.checkboxSelection;
           col['width'] = 220;
           col['valueGetter'] = function (params) {
             return params.context['componentParent'].objectService.idToName('institute', params.data.cephalixInstituteId);
@@ -149,9 +143,6 @@ export class InstitutesStatusComponent implements OnInit {
     (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
     this.gridApi.sizeColumnsToFit();
   }
-  onSelectionChanged() {
-    this.selected = this.gridApi.getSelectedRows();
-  }
 
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
@@ -173,8 +164,8 @@ export class InstitutesStatusComponent implements OnInit {
   //TODO RESPONSE
   public redirectToUpdate = (cephalixInstituteId: number) => {
     let sub = this.cephalixService.updateById(cephalixInstituteId).subscribe(
-      (val) => { console.log(val) },
-      (error) => { console.log(error) },
+      (val) => { this.authService.log(val) },
+      (error) => { this.authService.log(error) },
       () => { sub.unsubscribe(); }
     );
   }
@@ -183,9 +174,9 @@ export class InstitutesStatusComponent implements OnInit {
  * @param ev
  */
   async openActions(ev: any) {
-    if (this.selected) {
-      for (let i = 0; i < this.selected.length; i++) {
-        this.objectIds.push(this.selected[i].id);
+    if (this.gridApi.getSelectedRows().length > 0 ) {
+      for (let i = 0; i <  this.gridApi.getSelectedRows().length; i++) {
+        this.objectIds.push(this.gridApi.getSelectedRows()[i].id);
       }
     }
     const popover = await this.popoverCtrl.create({
@@ -194,7 +185,7 @@ export class InstitutesStatusComponent implements OnInit {
       componentProps: {
         objectType: "sync-object",
         objectIds: this.objectIds,
-        selection: this.selected
+        selection: this.gridApi.getSelectedRows()
       },
       animated: true,
       showBackdrop: true
@@ -220,7 +211,7 @@ export class InstitutesStatusComponent implements OnInit {
       });
       modal.onDidDismiss().then((dataReturned) => {
         if (dataReturned.data) {
-          console.log("Object was created or modified", dataReturned.data)
+          this.authService.log("Object was created or modified", dataReturned.data)
         }
       });
       (await modal).present();
@@ -249,7 +240,7 @@ export class InstitutesStatusComponent implements OnInit {
       }
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
+      this.authService.log("most lett vegrehajtva.")
     })
   }
 }

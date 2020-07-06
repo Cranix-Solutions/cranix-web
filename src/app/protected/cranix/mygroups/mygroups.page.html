@@ -1,19 +1,19 @@
+
 <cranix-toolbar></cranix-toolbar>
 <ion-content id="carded">
   <ion-row class="header-row">
   <ion-col size=6>
-    <ion-title>{{'Manage printers' | translate}}</ion-title>
+    <ion-title>{{'Manage groups' | translate}}</ion-title>
   </ion-col>
-  </ion-row>
+</ion-row>
   <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
     <ion-fab-button>
       <ion-icon name="arrow-forward-circle"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="start">
       <ion-fab-button><ion-icon name="ellipsis-vertical-sharp" (click)="openActions($event,null)"></ion-icon></ion-fab-button>
-      <ion-fab-button><ion-icon name="add-circle-outline" (click)="addDevice($event)"></ion-icon></ion-fab-button>
-      <ion-fab-button><ion-icon name="print-outline" (click)="addPrinter($event)" disabled></ion-icon></ion-fab-button>
-      <ion-fab-button><ion-icon name="apps" (click)="openCollums($event)"></ion-icon></ion-fab-button>
+      <ion-fab-button><ion-icon name="list-outline" (click)="toggleColumnDef()"></ion-icon></ion-fab-button>
+      <ion-fab-button><ion-icon name="add-circle-outline" (click)="redirectToEdit($event,null)"></ion-icon></ion-fab-button>
     </ion-fab-list>
   </ion-fab>
   <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('quickFilterMD')" id="quickFilterMD" showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
@@ -27,33 +27,35 @@
           </ion-item>
         </ion-col>
         <ion-col offset="6" size="3" class="ion-align-self-center ion-text-end hidden-xs hidden-sm hidden-md">
-          <ion-button size="small" (click)="addDevice($event)"  matTooltip="{{'Create a new printer device' | translate }}">
+          <ion-button size="small" (click)="redirectToEdit($event,null)"  matTooltip="{{'Create a new group' | translate }}">
             <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="addPrinter($event)" matTooltip="{{'Create a new printer queue' | translate }}" disabled>
-            <ion-icon slot="icon-only" name="print"></ion-icon>
+          <ion-button size="small" (click)="toggleColumnDef()"
+            matTooltip="{{'Change grouping of the table' | translate }}">
+            <ion-icon slot="icon-only" name="list"></ion-icon>
           </ion-button>
           <ion-button size="small" (click)="openActions($event,null)" matTooltip="{{'Apply actions on the selected objects' | translate }}" >
             <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
-          </ion-button>
-          <ion-button size="small" (click)="openCollums($event)" matTooltip="{{'Select the columns to show' | translate }}">
-            <ion-icon slot="icon-only" name="apps"></ion-icon>
           </ion-button>
         </ion-col>
       </ion-row>
     </ion-card-header>
     <ion-card-content>
-      <ag-grid-angular 
-        style="width: 100%; height:  100%;"
-        class="{{authService.settings.agGridThema}}"
+      <ag-grid-angular
+        id="myGroupsTable"
+        style="width: 100%; height: 100%;"
         rowSelection="multiple"
+        class="{{authService.settings.agGridThema}}"
         rowHeight="{{authService.settings.rowHeight}}"
+        rowMultiSelectWithClick="{{authService.settings.rowMultiSelectWithClick}}"
+        animateRows="true"
+        deltaColumnMode="true"
+        [modules]="modules"
         [context]="context"
         [rowData]="rowData"
+        [autoGroupColumnDef]="autoGroupColumnDef"
         [columnDefs]="columnDefs"
-        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
-        (gridReady)="onGridReady($event)"
-         id="agGridTable">
+        (gridReady)="onGridReady($event)">
       </ag-grid-angular>
     </ion-card-content>
   </ion-card>

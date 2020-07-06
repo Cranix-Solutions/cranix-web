@@ -10,7 +10,7 @@
       <ion-icon name="arrow-forward-circle"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="start">
-      <ion-fab-button><ion-icon name="cloud-download" (click)="downloadSoftwares($event)"></ion-icon></ion-fab-button>
+      <ion-fab-button *ngIf="authService.isAllowed('software.download')" ><ion-icon name="cloud-download" (click)="downloadSoftwares($event)"></ion-icon></ion-fab-button>
       <ion-fab-button><ion-icon name="add-circle-outline" (click)="redirectToEdit($event,null)"></ion-icon></ion-fab-button>
       <ion-fab-button><ion-icon name="refresh-outline" (click)="readInstallableSoftware()"></ion-icon></ion-fab-button>
     </ion-fab-list>
@@ -26,7 +26,7 @@
           </ion-item>
         </ion-col>
         <ion-col offset="6" size="3" class="ion-align-self-center ion-text-end hidden-xs hidden-sm hidden-md">
-          <ion-button size="small" (click)="downloadSoftwares($event)" matTooltip="{{'Download software packages.' | translate }}" >
+          <ion-button *ngIf="authService.isAllowed('software.download')" size="small" (click)="downloadSoftwares($event)" matTooltip="{{'Download software packages.' | translate }}" >
             <ion-icon slot="icon-only" name="cloud-download"></ion-icon>
           </ion-button>
           <ion-button size="small" (click)="redirectToEdit($event,null)"  matTooltip="{{'Create a new software package' | translate }}">

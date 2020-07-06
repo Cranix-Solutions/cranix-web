@@ -27,15 +27,15 @@ export class HwconfsService {
         constructor(
                 private utilsS: UtilsService,
                 private http: HttpClient,
-                private authS: AuthenticationService) {
+                private authService: AuthenticationService) {
                         this.hostname = this.utilsS.hostName();
-                        this.token          = this.authS.getToken();
-                        this.headers     = new HttpHeaders({
+                        this.token    = this.authService.getToken();
+                        this.headers  = new HttpHeaders({
                                 'Content-Type': "application/json",
                                 'Accept': "application/json",
                                 'Authorization': "Bearer " + this.token
                         });
-                        this.utilsS.log('Constructor Users completed');
+                        this.authService.log('Constructor Users completed');
         }
 
 	startCloning(clone: CloneCommand,hwconfId: number ){
