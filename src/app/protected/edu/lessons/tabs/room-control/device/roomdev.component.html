@@ -1,6 +1,9 @@
-<ion-card >
-  <img src="assets/img/test.jpg"/>
-  <ion-card-header style="background-color: red">
-    {{index}}
+<ion-card padding="none">
+  <!--img *ngIf="device" src="{{screenShot}}"/-->
+  <ion-card-header >
+    {{row}} / {{place}}
   </ion-card-header>
+  <ion-card-content>
+    <img *ngIf="device" src="{{screenShot}}" />
+  </ion-card-content>
 </ion-card>

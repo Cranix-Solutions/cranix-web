@@ -9,9 +9,10 @@ import { UtilsService } from './utils.service';
 import { BehaviorSubject } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
 //import { ServerResponse } from 'http';
-import { AccessStatus, Room, Device, User, Group, Category, PositivListObj, SmartRoom, SmartRoomStatus } from '../shared/models/data-model';
+import { AccessStatus, Room, Device, User, Group, Category, PositivListObj, SmartRoom, SmartRoomStatus, EduRoom } from '../shared/models/data-model';
 //import { SmartRoom, SmartRoomStatus, PositivListObj } from '../education-data-model';
 import { ServerResponse } from 'src/app/shared/models/server-models';
+import { AuthenticationService } from './auth.service';
 
 @Injectable()
 export class EductaionService{
@@ -19,9 +20,16 @@ export class EductaionService{
 	token: string;
 	url: string;
     res: any;
-    
-    constructor(private utils: UtilsService, private http: HttpClient) {
+	headers: HttpHeaders;
+
+    constructor(private utils: UtilsService, private http: HttpClient,private authS: AuthenticationService) {
 		this.hostname = this.utils.hostName();
+		this.token          = this.authS.getToken();
+		this.headers     = new HttpHeaders({
+				'Content-Type': "application/json",
+				'Accept': "application/json",
+				'Authorization': "Bearer " + this.token
+			});
 		//sessionStorage.getItem('token') = sessionStorage.getItem('token');
     }
 
@@ -147,14 +155,7 @@ export class EductaionService{
 
 	setAccessStatus(status: AccessStatus){
 		this.url = `${this.hostname}/education/rooms/${status.roomId}/accessStatus`;
-    //let x = fd.getAll("name")
-    //let y = fd.get("name")	'Content-Type': "multipart/form-data",
-    //console.log("in service", x,y);,
-    const headers = new HttpHeaders({
-			'Accept' : "application/json",
-			'Authorization' : "Bearer " + sessionStorage.getItem('token')
-    });
-    return this.http.post<ServerResponse>(this.url,status, { headers: headers});
+    return this.http.post<ServerResponse>(this.url,status, { headers: this.headers});
 	}
 	// GET Calls on Rooms
 
@@ -165,14 +166,14 @@ export class EductaionService{
 	getMyRooms(){
 		this.url = `${this.hostname}/education/myRooms`;
 		console.log(this.url);
-		console.log(sessionStorage.getItem('token'));
+	/*	console.log(sessionStorage.getItem('token'));
 		const headers = new HttpHeaders({
 			'Accept' : "application/json",
                         'Authorization' : "Bearer " + sessionStorage.getItem('token')
-		});
+		});*/
 		let body=null;
 		// console.log(headers.getAll('Content-Type') + " " + headers.getAll('Accept') + " " + headers.getAll('Authorization'));
-		return this.http.get<Room[]>(this.url,{ headers: headers});
+		return this.http.get<Room[]>(this.url,{ headers : this.headers});
 	}
 
 	/**
@@ -213,7 +214,7 @@ export class EductaionService{
 		});
 		let body=null;
 		// console.log(headers.getAll('Content-Type') + " " + headers.getAll('Accept') + " " + headers.getAll('Authorization'));
-		return this.http.get<Room>(this.url,{ headers: headers});
+		return this.http.get<EduRoom>(this.url,{ headers: this.headers});
 	}
 
 	getRoomAccessStatus(roomId: number){

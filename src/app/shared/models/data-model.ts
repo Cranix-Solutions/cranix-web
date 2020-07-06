@@ -180,6 +180,8 @@ export class Device {
 	locality?: string = "";
 	hwconfId: number = 0;
 	roomId?: any = null;
+	screenShot? = "";
+	loggedInId? = "";
 	constructor() { }
 }
 export class Printer {
@@ -389,6 +391,26 @@ export class SystemConfig {
 	help: string = "";
 	constructor() { }
 }
+
+export class EduRoom{
+	id?: number;
+	name: string = "";
+	description: string = "";
+	hwconfId: number = 0;
+	netMask?: number = 0;
+	devCount?: number = 0;
+	devices?: any;
+	users?: User[];
+	startIP?: string = "";
+	roomType: string = "";
+	roomControl: string = "";
+	network: string;
+	places: number = 0;
+	rows: number = 0;
+	accessInRooms?: AccessInRooms;
+	constructor() { }
+}
+
 export interface SmartRoom{
     id?: number, 
     name: string, 
@@ -408,6 +430,7 @@ export interface SmartRoomStatus{
     userId: number, 
     deviceId: number
 }
+
 
 export interface PositivListObj{
     id?: number,

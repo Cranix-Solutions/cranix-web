@@ -1,45 +1,68 @@
 <div id="controlgrid">
+  <ion-content>
+    <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
+      <ion-fab-button>
+        <ion-icon name="arrow-forward-circle"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-list side="start">
+        <ion-fab-button><ion-toggle (ionChange)="setAccess()" [(ngModel)]="login"></ion-toggle><ion-icon name="ellipsis-vertical-sharp" (click)="click()"></ion-icon></ion-fab-button>
+        <ion-fab-button><ion-icon name="add-circle-outline" (click)="click()"></ion-icon></ion-fab-button>
+        <ion-fab-button><ion-icon name="apps" (click)="click()"></ion-icon></ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
   <ion-card>
-    <ion-card-header>
-      
-      <ion-item lines="none">
-        <ion-label>{{' ALLOWLOGIN' | translate}}</ion-label>
-        <ion-toggle (ionChange)="setAccess()" [(ngModel)]="login"></ion-toggle>
+    <ion-card-header class="hidden-xs hidden-sm hidden-md">  
+      <ion-item *ngIf="room" lines="none">
+        <ion-label>{{ 'ALLOWLOGIN' | translate}}</ion-label>
+        <ion-toggle (ionChange)="setAccess()" [(ngModel)]="room.accessInRooms.login" [disabled]="!room"></ion-toggle>
+      </ion-item>
+      <ion-item *ngIf="room"  lines="none">
+        <ion-label>{{ 'ALLOWDIRECT' | translate}}</ion-label>
+        <ion-toggle (ionChange)="setAccess()" [(ngModel)]="room.accessInRooms.direct" [disabled]="!room"></ion-toggle>
       </ion-item>
     
-      <ion-item lines="none">
-        <ion-label>Sausage</ion-label>
-        <ion-toggle (ionChange)="setAccess()" [(ngModel)]="direct"></ion-toggle>
+      <ion-item *ngIf="room" lines="none">
+        <ion-label>{{ 'ALLOWLOGIN' | translate}}</ion-label>
+        <ion-toggle (ionChange)="setAccess()" [(ngModel)]="room.accessInRooms.printing" [disabled]="!room"></ion-toggle>
       </ion-item>
     
-      <ion-item lines="none">
-        <ion-label>{{' ALLOWLOGIN' | translate}}</ion-label>
-        <ion-toggle (ionChange)="setAccess()" [(ngModel)]="printing"></ion-toggle>
-      </ion-item>
-    
-      <ion-item lines="none">
-        <ion-label>Sausage</ion-label>
-        <ion-toggle (ionChange)="setAccess()" [(ngModel)]="proxy"></ion-toggle>
+      <ion-item *ngIf="room" lines="none">
+        <ion-label>{{ 'SETROXY' | translate}}</ion-label>
+        <ion-toggle (ionChange)="setAccess()" [(ngModel)]="room.accessInRooms.proxy" [disabled]="!room"></ion-toggle>
       </ion-item>
       
-      <ion-button fill="clear" (click)="onBTNSHARE()">
+      <ion-button  fill="clear" (click)="onBTNSHARE()">
         <ion-icon name="cloud-upload"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" (click)="onBTNCOLLECT()">
+      <ion-button  fill="clear" (click)="onBTNCOLLECT()">
         <ion-icon name="cloud-download"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" (click)="openAction()">
+      <ion-button  fill="clear" (click)="openAction()">
         <ion-icon name="desktop"></ion-icon>
       </ion-button>
+      <ion-item lines="none">
+        <ion-label *ngIf="room">{{room.name}}</ion-label>
+        <ion-select *ngIf="rooms" [(ngModel)]="selectedRoomId" #roomSelect (ionChange)="selectChanged($event)" okText="Okay" cancelText="Dismiss">
+          <ion-select-option value="{{room.id}}" *ngFor="let room of rooms | async">{{room.name}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>Size</ion-label>
+        <ion-select *ngIf="room" [(ngModel)]="gridSize" #roomSelect (ionChange)="sizeChange($event)"okText="Okay" cancelText="Dismiss">
+          <ion-select-option value="{{size}}" *ngFor="let size of gridSizes">{{size}}</ion-select-option>
+        </ion-select>
+      </ion-item>
     </ion-card-header>
-    <ion-card-content>
-      <ion-grid *ngIf="room">
-        <ion-row *ngFor="let row of array(room.rows)">
-          <ion-col *ngFor="let dev of array(room.places)" size="4">
-            <cranix-roomdev [index]="dev"></cranix-roomdev>
+    <h3 *ngIf="room">{{room.devices.length}}</h3>
+    <h3 *ngIf="room">{{gridSize}}</h3>
+  </ion-card>
+  
+  <ion-grid *ngIf="room" fiexd="true">
+        <ion-row class="grid-row" *ngFor="let row of array(room.rows); index as r">
+          <ion-col *ngFor="let dev of array(room.places); index as p" size="{{gridSize}}">
+            <cranix-roomdev [row]="r+1" [place]="p+1" [device]="getDevice(r+1,p+1)"[index]="dev"></cranix-roomdev>
           </ion-col>
         </ion-row>
       </ion-grid>
-    </ion-card-content>
-  </ion-card>
+</ion-content>
 </div>

@@ -2,9 +2,23 @@
     padding-top: 67px; 
     height: 100%;
     width: 100%;
-    overflow: scroll;
     
     ion-card-header{
-        display: flex
+        display: flex;
+     
+        /* align-items: center; */
+        align-items: center;
+        justify-content: space-between;
     }
+    ion-card-content{
+        overflow: scroll;
+
+    }
+}
+
+ion-grid {
+    flex-grow: initial;
+}
+.grid-row{
+    justify-content: space-between;
 }
