@@ -40,7 +40,7 @@ export class AppComponent {
           } else if ( this.authService.isAllowed('user.manage') ) {
             this.router.navigate(['pages/cranix/users/all']);
           } else {
-            this.router.navigate(['pages/cranix/groups']);
+            this.router.navigate(['pages/cranix/mygroups']);
           }
         } else if (sessionStorage.getItem('cephalix_token')) {
           this.authService.token = sessionStorage.getItem('cephalix_token');

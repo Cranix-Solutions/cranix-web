@@ -64,7 +64,7 @@ export class ProtectedPage implements OnInit {
       icon: 'settings'
     },
     {
-      title: 'Securtiy',
+      title: 'Security',
       url: '/pages/cranix/security',
       icon: 'security'
     },
@@ -72,6 +72,11 @@ export class ProtectedPage implements OnInit {
       title: 'Lessons',
       url: '/pages/edu/lessons/roomcontrol',
       icon: 'school'
+    },
+    {
+      title: 'MyGroups',
+      url: '/pages/cranix/mygroups',
+      icon: "people"
     }
   ];
 

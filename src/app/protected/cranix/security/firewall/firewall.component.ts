@@ -63,7 +63,7 @@ export class FirewallComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("readData called");
+    this.authService.log("readData called");
     this.securityService.readDatas();
   }
 
@@ -112,7 +112,7 @@ export class FirewallComponent implements OnInit {
     });
     modal.onDidDismiss().then((val) => {
       if (val.data) {
-        console.log(this.securityService.outgoingRules);
+        this.authService.log(this.securityService.outgoingRules);
         this.outApi.setRowData(this.securityService.outgoingRules);
         this.securityService.outgoinChanged = true;
       }
@@ -129,7 +129,7 @@ export class FirewallComponent implements OnInit {
         newRules.push(rule);
       }
     }
-    console.log(newRules);
+    this.authService.log(newRules);
     this.securityService.outgoinChanged = true;
     this.securityService.outgoingRules = newRules;
     this.outApi.setRowData(newRules);
@@ -144,7 +144,7 @@ export class FirewallComponent implements OnInit {
     });
     modal.onDidDismiss().then((val) => {
       if (val.data) {
-        console.log(this.securityService.remoteRules);
+        this.authService.log(this.securityService.remoteRules);
         this.remoteApi.setRowData(this.securityService.remoteRules);
         this.securityService.remoteChanged = true;
       }
@@ -161,7 +161,7 @@ export class FirewallComponent implements OnInit {
         newRules.push(rule);
       }
     }
-    console.log(newRules);
+    this.authService.log(newRules);
     this.securityService.remoteRules = newRules;
     this.remoteApi.setRowData(newRules);
     this.securityService.remoteChanged = true;

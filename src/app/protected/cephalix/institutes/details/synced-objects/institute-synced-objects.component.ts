@@ -7,6 +7,7 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { Institute, SynchronizedObject } from 'src/app/shared/models/cephalix-data-model';
 import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
+import { AllModules, RowGroupingModule } from '@ag-grid-enterprise/all-modules';
 
 @Component({
   selector: 'cranix-institute-synced-objects',
@@ -22,6 +23,7 @@ export class InstituteSyncedObjectsComponent implements OnInit {
   memberSelection: SynchronizedObject[] = [];
   memberData: SynchronizedObject[] = [];
   autoGroupColumnDef;
+  modules = [ AllModules, RowGroupingModule ];
   institute;
 
   constructor(
@@ -62,16 +64,9 @@ export class InstituteSyncedObjectsComponent implements OnInit {
         cellRendererFramework: DateTimeCellRenderer
       }
     ];
-    this.autoGroupColumnDef = { 
+    this.autoGroupColumnDef = {
       headerName: this.languageS.trans('objectType'),
-      field: 'objectType',
-      valueGetter: function(params) {
-        return  params.context['componentParent'].languageS.trans(params.data.objectType);
-      },
-      headerCheckboxSelection: true,
-      headerCheckboxSelectionFilteredOnly: true,
-      checkboxSelection: true,
-      minWidth: 200 
+      minWidth: 250
     };
   }
 
@@ -112,8 +107,8 @@ export class InstituteSyncedObjectsComponent implements OnInit {
   }
   readMembers() {
     let subM = this.cephalixService.getSynchronizedObjects(this.institute.id).subscribe(
-      (val) => { this.memberData = val; console.log(val) },
-      (err) => { console.log(err) },
+      (val) => { this.memberData = val; this.authService.log(val) },
+      (err) => { this.authService.log(err) },
       () => { subM.unsubscribe() });
   }
 

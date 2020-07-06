@@ -23,8 +23,8 @@ export class CustomersPage implements OnInit {
   objectKeys: string[] = [];
   displayedColumns: string[] = ['name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity'];
   sortableColumns: string[] = ['name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity'];
-  gridOptions: GridOptions;
   columnDefs = [];
+  defaultColDef = {};
   gridApi: GridApi;
   columnApi: ColumnApi;
   context;
@@ -43,16 +43,11 @@ export class CustomersPage implements OnInit {
   ) {
     this.objectKeys = Object.getOwnPropertyNames(new Customer());
     this.createColumnDefs();
-    this.gridOptions = <GridOptions>{
-      defaultColDef: {
+    this.defaultColDef ={
         resizable: true,
         sortable: true,
         hide: false
-      },
-      columnDefs: this.columnDefs,
-      context: this.context,
-      rowHeight: 35
-    }
+      };
     this.context = { componentParent: this };
   }
   ngOnInit() {
@@ -110,7 +105,6 @@ export class CustomersPage implements OnInit {
     this.gridApi.sizeColumnsToFit();
   }
   onSelectionChanged() {
-    this.selected = this.gridApi.getSelectedRows();
   }
 
   onQuickFilterChanged(quickFilter) {
@@ -134,7 +128,7 @@ export class CustomersPage implements OnInit {
  * @param ev 
  */
   async redirectToAddInstitute(ev: any) {
-
+    this.selected = this.gridApi.getSelectedRows();
     if( !this.selected) {
       this.objectService.selectObject();
       return;
@@ -159,7 +153,7 @@ export class CustomersPage implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
+        this.authService.log("Object was created or modified", dataReturned.data)
       }
     });
     (await modal).present();
@@ -184,7 +178,7 @@ export class CustomersPage implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
+        this.authService.log("Object was created or modified", dataReturned.data)
       }
     });
     (await modal).present();
@@ -213,7 +207,7 @@ export class CustomersPage implements OnInit {
       }
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
+      this.authService.log("most lett vegrehajtva.")
     })
   }
 }

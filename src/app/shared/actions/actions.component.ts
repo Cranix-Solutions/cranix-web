@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { PopoverController, NavParams } from '@ionic/angular';
+import { PopoverController, NavParams, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { AlertController } from '@ionic/angular';
 //Own stuff
-import { userMenu, groupMenu, roomMenu, deviceMenu, instituteMenu, hwconfMenu, devActionMenu } from './objects.menus';
+import { userMenu, groupMenu, roomMenu, deviceMenu, instituteMenu, hwconfMenu,devActionMenu, printerMenu, studentMenu  } from './objects.menus';
 import { CrxActionMap, ServerResponse } from 'src/app/shared/models/server-models';
 import { LanguageService } from 'src/app/services/language.service';
-import { CephalixService } from 'src/app/services/cephalix.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { SetpasswordComponent } from './setpassword/setpassword.component';
 
 
 @Component({
@@ -48,6 +48,7 @@ export class ActionsComponent implements OnInit {
 
   constructor(
     public alertController: AlertController,
+    public modalController: ModalController,
     private navParams: NavParams,
     private popoverController: PopoverController,
     public translateService: TranslateService,
@@ -71,6 +72,8 @@ export class ActionsComponent implements OnInit {
     }
     if (this.objectType == "user") {
       this.menu = this.commonMenu.concat(userMenu).concat(this.commonLastMenu);
+    } else if (this.objectType == "education/user" || this.objectType == "education/group" ) {
+      this.menu = this.commonMenu.concat(studentMenu);
     } else if (this.objectType == "group") {
       this.menu = this.commonMenu.concat(groupMenu).concat(this.commonLastMenu);
     } else if (this.objectType == "room") {
@@ -83,19 +86,30 @@ export class ActionsComponent implements OnInit {
       this.menu = this.commonMenu.concat(groupMenu).concat(this.commonLastMenu);
     } else if (this.objectType == "hwconf") {
       this.menu = this.commonMenu.concat(hwconfMenu).concat(this.commonLastMenu);
-    } 
+    } else if (this.objectType == "printer") {
+      this.menu = this.commonMenu.concat(printerMenu).concat(this.commonLastMenu);
+    }
   }
 
   ngOnInit() {
     console.log("ActionsComponent" + this.objectIds);
   }
 
+  adaptMenu(){
+    //TODO
+    for( let m of this.menu ) {
+
+    }
+  }
   closePopover() {
     this.popoverController.dismiss();
   }
 
   async messages(ev: string) {
     console.log(ev);
+    let actionMap = new CrxActionMap;
+    actionMap.name = ev;
+    actionMap.objectIds = this.objectIds;
     switch (ev) {
       case 'csv-export': {
         let header: string[] = [];
@@ -103,30 +117,26 @@ export class ActionsComponent implements OnInit {
         this.popoverController.dismiss();
         break;
       }
-     /* case 'devices*':{
-        const alert = await this.alertController.create({
-          header: this.languageService.trans(ev),
-          buttons: [
-            {
-              text: this.languageService.trans('Cancel'),
-              role: 'cancel',
-              cssClass: 'secondary',
-              handler: (blah) => {
-                console.log('Confirm Cancel: blah');
-              }
-            }, {
-              text: this.languageService.trans('OK'),
-              handler: () => {
-                this.devicesAction(ev)
-                console.log('Confirm Okay');
-              }
-            }
-          ]
+      case 'setPassword': {
+        this.popoverController.dismiss();
+        const modal = await this.modalController.create({
+          component: SetpasswordComponent,
+          cssClass: 'small-modal',
+          animated: true,
+          swipeToClose: true,
+          showBackdrop: true
         });
-        alert.onDidDismiss().then(() => this.popoverController.dismiss());
-        await alert.present();
+        modal.onDidDismiss().then((dataReturned) => {
+          this.authS.log(dataReturned.data)
+          if (dataReturned.data) {
+            actionMap.stringValue = dataReturned.data.password;
+            actionMap.booleanValue = dataReturned.data.mustChnage;
+            this.executeAction(actionMap);
+          }
+        });
+        (await modal).present();
         break;
-      }*/
+      }
       default: {
         const alert = await this.alertController.create({
           header: this.languageService.trans(ev),
@@ -141,7 +151,7 @@ export class ActionsComponent implements OnInit {
             }, {
               text: this.languageService.trans('OK'),
               handler: () => {
-                this.executeAction(ev)
+                this.executeAction(actionMap);
                 console.log('Confirm Okay');
               }
             }
@@ -154,23 +164,23 @@ export class ActionsComponent implements OnInit {
     }
   }
 
-  executeAction(action: string) {
-    let actionMap = new CrxActionMap;
-    actionMap.name = action;
-    actionMap.objectIds = this.objectIds;
+  executeAction(actionMap: CrxActionMap) {
     this.objectService.requestSent();
     let url = this.hostname + "/" + this.objectType + "s/applyAction"
     console.log("Execute Action")
     console.log(url)
     console.log(actionMap)
     let sub = this.http.post<ServerResponse[]>(url, actionMap, { headers: this.headers }).subscribe(
-      (val) => { 
+      (val) => {
         let response = this.languageService.trans("List of the results:");
-        for(let resp of val ){
+        for (let resp of val) {
           response = response + "<br>" + this.languageService.transResponse(resp);
         }
-        this.objectService.getAllObject(this.objectType);
-        this.objectService.okMessage(response) },
+        if( actionMap.name == 'delete ' ) {
+          this.objectService.getAllObject(this.objectType);
+        }
+        this.objectService.okMessage(response)
+      },
       (err) => { this.objectService.errorMessage(err) },
       () => { sub.unsubscribe(); }
     )

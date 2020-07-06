@@ -45,4 +45,18 @@ export class CrxActionMap {
 	stringValue  = "";
 }
 
+export class Settings {
+        agGridThema: string = "ag-theme-alpine";
+        lang: string = "";
+        errorMessageDuration: number = 10;
+        okMessageDuration: number = 10;
+        warningMessageDuration: number = 6;
+        rowHeight = 35;
+        rowMultiSelectWithClick: boolean = true;
+        checkboxSelection: boolean = true;
+	headerCheckboxSelection: boolean = true;
+	debug: boolean = false;
+        constructor() { }
+}
+
 export const TOKEN = 'cranix-token';

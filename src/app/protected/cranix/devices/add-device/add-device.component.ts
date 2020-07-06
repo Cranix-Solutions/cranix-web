@@ -46,7 +46,7 @@ export class AddDeviceComponent implements OnInit {
   initValues(id: number) {
     this.device = new Device();
     if (id) {
-      console.log(id);
+      this.authService.log(id);
       this.ipAdresses = [];
       this.deviceNames = {};
       let sub = this.roomService.getAvailiableIPs(id).subscribe(
@@ -57,11 +57,11 @@ export class AddDeviceComponent implements OnInit {
             this.deviceNames[b[0]] = b[1];
           }
         },
-        (err) => { console.log(err) },
+        (err) => { this.authService.log(err) },
         () => { sub.unsubscribe() }
       )
       this.room = this.objectService.getObjectById('room', id);
-      console.log(this.room);
+      this.authService.log(this.room);
       this.device.hwconfId = this.room.hwconfId;
       this.device.roomId = this.room.id;
     }
@@ -72,7 +72,7 @@ export class AddDeviceComponent implements OnInit {
   onSubmit(device: Device) {
     let devices: Device[] = [];
     devices.push(device);
-    console.log(devices);
+    this.authService.log(devices);
     let subs = this.roomService.addDevice(devices, this.room.id).subscribe(
       (val) => {
         if (val.code == "OK") {
@@ -85,7 +85,7 @@ export class AddDeviceComponent implements OnInit {
       },
       (err) => {
          this.objectService.errorMessage("ServerError" + err);
-         console.log(err);
+         this.authService.log(err);
          },
       () => { subs.unsubscribe() }
     )

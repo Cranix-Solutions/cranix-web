@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { AllModules } from '@ag-grid-enterprise/all-modules';
+import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
 
 //Own stuff
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
-import { Institute, SynchronizedObject } from 'src/app/shared/models/cephalix-data-model';
+import { SynchronizedObject } from 'src/app/shared/models/cephalix-data-model';
 
 @Component({
   selector: 'cranix-institutes-sync-objects',
@@ -14,15 +16,14 @@ import { Institute, SynchronizedObject } from 'src/app/shared/models/cephalix-da
 export class InstitutesSyncObjectsComponent implements OnInit {
 
   context;
-  memberOptions;
   columnDefs = [];
   memberApi;
   memberColumnApi;
   memberSelection: SynchronizedObject[] = [];
   memberData: SynchronizedObject[] = [];
   autoGroupColumnDef;
+  modules = [ AllModules, RowGroupingModule ];
   institute;
-  selectedList: string[] = [];
 
   constructor(
     public authService:     AuthenticationService,
@@ -30,19 +31,7 @@ export class InstitutesSyncObjectsComponent implements OnInit {
     public objectService: GenericObjectService,
     private languageS: LanguageService
   ) {
-    this.institute = <Institute>this.objectService.selectedObject;
-
     this.context = { componentParent: this };
-    this.memberOptions = {
-      defaultColDef: {
-        resizable: true,
-        sortable: true,
-        hide: false
-      },
-      columnDefs: this.columnDefs,
-      context: this.context,
-      rowSelection: 'multiple'
-    }
     this.columnDefs = [
       {
         field: 'objectType',
@@ -60,12 +49,6 @@ export class InstitutesSyncObjectsComponent implements OnInit {
     ];
     this.autoGroupColumnDef = {
       headerName: this.languageS.trans('objectType'),
-      field: 'objectType',
-      headerCheckboxSelection: false,
-      headerCheckboxSelectionFilteredOnly: true,
-      checkboxSelection: true,
-      cellStyle: { 'justify-content': "left" },
-      valueGetter: function (params) { return " "; },
       minWidth: 250
     };
   }
@@ -77,11 +60,6 @@ export class InstitutesSyncObjectsComponent implements OnInit {
   onMemberReady(params) {
     this.memberApi = params.api;
     this.memberColumnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
-  }
-
-  onMemberSelectionChanged() {
-    this.memberSelection = this.memberApi.getSelectedRows();
   }
 
   onMemberFilterChanged() {
@@ -89,10 +67,6 @@ export class InstitutesSyncObjectsComponent implements OnInit {
     this.memberApi.doLayout();
   }
 
-  onResize(ev: Event) {
-    (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
-    //this.sizeAll();
-  }
   sizeAll() {
     var allColumnIds = [];
     this.memberColumnApi.getAllColumns().forEach((column) => {
@@ -102,28 +76,30 @@ export class InstitutesSyncObjectsComponent implements OnInit {
   }
   readMembers() {
     let subM = this.cephalixService.getObjectsToSynchronize().subscribe(
-      (val) => { this.memberData = val; console.log(val) },
-      (err) => { console.log(err) },
+      (val) => { this.memberData = val; this.authService.log(val) },
+      (err) => { this.authService.log(err) },
       () => { subM.unsubscribe() });
   }
   startSync(en: Event) {
+    this.objectService.requestSent();
     for (let institute of this.cephalixService.selectedInstitutes) {
-      for (let sel of this.memberSelection) {
+      for (let sel of this.memberApi.getSelectedRows()) {
         let sub = this.cephalixService.putObjectToInstitute(institute.id, sel.objectType, sel.cephalixId)
           .subscribe(
-            (val) => { console.log("Start sync:") },
-            (err) => { console.log },
+            (val) => { this.authService.log("Start sync:") },
+            (err) => { this.authService.log },
             () => { sub.unsubscribe() })
       }
     }
   }
   stopSync(en: Event) {
+    this.objectService.requestSent();
     for (let institute of this.cephalixService.selectedInstitutes) {
-      for (let sel of this.memberSelection) {
+      for (let sel of this.memberApi.getSelectedRows()) {
         let sub = this.cephalixService.deleteObjectFromInstitute(institute.id, sel.objectType, sel.cephalixId)
           .subscribe(
-            (val) => { console.log("Stop sync:") },
-            (err) => { console.log },
+            (val) => { this.authService.log("Stop sync:") },
+            (err) => { this.authService.log },
             () => { sub.unsubscribe() })
       }
     }

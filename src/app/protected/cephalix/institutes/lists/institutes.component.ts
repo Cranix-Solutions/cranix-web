@@ -26,11 +26,10 @@ export class InstitutesComponent implements OnInit {
   objectKeys: string[] = [];
   displayedColumns: string[] = ['name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity'];
   sortableColumns: string[] = ['uuid', 'name', 'locality', 'ipVPN', 'regCode', 'validity'];
-  gridOptions: GridOptions;
   columnDefs = [];
+  defaultColDef = {};
   gridApi: GridApi;
   columnApi: ColumnApi;
-  rowSelection;
   context;
   title = 'app';
   rowData = [];
@@ -48,19 +47,12 @@ export class InstitutesComponent implements OnInit {
     this.context = { componentParent: this };
     this.objectKeys = Object.getOwnPropertyNames(cephalixService.templateInstitute);
     this.createColumnDefs();
-    this.gridOptions = <GridOptions>{
-      defaultColDef: {
+    this.defaultColDef = {
         resizable: true,
         sortable: true,
         hide: false,
         suppressMenu : true
-      },
-      columnDefs: this.columnDefs,
-      context: this.context,
-      rowSelection: 'multiple',
-      // domLayout: 'autoHeight',
-      rowHeight: 35
-    }
+      };
   }
 
   ngOnInit() {
@@ -85,9 +77,9 @@ export class InstitutesComponent implements OnInit {
       col['minWidth'] = 110;
       switch (key) {
         case 'name': {
-          col['headerCheckboxSelection'] = true;
+          col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
-          col['checkboxSelection'] = true;
+          col['checkboxSelection'] = this.authService.settings.checkboxSelection;
           col['width'] = 220;
           col['flex'] = '1';
 
@@ -129,7 +121,7 @@ export class InstitutesComponent implements OnInit {
     };
 
     columnDefs.splice(1, 0, check)
-    console.log('columnsDef', columnDefs);
+    this.authService.log('columnsDef', columnDefs);
     this.columnDefs = columnDefs;
   }
 
@@ -224,7 +216,7 @@ export class InstitutesComponent implements OnInit {
       });
       modal.onDidDismiss().then((dataReturned) => {
         if (dataReturned.data) {
-          console.log("Object was created or modified", dataReturned.data)
+          this.authService.log("Object was created or modified", dataReturned.data)
         }
       });
       (await modal).present();
@@ -254,7 +246,7 @@ export class InstitutesComponent implements OnInit {
       }
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
+      this.authService.log("most lett vegrehajtva.")
     })
   }
 }

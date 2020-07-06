@@ -27,12 +27,11 @@ export class DevicesComponent implements OnInit {
   displayedColumns: string[] = ['name', 'mac', 'ip', 'hwconfId', 'roomId'];
   sortableColumns: string[] = ['name', 'mac', 'ip', 'hwconfId', 'roomId'];
   columnDefs = [];
-  gridOptions: GridOptions;
+  defaultColDef = {};
   gridApi: GridApi;
   columnApi: ColumnApi;
   rowSelection;
   context;
-  selected: Device[] = [];
   title = 'app';
   rowData = [];
 
@@ -50,17 +49,12 @@ export class DevicesComponent implements OnInit {
     this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new Device());
     this.createColumnDefs();
-    this.gridOptions = <GridOptions>{
-      defaultColDef: {
+    this.defaultColDef = {
         resizable: true,
         sortable: true,
         hide: false,
         suppressMenu : true
-      },
-      columnDefs: this.columnDefs,
-      context: this.context,
-      rowHeight: 35
-    }
+      }
   }
   ngOnInit() {
     this.storage.get('DevicesComponent.displayedColumns').then((val) => {
@@ -102,9 +96,9 @@ export class DevicesComponent implements OnInit {
       col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
       switch (key) {
         case 'name': {
-          col['headerCheckboxSelection'] = true;
+          col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
-          col['checkboxSelection'] = true;
+          col['checkboxSelection'] = this.authService.settings.checkboxSelection;
           col['width'] = 120;
           col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
@@ -146,9 +140,6 @@ export class DevicesComponent implements OnInit {
     this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
-  onSelectionChanged() {
-    this.selected = this.gridApi.getSelectedRows();
-  }
 
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
@@ -171,7 +162,7 @@ export class DevicesComponent implements OnInit {
  * @param ev 
  */
   async openActions(ev: any, objId: number) {
-    if (this.selected.length == 0 && !objId) {
+    if (this.gridApi.getSelectedRows().length == 0 && !objId) {
       this.objectService.selectObject();
       return;
     }
@@ -179,8 +170,8 @@ export class DevicesComponent implements OnInit {
     if (objId) {
       objectIds.push(objId)
     } else {
-      for (let i = 0; i < this.selected.length; i++) {
-        objectIds.push(this.selected[i].id);
+      for (let i = 0; i < this.gridApi.getSelectedRows().length; i++) {
+        objectIds.push(this.gridApi.getSelectedRows()[i].id);
       }
     }
     const popover = await this.popoverCtrl.create({
@@ -189,7 +180,7 @@ export class DevicesComponent implements OnInit {
       componentProps: {
         objectType: "device",
         objectIds: objectIds,
-        selection: this.selected
+        selection: this.gridApi.getSelectedRows()
       },
       animated: true,
       showBackdrop: true
@@ -216,7 +207,7 @@ export class DevicesComponent implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
+        this.authService.log("Object was created or modified", dataReturned.data)
       }
     });
     (await modal).present();
@@ -238,7 +229,7 @@ export class DevicesComponent implements OnInit {
       this.createColumnDefs();
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
+      this.authService.log("most lett vegrehajtva.")
     })
   }
   /**
@@ -264,7 +255,7 @@ export class DevicesComponent implements OnInit {
       this.createColumnDefs();
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
+      this.authService.log("most lett vegrehajtva.")
     })
   }
 
@@ -280,7 +271,7 @@ export class DevicesComponent implements OnInit {
       backdropDismiss: false
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
+      this.authService.log("most lett vegrehajtva.")
     })
   }
 }

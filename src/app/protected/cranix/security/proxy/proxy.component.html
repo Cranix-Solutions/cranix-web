@@ -10,7 +10,7 @@
       <ion-icon name="arrow-forward-circle"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="start">
-      <ion-fab-button *ngIf="segment == 'positive'" (click)="addEditPositiveList(null)">
+      <ion-fab-button *ngIf="segment == 'positive'" (click)="redirectToEdit($event,null)">
         <ion-icon name="add-circle" ></ion-icon>
       </ion-fab-button>
       <ion-fab-button *ngIf="segment == 'basic'" (click)="writeConfig()">
@@ -35,7 +35,7 @@
           </ion-segment>
         </ion-col>
         <ion-col offset="3" size="3" class="ion-align-self-center ion-text-end hidden-xs hidden-sm hidden-md">
-          <ion-button *ngIf="segment == 'positive'" size="small" (click)="addEditPositiveList(null)"
+          <ion-button *ngIf="segment == 'positive'" size="small" (click)="redirectToEdit($event,null)"
             matTooltip="{{'Create a new positive list.' | translate }}">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>

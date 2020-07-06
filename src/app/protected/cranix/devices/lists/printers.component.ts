@@ -34,7 +34,6 @@ export class PrintersComponent implements OnInit {
   columnApi: ColumnApi;
   rowSelection;
   context;
-  selected: Device[] = [];
   title = 'app';
   rowData = [];
 
@@ -90,9 +89,9 @@ export class PrintersComponent implements OnInit {
       col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
       switch (key) {
         case 'name': {
-          col['headerCheckboxSelection'] = true;
+          col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
-          col['checkboxSelection'] = true;
+          col['checkboxSelection'] = this.authService.settings.checkboxSelection;
           col['width'] = 170;
           col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
@@ -132,9 +131,6 @@ export class PrintersComponent implements OnInit {
     this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
-  onSelectionChanged() {
-    this.selected = this.gridApi.getSelectedRows();
-  }
 
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
@@ -149,15 +145,16 @@ export class PrintersComponent implements OnInit {
     this.columnApi.autoSizeColumns(allColumnIds);
   }
 
-  redirectToDelete(device: Device) {
-    this.objectService.deleteObjectDialog(device, 'device')
+  redirectToDelete(printer: Printer) {
+    this.objectService.deleteObjectDialog(printer, 'printer')
   }
   /**
  * Open the actions menu with the selected object ids.
  * @param ev 
  */
   async openActions(ev: any, objId: number) {
-    if (this.selected.length == 0 && !objId) {
+    let selected = this.gridApi.getSelectedRows();
+    if ( selected.length == 0 && !objId) {
       this.objectService.selectObject();
       return;
     }
@@ -165,36 +162,37 @@ export class PrintersComponent implements OnInit {
     if (objId) {
       objectIds.push(objId)
     } else {
-      for (let i = 0; i < this.selected.length; i++) {
-        objectIds.push(this.selected[i].id);
+      for (let i = 0; i < selected.length; i++) {
+        objectIds.push(selected[i].id);
       }
     }
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
       event: ev,
       componentProps: {
-        objectType: "device",
+        objectType: "printer",
         objectIds: objectIds,
-        selection: this.selected
+        selection: selected
       },
       animated: true,
       showBackdrop: true
     });
     (await popover).present();
   }
-  async redirectToEdit(ev: Event, device: Device) {
+
+  async redirectToEdit(ev: Event, printer: Printer) {
     let action = "modify";
-    if (!device) {
-      device = new Device();
+    if (!printer) {
+      printer = new Printer();
       action = "add";
     }
     const modal = await this.modalCtrl.create({
       component: ObjectsEditComponent,
       cssClass: "medium-modal",
       componentProps: {
-        objectType: "device",
+        objectType: "printer",
         objectAction: action,
-        object: device
+        object: printer
       },
       animated: true,
       swipeToClose: true,
@@ -202,7 +200,7 @@ export class PrintersComponent implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
+        this.authService.log("Object was created or modified", dataReturned.data)
       }
     });
     (await modal).present();
@@ -231,7 +229,7 @@ export class PrintersComponent implements OnInit {
       this.createColumnDefs();
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
+      this.authService.log("most lett vegrehajtva.")
     })
   }
 
@@ -256,7 +254,7 @@ export class PrintersComponent implements OnInit {
       this.createColumnDefs();
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
+      this.authService.log("most lett vegrehajtva.")
     })
   }
 
@@ -273,7 +271,7 @@ export class PrintersComponent implements OnInit {
       },
       (error) => {
         this.objectService.errorMessage("ServerError" + error);
-        console.log(error);
+        this.authService.log(error);
       },
       () => { subs.unsubscribe() }
     )
@@ -292,7 +290,7 @@ export class PrintersComponent implements OnInit {
       },
       (error) => {
         this.objectService.errorMessage("ServerError" + error);
-        console.log(error);
+        this.authService.log(error);
       },
       () => { subs.unsubscribe() }
     )

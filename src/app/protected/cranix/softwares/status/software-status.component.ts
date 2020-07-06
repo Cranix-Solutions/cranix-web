@@ -12,7 +12,7 @@ import { SoftwareStatus } from 'src/app/shared/models/data-model';
 })
 export class SoftwareStatusComponent implements OnInit {
   context;
-  memberOptions;
+  defaultColDef = {};
   columnDefs = [];
   memberApi;
   memberColumnApi;
@@ -20,7 +20,6 @@ export class SoftwareStatusComponent implements OnInit {
   memberData: SoftwareStatus[] = [];
   autoGroupColumnDef;
   institute;
-  selectedList: string[] = [];
   rowGroupPanelShow="always";
 
   constructor(
@@ -29,17 +28,11 @@ export class SoftwareStatusComponent implements OnInit {
     private languageS: LanguageService
     ) {
     this.context = { componentParent: this };
-    this.memberOptions = {
-      defaultColDef: {
+    this.defaultColDef = {
         resizable: true,
         sortable: true,
         hide: false
-      },
-      columnDefs: this.columnDefs,
-      context: this.context,
-      rowSelection: 'multiple'
-    }
- 
+      };
    }
 
   ngOnInit() {
@@ -70,8 +63,8 @@ export class SoftwareStatusComponent implements OnInit {
   }
   readMembers() {
     let subM = this.softwareService.getSoftwareStatus().subscribe(
-      (val) => { this.memberData = val; console.log(val) },
-      (err) => { console.log(err) },
+      (val) => { this.memberData = val; this.authService.log(val) },
+      (err) => { this.authService.log(err) },
       () => { subM.unsubscribe() });
   }
   roomDeviceGrouping() {

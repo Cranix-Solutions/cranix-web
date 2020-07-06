@@ -9,7 +9,7 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
         <!--div>
         <ion-note >{{ name }}</ion-note>
         </div-->
-        <ion-button fill="clear" size="small" (click)="details()" matTooltip="{{'edit' | translate }}">
+        <ion-button fill="clear" size="small" (click)="details()" matTooltip="{{'modify' | translate }}">
              <ion-icon name="build-sharp"></ion-icon>
         </ion-button>
         <ion-button fill="clear" size="small" (click)="openAction($event)" matTooltip="{{'Apply actions on the selected objects' | translate }}">

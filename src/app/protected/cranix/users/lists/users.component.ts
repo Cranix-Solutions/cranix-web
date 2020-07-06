@@ -24,13 +24,12 @@ export class UsersComponent implements OnInit {
   objectKeys: string[] = [];
   displayedColumns: string[] = ['uid', 'uuid', 'givenName', 'surName', 'role', 'classes', 'actions'];
   sortableColumns: string[] = ['uid', 'uuid', 'givenName', 'surName', 'role', 'classes'];
-  gridOptions: GridOptions;
   columnDefs = [];
+  defaultColDef = {};
   gridApi: GridApi;
   rowSelection: 'multiple';
   columnApi: ColumnApi;
   context;
-  selected: User[] = [];
   title = 'app';
   rowData = [];
 
@@ -46,18 +45,12 @@ export class UsersComponent implements OnInit {
     this.context = { componentParent: this };
     this.objectKeys = Object.getOwnPropertyNames(new User());
     this.createColumnDefs();
-    this.gridOptions = <GridOptions>{
-      defaultColDef: {
+    this.defaultColDef = {
         resizable: true,
         sortable: true,
         hide: false,
         suppressMenu : true
-      },
-      columnDefs: this.columnDefs,
-      context: this.context,
-      rowSelection: 'multiple',
-      rowHeight: 35
-    }
+      }
   }
   ngOnInit() {
     this.storage.get('UsersPage.displayedColumns').then((val) => {
@@ -79,10 +72,10 @@ export class UsersComponent implements OnInit {
       col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
       switch (key) {
         case 'uid': {
-          col['headerCheckboxSelection'] = true;
+          col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
-          col['checkboxSelection'] = true;
-          col['width'] = 170;
+          col['checkboxSelection'] = this.authService.settings.checkboxSelection;
+          col['width'] = 150;
           col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
@@ -99,7 +92,7 @@ export class UsersComponent implements OnInit {
     }
     let action = {
       headerName: "",
-      width: 150,
+      minWidth: 150,
       suppressSizeToFit: true,
       cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
@@ -116,9 +109,6 @@ export class UsersComponent implements OnInit {
     this.gridApi.sizeColumnsToFit();
     this.sizeAll();
   }
-  onSelectionChanged() {
-    this.selected = this.gridApi.getSelectedRows();
-  }
 
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
@@ -126,8 +116,8 @@ export class UsersComponent implements OnInit {
   }
 
   onResize($event) {
-    console.log("window");
-    console.log(window);
+    this.authService.log("window");
+    this.authService.log(window);
     (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
     this.sizeAll();
     this.gridApi.sizeColumnsToFit();
@@ -148,7 +138,8 @@ export class UsersComponent implements OnInit {
  * @param ev
  */
   async openActions(ev: any, objId: number) {
-    if (this.selected.length == 0 && !objId) {
+    let selected = this.gridApi.getSelectedRows();
+    if (selected.length == 0 && !objId) {
       this.objectService.selectObject();
       return;
     }
@@ -156,8 +147,8 @@ export class UsersComponent implements OnInit {
     if (objId) {
       objectIds.push(objId)
     } else {
-      for (let i = 0; i < this.selected.length; i++) {
-        objectIds.push(this.selected[i].id);
+      for (let i = 0; i < selected.length; i++) {
+        objectIds.push(selected[i].id);
       }
     }
     const popover = await this.popoverCtrl.create({
@@ -166,8 +157,9 @@ export class UsersComponent implements OnInit {
       componentProps: {
         objectType: "user",
         objectIds: objectIds,
-        selection: this.selected
-      },
+        selection: selected
+	},
+      translucent: true,
       animated: true,
       showBackdrop: true
     });
@@ -184,7 +176,7 @@ export class UsersComponent implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
+        this.authService.log("Object was created or modified", dataReturned.data)
       }
     });
     (await modal).present();
@@ -213,7 +205,7 @@ export class UsersComponent implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
+        this.authService.log("Object was created or modified", dataReturned.data)
       }
     });
     (await modal).present();
@@ -242,7 +234,7 @@ export class UsersComponent implements OnInit {
       }
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
+      this.authService.log("most lett vegrehajtva.")
     })
   }
 }

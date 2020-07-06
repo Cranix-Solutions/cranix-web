@@ -23,10 +23,10 @@ export class EditBTNRenderer implements ICellRendererAngularComp {
 
     public details() {
         console.log("Edit", this.params.data);
-        this.params.context.componentParent.addEditSet(this.params.data);
+        this.params.context.componentParent.redirectToEdit(null,this.params.data);
     }
    public delete() {
-        this.params.context.componentParent.delete(this.params.data);
+        this.params.context.componentParent.redirectToDelete(this.params.data);
     }
 
     refresh(params: any): boolean {

@@ -1,5 +1,5 @@
 import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__, AfterContentInit } from '@angular/core';
-import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
+import {  GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
@@ -25,13 +25,11 @@ export class TicketsPage implements OnInit {
   objectKeys: string[] = [];
   displayedColumns: string[] = ['title', 'cephalixInstituteId', 'recDate', 'ticketStatus'];
   sortableColumns: string[] = ['title', 'cephalixInstituteId', 'recDate', 'ticketStatus'];
-  gridOptions: GridOptions;
   columnDefs = [];
-  gridApi: GridApi;
+  defaultColDef = {};
   columnApi: ColumnApi;
-  rowSelection;
+  gridApi: GridApi;
   context;
-  selected: Ticket[] = [];
   title = 'app';
   rowData = [];
   objectIds: number[] = [];
@@ -47,19 +45,13 @@ export class TicketsPage implements OnInit {
   ) {
 
     this.context = { componentParent: this };
-    this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new Ticket());
     this.createColumnDefs();
-    this.gridOptions = <GridOptions>{
-      defaultColDef: {
+    this.defaultColDef = {
         resizable: true,
         sortable: true,
         hide: false
-      },
-      columnDefs: this.columnDefs,
-      context: this.context,
-      rowHeight: 35
-    }
+      };
   }
 
   ngOnInit() {
@@ -73,11 +65,6 @@ export class TicketsPage implements OnInit {
     this.objectService.getObjects('ticket').subscribe(obj => this.rowData = obj);
   }
 
-  instituteIdToName(params) {
-    console.log(Object.getOwnPropertyNames(params));
-    return this.objectService.idToName('institute', params.id);
-  }
-
   createColumnDefs() {
     let columnDefs = [];
     for (let key of this.objectKeys) {
@@ -89,9 +76,9 @@ export class TicketsPage implements OnInit {
       col['minWidth'] = 110;
       switch (key) {
         case 'title': {
-          col['headerCheckboxSelection'] = true;
+          col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
-          col['checkboxSelection'] = true;
+          col['checkboxSelection'] = this.authService.settings.checkboxSelection;
           col['width'] = 220;
           col['cellStyle'] = { 'padding-left': '2px', 'padding-right': '2px' };
           col['suppressSizeToFit'] = true;
@@ -130,9 +117,6 @@ export class TicketsPage implements OnInit {
     this.columnApi = params.columnApi;
     (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
   }
-  onSelectionChanged() {
-    this.selected = this.gridApi.getSelectedRows();
-  }
 
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
@@ -159,7 +143,8 @@ export class TicketsPage implements OnInit {
  * @param ev 
  */
   async openActions(ev: any, objId: number) {
-    if (this.selected.length == 0  && !objId) {
+    let selected = this.gridApi.getSelectedRows();
+    if ( selected.length == 0  && !objId) {
       this.objectService.selectObject();
       return;
     }
@@ -167,8 +152,8 @@ export class TicketsPage implements OnInit {
     if (objId) {
       this.objectIds.push(objId);
     } else {
-      for (let i = 0; i < this.selected.length; i++) {
-        this.objectIds.push(this.selected[i].id);
+      for (let i = 0; i < selected.length; i++) {
+        this.objectIds.push(selected[i].id);
       }
     }
     const popover = await this.popoverCtrl.create({
@@ -177,7 +162,7 @@ export class TicketsPage implements OnInit {
       componentProps: {
         objectType: "ticket",
         objectIds: this.objectIds,
-        selection: this.selected
+        selection: selected
       },
       animated: true,
       showBackdrop: true
@@ -203,7 +188,7 @@ export class TicketsPage implements OnInit {
       });
       modal.onDidDismiss().then((dataReturned) => {
         if (dataReturned.data) {
-          console.log("Object was created or modified", dataReturned.data)
+          this.authService.log("Object was created or modified", dataReturned.data)
         }
       });
       (await modal).present();
@@ -233,7 +218,7 @@ export class TicketsPage implements OnInit {
       }
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
+      this.authService.log("most lett vegrehajtva.")
     })
   }
 }

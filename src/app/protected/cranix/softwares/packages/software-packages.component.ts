@@ -76,9 +76,9 @@ export class SoftwarePackagesComponent implements OnInit {
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
       switch (key) {
         case 'name': {
-          col['headerCheckboxSelection'] = true;
+          col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
-          col['checkboxSelection'] = true;
+          col['checkboxSelection'] = this.authService.settings.checkboxSelection;
           col['width'] = 220;
           col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
@@ -160,11 +160,11 @@ export class SoftwarePackagesComponent implements OnInit {
       }
     });
     (await modal).present().then((val) => {
-      console.log("downloadSoftwares executed.")
+      this.authService.log("downloadSoftwares executed.")
     })
   }
   async redirectToEdit(ev: Event, software: Software) {
-    let action = 'edit';
+    let action = 'modify';
     if (!software) {
       software = new Software();
       action = 'add';
@@ -182,7 +182,7 @@ export class SoftwarePackagesComponent implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
+        this.authService.log("Object was created or modified", dataReturned.data)
       }
     });
     (await modal).present();

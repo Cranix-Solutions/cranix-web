@@ -19,6 +19,18 @@ export const deviceMenu = [
   },
   {
     "enabled": true,
+    "icon":"logo-buffer",
+    "color":"success",
+    "action": "startclone"
+  },
+  {
+    "enabled": true,
+    "icon":"logo-buffer",
+    "color":"danger",
+    "action": "stopclone"
+  },
+  {
+    "enabled": true,
     "icon":"lock-open",
     "color":"success",
     "action": "open"
@@ -37,18 +49,21 @@ export const deviceMenu = [
 export const  groupMenu = [
 ]
 
+export const  printerMenu = [
+]
+
 export const hwconfMenu = [
   {
     "enabled": true,
-    "icon":"power",
+    "icon":"logo-buffer",
     "color":"success",
-    "action": "startClone"
+    "action": "startclone"
   },
   {
     "enabled": true,
-    "icon":"power",
+    "icon":"logo-buffer",
     "color":"danger",
-    "action": "stopClone"
+    "action": "stopclone"
   },
   {
     "enabled": true,
@@ -106,6 +121,18 @@ export const  roomMenu = [
   },
   {
     "enabled": true,
+    "icon":"logo-buffer",
+    "color":"success",
+    "action": "startclone"
+  },
+  {
+    "enabled": true,
+    "icon":"logo-buffer",
+    "color":"danger",
+    "action": "stopclone"
+  },
+  {
+    "enabled": true,
     "icon":"lock-open",
     "color":"success",
     "action": "open"
@@ -129,7 +156,7 @@ export const userMenu = [
     "enabled": true,
     "icon":"key",
     "color":"secondary",
-    "action": "changePassword"
+    "action": "setPassword"
   },
   {
     "enabled": true,
@@ -229,5 +256,68 @@ export const devActionMenu = [
     "icon"    : "eye",
     "color"   : "secondary",
     "action"  : "setPassword"
+  }
+];
+
+export const studentMenu = [
+  {
+    "enabled": true,
+    "icon":"key",
+    "color":"secondary",
+    "action": "setPassword"
+  },
+  {
+    "enabled": true,
+    "icon":"cut",
+    "color":"secondary",
+    "action": "removeProfiles"
+  },
+  {
+    "enabled": true,
+    "icon":"log-in",
+    "color":"danger",
+    "action": "disableLogin"
+  },
+  {
+    "enabled": true,
+    "icon":"log-in",
+    "color":"success",
+    "action": "enableLogin"
+  },
+  {
+    "enabled": true,
+    "icon":"cloud-offline",
+    "color":"danger",
+    "action": "disableInternet"
+  },
+  {
+    "enabled": true,
+    "icon":"cloud-done",
+    "color":"success",
+    "action": "enableInternet"
+  },
+  {
+    "enabled": true,
+    "icon":"file-tray",
+    "color":"secondary",
+    "action": "mandatoryProfile"
+  },
+  {
+    "enabled": true,
+    "icon":"file-tray",
+    "color":"danger",
+    "action": "copyTemplate"
+  },
+  {
+    "enabled": true,
+    "icon":"file-tray-full",
+    "color":"secondary",
+    "action": "setFilesystemQuota"
+  },
+  {
+    "enabled": true,
+    "icon":"mail",
+    "color":"secondary",
+    "action": "setMailSystemQuota"
   }
 ];

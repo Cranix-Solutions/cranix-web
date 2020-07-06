@@ -10,6 +10,7 @@ import { GenericObjectService } from './generic-object.service';
 import { LanguageService } from './language.service';
 import { ServerResponse } from 'src/app/shared/models/server-models';
 import { AccessInRoom, IncomingRules, OutgoingRule, RemoteRule } from '../shared/models/secutiry-model';
+import { Room } from '../shared/models/data-model';
 
 @Injectable()
 export class SecurityService {
@@ -22,6 +23,7 @@ export class SecurityService {
   incomingRules: IncomingRules;
   outgoingRules: OutgoingRule[];
   remoteRules: RemoteRule[];
+  firewallRooms: Room[];
   public outgoinChanged: boolean = false;
   public incomingChanged: boolean = false;
   public remoteChanged: boolean = false;
@@ -78,6 +80,12 @@ export class SecurityService {
     return this.http.get<RemoteRule[]>(this.url, { headers: this.headers });
   }
 
+  getFirewallRooms() {
+    this.url = this.hostname + "/rooms/allWithFirewallControl";
+    console.log(this.url);
+    return this.http.get<Room[]>(this.url, { headers: this.headers });
+  }
+
   async applyChange(rules, rulesName) {
     this.url = this.hostname + '/system/firewall/' + rulesName;
     let sub = this.http.post<ServerResponse>(this.url, rules, { headers: this.headers }).subscribe(
@@ -100,7 +108,7 @@ export class SecurityService {
     this.url = this.hostname + "/rooms/" + accessInRoom.roomId + "/accessList";
     console.log(this.url);
     this.objectService.requestSent();
-    let sub =  this.http.post<ServerResponse>(this.url, accessInRoom, { headers: this.headers }).subscribe(
+    let sub = this.http.post<ServerResponse>(this.url, accessInRoom, { headers: this.headers }).subscribe(
       (val) => {
         let serverResponse = val;
         if (serverResponse.code == "OK") {
@@ -116,12 +124,12 @@ export class SecurityService {
       () => { sub.unsubscribe() }
     );
   }
-  
+
   deleteAccessInRoom(id: number) {
     this.url = this.hostname + "/rooms/accessList/" + id;
     console.log(this.url);
     this.objectService.requestSent();
-    let sub =  this.http.delete<ServerResponse>(this.url,  { headers: this.headers }).subscribe(
+    let sub = this.http.delete<ServerResponse>(this.url, { headers: this.headers }).subscribe(
       (val) => {
         let serverResponse = val;
         if (serverResponse.code == "OK") {
@@ -153,9 +161,13 @@ export class SecurityService {
       (err) => { console.log(err) },
       () => { sub3.unsubscribe(); }
     )
+    let sub4 = this.getFirewallRooms().subscribe(
+      (val) => { this.firewallRooms = val; },
+      (err) => { console.log(err) },
+      () => { sub4.unsubscribe(); }
+    )
   }
 }
-
 
 @Injectable()
 export class FirewallCanDeactivate implements CanDeactivate<SecurityService> {
@@ -164,17 +176,17 @@ export class FirewallCanDeactivate implements CanDeactivate<SecurityService> {
     public securityService: SecurityService
   ) { }
   canDeactivate(securityService: SecurityService) {
-    if ( this.securityService.outgoinChanged  ) {
+    if (this.securityService.outgoinChanged) {
       return window.confirm(
         this.languageS.trans('The outgoing rules was changed but not saved. Do you really want to cancel?')
       );
     }
-    if ( this.securityService.remoteChanged  ) {
+    if (this.securityService.remoteChanged) {
       return window.confirm(
         this.languageS.trans('The remote rules was changed but not saved. Do you really want to cancel?')
       );
     }
-    if ( this.securityService.incomingChanged  ) {
+    if (this.securityService.incomingChanged) {
       return window.confirm(
         this.languageS.trans('The incomming rules was changed but not saved. Do you really want to cancel?')
       );

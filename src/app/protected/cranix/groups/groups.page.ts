@@ -25,13 +25,12 @@ export class GroupsPage implements OnInit {
   objectKeys: string[] = [];
   displayedColumns: string[] = ['name', 'description', 'roomControl', 'hwconfId', 'actions'];
   sortableColumns: string[] = ['name', 'description', 'roomControl', 'hwconfId'];
-  gridOptions: GridOptions;
   columnDefs = [];
+  defaultColDef = {};
   gridApi: GridApi;
   columnApi: ColumnApi;
   rowSelection;
   context;
-  selected: Group[] = [];
   title = 'app';
   rowData = [];
 
@@ -49,17 +48,12 @@ export class GroupsPage implements OnInit {
     this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new Group());
     this.createColumnDefs();
-    this.gridOptions = <GridOptions>{
-      defaultColDef: {
+    this.defaultColDef = {
         resizable: true,
         sortable: true,
         hide: false,
         suppressMenu : true
-      },
-      columnDefs: this.columnDefs,
-      context: this.context,
-      rowHeight: 35
-    }
+      }
   }
   ngOnInit() {
     this.storage.get('GroupsPage.displayedColumns').then((val) => {
@@ -73,30 +67,8 @@ export class GroupsPage implements OnInit {
   }
 
   createColumnDefs() {
-    let columnDefs = [];
-    for (let key of this.objectKeys) {
-      let col = {};
-      col['field'] = key;
-      col['headerName'] = this.languageS.trans(key);
-      col['hide'] = (this.displayedColumns.indexOf(key) == -1);
-      col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
-      switch (key) {
-        case 'name': {
-          col['headerCheckboxSelection'] = true;
-          col['headerCheckboxSelectionFilteredOnly'] = true;
-          col['checkboxSelection'] = true;
-          col['width'] = 150;
-          col['cellStyle'] = { 'padding-left': '2px' };
-          col['suppressSizeToFit'] = true;
-          col['pinned'] = 'left';
-          col['flex'] = '1';
-          col['colId'] = '1';
-          break;
-        }
-      }
-      columnDefs.push(col);
-    }
-    let action = {
+     this.columnDefs = [];
+     let action = {
       headerName: "",
       width: 150,
       suppressSizeToFit: true,
@@ -105,8 +77,31 @@ export class GroupsPage implements OnInit {
       pinned: 'left',
       cellRendererFramework: GroupActionBTNRenderer
     };
-    columnDefs.splice(1, 0, action)
-    this.columnDefs = columnDefs;
+    for (let key of this.objectKeys) {
+      let col = {};
+      col['field'] = key;
+      col['headerName'] = this.languageS.trans(key);
+      col['hide'] = (this.displayedColumns.indexOf(key) == -1);
+      col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
+      switch (key) {
+        case 'name': {
+          col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
+          col['headerCheckboxSelectionFilteredOnly'] = true;
+          col['checkboxSelection'] = this.authService.settings.checkboxSelection;
+          col['width'] = 150;
+          col['cellStyle'] = { 'padding-left': '2px' };
+          col['suppressSizeToFit'] = true;
+          col['pinned'] = 'left';
+          col['flex'] = '1';
+          col['colId'] = '1';
+          this.columnDefs.push(col);
+          this.columnDefs.push(action);
+          continue;
+          break;
+        }
+      }
+      this.columnDefs.push(col);
+    }
   }
 
   onGridReady(params) {
@@ -114,9 +109,7 @@ export class GroupsPage implements OnInit {
     this.columnApi = params.columnApi;
     this.sizeAll();
   }
-  onSelectionChanged() {
-    this.selected = this.gridApi.getSelectedRows();
-  }
+
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.doLayout();
@@ -153,7 +146,8 @@ export class GroupsPage implements OnInit {
   * @param ev
   */
   async openActions(ev: any, objId: number) {
-    if (this.selected.length == 0 && !objId) {
+    let selected = this.gridApi.getSelectedRows();
+    if ( selected.length == 0 && !objId) {
       this.objectService.selectObject();
       return;
     }
@@ -161,8 +155,8 @@ export class GroupsPage implements OnInit {
     if (objId) {
       objectIds.push(objId)
     } else {
-      for (let i = 0; i < this.selected.length; i++) {
-        objectIds.push(this.selected[i].id);
+      for (let i = 0; i < selected.length; i++) {
+        objectIds.push(selected[i].id);
       }
     }
     const popover = await this.popoverCtrl.create({
@@ -171,7 +165,7 @@ export class GroupsPage implements OnInit {
       componentProps: {
         objectType: "group",
         objectIds: objectIds,
-        selection: this.selected
+        selection: selected
       },
       animated: true,
       showBackdrop: true
@@ -188,7 +182,7 @@ export class GroupsPage implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
+        this.authService.log("Object was created or modified", dataReturned.data)
       }
     });
     (await modal).present();
@@ -213,7 +207,7 @@ export class GroupsPage implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        console.log("Object was created or modified", dataReturned.data)
+        this.authService.log("Object was created or modified", dataReturned.data)
       }
     });
     (await modal).present();
@@ -242,7 +236,7 @@ export class GroupsPage implements OnInit {
       }
     });
     (await modal).present().then((val) => {
-      console.log("most lett vegrehajtva.")
+      this.authService.log("most lett vegrehajtva.")
     })
   }
 }
