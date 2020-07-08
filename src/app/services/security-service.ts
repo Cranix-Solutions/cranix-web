@@ -62,6 +62,12 @@ export class SecurityService {
     return this.http.get<any[]>(this.url, { headers: this.headers });
   }
 
+  setProxyBasic(acls) {
+    this.url = this.hostname + `/system/proxy/basic`;
+    console.log(this.url);
+    return this.http.post<ServerResponse>(this.url, acls, { headers: this.headers });
+  }
+
   getIncomingRules() {
     this.url = this.hostname + `/system/firewall/incomingRules`;
     console.log(this.url);
