@@ -18,7 +18,7 @@ import { Software } from 'src/app/shared/models/data-model';
 })
 export class SoftwarePackagesComponent implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['name', 'description', 'version', 'weight'];
+  displayedColumns: string[] = ['name', 'description', 'version', 'weight','sourceAvailable'];
   gridOptions: GridOptions;
   columnDefs = [];
   gridApi: GridApi;
@@ -163,12 +163,33 @@ export class SoftwarePackagesComponent implements OnInit {
       this.authService.log("downloadSoftwares executed.")
     })
   }
+
+  /**
+   * Modify or add a software package
+   * @param ev
+   * @param software
+   */
   async redirectToEdit(ev: Event, software: Software) {
     let action = 'modify';
-    if (!software) {
+    if (software) {
+      let versions: string[]  = [];
+      let names: string[]  = [];
+      for( let a of software.softwareFullNames ) {
+        names.push(a.fullName);
+      }
+      for( let a of software.softwareVersions ) {
+        versions.push(a.version)
+      }
+      software.softwareFullNames = names;
+      software.softwareVersions = versions;
+    }else {
       software = new Software();
+      delete software.softwareFullNames;
+      delete software.softwareVersions;
+      delete software.sourceAvailable;
       action = 'add';
     }
+    this.authService.log(software);
     const modal = await this.modalCtrl.create({
       component: ObjectsEditComponent,
       componentProps: {
@@ -176,6 +197,7 @@ export class SoftwarePackagesComponent implements OnInit {
         objectAction: action,
         object: software
       },
+      cssClass: 'medium-modal',
       animated: true,
       swipeToClose: true,
       showBackdrop: true

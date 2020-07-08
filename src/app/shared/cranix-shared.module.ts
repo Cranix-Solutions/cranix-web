@@ -12,6 +12,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { PipesModule } from 'src/app/pipes/pipe-modules';
 import { AgGridModule } from 'ag-grid-angular';
 import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
+import { ApplyCheckBoxBTNRenderer } from 'src/app/pipes/ag-apply-checkbox-renderer';
 import { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
 import { CheckBoxBTNRenderer } from 'src/app/pipes/ag-checkbox-renderer';
 import { GroupActionBTNRenderer } from 'src/app/pipes/ag-group-renderer';
@@ -33,13 +34,14 @@ import { UserIdCellRenderer } from 'src/app/pipes/ag-userid-renderer';
 import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-renderer';
 
 @NgModule({
-  declarations: [ 
-    ActionBTNRenderer, 
+  declarations: [
+    ApplyCheckBoxBTNRenderer,
+    ActionBTNRenderer,
     DateCellRenderer,
     DateTimeCellRenderer,
     DeviceIdCellRenderer,
     DeviceActionBTNRenderer,
-    EditBTNRenderer, 
+    EditBTNRenderer,
     GroupIdCellRenderer,
     GroupActionBTNRenderer,
     HwconfIdCellRenderer,
@@ -58,36 +60,37 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
   ],
   imports: [
     AgChartsAngularModule,
-  CommonModule,
-  AgGridModule.withComponents( [
-    ActionBTNRenderer, 
-    DateCellRenderer,
-    DateTimeCellRenderer,
-    DeviceIdCellRenderer,
-    DeviceActionBTNRenderer,
-    EditBTNRenderer, 
-    GroupIdCellRenderer,
-    GroupActionBTNRenderer,
-    HwconfIdCellRenderer,
-    InstituteIdCellRenderer,
-    InstituteUUIDCellRenderer,
-    PrinterActionBTNRenderer,
-    RoomIdCellRenderer,
-    RoomActionBTNRenderer,
-    UpdateRenderer,
-    UserActionBTNRenderer,
-    UserIdCellRenderer,
-    UserIdToNameCellRenderer,
-    YesNoBTNRenderer,
-    CheckBoxBTNRenderer,
-  ]),
-  FormsModule,
-  IonicModule,
-  MatTooltipModule,
-  MatIconModule,
-  ReactiveFormsModule,
-  PipesModule,
-  TranslateModule,
+    CommonModule,
+    AgGridModule.withComponents([
+      ApplyCheckBoxBTNRenderer,
+      ActionBTNRenderer,
+      DateCellRenderer,
+      DateTimeCellRenderer,
+      DeviceIdCellRenderer,
+      DeviceActionBTNRenderer,
+      EditBTNRenderer,
+      GroupIdCellRenderer,
+      GroupActionBTNRenderer,
+      HwconfIdCellRenderer,
+      InstituteIdCellRenderer,
+      InstituteUUIDCellRenderer,
+      PrinterActionBTNRenderer,
+      RoomIdCellRenderer,
+      RoomActionBTNRenderer,
+      UpdateRenderer,
+      UserActionBTNRenderer,
+      UserIdCellRenderer,
+      UserIdToNameCellRenderer,
+      YesNoBTNRenderer,
+      CheckBoxBTNRenderer,
+    ]),
+    FormsModule,
+    IonicModule,
+    MatTooltipModule,
+    MatIconModule,
+    ReactiveFormsModule,
+    PipesModule,
+    TranslateModule,
   ], exports: [
     AgChartsAngularModule,
     CommonModule,
@@ -101,6 +104,6 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
     TranslateModule,
     ToolbarComponent,
   ],
-  providers:[ WindowRef ]
+  providers: [WindowRef]
 })
 export class CranixSharedModule { }
