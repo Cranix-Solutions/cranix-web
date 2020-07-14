@@ -32,7 +32,7 @@ export class RoomControlComponent implements OnInit,OnDestroy,AfterViewInit {
 
   rooms : Observable<Room[]>;
 
-  gridSize : number; 
+  gridSize : number = 2; 
   @ViewChild('roomSelect') selectRef: IonSelect;
 
 
@@ -107,14 +107,16 @@ export class RoomControlComponent implements OnInit,OnDestroy,AfterViewInit {
   openSelect(){
     this.selectRef.open();
   }
-  async openAction() {
+  async openAction(ev) {
   
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
-     // event: ev,
+     //
+      event: ev,
       componentProps: {
-        type: "room",
-        roomId: this.room.id,
+        objectType: "eduRoom",
+        objectIds:this.room.id,
+        selection: this.room
         //selection: this.selected
       },
       animated: true,

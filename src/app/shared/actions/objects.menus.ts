@@ -151,6 +151,44 @@ export const  roomMenu = [
   }
 ]
 
+export const  eduRoomMenu = [
+  {
+    "enabled": true,
+    "icon":"power",
+    "color":"success",
+    "action": "wol"
+  },
+  {
+    "enabled": true,
+    "icon":"power",
+    "color":"danger",
+    "action": "shutdown"
+  },
+  {
+    "enabled": true,
+    "icon":"refresh",
+    "color":"danger",
+    "action": "reboot"
+  },
+  {
+    "enabled": true,
+    "icon":"lock-open",
+    "color":"success",
+    "action": "open"
+  },
+  {
+    "enabled": true,
+    "icon":"lock-closed",
+    "color":"danger",
+    "action": "close"
+  },
+  {
+    "enabled": true,
+    "icon":"log-out",
+    "color":"danger",
+    "action": "logout"
+  }
+]
 export const userMenu = [
   {
     "enabled": true,

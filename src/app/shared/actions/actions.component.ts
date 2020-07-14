@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { AlertController } from '@ionic/angular';
 //Own stuff
-import { userMenu, groupMenu, roomMenu, deviceMenu, instituteMenu, hwconfMenu,devActionMenu, printerMenu, studentMenu  } from './objects.menus';
+import { userMenu, groupMenu, roomMenu, deviceMenu, instituteMenu, hwconfMenu,devActionMenu, printerMenu, studentMenu, eduRoomMenu  } from './objects.menus';
 import { CrxActionMap, ServerResponse } from 'src/app/shared/models/server-models';
 import { LanguageService } from 'src/app/services/language.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -42,6 +42,7 @@ export class ActionsComponent implements OnInit {
     "color": "danger",
     "action": "delete"
   }]
+
   token: string;
   hostname: string;
   headers: HttpHeaders;
@@ -64,6 +65,7 @@ export class ActionsComponent implements OnInit {
       'Accept': "application/json",
       'Authorization': "Bearer " + this.token
     });
+
     this.objectType = this.navParams.get('objectType');
     this.objectIds = this.navParams.get('objectIds');
     this.selection = this.navParams.get('selection');
@@ -88,11 +90,13 @@ export class ActionsComponent implements OnInit {
       this.menu = this.commonMenu.concat(hwconfMenu).concat(this.commonLastMenu);
     } else if (this.objectType == "printer") {
       this.menu = this.commonMenu.concat(printerMenu).concat(this.commonLastMenu);
+    } else if(this.objectType == "eduRoom"){
+      this.menu = eduRoomMenu; 
     }
   }
 
   ngOnInit() {
-    console.log("ActionsComponent" + this.objectIds);
+    console.log("ActionsComponent" + this.navParams);
   }
 
   adaptMenu(){

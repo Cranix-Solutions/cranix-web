@@ -3,4 +3,7 @@ ion-card{
     flex-direction: column;
     width: 100% !important;
     margin: 0 !important;
+    ion-card-content{
+      padding: 2px;
+    }
   }

@@ -1,9 +1,10 @@
-<ion-card padding="none">
+<ion-card no-margin>
   <!--img *ngIf="device" src="{{screenShot}}"/-->
-  <ion-card-header >
-    {{row}} / {{place}}
+  <ion-card-header *ngIf="device">
+    {{device.name}} : {{device.loggedInId}}
   </ion-card-header>
-  <ion-card-content>
+  <ion-card-content class="ion-justify-content-center">
     <img *ngIf="device" src="{{screenShot}}" />
+    <h3 *ngIf="!device">{{ 'NODEVICE' | translate}}</h3>
   </ion-card-content>
 </ion-card>

@@ -25,7 +25,7 @@ export class RoomDevComponent implements OnInit {
 
   getScreen(){
      this.screenShot= "data:image/jpg;base64,"+this.device.screenShot;
-      console.log("screen is: ", this.screenShot);
+   //   console.log("screen is: ", this.screenShot);
     }
 
 }
