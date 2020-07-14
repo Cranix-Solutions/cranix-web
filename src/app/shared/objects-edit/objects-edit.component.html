@@ -121,6 +121,10 @@
                 {{option | idToName:objectService.idToPipe(key.substring(0,key.length -1 )) | translate }}</ion-select-option>
             </ion-select>
         </ion-item>
+        <ion-item *ngSwitchCase="'multivalued'">
+          <ion-label position="stacked">{{ key | translate }}</ion-label>
+          <ion-label *ngFor="let value of object[key]">{{value}}</ion-label>
+        </ion-item>
       </div>
     </ion-list>
   </ion-content>

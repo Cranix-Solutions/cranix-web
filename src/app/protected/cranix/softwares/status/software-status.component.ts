@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AllModules } from '@ag-grid-enterprise/all-modules';
+import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
 //Own stuff
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { LanguageService } from 'src/app/services/language.service';
@@ -18,22 +20,28 @@ export class SoftwareStatusComponent implements OnInit {
   memberColumnApi;
   memberSelection: SoftwareStatus[] = [];
   memberData: SoftwareStatus[] = [];
-  autoGroupColumnDef;
+  autoGroupColumnDef = {
+    headerName: "",
+    //headerName: this.languageS.trans('software') + " " + this.languageS.trans('version'),
+    minWidth: 250
+  };
   institute;
-  rowGroupPanelShow="always";
+  rowGroupPanelShow = "always";
+  modules = [AllModules, RowGroupingModule];
+  grouping = "roomGrouping"
 
   constructor(
     public authService: AuthenticationService,
     public softwareService: SoftwareService,
     private languageS: LanguageService
-    ) {
+  ) {
     this.context = { componentParent: this };
     this.defaultColDef = {
-        resizable: true,
-        sortable: true,
-        hide: false
-      };
-   }
+      resizable: true,
+      sortable: true,
+      hide: false
+    };
+  }
 
   ngOnInit() {
     this.roomDeviceGrouping();
@@ -43,12 +51,12 @@ export class SoftwareStatusComponent implements OnInit {
     while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
   }
 
+  exportSelected() {
+    this.memberApi.exportDataAsCsv({onlySelected:true,fileName:'installation-status'});
+  }
   onMemberReady(params) {
     this.memberApi = params.api;
     this.memberColumnApi = params.columnApi;
-  }
-  onMemberSelectionChanged() {
-    this.memberSelection = this.memberApi.getSelectedRows();
   }
   onQuickFilterChanged(quickFilter) {
     this.memberApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
@@ -67,54 +75,143 @@ export class SoftwareStatusComponent implements OnInit {
       (err) => { this.authService.log(err) },
       () => { subM.unsubscribe() });
   }
+  toggleColumnDef() {
+    if (this.grouping == "roomGrouping") {
+      this.grouping = "softwareGrouping";
+      this.softwareVersionGrouping();
+    } else if (this.grouping == "softwareGrouping") {
+      this.grouping = "statusGrouping";
+      this.installationStatusGrouping();
+    } else if (this.grouping == "statusGrouping") {
+      this.grouping ="noGrouping";
+      this.noGrouping();
+    } else {
+      this.grouping = "roomGrouping";
+      this.roomDeviceGrouping();
+    }
+  }
   roomDeviceGrouping() {
+    this.authService.log("roomDeviceGrouping  was called");
     this.columnDefs = [
       {
         field: 'roomName',
         rowGroup: true,
-        hide: true,
-        headerName: this.languageS.trans('room'),
-        cellStyle: { 'justify-content': "left" }
+        hide: true
       },
       {
         field: 'deviceName',
         rowGroup: true,
-        hide: true,
-        headerName: this.languageS.trans('device'),
-        cellStyle: { 'justify-content': "left" }
+        hide: true
       },
       {
         field: 'softwareName',
-        enablePivot: true,
-        enableRowGroup: true,
         headerName: this.languageS.trans('software'),
       },
       {
         field: 'version',
-        enablePivot: true,
-        enableRowGroup: true,
         headerName: this.languageS.trans('version'),
       },
       {
         field: 'status',
-        enablePivot: true,
-        enableRowGroup: true,
         headerName: this.languageS.trans('status')
       }
     ];
-    this.autoGroupColumnDef = {
-      headerName: this.languageS.trans('rooms') + " " + this.languageS.trans('devices'),
-      minWidth: 250
-    };
-    /* this.autoGroupColumnDef = {
-      headerName: this.languageS.trans('room'),
-      field: 'roomName',
-      headerCheckboxSelection: false,
-      headerCheckboxSelectionFilteredOnly: true,
-      checkboxSelection: true,
-      valueGetter: function (params) { return " "; },
-      minWidth: 250
-    }; */
+  }
+  /**
+   * Order the table by groups software name and version
+   */
+  softwareVersionGrouping() {
+    this.authService.log("softwareVersionGrouping  was called");
+    this.columnDefs = [
+      {
+        field: 'softwareName',
+        rowGroup: true,
+        hide: true
+      },
+      {
+        field: 'version',
+        rowGroup: true,
+        hide: true
+      },
+      {
+        field: 'roomName',
+        rowGroup: true,
+        hide: true
+      },
+      {
+        field: 'deviceName',
+        headerName: this.languageS.trans('device'),
+        cellStyle: { 'justify-content': "left" }
+      },
+      {
+        field: 'status',
+        headerName: this.languageS.trans('status')
+      }
+    ];
   }
 
+  /**
+   * Make table grouping  by installation status and software name.
+   * This grouping is good for searching failed installations
+   */
+  installationStatusGrouping() {
+    this.authService.log("installationStatusGrouping  was called");
+    this.columnDefs = [
+      {
+        field: 'status',
+        rowGroup: true,
+        hide: true
+      },
+      {
+        field: 'softwareName',
+        rowGroup: true,
+        hide: true
+      },
+      {
+        field: 'roomName',
+        rowGroup: true,
+        hide: true
+      },
+      {
+        field: 'deviceName',
+        headerName: this.languageS.trans('device'),
+        cellStyle: { 'justify-content': "left" }
+      },
+      {
+        field: 'version',
+        headerName: this.languageS.trans('version'),
+      },
+    ];
+  }
+
+   /**
+   * Make table grouping  by installation status and software name.
+   * This grouping is good for searching failed installations
+   */
+  noGrouping() {
+    this.authService.log("installationStatusGrouping  was called");
+    this.columnDefs = [
+      {
+        field: 'softwareName',
+        headerName: this.languageS.trans('software'),
+        headerCheckboxSelection: true
+      },
+      {
+        field: 'version',
+        headerName: this.languageS.trans('version'),
+      },
+      {
+        field: 'roomName',
+        headerName: this.languageS.trans('room')
+      },
+      {
+        field: 'deviceName',
+        headerName: this.languageS.trans('device')
+      },
+      {
+        field: 'status',
+        headerName: this.languageS.trans('status')
+      }
+    ];
+  }
 }

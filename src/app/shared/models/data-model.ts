@@ -123,7 +123,9 @@ export class Software {
 	weight: number = 0;
 	version?: string = "";
 	manually: boolean;
-	softwareVersions: SoftwareVersions[];
+	sourceAvailable: boolean;
+	softwareVersions: any[];
+	softwareFullNames: any[];
 	constructor() { }
 }
 

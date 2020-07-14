@@ -4,7 +4,14 @@
   <ion-col size=6>
     <ion-title>{{ 'Software installation status:' | translate}}</ion-title>
   </ion-col>
-</ion-row>
+</ion-row><ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
+  <ion-fab-button>
+    <ion-icon name="arrow-forward-circle"></ion-icon>
+  </ion-fab-button>
+  <ion-fab-list side="start">
+    <ion-fab-button><ion-icon name="list-outline" (click)="toggleColumnDef()"></ion-icon></ion-fab-button>
+  </ion-fab-list>
+</ion-fab>
 <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('quickFilterMD')" id="quickFilterMD"
 showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
   <ion-card>
@@ -16,7 +23,22 @@ showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
             </ion-input>
           </ion-item>
         </ion-col>
-        <ion-col size="7">
+        <ion-col size=3>
+          <ion-item>
+            <ion-label>
+              {{grouping | translate}}
+            </ion-label>
+          </ion-item>
+        </ion-col>
+        <ion-col offset="3" size="3" class="ion-align-self-center ion-text-end hidden-xs hidden-sm hidden-md">
+          <ion-button size="small" (click)="toggleColumnDef()"
+            matTooltip="{{'Change grouping of the table' | translate }}">
+            <ion-icon slot="icon-only" name="list"></ion-icon>
+          </ion-button>
+          <ion-button size="small" (click)="exportSelected()"
+             matTooltip="{{'Export selected objects'|translate}}">
+            <ion-icon slot="icon-only" name="download"></ion-icon>
+          </ion-button>
         </ion-col>
       </ion-row>
     </ion-card-header>
@@ -27,6 +49,9 @@ showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
         class="{{authService.settings.agGridThema}}"
         rowHeight="{{authService.settings.rowHeight}}"
         rowSelection="multiple"
+        animateRows="true"
+        deltaColumnMode="true"
+        [modules]="modules"
         [context]="context"
         [rowData]="memberData"
         [columnDefs]="columnDefs"

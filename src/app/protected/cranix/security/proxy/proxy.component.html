@@ -14,7 +14,7 @@
         <ion-icon name="add-circle" ></ion-icon>
       </ion-fab-button>
       <ion-fab-button *ngIf="segment == 'basic'" (click)="writeConfig()">
-        <ion-icon name="checkmark-sharp"></ion-icon>
+        <ion-icon color="success" name="checkmark-sharp"></ion-icon>
       </ion-fab-button>
       <ion-fab-button (click)="restartProxy()">
         <ion-icon name="refresh"></ion-icon>
@@ -41,7 +41,7 @@
           </ion-button>
           <ion-button *ngIf="segment == 'basic'" size="small" (click)="writeConfig()"
             matTooltip="{{'Write basic configuration.' | translate }}">
-            <ion-icon slot="icon-only" name="checkmark-sharp"></ion-icon>
+            <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
           </ion-button>
           <ion-button size="small" (click)="restartProxy()"
             matTooltip="{{'Restaert proxy.' | translate }}">
@@ -51,17 +51,15 @@
       </ion-row>
     </ion-card-header>
     <ion-card-content>
-     <ag-grid-angular
+     <ag-grid-angular *ngIf="segment == 'basic'"
         style="width: 100%; height: 100%;"
         class="{{authService.settings.agGridThema}}"
-        [rowData]="proxyData"
-        [gridOptions]="proxyOptions" 
+        rowHeight="{{authService.settings.rowHeight}}"
+        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
+        [rowData]="rowData"
         [columnDefs]="columnDefs"
         [context]="context"
-        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
-        rowSelection="multiple"
         (gridReady)="proxyGridReady($event)"
-        (selectionChanged)="proxySelectionChanged()"
         id="proxyGridTable">
       </ag-grid-angular>
     </ion-card-content>

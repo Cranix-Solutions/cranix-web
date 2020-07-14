@@ -44,6 +44,10 @@ export class GenericObjectService {
     'instituteType', 'groupType', 'deviceType', 'roomType', 'roomControl', 'network', 'accessType', 'role', 'noticeType'
   ];
 
+  multivalued: string[] = [
+    'softwareVersions','softwareFullNames'
+  ]
+
   /**
    * Attributes which can not be modified
    */
@@ -60,6 +64,7 @@ export class GenericObjectService {
     'ownerName',
     'recDate',
     'role',
+    'sourceAvailable',
     'startIp',
     'uid',
     'wlanIp'
@@ -466,6 +471,9 @@ export class GenericObjectService {
     }
     if (key.substring(key.length - 4) == 'File') {
       return 'file';
+    }
+    if( this.multivalued.indexOf(key) != -1 ) {
+      return 'multivalued';
     }
     return "string";
   }
