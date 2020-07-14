@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Device } from 'src/app/shared/models/data-model';
+import { ActionsComponent } from 'src/app/shared/actions/actions.component';
+import { PopoverController } from '@ionic/angular/providers/popover-controller';
 
 @Component({
   selector: 'cranix-roomdev',
@@ -15,7 +17,8 @@ export class RoomDevComponent implements OnInit {
 
   screenShot ; 
 
-  constructor() { }
+  constructor(              public popoverCtrl: PopoverController,
+    ) { }
 
   ngOnInit() {
     if(this.device){
@@ -28,4 +31,21 @@ export class RoomDevComponent implements OnInit {
    //   console.log("screen is: ", this.screenShot);
     }
 
+    async openAction(ev) {
+  
+      const popover = await this.popoverCtrl.create({
+        component: ActionsComponent,
+       //
+        event: ev,
+        componentProps: {
+          objectType: "eduRoom",
+          objectIds:this.device.id,
+          selection: this.device
+          //selection: this.selected
+        },
+        animated: true,
+        showBackdrop: true
+      });
+      (await popover).present();
+    }
 }
