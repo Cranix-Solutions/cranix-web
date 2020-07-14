@@ -1,5 +1,4 @@
 <ion-content>
-  <ion-list-header *ngIf="selection.length > 1"> # {{'Selected Items: ' | translate }} {{ count }}</ion-list-header>
   <ion-list>
     <div *ngFor="let item of menu">
       <ion-item button  *ngIf="item.enabled" (click)="messages(item.action)">

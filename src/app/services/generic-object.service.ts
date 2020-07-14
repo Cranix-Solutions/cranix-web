@@ -372,7 +372,7 @@ export class GenericObjectService {
   }
 
   responseMessage(resp: ServerResponse) {
-    if (resp.code == 'OK ') {
+    if (resp.code == 'OK') {
       return this.okMessage(this.languageS.transResponse(resp));
     } else {
       return this.errorMessage(this.languageS.transResponse(resp));

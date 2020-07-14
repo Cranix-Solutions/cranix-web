@@ -151,6 +151,44 @@ export const  roomMenu = [
   }
 ]
 
+export const  eduRoomMenu = [
+  {
+    "enabled": true,
+    "icon":"power",
+    "color":"success",
+    "action": "wol"
+  },
+  {
+    "enabled": true,
+    "icon":"power",
+    "color":"danger",
+    "action": "shutdown"
+  },
+  {
+    "enabled": true,
+    "icon":"refresh",
+    "color":"danger",
+    "action": "reboot"
+  },
+  {
+    "enabled": true,
+    "icon":"lock-open",
+    "color":"success",
+    "action": "open"
+  },
+  {
+    "enabled": true,
+    "icon":"lock-closed",
+    "color":"danger",
+    "action": "close"
+  },
+  {
+    "enabled": true,
+    "icon":"log-out",
+    "color":"danger",
+    "action": "logout"
+  }
+]
 export const userMenu = [
   {
     "enabled": true,
@@ -214,6 +252,50 @@ export const userMenu = [
   }
 ];
 
+export const devActionMenu = [
+  {
+    "enabled" : true,
+    "icon"    : "lock-open",
+    "color"   : "secondary",
+    "action"  : "devicesUnlock"
+  },
+  {
+    "enabled" : true,
+    "icon"    : "lock-closed",
+    "color"   : "secondary",
+    "action"  : "devicesLock"
+  },
+  {
+    "enabled" : true,
+    "icon"    : "exit",
+    "color"   : "secondary",
+    "action"  : "devicesLogout"
+  },
+  {
+    "enabled" : true,
+    "icon"    : "play",
+    "color"   : "secondary",
+    "action"  : "devicesWOL"
+  },
+  {
+    "enabled" : true,
+    "icon"    : "refresh",
+    "color"   : "secondary",
+    "action"  : "devicesRestart"
+  },
+  {
+    "enabled" : true,
+    "icon"    : "stop",
+    "color"   : "secondary",
+    "action"  : "devicesShutdown"
+  },
+  {
+    "enabled" : true,
+    "icon"    : "eye",
+    "color"   : "secondary",
+    "action"  : "setPassword"
+  }
+];
 
 export const studentMenu = [
   {

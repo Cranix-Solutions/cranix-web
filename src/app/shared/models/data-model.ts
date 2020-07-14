@@ -180,6 +180,8 @@ export class Device {
 	locality?: string = "";
 	hwconfId: number = 0;
 	roomId?: any = null;
+	screenShot? = "";
+	loggedInId? = "";
 	constructor() { }
 }
 export class Printer {
@@ -372,4 +374,73 @@ export class SystemConfig {
 	value: string = "";
 	help: string = "";
 	constructor() { }
+}
+
+export class EduRoom{
+	id?: number;
+	name: string = "";
+	description: string = "";
+	hwconfId: number = 0;
+	netMask?: number = 0;
+	devCount?: number = 0;
+	devices?: any;
+	users?: User[];
+	startIP?: string = "";
+	roomType: string = "";
+	roomControl: string = "";
+	network: string;
+	places: number = 0;
+	rows: number = 0;
+	accessInRooms?: AccessInRooms;
+	constructor() { }
+}
+
+export interface SmartRoom{
+    id?: number, 
+    name: string, 
+    description: string, 
+    validFrom?: number, 
+    validUntil?: number,
+    ownerId?: number, 
+    deviceIds?: number[],
+    hwConfIds?: number [],
+    roomIds?: number [],
+    userIds?: number [],
+    groupIds?: number [],
+    announcementIds?: number [],
+  }
+
+export interface SmartRoomStatus{
+    userId: number, 
+    deviceId: number
+}
+
+
+export interface PositivListObj{
+    id?: number,
+    description: string,
+    name: string,
+    subject: string,
+    domains: string
+}
+
+export interface AccessStatus {
+	id?: number,
+	accessType?: string,
+	action?: string,
+	roomId: any,
+	monday?: boolean,
+	tuesday?: boolean,
+	wednesday?: boolean,
+	thursday?: boolean,
+	friday?: boolean,
+	saturday?: boolean,
+	sunday?: boolean,
+	holiday?: boolean,
+	direct: boolean,
+	login: boolean,
+	portal: boolean,
+	printing: boolean,
+	proxy: boolean,
+	pointInTime?: string
 }

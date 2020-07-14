@@ -70,7 +70,7 @@
     "protractor": "^5.4.4",
     "ts-node": "^8.10.2",
     "tslint": "~5.15.0",
-    "typescript": "^3.8.3"
+    "typescript": "3.8.3"
   },
   "description": "CRANXI/CEPHALIX Serverfrontend"
 }
