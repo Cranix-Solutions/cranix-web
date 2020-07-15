@@ -68,6 +68,18 @@ export class SecurityService {
     return this.http.post<ServerResponse>(this.url, acls, { headers: this.headers });
   }
 
+  getProxyCustom(custom) {
+    this.url = this.hostname + `/system/proxy/custom/${custom}`;
+    console.log(this.url);
+    return this.http.get<string[]>(this.url, { headers: this.headers });
+  }
+
+  setProxyCustom(custom,list: string[]) {
+    this.url = this.hostname + `/system/proxy/custom/${custom}`;
+    console.log(this.url);
+    return this.http.post<ServerResponse>(this.url, list, { headers: this.headers });
+  }
+
   getIncomingRules() {
     this.url = this.hostname + `/system/firewall/incomingRules`;
     console.log(this.url);

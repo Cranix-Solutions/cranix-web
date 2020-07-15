@@ -1,4 +1,7 @@
 {
+    "File %s could not be saved to user: %s: %s":"Die Datei '%s' konnte nicht für '%s' gespeichert werden: '%s'",
+    "File '%s' successfully saved to user '%s'.":"Die Datei '%s' wurde für '%s' erfolgreich gespeichert.",
+    "Access state in %s was set succesfully.":"Zungangsstatus im Raum %s wurde gäendert.",
     "Actual status": "Aktueller Status",
     "Add device": "Gerät anlegen",
     "Add group": "Gruppe anlegen",

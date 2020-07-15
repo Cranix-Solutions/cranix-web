@@ -187,6 +187,18 @@ export const  eduRoomMenu = [
     "icon":"log-out",
     "color":"danger",
     "action": "logout"
+  },
+  {
+    "enabled": true,
+    "icon":"cloud-upload",
+    "color":"success",
+    "action": "upload"
+  },
+  {
+    "enabled": true,
+    "icon":"cloud-download",
+    "color":"success",
+    "action": "collect"
   }
 ]
 export const userMenu = [
@@ -357,5 +369,17 @@ export const studentMenu = [
     "icon":"mail",
     "color":"secondary",
     "action": "setMailSystemQuota"
+  },
+  {
+    "enabled": true,
+    "icon":"cloud-upload",
+    "color":"success",
+    "action": "upload"
+  },
+  {
+    "enabled": true,
+    "icon":"cloud-download",
+    "color":"success",
+    "action": "collect"
   }
 ];

@@ -29,6 +29,15 @@
             <ion-segment-button value="basic">
               <ion-label>{{'Basic configuration' | translate}}</ion-label>
             </ion-segment-button>
+            <ion-segment-button value="good">
+              <ion-label>{{'White list' | translate}}</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="bad">
+              <ion-label>{{'Black list' | translate}}</ion-label>
+            </ion-segment-button>
+            <ion-segment-button *ngIf="authService.session.name == 'cephalix'" value="cephalix">
+              <ion-label>{{'Cephalix list' | translate}}</ion-label>
+            </ion-segment-button>
             <ion-segment-button value="positive">
               <ion-label>{{'Positive lists' | translate}}</ion-label>
             </ion-segment-button>
@@ -39,7 +48,7 @@
             matTooltip="{{'Create a new positive list.' | translate }}">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="segment == 'basic'" size="small" (click)="writeConfig()"
+          <ion-button *ngIf="segment != 'positive'" size="small" (click)="writeConfig()"
             matTooltip="{{'Write basic configuration.' | translate }}">
             <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
           </ion-button>
@@ -62,6 +71,14 @@
         (gridReady)="proxyGridReady($event)"
         id="proxyGridTable">
       </ag-grid-angular>
+      <ion-textarea  *ngIf="segment == 'good'" inputmode="url"  autoGrow="true" value="{{whiteList}}" id="good"></ion-textarea>
+      <ion-textarea  *ngIf="segment == 'bad'" inputmode="url"  autoGrow="true" value="{{blackList}}" id="bad"></ion-textarea>
+      <ion-textarea  *ngIf="segment == 'cephalix'" inputmode="url"  autoGrow="true" value="{{cephalixList}}" id="cephalix"></ion-textarea>
+      <ion-grid  *ngIf="segment == 'positive'">
+        <ion-row>
+
+        </ion-row>
+      </ion-grid>
     </ion-card-content>
   </ion-card>
 </ion-content>

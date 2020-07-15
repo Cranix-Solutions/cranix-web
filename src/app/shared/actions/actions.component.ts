@@ -12,6 +12,8 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { SetpasswordComponent } from './setpassword/setpassword.component';
+import { FilesUploadComponent } from './files-upload/files-upload.component';
+import { FilesCollectComponent } from './files-collect/files-collect.component';
 
 
 @Component({
@@ -119,6 +121,38 @@ export class ActionsComponent implements OnInit {
         let header: string[] = [];
         new AngularCsv(this.selection, this.objectType, { showLabels: true, headers: Object.getOwnPropertyNames(this.selection[0]) });
         this.popoverController.dismiss();
+        break;
+      }
+      case 'upload': {
+        this.popoverController.dismiss();
+        const modal = await this.modalController.create({
+          component: FilesUploadComponent,
+          cssClass: 'small-modal',
+          animated: true,
+          swipeToClose: true,
+          showBackdrop: true,
+          componentProps: {
+            objectType: this.objectType,
+            actionMap: actionMap
+          }
+        });
+        (await modal).present();
+        break;
+      }
+      case 'collect': {
+        this.popoverController.dismiss();
+        const modal = await this.modalController.create({
+          component: FilesCollectComponent,
+          cssClass: 'small-modal',
+          animated: true,
+          swipeToClose: true,
+          showBackdrop: true,
+          componentProps: {
+            objectType: this.objectType,
+            actionMap: actionMap
+          }
+        });
+        (await modal).present();
         break;
       }
       case 'setPassword': {

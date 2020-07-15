@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Device } from 'src/app/shared/models/data-model';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
-import { PopoverController } from '@ionic/angular/providers/popover-controller';
+import { PopoverController } from '@ionic/angular';
 
 @Component({
   selector: 'cranix-roomdev',
