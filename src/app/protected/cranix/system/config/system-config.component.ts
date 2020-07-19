@@ -33,11 +33,9 @@ export class SystemConfigComponent implements OnInit {
   }
   save(key: string){
     let sub = this.systemService.setSystemConfigValue(key,(<HTMLInputElement>document.getElementById(key)).value).subscribe(
-      (val) => { if ( val.code == "OK") {
-        this.objectService.okMessage(this.languageService.trans(val.value))
-      } else {
-        this.objectService.errorMessage(this.languageService.trans(val.value))
-      }},
+      (val) => {
+        this.objectService.responseMessage(val)
+      },
       (err) => {
         this.objectService.errorMessage(err);
       },
@@ -47,11 +45,9 @@ export class SystemConfigComponent implements OnInit {
 
   togle(key: string, checked: boolean){
     let sub = this.systemService.setSystemConfigValue(key, checked ? "yes" : "no").subscribe(
-      (val) => { if ( val.code == "OK") {
-        this.objectService.okMessage(this.languageService.trans(val.value))
-      } else {
-        this.objectService.errorMessage(this.languageService.trans(val.value))
-      }},
+      (val) => {
+        this.objectService.responseMessage(val)
+      },
       (err) => {
         this.objectService.errorMessage(err);
       },

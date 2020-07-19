@@ -69,11 +69,7 @@ export class InstituteEditComponent implements OnInit {
     this.objectService.requestSent();
     let subs = this.cephalixService.writeConfig(this.object.id).subscribe(
       (serverResponse) => {
-        if (serverResponse.code == "OK") {
-          this.objectService.okMessage(this.languageService.trans( "Configuration was written successfully"));
-        } else {
-          this.objectService.errorMessage(serverResponse.value);
-        }
+          this.objectService.responseMessage(serverResponse);
       },
       (err) => { console.log(err) },
       () => { subs.unsubscribe() }

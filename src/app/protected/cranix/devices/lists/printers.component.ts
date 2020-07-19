@@ -261,12 +261,10 @@ export class PrintersComponent implements OnInit {
   reset(id: number) {
     let subs = this.printersService.reset(id).subscribe(
       (val) => {
+        this.objectService.responseMessage(val);
         if (val.code == "OK") {
           this.objectService.getAllObject('printer');
-          this.objectService.okMessage(this.languageS.transResponse(val));
           this.modalCtrl.dismiss();
-        } else {
-          this.objectService.errorMessage(this.languageS.transResponse(val));
         }
       },
       (error) => {
@@ -280,12 +278,10 @@ export class PrintersComponent implements OnInit {
   toggle(id: number, what: string, yesno: boolean) {
     let subs = this.printersService.toggle(id,what,yesno).subscribe(
       (val) => {
+        this.objectService.responseMessage(val);
         if (val.code == "OK") {
           this.objectService.getAllObject('printer');
-          this.objectService.okMessage(this.languageS.transResponse(val));
           this.modalCtrl.dismiss();
-        } else {
-          this.objectService.errorMessage(this.languageS.transResponse(val));
         }
       },
       (error) => {

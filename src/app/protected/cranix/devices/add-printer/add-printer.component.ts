@@ -98,11 +98,10 @@ export class AddPrinterComponent implements OnInit {
       (val) => {
         this.objectService.getAllObject('printer');
         this.objectService.getAllObject('device');
+        this.objectService.responseMessage(val);
         if (val.code == "OK") {
-          this.objectService.okMessage(this.languageS.transResponse(val));
           this.modalCtrl.dismiss();
         } else {
-          this.objectService.errorMessage(this.languageS.transResponse(val));
           this.submitted=false;
         }
       },

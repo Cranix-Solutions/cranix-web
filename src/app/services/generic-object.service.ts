@@ -293,7 +293,6 @@ export class GenericObjectService {
     } else {
       name = object.name;
     }
-    let serverResponse: ServerResponse;
     const alert = await this.alertController.create({
       header: this.languageS.trans('Confirm!'),
       message: this.languageS.trans('Do you realy want to  delete?') + '<br>' + name,
@@ -306,13 +305,10 @@ export class GenericObjectService {
           handler: () => {
             var a = this.deleteObject(object, objectType).subscribe(
               (val) => {
-                serverResponse = val;
-                if (serverResponse.code == "OK") {
+                this.responseMessage(val);
+                if (val.code == "OK") {
                   this.getAllObject(objectType);
-                  this.okMessage(this.languageS.trans("Object was deleted"));
                   this.modalCtrl.dismiss("success");
-                } else {
-                  this.errorMessage("" + serverResponse.value);
                 }
               },
               (err) => {
@@ -334,15 +330,11 @@ export class GenericObjectService {
     } else {
       name = object.name;
     }
-    let serverResponse: ServerResponse;
     var a = this.modifyObject(object, objectType).subscribe(
       (val) => {
-        serverResponse = val;
-        if (serverResponse.code == "OK") {
+        this.responseMessage(val);
+        if (val.code == "OK") {
           this.getAllObject(objectType);
-          this.okMessage(this.languageS.trans(objectType + " was modified"));
-        } else {
-          this.errorMessage(this.languageS.trans(serverResponse.value));
         }
       },
       (err) => {
