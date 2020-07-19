@@ -5,17 +5,19 @@ import { EductaionService } from 'src/app/services/education.service';
 import { takeWhile } from 'rxjs/operators';
 import { Observable } from 'rxjs/internal/Observable';
 import { TranslateService } from '@ngx-translate/core';
-import { PopoverController,IonSelect } from '@ionic/angular';
+import { PopoverController, IonSelect, ModalController } from '@ionic/angular';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { JsonPipe } from '@angular/common';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { FilesCollectComponent } from 'src/app/shared/actions/files-collect/files-collect.component';
+import { FilesUploadComponent } from 'src/app/shared/actions/files-upload/files-upload.component';
 
 @Component({
   selector: 'cranix-room-control',
   templateUrl: './room-control.component.html',
   styleUrls: ['./room-control.component.scss'],
 })
-export class RoomControlComponent implements OnInit,OnDestroy,AfterViewInit {
+export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
 
   alive = true;
 
@@ -25,97 +27,98 @@ export class RoomControlComponent implements OnInit,OnDestroy,AfterViewInit {
   printing: boolean;
   proxy: boolean;
 
-  devices = [1,2,3,4,5,6]
-  room : EduRoom; 
+  devices = [1, 2, 3, 4, 5, 6]
+  room: EduRoom;
 
-  selectedRoomId: number; 
+  selectedRoomId: number;
 
-  rooms : Observable<Room[]>;
+  rooms: Observable<Room[]>;
 
-  gridSize : number = 2; 
+  gridSize: number = 2;
   @ViewChild('roomSelect') selectRef: IonSelect;
 
 
-  gridSizes = [ 1,2,3,4,5,6,7,8,9,10,11,12]
+  gridSizes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
-  constructor(private authS: AuthenticationService,
-              private eduS: EductaionService,
-              public popoverCtrl: PopoverController,
-              private translateS: TranslateService,
-              private objectS: GenericObjectService
-              ) {
+  constructor(
+    private authS: AuthenticationService,
+    private eduS: EductaionService,
+    public popoverCtrl: PopoverController,
+    public modalController: ModalController,
+    private objectS: GenericObjectService
+  ) {
     this.rooms = this.eduS.getMyRooms();
 
-  
-              }
+
+  }
   ngOnInit() {
-   
-      console.log(`Room on init: ${this.room}`)
-     /* this.eduS.getMyRooms()
-      .pipe(takeWhile( () => this.alive ))
-      .subscribe(res => {
-        console.log('my rooms are: ', res);
-        this.myRooms = res
-      });*/
+
+    console.log(`Room on init: ${this.room}`)
+    /* this.eduS.getMyRooms()
+     .pipe(takeWhile( () => this.alive ))
+     .subscribe(res => {
+       console.log('my rooms are: ', res);
+       this.myRooms = res
+     });*/
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
 
-    if (this.authS.session.roomId){
+    if (this.authS.session.roomId) {
       this.eduS.getRoomById(parseInt(this.authS.session.roomId))
-          .pipe(takeWhile( () => this.alive ))
-          .subscribe(res => {
-            this.room = res
-          });
-          
-    }else if(!this.room && !this.authS.session.roomId) {
+        .pipe(takeWhile(() => this.alive))
+        .subscribe(res => {
+          this.room = res
+        });
+
+    } else if (!this.room && !this.authS.session.roomId) {
       console.log(`Room afterViewChecked: ${this.room}`)
       this.openSelect();
-    /*  this.eduS.getRoomById(9)
-      .pipe(takeWhile( () => this.alive ))
-      .subscribe(res => {
-        this.room = res
-      });*/
+      /*  this.eduS.getRoomById(9)
+        .pipe(takeWhile( () => this.alive ))
+        .subscribe(res => {
+          this.room = res
+        });*/
     }
   }
   array(n: number): any[] {
     return Array(n);
   }
 
-  sizeChange(ev){
+  sizeChange(ev) {
     console.log('event is: ', ev);
   }
-  click(){
+  click() {
     console.log("Cliked");
   }
 
-  getDevice(r,p){
-  //  console.log(`Device at row: ${r} and place: ${p} is: ${this.room.devices.find(e => e.row === r && e.place === p)}`)
+  getDevice(r, p) {
+    //  console.log(`Device at row: ${r} and place: ${p} is: ${this.room.devices.find(e => e.row === r && e.place === p)}`)
     return this.room.devices.find(e => e.row === r && e.place === p);
   }
 
-  selectChanged(ev){
+  selectChanged(ev) {
     console.log(`Select roomId is: ${this.selectedRoomId}`)
     this.eduS.getRoomById(this.selectedRoomId)
-    .pipe(takeWhile( () => this.alive ))
-    .subscribe(res => { 	
-      this.room = res
-      console.log('Room is:', this.room);
-    })
+      .pipe(takeWhile(() => this.alive))
+      .subscribe(res => {
+        this.room = res
+        console.log('Room is:', this.room);
+      })
     //this.eduS.getRoomById()
   }
-  openSelect(){
+  openSelect() {
     this.selectRef.open();
   }
   async openAction(ev) {
-  
+
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
-     //
+      //
       event: ev,
       componentProps: {
         objectType: "eduRoom",
-        objectIds:this.room.id,
+        objectIds: this.room.id,
         selection: this.room
         //selection: this.selected
       },
@@ -161,13 +164,42 @@ export class RoomControlComponent implements OnInit,OnDestroy,AfterViewInit {
       })
   }
 
-  onBTNSHARE(){
-    console.log('share')
+  /**
+   * Share the files in the room.
+   */
+  async onBTNSHARE() {
+    const modal = await this.modalController.create({
+      component: FilesUploadComponent,
+      cssClass: 'small-modal',
+      animated: true,
+      swipeToClose: true,
+      showBackdrop: true,
+      componentProps: {
+        objectType: "room",
+        actionMap: {objectIds : [this.selectedRoomId]}
+      }
+    });
+    (await modal).present();
   }
-  onBTNCOLLECT(){
+  /*
+   *  Collect the files from the room
+   */
+  async onBTNCOLLECT() {
+    const modal = await this.modalController.create({
+      component: FilesCollectComponent,
+      cssClass: 'small-modal',
+      animated: true,
+      swipeToClose: true,
+      showBackdrop: true,
+      componentProps: {
+        objectType: "room",
+        actionMap: {objectIds : [this.selectedRoomId]}
+      }
+    });
+    (await modal).present();
     console.log('collect')
   }
-  ngOnDestroy(){
-    this.alive = false; 
+  ngOnDestroy() {
+    this.alive = false;
   }
 }

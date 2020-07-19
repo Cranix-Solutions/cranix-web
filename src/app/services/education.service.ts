@@ -309,13 +309,26 @@ export class EductaionService {
 
 	uploadDataToObjects(fd: FormData, objectType: string) {
 		this.url = `${this.hostname}/education/${objectType}s/upload`;
-		const headers = new HttpHeaders({
-			'Accept': "application/json",
-			'Authorization': "Bearer " + this.token
-		});
 		console.log(this.url);
 		this.objectService.requestSent();
-		let sub = this.http.post<ServerResponse[]>(this.url, fd, { headers: headers }).subscribe(
+		let sub = this.http.post<ServerResponse[]>(this.url, fd, { headers: this.headers }).subscribe(
+			(val) => {
+				let response = this.languageService.trans("List of the results:");
+				for (let resp of val) {
+					response = response + "<br>" + this.languageService.transResponse(resp);
+				}
+				this.objectService.okMessage(response)
+			},
+			(err) => { this.objectService.errorMessage("ERROR") },
+			() => { sub.unsubscribe() }
+		)
+	}
+
+	collectDataFromObjects(fd: FormData, objectType: string) {
+		this.url = `${this.hostname}/education/${objectType}s/collect`;
+		console.log(this.url);
+		this.objectService.requestSent();
+		let sub = this.http.post<ServerResponse[]>(this.url, fd, { headers: this.headers }).subscribe(
 			(val) => {
 				let response = this.languageService.trans("List of the results:");
 				for (let resp of val) {

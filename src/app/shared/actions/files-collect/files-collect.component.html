@@ -1,3 +1,35 @@
-<p>
-  files-collect works!
-</p>
+<form #collectFile="ngForm" (ngSubmit)="onSubmit(collectFile.value)">
+  <ion-header translucent>
+    <ion-toolbar>
+      <ion-title>{{  'Collect files' | translate }}</ion-title>
+      <ion-buttons slot="end">
+        <ion-button type="submit" class="ion-no-margin" fill="clear" size="small" [disabled]="!collectFile.valid">
+          <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" size="small" (click)="modalController.dismiss()">
+          <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen>
+    <ion-list>
+      <ion-item>
+        <ion-label position="start">{{'projectName'| translate}}</ion-label>
+        <ion-input  [(ngModel)]="projectName" name="projectName" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="start">{{'sortInDirs'| translate}}</ion-label>
+        <ion-checkbox position="end" [(ngModel)]="sortInDirs" name="sortInDirs"></ion-checkbox>
+      </ion-item>
+      <ion-item>
+        <ion-label position="start">{{'cleanUpExport'| translate}}</ion-label>
+        <ion-checkbox position="end" [(ngModel)]="cleanUpExport" name="cleanUpExport"></ion-checkbox>
+      </ion-item>
+      <ion-item *ngIf="objectType == 'group'">
+        <ion-label position="start">{{'studentsOnly'| translate}}</ion-label>
+        <ion-checkbox position="end" [(ngModel)]="studentsOnly" name="studentsOnly"></ion-checkbox>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</form>
