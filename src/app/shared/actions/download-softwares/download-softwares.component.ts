@@ -68,13 +68,10 @@ export class DownloadSoftwaresComponent implements OnInit {
         toDownload.push(p.name);
       }
       let subs = this.softwareService.downloadSoftwares(toDownload).subscribe(
-        (val) =>{  
-          let resp: ServerResponse = val;
-          if( resp.code == "OK") {
-            this.objectService.okMessage(this.languageS.trans(resp.value));
+      (val) =>{
+          this.objectService.responseMessage(val);
+          if( val.code == "OK") {
             this.closeWindow();
-          } else {
-            this.objectService.errorMessage(this.languageS.trans(resp.value));
           }
         },
         (err) => { this.objectService.errorMessage(err)},
