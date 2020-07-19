@@ -1,7 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 import { CrxActionMap } from '../../models/server-models';
-import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { EductaionService } from 'src/app/services/education.service';
 
 @Component({
@@ -42,8 +41,7 @@ export class FilesUploadComponent implements OnInit {
       } else {
         fd.append('cleanUp', "false");
       }
-      console.log(object);
-      console.log(this.objectType);
+      console.log(fd);
       this.educationController.uploadDataToObjects(fd, this.objectType);
     }
   }
