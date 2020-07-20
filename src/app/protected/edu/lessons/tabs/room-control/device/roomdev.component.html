@@ -1,10 +1,15 @@
 <ion-card no-margin>
-  <!--img *ngIf="device" src="{{screenShot}}"/-->
   <ion-card-header *ngIf="device">
-    {{device.name}} : {{device.loggedInId}}
-    <ion-button  fill="clear" (click)="openAction($event)">
-      <ion-icon name="desktop"></ion-icon>
-    </ion-button>
+    <ion-toolbar>
+      <ion-label>
+        {{device.name}} : {{device.loggedInId | userIdToName }}
+      </ion-label>
+      <ion-buttons slot="end">
+        <ion-button fill="clear" (click)="openAction($event)">
+          <ion-icon name="desktop"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
   </ion-card-header>
   <ion-card-content class="ion-justify-content-center">
     <img *ngIf="device" src="{{screenShot}}" />

@@ -10,42 +10,38 @@ import { PopoverController } from '@ionic/angular';
 })
 export class RoomDevComponent implements OnInit {
 
-  @Input() index: number; 
+  @Input() index: number;
   @Input() device: Device;
   @Input() row: number;
   @Input() place: number;
 
-  screenShot ; 
+  screenShot;
 
-  constructor(              public popoverCtrl: PopoverController,
-    ) { }
+  constructor(public popoverCtrl: PopoverController,
+  ) { }
 
   ngOnInit() {
-    if(this.device){
-    this.getScreen();
+    if (this.device) {
+      this.getScreen();
     }
   }
 
-  getScreen(){
-     this.screenShot= "data:image/jpg;base64,"+this.device.screenShot;
-   //   console.log("screen is: ", this.screenShot);
-    }
+  getScreen() {
+    this.screenShot = "data:image/jpg;base64," + this.device.screenShot;
+  }
 
-    async openAction(ev) {
-  
-      const popover = await this.popoverCtrl.create({
-        component: ActionsComponent,
-       //
-        event: ev,
-        componentProps: {
-          objectType: "eduRoom",
-          objectIds:this.device.id,
-          selection: this.device
-          //selection: this.selected
-        },
-        animated: true,
-        showBackdrop: true
-      });
-      (await popover).present();
-    }
+  async openAction(ev) {
+
+    const popover = await this.popoverCtrl.create({
+      component: ActionsComponent,
+      event: ev,
+      componentProps: {
+        objectType: "education/device",
+        objectIds: [ this.device.id ]
+      },
+      animated: true,
+      showBackdrop: true
+    });
+    (await popover).present();
+  }
 }

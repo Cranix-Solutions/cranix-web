@@ -41,7 +41,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   gridSizes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
   constructor(
-    private authS: AuthenticationService,
+    public authS: AuthenticationService,
     private eduS: EductaionService,
     public popoverCtrl: PopoverController,
     public modalController: ModalController,
@@ -110,17 +110,19 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   openSelect() {
     this.selectRef.open();
   }
+
+  /**
+   * Opens an action menue for the content
+   * @param ev 
+   */
   async openAction(ev) {
 
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
-      //
       event: ev,
       componentProps: {
-        objectType: "eduRoom",
-        objectIds: this.room.id,
-        selection: this.room
-        //selection: this.selected
+        objectType: "education/room",
+        objectIds:  [ this.room.id ]
       },
       animated: true,
       showBackdrop: true
@@ -143,24 +145,8 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((res) => {
         console.log(res);
         this.objectS.responseMessage(res);
-        /*
-        if (res.code === "OK") {
-          this.translateS.get(res.value)
-            .subscribe((res) => {
-             // this.notify.success(res);
-              console.log(res);
-            })
-        } else if (res.code === "ERROR") {
-          this.translateS.get(res.value)
-            .subscribe((res) => {
-            //  this.notify.error(res);
-            console.log(res);
-
-            })
-        }*/
       }, err => {
         this.objectS.errorMessage(err);
-        //this.notify.error(err.message);
       })
   }
 

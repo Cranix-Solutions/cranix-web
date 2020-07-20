@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { AlertController } from '@ionic/angular';
 //Own stuff
-import { userMenu, groupMenu, roomMenu, deviceMenu, instituteMenu, hwconfMenu,devActionMenu, printerMenu, studentMenu, eduRoomMenu  } from './objects.menus';
+import { userMenu, groupMenu, roomMenu, deviceMenu, instituteMenu, hwconfMenu, devActionMenu, printerMenu, studentMenu, eduRoomMenu } from './objects.menus';
 import { CrxActionMap, ServerResponse } from 'src/app/shared/models/server-models';
 import { LanguageService } from 'src/app/services/language.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -67,16 +67,22 @@ export class ActionsComponent implements OnInit {
       'Accept': "application/json",
       'Authorization': "Bearer " + this.token
     });
+  }
 
+  ngOnInit() {
+    console.log("ActionsComponent")
+    console.log(this.navParams);
     this.objectType = this.navParams.get('objectType');
     this.objectIds = this.navParams.get('objectIds');
     this.selection = this.navParams.get('selection');
     if (this.objectIds) {
       this.count = this.objectIds.length;
+    } else {
+      this.count = this.selection.length;
     }
     if (this.objectType == "user") {
       this.menu = this.commonMenu.concat(userMenu).concat(this.commonLastMenu);
-    } else if (this.objectType == "education/user" || this.objectType == "education/group" ) {
+    } else if (this.objectType == "education/user" || this.objectType == "education/group") {
       this.menu = this.commonMenu.concat(studentMenu);
     } else if (this.objectType == "group") {
       this.menu = this.commonMenu.concat(groupMenu).concat(this.commonLastMenu);
@@ -92,18 +98,15 @@ export class ActionsComponent implements OnInit {
       this.menu = this.commonMenu.concat(hwconfMenu).concat(this.commonLastMenu);
     } else if (this.objectType == "printer") {
       this.menu = this.commonMenu.concat(printerMenu).concat(this.commonLastMenu);
-    } else if(this.objectType == "eduRoom"){
-      this.menu = eduRoomMenu; 
+    } else if (this.objectType == "education/room" || this.objectType == "education/device") {
+      this.menu = eduRoomMenu;
     }
+    console.log(this.menu);
   }
 
-  ngOnInit() {
-    console.log("ActionsComponent" + this.navParams);
-  }
-
-  adaptMenu(){
+  adaptMenu() {
     //TODO
-    for( let m of this.menu ) {
+    for (let m of this.menu) {
 
     }
   }
@@ -214,7 +217,7 @@ export class ActionsComponent implements OnInit {
         for (let resp of val) {
           response = response + "<br>" + this.languageService.transResponse(resp);
         }
-        if( actionMap.name == 'delete ' ) {
+        if (actionMap.name == 'delete ') {
           this.objectService.getAllObject(this.objectType);
         }
         this.objectService.okMessage(response)
