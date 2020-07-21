@@ -115,7 +115,7 @@
         </ion-item>
         <ion-item *ngSwitchCase="'idsPipe'">
           <ion-label position="stacked">{{ key.substring(0,key.length -1 ) | translate }}{{objectService.required[key]}}</ion-label>
-            <ion-select type="text" formControlName="{{key}}" [compareWith]="objectService.compareFn"
+            <ion-select class="select-full-width wrap-no" type="text" formControlName="{{key}}" [compareWith]="objectService.compareFn"
               [required]="objectService.required[key]" multiple="true">
               <ion-select-option *ngFor="let option of  objectService.selects[key.substring(0,key.length -1 )]" value="{{option}}">
                 {{option | idToName:objectService.idToPipe(key.substring(0,key.length -1 )) | translate }}</ion-select-option>

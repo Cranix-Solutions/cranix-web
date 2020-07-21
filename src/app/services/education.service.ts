@@ -6,7 +6,7 @@
 import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UtilsService } from './utils.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
 //import { ServerResponse } from 'http';
 import { AccessStatus, Room, Device, User, Group, Category, PositivListObj, SmartRoom, SmartRoomStatus, EduRoom } from '../shared/models/data-model';
@@ -174,6 +174,19 @@ export class EductaionService {
 		// console.log(headers.getAll('Content-Type') + " " + headers.getAll('Accept') + " " + headers.getAll('Authorization'));
 		return this.http.get<EduRoom>(this.url, { headers: this.headers });
 	}
+
+	/*getRoomStatusById(roomId: number){
+		this.url = `${this.hostname}/education/rooms/${roomId}/details`;
+		console.log(this.url);
+		console.log(sessionStorage.getItem('token'));
+		const headers = new HttpHeaders({
+			'Accept': "application/json",
+			'Authorization': "Bearer " + sessionStorage.getItem('token')
+		});
+		let body = null;
+		// console.log(headers.getAll('Content-Type') + " " + headers.getAll('Accept') + " " + headers.getAll('Authorization'));
+		return Observable.interval(3000).flatMap(() => { this.http.get<EduRoom>(this.url, { headers: this.headers }).map(res = res.json())});
+	}*/
 
 	getRoomAccessStatus(roomId: number) {
 		this.url = `${this.hostname}/education/rooms/${roomId}/AccessStatus`;

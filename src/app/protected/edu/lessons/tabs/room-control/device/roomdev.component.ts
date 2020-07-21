@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Device } from 'src/app/shared/models/data-model';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { PopoverController } from '@ionic/angular';
+import { Subscription, interval } from 'rxjs';
 
 @Component({
   selector: 'cranix-roomdev',
@@ -17,15 +18,20 @@ export class RoomDevComponent implements OnInit {
 
   screenShot;
 
+  devStatusSub: Subscription;
   constructor(public popoverCtrl: PopoverController,
   ) { }
 
   ngOnInit() {
     if (this.device) {
-      this.getScreen();
+      this.devStatusSub = interval(3000).subscribe((func => {
+        this.getScreen();
+      }))
+      
     }
   }
 
+  
   getScreen() {
     this.screenShot = "data:image/jpg;base64," + this.device.screenShot;
   }

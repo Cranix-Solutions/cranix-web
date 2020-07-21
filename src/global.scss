@@ -59,7 +59,13 @@ ion-content ion-segment {
 }
 
 ion-select {
-  max-width: 100% !important;
+  width: 100% ;
+  white-space: normal !important;
+
+}
+.sc-ion-alert-md{
+  white-space: normal !important;
+
 }
 
 /* ion-segment-button {
