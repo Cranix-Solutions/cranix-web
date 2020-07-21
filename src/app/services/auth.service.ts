@@ -2,8 +2,8 @@ import { BehaviorSubject } from 'rxjs';
 import { HttpClient, HttpHeaders, } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Platform, ToastController } from '@ionic/angular';
-import { Storage }   from '@ionic/storage';
-import { Router }    from '@angular/router';
+import { Storage } from '@ionic/storage';
+import { Router } from '@angular/router';
 import { isDevMode } from '@angular/core';
 
 
@@ -50,46 +50,46 @@ export class AuthenticationService {
     setUpSession(user: LoginForm, instituteName: string) {
         this.session = null;
         this.authenticationState.next(false);
-	let subscription = this.login(user).subscribe(
-		(val) => {
-		    // Load settings from the local storage
-                    this.storage.get('myCranixSettings').then((myCranixSettings) => {
-                        if(myCranixSettings && myCranixSettings != "") {
-				console.log("myCranixSettings");
-				console.log(myCranixSettings);
-				let myCranixSettingsHash = JSON.parse(myCranixSettings);
-				console.log(myCranixSettingsHash);
-				for( let key in Object.getOwnPropertyNames(this.settings) ) {
-					if( myCranixSettingsHash.hasOwnProperty(key) ) {
-						this.settings[key] = myCranixSettingsHash[key];
-					}
-				}
+        let subscription = this.login(user).subscribe(
+            (val) => {
+                // Load settings from the local storage
+                this.storage.get('myCranixSettings').then((myCranixSettings) => {
+                    if (myCranixSettings && myCranixSettings != "") {
+                        console.log("myCranixSettings");
+                        console.log(myCranixSettings);
+                        let myCranixSettingsHash = JSON.parse(myCranixSettings);
+                        console.log(myCranixSettingsHash);
+                        for (let key in Object.getOwnPropertyNames(this.settings)) {
+                            if (myCranixSettingsHash.hasOwnProperty(key)) {
+                                this.settings[key] = myCranixSettingsHash[key];
+                            }
                         }
-		    });
-                    console.log('login respons is', val);
-                    this.session = val;
-                    this.session['instituteName'] = instituteName;
-                    this.session['roomId'] = val.roomId;
-                    this.session['roomName'] = val.roomName;
-                    this.authenticationState.next(true);
-                },
-                async (err) => {
-                    console.log('error is', err);
-                    if (err.status === 401) {
-                        const toast = this.toastController.create({
-                            position: "middle",
-                            message: 'Passwort falsch!',
-                            color: "danger",
-                            duration: 3000
-                        });
-                        (await toast).present();
-		    }
-		},
-		() => {
-		    subscription.unsubscribe();
-                    console.log("login call completed" + this.session.role);
+                    }
+                });
+                console.log('login respons is', val);
+                this.session = val;
+                this.session['instituteName'] = instituteName;
+                this.session['roomId'] = val.roomId;
+                this.session['roomName'] = val.roomName;
+                this.authenticationState.next(true);
+            },
+            async (err) => {
+                console.log('error is', err);
+                if (err.status === 401) {
+                    const toast = this.toastController.create({
+                        position: "middle",
+                        message: 'Passwort falsch!',
+                        color: "danger",
+                        duration: 3000
+                    });
+                    (await toast).present();
                 }
-            );
+            },
+            () => {
+                subscription.unsubscribe();
+                console.log("login call completed" + this.session.role);
+            }
+        );
     }
 
     public loadSession() {
@@ -200,12 +200,12 @@ export class AuthenticationService {
             case "/pages/cranix/groups": { return this.isAllowed('group.manage') }
             case "/pages/cranix/hwconfs": { return this.isAllowed('hwconf.manage') }
             case "/pages/cranix/rooms": { return this.isAllowed('room.manage') }
-	    case "/pages/cranix/rooms/all": { return this.isAllowed('room.manage') }
+            case "/pages/cranix/rooms/all": { return this.isAllowed('room.manage') }
             case "/pages/cranix/users": { return this.isAllowed('user.manage') }
             case "/pages/cranix/users/all": { return this.isAllowed('user.manage') }
             case "/pages/cranix/system": { return this.isAllowed('system.status') }
             case "/pages/cranix/softwares": { return this.isAllowed('software.manage') }
-            case "/pages/cranix/security": { return this.isOneOfAllowed(['system.firewall','system.proxy']) }
+            case "/pages/cranix/security": { return this.isOneOfAllowed(['system.firewall', 'system.proxy']) }
             case "/pages/edu/lessons/roomcontrol": { return this.isAllowed('education.rooms') }
             case "/pages/cranix/mygroups": { return this.isAllowed('education.groups') }
             case "/pages/cranix/myusers": { return this.isAllowed('education.users') }
@@ -219,12 +219,12 @@ export class AuthenticationService {
             case "users/:id": { return this.isAllowed('user.modify') }
         }
         return false;
-   }
+    }
 
-    public log(arg1, ...args){
-        if( this.settings.debug || isDevMode() ) {
+    public log(arg1, ...args) {
+        if (this.settings.debug || isDevMode()) {
             console.log(arguments)
-	}
+        }
     }
 }
 

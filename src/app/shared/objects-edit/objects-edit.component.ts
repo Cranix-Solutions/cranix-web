@@ -116,14 +116,11 @@ export class ObjectsEditComponent implements OnInit {
     let serverResponse: ServerResponse;
     let subs = this.objectService.applyAction(object, this.objectType, this.objectAction).subscribe(
       async (val) => {
-        serverResponse = val;
-        console.log(val);
-        if (serverResponse.code == "OK") {
+        this.objectService.responseMessage(val);
+        if (val.code == "OK") {
           this.objectService.getAllObject(this.objectType);
-          this.objectService.okMessage(this.languageS.transResponse(serverResponse));
           this.modalController.dismiss("succes");
         } else {
-          this.objectService.errorMessage(this.languageS.transResponse(serverResponse));
           this.editForm.enable();
           this.splashScreen.hide();
         }
@@ -145,13 +142,10 @@ export class ObjectsEditComponent implements OnInit {
   supportRequest(object: SupportTicket) {
     let subs = this.systemService.createSupportRequest(object).subscribe(
       async (val) => {
-        console.log("supportRequest");
-        console.log(val);
+        this.objectService.responseMessage(val);
         if (val.code == "OK") {
-          this.objectService.okMessage(this.languageS.transResponse(val));
           this.modalController.dismiss("succes");
         } else {
-          this.objectService.errorMessage(this.languageS.transResponse(val));
           this.editForm.enable();
           this.splashScreen.hide();
         }
@@ -171,34 +165,30 @@ export class ObjectsEditComponent implements OnInit {
     formData.append('role', object.role);
     formData.append('lang', object.lang);
     formData.append('identifier', object.identifier);
-    formData.append('test', object.test.toString());
+    formData.append('test', object.test ? "true":"false");
     formData.append('password', object.password);
-    formData.append('mustChange', object.mustChange.toString());
-    formData.append('full', object.full.toString());
-    formData.append('allClasses', object.allClasses.toString());
-    formData.append('cleanClassDirs', object.cleanClassDirs.toString());
-    formData.append('resetPassword', object.resetPassword.toString());
-    formData.append('appendBirthdayToPassword', object.appendBirthdayToPassword.toString());
-    console.log(formData)
+    formData.append('mustChange', object.mustChange ? "true":"false");
+    formData.append('full', object.full ? "true":"false");
+    formData.append('allClasses', object.allClasses ? "true":"false");
+    formData.append('cleanClassDirs', object.cleanClassDirs ? "true":"false");
+    formData.append('resetPassword', object.resetPassword ? "true":"false");
+    formData.append('appendBirthdayToPassword', object.appendBirthdayToPassword ? "true":"false");
     console.log(object.test);
     console.log(object.password);
     console.log(this.formData.get("role"))
     let serverResponse: ServerResponse;
-    let subs = this.usersService.importUsers(this.formData).subscribe(
+    let subs = this.usersService.importUsers(formData).subscribe(
       async (val) => {
-        serverResponse = val;
-        console.log(val);
+        this.objectService.responseMessage(val);
         if (serverResponse.code == "OK") {
-          this.objectService.getAllObject(this.objectType);
-          this.objectService.okMessage("Success:");
           this.modalController.dismiss("succes");
         } else {
-          this.objectService.errorMessage("An error is accoured");
           this.editForm.enable();
           this.splashScreen.hide();
         }
       },
       async (error) => {
+        console.log(error)
         this.objectService.errorMessage("A Server Error is accoured:" + error);
         this.editForm.enable();
         this.splashScreen.hide();

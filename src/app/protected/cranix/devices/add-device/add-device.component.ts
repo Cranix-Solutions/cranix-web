@@ -75,12 +75,10 @@ export class AddDeviceComponent implements OnInit {
     this.authService.log(devices);
     let subs = this.roomService.addDevice(devices, this.room.id).subscribe(
       (val) => {
+        this.objectService.responseMessage(val);
         if (val.code == "OK") {
           this.objectService.getAllObject('device');
-          this.objectService.okMessage(this.languageS.transResponse(val));
           this.modalCtrl.dismiss();
-        } else {
-          this.objectService.errorMessage(this.languageS.transResponse(val));
         }
       },
       (err) => {

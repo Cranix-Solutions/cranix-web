@@ -15,7 +15,10 @@ import { ApplyCheckBoxBTNRenderer } from 'src/app/pipes/ag-apply-checkbox-render
 export class ProxyComponent implements OnInit {
 
   segment = 'basic';
-  rowData: any[];
+  rowData: any[] = [];
+  blackList: string = "";
+  whiteList: string = ""
+  cephalixList: string = "";
   proxyOptions;
   context;
   proxyApi;
@@ -30,6 +33,7 @@ export class ProxyComponent implements OnInit {
     public securityService: SecurityService
   ) {
     this.context = { componentParent: this };
+    this.readLists();
     this.readDatas().then(val => {
       this.rowData = val;
       this.columnDefs = [{
@@ -39,13 +43,13 @@ export class ProxyComponent implements OnInit {
         sortable: true
       },
       {
-        field: 'applyForAll' ,
+        field: 'applyForAll',
         cellStyle: { 'justify-content': "center" },
         headerName: this.languageS.trans('applyForAll'),
         width: 100,
         cellRendererFramework: ApplyCheckBoxBTNRenderer
       }
-    ];
+      ];
       this.authService.log(this.rowData);
       for (let key of Object.getOwnPropertyNames(val[0])) {
         let col = {};
@@ -78,6 +82,26 @@ export class ProxyComponent implements OnInit {
       )
     });
   }
+  readLists() {
+    let sub = this.securityService.getProxyCustom('good').subscribe(
+      (val) => { this.whiteList = val.join("\n") },
+      (err) => { this.authService.log(err) },
+      () => { sub.unsubscribe() }
+    );
+    this.securityService.getProxyCustom('bad').subscribe(
+      (val) => { this.blackList = val.join("\n") },
+      (err) => { this.authService.log(err) },
+      () => { sub.unsubscribe() }
+    );
+    if (this.authService.session.name == 'cephalix') {
+      this.securityService.getProxyCustom('cephalix').subscribe(
+        (val) => { this.cephalixList = val.join("\n") },
+        (err) => { this.authService.log(err) },
+        () => { sub.unsubscribe() }
+      );
+    }
+  }
+
   proxyGridReady(params) {
     this.proxyApi = params.api;
     this.proxyColumnApi = params.columnApi;
@@ -91,14 +115,29 @@ export class ProxyComponent implements OnInit {
     //TODO
   }
   writeConfig() {
-    this.authService.log(this.rowData);
-    this.objectService.requestSent();
-    let sub = this.securityService.setProxyBasic(this.rowData).subscribe(
-      (val) => { this.objectService.responseMessage(val) },
-      (err) => {
-        this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
-      },
-      () => { sub.unsubscribe() });
+    switch (this.segment) {
+      case 'basic': {
+        this.authService.log(this.rowData);
+        this.objectService.requestSent();
+        let sub = this.securityService.setProxyBasic(this.rowData).subscribe(
+          (val) => { this.objectService.responseMessage(val) },
+          (err) => {
+            this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
+          },
+          () => { sub.unsubscribe() });
+        break;
+      }
+      case 'positive': { break; }
+      default: { 
+        let list: string[] = (<HTMLInputElement>document.getElementById(this.segment)).value.split("\n");
+        this.objectService.requestSent();
+        let sub = this.securityService.setProxyCustom(this.segment,list).subscribe(
+          (val) => { this.objectService.responseMessage(val)},
+          (err) => { this.objectService.errorMessage(this.languageS.trans("An error was accoured")); },
+          () => {sub.unsubscribe()}
+        )
+      }
+    }
   }
   restartProxy() {
     //TODO

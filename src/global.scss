@@ -58,6 +58,10 @@ ion-content ion-segment {
   margin: 5px 0;
 }
 
+ion-select {
+  max-width: 100% !important;
+}
+
 /* ion-segment-button {
   background-color: lightgrey;
 } */

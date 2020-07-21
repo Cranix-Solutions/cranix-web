@@ -30,6 +30,7 @@ import { ShowImportComponent } from 'src/app/shared/actions/show-import/show-imp
 import { CanActivateViaAcls } from './services/auth-guard.service';
 import { CephalixService } from './services/cephalix.service';
 import { DevicesService } from './services/devices.service';
+import { EductaionService } from './services/education.service';
 import { GenericObjectService } from './services/generic-object.service';
 import { GroupsService } from './services/groups.service';
 import { HwconfsService } from './services/hwconfs.service';
@@ -50,6 +51,8 @@ import { AddPrinterComponent } from 'src/app/protected/cranix/devices/add-printe
 import { AddOutgoingRuleComponent } from './protected/cranix/security/firewall/add-rules/add-outgoing-rule.component';
 import { AddRemoteRuleComponent } from './protected/cranix/security/firewall/add-rules/add-remote-rule.component';
 import { AddEditRoomAccessComponent } from 'src/app/protected/cranix/security/room-access/add-edit-room-access/add-edit-room-access.component';
+import { FilesUploadComponent } from 'src/app/shared/actions/files-upload/files-upload.component'
+import { FilesCollectComponent } from 'src/app/shared/actions/files-collect/files-collect.component'
 import { FirewallCanDeactivate } from 'src/app/services/security-service'
 import { SetpasswordComponent } from 'src/app/shared/actions/setpassword/setpassword.component'
 
@@ -79,6 +82,8 @@ const routes: Routes = [
     AppComponent,
     ActionsComponent,
     DownloadSoftwaresComponent,
+    FilesUploadComponent,
+    FilesCollectComponent,
     ShowImportComponent,
     ObjectsEditComponent,
     DevicePrintersComponent,
@@ -96,6 +101,8 @@ const routes: Routes = [
     AddRemoteRuleComponent,
     ActionsComponent,
     DownloadSoftwaresComponent,
+    FilesUploadComponent,
+    FilesCollectComponent,
     ShowImportComponent,
     ObjectsEditComponent,
     DevicePrintersComponent,
@@ -132,6 +139,7 @@ const routes: Routes = [
     DevicesService,
     FirewallCanDeactivate,
     GenericObjectService,
+    EductaionService,
     GroupsService,
     HwconfsService,
     StatusBar,

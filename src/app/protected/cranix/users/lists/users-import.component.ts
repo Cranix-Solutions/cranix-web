@@ -53,8 +53,10 @@ export class UsersImportComponent implements OnInit {
     let userImport = new UsersImport();
     userImport.importFile = "";
     delete userImport.result;
+    //delete userImport.lang;
     const modal = await this.modalCtrl.create({
       component: ObjectsEditComponent,
+      cssClass: "medium-modal",
       componentProps: {
         objectType: "userImport",
         objectAction: "add",

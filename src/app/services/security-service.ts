@@ -68,6 +68,18 @@ export class SecurityService {
     return this.http.post<ServerResponse>(this.url, acls, { headers: this.headers });
   }
 
+  getProxyCustom(custom) {
+    this.url = this.hostname + `/system/proxy/custom/${custom}`;
+    console.log(this.url);
+    return this.http.get<string[]>(this.url, { headers: this.headers });
+  }
+
+  setProxyCustom(custom,list: string[]) {
+    this.url = this.hostname + `/system/proxy/custom/${custom}`;
+    console.log(this.url);
+    return this.http.post<ServerResponse>(this.url, list, { headers: this.headers });
+  }
+
   getIncomingRules() {
     this.url = this.hostname + `/system/firewall/incomingRules`;
     console.log(this.url);
@@ -96,12 +108,7 @@ export class SecurityService {
     this.url = this.hostname + '/system/firewall/' + rulesName;
     let sub = this.http.post<ServerResponse>(this.url, rules, { headers: this.headers }).subscribe(
       (val) => {
-        let serverResponse = val;
-        if (serverResponse.code == "OK") {
-          this.objectService.okMessage(this.languageS.trans(serverResponse.value));
-        } else {
-          this.objectService.errorMessage("" + serverResponse.value);
-        }
+        this.objectService.responseMessage(val);
       },
       (err) => {
         this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
@@ -116,13 +123,7 @@ export class SecurityService {
     this.objectService.requestSent();
     let sub = this.http.post<ServerResponse>(this.url, accessInRoom, { headers: this.headers }).subscribe(
       (val) => {
-        let serverResponse = val;
-        if (serverResponse.code == "OK") {
-          this.objectService.okMessage(this.languageS.transResponse(serverResponse));
-          this.modalCtrl.dismiss("success");
-        } else {
-          this.objectService.errorMessage("" + serverResponse.value);
-        }
+        this.objectService.responseMessage(val);
       },
       (err) => {
         this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
@@ -137,12 +138,7 @@ export class SecurityService {
     this.objectService.requestSent();
     let sub = this.http.delete<ServerResponse>(this.url, { headers: this.headers }).subscribe(
       (val) => {
-        let serverResponse = val;
-        if (serverResponse.code == "OK") {
-          this.objectService.okMessage(this.languageS.transResponse(serverResponse));
-        } else {
-          this.objectService.errorMessage("" + serverResponse.value);
-        }
+        this.objectService.responseMessage(val);
       },
       (err) => {
         this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
