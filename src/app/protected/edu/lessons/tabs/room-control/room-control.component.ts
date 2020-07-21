@@ -11,6 +11,7 @@ import { JsonPipe } from '@angular/common';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { FilesCollectComponent } from 'src/app/shared/actions/files-collect/files-collect.component';
 import { FilesUploadComponent } from 'src/app/shared/actions/files-upload/files-upload.component';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'cranix-room-control',
@@ -40,6 +41,8 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
 
   gridSizes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
+  roomStatusSub : Subscription;
+  
   constructor(
     public authS: AuthenticationService,
     private eduS: EductaionService,
@@ -48,8 +51,6 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     private objectS: GenericObjectService
   ) {
     this.rooms = this.eduS.getMyRooms();
-
-
   }
   ngOnInit() {
 
@@ -65,12 +66,8 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit() {
 
     if (this.authS.session.roomId) {
-      this.eduS.getRoomById(parseInt(this.authS.session.roomId))
-        .pipe(takeWhile(() => this.alive))
-        .subscribe(res => {
-          this.room = res
-        });
-
+      this.selectedRoomId = parseInt(this.authS.session.roomId);
+     this.statusTimer();
     } else if (!this.room && !this.authS.session.roomId) {
       console.log(`Room afterViewChecked: ${this.room}`)
       this.openSelect();
@@ -80,6 +77,22 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
           this.room = res
         });*/
     }
+  }
+
+  statusTimer(){
+     this.roomStatusSub = interval(3000).subscribe((func => {
+        this.getRoomStatus();
+      }))
+  }
+  getRoomStatus(){
+    this.eduS.getRoomById(this.selectedRoomId)
+        .pipe(takeWhile(() => this.alive))
+        .subscribe(res => {
+          this.room = res
+          console.log(`Rooms is: ${this.room}`)
+          let test = JSON.stringify(res);
+          console.log(test);
+    });
   }
   array(n: number): any[] {
     return Array(n);
@@ -99,12 +112,14 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
 
   selectChanged(ev) {
     console.log(`Select roomId is: ${this.selectedRoomId}`)
-    this.eduS.getRoomById(this.selectedRoomId)
+
+   /* this.eduS.getRoomById(this.selectedRoomId)
       .pipe(takeWhile(() => this.alive))
       .subscribe(res => {
         this.room = res
         console.log('Room is:', this.room);
-      })
+      })*/
+      this.statusTimer();
     //this.eduS.getRoomById()
   }
   openSelect() {
