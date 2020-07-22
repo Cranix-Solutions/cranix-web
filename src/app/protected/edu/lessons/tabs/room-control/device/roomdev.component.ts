@@ -24,7 +24,7 @@ export class RoomDevComponent implements OnInit {
 
   ngOnInit() {
     if (this.device) {
-      this.devStatusSub = interval(3000).subscribe((func => {
+      this.devStatusSub = interval(3000).pipe(takeWhile(() => this.alive)).subscribe((func => {
         this.getScreen();
       }))
       
