@@ -80,7 +80,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   statusTimer(){
-     this.roomStatusSub = interval(3000).subscribe((func => {
+     this.roomStatusSub = interval(3000).pipe(takeWhile(() => this.alive)).subscribe((func => {
         this.getRoomStatus();
       }))
   }
