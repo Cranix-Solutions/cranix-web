@@ -28,9 +28,6 @@ export class ApplyCheckBoxBTNRenderer implements ICellRendererAngularComp {
             this.params.context.componentParent.rowData[this.index][key] = event.detail.checked;
            }
        }
-       //this.params.context.componentParent.rowData[index][field] = event.detail.checked;
-       //var params = { force: true };
-       //this.params.context.componentParent.proxyApi.refreshCells(params);
     }
     refresh(params: any): boolean {
         return true;
