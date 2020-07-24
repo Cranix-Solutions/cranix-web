@@ -7,7 +7,6 @@ import { Observable } from 'rxjs/internal/Observable';
 import { TranslateService } from '@ngx-translate/core';
 import { PopoverController, IonSelect, ModalController } from '@ionic/angular';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
-import { JsonPipe } from '@angular/common';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { FilesCollectComponent } from 'src/app/shared/actions/files-collect/files-collect.component';
 import { FilesUploadComponent } from 'src/app/shared/actions/files-upload/files-upload.component';
@@ -30,9 +29,6 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
 
   devices = [1, 2, 3, 4, 5, 6]
   room: EduRoom;
-
-  selectedRoomId: number;
-
   rooms: Observable<Room[]>;
 
   gridSize: number = 2;
@@ -41,11 +37,11 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
 
   gridSizes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
-  roomStatusSub : Subscription;
-  
+  roomStatusSub: Subscription;
+
   constructor(
     public authS: AuthenticationService,
-    private eduS: EductaionService,
+    public eduS: EductaionService,
     public popoverCtrl: PopoverController,
     public modalController: ModalController,
     private objectS: GenericObjectService
@@ -53,21 +49,13 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     this.rooms = this.eduS.getMyRooms();
   }
   ngOnInit() {
-
     console.log(`Room on init: ${this.room}`)
-    /* this.eduS.getMyRooms()
-     .pipe(takeWhile( () => this.alive ))
-     .subscribe(res => {
-       console.log('my rooms are: ', res);
-       this.myRooms = res
-     });*/
   }
 
   ngAfterViewInit() {
-
     if (this.authS.session.roomId) {
-      this.selectedRoomId = parseInt(this.authS.session.roomId);
-     this.statusTimer();
+      this.eduS.selectedRoomId = parseInt(this.authS.session.roomId);
+      this.statusTimer();
     } else if (!this.room && !this.authS.session.roomId) {
       console.log(`Room afterViewChecked: ${this.room}`)
       this.openSelect();
@@ -79,20 +67,19 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  statusTimer(){
-     this.roomStatusSub = interval(3000).pipe(takeWhile(() => this.alive)).subscribe((func => {
-        this.getRoomStatus();
-      }))
+  statusTimer() {
+    this.roomStatusSub = interval(
+      this.eduS.screenShotTimeDealy
+      ).pipe(takeWhile(() => this.alive)).subscribe((func => {
+      this.getRoomStatus();
+    }))
   }
-  getRoomStatus(){
-    this.eduS.getRoomById(this.selectedRoomId)
-        .pipe(takeWhile(() => this.alive))
-        .subscribe(res => {
-          this.room = res
-          console.log(`Rooms is: ${this.room}`)
-          let test = JSON.stringify(res);
-          console.log(test);
-    });
+  getRoomStatus() {
+    this.eduS.getRoomById(this.eduS.selectedRoomId)
+      .pipe(takeWhile(() => this.alive))
+      .subscribe(res => {
+        this.room = res
+      });
   }
   array(n: number): any[] {
     return Array(n);
@@ -106,21 +93,12 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getDevice(r, p) {
-    //  console.log(`Device at row: ${r} and place: ${p} is: ${this.room.devices.find(e => e.row === r && e.place === p)}`)
     return this.room.devices.find(e => e.row === r && e.place === p);
   }
 
   selectChanged(ev) {
-    console.log(`Select roomId is: ${this.selectedRoomId}`)
-
-   /* this.eduS.getRoomById(this.selectedRoomId)
-      .pipe(takeWhile(() => this.alive))
-      .subscribe(res => {
-        this.room = res
-        console.log('Room is:', this.room);
-      })*/
-      this.statusTimer();
-    //this.eduS.getRoomById()
+    console.log(`Select roomId is: ${this.eduS.selectedRoomId}`)
+    this.statusTimer();
   }
   openSelect() {
     this.selectRef.open();
@@ -131,19 +109,22 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
    * @param ev 
    */
   async openAction(ev) {
-
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
       event: ev,
       componentProps: {
         objectType: "education/room",
-        objectIds:  [ this.room.id ]
+        objectIds: [this.room.id]
       },
       animated: true,
       showBackdrop: true
     });
     (await popover).present();
   }
+
+  /***
+   * Set room access status
+   */
   setAccess() {
     let status: AccessInRooms = {
       accessType: "FW",
@@ -177,7 +158,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       showBackdrop: true,
       componentProps: {
         objectType: "room",
-        actionMap: {objectIds : [this.selectedRoomId]}
+        actionMap: { objectIds: [this.eduS.selectedRoomId] }
       }
     });
     (await modal).present();
@@ -194,7 +175,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       showBackdrop: true,
       componentProps: {
         objectType: "room",
-        actionMap: {objectIds : [this.selectedRoomId]}
+        actionMap: { objectIds: [this.eduS.selectedRoomId] }
       }
     });
     (await modal).present();

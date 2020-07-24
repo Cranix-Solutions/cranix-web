@@ -29,6 +29,10 @@ export class FilesUploadComponent implements OnInit {
    }
 
   onSubmit(object) {
+    console.log("Files");
+    console.log(this.files);
+    console.log("Object");
+    console.log(object);
     for (let i = 0; i < this.files.length; i++) {
       let fd = new FormData();
       fd.append('file', this.files[i], this.files[i].name);
@@ -41,6 +45,7 @@ export class FilesUploadComponent implements OnInit {
       } else {
         fd.append('cleanUp', "false");
       }
+      console.log("Form data");
       console.log(fd);
       this.educationController.uploadDataToObjects(fd, this.objectType);
     }

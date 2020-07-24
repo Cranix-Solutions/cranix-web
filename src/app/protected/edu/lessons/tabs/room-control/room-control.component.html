@@ -32,18 +32,18 @@
         <ion-toggle (click)="setAccess()" [(ngModel)]="room.accessInRooms.printing" [disabled]="!room"></ion-toggle>
       </ion-item>
 
-      <ion-button  fill="clear" (click)="onBTNSHARE()">
+      <!-- ion-button  fill="clear" (click)="onBTNSHARE()">
         <ion-icon name="cloud-upload"></ion-icon>
       </ion-button>
       <ion-button  fill="clear" (click)="onBTNCOLLECT()">
         <ion-icon name="cloud-download"></ion-icon>
-      </ion-button>
+      </ion-button -->
       <ion-button  fill="clear" (click)="openAction($event)" matTooltip="{{'Apply action on all devices in room'|translate}}">
         <ion-icon name="desktop"></ion-icon>
       </ion-button>
       <ion-item lines="none" matTooltip="{{'Select the room to control' | translate}}">
         <ion-label *ngIf="room">{{room.name}}</ion-label>
-        <ion-select *ngIf="rooms" [(ngModel)]="selectedRoomId" #roomSelect (ionChange)="selectChanged($event)" okText="OK" cancelText="{{ 'Cancel' | translate}}">
+        <ion-select *ngIf="rooms" [(ngModel)]="eduS.selectedRoomId" #roomSelect (ionChange)="selectChanged($event)" okText="OK" cancelText="{{ 'Cancel' | translate}}">
           <ion-select-option value="{{room.id}}" *ngFor="let room of rooms | async">{{room.name}}</ion-select-option>
         </ion-select>
       </ion-item>

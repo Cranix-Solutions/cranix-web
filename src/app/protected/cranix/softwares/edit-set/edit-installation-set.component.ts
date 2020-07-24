@@ -267,7 +267,7 @@ export class EditInstallationSetComponent implements OnInit {
   }
 
   delete() {
-    this.objectService.deleteObjectDialog(this.softwareService.selectedInstallationSet, "category");
+    this.objectService.deleteObjectDialog(this.softwareService.selectedInstallationSet, "categorie");
   }
   
   onSubmit(installationSet: Category) {

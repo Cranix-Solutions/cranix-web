@@ -1,4 +1,12 @@
 {
+    "You must not set access control in a room with no room control.":"In diesem Raum dürfen keine Zugriffsregel gesetzt werden.",
+    "rowHeight":"Zeilenhöhe",
+    "Add room access rule.":"Zugriffslregel setzten",
+    "Acces was deleted succesfully":"Zugriffslregel wurde erfolgreich gelöscht",
+    "The members of group was set.":"Die Mitglieder der Gruppe wurden geändert.",
+    "User was modified succesfully":"Benutzer wurde erfolgreich geändert",
+    "Printers of the room was set.":"Die Drucker wurden für den Raum gesetzt",
+    "Printers of the device was set.":"Die Drucker wurden für den Rechner gesetzt",
     "Access state in %s was set succesfully.": "Zungangsstatus im Raum %s wurde gäendert.",
     "Actual status": "Aktueller Status",
     "AdHoc rooms": "AdHoc Räme",

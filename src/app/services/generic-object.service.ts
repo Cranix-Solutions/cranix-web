@@ -437,7 +437,7 @@ export class GenericObjectService {
     if (key == 'reminder' || key == 'created') {
       return "date-time";
     }
-    if (key == 'text') {
+    if (key == 'text' || key == 'domains' ) {
       return "text";
     }
     if (typeof obj === 'boolean' && obj) {
