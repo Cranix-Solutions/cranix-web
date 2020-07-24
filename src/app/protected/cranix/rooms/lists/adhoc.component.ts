@@ -156,6 +156,7 @@ export class AdhocComponent implements OnInit {
   async redirectToEdit(event,adhocroom: AdHocRoom) {
     let action = "";
     if (adhocroom) {
+      action = 'modify';
       delete adhocroom.netMask;
       delete adhocroom.roomType;
       delete adhocroom.places;
@@ -163,16 +164,22 @@ export class AdhocComponent implements OnInit {
       delete adhocroom.startIP;
       delete adhocroom.hwconfId;
       this.objectService.selectedObject = adhocroom;
-      action = 'modify';
     } else {
       action = "add";
       adhocroom = new AdHocRoom;
       adhocroom.network = this.objectService.selects['network'][0];
+      adhocroom.hwconfId = 3;
+      adhocroom.devCount = 512;
+      adhocroom.roomControl = 'allTeachers'
+      delete adhocroom.accessInRooms;
+      delete adhocroom.groups;
       delete adhocroom.netMask;
       delete adhocroom.roomType;
       delete adhocroom.places;
-      adhocroom.devCount = 512;
-      adhocroom.roomControl = 'allTeachers'
+      delete adhocroom.rows;
+      delete adhocroom.startIP;
+      delete adhocroom.users;
+      delete adhocroom.userIds;
     }
     const modal = await this.modalCtrl.create({
       component: ObjectsEditComponent,
