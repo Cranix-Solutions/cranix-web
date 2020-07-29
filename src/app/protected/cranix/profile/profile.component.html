@@ -1,0 +1,19 @@
+<!--cranix-toolbar></cranix-toolbar-->
+<cranix-toolbar></cranix-toolbar>
+<ion-tabs>
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button tab="myself">
+        <!-- To Do 29.07.2020: Platform specific icons [ios]="calendar + '-outline'" [md]="calendar + '-sharp'"-->
+        <ion-icon name="calendar"></ion-icon>
+        <ion-label>{{ 'mySelf' | translate }}</ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="mydevice">
+        <ion-icon name="desktop" ></ion-icon>
+        <ion-label>{{ 'myDevice' | translate }}</ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="myVPN">
+        <ion-icon name="security" ></ion-icon>
+        <ion-label>{{ 'VPN' | translate }}</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>

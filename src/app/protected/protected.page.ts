@@ -74,6 +74,11 @@ export class ProtectedPage implements OnInit {
       icon: 'school'
     },
     {
+      title: 'Profile',
+      url: '/pages/cranix/profile/myself',
+      icon: 'man'
+    },
+    {
       title: 'MyGroups',
       url: '/pages/cranix/mygroups',
       icon: "people"
@@ -85,11 +90,16 @@ export class ProtectedPage implements OnInit {
     public translateService: TranslateService,
     public menuCtrl: MenuController
   ) { 
+    console.log(`Urls are: ${JSON.stringify(this.defAppPages)}`)
     for( let page of this.defAppPages ) {
+      console.log(`Checking acl ${JSON.stringify(page)}`)
       if( this.authService.isRouteAllowed(page.url)) {
         this.appPages.push(page);
+        console.log(`Adding url to menu: ${JSON.stringify(page)}`)
       }
+      
     }
+
   }
   ngOnInit() {
   }
