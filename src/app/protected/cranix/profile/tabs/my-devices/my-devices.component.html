@@ -3,8 +3,8 @@
     <ion-card-header >
        <h1>{{ 'My Devices' | translate}}</h1>
     </ion-card-header>
-    <ion-card-content *ngIf="supportedOSlist">
-     <ion-list>
+    <ion-card-content >
+     <ion-list *ngIf="myDevs">
        <ion-item *ngFor="let dev of myDevs | async">
          <ion-icon slot="start" name="cube"></ion-icon>
          <ion-label>
