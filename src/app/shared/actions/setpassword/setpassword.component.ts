@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 @Component({
@@ -8,6 +8,8 @@ import { ModalController } from '@ionic/angular';
 })
 export class SetpasswordComponent implements OnInit {
 
+  @Input() type;
+
   setPassword = {
     mustChange: true,
     password: "",
@@ -16,12 +18,14 @@ export class SetpasswordComponent implements OnInit {
 
   constructor(
     public modalController: ModalController
-  ) { }
+  ) { 
+    console.log('type is:', this.type);
+  }
 
   ngOnInit() {}
 
   onSubmit(val) {
-    console.log(val);
+   // console.log(val);
     this.modalController.dismiss(val);
   }
 
