@@ -12,6 +12,7 @@ import { MyselfComponent } from 'src/app/protected/cranix/profile/tabs/myself/my
 import { MyDevicesComponent } from 'src/app/protected/cranix/profile/tabs/my-devices/my-devices.component'
 import { MyVPNComponent } from 'src/app/protected/cranix/profile/tabs/my-vpn/my-vpn.component'
 import { SelfManagementService } from 'src/app/services/selfmanagement.service';
+import { AdHocLanService } from 'src/app/services/adhoclan.service';
 
 const routes: Routes = [
   {
@@ -24,7 +25,7 @@ const routes: Routes = [
         component: MyselfComponent
       },
       {
-        path: 'mydevices',
+        path: 'mydevice',
         component: MyDevicesComponent
       },
       {
@@ -49,6 +50,6 @@ const routes: Routes = [
     CranixSharedModule
   ],
   declarations: [ProfileComponent,MyselfComponent,MyDevicesComponent,MyVPNComponent],
-  providers: [TranslateService, PipesModule,SelfManagementService]
+  providers: [TranslateService, PipesModule,SelfManagementService,AdHocLanService]
 })
 export class ProfileModule { }
