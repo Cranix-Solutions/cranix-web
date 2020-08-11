@@ -4,7 +4,7 @@ import { AuthenticationService} from './auth.service';
 import { UtilsService } from './utils.service';
 import { Observable } from 'rxjs';
 import { ServerResponse } from 'src/app/shared/models/server-models';
-import { User } from 'src/app/shared/models/data-model';
+import { User, Device, Room } from 'src/app/shared/models/data-model';
 
 
 
@@ -77,6 +77,27 @@ export class SelfManagementService {
         return this.http.get(this.url, { headers: headers,  observe: 'response', responseType: 'blob' });
     }
 
+    getMyDevices(){
+        //	this.hostname = this.utils.hostName();
+        //      this.token = sessionStorage.getItem('token');
+        console.log('token used for myself is', sessionStorage.getItem('token'));
+        this.url = this.hostname + `/selfmanagement/devices`;
+        console.log(this.url);
+      
+        return this.http.get<User>(this.url, { headers: this.headers});
+
+    }
+    getMyRooms(){
+        //	this.hostname = this.utils.hostName();
+        //      this.token = sessionStorage.getItem('token');
+        console.log('token used for myself is', sessionStorage.getItem('token'));
+        this.url = this.hostname + `/selfmanagement/rooms`;
+        console.log(this.url);
+      
+        return this.http.get<Room[]>(this.url, { headers: this.headers});
+
+    }
+
     // POST 
 
     modMySelf(user: User){
@@ -84,5 +105,19 @@ export class SelfManagementService {
 
 		console.log(url);
 		return this.http.post<ServerResponse>(url, user, { headers: this.headers});
+    }
+
+    addDevice(dev: Device){
+        const url = this.hostname + "/selfmanagement/devices/add";
+		console.log(url);
+		return this.http.post<string>(url, dev, { headers: this.headers});
+    }
+
+    //Delete
+
+    removeDevice(devId: number){
+        const url = this.hostname + `/selfmanagement/devices/${devId}`;
+		console.log(url);
+		return this.http.delete<ServerResponse>(url, { headers: this.headers});
     }
 }

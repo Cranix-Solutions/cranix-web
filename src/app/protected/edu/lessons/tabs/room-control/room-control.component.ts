@@ -54,7 +54,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   ngOnInit() {
 
-    console.log(`Room on init: ${this.room}`)
+  //  console.log(`Room on init: ${this.room}`)
     /* this.eduS.getMyRooms()
      .pipe(takeWhile( () => this.alive ))
      .subscribe(res => {
@@ -69,7 +69,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       this.selectedRoomId = parseInt(this.authS.session.roomId);
      this.statusTimer();
     } else if (!this.room && !this.authS.session.roomId) {
-      console.log(`Room afterViewChecked: ${this.room}`)
+     // console.log(`Room afterViewChecked: ${this.room}`)
       this.openSelect();
       /*  this.eduS.getRoomById(9)
         .pipe(takeWhile( () => this.alive ))
@@ -91,7 +91,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
           this.room = res
           console.log(`Rooms is: ${this.room}`)
           let test = JSON.stringify(res);
-          console.log(test);
+        //  console.log(test);
     });
   }
   array(n: number): any[] {
@@ -144,7 +144,38 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     (await popover).present();
   }
-  setAccess() {
+  setAccess(type : string) {
+    
+    switch (type){
+      case 'login':
+        if(this.room.accessInRooms.login){
+          this.room.accessInRooms.login = false;
+        }else {
+          this.room.accessInRooms.login = true;
+        }
+        break;
+      case 'proxy':
+        if(this.room.accessInRooms.proxy){
+          this.room.accessInRooms.proxy = false;
+        }else {
+          this.room.accessInRooms.proxy = true;
+        }
+        break;
+      case 'direct':
+        if(this.room.accessInRooms.direct){
+          this.room.accessInRooms.direct = false;
+        }else {
+          this.room.accessInRooms.direct = true;
+        }
+        break;
+      case 'printing':
+        if(this.room.accessInRooms.printing){
+          this.room.accessInRooms.printing = false;
+        }else {
+          this.room.accessInRooms.printing = true;
+        }
+        break;
+    }
     let status: AccessInRooms = {
       accessType: "FW",
       roomId: this.room.id,
@@ -154,11 +185,10 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       direct: this.room.accessInRooms.direct,
       login: this.room.accessInRooms.login
     }
-    console.log('fw status is', status);
     this.eduS.setAccessStatus(status)
       .pipe(takeWhile(() => this.alive))
       .subscribe((res) => {
-        console.log(res);
+        console.log(JSON.stringify(res));
         this.objectS.responseMessage(res);
       }, err => {
         this.objectS.errorMessage(err);

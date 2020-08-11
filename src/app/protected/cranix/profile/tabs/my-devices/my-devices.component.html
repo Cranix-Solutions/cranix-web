@@ -1,7 +1,18 @@
 <ion-content>
   <ion-card class="toolbar-inherit">
-    <ion-card-header >
-       <h1>{{ 'My Devices' | translate}}</h1>
+    <ion-card-header>
+      <ion-toolbar>
+      <ion-buttons slot="end">
+        <ion-button>
+          <ion-button size="small" (click)="addDevice($event)"
+            matTooltip="{{'Add Device' | translate }}">
+            <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+          </ion-button>
+        </ion-button>
+      </ion-buttons>
+      
+        <ion-title>{{ 'My Devices' | translate}}</ion-title>
+      </ion-toolbar>
     </ion-card-header>
     <ion-card-content >
      <ion-list *ngIf="myDevs">
@@ -12,7 +23,9 @@
            <h3>{{ dev.ip }}</h3>
            <h3>{{ dev.mac }}</h3>
         </ion-label>
-         <ion-button (click)="deleteDev(dev.id)"color="warn">{{'BUTTONS.DELETE' | translate}}</ion-button>
+         <ion-button (click)="deleteDev(dev.id)" fill="clear">
+           <ion-icon color="danger" name="trash"></ion-icon>
+        </ion-button>
        </ion-item>
       
      </ion-list>
