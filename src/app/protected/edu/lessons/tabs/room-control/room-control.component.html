@@ -4,32 +4,32 @@
       <ion-fab-button>
         <ion-icon name="arrow-forward-circle"></ion-icon>
       </ion-fab-button>
-      <ion-fab-list side="start">
-        <ion-fab-button><ion-toggle (ionChange)="setAccess()" [(ngModel)]="login"></ion-toggle><ion-icon name="ellipsis-vertical-sharp" (click)="click()"></ion-icon></ion-fab-button>
+      <ion-fab-list side="start" *ngIf="room">
+        <ion-fab-button ><ion-toggle (click)="setAccess('login')" [(ngModel)]="room.accessInRooms.login"></ion-toggle><ion-icon name="ellipsis-vertical-sharp"></ion-icon></ion-fab-button>
         <ion-fab-button><ion-icon name="add-circle-outline" (click)="click()"></ion-icon></ion-fab-button>
         <ion-fab-button><ion-icon name="apps" (click)="click()"></ion-icon></ion-fab-button>
       </ion-fab-list>
     </ion-fab>
   <ion-card>
     <ion-card-header class="hidden-xs hidden-sm hidden-md">
-      <ion-item *ngIf="room" lines="none">
+      <ion-item  *ngIf="room" lines="none">
         <ion-label>{{ 'To login' | translate}}</ion-label>
-        <ion-toggle (click)="setAccess()" [(ngModel)]="room.accessInRooms.login" [disabled]="!room"></ion-toggle>
+        <ion-toggle (click)="setAccess('login')" [(ngModel)]="room.accessInRooms.login" [disabled]="!room"></ion-toggle>
       </ion-item>
 
       <ion-item *ngIf="room" lines="none">
         <ion-label>{{ 'Filtered internet access' | translate}}</ion-label>
-        <ion-toggle (click)="setAccess()" [(ngModel)]="room.accessInRooms.proxy" [disabled]="!room"></ion-toggle>
+        <ion-toggle (click)="setAccess('proxy')" [(ngModel)]="room.accessInRooms.proxy" [disabled]="!room"></ion-toggle>
       </ion-item>
 
       <ion-item *ngIf="room && authS.isAllowed('room.direct')"  lines="none">
         <ion-label>{{ 'Direct internet access' | translate}}</ion-label>
-        <ion-toggle (click)="setAccess()" [(ngModel)]="room.accessInRooms.direct" [disabled]="!room"></ion-toggle>
+        <ion-toggle (click)="setAccess('direct')" [(ngModel)]="room.accessInRooms.direct" [disabled]="!room"></ion-toggle>
       </ion-item>
 
       <ion-item *ngIf="room" lines="none">
         <ion-label>{{ 'Printing' | translate}}</ion-label>
-        <ion-toggle (click)="setAccess()" [(ngModel)]="room.accessInRooms.printing" [disabled]="!room"></ion-toggle>
+        <ion-toggle (click)="setAccess('printing')" [(ngModel)]="room.accessInRooms.printing" [disabled]="!room"></ion-toggle>
       </ion-item>
 
       <!-- ion-button  fill="clear" (click)="onBTNSHARE()">
@@ -42,14 +42,13 @@
         <ion-icon name="desktop"></ion-icon>
       </ion-button>
       <ion-item lines="none" matTooltip="{{'Select the room to control' | translate}}">
-        <ion-label *ngIf="room">{{room.name}}</ion-label>
         <ion-select *ngIf="rooms" [(ngModel)]="eduS.selectedRoomId" #roomSelect (ionChange)="selectChanged($event)" okText="OK" cancelText="{{ 'Cancel' | translate}}">
           <ion-select-option value="{{room.id}}" *ngFor="let room of rooms | async">{{room.name}}</ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item lines="none">
         <ion-label>{{ 'Picture size' | translate}}</ion-label>
-        <ion-select *ngIf="room" [(ngModel)]="gridSize" #roomSelect (ionChange)="sizeChange($event)"okText="'OK' | translate " cancelText="{{ 'Cancel' | translate}}">
+        <ion-select *ngIf="room" [(ngModel)]="gridSize" #roomSelect (ionChange)="sizeChange($event)" okText="'OK' | translate " cancelText="{{ 'Cancel' | translate}}">
           <ion-select-option value="{{size}}" *ngFor="let size of gridSizes">{{size}}</ion-select-option>
         </ion-select>
       </ion-item>

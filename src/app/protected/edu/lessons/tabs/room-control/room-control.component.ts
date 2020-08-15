@@ -20,21 +20,12 @@ import { interval, Subscription } from 'rxjs';
 export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
 
   alive = true;
-
-  direct: boolean;
-  login: boolean;
-  portal: boolean;
-  printing: boolean;
-  proxy: boolean;
-
   devices = [1, 2, 3, 4, 5, 6]
   room: EduRoom;
   rooms: Observable<Room[]>;
 
   gridSize: number = 2;
   @ViewChild('roomSelect') selectRef: IonSelect;
-
-
   gridSizes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
   roomStatusSub: Subscription;
@@ -70,7 +61,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   statusTimer() {
     this.roomStatusSub = interval(
       this.eduS.screenShotTimeDealy
-      ).pipe(takeWhile(() => this.alive)).subscribe((func => {
+    ).pipe(takeWhile(() => this.alive)).subscribe((func => {
       this.getRoomStatus();
     }))
   }
@@ -125,7 +116,14 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   /***
    * Set room access status
    */
-  setAccess() {
+  setAccess(key) {
+    switch(key){
+      case 'direct': { this.room.accessInRooms.direct = !this.room.accessInRooms.direct; break; }
+      case 'login': { this.room.accessInRooms.login = !this.room.accessInRooms.login;  break;}
+      case 'proxy': { this.room.accessInRooms.proxy = !this.room.accessInRooms.proxy; break;}
+      case 'portal': { this.room.accessInRooms.portal = !this.room.accessInRooms.portal; break;}
+      case 'printing': { this.room.accessInRooms.printing = !this.room.accessInRooms.printing; break}
+    }
     let status: AccessInRooms = {
       accessType: "FW",
       roomId: this.room.id,
