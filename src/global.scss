@@ -30,14 +30,17 @@
 /* AgGrifd */
 @import "~ag-grid-community/dist/styles/ag-grid.css";
 @import "~ag-grid-community/dist/styles/ag-theme-balham.css";
-@import "~ag-grid-community/dist/styles/ag-theme-balham-dark.css";
 @import "~ag-grid-community/dist/styles/ag-theme-alpine.css";
-@import "~ag-grid-community/dist/styles/ag-theme-alpine-dark.css";
 @import "~ag-grid-community/dist/styles/ag-theme-material.css";
+/* do not import dark styles
+@import "~ag-grid-community/dist/styles/ag-theme-alpine-dark.css";
+@import "~ag-grid-community/dist/styles/ag-theme-balham-dark.css";
+*/
 
 /* Custom */
 //@import "theme/ion-custom.scss"; 
 @import "theme/cranix-custom.scss";
+@import "theme/fonts.css";
 
 @media only screen and (min-width: 768px) and (min-height: 768px) {
   .modal-wrapper {
