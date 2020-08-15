@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { MenuController } from '@ionic/angular';
+import { Router, RouterEvent } from '@angular/router';
 
 import { AuthenticationService } from 'src/app/services/auth.service';
-import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'cranix-protected',
@@ -11,6 +12,7 @@ import { MenuController } from '@ionic/angular';
 })
 export class ProtectedPage implements OnInit {
 
+  public activePath = "";
   public appPages = [ ];
   private defAppPages = [
     {
@@ -86,20 +88,19 @@ export class ProtectedPage implements OnInit {
   ];
 
   constructor(
+    private router: Router,
     public authService: AuthenticationService,
     public translateService: TranslateService,
     public menuCtrl: MenuController
   ) { 
-    console.log(`Urls are: ${JSON.stringify(this.defAppPages)}`)
+    this.router.events.subscribe((event: RouterEvent) => {
+      this.activePath = event.url
+    })
     for( let page of this.defAppPages ) {
-      console.log(`Checking acl ${JSON.stringify(page)}`)
       if( this.authService.isRouteAllowed(page.url)) {
         this.appPages.push(page);
-        console.log(`Adding url to menu: ${JSON.stringify(page)}`)
       }
-      
     }
-
   }
   ngOnInit() {
   }

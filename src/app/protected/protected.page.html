@@ -5,7 +5,7 @@
         <ion-list-header>
           <ion-item lines="none">
             <ion-thumbnail>
-              <img (click)="toggleMenu()" src="assets/images/logo/cranix_school.svg">
+              <img src="assets/images/logo/cranix_school.svg">
             </ion-thumbnail>
             <ion-label>
               <h3 *ngIf="authService.isAllowed('cephalix.manage'); else elseBlock">CEPHALIX</h3>
@@ -16,7 +16,8 @@
           </ion-item>
         </ion-list-header>
         <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
-          <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false">
+          <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false"
+            [class.active-menu]="activePath === p.url">
             <ion-icon size="small" color="#ffffff" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'">
             </ion-icon>
             <ion-label>{{ p.title | translate }}</ion-label>
