@@ -17,7 +17,7 @@
     <ion-list lines="full" class="ion-no-margin ion-no-padding">
       <ion-item>
         <ion-label>{{"Default Printer" | translate}}</ion-label>
-        <ion-select type="text" [compareWith]="objectService.compareFn" formControlName="defaultPrinter">
+        <ion-select type="text" [(value)]="printers.defaultPrinter" [compareWith]="objectService.compareFn" formControlName="defaultPrinter">
           <ion-select-option *ngFor="let printer of allDefaultPrinters" value="{{printer.id}}">
             {{ printer.name }}</ion-select-option>
         </ion-select>

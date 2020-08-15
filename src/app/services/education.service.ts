@@ -17,6 +17,8 @@ import { LanguageService } from './language.service';
 
 @Injectable()
 export class EductaionService {
+
+	sendigData = new BehaviorSubject(false);
 	hostname: string;
 	token: string;
 	url: string;
@@ -324,11 +326,11 @@ export class EductaionService {
 		)
 	}
 
-	collectDataFromObjects(fd: FormData, objectType: string) {
+	async collectDataFromObjects(fd: FormData, objectType: string) {
 		this.url = `${this.hostname}/education/${objectType}s/collect`;
 		console.log(this.url);
 		this.objectService.requestSent();
-		let sub = this.http.post<ServerResponse[]>(this.url, fd, { headers: this.headers }).subscribe(
+		let sub = await this.http.post<ServerResponse[]>(this.url, fd, { headers: this.headers }).subscribe(
 			(val) => {
 				let response = this.languageService.trans("List of the results:");
 				for (let resp of val) {
