@@ -1,4 +1,4 @@
-import { Component, OnInit, Testability } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
@@ -19,6 +19,7 @@ export class LoginPage implements OnInit {
     authForm: FormGroup;
     instName: Observable<string>;
     instituteName: string = "";
+    allowSavePassword: boolean = false;
 
     constructor(
         private authService: AuthenticationService,
@@ -26,6 +27,7 @@ export class LoginPage implements OnInit {
         private systemService: SystemService,
     ) {
         this.instName = this.systemService.getInstituteName();
+        //TODO read allowSavePassword from server
     }
 
     ngOnInit() {
