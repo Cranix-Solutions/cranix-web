@@ -31,7 +31,7 @@ export class GenericObjectService {
 
   selects: any = {
     'action': ['wol', 'reboot', 'shutdown', 'logout'],
-    'agGridThema': ['ag-theme-alpine', 'ag-theme-balham', 'ag-theme-material'],
+    'agGridThema': [ 'ag-theme-material','ag-theme-alpine', 'ag-theme-balham'],
     'devCount': [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096],
     'identifier': ['sn-gn-bd', 'uuid', 'uid'],
     'lang': ['DE', 'EN'],

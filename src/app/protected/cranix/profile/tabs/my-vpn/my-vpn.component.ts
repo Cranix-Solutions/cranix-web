@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { SelfManagementService } from 'src/app/services/selfmanagement.service';
 import { takeWhile } from 'rxjs/internal/operators/takeWhile';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
 
 @Component({
   selector: 'cranix-my-vpn',
@@ -15,7 +16,8 @@ export class MyVPNComponent implements OnInit,OnDestroy {
 
   selectedOS: string; 
   
-  constructor(private selfS: SelfManagementService) {
+  constructor(private selfS: SelfManagementService,
+    public objectService: GenericObjectService) {
     this.supportedOSlist = this.selfS.getSupportedOS()  
   }
 
@@ -25,6 +27,7 @@ export class MyVPNComponent implements OnInit,OnDestroy {
     console.log('value is:', this.selectedOS);
   }
   downloadExec(){
+    this.objectService.requestSent();
     this.selfS.getVPNInstaller(this.selectedOS)
         .pipe(takeWhile(() => this.alive ))
         .subscribe((x) => { 
@@ -58,10 +61,13 @@ export class MyVPNComponent implements OnInit,OnDestroy {
               window.URL.revokeObjectURL(data);
               link.remove();
           }, 100);
+        }, (err) => {
+          this.objectService.errorMessage(err);
         })
   }
 
   downloadConfig(){
+    this.objectService.requestSent();
     this.selfS.getVPNConfig(this.selectedOS)
     .pipe(takeWhile(() => this.alive ))
     .subscribe((x) => {
@@ -92,6 +98,8 @@ export class MyVPNComponent implements OnInit,OnDestroy {
           window.URL.revokeObjectURL(data);
           link.remove();
       }, 100);
+    }, (err) => {
+      this.objectService.errorMessage(err);
     })
   }
 

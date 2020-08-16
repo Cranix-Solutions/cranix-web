@@ -11,7 +11,7 @@
         <ion-icon name="desktop" ></ion-icon>
         <ion-label>{{ 'myDevice' | translate }}</ion-label>
       </ion-tab-button>
-      <ion-tab-button tab="myVPN">
+      <ion-tab-button *ngIf="vpn" tab="myVPN" >
         <ion-icon name="security" ></ion-icon>
         <ion-label>{{ 'VPN' | translate }}</ion-label>
       </ion-tab-button>

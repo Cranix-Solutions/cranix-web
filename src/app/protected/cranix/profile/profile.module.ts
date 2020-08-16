@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CanActivateViaAcls } from 'src/app/services/auth-guard.service';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ModalController } from '@ionic/angular';
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { TranslateService } from '@ngx-translate/core';
 import { PipesModule } from 'src/app/pipes/pipe-modules';
@@ -13,6 +13,7 @@ import { MyDevicesComponent } from 'src/app/protected/cranix/profile/tabs/my-dev
 import { MyVPNComponent } from 'src/app/protected/cranix/profile/tabs/my-vpn/my-vpn.component'
 import { SelfManagementService } from 'src/app/services/selfmanagement.service';
 import { AdHocLanService } from 'src/app/services/adhoclan.service';
+import { AddDeviceComponent } from '../devices/add-device/add-device.component';
 
 const routes: Routes = [
   {

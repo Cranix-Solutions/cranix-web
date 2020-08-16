@@ -40,7 +40,13 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     this.rooms = this.eduS.getMyRooms();
   }
   ngOnInit() {
-    console.log(`Room on init: ${this.room}`)
+    //  console.log(`Room on init: ${this.room}`)
+    /* this.eduS.getMyRooms()
+     .pipe(takeWhile( () => this.alive ))
+     .subscribe(res => {
+       console.log('my rooms are: ', res);
+       this.myRooms = res
+     });*/
   }
 
   ngAfterViewInit() {
@@ -48,7 +54,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       this.eduS.selectedRoomId = parseInt(this.authS.session.roomId);
       this.statusTimer();
     } else if (!this.room && !this.authS.session.roomId) {
-      console.log(`Room afterViewChecked: ${this.room}`)
+     // console.log(`Room afterViewChecked: ${this.room}`)
       this.openSelect();
       /*  this.eduS.getRoomById(9)
         .pipe(takeWhile( () => this.alive ))
@@ -58,19 +64,20 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  statusTimer() {
-    this.roomStatusSub = interval(
-      this.eduS.screenShotTimeDealy
-    ).pipe(takeWhile(() => this.alive)).subscribe((func => {
-      this.getRoomStatus();
-    }))
+  statusTimer(){
+     this.roomStatusSub = interval(3000).pipe(takeWhile(() => this.alive)).subscribe((func => {
+        this.getRoomStatus();
+      }))
   }
-  getRoomStatus() {
-    this.eduS.getRoomById(this.eduS.selectedRoomId)
-      .pipe(takeWhile(() => this.alive))
-      .subscribe(res => {
-        this.room = res
-      });
+  getRoomStatus(){
+    this.eduS.getRoomById(this.selectedRoomId)
+        .pipe(takeWhile(() => this.alive))
+        .subscribe(res => {
+          this.room = res
+          console.log(`Rooms is: ${this.room}`)
+          let test = JSON.stringify(res);
+        //  console.log(test);
+    });
   }
   array(n: number): any[] {
     return Array(n);
@@ -133,11 +140,10 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       direct: this.room.accessInRooms.direct,
       login: this.room.accessInRooms.login
     }
-    console.log('fw status is', status);
     this.eduS.setAccessStatus(status)
       .pipe(takeWhile(() => this.alive))
       .subscribe((res) => {
-        console.log(res);
+        console.log(JSON.stringify(res));
         this.objectS.responseMessage(res);
       }, err => {
         this.objectS.errorMessage(err);

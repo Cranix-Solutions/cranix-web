@@ -260,11 +260,12 @@ export class DevicesComponent implements OnInit {
   }
 
   async addDevice(ev: Event) {
+    console.log('selected room is,', this.selectedRoom);
     const modal = await this.modalCtrl.create({
       component: AddDeviceComponent,
       cssClass: 'medium-modal',
       componentProps: {
-        room: this.selectedRoom
+        rooms: this.selectedRoom
       },
       animated: true,
       swipeToClose: true,
