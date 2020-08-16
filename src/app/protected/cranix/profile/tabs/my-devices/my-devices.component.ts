@@ -3,6 +3,8 @@ import { SelfManagementService } from 'src/app/services/selfmanagement.service';
 import { AdHocLanService } from 'src/app/services/adhoclan.service';
 import { takeWhile } from 'rxjs/internal/operators/takeWhile';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { ModalController } from '@ionic/angular';
+import { AddDeviceComponent } from 'src/app/protected/cranix/devices/add-device/add-device.component';
 
 @Component({
   selector: 'cranix-my-devices',
@@ -14,21 +16,59 @@ export class MyDevicesComponent implements OnInit,OnDestroy {
   alive :boolean = true; 
 
   myDevs; 
-  constructor(private adhocS: AdHocLanService,
+
+  myRooms; 
+  constructor(private selfS: SelfManagementService,
+    public modalCtrl: ModalController,
     public objectService: GenericObjectService,) {
-    this.myDevs = this.adhocS.getMyDevices()
+      this.selfS.getMyRooms()
+          .pipe(takeWhile(() => this.alive ))
+          .subscribe((res) => {
+            this.myRooms = res; 
+            console.log('myRooms are', res);
+          }, (err) => {
+            this.objectService.errorMessage(err);
+          })
+
+    this.myDevs = this.selfS.getMyDevices()
+
    }
 
   ngOnInit() {}
 
   deleteDev(dev: number){
-    this.adhocS.deleteAdHocDevice(dev)
+    this.selfS.removeDevice(dev)
         .pipe(takeWhile(() => this.alive ))
         .subscribe((res) => {
           this.objectService.responseMessage(res)
         }, (err) => {
           this.objectService.errorMessage(err);
         })
+  }
+
+  async addDevice(ev: Event) {
+    let room = "";
+    if(this.myRooms.length == 1){
+      room = this.myRooms[0];
+    }else{
+      room = this.myRooms
+    }
+   console.log('myrooms are:', JSON.stringify(this.myRooms) );
+    const modal = await this.modalCtrl.create({
+      component: AddDeviceComponent,
+      cssClass: 'medium-modal',
+      componentProps: {
+        addHocRooms: JSON.stringify(this.myRooms)
+      },
+      animated: true,
+      swipeToClose: true,
+      backdropDismiss: false
+    });
+    return await modal.present();
+
+    (await modal).present().then((val) => {
+      console.log('presenting: ', val);
+    })
   }
 
   ngOnDestroy(){

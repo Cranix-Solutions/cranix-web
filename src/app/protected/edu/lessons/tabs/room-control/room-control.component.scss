@@ -1,4 +1,4 @@
-#controlgrid{
+/*#controlgrid{
     padding-top: 67px; 
     height: 100%;
     width: 100%;
@@ -6,7 +6,7 @@
     ion-card-header{
         display: flex;
      
-        /* align-items: center; */
+        /* align-items: center; /
         align-items: center;
         justify-content: space-between;
     }
@@ -14,10 +14,16 @@
         overflow: scroll;
 
     }
-}
+}*/
 
 ion-grid {
+    
     flex-grow: initial;
+    overflow: hidden;
+    padding-top: 50px;
+    height: 100%;
+    width: 100%;
+
 }
 .grid-row{
     justify-content: space-between;

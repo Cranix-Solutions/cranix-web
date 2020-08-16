@@ -35,10 +35,42 @@ export class AdHocLanService {
 
 
    
+// CRANIX 4.2
 
+    //GET 
+    getMyDevices(){
+        this.url = `${this.hostname}/adhocrooms/devices`;
+        console.log(this.url);
+        const headers = new HttpHeaders({
+            'Accept': "application/json",
+            'Authorization': "Bearer " + this.token
+        });
+        return this.http.get<Device[]>(this.url, { headers:  this.headers  });
+    }
+    getMyRooms() {
+        this.url = `${this.hostname}/adhocrooms/all`;
+        console.log(this.url);
+        const headers = new HttpHeaders({
+            'Accept': "application/json",
+            'Authorization': "Bearer " + this.token
+        });
+        return this.http.get<AdHocRoom[]>(this.url, { headers: this.headers });
+    }
 
+    //DELETE
 
-    //GET calls
+    deleteAdhocDEV(devId: number){
+        this.url = this.hostname + `/adhocrooms/devices/${devId}`;
+        const headers = new HttpHeaders({
+			'Content-Type': "application/json",
+			'Accept': "application/json",
+			'Authorization': "Bearer " + this.token
+		});
+		return this.http.delete<ServerResponse>(this.url, { headers:  this.headers  });
+    }
+
+// folowing is deprecated
+    //GET calls 
     getAllRooms() {
         this.url = `${this.hostname}/adhoclan/rooms`;
         console.log(this.url);
@@ -97,7 +129,7 @@ export class AdHocLanService {
         });
         return this.http.get<Group[]>(this.url, { headers:  this.headers  });
     }
-    getMyDevices(){
+    /*getMyDevices(){
         this.url = `${this.hostname}/adhoclan/devices`;
         console.log(this.url);
         const headers = new HttpHeaders({
@@ -105,7 +137,7 @@ export class AdHocLanService {
             'Authorization': "Bearer " + this.token
         });
         return this.http.get<Device[]>(this.url, { headers:  this.headers  });
-    }
+    }*/
 
     getDevicesInRoom(id: number){
         this.url = `${this.hostname}/adhoclan/rooms/${id}/devices`;

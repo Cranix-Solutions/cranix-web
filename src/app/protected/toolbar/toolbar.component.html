@@ -2,8 +2,7 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>{{authService.session.commonName}}  {{authService.session.instituteName}} {{authService.session.roomName}}</ion-title>
+    </ion-buttons>  
     <ion-buttons slot="end">
       <ion-button fill="clear" (click)="objectService.initialize(true)" matTooltip="{{ 'Refresh all objects' | translate }}">
         <ion-icon color="tertiary" name="refresh"></ion-icon>
@@ -17,7 +16,8 @@
       <ion-button  fill="clear" (click)="logOut($event)">
         <ion-icon color="danger" name="log-out"></ion-icon>
       </ion-button>
-    </ion-buttons>
+    </ion-buttons> 
+    <ion-title>{{authService.session.commonName}}  {{authService.session.instituteName}} {{authService.session.roomName}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
