@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
-import { Validators } from '@angular/forms';
 // own modules
 import { ServerResponse } from 'src/app/shared/models/server-models';
 import { Package } from 'src/app/shared/models/data-model';
@@ -477,8 +476,6 @@ export class GenericObjectService {
       if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil' || key == 'created') {
         let date = new Date(object[key]);
         output[key] = date.toJSON();
-      } else if (this.required[key]) {
-        output[key] = [object[key], Validators.compose([Validators.required])];
       } else {
         output[key] = object[key];
       }
