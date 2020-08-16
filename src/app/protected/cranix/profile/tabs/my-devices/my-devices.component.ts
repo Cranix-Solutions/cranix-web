@@ -56,7 +56,7 @@ export class MyDevicesComponent implements OnInit,OnDestroy {
    console.log('myrooms are:', JSON.stringify(this.myRooms) );
     const modal = await this.modalCtrl.create({
       component: AddDeviceComponent,
-      cssClass: 'medium-modal',
+      cssClass: 'small-modal',
       componentProps: {
         addHocRooms: JSON.stringify(this.myRooms)
       },
