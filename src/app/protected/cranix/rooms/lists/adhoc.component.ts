@@ -157,12 +157,9 @@ export class AdhocComponent implements OnInit {
     let action = "";
     if (adhocroom) {
       action = 'modify';
-      delete adhocroom.netMask;
-      delete adhocroom.roomType;
-      delete adhocroom.places;
-      delete adhocroom.rows;
-      delete adhocroom.startIP;
       delete adhocroom.hwconfId;
+      delete adhocroom.network;
+      delete adhocroom.groupIds;
       this.objectService.selectedObject = adhocroom;
     } else {
       action = "add";
@@ -171,16 +168,16 @@ export class AdhocComponent implements OnInit {
       adhocroom.hwconfId = 3;
       adhocroom.devCount = 512;
       adhocroom.roomControl = 'allTeachers'
-      delete adhocroom.accessInRooms;
-      delete adhocroom.groups;
-      delete adhocroom.netMask;
-      delete adhocroom.roomType;
-      delete adhocroom.places;
-      delete adhocroom.rows;
-      delete adhocroom.startIP;
-      delete adhocroom.users;
-      delete adhocroom.userIds;
     }
+    delete adhocroom.accessInRooms;
+    delete adhocroom.groups;
+    delete adhocroom.netMask;
+    delete adhocroom.roomType;
+    delete adhocroom.places;
+    delete adhocroom.rows;
+    delete adhocroom.startIP;
+    delete adhocroom.users;
+    delete adhocroom.userIds;
     const modal = await this.modalCtrl.create({
       component: ObjectsEditComponent,
       cssClass: 'medium-modal',
