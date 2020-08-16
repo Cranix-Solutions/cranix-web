@@ -110,7 +110,7 @@ export class SelfManagementService {
     addDevice(dev: Device){
         const url = this.hostname + "/selfmanagement/devices/add";
 		console.log(url);
-		return this.http.post<string>(url, dev, { headers: this.headers});
+		return this.http.post<ServerResponse>(url, dev, { headers: this.headers});
     }
 
     //Delete

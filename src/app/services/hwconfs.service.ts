@@ -74,6 +74,16 @@ export class HwconfsService {
 		});
 		return this.http.get(this.url, { headers: this.headers });
 	}
+
+	getHWConfs(){
+		this.url = `${this.hostname}/clonetool/all`;
+		console.log(this.url);
+		const headers = new HttpHeaders({
+			'Accept': "text/plain",
+			'Authorization': "Bearer " + this.token
+		});
+		return this.http.get<Hwconf[]>(this.url, { headers: this.headers });
+	}
 	//PUT calls
 
 	setMaster(devId: number, value: number){

@@ -53,19 +53,21 @@ export class MyDevicesComponent implements OnInit,OnDestroy {
     }else{
       room = this.myRooms
     }
-    
+   console.log('myrooms are:', JSON.stringify(this.myRooms) );
     const modal = await this.modalCtrl.create({
       component: AddDeviceComponent,
       cssClass: 'medium-modal',
       componentProps: {
-        addHocRooms: this.myRooms
+        addHocRooms: JSON.stringify(this.myRooms)
       },
       animated: true,
       swipeToClose: true,
       backdropDismiss: false
     });
+    return await modal.present();
+
     (await modal).present().then((val) => {
-      console.log(val);
+      console.log('presenting: ', val);
     })
   }
 
