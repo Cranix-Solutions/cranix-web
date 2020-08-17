@@ -65,10 +65,6 @@ export class MyDevicesComponent implements OnInit,OnDestroy {
       backdropDismiss: false
     });
     return await modal.present();
-
-    (await modal).present().then((val) => {
-      console.log('presenting: ', val);
-    })
   }
 
   ngOnDestroy(){

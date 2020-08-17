@@ -113,44 +113,30 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
   onSubmit(devices: Device) {
     console.log('devices', devices);
     this.objectService.requestSent()
-    let macs;
     let newDevice = [];
-    if (devices.mac.indexOf('\n')) {
-      macs = devices.mac.split('\n');
+    let macs = devices.mac.split('\n');
+
+    for (let x = 0; x < macs.length; x++) {
+      newDevice[x] = {
+        name: this.ipAdresses[this.ipAdresses.indexOf(this.ipAdresses.find(item => item.includes(devices.name))) + x].split(' ')[1],
+        ip: this.ipAdresses[this.ipAdresses.indexOf(this.ipAdresses.find(item => item.includes(devices.name))) + x].split(' ')[0],
+        mac: macs[x],
+        hwconfId: devices.hwconfId,
+        roomId: this.roomId
+      }
     }
 
-    if (macs.length > 1 && !this.addHocRooms) {
-      for (let x = 0; x < macs.length; x++) {
-        newDevice[x] = {
-          name: this.ipAdresses[this.ipAdresses.indexOf(this.ipAdresses.find(item => item.includes(devices.name))) + x].split(' ')[1],
-          ip: this.ipAdresses[this.ipAdresses.indexOf(this.ipAdresses.find(item => item.includes(devices.name))) + x].split(' ')[0],
-          mac: macs[x],
-          hwconfId: devices.hwconfId,
-          roomId: this.roomId
-        }
-      }
-    } else if (!this.addHocRooms) {
-      devices.ip = devices.ip.split(" ")[0];
-      newDevice.push(devices);
-    }
-
-    if (!this.addHocRooms) {
-      if (newDevice.length > 1) {
-        let devs = from(newDevice);
-        devs.pipe(mergeMap(dev => {
-          console.log('devs are', dev);
-          let arr = [dev];
-          return this.roomService.addDevice(arr, dev.roomId)
-        })).pipe(takeWhile(() => this.alive))
-          .subscribe((res) => {
-            this.objectService.responseMessage(res);
-          },
-            (err) => { },
-            () => this.modalCtrl.dismiss())
-      }
-    } else {
+    if (this.addHocRooms) {
       console.log('adding Addoc', devices);
       this.selfS.addDevice(devices)
+        .pipe(takeWhile(() => this.alive))
+        .subscribe((res) => {
+          this.objectService.responseMessage(res);
+        },
+          (err) => { },
+          () => this.modalCtrl.dismiss())
+    } else {
+      this.roomService.addDevice(newDevice, newDevice[0].roomId)
         .pipe(takeWhile(() => this.alive))
         .subscribe((res) => {
           this.objectService.responseMessage(res);
@@ -162,7 +148,6 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
 
   ipChanged(ev) {
     this.addDeviceForm.controls['name'].patchValue(ev.detail.value.split(" ")[1])
-
   }
 
   roomChanged(ev) {

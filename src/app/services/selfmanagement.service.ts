@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { AuthenticationService} from './auth.service';
 import { UtilsService } from './utils.service';
-import { Observable } from 'rxjs';
 import { ServerResponse } from 'src/app/shared/models/server-models';
 import { User, Device, Room } from 'src/app/shared/models/data-model';
 
@@ -93,7 +92,6 @@ export class SelfManagementService {
         console.log('token used for myself is', sessionStorage.getItem('token'));
         this.url = this.hostname + `/selfmanagement/rooms`;
         console.log(this.url);
-      
         return this.http.get<Room[]>(this.url, { headers: this.headers});
 
     }
@@ -102,7 +100,6 @@ export class SelfManagementService {
 
     modMySelf(user: User){
         const url = this.hostname + "/selfmanagement/modify";
-
 		console.log(url);
 		return this.http.post<ServerResponse>(url, user, { headers: this.headers});
     }
