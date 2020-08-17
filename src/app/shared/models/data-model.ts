@@ -418,12 +418,12 @@ export interface SmartRoomStatus{
 }
 
 
-export interface PositivListObj{
-    id?: number,
-    description: string,
-    name: string,
-    subject: string,
-    domains: string
+export class PositivList {
+	id?: number = 0;
+    name: string = "";
+    description: string = "";
+    subject: string  = "";
+    domains: string = "";
 }
 
 export interface AccessStatus {

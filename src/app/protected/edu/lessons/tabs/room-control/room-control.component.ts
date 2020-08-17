@@ -38,11 +38,10 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   gridSize: number = 2;
   @ViewChild('roomSelect') selectRef: IonSelect;
 
-
   gridSizes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
   roomStatusSub : Subscription;
-  
+
   constructor(
     public authS: AuthenticationService,
     private eduS: EductaionService,

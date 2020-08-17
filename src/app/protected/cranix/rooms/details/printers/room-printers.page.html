@@ -1,35 +1,33 @@
-<form [formGroup]="editPrinter" (ngSubmit)="onSubmit(editPrinter.value)">
-  <ion-header>
-    <ion-toolbar>
-      <ion-title color="primary">{{ 'Modify printers selected room' | translate}}: "{{room.name}}"
-      </ion-title>
-      <ion-buttons slot="end">
-        <ion-button type="submit" class="ion-no-margin" >
-          <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
-        </ion-button>
-        <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss()">
-          <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content fullscreen>
-    <ion-list lines="full" class="ion-no-margin ion-no-padding">
-      <ion-item>
-        <ion-label>{{"Default Printer" | translate}}</ion-label>
-        <ion-select type="text" [compareWith]="objectService.compareFn" formControlName="defaultPrinter">
-          <ion-select-option *ngFor="let printer of allDefaultPrinters" value="{{printer.id}}">
-            {{ printer.name }}</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
-        <ion-label>{{"Available Printers" | translate}}</ion-label>
-        <ion-select type="text" [(value)]="printers.availablePrinters" multiple="true"
-          [compareWith]="objectService.compareFn" formControlName="availablePrinters">
-          <ion-select-option *ngFor="let printer of allPrinters" value="{{printer.id}}">{{ printer.name }}
-          </ion-select-option>
-        </ion-select>
-      </ion-item>
-    </ion-list>
-  </ion-content>
-</form>
+<ion-header>
+  <ion-toolbar>
+    <ion-title color="primary">{{ 'Modify printers selected room' | translate}}: "{{room.name}}"
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" size="small" (click)="onSubmit()">
+        <ion-icon slot="icon-only" color="success" name="checkmark-sharp" ></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss()">
+        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content fullscreen>
+  <ion-list lines="full" class="ion-no-margin ion-no-padding">
+    <ion-item>
+      <ion-label>{{"Default Printer" | translate}}</ion-label>
+      <ion-select type="text" [(ngModel)]="printers.defaultPrinter" [compareWith]="objectService.compareFn">
+        <ion-select-option *ngFor="let printer of allDefaultPrinters" value="{{printer.id}}">
+          {{ printer.name }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>{{"Available Printers" | translate}}</ion-label>
+      <ion-select type="text" [(ngModel)]="printers.availablePrinters" multiple="true"
+        [compareWith]="objectService.compareFn">
+        <ion-select-option *ngFor="let printer of allPrinters" value="{{printer.id}}">{{ printer.name }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+</ion-content>

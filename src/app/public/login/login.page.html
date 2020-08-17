@@ -12,7 +12,8 @@
         <ion-card-content>
           <form [formGroup]="authForm" style="padding: 15px;">
             <ion-item>
-              <ion-input formControlName="username" type="text" placeholder="{{ 'username' | translate }}"></ion-input>
+              <ion-input *ngIf="allowSavePassword" formControlName="username" type="text" placeholder="{{ 'username' | translate }}" autocomplete="off"></ion-input>
+              <input *ngIf="!allowSavePassword" style="border:0ch" formControlName="username" type="text" placeholder="{{ 'username' | translate }}" autocomplete="off" readonly  onfocus="this.removeAttribute('readonly');">
             </ion-item>
 
             <ion-item lines="none" *ngIf="authForm.controls.username.hasError('required') && authForm.controls.username.touched">
@@ -20,8 +21,8 @@
             </ion-item>
 
             <ion-item>
-              <ion-input formControlName="password" type="password" placeholder="{{ 'password' | translate }}">
-              </ion-input>
+              <ion-input *ngIf="allowSavePassword" formControlName="password" type="password" placeholder="{{ 'password' | translate }}" autocomplete="off"></ion-input>
+              <input *ngIf="!allowSavePassword" style="border:0ch"  formControlName="password" type="password" placeholder="{{ 'password' | translate }}" autocomplete="off" readonly  onfocus="this.removeAttribute('readonly');">
             </ion-item>
             <ion-item lines="none" *ngIf="authForm.controls.password.hasError('required') && authForm.controls.password.touched">
               <p  class="error-text">{{ 'Sorry, field password is required!' | translate }}</p>

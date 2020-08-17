@@ -96,7 +96,7 @@ export class SystemService {
 	}
 
 	applyServiceState(name,what,value){
-		this.url = this.hostname + `/system/service/${name}/${what}/${value}`;
+		this.url = this.hostname + `/system/services/${name}/${what}/${value}`;
 		console.log(this.url);
 		return this.http.put<ServerResponse>(this.url,null, { headers: this.headers });
 	}

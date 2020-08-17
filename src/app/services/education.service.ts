@@ -9,8 +9,7 @@ import { UtilsService } from './utils.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
 //import { ServerResponse } from 'http';
-import { AccessStatus, Room, Device, User, Group, Category, PositivListObj, SmartRoom, SmartRoomStatus, EduRoom } from '../shared/models/data-model';
-//import { SmartRoom, SmartRoomStatus, PositivListObj } from '../education-data-model';
+import { AccessStatus, Room, Device, User, Group, Category, PositivList, SmartRoom, SmartRoomStatus, EduRoom } from '../shared/models/data-model';
 import { ServerResponse } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from './auth.service';
 import { GenericObjectService } from './generic-object.service';
@@ -18,11 +17,16 @@ import { LanguageService } from './language.service';
 
 @Injectable()
 export class EductaionService {
+
+	sendigData = new BehaviorSubject(false);
 	hostname: string;
 	token: string;
 	url: string;
 	res: any;
 	headers: HttpHeaders;
+	selectedRoomId: number;
+	//TODO make it configurable
+	screenShotTimeDealy: number = 5000;
 
 	constructor(
 		public objectService: GenericObjectService,
@@ -33,7 +37,6 @@ export class EductaionService {
 		this.hostname = this.utils.hostName();
 		this.token = this.authS.getToken();
 		this.headers = new HttpHeaders({
-			'Content-Type': "application/json",
 			'Accept': "application/json",
 			'Authorization': "Bearer " + this.token
 		});
@@ -41,7 +44,6 @@ export class EductaionService {
 
 
 	// miscellaneous
-
 	setWorkstationPassword(rId: number, pw: any) {
 		this.url = `${this.hostname}/education/rooms/${rId}/actionWithMap/setPassword`;
 		return this.http.post<ServerResponse>(this.url, pw, { headers: this.headers });
@@ -49,7 +51,6 @@ export class EductaionService {
 	}
 
 	// powerFunction 
-
 	applyPower(type: string, id: number, action: string) {
 		if (type == "room") {
 			return this.actionOnRoom(id, action)
@@ -58,30 +59,33 @@ export class EductaionService {
 		}
 	}
 	// Calls on positiv list
-
 	//POST
-	addPositivList(list: PositivListObj) {
+	addPositivList(list: PositivList) {
 		this.url = `${this.hostname}/education/proxy/positiveLists`;
 		return this.http.post<ServerResponse>(this.url, list, { headers: this.headers });
 	}
 
 	//GET 
-
 	getMyPositivLists() {
 		this.url = `${this.hostname}/education/proxy/myPositiveLists`;
 		console.log(this.url);
-		return this.http.get<PositivListObj[]>(this.url, { headers: this.headers });
+		return this.http.get<PositivList[]>(this.url, { headers: this.headers });
 	}
-
 	getPositivLists() {
 		this.url = `${this.hostname}/education/proxy/positiveLists`;
-		return this.http.get<PositivListObj[]>(this.url, { headers: this.headers });
+		return this.http.get<PositivList[]>(this.url, { headers: this.headers });
 	}
-
-	//DELETE 
 
 	deletePositivList(listId: number) {
 		this.url = this.hostname + `/education/proxy/positiveLists/${listId}`;
+		return this.http.delete<ServerResponse>(this.url, { headers: this.headers });
+	}
+	activatePositivListInRoom(roomId: number, listIds: number[]) {
+		this.url = this.hostname + `/education/proxy/rooms/${roomId}`;
+		return this.http.post<ServerResponse>(this.url, listIds, { headers: this.headers });
+	}
+	deactivatePositivListInRoom(roomId: number) {
+		this.url = this.hostname + `/education/proxy/rooms/${roomId}`;
 		return this.http.delete<ServerResponse>(this.url, { headers: this.headers });
 	}
 	//Calls on Rooms 
@@ -153,25 +157,10 @@ export class EductaionService {
 	getRoomStatus(roomId: number) {
 		this.url = `${this.hostname}/education/rooms/${roomId}`;
 		console.log(this.url);
-		console.log(sessionStorage.getItem('token'));
-		const headers = new HttpHeaders({
-			'Accept': "application/json",
-			'Authorization': "Bearer " + sessionStorage.getItem('token')
-		});
-		let body = null;
-		// console.log(headers.getAll('Content-Type') + " " + headers.getAll('Accept') + " " + headers.getAll('Authorization'));
-		return this.http.get<SmartRoomStatus[]>(this.url, { headers: headers });
+		return this.http.get<SmartRoomStatus[]>(this.url, { headers: this.headers });
 	}
 	getRoomById(roomId: number) {
 		this.url = `${this.hostname}/education/rooms/${roomId}/details`;
-		console.log(this.url);
-		console.log(sessionStorage.getItem('token'));
-		const headers = new HttpHeaders({
-			'Accept': "application/json",
-			'Authorization': "Bearer " + sessionStorage.getItem('token')
-		});
-		let body = null;
-		// console.log(headers.getAll('Content-Type') + " " + headers.getAll('Accept') + " " + headers.getAll('Authorization'));
 		return this.http.get<EduRoom>(this.url, { headers: this.headers });
 	}
 
@@ -337,11 +326,11 @@ export class EductaionService {
 		)
 	}
 
-	collectDataFromObjects(fd: FormData, objectType: string) {
+	async collectDataFromObjects(fd: FormData, objectType: string) {
 		this.url = `${this.hostname}/education/${objectType}s/collect`;
 		console.log(this.url);
 		this.objectService.requestSent();
-		let sub = this.http.post<ServerResponse[]>(this.url, fd, { headers: this.headers }).subscribe(
+		let sub = await this.http.post<ServerResponse[]>(this.url, fd, { headers: this.headers }).subscribe(
 			(val) => {
 				let response = this.languageService.trans("List of the results:");
 				for (let resp of val) {

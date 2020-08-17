@@ -156,24 +156,28 @@ export class AdhocComponent implements OnInit {
   async redirectToEdit(event,adhocroom: AdHocRoom) {
     let action = "";
     if (adhocroom) {
-      delete adhocroom.netMask;
-      delete adhocroom.roomType;
-      delete adhocroom.places;
-      delete adhocroom.rows;
-      delete adhocroom.startIP;
-      delete adhocroom.hwconfId;
-      this.objectService.selectedObject = adhocroom;
       action = 'modify';
+      delete adhocroom.hwconfId;
+      delete adhocroom.network;
+      delete adhocroom.groupIds;
+      this.objectService.selectedObject = adhocroom;
     } else {
       action = "add";
       adhocroom = new AdHocRoom;
       adhocroom.network = this.objectService.selects['network'][0];
-      delete adhocroom.netMask;
-      delete adhocroom.roomType;
-      delete adhocroom.places;
+      adhocroom.hwconfId = 3;
       adhocroom.devCount = 512;
       adhocroom.roomControl = 'allTeachers'
     }
+    delete adhocroom.accessInRooms;
+    delete adhocroom.groups;
+    delete adhocroom.netMask;
+    delete adhocroom.roomType;
+    delete adhocroom.places;
+    delete adhocroom.rows;
+    delete adhocroom.startIP;
+    delete adhocroom.users;
+    delete adhocroom.userIds;
     const modal = await this.modalCtrl.create({
       component: ObjectsEditComponent,
       cssClass: 'medium-modal',

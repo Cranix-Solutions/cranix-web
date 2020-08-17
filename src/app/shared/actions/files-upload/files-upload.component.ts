@@ -11,7 +11,7 @@ import { EductaionService } from 'src/app/services/education.service';
 export class FilesUploadComponent implements OnInit {
   public files: FileList;
   studentsOnly: boolean = true;
-  cleanUp: boolean = true;
+  cleanUp: boolean = false;
   objectType: string = "user";
   actionMap: CrxActionMap;
 
@@ -28,7 +28,7 @@ export class FilesUploadComponent implements OnInit {
     this.objectType = type.replace("education/", "");
    }
 
-  onSubmit(object) {
+  async onSubmit(object) {
     for (let i = 0; i < this.files.length; i++) {
       let fd = new FormData();
       fd.append('file', this.files[i], this.files[i].name);
@@ -41,9 +41,11 @@ export class FilesUploadComponent implements OnInit {
       } else {
         fd.append('cleanUp', "false");
       }
+      console.log("Form data");
       console.log(fd);
       this.educationController.uploadDataToObjects(fd, this.objectType);
     }
+    this.modalController.dismiss();
   }
   onFilesAdded(files: FileList) {
     this.files = files;

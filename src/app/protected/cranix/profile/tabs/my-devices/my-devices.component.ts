@@ -56,7 +56,7 @@ export class MyDevicesComponent implements OnInit,OnDestroy {
    console.log('myrooms are:', JSON.stringify(this.myRooms) );
     const modal = await this.modalCtrl.create({
       component: AddDeviceComponent,
-      cssClass: 'medium-modal',
+      cssClass: 'small-modal',
       componentProps: {
         addHocRooms: JSON.stringify(this.myRooms)
       },
@@ -65,10 +65,6 @@ export class MyDevicesComponent implements OnInit,OnDestroy {
       backdropDismiss: false
     });
     return await modal.present();
-
-    (await modal).present().then((val) => {
-      console.log('presenting: ', val);
-    })
   }
 
   ngOnDestroy(){

@@ -9,32 +9,32 @@
         <ion-icon slot="start" name="calendar"></ion-icon>
         <ion-label>
           <h2>{{ mySelf.birthDay | date:'yyyy-MM-dd'}}</h2>
-          <h3>{{ 'Birthday' | translate}}</h3>    
+          <h3>{{ 'birthDay' | translate}}</h3>
         </ion-label>
       </ion-item>
       <ion-item>
         <ion-icon slot="start" name="cube"></ion-icon>
         <ion-label>
           <h2>{{ mySelf.givenName }}</h2>
-          <h3>{{ 'givenName' | translate}}</h3>    
+          <h3>{{ 'givenName' | translate}}</h3>
         </ion-label>
       </ion-item>
       <ion-item>
         <ion-icon slot="start" name="cube"></ion-icon>
         <ion-label>
           <h2>{{ mySelf.surName }}</h2>
-          <h3>{{ 'surName' | translate}}</h3>    
+          <h3>{{ 'surName' | translate}}</h3>
         </ion-label>
       </ion-item>
       <ion-item>
         <ion-icon slot="start" name="folder"></ion-icon>
         <ion-label>
           <h2>{{ 'Used' | translate }} {{ mySelf.fsQuotaUsed }} {{ 'of' | translate }} {{ mySelf.fsQuota}} MB</h2>
-          <h3>{{ 'fsQuota' | translate}}</h3>    
+          <h3>{{ 'fsQuota' | translate}}</h3>
         </ion-label>
       </ion-item>
       <ion-item lines="none">
-        <ion-button (click)="openChangePW()">  
+        <ion-button (click)="openChangePW()">
           {{ 'Reset password' | translate }}
         </ion-button>
       </ion-item>
@@ -42,5 +42,4 @@
    </ion-card-content>
  </ion-card>
 </ion-content>
-  
 

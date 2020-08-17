@@ -9,7 +9,8 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { AllModules } from '@ag-grid-enterprise/all-modules';
 import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
 import { ModalController } from '@ionic/angular';
-import {  AddEditRoomAccessComponent } from './add-edit-room-access/add-edit-room-access.component';
+import { AddEditRoomAccessComponent } from './add-edit-room-access/add-edit-room-access.component';
+import { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
 
 @Component({
   selector: 'cranix-room-access',
@@ -18,7 +19,7 @@ import {  AddEditRoomAccessComponent } from './add-edit-room-access/add-edit-roo
 })
 export class RoomAccessComponent implements OnInit {
   segment = 'list';
-  accessData: AccessInRoom[] = [];
+  rowData: AccessInRoom[] = [];
   accessOptions = {};
   context;
   accessApi;
@@ -28,7 +29,7 @@ export class RoomAccessComponent implements OnInit {
   autoGroupColumnDef;
   defaultColDef;
   grouping = '';
-  modules = [ AllModules, RowGroupingModule ];
+  modules = [AllModules, RowGroupingModule];
 
   constructor(
     public authService: AuthenticationService,
@@ -67,18 +68,13 @@ export class RoomAccessComponent implements OnInit {
         case "roomId": {
           col['cellRendererFramework'] = RoomIdCellRenderer;
           if (this.grouping == 'roomId') {
-            col['checkboxSelection'] = true;
             col['rowGroup'] = true;
             col['hide'] = true;
-            col['valueGetter'] = function (params) {
-              return params.context['componentParent'].objectService.idToName("room", params.data.roomId);
-            }
           }
           break;
         }
         case "pointInTime": {
           if (this.grouping == 'pointInTime') {
-            col['checkboxSelection'] = true;
             col['rowGroup'] = true;
             col['hide'] = true;
           }
@@ -88,7 +84,11 @@ export class RoomAccessComponent implements OnInit {
           col['sortable'] = false;
           col['minWidth'] = 70;
           col['maxWidth'] = 100;
-          col['cellRendererFramework'] = CheckBoxBTNRenderer;
+          if (this.grouping == "") {
+            col['cellRendererFramework'] = CheckBoxBTNRenderer;
+          } else {
+            col['cellRendererFramework'] = YesNoBTNRenderer;
+          }
         }
       }
       this.columnDefs.push(col);
@@ -100,20 +100,11 @@ export class RoomAccessComponent implements OnInit {
       }
       case 'roomId': {
         this.grouping = 'pointInTime';
-        this.autoGroupColumnDef = {
-          headerName: this.languageS.trans('roomId'),
-          minWidth: 150
-        };
-	this.accessApi.setAutoGroupColumnDef(this.autoGroupColumnDef);
         break;
       }
       case 'pointInTime': {
-        this.autoGroupColumnDef = {
-          headerName: this.languageS.trans('pointInTime'),
-          minWidth: 150
-        };
-	this.accessApi.setAutoGroupColumnDef(this.autoGroupColumnDef);
-        this.grouping = ''; break
+        this.grouping = '';
+        break;
       }
     }
   }
@@ -123,7 +114,7 @@ export class RoomAccessComponent implements OnInit {
 
   readDatas() {
     let sub = this.securityService.getAllAccess().subscribe(
-      (val) => { this.accessData = val },
+      (val) => { this.rowData = val },
       (err) => { this.authService.log(err) },
       () => { sub.unsubscribe(); }
     );
@@ -138,11 +129,12 @@ export class RoomAccessComponent implements OnInit {
     let action = "add";
     if (accesInRoom) {
       this.objectService.selectedObject = accesInRoom;
+      action = "modify";
     } else {
       accesInRoom = new AccessInRoom();
     }
     const modal = await this.modalCtrl.create({
-      component:     AddEditRoomAccessComponent,
+      component: AddEditRoomAccessComponent,
       cssClass: 'medium-modal',
       componentProps: {
         objectType: "access",
@@ -156,8 +148,8 @@ export class RoomAccessComponent implements OnInit {
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
         this.authService.log("Object was created or modified or deleted", dataReturned.data)
-        this.readDatas();
       }
+      this.readDatas();
     });
     (await modal).present();
   }
@@ -167,10 +159,10 @@ export class RoomAccessComponent implements OnInit {
 
   delete() {
     this.accessSelected = this.accessApi.getSelectedRows();
-    for( let obj of this.accessSelected ){
+    for (let obj of this.accessSelected) {
       this.securityService.deleteAccessInRoom(obj.id);
-      setTimeout(() => {  this.authService.log("World!"); }, 1000);
+      setTimeout(() => { this.authService.log("World!"); }, 1000);
     }
     this.readDatas();
-   }
+  }
 }

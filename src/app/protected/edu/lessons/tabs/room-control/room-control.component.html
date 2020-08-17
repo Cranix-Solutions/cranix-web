@@ -1,120 +1,50 @@
-  <ion-content >
-    <!--ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
-      <ion-fab-button>
-        <ion-icon name="arrow-forward-circle"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-list side="start">
-        <ion-fab-button>
-          <ion-toggle (ionChange)="setAccess('login')" [(ngModel)]="login"></ion-toggle>
-          <ion-icon name="ellipsis-vertical-sharp" (click)="click()"></ion-icon>
-        </ion-fab-button>
-        <ion-fab-button>
-          <ion-icon name="add-circle-outline" (click)="click()"></ion-icon>
-        </ion-fab-button>
-        <ion-fab-button>
-          <ion-icon name="apps" (click)="click()"></ion-icon>
-        </ion-fab-button>
-      </ion-fab-list>
-    </ion-fab-->
-  <ion-toolbar *ngIf="room" style="padding-top: 50px" slot="fixed">
-        <ion-buttons slot="start">
-          <ion-button matTooltip="{{ 'To login' | translate}}" (click)="setAccess('login')">
-            <ion-icon  [ngStyle]="{'color': room.accessInRooms.login  ? '#2dd36f' : '#eb445a'}" name="key-sharp"></ion-icon>
-          </ion-button>
-       
-          <ion-button matTooltip="{{ 'Filtered internet access' | translate}}" (click)="setAccess('proxy')">
-            <ion-icon [ngStyle]="{'color': room.accessInRooms.proxy  ? '#2dd36f' : '#eb445a'}" name="globe-sharp"></ion-icon>
-          </ion-button>
-        
-          <ion-button *ngIf="room && authS.isAllowed('room.direct')"  matTooltip="{{ 'Direct internet access' | translate}}" (click)="setAccess('direct')">
-            <ion-icon [ngStyle]="{'color': room.accessInRooms.direct  ? '#2dd36f' : '#eb445a'}" name="nuclear-sharp"></ion-icon>
-          </ion-button>
-      
-          <ion-button matTooltip="{{ 'Printing' | translate}}" (click)="setAccess('printing')">
-            <ion-icon [ngStyle]="{'color': room.accessInRooms.printing  ? '#2dd36f' : '#eb445a'}" name="print-sharp"></ion-icon>
-          </ion-button>    
-        </ion-buttons>
-        <ion-buttons slot="end">
-          <!--ion-label *ngIf="room">{{room.name}}</ion-label-->
-        <ion-select *ngIf="rooms" [(ngModel)]="selectedRoomId" #roomSelect (ionChange)="selectChanged($event)" okText="OK" cancelText="{{ 'Cancel' | translate}}">
-          <ion-select-option value="{{room.id}}" *ngFor="let room of rooms | async">{{room.name}}</ion-select-option>
-        </ion-select>
-          <ion-select *ngIf="room" [(ngModel)]="gridSize" #roomSelect (ionChange)="sizeChange($event)"
-          okText="'OK' | translate " cancelText="{{ 'Cancel' | translate}}">
-          <ion-select-option value="{{size}}" *ngFor="let size of gridSizes">{{size}}</ion-select-option>
-        </ion-select>
-            <ion-button   fill="clear" (click)="openAction($event)"
+<ion-content>
+  <ion-toolbar style="padding-top: 50px" slot="fixed">
+    <ion-buttons *ngIf="room"  slot="start">
+      <ion-button matTooltip="{{ 'To login' | translate}}" (click)="setAccess('login')">
+        <ion-icon [ngStyle]="{'color': room.accessInRooms.login  ? '#2dd36f' : '#eb445a'}" name="key-sharp" size="large"></ion-icon>
+      </ion-button>
+      <ion-button matTooltip="{{ 'Filtered internet access' | translate}}" (click)="setAccess('proxy')">
+        <ion-icon [ngStyle]="{'color': room.accessInRooms.proxy  ? '#2dd36f' : '#eb445a'}" name="globe-sharp" size="large">
+        </ion-icon>
+      </ion-button>
+      <ion-button *ngIf="room && authS.isAllowed('room.direct')" matTooltip="{{ 'Direct internet access' | translate}}"
+        (click)="setAccess('direct')">
+        <ion-icon [ngStyle]="{'color': room.accessInRooms.direct  ? '#2dd36f' : '#eb445a'}" name="nuclear-sharp"size="large">
+        </ion-icon>
+      </ion-button>
+      <ion-button matTooltip="{{ 'Printing' | translate}}" (click)="setAccess('printing')">
+        <ion-icon [ngStyle]="{'color': room.accessInRooms.printing  ? '#2dd36f' : '#eb445a'}" name="print-sharp" size="large">
+        </ion-icon>
+      </ion-button>
+      <ion-button fill="clear" (click)="openAction($event)"
         matTooltip="{{'Apply action on all devices in room'|translate}}">
-        <ion-icon slot="end" name="desktop"></ion-icon>
+        <ion-icon slot="end" name="desktop" size="large"></ion-icon>
       </ion-button>
-        </ion-buttons>       
-       <ion-title *ngIf="room">{{ room.name }}</ion-title>
-
-    </ion-toolbar>
-    <!--ion-card >
-      <ion-card-header class="hidden-xs hidden-sm hidden-md" *ngIf="room">
-        <ion-item lines="none">
-          <ion-label>{{ 'Picture size' | translate}}</ion-label>
-          <ion-select *ngIf="room" [(ngModel)]="gridSize" #roomSelect (ionChange)="sizeChange($event)"
-            okText="'OK' | translate " cancelText="{{ 'Cancel' | translate}}">
-            <ion-select-option value="{{size}}" *ngFor="let size of gridSizes">{{size}}</ion-select-option>
-          </ion-select>
-        </ion-item>
-        <!--ion-item *ngIf="room" lines="none">
-        <ion-label>{{ 'To login' | translate}}</ion-label>
-        <ion-toggle (click)="setAccess()" [(ngModel)]="room.accessInRooms.login" [disabled]="!room"></ion-toggle>
-      </ion-item>
-
-      <ion-item *ngIf="room" lines="none">
-        <ion-label>{{ 'Filtered internet access' | translate}}</ion-label>
-        <ion-toggle (click)="setAccess()" [(ngModel)]="room.accessInRooms.proxy" [disabled]="!room"></ion-toggle>
-      </ion-item>
-
-      <ion-item *ngIf="room && authS.isAllowed('room.direct')"  lines="none">
-        <ion-label>{{ 'Direct internet access' | translate}}</ion-label>
-        <ion-toggle (click)="setAccess()" [(ngModel)]="room.accessInRooms.direct" [disabled]="!room"></ion-toggle>
-      </ion-item>
-
-      <ion-item *ngIf="room" lines="none">
-        <ion-label>{{ 'Printing' | translate}}</ion-label>
-        <ion-toggle (click)="setAccess()" [(ngModel)]="room.accessInRooms.printing" [disabled]="!room"></ion-toggle>
-      </ion-item>
-
-      <ion-button  fill="clear" (click)="onBTNSHARE()">
-        <ion-icon name="cloud-upload"></ion-icon>
-      </ion-button>
-      <ion-button  fill="clear" (click)="onBTNCOLLECT()">
-        <ion-icon name="cloud-download"></ion-icon>
-      </ion-button>
-      <ion-button  fill="clear" (click)="openAction($event)" matTooltip="{{'Apply action on all devices in room'|translate}}">
-        <ion-icon name="desktop"></ion-icon>
-      </ion-button>
-      <ion-item lines="none" matTooltip="{{'Select the room to control' | translate}}">
-        <ion-label *ngIf="room">{{room.name}}</ion-label>
-        <ion-select *ngIf="rooms" [(ngModel)]="selectedRoomId" #roomSelect (ionChange)="selectChanged($event)" okText="OK" cancelText="{{ 'Cancel' | translate}}">
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-item  matTooltip="{{'Select the room to control' | translate}}">
+        <ion-label *ngIf="room" position="stacked">{{'Select a room' | translate}}</ion-label>
+        <ion-select [(ngModel)]="selectedRoomId" #roomSelect (ionChange)="selectChanged($event)"
+          okText="OK" cancelText="{{ 'Cancel' | translate}}">
           <ion-select-option value="{{room.id}}" *ngFor="let room of rooms | async">{{room.name}}</ion-select-option>
         </ion-select>
       </ion-item>
-      <ion-item lines="none">
-        <ion-label>{{ 'Picture size' | translate}}</ion-label>
-        <ion-select *ngIf="room" [(ngModel)]="gridSize" #roomSelect (ionChange)="sizeChange($event)"okText="'OK' | translate " cancelText="{{ 'Cancel' | translate}}">
+      <ion-item matTooltip="{{'Select picture size' | translate}}">
+        <ion-label position="stacked">{{'Select picture size' | translate }}</ion-label>
+        <ion-select *ngIf="room" [(ngModel)]="gridSize" #roomSelect (ionChange)="sizeChange($event)"
+          okText="{{'apply' | translate }}" cancelText="{{ 'Cancel' | translate}}">
           <ion-select-option value="{{size}}" *ngFor="let size of gridSizes">{{size}}</ion-select-option>
         </ion-select>
-      </ion-item->
-      </ion-card-header>
-    </ion-card-->
-    <ion-item lines="none" matTooltip="{{'Select the room to control' | translate}}">
-      <ion-label *ngIf="room">{{room.name}}</ion-label>
-      <ion-select *ngIf="rooms" [(ngModel)]="selectedRoomId" #roomSelect (ionChange)="selectChanged($event)" okText="OK"
-        cancelText="{{ 'Cancel' | translate}}">
-        <ion-select-option value="{{room.id}}" *ngFor="let room of rooms | async">{{room.name}}</ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-grid *ngIf="room" fiexd="true">
-      <ion-row class="grid-row" *ngFor="let row of array(room.rows); index as r">
-        <ion-col *ngFor="let dev of array(room.places); index as p" size="{{gridSize}}">
-          <cranix-roomdev [row]="r+1" [place]="p+1" [device]="getDevice(r+1,p+1)" [index]="dev"></cranix-roomdev>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-content>
+      </ion-item>
+    </ion-buttons>
+    <ion-title *ngIf="room">{{'Room' | translate}}: "{{ room.name }}"</ion-title>
+  </ion-toolbar>
+  <ion-grid *ngIf="room" fiexd="true">
+    <ion-row class="grid-row" *ngFor="let row of array(room.rows); index as r">
+      <ion-col *ngFor="let dev of array(room.places); index as p" size="{{gridSize}}">
+        <cranix-roomdev [row]="r+1" [place]="p+1" [device]="getDevice(r+1,p+1)" [index]="dev"></cranix-roomdev>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
