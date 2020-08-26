@@ -13,9 +13,13 @@
             {{'List of  Imports' | translate}}
           </ion-title>
         </ion-col>
-        <ion-col offset="6" size="3" *ngIf="!runningImport">
-          <ion-button size="small" (click)="startImport()" matTooltip="{{'Start a new user import' | translate }}">
+        <ion-col offset="6" size="3">
+          <ion-button *ngIf="!runningImport" size="small" (click)="startImport()" matTooltip="{{'Start a new user import' | translate }}">
             <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+          </ion-button>
+          <ion-button size="small" (click)="refreshRunningImport()"
+            matTooltip="{{'Refresh the running import' | translate }}">
+            <ion-icon slot="icon-only" name="refresh"></ion-icon>
           </ion-button>
         </ion-col>
       </ion-row>
@@ -53,7 +57,8 @@
             <ion-icon *ngIf="runningImport.mustChange" color="success" name="checkmark-sharp" size="small"></ion-icon>
           </ion-col>
           <ion-col>
-            <ion-icon *ngIf="runningImport.resetPassword" color="success" name="checkmark-sharp" size="small"></ion-icon>
+            <ion-icon *ngIf="runningImport.resetPassword" color="success" name="checkmark-sharp" size="small">
+            </ion-icon>
           </ion-col>
           <ion-col>
             <ion-icon *ngIf="runningImport.full" color="success" name="checkmark-sharp" size="small"></ion-icon>
@@ -62,7 +67,8 @@
             <ion-icon *ngIf="runningImport.allClasses" color="success" name="checkmark-sharp" size="small"></ion-icon>
           </ion-col>
           <ion-col>
-            <ion-icon *ngIf="runningImport.cleanClassDirs" color="success" name="checkmark-sharp" size="small"></ion-icon>
+            <ion-icon *ngIf="runningImport.cleanClassDirs" color="success" name="checkmark-sharp" size="small">
+            </ion-icon>
           </ion-col>
         </ion-row>
         <ion-row *ngFor="let import of imports">
