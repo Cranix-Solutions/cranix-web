@@ -13,7 +13,7 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 export class ProtectedPage implements OnInit {
 
   public activePath = "";
-  public appPages = [ ];
+  public appPages = [];
   private defAppPages = [
     {
       title: 'Customers',
@@ -37,7 +37,7 @@ export class ProtectedPage implements OnInit {
     },
     {
       title: 'Users',
-      url: '/pages/cranix/users/all',
+      url: '/pages/cranix/users',
       icon: 'person'
     },
     {
@@ -77,7 +77,7 @@ export class ProtectedPage implements OnInit {
     },
     {
       title: 'Profile',
-      url: '/pages/cranix/profile/myself',
+      url: '/pages/cranix/profile',
       icon: 'man'
     },
     {
@@ -92,12 +92,15 @@ export class ProtectedPage implements OnInit {
     public authService: AuthenticationService,
     public translateService: TranslateService,
     public menuCtrl: MenuController
-  ) { 
+  ) {
     this.router.events.subscribe((event: RouterEvent) => {
-      this.activePath = event.url
+      if (event.url) {
+        let path = event.url.split("/");
+        this.activePath = "/" + path[1] + "/" + path[2] + "/" + path[3]
+      }
     })
-    for( let page of this.defAppPages ) {
-      if( this.authService.isRouteAllowed(page.url)) {
+    for (let page of this.defAppPages) {
+      if (this.authService.isRouteAllowed(page.url)) {
         this.appPages.push(page);
       }
     }
