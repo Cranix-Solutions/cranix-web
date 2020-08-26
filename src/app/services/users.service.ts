@@ -106,4 +106,14 @@ export class UsersService {
 		return this.http.post<ServerResponse>(this.url, imp, { headers: headers });
 	}
 
+	restartUserImport(userImport: string) {
+		this.url = `${this.hostname}/users/imports/${userImport}`;
+		return this.http.put<ServerResponse>(this.url, { headers: this.headers });
+	};
+
+	deleteUserImport(userImport: string) {
+		this.url = `${this.hostname}/users/imports/${userImport}`;
+		return this.http.delete<ServerResponse>(this.url, { headers: this.headers });
+	};
+
 }
