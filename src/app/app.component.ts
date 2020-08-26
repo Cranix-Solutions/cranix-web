@@ -38,7 +38,7 @@ export class AppComponent {
             this.router.navigate(['pages/cephalix/institutes/all']);
           } else if ( this.authService.isAllowed('user.manage') ) {
             this.router.navigate(['pages/cranix/users/all']);
-          } else if ( this.authService.session['role'] == 'teacher' ) {
+          } else if ( this.authService.session['role'] == 'teachers' ) {
             this.router.navigate(['pages/cranix/mygroups']);
           } else {
             this.router.navigate(['/pages/cranix/profile/myself']);
