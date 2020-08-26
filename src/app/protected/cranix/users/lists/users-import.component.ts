@@ -38,11 +38,7 @@ export class UsersImportComponent implements OnInit {
       (err) => { console.log(err) },
       () => { subs.unsubscribe() }
     )
-    let subs1 = this.usersService.getRunningImport().subscribe(
-      (val) => { this.runningImport = val },
-      (err) => { console.log(err) },
-      () => { subs1.unsubscribe() }
-    )
+    this.refreshRunningImport();
   }
 
   async stopImport() {
@@ -89,16 +85,30 @@ export class UsersImportComponent implements OnInit {
   onResize(ev: Event) {
   }
   restartImport(startTime: string) {
-    //TODO
+    this.objectService.requestSent();
+    let subs = this.usersService.restartUserImport(startTime).subscribe(
+      (val) => { this.objectService.responseMessage(val)},
+      (err) => { this.objectService.errorMessage(err)},
+      () => { subs.unsubscribe()}
+    )
   }
   downloadImport(startTime: string, type: string) {
     //TODO
   }
   deleteImport(startTime: string) {
-    //TODO
+    this.objectService.requestSent();
+    let subs = this.usersService.deleteUserImport(startTime).subscribe(
+      (val) => { this.objectService.responseMessage(val)},
+      (err) => { this.objectService.errorMessage(err)},
+      () => { subs.unsubscribe()}
+    )
   }
   refreshRunningImport(){
-    //TODO
+    let subs1 = this.usersService.getRunningImport().subscribe(
+      (val) => { this.runningImport = val },
+      (err) => { console.log(err) },
+      () => { subs1.unsubscribe() }
+    )
   }
 
 }
