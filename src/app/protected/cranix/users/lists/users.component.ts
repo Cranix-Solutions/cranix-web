@@ -67,6 +67,7 @@ export class UsersComponent implements OnInit {
     for (let key of this.objectKeys) {
       let col = {};
       col['field'] = key;
+      col['resizable'] = true;
       col['headerName'] = this.languageS.trans(key);
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
       col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
@@ -75,13 +76,23 @@ export class UsersComponent implements OnInit {
           col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
-          col['width'] = 150;
+          col['minWidth'] = 170;
           col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
           col['flex'] = '1';
           col['colId'] = '1';
-          break;
+          columnDefs.push(col);
+          columnDefs.push({
+            headerName: "",
+            minWidth: 130,
+            suppressSizeToFit: true,
+            cellStyle: { 'padding': '2px', 'line-height': '36px' },
+            field: 'actions',
+            pinned: 'left',
+            cellRendererFramework: UserActionBTNRenderer
+          });
+          continue;
         }
         case 'birthDay': {
           col['cellRendererFramework'] = DateCellRenderer;
@@ -90,16 +101,6 @@ export class UsersComponent implements OnInit {
       }
       columnDefs.push(col);
     }
-    let action = {
-      headerName: "",
-      minWidth: 150,
-      suppressSizeToFit: true,
-      cellStyle: { 'padding': '2px', 'line-height': '36px' },
-      field: 'actions',
-      pinned: 'left',
-      cellRendererFramework: UserActionBTNRenderer
-    };
-    columnDefs.splice(1, 0, action);
     this.columnDefs = columnDefs;
   }
   onGridReady(params) {
