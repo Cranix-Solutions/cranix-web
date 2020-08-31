@@ -33,12 +33,7 @@ export class UsersImportComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    let subs = this.usersService.getAllImports().subscribe(
-      (val) => { this.imports = val },
-      (err) => { console.log(err) },
-      () => { subs.unsubscribe() }
-    )
-    this.refreshRunningImport();
+    this.refreshImports();
   }
 
   async stopImport() {
@@ -49,7 +44,6 @@ export class UsersImportComponent implements OnInit {
     let userImport = new UsersImport();
     userImport.importFile = "";
     delete userImport.result;
-    //delete userImport.lang;
     const modal = await this.modalCtrl.create({
       component: ObjectsEditComponent,
       cssClass: "medium-modal",
@@ -63,6 +57,7 @@ export class UsersImportComponent implements OnInit {
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
+      this.refreshImports()
       if (dataReturned.data) {
         console.log("Object was created or modified", dataReturned.data)
       }
@@ -89,7 +84,9 @@ export class UsersImportComponent implements OnInit {
     let subs = this.usersService.restartUserImport(startTime).subscribe(
       (val) => { this.objectService.responseMessage(val)},
       (err) => { this.objectService.errorMessage(err)},
-      () => { subs.unsubscribe()}
+      () => { 
+        this.refreshImports()
+        subs.unsubscribe()}
     )
   }
   downloadImport(startTime: string, type: string) {
@@ -100,10 +97,18 @@ export class UsersImportComponent implements OnInit {
     let subs = this.usersService.deleteUserImport(startTime).subscribe(
       (val) => { this.objectService.responseMessage(val)},
       (err) => { this.objectService.errorMessage(err)},
-      () => { subs.unsubscribe()}
+      () => { 
+        this.refreshImports()
+        subs.unsubscribe() }
     )
   }
-  refreshRunningImport(){
+
+  refreshImports(){
+    let subs = this.usersService.getAllImports().subscribe(
+      (val) => { this.imports = val },
+      (err) => { console.log(err) },
+      () => { subs.unsubscribe() }
+    )
     let subs1 = this.usersService.getRunningImport().subscribe(
       (val) => { this.runningImport = val },
       (err) => { console.log(err) },

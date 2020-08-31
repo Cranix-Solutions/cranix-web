@@ -176,11 +176,10 @@ export class ObjectsEditComponent implements OnInit {
     console.log(object.test);
     console.log(object.password);
     console.log(this.formData.get("role"))
-    let serverResponse: ServerResponse;
     let subs = this.usersService.importUsers(formData).subscribe(
       async (val) => {
         this.objectService.responseMessage(val);
-        if (serverResponse.code == "OK") {
+        if (val.code == "OK") {
           this.modalController.dismiss("succes");
         } else {
           this.editForm.enable();

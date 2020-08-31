@@ -38,7 +38,7 @@
           <ion-col size=1>{{'allClasses' |translate}}</ion-col>
           <ion-col size=1>{{'cleanClassDirs' |translate}}</ion-col>
         </ion-row>
-        <ion-row *ngIf="runningImport">
+        <ion-row *ngIf="runningImport" [ngStyle]="{'color':'#eb445a'}" >
           <ion-col size=2>{{runningImport.startTime}} </ion-col>
           <ion-col size=2>
             <ion-button color="light" size="small" (click)="showImport($event,runningImport)"
@@ -83,10 +83,10 @@
               matTooltip="{{'Start the import as real import not test.' | translate }}">
               <ion-icon slot="icon-only" color="warning" name="reload"></ion-icon>
             </ion-button>
-            <ion-button color="light" *ngIf="!import.test" size="small" (click)="downloadImport(import.startTime,'pdf')"
+            <!-- ion-button color="light" *ngIf="!import.test" size="small" (click)="downloadImport(import.startTime,'pdf')"
               matTooltip="{{'Download the password files as pdf files.' | translate }}">
               <ion-icon slot="icon-only" color="success" name="download"></ion-icon>
-            </ion-button>
+            </ion-button -->
             <ion-button color="light" *ngIf="!import.test" size="small" (click)="downloadImport(import.startTime,'txt')"
               matTooltip="{{'Download the password files as txt files.' | translate }}">
               <ion-icon slot="icon-only" color="warning" name="download"></ion-icon>
