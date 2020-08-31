@@ -34,13 +34,14 @@ export class AppComponent {
       this.authService.authenticationState.subscribe(state => {
         if (state) {
           this.genericObjectS.initialize(true);
-          
           if( this.authService.isAllowed('cephalix.manage')) {
             this.router.navigate(['pages/cephalix/institutes/all']);
           } else if ( this.authService.isAllowed('user.manage') ) {
             this.router.navigate(['pages/cranix/users/all']);
-          } else {
+          } else if ( this.authService.session['role'] == 'teachers' ) {
             this.router.navigate(['pages/cranix/mygroups']);
+          } else {
+            this.router.navigate(['/pages/cranix/profile/myself']);
           }
         } else if (sessionStorage.getItem('cephalix_token')) {
           this.authService.token = sessionStorage.getItem('cephalix_token');
