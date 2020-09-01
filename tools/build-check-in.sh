@@ -8,12 +8,12 @@ if [ $b != "y" ]; then
 	exit
 fi
 cp src/app/services/utils.service.ts-notest src/app/services/utils.service.ts
+cp src/index.html-prod src/index.html
 ionic build --prod
 echo -n "Can we checkin y/n "; read b
 if [ "${b}" != "y" ]; then
 	exit
 fi
-cp src/index.html-prod www/index.htmlcd
 cd www
 tar cjf $REPO/cranix-web.tar.bz2 *
 xterm -e "git log --raw" &
