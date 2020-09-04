@@ -159,7 +159,6 @@ export class AdhocComponent implements OnInit {
       action = 'modify';
       delete adhocroom.hwconfId;
       delete adhocroom.network;
-      delete adhocroom.groupIds;
       this.objectService.selectedObject = adhocroom;
     } else {
       action = "add";

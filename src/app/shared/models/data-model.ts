@@ -217,7 +217,7 @@ export class Installation {
 	deviceIds?: number[] = [];
 	roomIds?: number[] = [];
 	softwareIds?: number[] = [];
-	hwconfIds?: number[]
+	hwonfIds?: number[]
 	constructor() { }
 }
 

@@ -35,7 +35,7 @@
             <ion-segment-button value="bad">
               <ion-label>{{'Black list' | translate}}</ion-label>
             </ion-segment-button>
-            <ion-segment-button *ngIf="authService.session.name == 'cephalix'" value="cephalix">
+            <ion-segment-button *ngIf="authService.session.name == 'cephalix' || authService.isAllowed('cephalix.manage')" value="cephalix">
               <ion-label>{{'Cephalix list' | translate}}</ion-label>
             </ion-segment-button>
             <ion-segment-button value="positive">

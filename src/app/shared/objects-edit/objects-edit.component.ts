@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams, ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
 //own
 import { CephalixService } from 'src/app/services/cephalix.service';
@@ -18,9 +17,9 @@ import { SupportTicket } from '../models/data-model';
 })
 export class ObjectsEditComponent implements OnInit {
   formData: FormData = new FormData();
+  disabled: boolean  = false;
   fileToUpload: File = null;
   result: any = {};
-  editForm: FormGroup;
   objectType: string = "";
   object: any = null;
   objectKeys: string[] = [];
@@ -32,7 +31,6 @@ export class ObjectsEditComponent implements OnInit {
 
   constructor(
     public cephalixService: CephalixService,
-    public formBuilder: FormBuilder,
     public objectService: GenericObjectService,
     public languageS: LanguageService,
     private navParams: NavParams,
@@ -60,7 +58,8 @@ export class ObjectsEditComponent implements OnInit {
     console.log(this.object);
   }
   ngOnInit() {
-    this.editForm = this.formBuilder.group(this.objectService.convertObject(this.object));
+    this.disabled = false;
+    //this.editForm = this.formBuilder.group(this.objectService.convertObject(this.object));
   }
 
   closeWindow() {
@@ -83,7 +82,10 @@ export class ObjectsEditComponent implements OnInit {
   }
 
   onSubmit(object) {
-    this.editForm.disable();
+    if( this.disabled ) {
+      return;
+    }
+    this.disabled = true;
     this.splashScreen.show();
     this.objectService.requestSent();
     console.log("onSubmit", object);
@@ -121,13 +123,13 @@ export class ObjectsEditComponent implements OnInit {
           this.objectService.getAllObject(this.objectType);
           this.modalController.dismiss("succes");
         } else {
-          this.editForm.enable();
+          this.disabled = false;
           this.splashScreen.hide();
         }
       },
       async (error) => {
         this.objectService.errorMessage("A Server Error is accoured:" + error);
-        this.editForm.enable();
+        this.disabled = false;
         this.splashScreen.hide();
       },
       () => {
@@ -146,7 +148,7 @@ export class ObjectsEditComponent implements OnInit {
         if (val.code == "OK") {
           this.modalController.dismiss("succes");
         } else {
-          this.editForm.enable();
+          this.disabled = false;
           this.splashScreen.hide();
         }
       },
@@ -182,14 +184,14 @@ export class ObjectsEditComponent implements OnInit {
         if (val.code == "OK") {
           this.modalController.dismiss("succes");
         } else {
-          this.editForm.enable();
+          this.disabled = false;
           this.splashScreen.hide();
         }
       },
       async (error) => {
         console.log(error)
         this.objectService.errorMessage("A Server Error is accoured:" + error);
-        this.editForm.enable();
+        this.disabled = false;
         this.splashScreen.hide();
       },
       () => {
