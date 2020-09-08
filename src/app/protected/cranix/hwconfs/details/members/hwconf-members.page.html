@@ -1,32 +1,70 @@
 <cranix-toolbar></cranix-toolbar>
+<ion-content id="carded">
 <ion-row class="header-row">
   <ion-col size=12>
-    <ion-title>{{ 'Start clone members of selected hwconf:' | translate}} "{{hwconf.name}}" {{hwconf.description}}
+    <ion-title>{{ 'Members of the selected hwconf:' | translate}} "{{hwconf.name}}" {{hwconf.description}}
       {{hwconf.deviceType | translate}}
     </ion-title>
   </ion-col>
 </ion-row>
+<ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
+  <ion-fab-button>
+    <ion-icon name="arrow-forward-circle"></ion-icon>
+  </ion-fab-button>
+  <ion-fab-list side="start">
+    <ion-fab-button (click)="triggerClone($event,'startmulticastclone')">
+      <ion-icon name="logo-buffer" color="success"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button (click)="triggerClone($event,'stopclone')">
+      <ion-icon name="logo-buffer" color="danger"></ion-icon>
+    </ion-fab-button>
+  </ion-fab-list>
+</ion-fab>
+<ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('quickFilterMD')"
+  id="quickFilterMD" showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
 <ion-content (window:resize)="onResize($event)">
   <ion-card>
     <ion-card-header>
       <ion-row class="ion-align-items-center">
         <ion-col size="3">
           <ion-item>
-            <ion-input placeholder="{{'search' | translate }}" (input)="onMemberFilterChanged()" id="quickFilter">
+            <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('quickFilter')" id="quickFilter">
             </ion-input>
           </ion-item>
         </ion-col>
-        <ion-col size="7">
+        <ion-col offset="6" size="3" class="ion-text-end hidden-xs hidden-sm hidden-md">
+          <ion-button size="small" (click)="createColumnDef()"
+            matTooltip="{{'Change grouping of the table' | translate }}">
+            <ion-icon slot="icon-only" name="list"></ion-icon>
+          </ion-button>
+          <ion-button size="small" (click)="triggerClone($event,'startmulticastclone')"
+            matTooltip="{{'Start multicast cloning' | translate }}">
+            <ion-icon slot="icon-only" name="logo-buffer" color="success"></ion-icon>
+          </ion-button>
+          <ion-button size="small" (click)="triggerClone($event,'stopclone')"
+            matTooltip="{{'Stop multicast cloning' | translate }}">
+            <ion-icon slot="icon-only" name="logo-buffer" color="danger"></ion-icon>
+          </ion-button>
         </ion-col>
       </ion-row>
     </ion-card-header>
     <ion-card-content>
-      <ag-grid-angular #agGrid style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}" [gridOptions]="memberOptions"
-        [rowData]="memberData" [columnDefs]="columnDefs" [context]="context"
-        rowSelection="multiple"
-	[rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
-        (gridReady)="onMemberReady($event)" (selectionChanged)="onMemberSelectionChanged()" id="memberTable"
-        [autoGroupColumnDef]="autoGroupColumnDef">
+      <ag-grid-angular
+      style="width: 100%; height:  100%;"
+      rowSelection="multiple"
+      class="{{authService.settings.agGridThema}}"
+      rowHeight="{{authService.settings.rowHeight}}"
+      rowMultiSelectWithClick="{{authService.settings.rowMultiSelectWithClick}}"
+      [modules]="modules"
+      [context]="context"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      [rowData]="memberData"
+      [autoGroupColumnDef]="autoGroupColumnDef"
+      [animateRows]="true"
+      [deltaColumnMode]="true"
+      id="memberTable"
+      (gridReady)="onMemberReady($event)">
       </ag-grid-angular>
     </ion-card-content>
   </ion-card>

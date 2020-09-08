@@ -51,14 +51,14 @@ export class RoomAccessComponent implements OnInit {
     this.autoGroupColumnDef = {
       minWidth: 150
     };
-    this.createColumDef();
+    this.createColumnDef();
   }
 
   ngOnInit() {
     this.readDatas();
   }
 
-  createColumDef() {
+  createColumnDef() {
     this.columnDefs = [];
     for (let key of Object.getOwnPropertyNames(new AccessInRoom())) {
       let col = {};

@@ -40,7 +40,7 @@ export class RoomsService {
 
 	addDevice(device: any, room: number) {
 		this.url = this.hostname + "/rooms/" + room + "/devices";
-		return this.http.post<ServerResponse>(this.url, device, { headers: this.headers });
+		return this.http.post<ServerResponse[]>(this.url, device, { headers: this.headers });
 	}
 
 
