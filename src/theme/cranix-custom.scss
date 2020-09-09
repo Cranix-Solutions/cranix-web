@@ -83,6 +83,18 @@ $breakpoints-values: map-values($grid-breakpoints);
   justify-content: center;
 }
 
+input {
+  border      : none;
+  border-width: 0;
+  box-shadow  : none;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}
 /*.ag-header-group-cell-label, .ag-header-cell-label{
   justify-content: center;
 }

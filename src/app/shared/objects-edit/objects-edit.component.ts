@@ -13,7 +13,7 @@ import { SupportTicket } from '../models/data-model';
 @Component({
   selector: 'cranix-objects-edit',
   templateUrl: './objects-edit.component.html',
-  //styleUrls: ['./objects-edit.component.scss'],
+  styleUrls: ['./objects-edit.component.scss'],
 })
 export class ObjectsEditComponent implements OnInit {
   formData: FormData = new FormData();
@@ -42,6 +42,7 @@ export class ObjectsEditComponent implements OnInit {
     public toastController: ToastController
   ) {
     this.objectType = this.navParams.get('objectType');
+    //this.object = this.objectService.convertObject(this.navParams.get('object'));
     this.object = this.navParams.get('object');
     if (this.navParams.get('objectAction') == 'add') {
       this.objectActionTitle = "Add " + this.objectType;
@@ -59,7 +60,6 @@ export class ObjectsEditComponent implements OnInit {
   }
   ngOnInit() {
     this.disabled = false;
-    //this.editForm = this.formBuilder.group(this.objectService.convertObject(this.object));
   }
 
   closeWindow() {
