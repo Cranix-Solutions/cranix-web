@@ -27,7 +27,6 @@ export class AddEditRoomAccessComponent implements OnInit {
     private navParams: NavParams,
     private modalController: ModalController,
     public securityService: SecurityService,
-    private splashScreen: SpinnerDialog,
     public translateService: TranslateService,
     public toastController: ToastController
   ) {
@@ -40,7 +39,6 @@ export class AddEditRoomAccessComponent implements OnInit {
       this.objectAction = "modify";
     }
     this.objectKeys = Object.getOwnPropertyNames(this.roomAccess);
-    
   }
   ngOnInit() {
   }
@@ -49,13 +47,14 @@ export class AddEditRoomAccessComponent implements OnInit {
     this.modalController.dismiss();
   }
   onSubmit(object) {
-    this.splashScreen.show();
     console.log("onSubmit", object);
     this.securityService.addAccessInRoom(object);
+    this.modalController.dismiss(object);
   }
 
   deleteObject() {
     this.securityService.deleteAccessInRoom(this.roomAccess.id);
+    this.modalController.dismiss(this.roomAccess);
   }
 }
 

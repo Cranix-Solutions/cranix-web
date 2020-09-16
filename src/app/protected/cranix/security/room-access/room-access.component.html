@@ -1,7 +1,7 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-content id=carded>
   <ion-row class="header-row">
-    <ion-col size=6>
+    <ion-col size=12>
       <ion-title>{{ 'Manage access in the rooms' | translate}}</ion-title>
     </ion-col>
   </ion-row>
@@ -33,18 +33,18 @@
         </ion-col>
         <ion-col offset="3" size="3" class="ion-align-self-center ion-text-end hidden-xs hidden-sm hidden-md">
           <ion-button *ngIf="segment == 'list'" size="small" (click)="redirectToAddEdit($event,null)"
-            matTooltip="{{'Add new room access status.' | translate }}">
+            matTooltip="{{'Add new room access status' | translate }}" [disabled]="disabled">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
           <ion-button *ngIf="segment == 'list'" size="small" (click)="delete()"
-            matTooltip="{{'Delete selected access rules' | translate }}">
+            matTooltip="{{'Delete selected access rules' | translate }}" [disabled]="disabled">
             <ion-icon slot="icon-only" name="trash"></ion-icon>
           </ion-button>
           <ion-button *ngIf="segment == 'list'" size="small" (click)="createColumnDef()"
             matTooltip="{{'Change grouping of the table' | translate }}">
             <ion-icon slot="icon-only" name="list"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="restartFirewall()" matTooltip="{{'Restart firewall.' | translate }}">
+          <ion-button size="small" (click)="restartFirewall()" matTooltip="{{'Restart firewall' | translate }}">
             <ion-icon slot="icon-only" name="refresh"></ion-icon>
           </ion-button>
         </ion-col>
