@@ -12,31 +12,28 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
   templateUrl: './myself.component.html',
   styleUrls: ['./myself.component.scss'],
 })
-export class MyselfComponent implements OnInit,OnDestroy {
+export class MyselfComponent implements OnInit, OnDestroy {
 
-  alive : boolean = true; 
-  mySelf: User; 
+  alive: boolean = true;
+  mySelf: User;
 
-  constructor(private mySelfs: SelfManagementService,    
-              public translateService: TranslateService,
-              public objectService: GenericObjectService,
-              public modalController: ModalController,
-              ) {
+  constructor(private mySelfs: SelfManagementService,
+    public translateService: TranslateService,
+    public objectService: GenericObjectService,
+    public modalController: ModalController,
+  ) {
     this.mySelfs.getMySelf()
-        .pipe(takeWhile(() => this.alive))
-        .subscribe((res) => {
-          console.log('I am: ', res);
-          this.mySelf = res; 
-        })
-
-
-    
-   }
+      .pipe(takeWhile(() => this.alive))
+      .subscribe((res) => {
+        console.log('I am: ', res);
+        this.mySelf = res;
+      })
+  }
 
   ngOnInit() {
   }
 
-  async openChangePW(){
+  async openChangePW() {
     const modal = await this.modalController.create({
       component: SetpasswordComponent,
       cssClass: 'small-modal',
@@ -48,25 +45,24 @@ export class MyselfComponent implements OnInit,OnDestroy {
       }
     });
     modal.onDidDismiss().then((dataReturned) => {
-      console.log(dataReturned.data.password)
-      if (dataReturned.data.password) {             
+      if (dataReturned.data) {
         this.objectService.requestSent();
         this.mySelf.password = dataReturned.data.password;
         console.log('user after mod:', this.mySelf);
-       this.mySelfs.modMySelf(this.mySelf)
-            .pipe(takeWhile(() => this.alive ))
-            .subscribe((res) => {
-              console.log('response is:', res);
-              this.objectService.responseMessage(res)
-            },(err) => {
-              this.objectService.errorMessage(err);
-            })
+        this.mySelfs.modMySelf(this.mySelf)
+          .pipe(takeWhile(() => this.alive))
+          .subscribe((res) => {
+            console.log('response is:', res);
+            this.objectService.responseMessage(res)
+          }, (err) => {
+            this.objectService.errorMessage(err);
+          })
       }
     });
     return await modal.present();
   }
-  ngOnDestroy(){
-    this.alive = false; 
+  ngOnDestroy() {
+    this.alive = false;
   }
 
 }

@@ -217,7 +217,7 @@ export class ActionsComponent implements OnInit {
         for (let resp of val) {
           response = response + "<br>" + this.languageService.transResponse(resp);
         }
-        if (actionMap.name == 'delete ') {
+        if (actionMap.name == 'delete') {
           this.objectService.getAllObject(this.objectType);
         }
         this.objectService.okMessage(response)

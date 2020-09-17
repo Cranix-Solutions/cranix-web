@@ -128,7 +128,8 @@ export class GenericObjectService {
       this.allObjects[key] = new BehaviorSubject([]);
     }
     let subs: any = {};
-    if (force || !this.initialized) {
+    if(force || !this.initialized) {
+      this.authService.log("initialize all abjects")
       for (let key of this.objects) {
         this.getAllObject(key);
       }

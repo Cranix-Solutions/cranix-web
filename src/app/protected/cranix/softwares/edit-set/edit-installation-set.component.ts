@@ -295,6 +295,7 @@ export class EditInstallationSetComponent implements OnInit {
     let subs = this.softwareService.addModifyInstallationsSets(installationSet).subscribe(
       (val) => {
           this.objectService.responseMessage(val);
+          this.modalCtrl.dismiss();
       },
       (err) => {
         this.objectService.errorMessage(err);

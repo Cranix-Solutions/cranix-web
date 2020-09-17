@@ -3,7 +3,7 @@ import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core';
 import { Device, InstallStateDev, Printer, DHCP } from 'src/app/shared/models/data-model';
 import { UtilsService } from './utils.service';
-import { ServerResponse } from 'src/app/shared/models/server-models';
+import { ServerResponse, CrxActionMap } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from './auth.service';
 
 @Injectable()
@@ -99,5 +99,12 @@ export class DevicesService {
 	deleteDHCPrecord(dId: number, paramId: number) {
 		this.url = this.hostname + `/devices/${dId}/dhcp/${paramId}`;
 		return this.http.delete<ServerResponse>(this.url, { headers: this.headers });
+	}
+
+	executeAction(actionMap: CrxActionMap) {
+		let url = this.hostname + "/devices/applyAction"
+		console.log(url)
+		console.log(actionMap)
+		return this.http.post<ServerResponse[]>(url, actionMap, { headers: this.headers });
 	}
 }

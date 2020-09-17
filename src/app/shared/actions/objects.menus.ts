@@ -64,13 +64,7 @@ export const hwconfMenu = [
     "icon":"logo-buffer",
     "color":"danger",
     "action": "stopclone"
-  },
-  {
-    "enabled": true,
-    "icon":"cut",
-    "color":"danger",
-    "action": "cleanUp"
-    }
+  }
 ]
 
 export const  instituteMenu = [

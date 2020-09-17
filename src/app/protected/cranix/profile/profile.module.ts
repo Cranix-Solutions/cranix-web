@@ -13,7 +13,6 @@ import { MyDevicesComponent } from 'src/app/protected/cranix/profile/tabs/my-dev
 import { MyVPNComponent } from 'src/app/protected/cranix/profile/tabs/my-vpn/my-vpn.component'
 import { SelfManagementService } from 'src/app/services/selfmanagement.service';
 import { AdHocLanService } from 'src/app/services/adhoclan.service';
-import { AddDeviceComponent } from '../devices/add-device/add-device.component';
 
 const routes: Routes = [
   {
@@ -32,13 +31,16 @@ const routes: Routes = [
       {
         path: 'myVPN',
         component: MyVPNComponent
+      },{
+        path: '',
+        redirectTo: 'myself'
       }
     ]
     //loadChildren: () => import('./lessons.module').then( m => m.LessonsModule)
   },
   {
-    path: '',
-    redirectTo: 'profile/myself'
+    path: 'profile',
+    redirectTo: 'myself'
   }
 ];
 

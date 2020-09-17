@@ -3,8 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AgChartsAngularModule } from 'ag-charts-angular';
 import {
+  MatDatepickerModule,
   MatTooltipModule,
-  MatIconModule
+  MatIconModule,
+  MatNativeDateModule
 } from "@angular/material";
 import { ToolbarComponent } from 'src/app/protected/toolbar/toolbar.component';
 import { IonicModule } from '@ionic/angular';
@@ -86,8 +88,10 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
     ]),
     FormsModule,
     IonicModule,
+    MatDatepickerModule,
     MatTooltipModule,
     MatIconModule,
+    MatNativeDateModule,
     ReactiveFormsModule,
     PipesModule,
     TranslateModule,
@@ -97,8 +101,10 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
     AgGridModule,
     FormsModule,
     IonicModule,
+    MatDatepickerModule,
     MatTooltipModule,
     MatIconModule,
+    MatNativeDateModule,
     PipesModule,
     ReactiveFormsModule,
     TranslateModule,

@@ -23,7 +23,7 @@ export class InstallationSetsComponent implements OnInit {
   installationSetApi;
   installationSetColumnApi;
   installationSetSelection: Installation[] = [];
-  installationSetData:      Installation[] = [];
+  installationSetData: Installation[] = [];
   autoGroupColumnDef;
   institute;
 
@@ -33,14 +33,14 @@ export class InstallationSetsComponent implements OnInit {
     public router: Router,
     public softwareService: SoftwareService,
     private languageS: LanguageService
-    ) {
+  ) {
     this.context = { componentParent: this };
     this.defaultColDef = {
-        resizable: true,
-        sortable: true,
-        hide: false
-      };
-   }
+      resizable: true,
+      sortable: true,
+      hide: false
+    };
+  }
   ngOnInit() {
     this.createColumnDefs();
     this.readMembers();
@@ -82,7 +82,7 @@ export class InstallationSetsComponent implements OnInit {
         this.installationSetData = val;
         this.authService.log("installationSets")
         this.authService.log(val);
-       },
+      },
       (err) => { this.authService.log(err) },
       () => { subM.unsubscribe() });
   }
@@ -108,7 +108,7 @@ export class InstallationSetsComponent implements OnInit {
       },
       {
         field: 'softwares',
-        suppressMenu : true,
+        suppressMenu: true,
         headerName: this.languageS.trans('softwares'),
         valueGetter: function (params) {
           return params.data.softwareIds.length;
@@ -116,7 +116,7 @@ export class InstallationSetsComponent implements OnInit {
       },
       {
         field: 'hwconfs',
-        suppressMenu : true,
+        suppressMenu: true,
         headerName: this.languageS.trans('hwconfs'),
         valueGetter: function (params) {
           return params.data.hwconfIds.length;
@@ -124,7 +124,7 @@ export class InstallationSetsComponent implements OnInit {
       },
       {
         field: 'rooms',
-        suppressMenu : true,
+        suppressMenu: true,
         headerName: this.languageS.trans('rooms'),
         valueGetter: function (params) {
           return params.data.roomIds.length;
@@ -132,7 +132,7 @@ export class InstallationSetsComponent implements OnInit {
       },
       {
         field: 'devices',
-        suppressMenu : true,
+        suppressMenu: true,
         headerName: this.languageS.trans('devices'),
         valueGetter: function (params) {
           return params.data.deviceIds.length;
@@ -140,9 +140,9 @@ export class InstallationSetsComponent implements OnInit {
       }
     ];
   }
-  async redirectToEdit(event,installation: Category){
-    let action=  "add"
-    if( installation ) {
+  async redirectToEdit(event, installation: Category) {
+    let action = "add"
+    if (installation) {
       this.softwareService.selectedInstallationSet = installation;
       action = "modify";
     } else {
@@ -151,7 +151,7 @@ export class InstallationSetsComponent implements OnInit {
     const modal = await this.modalCtrl.create({
       component: EditInstallationSetComponent,
       componentProps: {
-        objectAction:  action,
+        objectAction: action,
         installation: installation
       },
       animated: true,
@@ -159,16 +159,17 @@ export class InstallationSetsComponent implements OnInit {
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
+      this.readMembers();
       if (dataReturned.data) {
         this.authService.log("Object was created or modified", dataReturned.data)
       }
     });
     (await modal).present();
   }
-  writeConfig(){
+  writeConfig() {
     //TODO
   }
-  applyState(){
+  applyState() {
     //TODO
   }
 }

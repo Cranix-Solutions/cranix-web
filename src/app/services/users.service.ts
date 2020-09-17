@@ -56,18 +56,6 @@ export class UsersService {
 		return this.http.post<ServerResponse>(this.url, body, { headers: this.headers });
 	}
 
-	getAllImports() {
-		this.url = this.hostname + "/users/imports";
-		console.log(this.url);
-		return this.http.get<UsersImport[]>(this.url, { headers: this.headers });
-	}
-
-	getRunningImport() {
-		this.url = `${this.hostname}/users/imports/running`
-		console.log(this.url);
-		return this.http.get<UsersImport>(this.url, { headers: this.headers });
-	}
-
 	getUsersGroups(uid: number) {
 		this.url = `${this.hostname}/users/${uid}/groups`
 		console.log(this.url);
@@ -104,6 +92,39 @@ export class UsersService {
 		console.log(headers)
 		console.log(imp.get('file'))
 		return this.http.post<ServerResponse>(this.url, imp, { headers: headers });
+	}
+
+	getAllImports() {
+		this.url = this.hostname + "/users/imports";
+		console.log(this.url);
+		return this.http.get<UsersImport[]>(this.url, { headers: this.headers });
+	}
+
+	getRunningImport() {
+		this.url = `${this.hostname}/users/imports/running`
+		console.log(this.url);
+		return this.http.get<UsersImport>(this.url, { headers: this.headers });
+	}
+
+	stopRunningImport() {
+		this.url = `${this.hostname}/users/imports/running`
+		console.log(this.url);
+		return this.http.delete<ServerResponse>(this.url, { headers: this.headers });
+	}
+
+	restartUserImport(userImport: string) {
+		this.url = `${this.hostname}/users/imports/${userImport}`;
+		return this.http.put<ServerResponse>(this.url, null, { headers: this.headers });
+	};
+
+	deleteUserImport(userImport: string) {
+		this.url = `${this.hostname}/users/imports/${userImport}`;
+		return this.http.delete<ServerResponse>(this.url, { headers: this.headers });
+	};
+
+	getImportAs(userImport: string, resultType: string){
+		this.url = `${this.hostname}/users/imports/${userImport}/${resultType}`;
+		return this.http.get(this.url, { headers: this.headers, observe : 'response', responseType: 'blob' });
 	}
 
 }

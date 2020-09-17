@@ -77,13 +77,23 @@ export class RoomsComponent implements OnInit {
           col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
-          col['width'] = 150;
+          col['minWidth'] = 180;
           col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
           col['flex'] = '1';
           col['colId'] = '1';
-          break;
+          columnDefs.push(col);
+          columnDefs.push({
+            headerName: "",
+            minWidth: 200,
+            suppressSizeToFit: true,
+            cellStyle: { 'padding': '2px', 'line-height': '36px' },
+            field: 'actions',
+            pinned: 'left',
+            cellRendererFramework: RoomActionBTNRenderer
+          });
+          continue;
         }
         case 'hwconfId': {
           col['valueGetter'] = function (params) {
@@ -94,16 +104,6 @@ export class RoomsComponent implements OnInit {
       }
       columnDefs.push(col);
     }
-    let action = {
-      headerName: "",
-      width: 230,
-      suppressSizeToFit: true,
-      cellStyle: { 'padding': '2px', 'line-height': '36px' },
-      field: 'actions',
-      pinned: 'left',
-      cellRendererFramework: RoomActionBTNRenderer
-    };
-    columnDefs.splice(1, 0, action);
     this.columnDefs = columnDefs;
   }
   onGridReady(params) {

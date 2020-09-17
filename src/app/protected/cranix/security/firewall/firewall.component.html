@@ -11,13 +11,13 @@
     </ion-fab-button>
     <ion-fab-list side="start">
       <ion-fab-button size="small" (click)="applyChanges()">
-        <ion-icon slot="icon-only" name="checkmark-sharp"></ion-icon>
+        <ion-icon slot="icon-only" name="checkmark"></ion-icon>
       </ion-fab-button>
       <ion-fab-button *ngIf="segment == 'out'" (click)="addOutgoinRule()">
         <ion-icon name="add-circle-outline"></ion-icon>
       </ion-fab-button>
       <ion-fab-button *ngIf="segment == 'out'" (click)="deleteOutgoinRule()">
-        <ion-icon name="add-circle-outline"></ion-icon>
+        <ion-icon name="trash-outline"></ion-icon>
       </ion-fab-button>
       <ion-fab-button *ngIf="segment == 'remote'" size="small" (click)="addRemoteRule()">
         <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
@@ -53,30 +53,30 @@
           </ion-segment>
         </ion-col>
         <ion-col  size="4" class="ion-align-self-center ion-text-end hidden-xs hidden-sm hidden-md">
-          <ion-button size="small" (click)="applyChanges()" matTooltip="{{'Apply changes.' | translate }}">
-            <ion-icon slot="icon-only" name="checkmark-sharp"></ion-icon>
+          <ion-button size="small" (click)="applyChanges()" matTooltip="{{'Apply changes' | translate }}">
+            <ion-icon slot="icon-only" name="checkmark"></ion-icon>
           </ion-button>
           <ion-button *ngIf="segment == 'out'" size="small" (click)="addOutgoinRule()"
-            matTooltip="{{'Add outgoing rule.' | translate }}">
-            <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+            matTooltip="{{'Add outgoing rule' | translate }}">
+            <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
           <ion-button *ngIf="segment == 'out'" size="small" (click)="deleteOutgoinRule()"
-            matTooltip="{{'Delete outgoing rule.' | translate }}">
-            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+            matTooltip="{{'Delete selected outgoing rule' | translate }}">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
           </ion-button>
           <ion-button *ngIf="segment == 'remote'" size="small" (click)="addRemoteRule()"
-            matTooltip="{{'Add remote access rule.' | translate }}">
-            <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+            matTooltip="{{'Add remote access rule' | translate }}">
+            <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
           <ion-button *ngIf="segment == 'remote'" size="small" (click)="deleteRemoteRule()"
-            matTooltip="{{'Delete remote access rule.' | translate }}">
-            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+            matTooltip="{{'Delete selected remote access rule' | translate }}">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="restartFirewall()" matTooltip="{{'Restart firewall.' | translate }}">
-            <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+          <ion-button size="small" (click)="restartFirewall()" matTooltip="{{'Restart firewall' | translate }}">
+            <ion-icon slot="icon-only" name="refresh"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="stopFirewall()" matTooltip="{{'Stop firewall.' | translate }}">
-            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+          <ion-button size="small" (click)="stopFirewall()" matTooltip="{{'Stop firewall' | translate }}">
+            <ion-icon slot="icon-only" name="close"></ion-icon>
           </ion-button>
         </ion-col>
       </ion-row>

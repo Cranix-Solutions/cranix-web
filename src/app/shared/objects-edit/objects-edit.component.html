@@ -1,19 +1,20 @@
-<form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
+<form #editForm="ngForm" (ngSubmit)="onSubmit(editForm.value)">
   <ion-header translucent>
     <ion-toolbar>
-      <ion-title>{{  objectActionTitle | translate }}</ion-title> 
+      <ion-title>{{  objectActionTitle | translate }}</ion-title>
       <ion-buttons slot="end">
         <ion-button *ngIf="objectType == 'institute'" fill="clear" size="small" (click)="setNextDefaults()"
-          matTooltip="{{'Set the next default values' | translate }}" disabled="{{editForm.disabled}}">
+          matTooltip="{{'Set the next default values' | translate }}" disabled="disabled">
           <ion-icon slot="icon-only" name="refresh"></ion-icon>
         </ion-button>
         <ion-button type="submit" class="ion-no-margin" [disabled]="!editForm.valid">
           <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
         </ion-button>
-        <ion-button *ngIf="objectAction == 'modify' && objectType != 'settings'" fill="clear" size="small" (click)="deleteObject()" disabled="{{editForm.disabled}}">
+        <ion-button *ngIf="objectAction == 'modify' && objectType != 'settings'" fill="clear" size="small"
+          (click)="deleteObject()" [disabled]="disabled">
           <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
         </ion-button>
-        <ion-button fill="clear" size="small" (click)="closeWindow()" disabled="{{editForm.disabled}}">
+        <ion-button fill="clear" size="small" (click)="closeWindow()" [disabled]="disabled">
           <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
         </ion-button>
       </ion-buttons>
@@ -23,16 +24,17 @@
     <ion-list lines="full" class="ion-no-margin ion-no-padding">
       <div *ngFor=" let key of objectKeys" [ngSwitch]="objectService.typeOf(key,object,objectAction)">
         <ion-item *ngSwitchCase="'file'">
-          <ion-label >{{ key | translate }}{{objectService.required[key]}}</ion-label>
-          <input slot="end" type="file" formControlName="{{key}}"  (change)="handleFileInput($event.target.files)">
+          <ion-label>{{ key | translate }}{{objectService.required[key]}}</ion-label>
+          <input slot="end" type="file" [(ngModel)]="object[key]" name="{{key}}"
+            (change)="handleFileInput($event.target.files)">
         </ion-item>
         <ion-item *ngSwitchCase="'booleanTrue'">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
-          <ion-toggle slot="end" formControlName="{{key}}" color="secondary" checked></ion-toggle>
+          <ion-toggle slot="end" [(ngModel)]="object[key]" name="{{key}}" color="secondary" checked></ion-toggle>
         </ion-item>
         <ion-item *ngSwitchCase="'booleanFalse'">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
-          <ion-toggle slot="end" formControlName="{{key}}" color="secondary"></ion-toggle>
+          <ion-toggle slot="end" [(ngModel)]="object[key]" name="{{key}}" color="secondary"></ion-toggle>
         </ion-item>
         <ion-item *ngSwitchCase="'string'">
           <ion-label position="stacked">{{ key | translate }}{{objectService.required[key]}}</ion-label>
@@ -40,57 +42,52 @@
             *ngIf="editForm.controls[key] && editForm.controls[key].hasError('required')  && editForm.controls[key].touched">
             {{ 'This field is required!' | translate }}</ion-label>
           <ng-template [ngIf]="objectService.selects[key]" [ngIfElse]="elseBlock">
-            <ion-select type="text" formControlName="{{key}}" [compareWith]="objectService.compareFn"
+            <ion-select type="text" [(ngModel)]="object[key]" name="{{key}}" [compareWith]="objectService.compareFn"
               [required]="objectService.required[key]">
               <ion-select-option *ngFor="let option of  objectService.selects[key]" value="{{option}}">
                 {{option | translate}}</ion-select-option>
             </ion-select>
           </ng-template>
           <ng-template #elseBlock>
-            <ion-input type="text" formControlName="{{key}}" value="{{object[key]}}"
+            <ion-input type="text" [(ngModel)]="object[key]" name="{{key}}" value="{{object[key]}}"
               [required]="objectService.required[key]"></ion-input>
           </ng-template>
         </ion-item>
         <ion-item *ngSwitchCase="'stringRO'">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
-          <ion-input color="tertiary" type="text" formControlName="{{key}}" value="{{object[key]}}" readonly>
+          <ion-input color="tertiary" type="text" [(ngModel)]="object[key]" name="{{key}}" value="{{object[key]}}"
+            readonly>
           </ion-input>
         </ion-item>
         <ion-item *ngSwitchCase="'text'" lines="none">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
-          <ion-textarea color="tertiary" autoGrow="true" formControlName="{{key}}" value="{{object[key]}}">
+          <ion-textarea color="tertiary" autoGrow="true" [(ngModel)]="object[key]" name="{{key}}"
+            value="{{object[key]}}">
           </ion-textarea>
         </ion-item>
         <ion-item *ngSwitchCase="'date'">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
-          <!-- label *ngSwitchCase="'date'">
-            {{ key | translate }}
-            <input [owlDateTime]="dt1">
-            <span class="trigger" [owlDateTimeTrigger]="dt1">
-              <i class="fas fa-calendar-alt"></i>
-            </span>
-            <owl-date-time #dt1></owl-date-time>
-          </label -->
-          <!--mat-form-field appearance="standard">
-            <mat-label>{{ key | translate }}</mat-label>
-            <input matInput formControlName="{{key}}" [matDatepicker]="picker">
+          <mat-form-field appearance="standard">
+            <!-- mat-label>{{ key | translate }}</mat-label -->
+            <input matInput [(ngModel)]="object[key]" name="{{key}}" placeholder="{{object[key] | date:'yyyy-MM-dd'}}"
+              [matDatepicker]="picker">
             <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field -->
-          <!-- ion-input formControlName="{{key}}" type="text" value="{{object[key] | date:'yyyy-MM-dd'}}"></ion-input -->
-          <ion-datetime formControlName="{{key}}" cancelText="{{ 'cancel' | translate }}" displayFormat="YYYY-MM-DD"
-            doneText="{{'apply' | translate }}" max="2100" value="{{object[key] | date:'yyyy-MM-dd'}}"
-            pickerOptions="pickerOptions"></ion-datetime>
+            <mat-datepicker #picker [startAt]="object[key] | date:'yyyy-MM-dd'"></mat-datepicker>
+          </mat-form-field>
+          <!-- ion-input  [(ngModel)]="object[key]" name="{{key}}" type="text" value="{{object[key] | date:'yyyy-MM-dd'}}"></ion-input>
+          <ion-datetime  [(ngModel)]="object[key]" name="{{key}}" cancelText="{{ 'cancel' | translate }}" displayFormat="YYYY-MM-DD"
+            doneText="{{'apply' | translate }}" max="2100" value="{{object[key]}}"
+            pickerOptions="pickerOptions"></ion-datetime -->
         </ion-item>
         <ion-item *ngSwitchCase="'date-time'">
           <mat-form-field fxFlexOffset="2" fxFlex="32">
             <ion-label position="stacked">{{ key | translate }}</ion-label>
-            <ion-input matInput formControlName="{{key}}" [matDatepicker]="picker">
-              <mat-datepicker #picker></mat-datepicker>
-              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            </ion-input>
+            <input matInput [(ngModel)]="object[key]" name="{{key}}" placeholder="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z' }}"
+              [matDatepicker]="picker">
+            <mat-datepicker #picker [startAt]="object[key] | date:'yyyy-MM-dd HH:mm:ss Z'"></mat-datepicker>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           </mat-form-field>
-          <!-- ion-datetime formControlName="{{key}}" cancel-text="{{ 'cancel' | translate }}"
+          <!-- ion-datetime  [(ngModel)]="object[key]" name="{{key}}" cancel-text="{{ 'cancel' | translate }}"
             displayFormat="YYYY-MM-DD HH:mm" done-text="{{'apply' | translate }}" max="2100"
             value="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z'}}">
           </ion-datetime -->
@@ -101,25 +98,28 @@
             *ngIf="editForm.controls[key] && editForm.controls[key].hasError('required')  && editForm.controls[key].touched">
             {{ 'This field is required!' | translate }}</ion-label>
           <ng-template [ngIf]="objectService.selects[key]" [ngIfElse]="elseBlock">
-            <ion-select type="text" formControlName="{{key}}" [compareWith]="objectService.compareFn"
+            <ion-select type="text" [(ngModel)]="object[key]" name="{{key}}" [compareWith]="objectService.compareFn"
               [required]="objectService.required[key]">
               <ion-select-option *ngFor="let option of  objectService.selects[key]" value="{{option}}">
                 {{option | idToName:objectService.idToPipe(key)}}</ion-select-option>
             </ion-select>
           </ng-template>
           <ng-template #elseBlock>
-            <ion-input type="text" formControlName="{{key}}"
+            <ion-input type="text" [(ngModel)]="object[key]" name="{{key}}"
               value="{{object[key] | idToName:objectService.idToPipe(key) }}" [required]="objectService.required[key]">
             </ion-input>
           </ng-template>
         </ion-item>
         <ion-item *ngSwitchCase="'idsPipe'">
-          <ion-label position="stacked">{{ key.substring(0,key.length -1 ) | translate }}{{objectService.required[key]}}</ion-label>
-            <ion-select class="select-full-width wrap-no" type="text" formControlName="{{key}}" [compareWith]="objectService.compareFn"
-              [required]="objectService.required[key]" multiple="true">
-              <ion-select-option *ngFor="let option of  objectService.selects[key.substring(0,key.length -1 )]" value="{{option}}">
-                {{option | idToName:objectService.idToPipe(key.substring(0,key.length -1 )) | translate }}</ion-select-option>
-            </ion-select>
+          <ion-label position="stacked">{{ key.substring(0,key.length -1 ) | translate }}{{objectService.required[key]}}
+          </ion-label>
+          <ion-select class="select-full-width wrap-no" type="text" [(ngModel)]="object[key]" name="{{key}}"
+            [compareWith]="objectService.compareFn" [required]="objectService.required[key]" multiple="true">
+            <ion-select-option *ngFor="let option of  objectService.selects[key.substring(0,key.length -1 )]"
+              value="{{option}}">
+              {{option | idToName:objectService.idToPipe(key.substring(0,key.length -1 )) | translate }}
+            </ion-select-option>
+          </ion-select>
         </ion-item>
         <ion-item *ngSwitchCase="'multivalued'">
           <ion-label position="stacked">{{ key | translate }}</ion-label>

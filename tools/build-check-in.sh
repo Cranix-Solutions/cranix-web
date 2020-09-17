@@ -8,6 +8,7 @@ if [ $b != "y" ]; then
 	exit
 fi
 cp src/app/services/utils.service.ts-notest src/app/services/utils.service.ts
+cp src/index.html-prod src/index.html
 ionic build --prod
 echo -n "Can we checkin y/n "; read b
 if [ "${b}" != "y" ]; then

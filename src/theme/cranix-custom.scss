@@ -19,7 +19,6 @@ $breakpoints-values: map-values($grid-breakpoints);
       }
     }
   }
-
   @else {
     .hidden-#{nth($breakpoints-keys, $i)} {
       @media (min-width: nth($breakpoints-values, $i)) {
@@ -33,7 +32,7 @@ $breakpoints-values: map-values($grid-breakpoints);
   display          : flex;
   //justify-content: center; /* align horizontal *
   align-items      : center;
-  justify-content  :  space-between;
+  justify-content  : space-between;
   text-overflow    : ellipsis;
   border-right     : 0px !important;
   border-left-width: 0px !important;
@@ -83,6 +82,18 @@ $breakpoints-values: map-values($grid-breakpoints);
   justify-content: center;
 }
 
+input {
+  border      : none;
+  border-width: 0;
+  box-shadow  : none;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}
 /*.ag-header-group-cell-label, .ag-header-cell-label{
   justify-content: center;
 }

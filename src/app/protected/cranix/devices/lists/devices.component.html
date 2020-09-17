@@ -47,10 +47,11 @@
       rowHeight="{{authService.settings.rowHeight}}"
       rowMultiSelectWithClick="{{authService.settings.rowMultiSelectWithClick}}"
       [context]="context"
-      [rowData]="rowData"
       [columnDefs]="columnDefs"
-       (gridReady)="onGridReady($event)"
-       id="agGridTable">
+      [defaultColDef]="defaultColDef"
+      [rowData]="rowData"
+      (gridReady)="onGridReady($event)"
+      id="agGridTable">
       </ag-grid-angular>
     </ion-card-content>
   </ion-card>

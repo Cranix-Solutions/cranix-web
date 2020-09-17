@@ -4,17 +4,14 @@ import { DevicesService } from 'src/app/services/devices.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { RoomsService } from 'src/app/services/rooms.service';
 import { Device, Room, Hwconf } from 'src/app/shared/models/data-model';
-import { ModalController, NavParams } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { LanguageService } from 'src/app/services/language.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { SelfManagementService } from 'src/app/services/selfmanagement.service';
 import { takeWhile } from 'rxjs/operators';
 import { Observable } from 'rxjs/internal/Observable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HwconfsService } from 'src/app/services/hwconfs.service';
-import { from } from 'rxjs';
-import { forkJoin } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+
 
 @Component({
   selector: 'cranix-add-device',
@@ -32,6 +29,7 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
   roomsToSelect: Observable<Room[]>;
   addDeviceForm: FormGroup;
   hwConfs: Observable<Hwconf[]>;
+  disabled: boolean = false;
 
   @Input() addHocRooms: Room[];
   @Input() public rooms: Room;
@@ -39,13 +37,11 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
   constructor(
     public authService: AuthenticationService,
     public deviceService: DevicesService,
-    public languageS: LanguageService,
+    public languageService: LanguageService,
     public modalCtrl: ModalController,
-    private navParams: NavParams,
     public objectService: GenericObjectService,
     public roomService: RoomsService,
     private fb: FormBuilder,
-    private hwConfS: HwconfsService,
     private selfS: SelfManagementService
   ) {
 
@@ -89,9 +85,9 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
       });
       console.log('AddhocRooms', this.addDeviceForm)
     }
-    this.addDeviceForm.valueChanges.subscribe(() => {
+    /**this.addDeviceForm.valueChanges.subscribe(() => {
       this.onFormValuesChanged();
-    });
+    });**/
 
     if (this.addHocRooms) {
       this.roomsToSelect = this.selfS.getMyRooms();
@@ -136,13 +132,21 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
           (err) => { },
           () => this.modalCtrl.dismiss())
     } else {
+      this.disabled = true;
       this.roomService.addDevice(newDevice, newDevice[0].roomId)
         .pipe(takeWhile(() => this.alive))
-        .subscribe((res) => {
-          this.objectService.responseMessage(res);
+        .subscribe((responses) => {
+          let response = this.languageService.trans("List of the results:");
+          for (let resp of responses) {
+            response = response + "<br>" + this.languageService.transResponse(resp);
+          }
+          this.objectService.okMessage(response)
         },
           (err) => { },
-          () => this.modalCtrl.dismiss())
+          () => {
+            this.disabled = false;
+            this.modalCtrl.dismiss()
+          })
     }
   }
 
@@ -162,10 +166,9 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
       this.addDeviceForm.controls['hwconfId'].patchValue(ev.detail.value);
     }
   }
-
-  onFormValuesChanged() {
+/**   onFormValuesChanged() {
     console.log('Form value is: ', this.addDeviceForm);
-  }
+  }**/
   ngOnDestroy() {
     this.alive = false;
   }

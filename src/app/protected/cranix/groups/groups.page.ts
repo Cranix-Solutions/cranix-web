@@ -195,7 +195,7 @@ export class GroupsPage implements OnInit {
     }
     const modal = await this.modalCtrl.create({
       component: ObjectsEditComponent,
-      cssClass: 'medium-modal',
+      cssClass: 'small-modal',
       componentProps: {
         objectType: "group",
         objectAction: action,

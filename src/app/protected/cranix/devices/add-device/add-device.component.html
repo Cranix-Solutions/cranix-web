@@ -1,9 +1,10 @@
 <!--form #addDeviceForm="ngForm" (ngSubmit)="onSubmit(addDeviceForm.value)" [disabled]="!addDeviceForm.valid"-->
+<form [formGroup]="addDeviceForm" (ngSubmit)="onSubmit(addDeviceForm.value)">
   <ion-header translucent>
     <ion-toolbar>
       <ion-title>{{  'Add device' | translate }}</ion-title>
       <ion-buttons slot="end" *ngIf="addDeviceForm">
-        <ion-button (click)="onSubmit(addDeviceForm.value)" class="ion-no-margin"  [disabled]="!addDeviceForm.valid">
+        <ion-button (click)="onSubmit(addDeviceForm.value)" class="ion-no-margin"  [disabled]="!addDeviceForm.valid || disabled">
           <ion-icon slot="icon-only" color="success" name="checkmark-sharp" ></ion-icon>
         </ion-button>
         <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss()">
@@ -13,7 +14,7 @@
     </ion-toolbar>
   </ion-header>
   <ion-content fullscreen *ngIf="addDeviceForm">
-    <form [formGroup]="addDeviceForm" (ngSubmit)="onSubmit(addDeviceForm.value)" >
+    <!-- form [formGroup]="addDeviceForm" (ngSubmit)="onSubmit(addDeviceForm.value)"-->
     <ion-list lines="full">
       <ion-item *ngIf="roomsToSelect && device">
         <ion-label position="stacked">{{'roomId'| translate}}</ion-label>
@@ -71,6 +72,5 @@
         <ion-input type="text"  formControlName="place" ></ion-input>
       </ion-item>
     </ion-list>
-    </form>
   </ion-content>
-<!--/form-->
+</form>

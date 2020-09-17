@@ -11,7 +11,7 @@
     </ion-fab-button>
     <ion-fab-list side="start">
       <ion-fab-button *ngIf="segment == 'positive'" (click)="redirectToEdit($event,null)">
-        <ion-icon name="add-circle" ></ion-icon>
+        <ion-icon name="add-circle"></ion-icon>
       </ion-fab-button>
       <ion-fab-button *ngIf="segment == 'basic'" (click)="writeConfig()">
         <ion-icon color="success" name="checkmark-sharp"></ion-icon>
@@ -35,7 +35,9 @@
             <ion-segment-button value="bad">
               <ion-label>{{'Black list' | translate}}</ion-label>
             </ion-segment-button>
-            <ion-segment-button *ngIf="authService.session.name == 'cephalix'" value="cephalix">
+            <ion-segment-button
+              *ngIf="authService.session.name == 'cephalix' || authService.isAllowed('cephalix.manage')"
+              value="cephalix">
               <ion-label>{{'Cephalix list' | translate}}</ion-label>
             </ion-segment-button>
             <ion-segment-button value="positive">
@@ -49,34 +51,29 @@
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
           <ion-button *ngIf="segment != 'positive'" size="small" (click)="writeConfig()"
-            matTooltip="{{'Write basic configuration.' | translate }}">
-            <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+            matTooltip="{{'Write proxy configuration and restart proxy.' | translate }}">
+            <ion-icon slot="icon-only" color="success" name="checkmark"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="restartProxy()"
-            matTooltip="{{'Restart proxy.' | translate }}">
+          <ion-button size="small" (click)="restartProxy()" matTooltip="{{'Restart proxy.' | translate }}">
             <ion-icon slot="icon-only" name="refresh"></ion-icon>
           </ion-button>
         </ion-col>
       </ion-row>
     </ion-card-header>
     <ion-card-content>
-     <ag-grid-angular *ngIf="segment == 'basic'"
-        style="width: 100%; height: 100%;"
-        class="{{authService.settings.agGridThema}}"
-        rowHeight="{{authService.settings.rowHeight}}"
-        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
-        [rowData]="rowData"
-        [columnDefs]="columnDefs"
-        [context]="context"
-        (gridReady)="proxyGridReady($event)"
-        id="proxyGridTable">
+      <ag-grid-angular *ngIf="segment == 'basic'" style="width: 100%; height: 100%;"
+        class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}"
+        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" [rowData]="rowData"
+        [columnDefs]="columnDefs" [context]="context" (gridReady)="proxyGridReady($event)" id="proxyGridTable">
       </ag-grid-angular>
-      <ion-textarea  *ngIf="segment == 'good'" inputmode="url"  autoGrow="true" value="{{whiteList}}" id="good"></ion-textarea>
-      <ion-textarea  *ngIf="segment == 'bad'" inputmode="url"  autoGrow="true" value="{{blackList}}" id="bad"></ion-textarea>
-      <ion-textarea  *ngIf="segment == 'cephalix'" inputmode="url"  autoGrow="true" value="{{cephalixList}}" id="cephalix"></ion-textarea>
-      <ion-grid  *ngIf="segment == 'positive'">
+      <ion-textarea *ngIf="segment == 'good'" inputmode="url" autoGrow="true" value="{{whiteList}}" id="good">
+      </ion-textarea>
+      <ion-textarea *ngIf="segment == 'bad'" inputmode="url" autoGrow="true" value="{{blackList}}" id="bad">
+      </ion-textarea>
+      <ion-textarea *ngIf="segment == 'cephalix'" inputmode="url" autoGrow="true" value="{{cephalixList}}"
+        id="cephalix"></ion-textarea>
+      <ion-grid *ngIf="segment == 'positive'">
         <ion-row>
-
         </ion-row>
       </ion-grid>
     </ion-card-content>

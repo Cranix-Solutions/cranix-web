@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CheckBoxBTNRenderer } from 'src/app/pipes/ag-checkbox-renderer';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SecurityService } from 'src/app/services/security-service';
-import { RoomIdCellRenderer } from 'src/app/pipes/ag-roomid-render';
 import { AccessInRoom } from 'src/app/shared/models/secutiry-model';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { AllModules } from '@ag-grid-enterprise/all-modules';
@@ -20,11 +18,11 @@ import { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
 export class RoomAccessComponent implements OnInit {
   segment = 'list';
   rowData: AccessInRoom[] = [];
+  disabled: boolean= false;
   accessOptions = {};
   context;
   accessApi;
   accessColumnApi;
-  accessSelected;
   columnDefs: any[] = [];
   autoGroupColumnDef;
   defaultColDef;
@@ -49,16 +47,16 @@ export class RoomAccessComponent implements OnInit {
       resizable: true,
     };
     this.autoGroupColumnDef = {
-      minWidth: 150
+      minWidth: 200
     };
-    this.createColumDef();
+    this.createColumnDef();
   }
 
   ngOnInit() {
     this.readDatas();
   }
 
-  createColumDef() {
+  createColumnDef() {
     this.columnDefs = [];
     for (let key of Object.getOwnPropertyNames(new AccessInRoom())) {
       let col = {};
@@ -66,11 +64,16 @@ export class RoomAccessComponent implements OnInit {
       col['field'] = key;
       switch (key) {
         case "roomId": {
-          col['cellRendererFramework'] = RoomIdCellRenderer;
+          col['valueGetter'] = function (params) {
+            if (params.data) {
+              return params.context['componentParent'].objectService.idToName('room', params.data.roomId);
+            }
+          }
           if (this.grouping == 'roomId') {
             col['rowGroup'] = true;
             col['hide'] = true;
           }
+          col['sortable'] = true;
           break;
         }
         case "pointInTime": {
@@ -78,17 +81,14 @@ export class RoomAccessComponent implements OnInit {
             col['rowGroup'] = true;
             col['hide'] = true;
           }
+          col['sortable'] = true;
           break;
         }
         default: {
           col['sortable'] = false;
           col['minWidth'] = 70;
           col['maxWidth'] = 100;
-          if (this.grouping == "") {
-            col['cellRendererFramework'] = CheckBoxBTNRenderer;
-          } else {
-            col['cellRendererFramework'] = YesNoBTNRenderer;
-          }
+          col['cellRendererFramework'] = YesNoBTNRenderer;
         }
       }
       this.columnDefs.push(col);
@@ -158,11 +158,17 @@ export class RoomAccessComponent implements OnInit {
   }
 
   delete() {
-    this.accessSelected = this.accessApi.getSelectedRows();
-    for (let obj of this.accessSelected) {
+    let accessSelected = this.accessApi.getSelectedRows();
+    if( accessSelected.length == 0 ) {
+      this.objectService.selectObject();
+      return;
+    }
+    this.disabled = true;
+    for (let obj of accessSelected) {
       this.securityService.deleteAccessInRoom(obj.id);
       setTimeout(() => { this.authService.log("World!"); }, 1000);
     }
     this.readDatas();
+    this.disabled = false;
   }
 }
