@@ -1,41 +1,41 @@
-<!--form #addDeviceForm="ngForm" (ngSubmit)="onSubmit(addDeviceForm.value)" [disabled]="!addDeviceForm.valid"-->
-<form [formGroup]="addDeviceForm" (ngSubmit)="onSubmit(addDeviceForm.value)">
-  <ion-header translucent>
-    <ion-toolbar>
-      <ion-title>{{  'Add device' | translate }}</ion-title>
-      <ion-buttons slot="end" *ngIf="addDeviceForm">
-        <ion-button (click)="onSubmit(addDeviceForm.value)" class="ion-no-margin"  [disabled]="!addDeviceForm.valid || disabled">
-          <ion-icon slot="icon-only" color="success" name="checkmark-sharp" ></ion-icon>
-        </ion-button>
-        <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss()">
-          <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content fullscreen *ngIf="addDeviceForm">
-    <!-- form [formGroup]="addDeviceForm" (ngSubmit)="onSubmit(addDeviceForm.value)"-->
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-title>{{  'Add device' | translate }}</ion-title>
+    <ion-buttons slot="end" *ngIf="addDeviceForm">
+      <ion-button (click)="onSubmit(addDeviceForm.value)" class="ion-no-margin"
+        [disabled]="!addDeviceForm.valid || disabled">
+        <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss()">
+        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content fullscreen *ngIf="addDeviceForm">
+  <form [formGroup]="addDeviceForm" (ngSubmit)="onSubmit(addDeviceForm.value)">
     <ion-list lines="full">
       <ion-item *ngIf="roomsToSelect && device">
         <ion-label position="stacked">{{'roomId'| translate}}</ion-label>
-        <ion-select type="text" formControlName="roomId" (ionChange)="roomChanged($event)" [compareWith]="objectService.compareFn">
+        <ion-select type="text" formControlName="roomId" (ionChange)="roomChanged($event)"
+          [compareWith]="objectService.compareFn">
           <ion-select-option *ngFor="let room of roomsToSelect | async" value="{{room.id}}">{{room.name}}
           </ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item *ngIf="!addHocRooms && device && ipAdresses">
         <ion-label position="stacked">{{'ip'| translate}}</ion-label>
-        <ion-select type="text"  formControlName="ip" (ionChange)="ipChanged($event)" >
+        <ion-select type="text" formControlName="ip" (ionChange)="ipChanged($event)">
           <ion-select-option *ngFor="let ip of ipAdresses " value="{{ip}}">{{ip.split(' ')[0]}}</ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item *ngIf="device">
         <ion-label position="stacked">{{'name'|translate}}</ion-label>
-        <ion-input type="text" formControlName="name" name="name" ></ion-input>
+        <ion-input type="text" formControlName="name" name="name"></ion-input>
       </ion-item>
       <ion-item *ngIf="!addHocRooms">
         <ion-label position="stacked">{{'hwconfId'| translate}}</ion-label>
-        <ion-select formControlName="hwconfId" [compareWith]="objectService.compareFn" >
+        <ion-select formControlName="hwconfId" [compareWith]="objectService.compareFn">
           <ion-select-option *ngFor="let hw of hwConfs | async" value="{{hw.id}}">
             {{hw.name}}
           </ion-select-option>
@@ -46,31 +46,31 @@
         <ion-textarea type="text" formControlName="mac"></ion-textarea>
       </ion-item>
       <ng-template #room>
-        <ion-item >
+        <ion-item>
           <ion-label position="stacked">{{'mac'|translate}}</ion-label>
           <ion-input type="text" formControlName="mac"></ion-input>
         </ion-item>
       </ng-template>
       <ion-item *ngIf="!addHocRooms">
         <ion-label position="stacked">{{'wlanMac'|translate}}</ion-label>
-        <ion-input type="text"  formControlName="wlanMac" ></ion-input>
+        <ion-input type="text" formControlName="wlanMac"></ion-input>
       </ion-item>
       <ion-item *ngIf="!addHocRooms">
         <ion-label position="stacked">{{'serial'|translate}}</ion-label>
-        <ion-input type="text"   formControlName="serial" ></ion-input>
+        <ion-input type="text" formControlName="serial"></ion-input>
       </ion-item>
       <ion-item *ngIf="!addHocRooms">
         <ion-label position="stacked">{{'inventary'|translate}}</ion-label>
-        <ion-input type="text"   formControlName="inventary" ></ion-input>
+        <ion-input type="text" formControlName="inventary"></ion-input>
       </ion-item>
       <ion-item *ngIf="!addHocRooms">
         <ion-label position="stacked">{{'row'|translate}}</ion-label>
-        <ion-input type="text"  formControlName="row" ></ion-input>
+        <ion-input type="text" formControlName="row"></ion-input>
       </ion-item>
       <ion-item *ngIf="!addHocRooms">
         <ion-label position="stacked">{{'place'|translate}}</ion-label>
-        <ion-input type="text"  formControlName="place" ></ion-input>
+        <ion-input type="text" formControlName="place"></ion-input>
       </ion-item>
     </ion-list>
-  </ion-content>
-</form>
+  </form>
+</ion-content>
