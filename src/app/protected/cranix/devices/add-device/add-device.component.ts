@@ -151,6 +151,7 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
             response = response + "<br>" + this.languageService.transResponse(resp);
           }
           this.objectService.okMessage(response)
+          this.objectService.getObjects('devices');
         },
           (err) => { },
           () => {

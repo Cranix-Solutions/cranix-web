@@ -27,6 +27,11 @@ export class SecurityService {
   public outgoinChanged: boolean = false;
   public incomingChanged: boolean = false;
   public remoteChanged: boolean = false;
+  public proxyChanged = {
+    good: false,
+    bad: false,
+    cephalix: false
+  }
 
   constructor(
     private authService: AuthenticationService,
@@ -180,17 +185,49 @@ export class FirewallCanDeactivate implements CanDeactivate<SecurityService> {
   canDeactivate(securityService: SecurityService) {
     if (this.securityService.outgoinChanged) {
       return window.confirm(
-        this.languageS.trans('The outgoing rules was changed but not saved. Do you really want to cancel?')
+        this.languageS.trans('The outgoing rules was changed but not saved.') +
+        this.languageS.trans('The changes will be lost if you leave the module.')
       );
     }
     if (this.securityService.remoteChanged) {
       return window.confirm(
-        this.languageS.trans('The remote rules was changed but not saved. Do you really want to cancel?')
+        this.languageS.trans('The remote rules was changed but not saved.') +
+        this.languageS.trans('The changes will be lost if you leave the module.')
       );
     }
     if (this.securityService.incomingChanged) {
       return window.confirm(
-        this.languageS.trans('The incomming rules was changed but not saved. Do you really want to cancel?')
+        this.languageS.trans('The incomming rules was changed but not saved.') +
+        this.languageS.trans('The changes will be lost if you leave the module.')
+      );
+    }
+    return true;
+  }
+}
+
+@Injectable()
+export class ProxyCanDeactivate implements CanDeactivate<SecurityService> {
+  constructor(
+    public languageS: LanguageService,
+    public securityService: SecurityService
+  ) { }
+  canDeactivate(securityService: SecurityService) {
+    if (this.securityService.proxyChanged['good']) {
+      return window.confirm(
+        this.languageS.trans('The white list was changed.') +
+        this.languageS.trans('The changes will be lost if you leave the module.')
+      );
+    }
+    if (this.securityService.proxyChanged['bad']) {
+      return window.confirm(
+        this.languageS.trans('The black list was changed.') +
+        this.languageS.trans('The changes will be lost if you leave the module.')
+      );
+    }
+    if (this.securityService.proxyChanged['cephalix']) {
+      return window.confirm(
+        this.languageS.trans('The chephalix list  was changed.') +
+        this.languageS.trans('The changes will be lost if you leave the module.')
       );
     }
     return true;

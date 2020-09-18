@@ -1,4 +1,7 @@
 {
+    "Custom list was written succesfull":"Eigene Liste wurde erfolgreich geschrieben",
+    "%s was created succesfully.":"%s wurde erfolgreich erstellt.",
+    "%s was deleted succesfully.":"%s wurde erfolgreich gelöscht.",
     "Acces was deleted succesfully": "Zugriffsregel wurde erfolgreich gelöscht",
     "Access state in %s was set succesfully.": "Zungangsstatus im Raum %s wurde gäendert.",
     "Actual status": "Aktueller Status",

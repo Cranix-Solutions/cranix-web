@@ -22,7 +22,7 @@
   </ion-header>
   <ion-content fullscreen>
     <ion-list lines="full" class="ion-no-margin ion-no-padding">
-      <div *ngFor=" let key of objectKeys" [ngSwitch]="objectService.typeOf(key,object,objectAction)">
+      <div *ngFor="let key of objectKeys" [ngSwitch]="objectService.typeOf(key,object,objectAction)">
         <ion-item *ngSwitchCase="'file'">
           <ion-label>{{ key | translate }}{{objectService.required[key]}}</ion-label>
           <input slot="end" type="file" [(ngModel)]="object[key]" name="{{key}}"
