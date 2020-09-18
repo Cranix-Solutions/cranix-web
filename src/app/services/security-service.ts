@@ -122,6 +122,11 @@ export class SecurityService {
     );
   }
 
+	getActualAccessStatus() {
+		this.url = `${this.hostname}/rooms/accessStatus`;
+		return this.http.get<AccessInRoom[]>(this.url, { headers: this.headers });
+	}
+
   addAccessInRoom(accessInRoom: AccessInRoom) {
     this.url = this.hostname + "/rooms/" + accessInRoom.roomId + "/accessList";
     console.log(this.url);

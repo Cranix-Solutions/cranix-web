@@ -144,12 +144,6 @@ export class RoomsService {
 		this.url = `${this.hostname}/rooms/${room}/availablePrinters`;
 		return this.http.get<Printer[]>(this.url, { headers: this.headers });
 	}
-
-	getAllAccess() {
-		this.url = `${this.hostname}/rooms/accessStatus`;
-		return this.http.get<AccessStatus[]>(this.url, { headers: this.headers });
-	}
-
 	getHWinRoom(id: number) {
 		this.url = `${this.hostname}/rooms/${id}/hwConf`;
 		return this.http.get<Hwconf>(this.url, { headers: this.headers });
