@@ -150,10 +150,10 @@ export class RoomAccessComponent implements OnInit {
     }
   }
   segmentChanged(event) {
-    this.segment = event.detail.value;
     if( this.segment == 'status' ) {
       this.createAccesColumnDef();
     }
+    this.segment = event.detail.value;
   }
 
   readDatas() {
