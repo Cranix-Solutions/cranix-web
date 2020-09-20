@@ -2,7 +2,7 @@
   <ion-card-header *ngIf="device">
     <ion-toolbar>
       <ion-label>
-        {{device.name}} : {{device.loggedInId | userIdToName }}
+        {{device.name}} : {{userId | userIdToName}}
       </ion-label>
       <ion-buttons slot="end">
         <ion-button fill="clear" (click)="openAction($event)">
