@@ -14,7 +14,7 @@
         <ion-icon name="ellipsis-vertical-sharp" (click)="openActions($event,null)"></ion-icon>
       </ion-fab-button>
       <ion-fab-button>
-        <ion-icon name="add-circle-outline" (click)="redirectToEdit($event,null)"></ion-icon>
+        <ion-icon name="add-circle" (click)="redirectToEdit($event,null)"></ion-icon>
       </ion-fab-button>
       <ion-fab-button>
         <ion-icon name="apps" (click)="openCollums($event)"></ion-icon>
@@ -36,7 +36,7 @@
         <ion-col offset="6" size="3" class="ion-align-self-center ion-text-end hidden-xs hidden-sm hidden-md">
           <ion-button size="small" (click)="redirectToEdit($event,null)"
             matTooltip="{{'Create a new group' | translate }}">
-            <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+            <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
           <ion-button size="small" (click)="openActions($event,null)"
             matTooltip="{{'Apply actions on the selected objects' | translate }}">

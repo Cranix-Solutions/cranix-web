@@ -50,6 +50,7 @@ export class UsersImport {
 	cleanClassDirs: boolean = false;
 	resetPassword: boolean = false;
 	appendBirthdayToPassword: boolean = false;
+	appendClassToPassword: boolean = false;
 	result?: any = null;
 	importFile: any;
 	constructor() { }
