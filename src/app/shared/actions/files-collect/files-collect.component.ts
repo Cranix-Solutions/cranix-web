@@ -34,9 +34,7 @@ export class FilesCollectComponent implements OnInit {
       let fd = new FormData();
       fd.append('projectName', object.projectName);
       fd.append('objectIds', this.actionMap.objectIds.join(","));
-      if (this.objectType == "group") {
-        fd.append('studentsOnly', object.studentsOnly ? "true" : "false");
-      }
+      fd.append('studentsOnly', object.studentsOnly ? "true" : "false");
       fd.append('sortInDirs', object.sortInDirs ? "true" : "false");
       fd.append('cleanUpExport', object.cleanUpExport ? "true" : "false");
       this.educationController.collectDataFromObjects(fd, this.objectType);
