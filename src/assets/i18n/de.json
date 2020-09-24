@@ -1,4 +1,5 @@
 {
+    "User parameters were modified successfully.":"Die Benutzerdaten wurden erfolgreich geändert.",
     "Support request '%s' was created with ticket number '%s'. Answer will be sent to '%s'.":"Die Supportanfrage '%s' wurde mit der Nummer '%s' erstellt. Anwort wird an '%s' gesendet",
     "File was collected from: %s": "Datei(en) wurde(n) von %s eingesammelt",
     "%s was created succesfully.": "%s wurde erfolgreich erstellt.",

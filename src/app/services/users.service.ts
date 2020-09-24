@@ -28,65 +28,48 @@ interface UserList {
 export class UsersService {
 	hostname: string;
 	url: string;
-	token: string;
-	headers: HttpHeaders;
 
 	constructor(
 		private http: HttpClient,
 		private utilsS: UtilsService,
 		private authService: AuthenticationService) {
 		this.hostname = this.utilsS.hostName();
-		this.token = this.authService.getToken();
-		this.headers = new HttpHeaders({
-			'Content-Type': "application/json",
-			'Accept': "application/json",
-			'Authorization': "Bearer " + this.token
-		});
-		this.authService.log('Constructor Users completed');
 	};
 
 	removeUserFromGroup(uId: number, gId: number) {
 		this.url = this.hostname + `/users/${uId}/${gId}`;
-		return this.http.delete<ServerResponse>(this.url, { headers: this.headers });
+		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
 	}
 
 	addUserToGroups(ui: number, groups: any[]) {
 		const body = groups;
 		this.url = `${this.hostname}/users/${ui}/groups`;
-		return this.http.post<ServerResponse>(this.url, body, { headers: this.headers });
+		return this.http.post<ServerResponse>(this.url, body, { headers: this.authService.headers });
 	}
 
 	getUsersGroups(uid: number) {
 		this.url = `${this.hostname}/users/${uid}/groups`
 		console.log(this.url);
-		const headers = new HttpHeaders({
-			'Accept': "application/json",
-			'Authorization': "Bearer " + this.token
-		});
-		return this.http.get<Group[]>(this.url, { headers: headers });
+		return this.http.get<Group[]>(this.url, { headers: this.authService.headers });
 	}
 
 	getUsersAvailableGroups(uid: number) {
 		this.url = `${this.hostname}/users/${uid}/availableGroups`
 		console.log(this.url);
-		const headers = new HttpHeaders({
-			'Accept': "application/json",
-			'Authorization': "Bearer " + this.token
-		});
-		return this.http.get<Group[]>(this.url, { headers: headers });
+		return this.http.get<Group[]>(this.url, { headers: this.authService.headers });
 	}
 
 	setUsersGroups(uid: number, groups: number[]) {
 		const body = groups;
 		this.url = `${this.hostname}/users/${uid}/groups/set`;
-		return this.http.post<ServerResponse>(this.url, body, { headers: this.headers });
+		return this.http.post<ServerResponse>(this.url, body, { headers: this.authService.headers });
 	};
 
 	importUsers(imp: FormData) {
 		this.url = this.hostname + `/users/import`;
 		const headers = new HttpHeaders({
 			'Accept': "application/json",
-			'Authorization': "Bearer " + this.token
+			'Authorization': "Bearer " + this.authService.session.token
 		});
 		console.log(this.url)
 		console.log(headers)
@@ -97,34 +80,34 @@ export class UsersService {
 	getAllImports() {
 		this.url = this.hostname + "/users/imports";
 		console.log(this.url);
-		return this.http.get<UsersImport[]>(this.url, { headers: this.headers });
+		return this.http.get<UsersImport[]>(this.url, { headers: this.authService.headers });
 	}
 
 	getRunningImport() {
 		this.url = `${this.hostname}/users/imports/running`
 		console.log(this.url);
-		return this.http.get<UsersImport>(this.url, { headers: this.headers });
+		return this.http.get<UsersImport>(this.url, { headers: this.authService.headers });
 	}
 
 	stopRunningImport() {
 		this.url = `${this.hostname}/users/imports/running`
 		console.log(this.url);
-		return this.http.delete<ServerResponse>(this.url, { headers: this.headers });
+		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
 	}
 
 	restartUserImport(userImport: string) {
 		this.url = `${this.hostname}/users/imports/${userImport}`;
-		return this.http.put<ServerResponse>(this.url, null, { headers: this.headers });
+		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
 	};
 
 	deleteUserImport(userImport: string) {
 		this.url = `${this.hostname}/users/imports/${userImport}`;
-		return this.http.delete<ServerResponse>(this.url, { headers: this.headers });
+		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
 	};
 
 	getImportAs(userImport: string, resultType: string){
 		this.url = `${this.hostname}/users/imports/${userImport}/${resultType}`;
-		return this.http.get(this.url, { headers: this.headers, observe : 'response', responseType: 'blob' });
+		return this.http.get(this.url, { headers: this.authService.headers, observe : 'response', responseType: 'blob' });
 	}
 
 }

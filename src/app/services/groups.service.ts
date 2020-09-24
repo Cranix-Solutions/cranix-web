@@ -13,32 +13,23 @@ import { Group, User } from 'src/app/shared/models/data-model';
 export class GroupsService {
 	hostname: string;
 	url: string;
-	token: string;
-	headers: HttpHeaders;
 
 	constructor(
 		private utilsS: UtilsService,
 		private http: HttpClient,
 		private authService: AuthenticationService) {
 			this.hostname = this.utilsS.hostName();
-			this.token    = this.authService.getToken();
-			this.headers  = new HttpHeaders({
-				'Content-Type': "application/json",
-				'Accept': "application/json",
-				'Authorization': "Bearer " + this.token
-			});
-			this.authService.log('Constructor Users completed');
 	}
 
 
 	importGroups(fd: FormData){
 		this.url = this.hostname + `/groups/import`;
-		return this.http.post<ServerResponse>(this.url,fd, { headers: this.headers});
+		return this.http.post<ServerResponse>(this.url,fd, { headers: this.authService.headers});
 	}
 
 	getAllClasses(){
 		this.url = this.hostname + "/groups/byType/class";
-		return this.http.get<Group[]>(this.url, { headers: this.headers});
+		return this.http.get<Group[]>(this.url, { headers: this.authService.headers});
 	}
 
 	getMembers(id: number): Observable<User[]>{
@@ -47,7 +38,7 @@ export class GroupsService {
 		} else {
 			this.url = `${this.hostname}/education/groups/${id}/members`;
 		}
-		return this.http.get<User[]>(this.url, { headers: this.headers });
+		return this.http.get<User[]>(this.url, { headers: this.authService.headers });
 	}
 
 	getAvailiableMembers(id: number): Observable<User[]>{
@@ -56,7 +47,7 @@ export class GroupsService {
 		} else {
 			this.url = `${this.hostname}/education/groups/${id}/availableMembers`;
 		}
-		return this.http.get<User[]>(this.url, { headers: this.headers });
+		return this.http.get<User[]>(this.url, { headers: this.authService.headers });
 	}
 
 	setGroupMembers(id: number, membersId: number[]) {
@@ -66,18 +57,18 @@ export class GroupsService {
 			this.url = `${this.hostname}/education/groups/${id}/members`;
 		}
 		const body = membersId;
-		return this.http.post<ServerResponse>(this.url, body, { headers: this.headers });
+		return this.http.post<ServerResponse>(this.url, body, { headers: this.authService.headers });
 	}
 
 	// PUT Calls
 	putUserToGroup(ui: number, gi: number){
 		this.url = `${this.hostname}/groups/${gi}/${ui}`;
-		return this.http.put<ServerResponse>(this.url, null,{ headers: this.headers});
+		return this.http.put<ServerResponse>(this.url, null,{ headers: this.authService.headers});
 	}
 
 	// DELETE Calls
 	deletUserFromGroup(ui:number, gi: number){
 		this.url = `${this.hostname}/groups/${gi}/${ui}`;
-		return this.http.delete<ServerResponse>(this.url, { headers: this.headers });
+		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
 	}
 }

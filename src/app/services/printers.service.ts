@@ -9,43 +9,31 @@ import { AuthenticationService } from './auth.service';
 export class PrintersService {
 
 	hostname: string;
-	headers: HttpHeaders;
-	token: string;
-	url: string;
-
+	url:      string;
 
 	constructor(
 		private utils: UtilsService,
 		private http: HttpClient,
-		private authS: AuthenticationService) {
+		private authService: AuthenticationService) {
 		this.hostname = this.utils.hostName();
-		this.token = this.authS.getToken();
-		this.headers = new HttpHeaders({
-			'Content-Type': "application/json",
-			'Accept': "application/json",
-			'Authorization': "Bearer " + this.token
-		});
 	}
 	add(imp: FormData) {
 		this.url = this.hostname + `/printers/add`;
 		const headers = new HttpHeaders({
 			'Accept': "application/json",
-			'Authorization': "Bearer " + this.token
+			'Authorization': "Bearer " + this.authService.session.token
 		});
-		console.log(this.url)
-		console.log(headers)
-		//console.log(imp.get('file'))
 		return this.http.post<ServerResponse>(this.url, imp, { headers: headers });
 	}
 
 	getDrivers() {
 		this.url = this.hostname + '/printers/availableDrivers';
-		return this.http.get<any>(this.url, { headers: this.headers });
+		return this.http.get<any>(this.url, { headers: this.authService.headers });
 	}
 
 	reset(id: number) {
 		this.url = this.hostname + `/printers/${id}/reset`;
-		return this.http.put<ServerResponse>(this.url, null, { headers: this.headers });
+		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
 	}
 	toggle(id: number, what: string, yesno: boolean) {
 		this.url = this.hostname + `/printers/${id}/`;
@@ -62,6 +50,6 @@ export class PrintersService {
 				this.url = this.url + 'activateWindowsDriver';
 			}
 		}
-		return this.http.put<ServerResponse>(this.url, null, { headers: this.headers });
+		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
 	}
 }

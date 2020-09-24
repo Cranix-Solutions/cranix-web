@@ -112,37 +112,40 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
     let newDevice = [];
     let macs = devices.mac.split('\n');
     let startIndex = this.ipAdresses.indexOf(devices.ip);
-
-    if (macs.length == 1) {
-      newDevice[0] = {
-        name: devices.name,
-        ip: this.ipAdresses[startIndex].split(' ')[0],
-        mac: macs[0],
-        hwconfId: devices.hwconfId,
-        roomId: this.roomId
-      }
-    } else {
-      for (let x = 0; x < macs.length; x++) {
-        newDevice[x] = {
-          name: this.ipAdresses[startIndex + x].split(' ')[1],
-          ip: this.ipAdresses[startIndex + x].split(' ')[0],
-          mac: macs[x],
-          hwconfId: devices.hwconfId,
-          roomId: this.roomId
-        }
-      }
-    }
+    this.disabled = true;
+    this.objectService.requestSent();
     if (this.addHocRooms) {
       console.log('adding Addoc', devices);
       this.selfS.addDevice(devices)
         .pipe(takeWhile(() => this.alive))
         .subscribe((res) => {
-          this.objectService.responseMessage(res);
+	   this.objectService.responseMessage(res);
+	   if( res.code == "OK" ) {
+	       this.modalCtrl.dismiss();
+	   }
         },
           (err) => { },
-          () => this.modalCtrl.dismiss())
+	  () => {this.disabled = false; })
     } else {
-      this.disabled = true;
+      if (macs.length == 1) {
+        newDevice[0] = {
+          name: devices.name,
+          ip: this.ipAdresses[startIndex].split(' ')[0],
+          mac: macs[0],
+          hwconfId: devices.hwconfId,
+          roomId: this.roomId
+        }
+      } else {
+        for (let x = 0; x < macs.length; x++) {
+          newDevice[x] = {
+            name: this.ipAdresses[startIndex + x].split(' ')[1],
+            ip: this.ipAdresses[startIndex + x].split(' ')[0],
+            mac: macs[x],
+            hwconfId: devices.hwconfId,
+            roomId: this.roomId
+          }
+        }
+      }
       this.roomService.addDevice(newDevice, newDevice[0].roomId)
         .pipe(takeWhile(() => this.alive))
         .subscribe((responses) => {
