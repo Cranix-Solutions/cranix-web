@@ -23,7 +23,6 @@ export class UtilsService {
                         url = protocol + "//" + hostname + "/api";
 		}
                 //console.log("From utils: " + url);
-                return "https://78.94.80.30:14444/api";
                 return url ;
         }
         public log(args) {
