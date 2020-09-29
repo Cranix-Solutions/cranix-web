@@ -111,28 +111,41 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
     this.objectService.requestSent()
     let newDevice = [];
     let macs = devices.mac.split('\n');
-
-    for (let x = 0; x < macs.length; x++) {
-      newDevice[x] = {
-        name: this.ipAdresses[this.ipAdresses.indexOf(this.ipAdresses.find(item => item.includes(devices.name))) + x].split(' ')[1],
-        ip: this.ipAdresses[this.ipAdresses.indexOf(this.ipAdresses.find(item => item.includes(devices.name))) + x].split(' ')[0],
-        mac: macs[x],
-        hwconfId: devices.hwconfId,
-        roomId: this.roomId
-      }
-    }
-
+    let startIndex = this.ipAdresses.indexOf(devices.ip);
+    this.disabled = true;
+    this.objectService.requestSent();
     if (this.addHocRooms) {
       console.log('adding Addoc', devices);
       this.selfS.addDevice(devices)
         .pipe(takeWhile(() => this.alive))
         .subscribe((res) => {
-          this.objectService.responseMessage(res);
+	   this.objectService.responseMessage(res);
+	   if( res.code == "OK" ) {
+	       this.modalCtrl.dismiss();
+	   }
         },
           (err) => { },
-          () => this.modalCtrl.dismiss())
+	  () => {this.disabled = false; })
     } else {
-      this.disabled = true;
+      if (macs.length == 1) {
+        newDevice[0] = {
+          name: devices.name,
+          ip: this.ipAdresses[startIndex].split(' ')[0],
+          mac: macs[0],
+          hwconfId: devices.hwconfId,
+          roomId: this.roomId
+        }
+      } else {
+        for (let x = 0; x < macs.length; x++) {
+          newDevice[x] = {
+            name: this.ipAdresses[startIndex + x].split(' ')[1],
+            ip: this.ipAdresses[startIndex + x].split(' ')[0],
+            mac: macs[x],
+            hwconfId: devices.hwconfId,
+            roomId: this.roomId
+          }
+        }
+      }
       this.roomService.addDevice(newDevice, newDevice[0].roomId)
         .pipe(takeWhile(() => this.alive))
         .subscribe((responses) => {
@@ -141,6 +154,7 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
             response = response + "<br>" + this.languageService.transResponse(resp);
           }
           this.objectService.okMessage(response)
+          this.objectService.getObjects('devices');
         },
           (err) => { },
           () => {
@@ -166,9 +180,9 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
       this.addDeviceForm.controls['hwconfId'].patchValue(ev.detail.value);
     }
   }
-/**   onFormValuesChanged() {
-    console.log('Form value is: ', this.addDeviceForm);
-  }**/
+  /**   onFormValuesChanged() {
+      console.log('Form value is: ', this.addDeviceForm);
+    }**/
   ngOnDestroy() {
     this.alive = false;
   }

@@ -14,13 +14,13 @@
         <ion-icon slot="icon-only" name="checkmark"></ion-icon>
       </ion-fab-button>
       <ion-fab-button *ngIf="segment == 'out'" (click)="addOutgoinRule()">
-        <ion-icon name="add-circle-outline"></ion-icon>
+        <ion-icon name="add-circle"></ion-icon>
       </ion-fab-button>
       <ion-fab-button *ngIf="segment == 'out'" (click)="deleteOutgoinRule()">
         <ion-icon name="trash-outline"></ion-icon>
       </ion-fab-button>
       <ion-fab-button *ngIf="segment == 'remote'" size="small" (click)="addRemoteRule()">
-        <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+        <ion-icon slot="icon-only" name="add-circle"></ion-icon>
       </ion-fab-button>
       <ion-fab-button *ngIf="segment == 'remote'" size="small" (click)="deleteRemoteRule()">
         <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
@@ -36,7 +36,7 @@
   <ion-card>
     <ion-card-header>
       <ion-row>
-        <ion-col size="12" size-lg="8" size-xl="">
+        <ion-col size="12" size-lg="8" size-xl="8">
           <ion-segment scrollable="true" (ionChange)="segmentChanged($event)" color="secondary" value="in">
             <ion-segment-button value="in" layout="icon-start">
               <ion-label class="hidden-xs hidden-sm">{{'Incoming rules' | translate}}</ion-label>
@@ -84,12 +84,12 @@
     <ion-card-content>
       <ion-grid *ngIf="segment == 'in' && securityService.incomingRules">
         <ion-row>
-          <ion-col size=2>
+          <ion-col size=2 size-xs=6 size-sm=6 size-md=6>
             <ion-item>
               <ion-label>{{ 'ssh access' | translate }}</ion-label>
             </ion-item>
           </ion-col>
-          <ion-col size=2>
+          <ion-col size=2 size-xs=6 size-sm=6 size-md=6>
             <ion-item lines="none">
               <ion-checkbox slot="start" color="secondary" checked="{{securityService.incomingRules.ssh}}"
                 id="incoming-ssh" (ionChange)="incomingChanged()">
@@ -98,12 +98,12 @@
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-col size=2>
+          <ion-col size=2 size-xs=6 size-sm=6 size-md=6>
             <ion-item>
               <ion-label>{{'admin access' | translate}}</ion-label>
             </ion-item>
           </ion-col>
-          <ion-col size=2>
+          <ion-col size=2 size-xs=6 size-sm=6 size-md=6>
             <ion-item lines="none">
               <ion-checkbox slot="start" color="secondary" checked="{{securityService.incomingRules.admin}}"
                 id="incoming-admin" (ionChange)="incomingChanged()">
@@ -112,12 +112,12 @@
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-col size=2>
+          <ion-col size=2 size-xs=6 size-sm=6 size-md=6>
             <ion-item>
               <ion-label>{{'https access' | translate}}</ion-label>
             </ion-item>
           </ion-col>
-          <ion-col size=2>
+          <ion-col size=2 size-xs=6 size-sm=6 size-md=6>
             <ion-item lines="none">
               <ion-checkbox slot="start" color="secondary" checked="{{securityService.incomingRules.https}}"
                 id="incoming-https"  (ionChange)="incomingChanged()">
@@ -126,12 +126,12 @@
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-col size=2>
+          <ion-col size=2 size-xs=6 size-sm=6 size-md=6>
             <ion-item>
               <ion-label>{{'rdesktop access' | translate}}</ion-label>
             </ion-item>
           </ion-col>
-          <ion-col size=9>
+          <ion-col size=2 size-xs=6 size-sm=6 size-md=6>
             <ion-item lines="none">
               <ion-checkbox slot="start" color="secondary" checked="{{securityService.incomingRules.rdesktop}}"
                 id="incoming-rdesktop" (ionChange)="incomingChanged()">
@@ -140,12 +140,12 @@
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-col size=2>
+          <ion-col size=2 size-xs=6 size-sm=6 size-md=6>
             <ion-item>
               <ion-label>{{'open other ports' | translate}}</ion-label>
             </ion-item>
           </ion-col>
-          <ion-col size=10>
+          <ion-col size=10 size-xs=6 size-sm=6 size-md=6>
             <ion-item>
               <ion-input type="text" value="{{securityService.incomingRules.other}}" id="incoming-other" (ionChange)="incomingChanged()">
               </ion-input>

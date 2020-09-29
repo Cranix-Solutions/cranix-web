@@ -18,6 +18,7 @@ export class RoomDevComponent implements OnInit,OnDestroy {
   @Input() place: number;
 
   screenShot;
+  userId;
 
   devStatusSub: Subscription;
   alive : boolean = true; 
@@ -37,6 +38,7 @@ export class RoomDevComponent implements OnInit,OnDestroy {
   
   getScreen() {
     this.screenShot = "data:image/jpg;base64," + this.device.screenShot;
+    this.userId = this.device.loggedInId;
   }
 
   async openAction(ev) {

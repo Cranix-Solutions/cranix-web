@@ -175,6 +175,7 @@ export class ObjectsEditComponent implements OnInit {
     formData.append('cleanClassDirs', object.cleanClassDirs ? "true":"false");
     formData.append('resetPassword', object.resetPassword ? "true":"false");
     formData.append('appendBirthdayToPassword', object.appendBirthdayToPassword ? "true":"false");
+    formData.append('appendClassToPassword', object.appendClassToPassword ? "true":"false");
     console.log(object.test);
     console.log(object.password);
     console.log(this.formData.get("role"))

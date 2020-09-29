@@ -20,7 +20,11 @@ export class MyDevicesComponent implements OnInit,OnDestroy {
   myRooms; 
   constructor(private selfS: SelfManagementService,
     public modalCtrl: ModalController,
-    public objectService: GenericObjectService,) {
+    public objectService: GenericObjectService) {
+
+   }
+
+   ngOnInit() {
       this.selfS.getMyRooms()
           .pipe(takeWhile(() => this.alive ))
           .subscribe((res) => {
@@ -29,12 +33,8 @@ export class MyDevicesComponent implements OnInit,OnDestroy {
           }, (err) => {
             this.objectService.errorMessage(err);
           })
-
-    this.myDevs = this.selfS.getMyDevices()
-
+       this.myDevs = this.selfS.getMyDevices()
    }
-
-  ngOnInit() {}
 
   deleteDev(dev: number){
     this.selfS.removeDevice(dev)
@@ -53,7 +53,6 @@ export class MyDevicesComponent implements OnInit,OnDestroy {
     }else{
       room = this.myRooms
     }
-   console.log('myrooms are:', JSON.stringify(this.myRooms) );
     const modal = await this.modalCtrl.create({
       component: AddDeviceComponent,
       cssClass: 'small-modal',
@@ -63,6 +62,9 @@ export class MyDevicesComponent implements OnInit,OnDestroy {
       animated: true,
       swipeToClose: true,
       backdropDismiss: false
+    });
+    modal.onDidDismiss().then((data) => {
+       this.myDevs = this.selfS.getMyDevices()
     });
     return await modal.present();
   }

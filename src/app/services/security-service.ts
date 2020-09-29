@@ -15,10 +15,7 @@ import { Room } from '../shared/models/data-model';
 @Injectable()
 export class SecurityService {
 
-  headers: HttpHeaders;
-  textHeaders: HttpHeaders;
   hostname: string;
-  token: string;
   url: string;
   incomingRules: IncomingRules;
   outgoingRules: OutgoingRule[];
@@ -27,6 +24,11 @@ export class SecurityService {
   public outgoinChanged: boolean = false;
   public incomingChanged: boolean = false;
   public remoteChanged: boolean = false;
+  public proxyChanged = {
+    good: false,
+    bad: false,
+    cephalix: false
+  }
 
   constructor(
     private authService: AuthenticationService,
@@ -38,75 +40,65 @@ export class SecurityService {
     private utilsS: UtilsService
   ) {
     this.hostname = this.utilsS.hostName();
-    this.token = this.authService.getToken();
-    this.headers = new HttpHeaders({
-      'Content-Type': "application/json",
-      'Accept': "application/json",
-      'Authorization': "Bearer " + this.token
-    });
-    this.textHeaders = new HttpHeaders({
-      'Accept': "text/plain",
-      'Authorization': "Bearer " + this.token
-    });
   }
 
   getAllAccess() {
     this.url = this.hostname + `/rooms/accessList`;
     console.log(this.url);
-    return this.http.get<AccessInRoom[]>(this.url, { headers: this.headers });
+    return this.http.get<AccessInRoom[]>(this.url, { headers: this.authService.headers });
   }
 
   getProxyBasic() {
     this.url = this.hostname + `/system/proxy/basic`;
     console.log(this.url);
-    return this.http.get<any[]>(this.url, { headers: this.headers });
+    return this.http.get<any[]>(this.url, { headers: this.authService.headers });
   }
 
   setProxyBasic(acls) {
     this.url = this.hostname + `/system/proxy/basic`;
     console.log(this.url);
-    return this.http.post<ServerResponse>(this.url, acls, { headers: this.headers });
+    return this.http.post<ServerResponse>(this.url, acls, { headers: this.authService.headers });
   }
 
   getProxyCustom(custom) {
     this.url = this.hostname + `/system/proxy/custom/${custom}`;
     console.log(this.url);
-    return this.http.get<string[]>(this.url, { headers: this.headers });
+    return this.http.get<string[]>(this.url, { headers: this.authService.headers });
   }
 
   setProxyCustom(custom,list: string[]) {
     this.url = this.hostname + `/system/proxy/custom/${custom}`;
     console.log(this.url);
-    return this.http.post<ServerResponse>(this.url, list, { headers: this.headers });
+    return this.http.post<ServerResponse>(this.url, list, { headers: this.authService.headers });
   }
 
   getIncomingRules() {
     this.url = this.hostname + `/system/firewall/incomingRules`;
     console.log(this.url);
-    return this.http.get<IncomingRules>(this.url, { headers: this.headers });
+    return this.http.get<IncomingRules>(this.url, { headers: this.authService.headers });
   }
 
   getOutgoingRules() {
     this.url = this.hostname + `/system/firewall/outgoingRules`;
     console.log(this.url);
-    return this.http.get<OutgoingRule[]>(this.url, { headers: this.headers });
+    return this.http.get<OutgoingRule[]>(this.url, { headers: this.authService.headers });
   }
 
   getRemoteRules() {
     this.url = this.hostname + `/system/firewall/remoteAccessRules`;
     console.log(this.url);
-    return this.http.get<RemoteRule[]>(this.url, { headers: this.headers });
+    return this.http.get<RemoteRule[]>(this.url, { headers: this.authService.headers });
   }
 
   getFirewallRooms() {
     this.url = this.hostname + "/rooms/allWithFirewallControl";
     console.log(this.url);
-    return this.http.get<Room[]>(this.url, { headers: this.headers });
+    return this.http.get<Room[]>(this.url, { headers: this.authService.headers });
   }
 
   async applyChange(rules, rulesName) {
     this.url = this.hostname + '/system/firewall/' + rulesName;
-    let sub = this.http.post<ServerResponse>(this.url, rules, { headers: this.headers }).subscribe(
+    let sub = this.http.post<ServerResponse>(this.url, rules, { headers: this.authService.headers }).subscribe(
       (val) => {
         this.objectService.responseMessage(val);
       },
@@ -117,11 +109,16 @@ export class SecurityService {
     );
   }
 
+	getActualAccessStatus() {
+		this.url = `${this.hostname}/rooms/accessStatus`;
+		return this.http.get<AccessInRoom[]>(this.url, { headers: this.authService.headers });
+	}
+
   addAccessInRoom(accessInRoom: AccessInRoom) {
     this.url = this.hostname + "/rooms/" + accessInRoom.roomId + "/accessList";
     console.log(this.url);
     this.objectService.requestSent();
-    let sub = this.http.post<ServerResponse>(this.url, accessInRoom, { headers: this.headers }).subscribe(
+    let sub = this.http.post<ServerResponse>(this.url, accessInRoom, { headers: this.authService.headers }).subscribe(
       (val) => {
         this.objectService.responseMessage(val);
       },
@@ -136,7 +133,7 @@ export class SecurityService {
     this.url = this.hostname + "/rooms/accessList/" + id;
     console.log(this.url);
     this.objectService.requestSent();
-    let sub = this.http.delete<ServerResponse>(this.url, { headers: this.headers }).subscribe(
+    let sub = this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers }).subscribe(
       (val) => {
         this.objectService.responseMessage(val);
       },
@@ -180,17 +177,49 @@ export class FirewallCanDeactivate implements CanDeactivate<SecurityService> {
   canDeactivate(securityService: SecurityService) {
     if (this.securityService.outgoinChanged) {
       return window.confirm(
-        this.languageS.trans('The outgoing rules was changed but not saved. Do you really want to cancel?')
+        this.languageS.trans('The outgoing rules was changed but not saved.') +
+        this.languageS.trans('The changes will be lost if you leave the module.')
       );
     }
     if (this.securityService.remoteChanged) {
       return window.confirm(
-        this.languageS.trans('The remote rules was changed but not saved. Do you really want to cancel?')
+        this.languageS.trans('The remote rules was changed but not saved.') +
+        this.languageS.trans('The changes will be lost if you leave the module.')
       );
     }
     if (this.securityService.incomingChanged) {
       return window.confirm(
-        this.languageS.trans('The incomming rules was changed but not saved. Do you really want to cancel?')
+        this.languageS.trans('The incomming rules was changed but not saved.') +
+        this.languageS.trans('The changes will be lost if you leave the module.')
+      );
+    }
+    return true;
+  }
+}
+
+@Injectable()
+export class ProxyCanDeactivate implements CanDeactivate<SecurityService> {
+  constructor(
+    public languageS: LanguageService,
+    public securityService: SecurityService
+  ) { }
+  canDeactivate(securityService: SecurityService) {
+    if (this.securityService.proxyChanged['good']) {
+      return window.confirm(
+        this.languageS.trans('The white list was changed.') +
+        this.languageS.trans('The changes will be lost if you leave the module.')
+      );
+    }
+    if (this.securityService.proxyChanged['bad']) {
+      return window.confirm(
+        this.languageS.trans('The black list was changed.') +
+        this.languageS.trans('The changes will be lost if you leave the module.')
+      );
+    }
+    if (this.securityService.proxyChanged['cephalix']) {
+      return window.confirm(
+        this.languageS.trans('The chephalix list  was changed.') +
+        this.languageS.trans('The changes will be lost if you leave the module.')
       );
     }
     return true;

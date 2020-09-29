@@ -18,12 +18,16 @@ import { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
 export class RoomAccessComponent implements OnInit {
   segment = 'list';
   rowData: AccessInRoom[] = [];
+  statusData: AccessInRoom[] = [];
   disabled: boolean= false;
   accessOptions = {};
   context;
   accessApi;
   accessColumnApi;
+  statusApi;
+  statusColumnApi;
   columnDefs: any[] = [];
+  statusColumnDefs: any[] = [];
   autoGroupColumnDef;
   defaultColDef;
   grouping = '';
@@ -56,6 +60,43 @@ export class RoomAccessComponent implements OnInit {
     this.readDatas();
   }
 
+  createAccesColumnDef()  {
+    let sub = this.securityService.getActualAccessStatus().subscribe(
+      (val) => { this.statusData = val },
+      (err) => { this.authService.log(err) },
+      () => { sub.unsubscribe(); }
+    );
+    this.statusColumnDefs = [
+      {
+        headerName: this.languageS.trans('room'),
+        field: 'roomName'
+      },{
+        headerName: this.languageS.trans('login'),
+        field: 'login',
+        cellRendererFramework: YesNoBTNRenderer
+      },{
+        headerName: this.languageS.trans('portal'),
+        field: 'portal',
+        cellRendererFramework: YesNoBTNRenderer
+      },{
+        headerName: this.languageS.trans('portal'),
+        field: 'portal',
+        cellRendererFramework: YesNoBTNRenderer
+      },{
+        headerName: this.languageS.trans('printing'),
+        field: 'printing',
+        cellRendererFramework: YesNoBTNRenderer
+      },{
+        headerName: this.languageS.trans('proxy'),
+        field: 'proxy',
+        cellRendererFramework: YesNoBTNRenderer
+      },{
+        headerName: this.languageS.trans('direct'),
+        field: 'direct',
+        cellRendererFramework: YesNoBTNRenderer
+      }
+    ];
+  }
   createColumnDef() {
     this.columnDefs = [];
     for (let key of Object.getOwnPropertyNames(new AccessInRoom())) {
@@ -109,6 +150,9 @@ export class RoomAccessComponent implements OnInit {
     }
   }
   segmentChanged(event) {
+    if( this.segment == 'status' ) {
+      this.createAccesColumnDef();
+    }
     this.segment = event.detail.value;
   }
 
@@ -122,6 +166,12 @@ export class RoomAccessComponent implements OnInit {
   accessGridReady(params) {
     this.accessApi = params.api;
     this.accessColumnApi = params.columnApi;
+    this.authService.log(this.accessApi);
+    this.authService.log(this.accessColumnApi);
+  }
+  statusGridReady(params) {
+    this.statusApi = params.api;
+    this.statusColumnApi = params.columnApi;
     this.authService.log(this.accessApi);
     this.authService.log(this.accessColumnApi);
   }

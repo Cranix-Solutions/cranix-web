@@ -97,8 +97,6 @@ export class GenericObjectService {
     'surName': '*'
   };
 
-  headers: HttpHeaders;
-
   constructor(
     public alertController: AlertController,
     public authService: AuthenticationService,
@@ -110,11 +108,6 @@ export class GenericObjectService {
   }
 
   initialize(force: boolean) {
-    this.headers = new HttpHeaders({
-      'Content-Type': "application/json",
-      'Accept': "application/json",
-      'Authorization': "Bearer " + this.authService.getToken()
-    });
     if (this.authService.isAllowed('cephalix.manage')) {
       this.initializeCephalixObjects();
     }
@@ -135,7 +128,7 @@ export class GenericObjectService {
       }
       for (let key of this.enumerates) {
         let url = this.utilsS.hostName() + "/system/enumerates/" + key;
-        subs[key] = this.http.get<string[]>(url, { headers: this.headers }).subscribe(
+        subs[key] = this.http.get<string[]>(url, { headers: this.authService.headers }).subscribe(
           (val) => { this.selects[key] = val; },
           (err) => { },
           () => { subs[key].unsubscribe() });
@@ -150,24 +143,24 @@ export class GenericObjectService {
   initializeCephalixObjects() {
     this.objects.push('institute');
     let url = this.utilsS.hostName() + "/institutes/defaults/";
-    let sub1 = this.http.get<string[]>(url, { headers: this.headers }).subscribe(
+    let sub1 = this.http.get<string[]>(url, { headers: this.authService.headers }).subscribe(
       (val) => { this.cephalixDefaults = val; },
       (err) => { },
       () => { sub1.unsubscribe() });
     url = this.utilsS.hostName() + "/institutes/ayTemplates/";
-    let sub2 = this.http.get<string[]>(url, { headers: this.headers }).subscribe(
+    let sub2 = this.http.get<string[]>(url, { headers: this.authService.headers }).subscribe(
       (val) => { this.selects['ayTemplate'] = val; },
       (err) => { },
       () => { sub2.unsubscribe() });
     url = this.utilsS.hostName() + "/institutes/objects/";
-    let sub3 = this.http.get<string[]>(url, { headers: this.headers }).subscribe(
+    let sub3 = this.http.get<string[]>(url, { headers: this.authService.headers }).subscribe(
       (val) => { this.selects['objects'] = val; },
       (err) => { },
       () => { sub3.unsubscribe() });
   }
   getSoftwaresToDowload() {
     let url = this.utilsS.hostName() + "/softwares/available";
-    let sub = this.http.get<Package[]>(url, { headers: this.headers }).subscribe(
+    let sub = this.http.get<Package[]>(url, { headers: this.authService.headers }).subscribe(
       (val) => {
         this.packagesAvailable = val;
       },
@@ -183,7 +176,7 @@ export class GenericObjectService {
    */
   getAllObject(objectType) {
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";
-    let sub = this.http.get(url, { headers: this.headers }).subscribe(
+    let sub = this.http.get(url, { headers: this.authService.headers }).subscribe(
       (val) => {
         this.allObjects[objectType].next(val);
         this.selects[objectType + 'Id'] = []
@@ -274,16 +267,16 @@ export class GenericObjectService {
   addObject(object, objectType) {
     const body = object;
     let url = this.utilsS.hostName() + "/" + objectType + "s/add";
-    return this.http.post<ServerResponse>(url, body, { headers: this.headers });
+    return this.http.post<ServerResponse>(url, body, { headers: this.authService.headers });
   }
   modifyObject(object, objectType) {
     const body = object;
     let url = this.utilsS.hostName() + "/" + objectType + "s/" + object.id;
-    return this.http.post<ServerResponse>(url, body, { headers: this.headers })
+    return this.http.post<ServerResponse>(url, body, { headers: this.authService.headers })
   }
   deleteObject(object, objectType) {
     let url = this.utilsS.hostName() + "/" + objectType + "s/" + object.id;
-    return this.http.delete<ServerResponse>(url, { headers: this.headers })
+    return this.http.delete<ServerResponse>(url, { headers: this.authService.headers })
   }
 
   async deleteObjectDialog(object, objectType) {

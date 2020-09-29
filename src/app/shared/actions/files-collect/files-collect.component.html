@@ -1,4 +1,4 @@
-<form #collectFile="ngForm" (ngSubmit)="onSubmit(collectFile.value)">
+<form #collectFile="ngForm" (ngSubmit)="onSubmit()">
   <ion-header translucent>
     <ion-toolbar>
       <ion-title>{{  'Collect files' | translate }}</ion-title>
@@ -16,7 +16,7 @@
     <ion-list>
       <ion-item>
         <ion-label position="start">{{'projectName'| translate}}</ion-label>
-        <ion-input  [(ngModel)]="projectName" name="projectName" required></ion-input>
+        <ion-input  [(ngModel)]="projectName" name="projectName" pattern="[a-zA-Z0-9].*[a-zA-Z0-9]$" required></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="start">{{'sortInDirs'| translate}}</ion-label>
