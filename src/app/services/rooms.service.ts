@@ -191,10 +191,4 @@ export class RoomsService {
 		return this.http.put<ServerResponse>(this.url, body, { headers: this.authService.headers });
 	}
 
-	registerOwnDev(roomId: number, macAddress: string, name?: string) {
-		this.url = this.hostname + `/rooms/${roomId}/device/${macAddress}/${name}`;
-		let body = null;
-		return this.http.put<ServerResponse>(this.url, body, { headers: this.authService.headers });
-
-	}
 }

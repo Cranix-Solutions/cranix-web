@@ -68,7 +68,7 @@ export class Ticket{
 
 export class Article{
     id?: number;
-    cephalixArticleId: number = 0;
+    cephalixTicketId: number = 0;
     title: string = "";
     sender: string = "";
     recipient: string = "";

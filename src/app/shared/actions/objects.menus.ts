@@ -52,6 +52,15 @@ export const  groupMenu = [
 export const  printerMenu = [
 ]
 
+export const ticketMenu = [
+  {
+    "enabled": true,
+    "icon":"logo-buffer",
+    "color":"danger",
+    "action": "close"
+  }
+]
+
 export const hwconfMenu = [
   {
     "enabled": true,

@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { AlertController } from '@ionic/angular';
 //Own stuff
-import { userMenu, groupMenu, roomMenu, deviceMenu, instituteMenu, hwconfMenu, devActionMenu, printerMenu, studentMenu, eduRoomMenu } from './objects.menus';
+import { userMenu, groupMenu, roomMenu, deviceMenu, instituteMenu, hwconfMenu, ticketMenu, printerMenu, studentMenu, eduRoomMenu } from './objects.menus';
 import { CrxActionMap, ServerResponse } from 'src/app/shared/models/server-models';
 import { LanguageService } from 'src/app/services/language.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -92,6 +92,8 @@ export class ActionsComponent implements OnInit {
       this.menu = this.commonMenu.concat(deviceMenu).concat(this.commonLastMenu);
     } else if (this.objectType == "institute") {
       this.menu = this.commonMenu.concat(instituteMenu).concat(this.commonLastMenu);
+    } else if (this.objectType == "ticket") {
+      this.menu = this.commonMenu.concat(ticketMenu).concat(this.commonLastMenu);
     } else if (this.objectType == "group") {
       this.menu = this.commonMenu.concat(groupMenu).concat(this.commonLastMenu);
     } else if (this.objectType == "hwconf") {
