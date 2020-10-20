@@ -10,6 +10,7 @@ import { SystemPage } from './system.page';
 import { SystemStatusComponent }  from './status/system-status.component';
 import { SystemConfigComponent }  from './config/system-config.component';
 import { SystemAddonsComponent }  from './addons/system-addons.component';
+import { SystemAclsComponent } from './acls/system-acls.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,10 @@ const routes: Routes = [
       {
         path: 'addons',
         component: SystemAddonsComponent
+      },
+      {
+        path: 'acls',
+        component: SystemAclsComponent
       },
       {
         path: '',
@@ -48,6 +53,6 @@ const routes: Routes = [
     CranixSharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [SystemPage,SystemStatusComponent,SystemConfigComponent,SystemAddonsComponent]
+  declarations: [SystemPage,SystemStatusComponent,SystemConfigComponent,SystemAddonsComponent,SystemAclsComponent]
 })
 export class SystemPageModule { }

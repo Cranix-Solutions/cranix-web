@@ -14,6 +14,7 @@ import { LanguageService } from './language.service';
 export class GenericObjectService {
   allObjects: any = {};
   selectedObject: any = null;
+  selectedObjectType: string = null;
   selectedRoom: any = null;
   selectedGroup: any = null;
   packagesAvailable: Package[] = [];

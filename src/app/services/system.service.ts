@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders, HttpParams, HttpClientModule } from '@angular/
 import { UtilsService } from './utils.service';
 import { AuthenticationService} from './auth.service';
 import { SystemConfig, SupportTicket } from 'src/app/shared/models/data-model';
-import { ServerResponse } from 'src/app/shared/models/server-models';
+import { ServerResponse, Acl } from 'src/app/shared/models/server-models';
 
 @Injectable()
 export class SystemService {
@@ -97,5 +97,23 @@ export class SystemService {
 		this.url = this.hostname + `/system/services/${name}/${what}/${value}`;
 		console.log(this.url);
 		return this.http.put<ServerResponse>(this.url,null, { headers: this.authService.headers });
+	}
+
+	getAclsOfObject(objectType,id) {
+		this.url = this.hostname + `/system/acls/${objectType}s/${id}`;
+		console.log(this.url);
+		return this.http.get<Acl[]>(this.url, { headers: this.authService.headers });
+	}
+
+	getAvailableAclsOfObject(objectType,id) {
+		this.url = this.hostname + `/system/acls/${objectType}s/${id}/available`;
+		console.log(this.url);
+		return this.http.get<Acl[]>(this.url, { headers: this.authService.headers });
+	}
+
+	setAclOfObject(objectType,id,acl){
+		this.url = this.hostname + `/system/acls/${objectType}s/${id}`;
+		console.log(this.url);
+		return this.http.post<ServerResponse>(this.url,acl, { headers: this.authService.headers });
 	}
 }

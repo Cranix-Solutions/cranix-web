@@ -55,6 +55,7 @@ import { FilesUploadComponent } from 'src/app/shared/actions/files-upload/files-
 import { FilesCollectComponent } from 'src/app/shared/actions/files-collect/files-collect.component'
 import { FirewallCanDeactivate, ProxyCanDeactivate } from 'src/app/services/security-service'
 import { SetpasswordComponent } from 'src/app/shared/actions/setpassword/setpassword.component'
+import { ManageAclsComponent } from './protected/cranix/system/acls/manage-acls/manage-acls.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -87,6 +88,7 @@ const routes: Routes = [
     ShowImportComponent,
     ObjectsEditComponent,
     DevicePrintersComponent,
+    ManageAclsComponent,
     GroupMembersPage,
     UserGroupsPage,
     RoomPrintersPage,
@@ -94,6 +96,7 @@ const routes: Routes = [
     SetpasswordComponent
   ],
   entryComponents: [
+    ManageAclsComponent,
     AddDeviceComponent,
     AddEditRoomAccessComponent,
     AddOutgoingRuleComponent,
