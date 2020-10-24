@@ -23,6 +23,7 @@ export class AuthenticationService {
     token:    string;
     session:  UserResponse;
     headers:  HttpHeaders;
+    formHeaders: HttpHeaders;
     settings: Settings = new Settings();
 
     constructor(
@@ -75,6 +76,10 @@ export class AuthenticationService {
                 this.session['roomName'] = val.roomName;
                 this.headers = new HttpHeaders({
                     'Content-Type' : "application/json",
+                    'Accept'       : "application/json",
+                    'Authorization': "Bearer " + this.session.token
+                });
+                this.formHeaders = new HttpHeaders({
                     'Accept'       : "application/json",
                     'Authorization': "Bearer " + this.session.token
                 });

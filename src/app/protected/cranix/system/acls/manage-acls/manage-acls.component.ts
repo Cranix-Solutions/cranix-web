@@ -18,7 +18,7 @@ export class ManageAclsComponent implements OnInit {
 
   constructor(
     private navParams: NavParams,
-    public modalController: ModalController,
+    public  modalController: ModalController,
     private systemService: SystemService
   ) { }
 
