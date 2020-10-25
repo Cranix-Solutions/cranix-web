@@ -1,7 +1,4 @@
 {
-    "Printer was disabled succesfully.":"Drucker wurde erfolgreich deaktiviert",
-    "Printer was enabled succesfully.":"Drucker wurde erfolgreich aktiviert",
-    "Printer was reseted succesfully.":"Drucker wurde erfolgreich zurückgesetzt.",
     "%s was created succesfully.": "%s wurde erfolgreich erstellt.",
     "%s was deleted succesfully.": "%s wurde erfolgreich gelöscht.",
     "Acces was deleted succesfully": "Zugriffsregel wurde erfolgreich gelöscht",
@@ -157,6 +154,9 @@
     "Picture size": "Bildgröße",
     "Please select at last one object!": "Bitte mindestens ein Objekt markieren!",
     "Positive lists": "Positivlisten",
+    "Printer was disabled succesfully.": "Drucker wurde erfolgreich deaktiviert",
+    "Printer was enabled succesfully.": "Drucker wurde erfolgreich aktiviert",
+    "Printer was reseted succesfully.": "Drucker wurde erfolgreich zurückgesetzt.",
     "Printers of the device was set.": "Die Drucker wurden für den Rechner gesetzt",
     "Printers of the room was set.": "Die Drucker wurden für den Raum gesetzt",
     "Printing": "Drucken",
