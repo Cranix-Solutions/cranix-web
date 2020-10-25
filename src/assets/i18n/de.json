@@ -1,4 +1,6 @@
 {
+    "Edit education/group":"Projektgruppe bearbeiten",
+    "Add education/group":"Projektgruppe anlegen",
     "%s was created succesfully.": "%s wurde erfolgreich erstellt.",
     "%s was deleted succesfully.": "%s wurde erfolgreich gelöscht.",
     "Acces was deleted succesfully": "Zugriffsregel wurde erfolgreich gelöscht",
@@ -454,5 +456,5 @@
     "wol": "einschalten",
     "workSchool": "Berufschule",
     "workTime": "Erfasste Arbeitszeit in Minuten",
-    "workgroup": "Projektsgruppe"
+    "workgroup": "Projektgruppe"
 }
