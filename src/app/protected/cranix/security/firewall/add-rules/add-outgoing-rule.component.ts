@@ -5,6 +5,10 @@ import { Device, Room } from 'src/app/shared/models/data-model';
 import { ModalController } from '@ionic/angular';
 import { SecurityService } from 'src/app/services/security-service';
 
+class SourceObject {
+  public key:  number;
+  public name: string;
+}
 @Component({
   selector: 'cranix-add-outgoing-rule',
   templateUrl: './add-outgoing-rule.component.html',
@@ -13,8 +17,9 @@ import { SecurityService } from 'src/app/services/security-service';
 export class AddOutgoingRuleComponent implements OnInit {
 
   rule: OutgoingRule = new OutgoingRule();
-  roomIps: any[] = [];
-  deviceIps: any[] = [];
+  roomIps:        SourceObject[] = [];
+  deviceIps:      SourceObject[] = [];
+  selectedSource: SourceObject;
   constructor(
     public objectService: GenericObjectService,
     public securityService: SecurityService,
@@ -38,20 +43,9 @@ export class AddOutgoingRuleComponent implements OnInit {
 
   addOutRule(rule) {
     console.log(rule);
-    let name = "";
-    if (rule.type == 'device') {
-      for (let obj of this.deviceIps) {
-        if (obj.key == rule.id) {
-          name = obj.name;
-        }
-      }
-    } else {
-      for (let obj of this.roomIps) {
-        if (obj.key == rule.id) {
-          name = obj.name;
-        }
-      }
-    }
+    console.log(this.selectedSource);
+    rule.id= this.selectedSource.key;
+    let name = this.selectedSource.name;
     this.securityService.outgoingRules.push({
         prot: rule.prot,
         port: rule.port,

@@ -23,15 +23,25 @@
       </ion-item>
       <ion-item *ngIf="rule.type == 'room'">
         <ion-label position="stacked">{{'Room'| translate}}</ion-label>
-        <ion-select type="text" [(ngModel)]="rule.id" name="id" required>
-          <ion-select-option *ngFor="let obj of  roomIps" value="{{obj.key}}">{{obj.name}}</ion-select-option>
-        </ion-select>
+        <ionic-selectable
+         [(ngModel)]="selectedSource"
+         [ngModelOptions]="{standalone: true}"
+         [items]="roomIps"
+         itemValueField="key"
+         itemTextField="name"
+         [canSearch]="true">
+        </ionic-selectable>
       </ion-item>
       <ion-item *ngIf="rule.type == 'device'">
         <ion-label position="stacked">{{'Device'| translate}}</ion-label>
-        <ion-select type="text" [(ngModel)]="rule.id" name="id" required>
-          <ion-select-option *ngFor="let obj of  deviceIps" value="{{obj.key}}">{{obj.name}}</ion-select-option>
-        </ion-select>
+        <ionic-selectable
+         [(ngModel)]="selectedSource"
+         [ngModelOptions]="{standalone: true}"
+         [items]="deviceIps"
+         itemValueField="key"
+         itemTextField="name"
+         [canSearch]="true">
+        </ionic-selectable>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{'dest'|translate}}</ion-label>
@@ -47,7 +57,8 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{'Port'|translate}}</ion-label>
-        <ion-input type="text" [(ngModel)]="rule.port" name="port" [disabled]="rule.prot == 'all'" [required]="rule.prot != 'all'"></ion-input>
+        <ion-input type="text" [(ngModel)]="rule.port" name="port" [disabled]="rule.prot == 'all'"
+          [required]="rule.prot != 'all'"></ion-input>
       </ion-item>
     </ion-list>
   </ion-content>

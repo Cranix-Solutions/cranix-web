@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy, Routes, RouterModule } from '@angular/router';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { IonicSelectableModule } from 'ionic-selectable';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
@@ -121,6 +122,7 @@ const routes: Routes = [
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
     IonicModule.forRoot(),
+    IonicSelectableModule,
     RouterModule.forRoot(routes),
     HttpClientModule,
     CranixSharedModule,
