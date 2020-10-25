@@ -43,12 +43,12 @@
       </ion-item>
       <ion-item *ngIf="!addHocRooms; else room">
         <ion-label position="stacked">{{'mac'|translate}}</ion-label>
-        <ion-textarea type="text" formControlName="mac"></ion-textarea>
+        <ion-textarea type="text" formControlName="mac">{{authService.session.mac}}</ion-textarea>
       </ion-item>
       <ng-template #room>
         <ion-item>
           <ion-label position="stacked">{{'mac'|translate}}</ion-label>
-          <ion-input type="text" formControlName="mac"></ion-input>
+          <ion-input type="text" formControlName="mac">{{authService.session.mac}}</ion-input>
         </ion-item>
       </ng-template>
       <ion-item *ngIf="!addHocRooms">

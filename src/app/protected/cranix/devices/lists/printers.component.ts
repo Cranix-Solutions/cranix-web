@@ -135,7 +135,6 @@ export class PrintersComponent implements OnInit {
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.doLayout();
-
   }
   sizeAll() {
     var allColumnIds = [];
