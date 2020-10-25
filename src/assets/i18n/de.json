@@ -1,6 +1,4 @@
 {
-    "Edit education/group":"Projektgruppe bearbeiten",
-    "Add education/group":"Projektgruppe anlegen",
     "%s was created succesfully.": "%s wurde erfolgreich erstellt.",
     "%s was deleted succesfully.": "%s wurde erfolgreich gelöscht.",
     "Acces was deleted succesfully": "Zugriffsregel wurde erfolgreich gelöscht",
@@ -10,6 +8,7 @@
     "Add Device": "Gerät registrieren",
     "Add adhocroom": "AdHoc Raum anlegen",
     "Add device": "Gerät anlegen",
+    "Add education/group": "Projektgruppe anlegen",
     "Add group": "Gruppe anlegen",
     "Add hwconf": "Gerätekonfiguration anlegen",
     "Add institute": "Institut anlegen",
@@ -86,6 +85,7 @@
     "Edit adhocroom": "AdHoc Raum bearbeiten",
     "Edit customer": "Kunden bearbeiten",
     "Edit device": "Gerät bearbeiten",
+    "Edit education/group": "Projektgruppe bearbeiten",
     "Edit group": "Gruppe bearbeiten",
     "Edit hwconf": "Gerätekonfiguration bearbeiten",
     "Edit installation set": "Installationsset bearbeiten",
