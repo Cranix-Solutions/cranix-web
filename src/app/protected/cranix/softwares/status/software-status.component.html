@@ -12,14 +12,14 @@
     <ion-fab-button><ion-icon name="list-outline" (click)="toggleColumnDef()"></ion-icon></ion-fab-button>
   </ion-fab-list>
 </ion-fab>
-<ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('quickFilterMD')" id="quickFilterMD"
+<ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('memberFilterMD')" id="memberFilterMD"
 showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
   <ion-card>
     <ion-card-header class="hidden-xs hidden-sm hidden-md">
       <ion-row class="hidden-xs hidden-sm hidden-md">
         <ion-col size="3">
           <ion-item>
-            <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('quickFilter')" id="memberFilter">
+            <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('memberFilter')" id="memberFilter">
             </ion-input>
           </ion-item>
         </ion-col>
