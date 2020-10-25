@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { PrintersService } from 'src/app/services/printers.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { RoomsService } from 'src/app/services/rooms.service';
-import { Printer, Room } from 'src/app/shared/models/data-model';
+import { Printer, Room, Device } from 'src/app/shared/models/data-model';
 import { ModalController, NavParams } from '@ionic/angular';
 import { LanguageService } from 'src/app/services/language.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
@@ -24,6 +24,9 @@ export class AddPrinterComponent implements OnInit {
   models = {};
   manufacturers: string[] = [];
   submitted = false;
+  printerDevices: Device[] = [];
+  action = "";
+  originalModel = "";
 
   constructor(
     public authService: AuthenticationService,
@@ -44,7 +47,24 @@ export class AddPrinterComponent implements OnInit {
       (err) => { this.authService.log(err) },
       () => { subs.unsubscribe() }
     )
-    this.initValues(1);
+    this.action = this.navParams.get('action')
+    switch (this.action) {
+      case 'queue':
+        this.printersService.getPrinterDevices().subscribe(
+          (val) => {
+            this.printerDevices = val
+            this.printerDevices.sort(this.objectService.sortByName);
+          },
+          (err) => { console.log(err) }
+        )
+        break;
+      case 'add':
+        this.initValues;
+        break;
+      case 'modify':
+        this.printer = this.navParams.get('object');
+        this.originalModel = this.printer.model
+    }
   }
 
   public ngAfterViewInit() {
@@ -75,43 +95,88 @@ export class AddPrinterComponent implements OnInit {
       this.printer.mac = this.authService.session.mac;
     }
   }
-  onSubmit(printer: Printer) {
 
+  onSubmit(printer: Printer) {
+    this.objectService.requestSent();
     this.submitted = true;
     let formData: FormData = new FormData();
     if (this.driverFile) {
       formData.append('file', this.driverFile, this.driverFile.name);
     } else if (printer.model) {
       formData.append('model', printer.model);
-    } else {
+    } else if( this.action != 'modify' ) {
       this.objectService.errorMessage(
         this.languageS.trans('You have to set either the model of the printer or upload a ppd driver file.')
       );
       return;
     }
-    formData.append('ip', printer.ip);
     formData.append('name', printer.name);
-    formData.append('mac', printer.mac);
-    formData.append('roomId', printer.roomId.toString());
-    formData.append('windowsDriver', "true");
-    let subs = this.printersService.add(formData).subscribe(
-      (val) => {
-        this.objectService.getAllObject('printer');
-        this.objectService.getAllObject('device');
-        this.objectService.responseMessage(val);
-        if (val.code == "OK") {
-          this.modalCtrl.dismiss();
-        } else {
-          this.submitted=false;
+    switch (this.action) {
+      case 'add': {
+        formData.append('ip', printer.ip);
+        formData.append('mac', printer.mac);
+        formData.append('roomId', printer.roomId.toString());
+        formData.append('windowsDriver', "true");
+        let subs = this.printersService.add(formData).subscribe(
+          (val) => {
+            this.objectService.responseMessage(val);
+            if (val.code == "OK") {
+              this.objectService.getAllObject('device');
+              this.objectService.getAllObject('printer');
+              this.modalCtrl.dismiss();
+            }
+            this.submitted = false;
+          },
+          (err) => {
+            this.objectService.errorMessage("ServerError" + err);
+            this.authService.log(err);
+            this.submitted = false;
+          },
+          () => { subs.unsubscribe() }
+        )
+        break
+      }
+      case 'queue': {
+        formData.append('deviceId', printer.deviceId.toString());
+        formData.append('windowsDriver', "true");
+        let subs = this.printersService.add(formData).subscribe(
+          (val) => {
+            this.objectService.responseMessage(val);
+            if (val.code == "OK") {
+              this.objectService.getAllObject('printer');
+              this.modalCtrl.dismiss();
+            }
+            this.submitted = false;
+          },
+          (err) => {
+            this.objectService.errorMessage("ServerError" + err);
+            this.authService.log(err);
+            this.submitted = false;
+          },
+          () => { subs.unsubscribe() }
+        )
+        break
+      }
+      case 'modify': {
+        if( formData.has('file') || this.originalModel != printer.model ) {
+          let subs3 = this.printersService.setDrive(this.printer.id,formData).subscribe(
+            (val) => {
+              this.objectService.responseMessage(val);
+              if (val.code == "OK") {
+                this.objectService.getAllObject('printer');
+                this.modalCtrl.dismiss();
+              }
+              this.submitted = false;
+            },
+            (err) => {
+              this.submitted = false;
+              console.log(err)},
+            () => { subs3.unsubscribe() }
+          );
         }
-      },
-      (err) => {
-        this.objectService.errorMessage("ServerError" + err);
-        this.submitted=false;
-        this.authService.log(err);
-      },
-      () => { subs.unsubscribe() }
-    )
+        break
+      }
+    }
   }
 
   roomChanged(ev) {

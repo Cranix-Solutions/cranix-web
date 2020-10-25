@@ -192,6 +192,7 @@ export class Printer {
 	name: string = "";
 	ip: string = "";
 	deviceName: string = "";
+	deviceId?: number;
 	manufacturer: string = "";
 	model: string = "";
 	mac: string = "";

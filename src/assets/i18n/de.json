@@ -1,4 +1,7 @@
 {
+    "Printer was disabled succesfully.":"Drucker wurde erfolgreich deaktiviert",
+    "Printer was enabled succesfully.":"Drucker wurde erfolgreich aktiviert",
+    "Printer was reseted succesfully.":"Drucker wurde erfolgreich zurückgesetzt.",
     "%s was created succesfully.": "%s wurde erfolgreich erstellt.",
     "%s was deleted succesfully.": "%s wurde erfolgreich gelöscht.",
     "Acces was deleted succesfully": "Zugriffsregel wurde erfolgreich gelöscht",

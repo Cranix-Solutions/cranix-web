@@ -1,11 +1,16 @@
 <form #addPrinterFrom="ngForm" (ngSubmit)="onSubmit(addPrinterFrom.value)">
   <ion-header translucent>
     <ion-toolbar>
-      <ion-title>{{  'Add printer' | translate }}</ion-title>
+      <ion-title *ngIf="action=='add'">{{  'Add printer' | translate }}</ion-title>
+      <ion-title *ngIf="action=='queue'">{{  'Add printer queue' | translate }}</ion-title>
+      <ion-title *ngIf="action=='modify'">{{  'Modify printer' | translate }}</ion-title>
       <ion-buttons slot="end">
         <ion-button type="submit" class="ion-no-margin" [disabled]="!addPrinterFrom.form.valid || (!printer.driverFile && !printer.model ) || submitted ">
           <ion-icon slot="icon-only" color="success" name="checkmark-sharp" >
           </ion-icon>
+        </ion-button>
+        <ion-button *ngIf="action=='modify'" fill="clear" size="small" [disabled]="submitted" (click)="objectService.deleteObjectDialog(printer,'printer')">
+          <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
         </ion-button>
         <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss()" [disabled]="submitted">
           <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
@@ -15,7 +20,7 @@
   </ion-header>
   <ion-content fullscreen>
     <ion-list lines="full">
-      <ion-item>
+      <ion-item *ngIf="action == 'add'">
         <ion-label position="stacked">{{'roomId'| translate}}</ion-label>
         <ion-select type="text" [(ngModel)]="printer.roomId" name="roomId" (ngModelChange)="roomChanged($event)"
           required [compareWith]="objectService.compareFn" [disabled]="submitted">
@@ -23,7 +28,15 @@
           </ion-select-option>
         </ion-select>
       </ion-item>
-      <ion-item>
+      <ion-item *ngIf="action == 'queue'">
+        <ion-label position="stacked">{{'device'| translate}}</ion-label>
+        <ion-select type="text" [(ngModel)]="printer.deviceId" name="deviceId"
+          required [compareWith]="objectService.compareFn" [disabled]="submitted">
+          <ion-select-option *ngFor="let device of printerDevices" value="{{device.id}}">{{device.name}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="action == 'add'">
         <ion-label position="stacked">{{'ip'| translate}}</ion-label>
         <ion-select type="text" [(ngModel)]="printer.ip" name="ip" required [disabled]="!room || submitted">
           <ion-select-option *ngFor="let ip of  ipAdresses" value="{{ip}}">{{ip}}</ion-select-option>
@@ -31,35 +44,36 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{'name'|translate}}</ion-label>
-        <ion-input type="text" text-right [(ngModel)]="printer.name" name="name" required [disabled]="!room || submitted">
+        <ion-input type="text" text-right [(ngModel)]="printer.name" name="name" required
+          [disabled]="(!printer.deviceId && !room ) || submitted || action == 'modify'">
         </ion-input>
       </ion-item>
-      <ion-item>
+      <ion-item *ngIf="action == 'add'">
         <ion-label position="stacked">{{'mac'|translate}}</ion-label>
-        <ion-input type="text" [(ngModel)]="printer.mac" name="mac" required [disabled]="!room || submitted"></ion-input>
+        <ion-input type="text" [(ngModel)]="printer.mac" name="mac" required [disabled]="(!printer.deviceId && !room ) || submitted"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{'manufacturer'| translate}}</ion-label>
-        <ion-select type="text" [(ngModel)]="printer.manufacturer" name="manufacturer" [disabled]="!room  || submitted"  (ngModelChange)="manufacturerChanged($event)">
+        <ion-select type="text" [(ngModel)]="printer.manufacturer" name="manufacturer" [disabled]="submitted"  (ngModelChange)="manufacturerChanged($event)">
           <ion-select-option *ngFor="let man of  manufacturers" value="{{man}}">{{man}}</ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{'model'| translate}}</ion-label>
-        <ion-select type="text" [(ngModel)]="printer.model" name="model"  [disabled]="!room || submitted">
+        <ion-select type="text" [(ngModel)]="printer.model" name="model"  [disabled]="submitted" placeholder="{{printer.model}}">
           <ion-select-option *ngFor="let mod of models[printer.manufacturer]" value="{{mod}}">{{mod}}
           </ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{ driverFile | translate }}</ion-label>
-        <input type="file" [(ngModel)]="printer.driverFile"  name="driverFile" (change)="handleFileInput($event.target.files)"  [disabled]="!room || submitted">
+        <input type="file" [(ngModel)]="printer.driverFile"  name="driverFile" (change)="handleFileInput($event.target.files)"  [disabled]="submitted">
       </ion-item>
-      <ion-item>
+      <ion-item *ngIf="action == 'add'">
         <ion-label position="stacked">{{'serial'|translate}}</ion-label>
         <ion-input type="text" [(ngModel)]="printer.serial" name="serial" [disabled]="!room || submitted"></ion-input>
       </ion-item>
-      <ion-item>
+      <ion-item *ngIf="action == 'add'">
         <ion-label position="stacked">{{'inventary'|translate}}</ion-label>
         <ion-input type="text" [(ngModel)]="printer.inventary" name="inventary" [disabled]="!room || submitted"></ion-input>
       </ion-item>

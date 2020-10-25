@@ -419,6 +419,16 @@ export class GenericObjectService {
   compareFn(a: string, b: string): boolean {
     return a == b;
   }
+  sortByName(a, b) {
+    if ( a.name < b.name ){
+      return -1;
+    }
+    if ( a.name > b.name ){
+      return 1;
+    }
+    return 0;
+  }
+
   /**
    * Helper script fot the template to detect the type of the variables
    * @param val
