@@ -118,6 +118,7 @@ export class GenericObjectService {
     if (this.authService.isAllowed('cephalix.ticket')) {
       this.objects.push('ticket');
     }
+
     for (let key of this.objects) {
       this.allObjects[key] = new BehaviorSubject([]);
     }
@@ -297,6 +298,7 @@ export class GenericObjectService {
         }, {
           text: 'OK',
           handler: () => {
+            this.requestSent();
             var a = this.deleteObject(object, objectType).subscribe(
               (val) => {
                 this.responseMessage(val);

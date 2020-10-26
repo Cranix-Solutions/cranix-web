@@ -9,6 +9,7 @@ import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
 import { ModalController } from '@ionic/angular';
 import { AddEditRoomAccessComponent } from './add-edit-room-access/add-edit-room-access.component';
 import { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
+import { SystemService } from 'src/app/services/system.service';
 
 @Component({
   selector: 'cranix-room-access',
@@ -17,8 +18,7 @@ import { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
 })
 export class RoomAccessComponent implements OnInit {
   segment = 'list';
-  rowData: AccessInRoom[] = [];
-  statusData: AccessInRoom[] = [];
+  rowData:  AccessInRoom[] = [];
   disabled: boolean= false;
   accessOptions = {};
   context;
@@ -38,6 +38,7 @@ export class RoomAccessComponent implements OnInit {
     private languageS: LanguageService,
     public modalCtrl: ModalController,
     public objectService: GenericObjectService,
+    public systemService: SystemService,
     public securityService: SecurityService
   ) {
     this.context = { componentParent: this };
@@ -53,30 +54,27 @@ export class RoomAccessComponent implements OnInit {
     this.autoGroupColumnDef = {
       minWidth: 200
     };
-    this.createColumnDef();
   }
 
   ngOnInit() {
+    this.createColumnDef();
+    this.createAccesColumnDef();
     this.readDatas();
   }
 
   createAccesColumnDef()  {
-    let sub = this.securityService.getActualAccessStatus().subscribe(
-      (val) => { this.statusData = val },
-      (err) => { this.authService.log(err) },
-      () => { sub.unsubscribe(); }
-    );
     this.statusColumnDefs = [
       {
+        field: "id",
+        hide: true
+      },
+      {
+        sortable: true,
         headerName: this.languageS.trans('room'),
         field: 'roomName'
       },{
         headerName: this.languageS.trans('login'),
         field: 'login',
-        cellRendererFramework: YesNoBTNRenderer
-      },{
-        headerName: this.languageS.trans('portal'),
-        field: 'portal',
         cellRendererFramework: YesNoBTNRenderer
       },{
         headerName: this.languageS.trans('portal'),
@@ -96,6 +94,14 @@ export class RoomAccessComponent implements OnInit {
         cellRendererFramework: YesNoBTNRenderer
       }
     ];
+  }
+  toggle(id, field: string, value: boolean, rowIndex: number) {
+    console.log(id,field,value,rowIndex)
+    this.securityService.actualStatus[rowIndex][field] = !value
+    let rows = []
+    rows.push(this.statusApi.getDisplayedRowAtIndex(rowIndex));
+    this.securityService.setAccessStatusInRoom(this.securityService.actualStatus[rowIndex]);
+    this.statusApi.redrawRows({ rowNodes: rows });
   }
   createColumnDef() {
     this.columnDefs = [];
@@ -148,6 +154,10 @@ export class RoomAccessComponent implements OnInit {
         break;
       }
     }
+  }
+  onQuickFilterChanged(quickFilter) {
+    this.statusApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
+    this.statusApi.doLayout();
   }
   segmentChanged(event) {
     if( this.segment == 'status' ) {
@@ -204,7 +214,7 @@ export class RoomAccessComponent implements OnInit {
     (await modal).present();
   }
   restartFirewall() {
-
+    this.systemService.applyServiceState('SuSEfirewall2', 'activ', 'restart')
   }
 
   delete() {

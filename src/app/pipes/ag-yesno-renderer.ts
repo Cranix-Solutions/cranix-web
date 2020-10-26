@@ -28,8 +28,13 @@ export class YesNoBTNRenderer implements ICellRendererAngularComp {
     }
 
     public toggle() {
+        console.log(this.params)
         if (this.active) {
-            this.params.context.componentParent.toggle(this.params.data.id, this.params.colDef.field, this.params.value);
+            this.params.context.componentParent.toggle(
+                this.params.data.id,
+                this.params.colDef.field,
+                this.params.value,
+                this.params.rowIndex);
         }
     }
     refresh(params: any): boolean {

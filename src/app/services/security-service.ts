@@ -21,6 +21,7 @@ export class SecurityService {
   outgoingRules: OutgoingRule[];
   remoteRules: RemoteRule[];
   firewallRooms: Room[];
+  actualStatus: AccessInRoom[];
   public outgoinChanged: boolean = false;
   public incomingChanged: boolean = false;
   public remoteChanged: boolean = false;
@@ -111,9 +112,32 @@ export class SecurityService {
 
 	getActualAccessStatus() {
 		this.url = `${this.hostname}/rooms/accessStatus`;
-		return this.http.get<AccessInRoom[]>(this.url, { headers: this.authService.headers });
+		let sub = this.http.get<AccessInRoom[]>(this.url, { headers: this.authService.headers }).subscribe(
+      (val) => {
+        this.actualStatus = val;
+        console.log(this.actualStatus);
+      },
+      (err) => {
+        console.log('getActualAccessStatus',err)
+      },
+      () => { sub.unsubscribe() }
+    )
 	}
 
+  setAccessStatusInRoom(accessInRoom: AccessInRoom) {
+    this.url = this.hostname + "/rooms/" + accessInRoom.roomId + "/accessStatus";
+    console.log(this.url);
+    this.objectService.requestSent();
+    let sub = this.http.post<ServerResponse>(this.url, accessInRoom, { headers: this.authService.headers }).subscribe(
+      (val) => {
+        this.objectService.responseMessage(val);
+      },
+      (err) => {
+        this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
+      },
+      () => { sub.unsubscribe() }
+    );
+  }
   addAccessInRoom(accessInRoom: AccessInRoom) {
     this.url = this.hostname + "/rooms/" + accessInRoom.roomId + "/accessList";
     console.log(this.url);

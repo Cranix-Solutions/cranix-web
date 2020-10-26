@@ -39,11 +39,13 @@ export class SystemStatusComponent implements OnInit {
 
   ngOnInit() {
     this.storage.get('System.Status.mySupport').then((val) => {
+      console.log(val)
       let myTmp = JSON.parse(val);
-      if (myTmp) {
-        this.mySupport = myTmp;
-        this.mySupport['subject'] = "";
-        this.mySupport['text'] = "";
+      console.log(myTmp);
+      if(myTmp && myTmp.email) {
+          this.mySupport = myTmp;
+          this.mySupport['subject'] = "";
+          this.mySupport['text'] = "";
       }
     });
     this.systemStatus = {};
