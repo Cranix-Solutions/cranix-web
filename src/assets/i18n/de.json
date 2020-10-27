@@ -1,6 +1,4 @@
 {
-    "Apply Default":"Standardstatus",
-    "Toggle yes no":"Umschalten",
     "%s was created succesfully.": "%s wurde erfolgreich erstellt.",
     "%s was deleted succesfully.": "%s wurde erfolgreich gelöscht.",
     "Acces was deleted succesfully": "Zugriffsregel wurde erfolgreich gelöscht",
@@ -35,6 +33,7 @@
     "All institutes": "Alle Instituten",
     "All rooms": "Alle Räume",
     "All users": "Alle Benutzer",
+    "Apply Default": "Standardstatus",
     "Apply action on all devices in room": "Aktion an allen Geräten im Raum anwenden.",
     "Apply actions on the selected objects": "Aktionen an den ausgewählten Objekten ausführen.",
     "Apply changes": "Änderungen anwenden",
@@ -234,6 +233,7 @@
     "This field is required!": "Dieses Feld muss ausgeüllt werden!",
     "This is a printer device with defined printer queues. You have to delete this devices via printer management.": "Das ist ein Drucker mit zugewiesenen Warteschlangen. Bitte entfernen Sie es in Druckermanagement.",
     "To login": "Anmelden",
+    "Toggle yes no": "umschalten",
     "Update the server.": "Server aktualisieren.",
     "Upload files": "Dateien verteilen",
     "User": "Benutzer",
