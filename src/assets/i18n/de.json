@@ -1,4 +1,6 @@
 {
+    "Apply Default":"Standardstatus",
+    "Toggle yes no":"Umschalten",
     "%s was created succesfully.": "%s wurde erfolgreich erstellt.",
     "%s was deleted succesfully.": "%s wurde erfolgreich gelöscht.",
     "Acces was deleted succesfully": "Zugriffsregel wurde erfolgreich gelöscht",
@@ -291,7 +293,7 @@
     "deviceType": "Gerättyp",
     "devices": "Geräte",
     "devicesProUser": "Gerät pro Benutzer",
-    "direct": "direktes Internet",
+    "direct": "Direktinternet",
     "disableInternet": "Surfen verbeiten",
     "disableLogin": "Anmelden verbieten",
     "domain": "DNS-Domain",

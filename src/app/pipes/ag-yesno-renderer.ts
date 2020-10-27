@@ -5,7 +5,7 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
 @Component({
     selector: 'yesno-cell',
     template: `
-        <ion-button *ngIf="params.data && active" style="padding-horizontal : 2px" fill="clear" size="small" (click)="toggle()" matTooltip="{{'Togle yes no' | translate }}">
+        <ion-button *ngIf="params.data && active" style="padding-horizontal : 2px" fill="clear" size="small" (click)="toggle()" matTooltip="{{'Toggle yes no' | translate }}">
             <ion-icon *ngIf="params.value" name="checkmark-sharp" color="success"></ion-icon>
             <ion-icon *ngIf="!params.value" name="close" color="danger"></ion-icon>
         </ion-button>

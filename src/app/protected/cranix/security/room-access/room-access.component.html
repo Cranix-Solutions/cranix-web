@@ -38,7 +38,7 @@
           </ion-button>
           <ion-button *ngIf="segment == 'list'" size="small" (click)="delete()"
             matTooltip="{{'Delete selected access rules' | translate }}" [disabled]="disabled">
-            <ion-icon slot="icon-only" name="trash"></ion-icon>
+            <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
           </ion-button>
           <ion-button *ngIf="segment == 'list'" size="small" (click)="createColumnDef()"
             matTooltip="{{'Change grouping of the table' | translate }}">
@@ -46,14 +46,17 @@
           </ion-button>
           <ion-button *ngIf="segment == 'status'" size="small" (click)="securityService.getActualAccessStatus()"
             matTooltip="{{'Reload actual firewall status' | translate }}">
-            <ion-icon slot="icon-only" name="arrow-redo"></ion-icon>
+            <ion-icon slot="icon-only" name="refresh" color="tertiary"></ion-icon>
           </ion-button>
           <ion-button size="small" (click)="restartFirewall()" matTooltip="{{'Restart firewall' | translate }}">
-            <ion-icon slot="icon-only" name="refresh"></ion-icon>
+            <ion-icon slot="icon-only" name="arrow-redo" color="tertiary"></ion-icon>
+          </ion-button>
+          <ion-button size="small" (click)="stopFirewall()" matTooltip="{{'Stop firewall' | translate }}">
+            <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
           </ion-button>
         </ion-col>
       </ion-row>
-      <ion-row *ngIf="segment == 'status'">
+      <ion-row>
         <ion-col size=12>
           <ion-item>
             <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('roomsAccessFilter')" id="roomsAccessFilter">
@@ -68,6 +71,7 @@
         [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" rowSelection="multiple"
         [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [autoGroupColumnDef]="autoGroupColumnDef"
         [animateRows]="true" [rowData]="rowData" [context]="context" [deltaColumnMode]="true"
+        headerHeight="150"
         (gridReady)="accessGridReady($event)">
       </ag-grid-angular>
       <ag-grid-angular *ngIf="segment == 'status'"

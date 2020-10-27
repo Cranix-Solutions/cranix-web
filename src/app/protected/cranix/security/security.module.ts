@@ -33,13 +33,13 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'firewall'
+        redirectTo: 'access'
       }
     ]
   },
   {
     path: 'security',
-    redirectTo: 'firewall'
+    redirectTo: 'access'
   }
 ];
 

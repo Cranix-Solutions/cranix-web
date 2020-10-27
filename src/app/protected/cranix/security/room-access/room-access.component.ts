@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SecurityService } from 'src/app/services/security-service';
@@ -10,16 +10,18 @@ import { ModalController } from '@ionic/angular';
 import { AddEditRoomAccessComponent } from './add-edit-room-access/add-edit-room-access.component';
 import { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
 import { SystemService } from 'src/app/services/system.service';
+import { ApplyBTNRenderer } from 'src/app/pipes/ag-apply-renderer';
 
 @Component({
   selector: 'cranix-room-access',
   templateUrl: './room-access.component.html',
   styleUrls: ['./room-access.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class RoomAccessComponent implements OnInit {
   segment = 'list';
-  rowData:  AccessInRoom[] = [];
-  disabled: boolean= false;
+  rowData: AccessInRoom[] = [];
+  disabled: boolean = false;
   accessOptions = {};
   context;
   accessApi;
@@ -49,7 +51,7 @@ export class RoomAccessComponent implements OnInit {
       maxWidth: 150,
       suppressMenu: true,
       sortable: false,
-      resizable: true,
+      resizable: false
     };
     this.autoGroupColumnDef = {
       minWidth: 200
@@ -62,7 +64,7 @@ export class RoomAccessComponent implements OnInit {
     this.readDatas();
   }
 
-  createAccesColumnDef()  {
+  createAccesColumnDef() {
     this.statusColumnDefs = [
       {
         field: "id",
@@ -72,36 +74,58 @@ export class RoomAccessComponent implements OnInit {
         sortable: true,
         headerName: this.languageS.trans('room'),
         field: 'roomName'
-      },{
+      }, {
         headerName: this.languageS.trans('login'),
         field: 'login',
         cellRendererFramework: YesNoBTNRenderer
-      },{
+      }, {
         headerName: this.languageS.trans('portal'),
         field: 'portal',
         cellRendererFramework: YesNoBTNRenderer
-      },{
+      }, {
         headerName: this.languageS.trans('printing'),
         field: 'printing',
         cellRendererFramework: YesNoBTNRenderer
-      },{
+      }, {
         headerName: this.languageS.trans('proxy'),
         field: 'proxy',
         cellRendererFramework: YesNoBTNRenderer
-      },{
+      }, {
         headerName: this.languageS.trans('direct'),
         field: 'direct',
         cellRendererFramework: YesNoBTNRenderer
+      }, {
+        headerName: this.languageS.trans('Apply Default'),
+        field: 'apply_default',
+        cellRendererFramework: ApplyBTNRenderer
       }
     ];
   }
   toggle(id, field: string, value: boolean, rowIndex: number) {
-    console.log(id,field,value,rowIndex)
+    console.log(id, field, value, rowIndex)
     this.securityService.actualStatus[rowIndex][field] = !value
     let rows = []
     rows.push(this.statusApi.getDisplayedRowAtIndex(rowIndex));
     this.securityService.setAccessStatusInRoom(this.securityService.actualStatus[rowIndex]);
     this.statusApi.redrawRows({ rowNodes: rows });
+  }
+
+  apply(data: AccessInRoom, rowIndex: number) {
+    let sent = false
+    for (let access of this.rowData) {
+      if (access.roomId == data.roomId && access.accessType == "DEF") {
+        this.securityService.setAccessStatusInRoom(access)
+        sent = true
+        break
+      }
+    }
+    if (!sent) {
+      this.securityService.getActualAccessStatus()
+    } else {
+      this.objectService.warningMessage(
+        this.languageS.trans("There is no default access status for this room.")
+      )
+    }
   }
   createColumnDef() {
     this.columnDefs = [];
@@ -131,7 +155,17 @@ export class RoomAccessComponent implements OnInit {
           col['sortable'] = true;
           break;
         }
+        case "action": {
+          col['sortable'] = true;
+          break;
+        }
+        case "accessType": {
+          col['headerClass'] = "rotate-header-class"
+          col['sortable'] = true;
+          break;
+        }
         default: {
+          col['headerClass'] = "rotate-header-class"
           col['sortable'] = false;
           col['minWidth'] = 70;
           col['maxWidth'] = 100;
@@ -156,11 +190,16 @@ export class RoomAccessComponent implements OnInit {
     }
   }
   onQuickFilterChanged(quickFilter) {
-    this.statusApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.statusApi.doLayout();
+    if (this.segment == 'list') {
+      this.accessApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
+      this.accessApi.doLayout();
+    } else {
+      this.statusApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
+      this.statusApi.doLayout();
+    }
   }
   segmentChanged(event) {
-    if( this.segment == 'status' ) {
+    if (this.segment == 'status') {
       this.createAccesColumnDef();
     }
     this.segment = event.detail.value;
@@ -216,10 +255,12 @@ export class RoomAccessComponent implements OnInit {
   restartFirewall() {
     this.systemService.applyServiceState('SuSEfirewall2', 'activ', 'restart')
   }
-
+  stopFirewall() {
+    this.systemService.applyServiceState('SuSEfirewall2', 'activ', 'false')
+  }
   delete() {
     let accessSelected = this.accessApi.getSelectedRows();
-    if( accessSelected.length == 0 ) {
+    if (accessSelected.length == 0) {
       this.objectService.selectObject();
       return;
     }
