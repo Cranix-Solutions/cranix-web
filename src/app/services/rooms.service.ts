@@ -64,7 +64,7 @@ export class RoomsService {
 	}
 	//GET Calls
 
-	getMYRooms(): Observable<Room[]> {
+	getRoomsToRegister() {
 		this.url = `${this.hostname}/rooms/toRegister`;
 		return this.http.get<Room[]>(this.url, { headers: this.authService.headers });
 	}

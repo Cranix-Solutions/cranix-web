@@ -92,7 +92,7 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
     if (this.addHocRooms) {
       this.roomsToSelect = this.selfS.getMyRooms();
     } else {
-      this.roomsToSelect = this.objectService.getObjects('room');
+      this.roomsToSelect = this.roomService.getRoomsToRegister();
       if (this.rooms) {
         this.roomId = this.rooms.id;
         this.addDeviceForm.controls['roomId'].patchValue(this.roomId);
@@ -154,9 +154,11 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
             response = response + "<br>" + this.languageService.transResponse(resp);
           }
           this.objectService.okMessage(response)
-          this.objectService.getObjects('devices');
+          this.objectService.getAllObject('devices');
         },
-          (err) => { },
+          (err) => {
+            this.objectService.errorMessage(err)
+          },
           () => {
             this.disabled = false;
             this.modalCtrl.dismiss()
