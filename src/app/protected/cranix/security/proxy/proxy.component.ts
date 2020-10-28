@@ -79,6 +79,9 @@ export class ProxyComponent implements OnInit {
     });
   }
 
+  onQuickFilterChanged(){
+    //TODO
+  }
   segmentChanged(event) {
     this.segment   = event.detail.value;
     this.newDomain = "";

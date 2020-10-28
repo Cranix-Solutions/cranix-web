@@ -4,7 +4,7 @@
       {{user.surName}})
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button class="ion-no-margin"
+      <ion-button fill="clear" size="small" 
         matTooltip="{{'Add remove user to/from the selected groups.' | translate }}"
         (click)="applyChanges()"  [disabled]="noMemberSelection.length ==0 && memberSelection.length == 0">
         <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>

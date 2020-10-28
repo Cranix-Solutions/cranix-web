@@ -21,16 +21,16 @@
       <ion-toolbar>
         <ion-card-subtitle>{{article.recDate | date:'yy-MM-dd HH:mm'}}</ion-card-subtitle>
         <ion-buttons slot="end">
-          <ion-button (click)="setSeenOnArticle(article)">
+          <ion-button fill="solid" (click)="setSeenOnArticle(article)">
             <ion-icon slot="icon-only" name="checkmark"></ion-icon>
           </ion-button>
-          <ion-button (click)="answerArticle(article)">
+          <ion-button fill="solid" (click)="answerArticle(article)">
             <ion-icon slot="icon-only" name="arrow-undo"></ion-icon>
           </ion-button>
-          <ion-button (click)="noticeToArticle(article)">
+          <ion-button fill="solid" (click)="noticeToArticle(article)">
             <ion-icon slot="icon-only" name="document-text"></ion-icon>
           </ion-button>
-          <ion-button (click)="deleteArticle(article)">
+          <ion-button fill="solid" (click)="deleteArticle(article)">
             <ion-icon slot="icon-only" name="trash"></ion-icon>
           </ion-button>
         </ion-buttons>

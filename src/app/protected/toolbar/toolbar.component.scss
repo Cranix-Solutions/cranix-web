@@ -1,5 +1,4 @@
 ion-toolbar{
-//background-color: var(--ion-color-primary);
     --ion-text-color: var(--ion-color-primary-contrast);
     background-color: var(--ion-color-primary);
     --ion-background-color: var(--ion-color-primary);
@@ -13,7 +12,6 @@ ion-toolbar{
 .ios ion-toolbar {
     height: 54px;
     --ion-text-color: var(--ion-color-primary-contrast);
-  //  background-color: var(--ion-color-primary);
     --background: var(--ion-color-primary);
     border-color: var(--ion-color-primary-tint);
     border-width: 2px;

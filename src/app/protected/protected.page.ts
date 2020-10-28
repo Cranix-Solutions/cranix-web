@@ -4,6 +4,7 @@ import { MenuController } from '@ionic/angular';
 import { Router, RouterEvent } from '@angular/router';
 
 import { AuthenticationService } from 'src/app/services/auth.service';
+import { UtilsService } from '../services/utils.service';
 
 @Component({
   selector: 'cranix-protected',
@@ -11,7 +12,6 @@ import { AuthenticationService } from 'src/app/services/auth.service';
   styleUrls: ['./protected.page.scss'],
 })
 export class ProtectedPage implements OnInit {
-
   public activePath = "";
   public appPages = [];
   private defAppPages = [
@@ -91,7 +91,8 @@ export class ProtectedPage implements OnInit {
     private router: Router,
     public authService: AuthenticationService,
     public translateService: TranslateService,
-    public menuCtrl: MenuController
+    public menuCtrl: MenuController,
+    public utilService: UtilsService
   ) {
     this.router.events.subscribe((event: RouterEvent) => {
       if (event.url) {
@@ -100,15 +101,21 @@ export class ProtectedPage implements OnInit {
       }
     })
     for (let page of this.defAppPages) {
+      console.log(page)
       if (this.authService.isRouteAllowed(page.url)) {
+        console.log("show it")
         this.appPages.push(page);
       }
-    }
+    } 
   }
   ngOnInit() {
   }
 
-  toggleMenu() {
-    this.menuCtrl.toggle(); //Add this method to your button click function
+  async openMenu() {
+    await this.menuCtrl.open();
+  }
+
+  async toggleMenu() {
+    await this.menuCtrl.toggle(); //Add this method to your button click function
   }
 }

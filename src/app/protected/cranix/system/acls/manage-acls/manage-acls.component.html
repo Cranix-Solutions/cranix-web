@@ -3,10 +3,8 @@
     <ion-title>{{ 'Manage system acls of the selected object:' | translate}} {{name}}
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button>
-        <ion-button fill="clear" size="small" (click)="modalController.dismiss()">
-          <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
-        </ion-button>
+      <ion-button fill="clear" size="small" fill="solid" (click)="modalController.dismiss()">
+        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>

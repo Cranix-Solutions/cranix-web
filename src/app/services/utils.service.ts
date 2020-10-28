@@ -4,26 +4,33 @@ import { isDevMode } from '@angular/core';
 
 @Injectable()
 export class UtilsService {
+        public okBrowser: boolean = true;
+        constructor() {
+                let tmp = window.navigator.userAgent
+                if (tmp.indexOf("Mozilla") != -1 && tmp.indexOf("Windows") != -1) {
+                        this.okBrowser = false;
+                }
+        }
 
-        public hostName(): string{
+        public hostName(): string {
                 var hostname = window.location.hostname;
                 var protocol = window.location.protocol;
-                var port     = window.location.port;
-                var url      = '';
-                if (sessionStorage.getItem('shortName')){
-                        if(port){
+                var port = window.location.port;
+                var url = '';
+                if (sessionStorage.getItem('shortName')) {
+                        if (port) {
                                 url = `${protocol}//${hostname}:${port}/${sessionStorage.getItem('shortName')}`
-                        }else {
+                        } else {
                                 url = `${protocol}//${hostname}/${sessionStorage.getItem('shortName')}`
                         }
                 } else if (port) {
                         url = protocol + "//" + hostname + ":" + port + "/api";
                 }
-                else{
+                else {
                         url = protocol + "//" + hostname + "/api";
-		}
+                }
                 //console.log("From utils: " + url);
-                return "https://gif1.bbs1-gifhorn.de:444/api" ;
+                return "https://gif1.bbs1-gifhorn.de:444/api";
         }
         public log(args) {
                 var dev = isDevMode();
