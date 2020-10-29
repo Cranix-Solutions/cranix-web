@@ -66,4 +66,10 @@ export class Acl {
         userId: number;
         groupId: number;
 }
+
+export class ServiceStatus {
+        service: string;
+        enabled: string;
+        active: string;
+}
 export const TOKEN = 'cranix-token';

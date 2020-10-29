@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders, HttpParams, HttpClientModule } from '@angular/
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 import { SystemConfig } from 'src/app/shared/models/data-model';
-import { ServerResponse, Acl } from 'src/app/shared/models/server-models';
+import { ServerResponse, Acl, ServiceStatus } from 'src/app/shared/models/server-models';
 import { GenericObjectService } from './generic-object.service';
 import { LanguageService } from './language.service';
 
@@ -91,10 +91,22 @@ export class SystemService {
 		return this.http.post<ServerResponse>(this.url, tmp, { headers: this.authService.headers });
 	}
 
+	getSystemConfigValue(key, value) {
+		this.url = this.hostname + `/system/configuration`;
+		console.log(this.url);
+		return this.http.get<string>(this.url, { headers: this.authService.textHeaders });
+	}
+
 	createSupportRequest(support) {
 		this.url = this.hostname + `/support/create`;
 		console.log(this.url);
 		return this.http.post<ServerResponse>(this.url, support, { headers: this.authService.headers });
+	}
+
+	getServiceStatus() {
+		this.url = this.hostname + '/system/services';
+		console.log(this.url);
+		return this.http.get<ServiceStatus[]>(this.url, { headers: this.authService.headers } );
 	}
 
 	applyServiceState(name, what, value) {
@@ -110,7 +122,6 @@ export class SystemService {
 			},
 			() => { sub.unsubscribe() }
 		);
-		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
 	}
 
 	getAclsOfObject(objectType, id) {

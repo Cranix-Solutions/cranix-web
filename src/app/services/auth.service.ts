@@ -24,6 +24,7 @@ export class AuthenticationService {
     session:  UserResponse;
     headers:  HttpHeaders;
     formHeaders: HttpHeaders;
+    textHeaders: HttpHeaders;
     settings: Settings = new Settings();
 
     constructor(
@@ -81,6 +82,10 @@ export class AuthenticationService {
                 });
                 this.formHeaders = new HttpHeaders({
                     'Accept'       : "application/json",
+                    'Authorization': "Bearer " + this.session.token
+                });
+                this.textHeaders = new HttpHeaders({
+                    'Accept': "text/plain",
                     'Authorization': "Bearer " + this.session.token
                 });
                 this.authenticationState.next(true);

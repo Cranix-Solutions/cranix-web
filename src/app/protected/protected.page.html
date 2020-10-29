@@ -1,19 +1,19 @@
-<ion-split-pane contentId="main-content" [when]="utilService.okBrowser">
-  <ion-menu start=side contentId="main-content" type="overlay">
+<ion-split-pane contentId="main-content">
+  <ion-menu start=side contentId="main-content" menuId="main" type="overlay">
+    <ion-list-header>
+      <ion-item lines="none">
+        <ion-thumbnail>
+          <img src="assets/images/logo/cranix_school.svg">
+        </ion-thumbnail>
+        <ion-label>
+          <h3 *ngIf="authService.isAllowed('cephalix.manage'); else elseBlock">CEPHALIX</h3>
+          <ng-template #elseBlock>
+            <h3>CRANIX</h3>
+          </ng-template>
+        </ion-label>
+      </ion-item>
+    </ion-list-header>
     <ion-content>
-      <ion-list-header>
-        <ion-item lines="none">
-          <ion-thumbnail>
-            <img src="assets/images/logo/cranix_school.svg">
-          </ion-thumbnail>
-          <ion-label>
-            <h3 *ngIf="authService.isAllowed('cephalix.manage'); else elseBlock">CEPHALIX</h3>
-            <ng-template #elseBlock>
-              <h3>CRANIX</h3>
-            </ng-template>
-          </ion-label>
-        </ion-item>
-      </ion-list-header>
       <ion-list id="menu">
         <ion-menu-toggle [autoHide]="!utilService.okBrowser" *ngFor="let p of appPages">
           <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false"

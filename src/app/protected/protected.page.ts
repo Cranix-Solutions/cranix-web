@@ -112,10 +112,14 @@ export class ProtectedPage implements OnInit {
   }
 
   async openMenu() {
-    await this.menuCtrl.open();
+    await this.menuCtrl.open('main');
   }
 
+  async closeMenu() {
+    console.log("close menu called")
+    await this.menuCtrl.open('close');
+  }
   async toggleMenu() {
-    await this.menuCtrl.toggle(); //Add this method to your button click function
+    await this.menuCtrl.toggle('main'); //Add this method to your button click function
   }
 }
