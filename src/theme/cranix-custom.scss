@@ -11,6 +11,30 @@ $grid-breakpoints :(xs: 0,
 $breakpoints-keys  : map-keys($grid-breakpoints);
 $breakpoints-values: map-values($grid-breakpoints);
 
+.ok-row {
+  background: lightgreen;
+  text-align: center;
+  margin: 6px;
+}
+.neutral-row {
+  background: lightblue;
+  text-align: center;
+  margin: 6px;
+}
+.bad-row {
+  background: red;
+  color: black;
+  text-align: center;
+  margin: 6px;
+}
+.sub-header-row {
+  background: lightgray;
+  color: black;
+  text-align: center;
+  padding: 16px;
+  margin: 16px;
+}
+
 @for $i from 1 to length($breakpoints-keys)+1 {
   @if $i < length($breakpoints-keys) {
     .hidden-#{nth($breakpoints-keys, $i)} {

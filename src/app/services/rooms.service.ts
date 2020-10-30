@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { UtilsService } from './utils.service';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Room, AccessStatus, Printer, DHCP, Hwconf } from 'src/app/shared/models/data-model';
+import { Room, AccessStatus, Printer, Hwconf } from 'src/app/shared/models/data-model';
 import { ServerResponse } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from './auth.service';
 
@@ -35,12 +33,6 @@ export class RoomsService {
 		return this.http.post<ServerResponse[]>(this.url, device, { headers: this.authService.headers });
 	}
 
-
-	addDhcp(rId: any, dhcp: DHCP) {
-		this.url = this.hostname + `/rooms/${rId}/dhcp`;
-		return this.http.post<ServerResponse>(this.url, dhcp, { headers: this.authService.headers });
-
-	}
 
 	setAccessRoom(access: AccessStatus) {
 		const body = access;
@@ -142,10 +134,7 @@ export class RoomsService {
 
 	}
 
-	getDHCP(id: string) {
-		this.url = this.hostname + `/rooms/${id}/dhcp`;
-		return this.http.get<DHCP[]>(this.url, { headers: this.authService.headers });
-	}
+
 	//DELETE
 
 	deleteDHCPrecord(rId: number, paramId: number) {

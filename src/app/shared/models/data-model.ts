@@ -361,15 +361,6 @@ export class Category {
 	constructor() { }
 }
 
-export class DHCP {
-	id?: number;
-	objectType: string = "";
-	objectId: number = 0;
-	keyword: string = "";
-	value: string = "";
-	constructor() { }
-}
-
 export class SystemConfig {
 	path: string = "";
 	readOnly: string = "";
@@ -377,6 +368,15 @@ export class SystemConfig {
 	key: string = "";
 	value: string = "";
 	help: string = "";
+	constructor() { }
+}
+
+export class CrxMConfig {
+	id: number;
+	objectType: string;
+	objectId: number;
+	keyword: string;
+	value: string;
 	constructor() { }
 }
 

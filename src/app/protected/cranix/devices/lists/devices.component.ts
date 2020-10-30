@@ -15,6 +15,7 @@ import { Device } from 'src/app/shared/models/data-model'
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { DevicePrintersComponent } from './../details/printers/device-printers.component';
 import { AddDeviceComponent } from './../add-device/add-device.component';
+import { ManageDhcpComponent } from 'src/app/shared/actions/manage-dhcp/manage-dhcp.component';
 
 @Component({
   selector: 'cranix-devices',
@@ -212,7 +213,19 @@ export class DevicesComponent implements OnInit {
     });
     (await modal).present();
   }
-
+  async setDhcp(device: Device) {
+    const modal = await this.modalCtrl.create({
+      component: ManageDhcpComponent,
+      componentProps: {
+        objectType: "device",
+        object: device
+      },
+      animated: true,
+      swipeToClose: true,
+      backdropDismiss: false
+    });
+    (await modal).present();
+  }
   async setPrinters(device: Device) {
     this.objectService.selectedObject = device;
     const modal = await this.modalCtrl.create({
