@@ -24,23 +24,31 @@
       <ion-item *ngIf="rule.type == 'room'">
         <ion-label position="stacked">{{'Room'| translate}}</ion-label>
         <ionic-selectable
+         item-content
          [(ngModel)]="selectedSource"
          [ngModelOptions]="{standalone: true}"
          [items]="roomIps"
          itemValueField="key"
          itemTextField="name"
          [canSearch]="true">
+         <ng-template ionicSelectableCloseButtonTemplate>
+          <ion-icon color="red" name="close" style="font-size: 24px;"></ion-icon>
+        </ng-template>
         </ionic-selectable>
       </ion-item>
       <ion-item *ngIf="rule.type == 'device'">
         <ion-label position="stacked">{{'Device'| translate}}</ion-label>
         <ionic-selectable
+         item-content
          [(ngModel)]="selectedSource"
          [ngModelOptions]="{standalone: true}"
          [items]="deviceIps"
          itemValueField="key"
          itemTextField="name"
          [canSearch]="true">
+         <ng-template ionicSelectableCloseButtonTemplate>
+          <ion-icon color="red" name="close" style="font-size: 24px;"></ion-icon>
+        </ng-template>
         </ionic-selectable>
       </ion-item>
       <ion-item>

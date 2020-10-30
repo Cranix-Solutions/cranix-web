@@ -17,8 +17,17 @@
       <ion-col>
         <ion-item>
           <ion-label position="stacked">{{'New DHCP Option/Statement'| translate}}</ion-label>
-          <ionic-selectable [(ngModel)]="selectedDHCP" itemValueField="id" itemTextField="name"
-            [ngModelOptions]="{standalone: true}" [items]="dhcpOptions" [canSearch]="true">
+          <ionic-selectable
+            item-content
+            [(ngModel)]="selectedDHCP"
+            itemValueField="id"
+            itemTextField="name"
+            [ngModelOptions]="{standalone: true}"
+            [items]="dhcpOptions"
+            [canSearch]="true">
+            <ng-template ionicSelectableCloseButtonTemplate>
+              <ion-icon color="red" name="close" style="font-size: 24px;"></ion-icon>
+            </ng-template>
           </ionic-selectable>
         </ion-item>
       </ion-col>
