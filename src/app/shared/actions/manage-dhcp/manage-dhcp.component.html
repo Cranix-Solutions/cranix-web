@@ -14,10 +14,11 @@
       {{ 'Add new DHCP Option/Statement' | translate}}
     </ion-list-header>
     <ion-row>
-      <ion-col>
+      <ion-col size="4">
         <ion-item>
-          <ion-label position="stacked">{{'New DHCP Option/Statement'| translate}}</ion-label>
+          <ion-label position="stacked">{{'Select DHCP Option/Statement'| translate}}</ion-label>
           <ionic-selectable
+            #ionicSelectable
             item-content
             [(ngModel)]="selectedDHCP"
             itemValueField="id"
@@ -25,22 +26,34 @@
             [ngModelOptions]="{standalone: true}"
             [items]="dhcpOptions"
             [canSearch]="true">
-            <ng-template ionicSelectableCloseButtonTemplate>
-              <ion-icon color="red" name="close" style="font-size: 24px;"></ion-icon>
+            <ng-template ionicSelectableHeaderTemplate>
+              <ion-toolbar>
+                <ion-title>
+                {{ "Select a DHCP Option or Statement" | translate }}
+                </ion-title>
+                <ion-buttons slot="end">
+                  <ion-button ion-button (click)="ionicSelectable.close()">
+                    <ion-icon color="danger" name="close"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ion-toolbar>
+            </ng-template>
+            <ng-template ionicSelectableItemIconTemplate>
+              <div></div>
             </ng-template>
           </ionic-selectable>
         </ion-item>
       </ion-col>
-      <ion-col>
+      <ion-col size="6">
         <ion-item>
           <ion-label position="stacked">{{'set value'| translate}} </ion-label>
           <ion-input [(ngModel)]="newValue" name="newValue"></ion-input>
         </ion-item>
       </ion-col>
-      <ion-col>
+      <ion-col size="2">
         <ion-item lines="none">
-          <ion-button (click)="addDHCP()">
-            <ion-icon name="add-circle" color="red"></ion-icon>
+          <ion-button slot="end" (click)="addDHCP()">
+            <ion-icon name="add-circle" color="danger"></ion-icon>
           </ion-button>
         </ion-item>
       </ion-col>
@@ -61,7 +74,7 @@
         {{dhcp.value}}
       </ion-label>
       <ion-button (click)="deletDHCP(dhcp.id)">
-        <ion-icon name="trash" color="red"></ion-icon>
+        <ion-icon name="trash" color="danger"></ion-icon>
       </ion-button>
     </ion-item>
   </ion-list>

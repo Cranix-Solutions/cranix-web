@@ -80,7 +80,8 @@ export class ProxyComponent implements OnInit {
   }
 
   onQuickFilterChanged(){
-    //TODO
+    this.proxyApi.setQuickFilter((<HTMLInputElement>document.getElementById('proxyQuickFilter')).value);
+    this.proxyApi.doLayout();
   }
   segmentChanged(event) {
     this.segment   = event.detail.value;
