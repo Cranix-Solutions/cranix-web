@@ -83,7 +83,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.availableRooms = this.objectService.allObjects['room'].getValue();
     for (let tmp of this.objectService.allObjects['device'].getValue()) {
       let tmpHwconf = this.objectService.getObjectById('hwconf', tmp.hwconfId);
-      if (tmpHwconf.deviceType == 'FatClient') {
+      if (tmpHwconf && tmpHwconf.deviceType == 'FatClient') {
         this.availableDevices.push(tmp);
       }
     }
