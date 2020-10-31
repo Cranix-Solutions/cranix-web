@@ -26,6 +26,7 @@ export class SecurityService {
   public incomingChanged: boolean = false;
   public remoteChanged: boolean = false;
   public proxyChanged = {
+    basic: false,
     good: false,
     bad: false,
     cephalix: false
@@ -228,6 +229,12 @@ export class ProxyCanDeactivate implements CanDeactivate<SecurityService> {
     public securityService: SecurityService
   ) { }
   canDeactivate(securityService: SecurityService) {
+    if (this.securityService.proxyChanged['basic']) {
+      return window.confirm(
+        this.languageS.trans('The proxy basic configuration was changed.') +
+        this.languageS.trans('The changes will be lost if you leave the module.')
+      );
+    }
     if (this.securityService.proxyChanged['good']) {
       return window.confirm(
         this.languageS.trans('The white list was changed.') +
