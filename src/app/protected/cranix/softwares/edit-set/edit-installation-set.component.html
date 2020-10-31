@@ -6,10 +6,12 @@
       <ion-title *ngIf="! softwareService.selectedInstallationSet">{{ 'Create installation set' | translate}}
       </ion-title>
       <ion-buttons slot="end">
-        <ion-button *ngIf="toShow == 'overview'" type="submit" class="ion-no-margin" [disabled]="!editSoftwareSet.form.valid || submitted">
+        <ion-button *ngIf="toShow == 'overview'" type="submit" class="ion-no-margin"
+          [disabled]="!editSoftwareSet.form.valid || submitted">
           <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
         </ion-button>
-        <ion-button *ngIf="softwareService.selectedInstallationSet" fill="clear" size="small" (click)="delete()" [disabled]="submitted">
+        <ion-button *ngIf="softwareService.selectedInstallationSet" fill="clear" size="small" (click)="delete()"
+          [disabled]="submitted">
           <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
         </ion-button>
         <ion-button fill="clear" size="small" (click)="closeWindow()" [disabled]="submitted">
@@ -18,119 +20,118 @@
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
-  <ion-content fullscreen>
-    <ion-card>
-      <ion-card-header>
-        <ion-segment (ionChange)="segmentChanged($event)" [disabled]="submitted" color="secondary" value="overview">
-          <ion-segment-button value="overview">
-            <ion-label>{{'Overwiev' | translate}}</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="selectObjects">
-            <ion-label>{{'Select objects' | translate}}</ion-label>
-          </ion-segment-button>
-        </ion-segment>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-grid>
-          <ion-row *ngIf="toShow == 'overview'">
-            <ion-col>
-              <ion-item>
-                <ion-label position="stacked">{{'name' | translate}}</ion-label>
-                <ion-input [(ngModel)]=installationSet.name name="name" required></ion-input>
-              </ion-item>
-              <ion-item>
-                <ion-label position="stacked">{{'description' | translate}}</ion-label>
-                <ion-input [(ngModel)]=installationSet.description name="description" required></ion-input>
-              </ion-item>
-            </ion-col>
-            <ion-col>
-              <ion-item>
-                <ion-input type="text" placeholder="{{'search' | translate }}" (input)="softwaresFilterChanged()"
-                  id="softwaresFilter"></ion-input>
-              </ion-item>
-              <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}"
-                id="softwaresTable" [rowData]="softwares" [columnDefs]="softwareColumnDefs" rowSelection="multiple"
-                [context]="context" (gridReady)="softwaresReady($event)" (selectionChanged)="softwaresChanged()">
-              </ag-grid-angular>
-            </ion-col>
-            <ion-col *ngIf="hwconfs.length > 0">
-              <ion-item>
-                <ion-input type="text" placeholder="{{'search' | translate }}" (input)="hwconfsFilterChanged()"
-                  id="hwconfsFilter"></ion-input>
-              </ion-item>
-              <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}"
-                id="hwconfsTable" [rowData]="hwconfs" [columnDefs]="hwconfColumnDefs" rowSelection="multiple"
-                [context]="context" (gridReady)="hwconfsReady($event)" (selectionChanged)="hwconfsChanged()">
-              </ag-grid-angular>
-            </ion-col>
-            <ion-col *ngIf="rooms.length > 0">
-              <ion-item>
-                <ion-input type="text" placeholder="{{'search' | translate }}" (input)="roomsFilterChanged()"
-                  id="roomsFilter"></ion-input>
-              </ion-item>
-              <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}"
-                id="roomsTable" [rowData]="rooms" [columnDefs]="roomColumnDefs" rowSelection="multiple"
-                [context]="context" (gridReady)="roomsReady($event)" (selectionChanged)="roomsChanged()">
-              </ag-grid-angular>
-            </ion-col>
-            <ion-col *ngIf="devices.length > 0">
-              <ion-item>
-                <ion-input type="text" placeholder="{{'search' | translate }}" (input)="devicesFilterChanged()"
-                  id="devicesFilter"></ion-input>
-              </ion-item>
-              <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}"
-                id="devicesTable" [rowData]="devices" [columnDefs]="deviceColumnDefs" rowSelection="multiple"
-                [context]="context" (gridReady)="devicesReady($event)" (selectionChanged)="devicesChanged()">
-              </ag-grid-angular>
-            </ion-col>
-          </ion-row>
-          <ion-row *ngIf="toShow == 'selectObjects'">
-            <ion-col>
-              <ion-item>
-                <ion-input type="text" placeholder="{{'search' | translate }}"
-                  (input)="availableSoftwaresFilterChanged()" id="availableSoftwaresFilter"></ion-input>
-              </ion-item>
-              <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}"
-                id="availableSoftwaresTable" [rowData]="softwareService.availableSoftwares" [columnDefs]="softwareColumnDefs"
-                rowSelection="multiple" rowMultiSelectWithClick="true" [context]="context"
-                (gridReady)="availableSoftwaresReady($event)" (selectionChanged)="availableSoftwaresChanged()">
-              </ag-grid-angular>
-            </ion-col>
-            <ion-col>
-              <ion-item>
-                <ion-input type="text" placeholder="{{'search' | translate }}" (input)="availableHwconfsFilterChanged()"
-                  id="availableHwconfsFilter"></ion-input>
-              </ion-item>
-              <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}"
-                id="availableHwconfsTable" [rowData]="availableHwconfs" [columnDefs]="hwconfColumnDefs"
-                rowSelection="multiple" rowMultiSelectWithClick="true" [context]="context"
-                (gridReady)="availableHwconfsReady($event)" (selectionChanged)="availableHwconfsChanged()">
-              </ag-grid-angular>
-            </ion-col>
-            <ion-col>
-              <ion-item>
-                <ion-input type="text" placeholder="{{'search' | translate }}" (input)="availableRoomsFilterChanged()"
-                  id="availableRoomsFilter"></ion-input>
-              </ion-item>
-              <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}"
-                id="availableRoomsTable" [rowData]="availableRooms" [columnDefs]="roomColumnDefs"
-                rowSelection="multiple" rowMultiSelectWithClick="true" [context]="context"
-                (gridReady)="availableRoomsReady($event)" (selectionChanged)="availableRoomsChanged()">
-              </ag-grid-angular>
-            </ion-col>
-            <ion-col>
-              <ion-item>
-                <ion-input type="text" placeholder="{{'search' | translate }}" (input)="availableDevicesFilterChanged()"
-                  id="availableDevicesFilter"></ion-input>
-              </ion-item>
-              <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}"
-                id="availableDevicesTable" [rowData]="availableDevices" [columnDefs]="deviceColumnDefs"
-                rowSelection="multiple" rowMultiSelectWithClick="true" [context]="context"
-                (gridReady)="availableDevicesReady($event)" (selectionChanged)="availableDevicesChanged()">
-              </ag-grid-angular>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-card-content>
-    </ion-card>
-  </ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-segment (ionChange)="segmentChanged($event)" [disabled]="submitted" color="secondary" value="overview">
+        <ion-segment-button value="overview">
+          <ion-label>{{'Overwiev' | translate}}</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="selectObjects">
+          <ion-label>{{'Select objects' | translate}}</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row *ngIf="toShow == 'overview'">
+          <ion-col>
+            <ion-item>
+              <ion-label position="stacked">{{'name' | translate}}</ion-label>
+              <ion-input [(ngModel)]=installationSet.name name="name" required></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">{{'description' | translate}}</ion-label>
+              <ion-input [(ngModel)]=installationSet.description name="description" required></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-item>
+              <ion-input type="text" placeholder="{{'search' | translate }}" (input)="softwaresFilterChanged()"
+                id="softwaresFilter"></ion-input>
+            </ion-item>
+            <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}"
+              id="softwaresTable" [rowData]="softwares" [columnDefs]="softwareColumnDefs" rowSelection="multiple"
+              [context]="context" (gridReady)="softwaresReady($event)" (selectionChanged)="softwaresChanged()">
+            </ag-grid-angular>
+          </ion-col>
+          <ion-col *ngIf="hwconfs.length > 0">
+            <ion-item>
+              <ion-input type="text" placeholder="{{'search' | translate }}" (input)="hwconfsFilterChanged()"
+                id="hwconfsFilter"></ion-input>
+            </ion-item>
+            <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}"
+              id="hwconfsTable" [rowData]="hwconfs" [columnDefs]="hwconfColumnDefs" rowSelection="multiple"
+              [context]="context" (gridReady)="hwconfsReady($event)" (selectionChanged)="hwconfsChanged()">
+            </ag-grid-angular>
+          </ion-col>
+          <ion-col *ngIf="rooms.length > 0">
+            <ion-item>
+              <ion-input type="text" placeholder="{{'search' | translate }}" (input)="roomsFilterChanged()"
+                id="roomsFilter"></ion-input>
+            </ion-item>
+            <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}"
+              id="roomsTable" [rowData]="rooms" [columnDefs]="roomColumnDefs" rowSelection="multiple"
+              [context]="context" (gridReady)="roomsReady($event)" (selectionChanged)="roomsChanged()">
+            </ag-grid-angular>
+          </ion-col>
+          <ion-col *ngIf="devices.length > 0">
+            <ion-item>
+              <ion-input type="text" placeholder="{{'search' | translate }}" (input)="devicesFilterChanged()"
+                id="devicesFilter"></ion-input>
+            </ion-item>
+            <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}"
+              id="devicesTable" [rowData]="devices" [columnDefs]="deviceColumnDefs" rowSelection="multiple"
+              [context]="context" (gridReady)="devicesReady($event)" (selectionChanged)="devicesChanged()">
+            </ag-grid-angular>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="toShow == 'selectObjects'">
+          <ion-col>
+            <ion-item>
+              <ion-input type="text" placeholder="{{'search' | translate }}" (input)="availableSoftwaresFilterChanged()"
+                id="availableSoftwaresFilter"></ion-input>
+            </ion-item>
+            <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}"
+              id="availableSoftwaresTable" [rowData]="softwareService.availableSoftwares"
+              [columnDefs]="softwareColumnDefs" rowSelection="multiple" rowMultiSelectWithClick="true"
+              [context]="context" (gridReady)="availableSoftwaresReady($event)"
+              (selectionChanged)="availableSoftwaresChanged()">
+            </ag-grid-angular>
+          </ion-col>
+          <ion-col>
+            <ion-item>
+              <ion-input type="text" placeholder="{{'search' | translate }}" (input)="availableHwconfsFilterChanged()"
+                id="availableHwconfsFilter"></ion-input>
+            </ion-item>
+            <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}"
+              id="availableHwconfsTable" [rowData]="availableHwconfs" [columnDefs]="hwconfColumnDefs"
+              rowSelection="multiple" rowMultiSelectWithClick="true" [context]="context"
+              (gridReady)="availableHwconfsReady($event)" (selectionChanged)="availableHwconfsChanged()">
+            </ag-grid-angular>
+          </ion-col>
+          <ion-col>
+            <ion-item>
+              <ion-input type="text" placeholder="{{'search' | translate }}" (input)="availableRoomsFilterChanged()"
+                id="availableRoomsFilter"></ion-input>
+            </ion-item>
+            <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}"
+              id="availableRoomsTable" [rowData]="availableRooms" [columnDefs]="roomColumnDefs" rowSelection="multiple"
+              rowMultiSelectWithClick="true" [context]="context" (gridReady)="availableRoomsReady($event)"
+              (selectionChanged)="availableRoomsChanged()">
+            </ag-grid-angular>
+          </ion-col>
+          <ion-col>
+            <ion-item>
+              <ion-input type="text" placeholder="{{'search' | translate }}" (input)="availableDevicesFilterChanged()"
+                id="availableDevicesFilter"></ion-input>
+            </ion-item>
+            <ag-grid-angular style="width: 100%; height: 200px;" class="{{authService.settings.agGridThema}}"
+              id="availableDevicesTable" [rowData]="availableDevices" [columnDefs]="deviceColumnDefs"
+              rowSelection="multiple" rowMultiSelectWithClick="true" [context]="context"
+              (gridReady)="availableDevicesReady($event)" (selectionChanged)="availableDevicesChanged()">
+            </ag-grid-angular>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>>
