@@ -28,12 +28,14 @@ export class ApplyCheckBoxBTNRenderer implements ICellRendererAngularComp {
     }
 
     public toggle(event) {
-
        this.checked = !this.checked;
        for( let key of Object.getOwnPropertyNames( this.params.context.componentParent.rowData[this.index])) {
            if( key != "name") {
             this.params.context.componentParent.rowData[this.index][key] = this.checked;
            }
+       }
+       if( this.params.context.componentParent.setChanged ) {
+        this.params.context.componentParent.setChanged(true);
        }
     }
     refresh(params: any): boolean {

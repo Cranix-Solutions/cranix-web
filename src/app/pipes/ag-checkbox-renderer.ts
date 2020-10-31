@@ -27,6 +27,9 @@ export class CheckBoxBTNRenderer implements ICellRendererAngularComp {
        let field = this.params.colDef.field;
        let index = this.params.rowIndex;
        this.params.context.componentParent.rowData[index][field] = event.detail.checked;
+       if( this.params.context.componentParent.setChanged ) {
+        this.params.context.componentParent.setChanged(true);
+       }
     }
     refresh(params: any): boolean {
         return true;
