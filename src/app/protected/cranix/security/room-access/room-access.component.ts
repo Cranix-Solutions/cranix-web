@@ -21,6 +21,7 @@ import { ApplyBTNRenderer } from 'src/app/pipes/ag-apply-renderer';
 export class RoomAccessComponent implements OnInit {
   segment = 'list';
   rowData: AccessInRoom[] = [];
+  notActive: boolean = true;
   disabled: boolean = false;
   accessOptions = {};
   context;
@@ -203,6 +204,7 @@ export class RoomAccessComponent implements OnInit {
       this.createAccesColumnDef();
     }
     this.segment = event.detail.value;
+    this.notActive = !this.notActive
   }
 
   readDatas() {

@@ -98,7 +98,7 @@ export class Room {
 }
 
 export class Group {
-	id?: number;
+	id?: number = 0;
 	name: string = "";
 	description: string = "";
 	groupType: string = "";

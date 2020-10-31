@@ -11,7 +11,7 @@
     </ion-fab-button>
     <ion-fab-list side="start">
       <ion-fab-button>
-        <ion-icon name="help-cricle" (click)="support($event)"></ion-icon>
+        <ion-icon name="help" (click)="support($event)"></ion-icon>
       </ion-fab-button>
       <ion-fab-button>
         <ion-icon name="trending-up" color="tertiary" (click)="update($event)"></ion-icon>
@@ -46,7 +46,7 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-card-header>
-    <ion-card-content>
+    <ion-content>
       <ion-grid *ngIf="systemStatus">
         <ion-row>
           <ion-col *ngFor="let key of objectKeys">
@@ -54,6 +54,6 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-    </ion-card-content>
+    </ion-content>
   </ion-card>
 </ion-content>
