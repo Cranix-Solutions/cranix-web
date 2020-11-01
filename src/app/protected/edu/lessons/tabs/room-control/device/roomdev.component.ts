@@ -12,37 +12,32 @@ import { takeWhile } from 'rxjs/internal/operators/takeWhile';
 })
 export class RoomDevComponent implements OnInit,OnDestroy {
 
-  @Input() index: number;
+  @Input() index:  number;
   @Input() device: Device;
-  @Input() row: number;
-  @Input() place: number;
+  @Input() row:    number;
+  @Input() place:  number;
 
   screenShot;
-  userId;
 
   devStatusSub: Subscription;
-  alive : boolean = true; 
+  alive:        boolean = true;
 
   constructor(public popoverCtrl: PopoverController,
   ) { }
 
   ngOnInit() {
     if (this.device) {
-      this.devStatusSub = interval(3000).pipe(takeWhile(() => this.alive)).subscribe((func => {
+      this.devStatusSub = interval(5000).pipe(takeWhile(() => this.alive)).subscribe((func => {
         this.getScreen();
       }))
-      
     }
   }
 
-  
   getScreen() {
     this.screenShot = "data:image/jpg;base64," + this.device.screenShot;
-    this.userId = this.device.loggedInId;
   }
 
   async openAction(ev) {
-
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
       event: ev,
