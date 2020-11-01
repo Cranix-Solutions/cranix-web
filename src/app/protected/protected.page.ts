@@ -101,9 +101,7 @@ export class ProtectedPage implements OnInit {
       }
     })
     for (let page of this.defAppPages) {
-      console.log(page)
       if (this.authService.isRouteAllowed(page.url)) {
-        console.log("show it")
         this.appPages.push(page);
       }
     } 
