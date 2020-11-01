@@ -87,7 +87,7 @@ export class RoomsComponent implements OnInit {
           columnDefs.push(col);
           columnDefs.push({
             headerName: "",
-            minWidth: 200,
+            minWidth: 230,
             suppressSizeToFit: true,
             cellStyle: { 'padding': '2px', 'line-height': '36px' },
             field: 'actions',
