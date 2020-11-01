@@ -10,6 +10,9 @@ import { ServerResponse } from 'src/app/shared/models/server-models';
 import { UsersService } from 'src/app/services/users.service';
 import { SystemService } from 'src/app/services/system.service';
 import { SupportTicket } from '../models/data-model';
+import { AuthenticationService } from 'src/app/services/auth.service';
+import { HttpClient } from '@angular/common/http';
+import { UtilsService } from 'src/app/services/utils.service';
 @Component({
   selector: 'cranix-objects-edit',
   templateUrl: './objects-edit.component.html',
@@ -20,6 +23,7 @@ export class ObjectsEditComponent implements OnInit {
   disabled: boolean  = false;
   fileToUpload: File = null;
   result: any = {};
+  objectId: number;
   objectType: string = "";
   object: any = null;
   objectKeys: string[] = [];
@@ -30,6 +34,11 @@ export class ObjectsEditComponent implements OnInit {
   }
 
   constructor(
+
+
+    private utilsS: UtilsService,
+    public authService: AuthenticationService,
+    private http: HttpClient,
     public cephalixService: CephalixService,
     public objectService: GenericObjectService,
     public languageS: LanguageService,
@@ -43,7 +52,8 @@ export class ObjectsEditComponent implements OnInit {
   ) {
     this.objectType = this.navParams.get('objectType');
     //this.object = this.objectService.convertObject(this.navParams.get('object'));
-    this.object = this.navParams.get('object');
+    let object = this.navParams.get('object');
+    this.objectId = object.id;
     if (this.navParams.get('objectAction') == 'add') {
       this.objectActionTitle = "Add " + this.objectType;
       this.objectAction = "Create";
@@ -53,13 +63,33 @@ export class ObjectsEditComponent implements OnInit {
     }
     this.objectKeys = this.navParams.get('objectKeys');
     if (!this.objectKeys) {
-      this.objectKeys = Object.getOwnPropertyNames(this.object);
+      this.objectKeys = Object.getOwnPropertyNames(object);
     }
-    console.log(this.objectKeys);
-    console.log(this.object);
   }
   ngOnInit() {
     this.disabled = false;
+    let url = this.utilsS.hostName() + "/" + this.objectType + "s/" + this.object.id;
+    let sub = this.http.get(url, { headers: this.authService.headers }).subscribe(
+      (val) => {
+        for(let key of this.objectKeys) {
+          if( this.objectService.typeOf(key,this.object,'edit') == 'date' ) {
+            let d = new Date(val[key])
+            this.object[key] = d.toJSON().substring(0,10)
+            continue
+          }
+          if( this.objectService.typeOf(key,this.object,'edit') == 'multivalued' ) {
+            let s = val[key]
+            this.object[key] = s.join()
+            continue
+          }
+          this.object[key] = val[key];
+        }
+      },
+      (err) => {},
+      () => {
+        sub.unsubscribe();
+      }
+    );
   }
 
   closeWindow() {
@@ -85,6 +115,12 @@ export class ObjectsEditComponent implements OnInit {
     if( this.disabled ) {
       return;
     }
+    for(let key of this.objectKeys) {
+      if( this.objectService.typeOf(key,object,'edit') == 'multivalued' ) {
+        let s: string = object[key];
+        object[key] = s.split(",")
+      }
+    }
     this.disabled = true;
     this.splashScreen.show();
     this.objectService.requestSent();
@@ -107,7 +143,6 @@ export class ObjectsEditComponent implements OnInit {
         this.defaultAcion(object);
       }
     }
-    //return this.modalController.dismiss(object);
   }
 
   handleFileInput(files: FileList) {

@@ -34,7 +34,7 @@ export class User {
 	fsQuota?: number = 0;
 	msQuotaUsed?: number = 0;
 	fsQuotaUsed?: number = 0;
-	mailAliases?: string[] = [];
+	mailAliases: string[];
 	constructor() { }
 }
 export class UsersImport {
@@ -183,8 +183,9 @@ export class Device {
 	locality?: string = "";
 	hwconfId: number = 0;
 	roomId?: any = null;
-	screenShot? = "";
-	loggedInId? = "";
+	screenShot?;
+	loggedInId?;
+	loggedInName?;
 	constructor() { }
 }
 export class Printer {

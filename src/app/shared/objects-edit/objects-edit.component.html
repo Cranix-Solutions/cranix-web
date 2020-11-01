@@ -61,23 +61,12 @@
         </ion-item>
         <ion-item *ngSwitchCase="'text'" lines="none">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
-          <ion-textarea color="tertiary" autoGrow="true" [(ngModel)]="object[key]" name="{{key}}"
-            value="{{object[key]}}">
+          <ion-textarea color="tertiary" autoGrow="true" [(ngModel)]="object[key]" name="{{key}}" value="{{object[key]}}">
           </ion-textarea>
         </ion-item>
         <ion-item *ngSwitchCase="'date'">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
-          <mat-form-field appearance="standard">
-            <!-- mat-label>{{ key | translate }}</mat-label -->
-            <input matInput [(ngModel)]="object[key]" name="{{key}}" placeholder="{{object[key] | date:'yyyy-MM-dd'}}"
-              [matDatepicker]="picker">
-            <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker [startAt]="object[key] | date:'yyyy-MM-dd'"></mat-datepicker>
-          </mat-form-field>
-          <!-- ion-input  [(ngModel)]="object[key]" name="{{key}}" type="text" value="{{object[key] | date:'yyyy-MM-dd'}}"></ion-input>
-          <ion-datetime  [(ngModel)]="object[key]" name="{{key}}" cancelText="{{ 'cancel' | translate }}" displayFormat="YYYY-MM-DD"
-            doneText="{{'apply' | translate }}" max="2100" value="{{object[key]}}"
-            pickerOptions="pickerOptions"></ion-datetime -->
+          <input [(ngModel)]="object[key]" name="{{key}}" value="{{object[key]}}" type="date">
         </ion-item>
         <ion-item *ngSwitchCase="'date-time'">
           <mat-form-field fxFlexOffset="2" fxFlex="32">
@@ -87,10 +76,6 @@
             <mat-datepicker #picker [startAt]="object[key] | date:'yyyy-MM-dd HH:mm:ss Z'"></mat-datepicker>
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           </mat-form-field>
-          <!-- ion-datetime  [(ngModel)]="object[key]" name="{{key}}" cancel-text="{{ 'cancel' | translate }}"
-            displayFormat="YYYY-MM-DD HH:mm" done-text="{{'apply' | translate }}" max="2100"
-            value="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z'}}">
-          </ion-datetime -->
         </ion-item>
         <ion-item *ngSwitchCase="'idPipe'">
           <ion-label position="stacked">{{ key | translate }}{{objectService.required[key]}}</ion-label>
@@ -122,8 +107,8 @@
           </ion-select>
         </ion-item>
         <ion-item *ngSwitchCase="'multivalued'">
-          <ion-label position="stacked">{{ key | translate }}</ion-label>
-          <ion-label *ngFor="let value of object[key]">{{value}}</ion-label>
+          <ion-label position="stacked">{{ key | translate }} {{'Comma separated list' | translate }}</ion-label>
+          <ion-input type="text" [(ngModel)]="object[key]" name="{{key}}" value="{{object[key]}}"></ion-input>
         </ion-item>
       </div>
     </ion-list>

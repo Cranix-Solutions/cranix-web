@@ -45,7 +45,7 @@ export class GenericObjectService {
   ];
 
   multivalued: string[] = [
-    'softwareVersions','softwareFullNames'
+    'softwareVersions','softwareFullNames','mailAliases'
   ]
 
   /**
@@ -82,6 +82,7 @@ export class GenericObjectService {
     'partitions',
     'saveNext',
     'users',
+    'fullName'
   ]
   /**
    * Required attributes
