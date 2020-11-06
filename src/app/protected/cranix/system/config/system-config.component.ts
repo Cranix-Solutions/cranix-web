@@ -22,7 +22,9 @@ export class SystemConfigComponent implements OnInit {
 
   ngOnInit() {
     let sub = this.systemService.getSystemConfiguration().subscribe(
-      (val) => { this.configs = val },
+    (val) => {
+      val.sort((a, b) => (a.key > b.key) ? 1 : (b.key > a.key) ? -1 : 0)
+      this.configs = val },
       (err) => { console.log(err) },
       () => { sub.unsubscribe() }
     )
