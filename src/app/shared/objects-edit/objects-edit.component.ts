@@ -20,7 +20,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class ObjectsEditComponent implements OnInit {
   formData: FormData = new FormData();
-  disabled: boolean  = false;
+  disabled: boolean = false;
   fileToUpload: File = null;
   result: any = {};
   objectId: number;
@@ -68,28 +68,30 @@ export class ObjectsEditComponent implements OnInit {
   }
   ngOnInit() {
     this.disabled = false;
-    let url = this.utilsS.hostName() + "/" + this.objectType + "s/" + this.object.id;
-    let sub = this.http.get(url, { headers: this.authService.headers }).subscribe(
-      (val) => {
-        for(let key of this.objectKeys) {
-          if( this.objectService.typeOf(key,this.object,'edit') == 'date' ) {
-            let d = new Date(val[key])
-            this.object[key] = d.toJSON().substring(0,10)
-            continue
+    if (this.navParams.get('objectAction') != 'add') {
+      let url = this.utilsS.hostName() + "/" + this.objectType + "s/" + this.object.id;
+      let sub = this.http.get(url, { headers: this.authService.headers }).subscribe(
+        (val) => {
+          for (let key of this.objectKeys) {
+            if (this.objectService.typeOf(key, this.object, 'edit') == 'date') {
+              let d = new Date(val[key] + 12000000)
+              this.object[key] = d.toJSON().substring(0, 10)
+              continue
+            }
+            if (this.objectService.typeOf(key, this.object, 'edit') == 'multivalued') {
+              let s = val[key]
+              this.object[key] = s.join()
+              continue
+            }
+            this.object[key] = val[key];
           }
-          if( this.objectService.typeOf(key,this.object,'edit') == 'multivalued' ) {
-            let s = val[key]
-            this.object[key] = s.join()
-            continue
-          }
-          this.object[key] = val[key];
+        },
+        (err) => { },
+        () => {
+          sub.unsubscribe();
         }
-      },
-      (err) => {},
-      () => {
-        sub.unsubscribe();
-      }
-    );
+      );
+    }
   }
 
   closeWindow() {
@@ -112,11 +114,11 @@ export class ObjectsEditComponent implements OnInit {
   }
 
   onSubmit(object) {
-    if( this.disabled ) {
+    if (this.disabled) {
       return;
     }
-    for(let key of this.objectKeys) {
-      if( this.objectService.typeOf(key,object,'edit') == 'multivalued' ) {
+    for (let key of this.objectKeys) {
+      if (this.objectService.typeOf(key, object, 'edit') == 'multivalued') {
         let s: string = object[key];
         object[key] = s.split(",")
       }
@@ -150,7 +152,6 @@ export class ObjectsEditComponent implements OnInit {
     console.log(this.fileToUpload)
   }
   defaultAcion(object) {
-    let serverResponse: ServerResponse;
     let subs = this.objectService.applyAction(object, this.objectType, this.objectAction).subscribe(
       async (val) => {
         this.objectService.responseMessage(val);
@@ -173,7 +174,7 @@ export class ObjectsEditComponent implements OnInit {
     )
   }
   deleteObject() {
-    this.objectService.deleteObjectDialog(this.object,this.objectType);
+    this.objectService.deleteObjectDialog(this.object, this.objectType);
     //this.modalController.dismiss("succes");
   }
   supportRequest(object: SupportTicket) {
@@ -188,7 +189,7 @@ export class ObjectsEditComponent implements OnInit {
         }
       },
       async (error) => {
-        this.objectService.errorMessage("A Server Error is accoured:"+ error.toString());
+        this.objectService.errorMessage("A Server Error is accoured:" + error.toString());
         this.splashScreen.hide();
       },
       () => {
@@ -202,15 +203,15 @@ export class ObjectsEditComponent implements OnInit {
     formData.append('role', object.role);
     formData.append('lang', object.lang);
     formData.append('identifier', object.identifier);
-    formData.append('test', object.test ? "true":"false");
+    formData.append('test', object.test ? "true" : "false");
     formData.append('password', object.password);
-    formData.append('mustChange', object.mustChange ? "true":"false");
-    formData.append('full', object.full ? "true":"false");
-    formData.append('allClasses', object.allClasses ? "true":"false");
-    formData.append('cleanClassDirs', object.cleanClassDirs ? "true":"false");
-    formData.append('resetPassword', object.resetPassword ? "true":"false");
-    formData.append('appendBirthdayToPassword', object.appendBirthdayToPassword ? "true":"false");
-    formData.append('appendClassToPassword', object.appendClassToPassword ? "true":"false");
+    formData.append('mustChange', object.mustChange ? "true" : "false");
+    formData.append('full', object.full ? "true" : "false");
+    formData.append('allClasses', object.allClasses ? "true" : "false");
+    formData.append('cleanClassDirs', object.cleanClassDirs ? "true" : "false");
+    formData.append('resetPassword', object.resetPassword ? "true" : "false");
+    formData.append('appendBirthdayToPassword', object.appendBirthdayToPassword ? "true" : "false");
+    formData.append('appendClassToPassword', object.appendClassToPassword ? "true" : "false");
     console.log(object.test);
     console.log(object.password);
     console.log(this.formData.get("role"))

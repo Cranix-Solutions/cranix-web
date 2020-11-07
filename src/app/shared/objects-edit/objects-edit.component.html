@@ -66,7 +66,7 @@
         </ion-item>
         <ion-item *ngSwitchCase="'date'">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
-          <input [(ngModel)]="object[key]" name="{{key}}" value="{{object[key]}}" type="date">
+          <input [(ngModel)]="object[key]" name="{{key}}" type="date">
         </ion-item>
         <ion-item *ngSwitchCase="'date-time'">
           <mat-form-field fxFlexOffset="2" fxFlex="32">
