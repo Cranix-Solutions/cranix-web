@@ -73,11 +73,6 @@ export class ObjectsEditComponent implements OnInit {
       let sub = this.http.get(url, { headers: this.authService.headers }).subscribe(
         (val) => {
           for (let key of this.objectKeys) {
-            if (this.objectService.typeOf(key, this.object, 'edit') == 'date') {
-              let d = new Date(val[key] + 12000000)
-              this.object[key] = d.toJSON().substring(0, 10)
-              continue
-            }
             if (this.objectService.typeOf(key, this.object, 'edit') == 'multivalued') {
               let s = val[key]
               this.object[key] = s.join()

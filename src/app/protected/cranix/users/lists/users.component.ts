@@ -94,10 +94,6 @@ export class UsersComponent implements OnInit {
           });
           continue;
         }
-        case 'birthDay': {
-          col['cellRendererFramework'] = DateCellRenderer;
-          break;
-        }
       }
       columnDefs.push(col);
     }

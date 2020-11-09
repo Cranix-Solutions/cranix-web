@@ -26,7 +26,7 @@ export class User {
 	uuid?: string = "";
 	surName: string = "";
 	givenName: string = "";
-	birthDay?: any = new Date();
+	birthDay?: string = "";
 	password?: string = "";
 	role?: string = "";
 	classes?: string = "";
