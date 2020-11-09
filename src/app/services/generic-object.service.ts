@@ -22,9 +22,10 @@ export class GenericObjectService {
   /**
    * The base objects which need to be loaded by the initialisations
    */
-  objects: string[] = [
-    'user', 'group', 'room', 'device', 'hwconf', 'printer','adhocroom','education/user','education/group'
+  private objectsTemlate: string[] = [
+    'user', 'group', 'room', 'device', 'hwconf', 'printer', 'adhocroom', 'education/user', 'education/group'
   ]
+  objects: string[] = [];
   /**
    * Default.ini for cephalix
    */
@@ -32,7 +33,7 @@ export class GenericObjectService {
 
   selects: any = {
     'action': ['wol', 'reboot', 'shutdown', 'logout'],
-    'agGridThema': [ 'ag-theme-material','ag-theme-alpine', 'ag-theme-balham'],
+    'agGridThema': ['ag-theme-material', 'ag-theme-alpine', 'ag-theme-balham'],
     'devCount': [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096],
     'identifier': ['sn-gn-bd', 'uuid', 'uid'],
     'lang': ['DE', 'EN'],
@@ -45,7 +46,7 @@ export class GenericObjectService {
   ];
 
   multivalued: string[] = [
-    'softwareVersions','softwareFullNames','mailAliases'
+    'softwareVersions', 'softwareFullNames', 'mailAliases'
   ]
 
   /**
@@ -110,6 +111,10 @@ export class GenericObjectService {
   }
 
   initialize(force: boolean) {
+    this.objects = []
+    for( let obj of this.objectsTemlate ) {
+      this.objects.push(obj)
+    }
     if (this.authService.isAllowed('cephalix.manage')) {
       this.initializeCephalixObjects();
     }
@@ -119,13 +124,12 @@ export class GenericObjectService {
     if (this.authService.isAllowed('cephalix.ticket')) {
       this.objects.push('ticket');
     }
-
     for (let key of this.objects) {
       this.allObjects[key] = new BehaviorSubject([]);
     }
     let subs: any = {};
-    if(force || !this.initialized) {
-      this.authService.log("initialize all abjects")
+    if (force || !this.initialized) {
+      this.authService.log("initialize all objects")
       for (let key of this.objects) {
         this.getAllObject(key);
       }
@@ -258,11 +262,10 @@ export class GenericObjectService {
     if (idName == 'cephalixInstituteId') {
       return 'institute';
     }
-    if (idName.substring(idName.length - 2) == 'Id' )
-    {
+    if (idName.substring(idName.length - 2) == 'Id') {
       return idName.substring(0, idName.length - 2)
     }
-    if( idName.substring(idName.length - 3) == 'Ids' )  {
+    if (idName.substring(idName.length - 3) == 'Ids') {
       return idName.substring(0, idName.length - 3)
     }
   }
@@ -423,10 +426,10 @@ export class GenericObjectService {
     return a == b;
   }
   sortByName(a, b) {
-    if ( a.name < b.name ){
+    if (a.name < b.name) {
       return -1;
     }
-    if ( a.name > b.name ){
+    if (a.name > b.name) {
       return 1;
     }
     return 0;
@@ -444,7 +447,7 @@ export class GenericObjectService {
     if (key == 'reminder' || key == 'created') {
       return "date-time";
     }
-    if (key == 'text' || key == 'domains' ) {
+    if (key == 'text' || key == 'domains') {
       return "text";
     }
     if (typeof obj === 'boolean' && obj) {
@@ -453,7 +456,7 @@ export class GenericObjectService {
     if (typeof obj === 'boolean') {
       return "booleanFalse";
     }
-    if ( action == 'modify' && this.hiddenAttributes.indexOf(key) != -1) {
+    if (action == 'modify' && this.hiddenAttributes.indexOf(key) != -1) {
       return "hidden";
     }
     if (key == 'name' && object.regCode) {
@@ -462,16 +465,16 @@ export class GenericObjectService {
     if (action == 'modify' && this.readOnlyAttributes.indexOf(key) != -1) {
       return "stringRO";
     }
-    if (key.substring(key.length - 2) == 'Id' ) {
+    if (key.substring(key.length - 2) == 'Id') {
       return "idPipe";
     }
-    if( key.substring(key.length - 3) == 'Ids' )  {
+    if (key.substring(key.length - 3) == 'Ids') {
       return "idsPipe";
     }
     if (key.substring(key.length - 4) == 'File') {
       return 'file';
     }
-    if( this.multivalued.indexOf(key) != -1 ) {
+    if (this.multivalued.indexOf(key) != -1) {
       return 'multivalued';
     }
     return "string";

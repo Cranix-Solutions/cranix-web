@@ -11,46 +11,47 @@ import { AddDeviceComponent } from 'src/app/protected/cranix/devices/add-device/
   templateUrl: './my-devices.component.html',
   styleUrls: ['./my-devices.component.scss'],
 })
-export class MyDevicesComponent implements OnInit,OnDestroy {
+export class MyDevicesComponent implements OnInit, OnDestroy {
 
-  alive :boolean = true; 
+  alive: boolean = true;
 
-  myDevs; 
+  myDevs;
 
-  myRooms; 
+  myRooms;
   constructor(private selfS: SelfManagementService,
     public modalCtrl: ModalController,
     public objectService: GenericObjectService) {
 
-   }
+  }
 
-   ngOnInit() {
-      this.selfS.getMyRooms()
-          .pipe(takeWhile(() => this.alive ))
-          .subscribe((res) => {
-            this.myRooms = res; 
-            console.log('myRooms are', res);
-          }, (err) => {
-            this.objectService.errorMessage(err);
-          })
-       this.myDevs = this.selfS.getMyDevices()
-   }
+  ngOnInit() {
+    this.selfS.getMyRooms()
+      .pipe(takeWhile(() => this.alive))
+      .subscribe((res) => {
+        this.myRooms = res;
+        console.log('myRooms are', res);
+      }, (err) => {
+        this.objectService.errorMessage(err);
+      })
+    this.myDevs = this.selfS.getMyDevices()
+  }
 
-  deleteDev(dev: number){
+  deleteDev(dev: number) {
     this.selfS.removeDevice(dev)
-        .pipe(takeWhile(() => this.alive ))
-        .subscribe((res) => {
-          this.objectService.responseMessage(res)
-        }, (err) => {
-          this.objectService.errorMessage(err);
-        })
+      .pipe(takeWhile(() => this.alive))
+      .subscribe((res) => {
+        this.objectService.responseMessage(res)
+        this.myDevs = this.selfS.getMyDevices()
+      }, (err) => {
+        this.objectService.errorMessage(err);
+      })
   }
 
   async addDevice(ev: Event) {
     let room = "";
-    if(this.myRooms.length == 1){
+    if (this.myRooms.length == 1) {
       room = this.myRooms[0];
-    }else{
+    } else {
       room = this.myRooms
     }
     const modal = await this.modalCtrl.create({
@@ -64,12 +65,12 @@ export class MyDevicesComponent implements OnInit,OnDestroy {
       backdropDismiss: false
     });
     modal.onDidDismiss().then((data) => {
-       this.myDevs = this.selfS.getMyDevices()
+      this.myDevs = this.selfS.getMyDevices()
     });
     return await modal.present();
   }
 
-  ngOnDestroy(){
-    this.alive = false; 
+  ngOnDestroy() {
+    this.alive = false;
   }
 }
