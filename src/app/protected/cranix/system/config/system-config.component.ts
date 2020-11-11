@@ -33,6 +33,7 @@ export class SystemConfigComponent implements OnInit {
   segmentChanged(event) {
       this.toShow = event.detail.value;
   }
+
   save(key: string){
     let sub = this.systemService.setSystemConfigValue(key,(<HTMLInputElement>document.getElementById(key)).value).subscribe(
       (val) => {

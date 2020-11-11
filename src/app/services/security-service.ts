@@ -22,9 +22,10 @@ export class SecurityService {
   remoteRules: RemoteRule[];
   firewallRooms: Room[];
   actualStatus: AccessInRoom[];
-  public outgoinChanged: boolean = false;
+  public unboudChanged:   boolean = false;
+  public outgoinChanged:  boolean = false;
   public incomingChanged: boolean = false;
-  public remoteChanged: boolean = false;
+  public remoteChanged:   boolean = false;
   public proxyChanged = {
     basic: false,
     good: false,
@@ -67,7 +68,32 @@ export class SecurityService {
     console.log(this.url);
     return this.http.get<string[]>(this.url, { headers: this.authService.headers });
   }
-
+  getProxyCategories() {
+    this.url = this.hostname + "/system/proxy/lists";
+    console.log(this.url);
+    return this.http.get<any[]>(this.url, { headers: this.authService.headers });
+  }
+  getActiveUnboundLists() {
+    this.url = this.hostname + "/system/configuration/UNBOUND_LISTS";
+    console.log(this.url);
+    let textHeaders = new HttpHeaders({
+			'Accept': "text/plain",
+			'Authorization': "Bearer " + this.authService.session.token
+		});
+		return this.http.get(this.url, { headers: textHeaders, responseType: 'text' });
+  }
+  
+  setActiveUnboundLists(lists) {
+    this.url = this.hostname + "/system/configuration";
+    console.log(this.url);
+    let temp = {"key":"UNBOUND_LISTS","value":lists}
+    return this.http.post<ServerResponse>(this.url, temp, { headers: this.authService.headers });
+  }
+  resetUnbound() {
+    this.url = this.hostname + "/system/unbound";
+    console.log(this.url);
+    return this.http.put<ServerResponse>(this.url, { headers: this.authService.headers });
+  }
   setProxyCustom(custom,list: string[]) {
     this.url = this.hostname + `/system/proxy/custom/${custom}`;
     console.log(this.url);
@@ -97,6 +123,7 @@ export class SecurityService {
     console.log(this.url);
     return this.http.get<Room[]>(this.url, { headers: this.authService.headers });
   }
+
 
   async applyChange(rules, rulesName) {
     this.url = this.hostname + '/system/firewall/' + rulesName;
@@ -250,6 +277,23 @@ export class ProxyCanDeactivate implements CanDeactivate<SecurityService> {
     if (this.securityService.proxyChanged['cephalix']) {
       return window.confirm(
         this.languageS.trans('The chephalix list  was changed.') +
+        this.languageS.trans('The changes will be lost if you leave the module.')
+      );
+    }
+    return true;
+  }
+}
+
+@Injectable()
+export class UnboundCanDeactivate implements CanDeactivate<SecurityService> {
+  constructor(
+    public languageS: LanguageService,
+    public securityService: SecurityService
+  ) { }
+  canDeactivate(securityService: SecurityService) {
+    if (this.securityService.unboudChanged) {
+      return window.confirm(
+        this.languageS.trans('The unbound configuration was changed.') +
         this.languageS.trans('The changes will be lost if you leave the module.')
       );
     }

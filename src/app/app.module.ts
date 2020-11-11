@@ -54,7 +54,7 @@ import { AddRemoteRuleComponent } from './protected/cranix/security/firewall/add
 import { AddEditRoomAccessComponent } from 'src/app/protected/cranix/security/room-access/add-edit-room-access/add-edit-room-access.component';
 import { FilesUploadComponent } from 'src/app/shared/actions/files-upload/files-upload.component'
 import { FilesCollectComponent } from 'src/app/shared/actions/files-collect/files-collect.component'
-import { FirewallCanDeactivate, ProxyCanDeactivate } from 'src/app/services/security-service'
+import { FirewallCanDeactivate, ProxyCanDeactivate, UnboundCanDeactivate } from 'src/app/services/security-service'
 import { SetpasswordComponent } from 'src/app/shared/actions/setpassword/setpassword.component'
 import { ManageAclsComponent } from './protected/cranix/system/acls/manage-acls/manage-acls.component';
 import { ManageDhcpComponent } from './shared/actions/manage-dhcp/manage-dhcp.component';
@@ -163,6 +163,7 @@ const routes: Routes = [
     SystemService,
     LanguageService,
     SpinnerDialog,
+    UnboundCanDeactivate,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

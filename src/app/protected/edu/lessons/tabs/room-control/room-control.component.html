@@ -7,7 +7,8 @@
           <ion-icon [ngStyle]="{'color': room.accessInRooms.login  ? '#2dd36f' : '#eb445a'}" name="key-sharp"
             size="large"></ion-icon>
         </ion-button>
-        <ion-button matTooltip="{{ 'Filtered internet access' | translate}}" (click)="setAccess('proxy')">
+        <ion-button *ngIf="room && authS.isAllowed('education.proxy')"
+          matTooltip="{{ 'Filtered internet access' | translate}}" (click)="setAccess('proxy')">
           <ion-icon [ngStyle]="{'color': room.accessInRooms.proxy  ? '#2dd36f' : '#eb445a'}" name="globe-sharp"
             size="large">
           </ion-icon>

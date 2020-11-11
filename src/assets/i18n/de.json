@@ -1,4 +1,6 @@
 {
+    "Own Black List":"Eigene Black List",
+    "Denied Categories":"Verbotene Kategorien",
     "%s was created succesfully.": "%s wurde erfolgreich erstellt.",
     "%s was deleted succesfully.": "%s wurde erfolgreich gelöscht.",
     "Acces was deleted succesfully": "Zugriffsregel wurde erfolgreich gelöscht",
@@ -52,7 +54,7 @@
     "Cancel": "verwerfen",
     "Change grouping of the table": "Gruppierung der Tabelle ändern",
     "Collect files": "Dateien einsammeln",
-    "Collect the file from the Export directory of the logged on users or of the workstation users.": "Dateien aus der den Exportverzeichnissen der angemeldeten Benutzer oder der Worksationsbenutzer einsammeln.",
+    "Collect the file from the Export directory of the logged on users or of the workstation users.": "Dateien aus den Exportverzeichnissen der angemeldeten Benutzer oder der Worksationsbenutzer einsammeln.",
     "Comma separated list": "Elemente mit Komma trennen!",
     "Confirm": "bestätigen",
     "Confirm!": "Bestätigen!",
