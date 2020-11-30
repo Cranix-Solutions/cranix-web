@@ -25,8 +25,14 @@
       <div *ngFor="let key of objectKeys" [ngSwitch]="objectService.typeOf(key,object,objectAction)">
         <ion-item *ngSwitchCase="'file'">
           <ion-label>{{ key | translate }}{{objectService.required[key]}}</ion-label>
-          <input slot="end" type="file" [(ngModel)]="object[key]" name="{{key}}"
-            (change)="handleFileInput($event.target.files)">
+          <div class="upload-btn-wrapper">
+            <button class="btn">
+              <div *ngIf="!fileToUpload">{{'File to Upload'|translate}}</div>
+              <div *ngIf="fileToUpload">{{fileToUpload.name}}</div>
+              <input slot="end" type="file" [(ngModel)]="object[key]" name="{{key}}"
+                (change)="handleFileInput($event.target.files)">
+            </button>
+          </div>
         </ion-item>
         <ion-item *ngSwitchCase="'booleanTrue'">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
@@ -61,7 +67,8 @@
         </ion-item>
         <ion-item *ngSwitchCase="'text'" lines="none">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
-          <ion-textarea color="tertiary" autoGrow="true" [(ngModel)]="object[key]" name="{{key}}" value="{{object[key]}}">
+          <ion-textarea color="tertiary" autoGrow="true" [(ngModel)]="object[key]" name="{{key}}"
+            value="{{object[key]}}">
           </ion-textarea>
         </ion-item>
         <ion-item *ngSwitchCase="'date'">
@@ -71,8 +78,8 @@
         <ion-item *ngSwitchCase="'date-time'">
           <mat-form-field fxFlexOffset="2" fxFlex="32">
             <ion-label position="stacked">{{ key | translate }}</ion-label>
-            <input matInput [(ngModel)]="object[key]" name="{{key}}" placeholder="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z' }}"
-              [matDatepicker]="picker">
+            <input matInput [(ngModel)]="object[key]" name="{{key}}"
+              placeholder="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z' }}" [matDatepicker]="picker">
             <mat-datepicker #picker [startAt]="object[key] | date:'yyyy-MM-dd HH:mm:ss Z'"></mat-datepicker>
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           </mat-form-field>

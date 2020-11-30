@@ -14,9 +14,9 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
         <ion-button fill="clear" size="small" (click)="openAction($event)" matTooltip="{{'Apply actions on the selected objects' | translate }}">
             <ion-icon  name="ellipsis-vertical-sharp"></ion-icon> 
         </ion-button>
-        <!--ion-button style="padding-horizontal : 2px" fill="clear"  size="small" (click)="delete()" matTooltip="{{'delete' | translate }}">
+        <ion-button style="padding-horizontal : 2px" fill="clear"  size="small" (click)="delete()" matTooltip="{{'delete' | translate }}">
             <ion-icon color="danger" name="trash-outline" ></ion-icon>
-        </ion-button-->
+        </ion-button>
         ` 
 })
 
@@ -36,9 +36,9 @@ export class UserActionBTNRenderer implements ICellRendererAngularComp {
     public openAction(ev: any){
         this.params.context.componentParent.openActions(ev, this.params.data.id )
     }
-   /* public delete() {
+    public delete() {
         this.params.context.componentParent.redirectToDelete(this.params.data);
-    }*/
+    }
 
     refresh(params: any): boolean {
         return true;

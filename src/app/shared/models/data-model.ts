@@ -117,16 +117,20 @@ export class SoftwareVersions {
 	constructor() { }
 }
 
+export class SoftwareFullName {
+	id?: number;
+	fullName: string = "";
+}
 export class Software {
 	id?: number;
 	name: string = "";
 	description: string = "";
 	weight: number = 0;
 	version?: string = "";
-	manually: boolean;
+	manually: boolean = false;
 	sourceAvailable: boolean;
-	softwareVersions: any[];
-	softwareFullNames: any[];
+	softwareVersions: SoftwareVersions[];
+	softwareFullNames: SoftwareFullName[];
 	constructor() { }
 }
 

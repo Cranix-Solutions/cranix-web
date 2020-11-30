@@ -58,6 +58,7 @@ import { FirewallCanDeactivate, ProxyCanDeactivate, UnboundCanDeactivate } from 
 import { SetpasswordComponent } from 'src/app/shared/actions/setpassword/setpassword.component'
 import { ManageAclsComponent } from './protected/cranix/system/acls/manage-acls/manage-acls.component';
 import { ManageDhcpComponent } from './shared/actions/manage-dhcp/manage-dhcp.component';
+import { SoftwareLicensesComponent } from './shared/actions/software-licenses/software-licenses.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -90,6 +91,7 @@ const routes: Routes = [
     ShowImportComponent,
     ObjectsEditComponent,
     DevicePrintersComponent,
+    SoftwareLicensesComponent,
     ManageDhcpComponent,
     ManageAclsComponent,
     GroupMembersPage,
@@ -99,6 +101,7 @@ const routes: Routes = [
     SetpasswordComponent
   ],
   entryComponents: [
+    SoftwareLicensesComponent,
     ManageDhcpComponent,
     ManageAclsComponent,
     AddDeviceComponent,

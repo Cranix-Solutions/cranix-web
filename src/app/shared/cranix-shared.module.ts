@@ -25,6 +25,7 @@ import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
 import { RoomActionBTNRenderer } from 'src/app/pipes/ag-room-renderer';
 import { DeviceActionBTNRenderer } from 'src/app/pipes/ag-device-renderer';
 import { EditBTNRenderer } from 'src/app/pipes/ag-edit-renderer';
+import { SoftwareEditBTNRenderer } from 'src/app/pipes/ag-software-edit-renderer';
 import { GroupIdCellRenderer } from 'src/app/pipes/ag-groupid-renderer';
 import { HwconfIdCellRenderer } from 'src/app/pipes/ag-hwconfid-renderer';
 import { PrinterActionBTNRenderer } from 'src/app/pipes/ag-printer-renderer';
@@ -53,6 +54,7 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
     InstituteUUIDCellRenderer,
     PrinterActionBTNRenderer,
     RoomActionBTNRenderer,
+    SoftwareEditBTNRenderer,
     RoomIdCellRenderer,
     UpdateRenderer,
     UserActionBTNRenderer,
@@ -73,6 +75,7 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
       DeviceIdCellRenderer,
       DeviceActionBTNRenderer,
       EditBTNRenderer,
+      SoftwareEditBTNRenderer,
       GroupIdCellRenderer,
       GroupActionBTNRenderer,
       HwconfIdCellRenderer,

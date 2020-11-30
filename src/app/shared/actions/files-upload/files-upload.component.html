@@ -15,7 +15,17 @@
   <ion-content fullscreen>
     <ion-list>
       <ion-item>
-        <input type="file" (change)="onFilesAdded($event.target.files)" multiple />
+        <div class="upload-btn-wrapper">
+          <button class="btn">
+            <div *ngIf="!files">{{'Files to Upload'|translate}}</div>
+            <div *ngIf="files">
+              <div *ngFor="let file of files">
+                {{file.name}}
+              </div>
+            </div>
+            <input type="file" (change)="onFilesAdded($event.target.files)" multiple />
+          </button>
+        </div>
       </ion-item>
       <ion-item>
         <ion-label position="start">{{'cleanUp'| translate}}</ion-label>
