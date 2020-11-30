@@ -1,7 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-menu-button authoHide="utilService.okBrowser">
+        <img src="assets/images/logo/cranix_school.svg" width="32" height="32">
+      </ion-menu-button>
     </ion-buttons>  
     <ion-buttons slot="end">
       <ion-button fill="clear" (click)="objectService.initialize(true)" matTooltip="{{ 'Refresh all objects' | translate }}">

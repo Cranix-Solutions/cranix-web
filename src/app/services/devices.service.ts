@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/internal/Observable';
 import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Device, InstallStateDev, Printer, DHCP } from 'src/app/shared/models/data-model';
+import { Device, InstallStateDev, Printer } from 'src/app/shared/models/data-model';
 import { UtilsService } from './utils.service';
 import { ServerResponse, CrxActionMap } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from './auth.service';
@@ -19,24 +19,14 @@ export class DevicesService {
 		this.hostname = this.utils.hostName();
 	}
 
-
-	addDhcp(dId: number, dhcp: DHCP) {
-		this.url = this.hostname + `/devices/${dId}/dhcp`;
-		return this.http.post<ServerResponse>(this.url, dhcp, { headers: this.authService.headers });
-	}
 	importDevices(fd: FormData) {
 		this.url = this.hostname + `/devices/import`;
 		return this.http.post<ServerResponse>(this.url, fd, { headers: this.authService.headers });
 	}
 
-	setPrinters(dId: number, printers: any){
+	setPrinters(dId: number, printers: any) {
 		this.url = this.hostname + `/devices/${dId}/printers`;
 		return this.http.post<ServerResponse>(this.url, printers, { headers: this.authService.headers });
-	}
-	// GET Calls
-	getDhcp(dId: number) {
-		this.url = `${this.hostname}/devices/${dId}/dhcp`;
-		return this.http.get<DHCP[]>(this.url, { headers: this.authService.headers });
 	}
 
 	getSoftwareOnDev(id: number) {
@@ -86,12 +76,6 @@ export class DevicesService {
 		this.url = this.hostname + `/devices/${dId}/availablePrinters/${pId}`;
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
 	}
-
-	deleteDHCPrecord(dId: number, paramId: number) {
-		this.url = this.hostname + `/devices/${dId}/dhcp/${paramId}`;
-		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
-	}
-
 	executeAction(actionMap: CrxActionMap) {
 		let url = this.hostname + "/devices/applyAction"
 		console.log(url)

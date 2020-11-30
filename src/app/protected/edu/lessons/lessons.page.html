@@ -1,13 +1,12 @@
-<cranix-toolbar></cranix-toolbar>
 <ion-tabs>
-    <ion-tab-bar slot="bottom">
-      <ion-tab-button tab="roomcontrol">
-        <ion-icon name="calendar"></ion-icon>
-        <ion-label>{{ 'Room' | translate }}</ion-label>
-      </ion-tab-button>
-      <ion-tab-button tab="mypositive">
-        <ion-icon name="calendar"></ion-icon>
-        <ion-label>{{ 'Security' | translate }}</ion-label>
-      </ion-tab-button>
-    </ion-tab-bar>
-  </ion-tabs>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="roomcontrol">
+      <ion-icon name="calendar"></ion-icon>
+      <ion-label>{{ 'Room' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button *ngIf="authS.isAllowed('education.proxy')" tab="mypositive">
+      <ion-icon name="calendar"></ion-icon>
+      <ion-label>{{ 'Security' | translate }}</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

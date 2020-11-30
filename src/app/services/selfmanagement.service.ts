@@ -83,8 +83,8 @@ export class SelfManagementService {
 
     addDevice(dev: Device){
         const url = this.hostname + "/selfmanagement/devices/add";
-	console.log(url);
-	return this.http.post<ServerResponse>(url, dev, { headers: this.authService.headers});
+	    console.log(url);
+	    return this.http.post<ServerResponse>(url, dev, { headers: this.authService.headers});
     }
 
     //Delete

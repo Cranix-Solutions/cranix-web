@@ -195,7 +195,7 @@ export class TicketsPage implements OnInit {
     }
   }
 
-  /**
+/**
 * Function to Select the columns to show
 * @param ev 
 */

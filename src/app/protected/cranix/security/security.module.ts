@@ -10,7 +10,8 @@ import { SecurityPage }                  from './security.page';
 import { FirewallComponent }             from './firewall/firewall.component';
 import { ProxyComponent }                from './proxy/proxy.component';
 import { RoomAccessComponent }           from './room-access/room-access.component';
-import { FirewallCanDeactivate, ProxyCanDeactivate } from 'src/app/services/security-service';
+import { UnboundComponent }              from './unbound/unbound.component';
+import { FirewallCanDeactivate, ProxyCanDeactivate, UnboundCanDeactivate } from 'src/app/services/security-service';
 
 const routes: Routes = [
   {
@@ -28,18 +29,22 @@ const routes: Routes = [
         component:  ProxyComponent
       },
       {
+        path: 'unbound',
+        canDeactivate: [UnboundCanDeactivate],
+        component:  UnboundComponent
+      },{
         path: 'access',
         component:  RoomAccessComponent
       },
       {
         path: '',
-        redirectTo: 'firewall'
+        redirectTo: 'access'
       }
     ]
   },
   {
     path: 'security',
-    redirectTo: 'firewall'
+    redirectTo: 'access'
   }
 ];
 
@@ -51,6 +56,6 @@ const routes: Routes = [
     CranixSharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [SecurityPage,FirewallComponent,ProxyComponent,RoomAccessComponent]
+  declarations: [SecurityPage,FirewallComponent,ProxyComponent,RoomAccessComponent,UnboundComponent]
 })
 export class SecurityPageModule { }

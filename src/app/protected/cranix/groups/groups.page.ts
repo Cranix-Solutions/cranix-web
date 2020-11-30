@@ -23,8 +23,8 @@ import { GroupMembersPage  } from './details/members/group-members.page';
 })
 export class GroupsPage implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['name', 'description', 'roomControl', 'hwconfId', 'actions'];
-  sortableColumns: string[] = ['name', 'description', 'roomControl', 'hwconfId'];
+  displayedColumns: string[] = ['name', 'description', 'groupType', 'actions'];
+  sortableColumns: string[] = ['name', 'description', 'groupType'];
   columnDefs = [];
   defaultColDef = {};
   gridApi: GridApi;
@@ -97,6 +97,12 @@ export class GroupsPage implements OnInit {
           this.columnDefs.push(col);
           this.columnDefs.push(action);
           continue;
+          break;
+        }
+        case 'groupType': {
+          col['valueGetter'] = function (params) {
+            return params.context['componentParent'].languageS.trans(params.data.groupType);
+          }
           break;
         }
       }

@@ -73,37 +73,38 @@ export class MyGroupsPage implements OnInit {
   groupColumnDefs() {
     this.columnDefs = [
       {
-        field: 'groupType',
-        width: 150,
-        headerName: this.languageS.trans('groupType'),
-        sortable: false,
-        rowGroup: false,
-        hide: true,
-        valueGetter: function (params) {
-          return params.context['componentParent'].languageS.trans(params.data.groupType);
-        }
+        field: 'id',
+        hide: true
       },
       {
         field: 'name',
         headerCheckboxSelectionFilteredOnly: true,
         checkboxSelection: this.authService.settings.checkboxSelection,
-        width: 150,
-        sortable: true,
+        minWidth: 150,
         cellStyle: { 'padding-left': '2px' },
         suppressSizeToFit: true,
       },
       {
         headerName: "",
-        width: 150,
+        minWidth: 150,
         suppressSizeToFit: true,
-        cellStyle: { 'padding': '2px', 'line-height': '36px' },
+        cellStyle: { 'padding': '2px'},
         field: 'actions',
         cellRendererFramework: GroupActionBTNRenderer
       },
       {
         field: 'description',
-        sortable: true,
+        minWidth: 250,
         headerName: this.languageS.trans('description')
+      },
+      {
+        field: 'groupType',
+        minWidth: 150,
+        headerName: this.languageS.trans('groupType'),
+        hide: false,
+        valueGetter: function (params) {
+          return params.context['componentParent'].languageS.trans(params.data.groupType);
+        }
       }
     ];
     this.objectService.getObjects('education/group').subscribe(obj => this.rowData = obj);
@@ -115,22 +116,11 @@ export class MyGroupsPage implements OnInit {
 
   userColumnDefs() {
     this.columnDefs = [
-      /*      {
-              field: 'groupType',
-              width: 150,
-              headerName: this.languageS.trans('groupType'),
-              sortable: false,
-              rowGroup: true,
-              hide: true,
-              valueGetter: function (params) {
-                return params.context['componentParent'].languageS.trans(params.data.groupType);
-              }
-            },*/
       {
         field: 'groupName',
         headerCheckboxSelectionFilteredOnly: true,
         checkboxSelection: this.authService.settings.checkboxSelection,
-        width: 150,
+        minWidth: 150,
         hide: true,
         rowGroup: true,
         cellStyle: { 'padding-left': '2px' },
@@ -182,12 +172,11 @@ export class MyGroupsPage implements OnInit {
         this.gridApi.sizeColumnsToFit();
       });
     });
-
     this.gridApi.sizeColumnsToFit();
   }
 
   public redirectToDelete = (group: Group) => {
-    this.objectService.deleteObjectDialog(group, 'group')
+    this.objectService.deleteObjectDialog(group, 'education/group')
   }
   /**
   * Open the actions menu with the selected object ids.

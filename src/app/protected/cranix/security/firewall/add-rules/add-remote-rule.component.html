@@ -20,9 +20,31 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{'device'| translate}}</ion-label>
-        <ion-select type="text" [(ngModel)]="rule.id" name="id" required>
-          <ion-select-option *ngFor="let obj of  deviceIps" value="{{obj.key}}">{{obj.name}}</ion-select-option>
-        </ion-select>
+        <ionic-selectable
+          #ionicSelectable
+          item-content
+          [(ngModel)]="selectedDevice"
+          [ngModelOptions]="{standalone: true}"
+          [items]="deviceIps"
+          itemValueField="key"
+          itemTextField="name"
+          [canSearch]="true">
+          <ng-template ionicSelectableHeaderTemplate>
+            <ion-toolbar>
+              <ion-title>
+              {{ "Select a Device" | translate }}
+              </ion-title>
+              <ion-buttons slot="end">
+                <ion-button ion-button (click)="ionicSelectable.close()">
+                  <ion-icon color="danger" name="close"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ng-template>
+          <ng-template ionicSelectableItemIconTemplate>
+           <div></div>
+          </ng-template>
+        </ionic-selectable>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{'internal port'|translate}}</ion-label>

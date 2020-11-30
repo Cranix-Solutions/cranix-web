@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy, Routes, RouterModule } from '@angular/router';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { IonicSelectableModule } from 'ionic-selectable';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
@@ -53,8 +54,11 @@ import { AddRemoteRuleComponent } from './protected/cranix/security/firewall/add
 import { AddEditRoomAccessComponent } from 'src/app/protected/cranix/security/room-access/add-edit-room-access/add-edit-room-access.component';
 import { FilesUploadComponent } from 'src/app/shared/actions/files-upload/files-upload.component'
 import { FilesCollectComponent } from 'src/app/shared/actions/files-collect/files-collect.component'
-import { FirewallCanDeactivate, ProxyCanDeactivate } from 'src/app/services/security-service'
+import { FirewallCanDeactivate, ProxyCanDeactivate, UnboundCanDeactivate } from 'src/app/services/security-service'
 import { SetpasswordComponent } from 'src/app/shared/actions/setpassword/setpassword.component'
+import { ManageAclsComponent } from './protected/cranix/system/acls/manage-acls/manage-acls.component';
+import { ManageDhcpComponent } from './shared/actions/manage-dhcp/manage-dhcp.component';
+import { SoftwareLicensesComponent } from './shared/actions/software-licenses/software-licenses.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -87,6 +91,9 @@ const routes: Routes = [
     ShowImportComponent,
     ObjectsEditComponent,
     DevicePrintersComponent,
+    SoftwareLicensesComponent,
+    ManageDhcpComponent,
+    ManageAclsComponent,
     GroupMembersPage,
     UserGroupsPage,
     RoomPrintersPage,
@@ -94,6 +101,9 @@ const routes: Routes = [
     SetpasswordComponent
   ],
   entryComponents: [
+    SoftwareLicensesComponent,
+    ManageDhcpComponent,
+    ManageAclsComponent,
     AddDeviceComponent,
     AddEditRoomAccessComponent,
     AddOutgoingRuleComponent,
@@ -118,6 +128,7 @@ const routes: Routes = [
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
     IonicModule.forRoot(),
+    IonicSelectableModule,
     RouterModule.forRoot(routes),
     HttpClientModule,
     CranixSharedModule,
@@ -155,6 +166,7 @@ const routes: Routes = [
     SystemService,
     LanguageService,
     SpinnerDialog,
+    UnboundCanDeactivate,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

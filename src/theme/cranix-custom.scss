@@ -1,4 +1,54 @@
 /*
+* File select design
+*/
+.button-file {
+  min-width: 150px;
+  color: #fff;
+  background-color: lightskyblue;
+  font-weight: bold;
+  border: 1px #999 solid;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+  filter:progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#bb0000ff', EndColorStr='#990000ff');
+  padding: 10px 5px;
+}
+.button-file:active {
+  filter:progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#990000ff', EndColorStr='#bb0000ff');
+}
+.button-file:hover {
+  cursor: pointer;
+}
+
+/*
+* Ein anderes lookout 
+*/
+.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.btn {
+  min-width: 150px;
+  border: 2px solid gray;
+  color: black;
+  background-color: rgb(89, 124, 153);
+  padding: 8px 20px;
+  border-radius: 1px;
+  //font-size: 20px;
+  font-weight: bold;
+}
+
+.upload-btn-wrapper input[type=file] {
+  font-size: 20px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+/*
  * edited styling for ag-grid 
  *
  */
@@ -10,6 +60,30 @@ $grid-breakpoints :(xs: 0,
 
 $breakpoints-keys  : map-keys($grid-breakpoints);
 $breakpoints-values: map-values($grid-breakpoints);
+
+.ok-row {
+  background: lightgreen;
+  text-align: center;
+  margin: 6px;
+}
+.neutral-row {
+  background: lightblue;
+  text-align: center;
+  margin: 6px;
+}
+.bad-row {
+  background: red;
+  color: black;
+  text-align: center;
+  margin: 6px;
+}
+.sub-header-row {
+  background: lightgray;
+  color: black;
+  text-align: center;
+  padding: 16px;
+  margin: 16px;
+}
 
 @for $i from 1 to length($breakpoints-keys)+1 {
   @if $i < length($breakpoints-keys) {

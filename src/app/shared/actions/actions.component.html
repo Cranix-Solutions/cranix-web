@@ -1,11 +1,9 @@
 <ion-content>
-  <ion-list-header *ngIf="count > 1"> # {{'Selected Items: ' | translate }} {{ count }}</ion-list-header>
+  <ion-list-header *ngIf="count > 1"> # {{'Selected Items:' | translate }} {{ count }}</ion-list-header>
   <ion-list>
     <div *ngFor="let item of menu">
-      <ion-item button *ngIf="item.enabled" (click)="messages(item.action)">
-        <!--ion-avatar-->
+      <ion-item button *ngIf="item.enabled" (click)="messages(item.action)" matTooltip="{{ item.action | translate }}">
         <ion-icon slot="start" size="small" color="{{item.color}}" name="{{ item.icon }}"></ion-icon>
-        <!--/ion-avatar-->
         <ion-label>{{ item.action | translate }}</ion-label>
       </ion-item>
     </div>

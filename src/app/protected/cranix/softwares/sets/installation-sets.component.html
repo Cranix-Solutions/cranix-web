@@ -17,26 +17,24 @@
 </ion-fab>
 <ion-searchbar placeholder="{{'search' | translate }}" (input)="setFilterChanged()" id="installationSetFilter"showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
   <ion-card>
-    <ion-card-header class="hidden-xs hidden-sm hidden-md">
-      <ion-row class="hidden-xs hidden-sm hidden-md">
-        <ion-col size="3" class="ion-align-items-center">
-          <ion-item>
-            <ion-input placeholder="{{'search' | translate }}" (input)="setFilterChanged()" id="installationSetFilter">
-            </ion-input>
-          </ion-item>
-        </ion-col>
-        <ion-col offset="6" size="3" class="ion-align-self-center ion-text-end hidden-xs hidden-sm hidden-md">
-          <ion-button size="small" (click)="redirectToEdit($event,null)"  matTooltip="{{'Create a new installation set' | translate }}">
+    <ion-card-header>
+      <ion-toolbar>
+        <ion-item>
+          <ion-input placeholder="{{'search' | translate }}" (input)="setFilterChanged()" id="installationSetFilter">
+          </ion-input>
+        </ion-item>
+        <ion-buttons slot="end">
+          <ion-button size="small" fill="solid" (click)="redirectToEdit($event,null)"  matTooltip="{{'Create a new installation set' | translate }}">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="writeConfig()"  matTooltip="{{'Write state files for the devices' | translate }}">
+          <ion-button size="small" fill="solid" (click)="writeConfig()"  matTooltip="{{'Write state files for the devices' | translate }}">
             <ion-icon slot="icon-only" name="pencil-outline"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="applyState()"  matTooltip="{{'Apply state on all running devices' | translate }}">
+          <ion-button size="small" fill="solid" (click)="applyState()"  matTooltip="{{'Apply state on all running devices' | translate }}">
             <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
           </ion-button>
-        </ion-col>
-      </ion-row>
+        </ion-buttons>
+      </ion-toolbar>
     </ion-card-header>
     <ion-card-content>
       <ag-grid-angular 

@@ -44,16 +44,10 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private selfS: SelfManagementService
   ) {
-
   }
 
   ngOnInit() {
     console.log('room is, :::', this.rooms);
-  }
-
-  public ngAfterViewInit() {
-    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
-    console.log('After view:', this.addHocRooms);
     if (!this.addHocRooms) {
       console.log('no AddHOC')
       this.addDeviceForm = this.fb.group({
@@ -85,14 +79,10 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
       });
       console.log('AddhocRooms', this.addDeviceForm)
     }
-    /**this.addDeviceForm.valueChanges.subscribe(() => {
-      this.onFormValuesChanged();
-    });**/
-
     if (this.addHocRooms) {
       this.roomsToSelect = this.selfS.getMyRooms();
     } else {
-      this.roomsToSelect = this.objectService.getObjects('room');
+      this.roomsToSelect = this.roomService.getRoomsToRegister();
       if (this.rooms) {
         this.roomId = this.rooms.id;
         this.addDeviceForm.controls['roomId'].patchValue(this.roomId);
@@ -106,27 +96,32 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  public ngAfterViewInit() {
+    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
+    console.log('After view:', this.addHocRooms);
+  }
+
   onSubmit(devices: Device) {
     console.log('devices', devices);
     this.objectService.requestSent()
-    let newDevice = [];
-    let macs = devices.mac.split('\n');
-    let startIndex = this.ipAdresses.indexOf(devices.ip);
     this.disabled = true;
-    this.objectService.requestSent();
     if (this.addHocRooms) {
       console.log('adding Addoc', devices);
       this.selfS.addDevice(devices)
         .pipe(takeWhile(() => this.alive))
         .subscribe((res) => {
-	   this.objectService.responseMessage(res);
-	   if( res.code == "OK" ) {
-	       this.modalCtrl.dismiss();
-	   }
+          this.objectService.responseMessage(res);
+          if (res.code == "OK") {
+            this.modalCtrl.dismiss();
+          }
         },
           (err) => { },
-	  () => {this.disabled = false; })
+          () => { this.disabled = false; })
     } else {
+      let newDevice = [];
+      let macs = devices.mac.split('\n');
+      let startIndex = this.ipAdresses.indexOf(devices.ip);
       if (macs.length == 1) {
         newDevice[0] = {
           name: devices.name,
@@ -154,9 +149,11 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
             response = response + "<br>" + this.languageService.transResponse(resp);
           }
           this.objectService.okMessage(response)
-          this.objectService.getObjects('devices');
+          this.objectService.getAllObject('devices');
         },
-          (err) => { },
+          (err) => {
+            this.objectService.errorMessage(err)
+          },
           () => {
             this.disabled = false;
             this.modalCtrl.dismiss()
@@ -171,13 +168,15 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
   roomChanged(ev) {
     console.log('rooms is: ', ev);
     this.roomId = ev.detail.value;
-    this.roomService.getAvailiableIPs(ev.detail.value)
+    if (this.addHocRooms) {
+      this.addDeviceForm.controls['hwconfId'].patchValue(ev.detail.value);
+    } else {
+      this.roomService.getAvailiableIPs(ev.detail.value)
       .pipe(takeWhile(() => this.alive))
       .subscribe((res) => {
         this.ipAdresses = res;
       })
-    if (this.addHocRooms) {
-      this.addDeviceForm.controls['hwconfId'].patchValue(ev.detail.value);
+
     }
   }
   /**   onFormValuesChanged() {

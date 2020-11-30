@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ 'Manage system acls of the selected object:' | translate}} {{name}}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" size="small" fill="solid" (click)="modalController.dismiss()">
+        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size=12 sizeMd=12 sizeLg=6 sizeXl=6>
+        <ion-title>{{'Acls of the selected object'|translate}}</ion-title>
+        <ion-list>
+          <ion-item *ngFor="let acl of acls">
+            {{acl.acl}}
+            <ion-buttom slot="end" (click)=removeAcl(acl)>
+              <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
+            </ion-buttom>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col size=12 sizeMd=12 sizeLg=6 sizeXl=6>
+        <ion-title>{{'Available acls'|translate}}</ion-title>
+        <ion-list>
+          <ion-item *ngFor="let newAcl of availabeAcls">
+            {{newAcl.acl}}
+            <ion-buttom slot="end" (click)=addAcl(newAcl)>
+              <ion-icon slot="icon-only" name="add-circle" color="success"></ion-icon>
+            </ion-buttom>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

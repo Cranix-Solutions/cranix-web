@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from './services/auth.service';
 import { GenericObjectService } from './services/generic-object.service';
 import { LanguageService } from './services/language.service';
+import { SecurityService } from './services/security-service';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +21,7 @@ export class AppComponent {
     private languageService: LanguageService,
     private platform: Platform,
     private router: Router,
+    private securityService: SecurityService,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
   ) {
@@ -33,6 +35,9 @@ export class AppComponent {
       this.languageService.setInitialAppLanguage();
       this.authService.authenticationState.subscribe(state => {
         if (state) {
+          if (this.authService.isAllowed('room.manage')) {
+            this.securityService.getActualAccessStatus();
+          }
           this.genericObjectS.initialize(true);
           if( this.authService.isAllowed('cephalix.manage')) {
             this.router.navigate(['pages/cephalix/institutes/all']);

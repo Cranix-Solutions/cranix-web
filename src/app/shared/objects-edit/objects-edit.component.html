@@ -25,8 +25,14 @@
       <div *ngFor="let key of objectKeys" [ngSwitch]="objectService.typeOf(key,object,objectAction)">
         <ion-item *ngSwitchCase="'file'">
           <ion-label>{{ key | translate }}{{objectService.required[key]}}</ion-label>
-          <input slot="end" type="file" [(ngModel)]="object[key]" name="{{key}}"
-            (change)="handleFileInput($event.target.files)">
+          <div class="upload-btn-wrapper">
+            <button class="btn">
+              <div *ngIf="!fileToUpload">{{'File to Upload'|translate}}</div>
+              <div *ngIf="fileToUpload">{{fileToUpload.name}}</div>
+              <input slot="end" type="file" [(ngModel)]="object[key]" name="{{key}}"
+                (change)="handleFileInput($event.target.files)">
+            </button>
+          </div>
         </ion-item>
         <ion-item *ngSwitchCase="'booleanTrue'">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
@@ -67,30 +73,16 @@
         </ion-item>
         <ion-item *ngSwitchCase="'date'">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
-          <mat-form-field appearance="standard">
-            <!-- mat-label>{{ key | translate }}</mat-label -->
-            <input matInput [(ngModel)]="object[key]" name="{{key}}" placeholder="{{object[key] | date:'yyyy-MM-dd'}}"
-              [matDatepicker]="picker">
-            <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker [startAt]="object[key] | date:'yyyy-MM-dd'"></mat-datepicker>
-          </mat-form-field>
-          <!-- ion-input  [(ngModel)]="object[key]" name="{{key}}" type="text" value="{{object[key] | date:'yyyy-MM-dd'}}"></ion-input>
-          <ion-datetime  [(ngModel)]="object[key]" name="{{key}}" cancelText="{{ 'cancel' | translate }}" displayFormat="YYYY-MM-DD"
-            doneText="{{'apply' | translate }}" max="2100" value="{{object[key]}}"
-            pickerOptions="pickerOptions"></ion-datetime -->
+          <input [(ngModel)]="object[key]" name="{{key}}" type="date">
         </ion-item>
         <ion-item *ngSwitchCase="'date-time'">
           <mat-form-field fxFlexOffset="2" fxFlex="32">
             <ion-label position="stacked">{{ key | translate }}</ion-label>
-            <input matInput [(ngModel)]="object[key]" name="{{key}}" placeholder="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z' }}"
-              [matDatepicker]="picker">
+            <input matInput [(ngModel)]="object[key]" name="{{key}}"
+              placeholder="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z' }}" [matDatepicker]="picker">
             <mat-datepicker #picker [startAt]="object[key] | date:'yyyy-MM-dd HH:mm:ss Z'"></mat-datepicker>
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           </mat-form-field>
-          <!-- ion-datetime  [(ngModel)]="object[key]" name="{{key}}" cancel-text="{{ 'cancel' | translate }}"
-            displayFormat="YYYY-MM-DD HH:mm" done-text="{{'apply' | translate }}" max="2100"
-            value="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z'}}">
-          </ion-datetime -->
         </ion-item>
         <ion-item *ngSwitchCase="'idPipe'">
           <ion-label position="stacked">{{ key | translate }}{{objectService.required[key]}}</ion-label>
@@ -122,8 +114,8 @@
           </ion-select>
         </ion-item>
         <ion-item *ngSwitchCase="'multivalued'">
-          <ion-label position="stacked">{{ key | translate }}</ion-label>
-          <ion-label *ngFor="let value of object[key]">{{value}}</ion-label>
+          <ion-label position="stacked">{{ key | translate }} {{'Comma separated list' | translate }}</ion-label>
+          <ion-input type="text" [(ngModel)]="object[key]" name="{{key}}" value="{{object[key]}}"></ion-input>
         </ion-item>
       </div>
     </ion-list>

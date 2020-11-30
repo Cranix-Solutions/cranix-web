@@ -26,7 +26,7 @@ export class User {
 	uuid?: string = "";
 	surName: string = "";
 	givenName: string = "";
-	birthDay?: any = new Date();
+	birthDay?: string = "";
 	password?: string = "";
 	role?: string = "";
 	classes?: string = "";
@@ -34,7 +34,7 @@ export class User {
 	fsQuota?: number = 0;
 	msQuotaUsed?: number = 0;
 	fsQuotaUsed?: number = 0;
-	mailAliases?: string[] = [];
+	mailAliases: string[];
 	constructor() { }
 }
 export class UsersImport {
@@ -98,7 +98,7 @@ export class Room {
 }
 
 export class Group {
-	id?: number;
+	id?: number = 0;
 	name: string = "";
 	description: string = "";
 	groupType: string = "";
@@ -117,16 +117,20 @@ export class SoftwareVersions {
 	constructor() { }
 }
 
+export class SoftwareFullName {
+	id?: number;
+	fullName: string = "";
+}
 export class Software {
 	id?: number;
 	name: string = "";
 	description: string = "";
 	weight: number = 0;
 	version?: string = "";
-	manually: boolean;
+	manually: boolean = false;
 	sourceAvailable: boolean;
-	softwareVersions: any[];
-	softwareFullNames: any[];
+	softwareVersions: SoftwareVersions[];
+	softwareFullNames: SoftwareFullName[];
 	constructor() { }
 }
 
@@ -183,8 +187,9 @@ export class Device {
 	locality?: string = "";
 	hwconfId: number = 0;
 	roomId?: any = null;
-	screenShot? = "";
-	loggedInId? = "";
+	screenShot?;
+	loggedInId?;
+	loggedInName?;
 	constructor() { }
 }
 export class Printer {
@@ -192,6 +197,7 @@ export class Printer {
 	name: string = "";
 	ip: string = "";
 	deviceName: string = "";
+	deviceId?: number;
 	manufacturer: string = "";
 	model: string = "";
 	mac: string = "";
@@ -360,15 +366,6 @@ export class Category {
 	constructor() { }
 }
 
-export class DHCP {
-	id?: number;
-	objectType: string = "";
-	objectId: number = 0;
-	keyword: string = "";
-	value: string = "";
-	constructor() { }
-}
-
 export class SystemConfig {
 	path: string = "";
 	readOnly: string = "";
@@ -376,6 +373,15 @@ export class SystemConfig {
 	key: string = "";
 	value: string = "";
 	help: string = "";
+	constructor() { }
+}
+
+export class CrxMConfig {
+	id: number;
+	objectType: string;
+	objectId: number;
+	keyword: string;
+	value: string;
 	constructor() { }
 }
 

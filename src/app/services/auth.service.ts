@@ -18,11 +18,13 @@ import { UserResponse, LoginForm, Settings } from 'src/app/shared/models/server-
 export class AuthenticationService {
     authenticationState = new BehaviorSubject(false);
     hostname: string;
-    url:      string;
+    url: string;
     //Token will be used only for CEPHALIX connections to overhand the CRANIX session
-    token:    string;
-    session:  UserResponse;
-    headers:  HttpHeaders;
+    token: string;
+    session: UserResponse;
+    headers: HttpHeaders;
+    formHeaders: HttpHeaders;
+    textHeaders: HttpHeaders;
     settings: Settings = new Settings();
 
     constructor(
@@ -74,8 +76,16 @@ export class AuthenticationService {
                 this.session['roomId'] = val.roomId;
                 this.session['roomName'] = val.roomName;
                 this.headers = new HttpHeaders({
-                    'Content-Type' : "application/json",
-                    'Accept'       : "application/json",
+                    'Content-Type': "application/json",
+                    'Accept': "application/json",
+                    'Authorization': "Bearer " + this.session.token
+                });
+                this.formHeaders = new HttpHeaders({
+                    'Accept': "application/json",
+                    'Authorization': "Bearer " + this.session.token
+                });
+                this.textHeaders = new HttpHeaders({
+                    'Accept': "text/plain",
                     'Authorization': "Bearer " + this.session.token
                 });
                 this.authenticationState.next(true);

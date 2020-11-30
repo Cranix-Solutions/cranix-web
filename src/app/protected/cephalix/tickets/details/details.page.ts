@@ -15,13 +15,13 @@ export class DetailsPage implements OnInit {
   articles: Article[] = [new Article()];
   constructor(
     private route: ActivatedRoute,
-    private opbjectS: GenericObjectService,
+    private objectS: GenericObjectService,
     private cephlixS: CephalixService
   ) { }
 
   ngOnInit() {
     this.ticketId = this.route.snapshot.params.id;
-    this.opbjectS.allObjects['ticket'].getValue().forEach((t: Ticket) => {
+    this.objectS.allObjects['ticket'].getValue().forEach((t: Ticket) => {
       console.log(t);
       if (t.id == this.ticketId) {
         this.ticket = t;
@@ -37,4 +37,19 @@ export class DetailsPage implements OnInit {
     while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
   }
 
+  public deleteTicket(){
+    this.objectS.deleteObjectDialog(this.ticket,"ticket");
+  }
+  public answerArticle(article: Article){
+    //TODO
+  }
+  public noticeToArticle(article: Article){
+    //TODO
+  }
+  public deleteArticle(article: Article){
+    //TODO
+  }
+  public setSeenOnArticle(article: Article){
+    //TODO
+  }
 }

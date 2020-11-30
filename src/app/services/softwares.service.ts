@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 import { ServerResponse } from 'src/app/shared/models/server-models';
-import { Category, Device, Hwconf, Room, SoftwareStatus, Software } from 'src/app/shared/models/data-model';
+import { Category, Device, Hwconf, Room, SoftwareStatus, Software, License } from 'src/app/shared/models/data-model';
 
 
 @Injectable()
@@ -45,6 +45,26 @@ export class SoftwareService {
 		this.url = this.hostname + "/softwares/installations";
 		console.log(this.url);
 		return this.http.get<Category[]>(this.url, { headers: this.authService.headers });
+	}
+	getSoftwareLicense(softwareId: number) {
+		this.url = this.hostname + `/softwares/${softwareId}/license`;
+		console.log(this.url);
+		return this.http.get<License[]>(this.url, { headers: this.authService.headers });
+	}
+	deleteSoftwareLicense(licenseId: number) {
+		this.url = this.hostname + `/softwares/licenses/${licenseId}`;
+		console.log(this.url);
+		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
+	}
+	addSoftwareLicense(softwareId: number, form) {
+		this.url = this.hostname + `/softwares/${softwareId}/license`;
+		console.log(this.url);
+		return this.http.post<ServerResponse>(this.url, form, { headers: this.authService.formHeaders });
+	}
+	modifySoftwareLicense(licenseId: number, form) {
+		this.url = this.hostname + `/softwares/licenses/${licenseId}`;
+		console.log(this.url);
+		return this.http.post<ServerResponse>(this.url, form, { headers: this.authService.formHeaders });
 	}
 	downloadSoftwares(packages: string[]) {
 		this.url = this.hostname + "/softwares/download";

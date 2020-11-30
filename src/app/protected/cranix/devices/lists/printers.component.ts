@@ -135,7 +135,6 @@ export class PrintersComponent implements OnInit {
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.doLayout();
-
   }
   sizeAll() {
     var allColumnIds = [];
@@ -181,17 +180,11 @@ export class PrintersComponent implements OnInit {
   }
 
   async redirectToEdit(ev: Event, printer: Printer) {
-    let action = "modify";
-    if (!printer) {
-      printer = new Printer();
-      action = "add";
-    }
     const modal = await this.modalCtrl.create({
-      component: ObjectsEditComponent,
+      component: AddPrinterComponent,
       cssClass: "medium-modal",
       componentProps: {
-        objectType: "printer",
-        objectAction: action,
+        action: "modify",
         object: printer
       },
       animated: true,
@@ -233,15 +226,34 @@ export class PrintersComponent implements OnInit {
     })
   }
 
-  addPrinter(ev: Event) {
-
+  async addPrinter(ev: Event) {
+    const modal = await this.modalCtrl.create({
+      component: AddPrinterComponent,
+      cssClass: 'medium-modal',
+      componentProps: {
+        action: 'queue'
+      },
+      animated: true,
+      swipeToClose: true,
+      backdropDismiss: false
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        this.displayedColumns = dataReturned.data.concat(['actions']);
+      }
+      this.createColumnDefs();
+    });
+    (await modal).present().then((val) => {
+      this.authService.log("most lett vegrehajtva.")
+    })
   }
+
   async addDevice(ev: Event) {
     const modal = await this.modalCtrl.create({
       component: AddPrinterComponent,
       cssClass: 'medium-modal',
       componentProps: {
-        room: this.selectedRoom
+        action: 'add'
       },
       animated: true,
       swipeToClose: true,
@@ -275,7 +287,7 @@ export class PrintersComponent implements OnInit {
     )
   }
 
-  toggle(id: number, what: string, yesno: boolean) {
+  toggle(id: number, what: string, yesno: boolean, data) {
     let subs = this.printersService.toggle(id,what,yesno).subscribe(
       (val) => {
         this.objectService.responseMessage(val);

@@ -25,6 +25,7 @@ export class EductaionService {
 	selectedRoomId: number;
 	//TODO make it configurable
 	screenShotTimeDealy: number = 5000;
+	uploadState = new BehaviorSubject(false);
 
 	constructor(
 		public objectService: GenericObjectService,
@@ -51,15 +52,15 @@ export class EductaionService {
 			return this.actionOnDevice(id, action)
 		}
 	}
-        actionOnRoom(roomId: number, action: string) {
-               this.url = `${this.hostname}/education/rooms/${roomId}/${action}`;
-               return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
-       }
+	actionOnRoom(roomId: number, action: string) {
+		this.url = `${this.hostname}/education/rooms/${roomId}/${action}`;
+		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
+	}
 
-       actionOnDevice(deviceId: number, action: string) {
-               this.url = `${this.hostname}/education/devices/${deviceId}/${action}`;
-               return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
-        }
+	actionOnDevice(deviceId: number, action: string) {
+		this.url = `${this.hostname}/education/devices/${deviceId}/${action}`;
+		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
+	}
 
 
 	// Calls on positiv list
@@ -139,10 +140,10 @@ export class EductaionService {
 	//GET 
 
 	uploadDataToObjects(fd: FormData, objectType: string) {
+		this.uploadState.next(true);
 		this.url = `${this.hostname}/education/${objectType}s/upload`;
 		console.log(this.url);
-		this.objectService.requestSent();
-		let sub = this.http.post<ServerResponse[]>(this.url, fd, { headers: this.authService.headers }).subscribe(
+		let subs = this.http.post<ServerResponse[]>(this.url, fd, { headers: this.authService.formHeaders }).subscribe(
 			(val) => {
 				let response = this.languageService.trans("List of the results:");
 				for (let resp of val) {
@@ -150,16 +151,30 @@ export class EductaionService {
 				}
 				this.objectService.okMessage(response)
 			},
-			(err) => { this.objectService.errorMessage("ERROR") },
-			() => { sub.unsubscribe() }
+			(err) => {
+				console.log(err)
+				this.objectService.errorMessage("ERROR")
+			},
+			() => {
+				this.uploadState.next(false);
+				subs.unsubscribe()
+			}
 		)
+	}
+
+
+	uploadDataToObjectsSimple(fd: FormData, objectType: string) {
+		this.url = `${this.hostname}/education/${objectType}s/upload`;
+		console.log(this.url);
+		console.log(this.authService.formHeaders);
+		return this.http.post<ServerResponse[]>(this.url, fd, { headers: this.authService.formHeaders });
 	}
 
 	async collectDataFromObjects(fd: FormData, objectType: string) {
 		this.url = `${this.hostname}/education/${objectType}s/collect`;
 		console.log(this.url);
 		this.objectService.requestSent();
-		let sub = await this.http.post<ServerResponse[]>(this.url, fd, { headers: this.authService.headers }).subscribe(
+		let sub = await this.http.post<ServerResponse[]>(this.url, fd, { headers: this.authService.formHeaders }).subscribe(
 			(val) => {
 				let response = this.languageService.trans("List of the results:");
 				for (let resp of val) {

@@ -7,6 +7,7 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { SystemService } from 'src/app/services/system.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SupportTicket } from 'src/app/shared/models/data-model';
+import { ServiceStatus } from 'src/app/shared/models/server-models';
 
 @Component({
   selector: 'cranix-system-status',
@@ -18,6 +19,7 @@ export class SystemStatusComponent implements OnInit {
   mySupport = new SupportTicket();
   objectKeys: string[];
   systemStatus: any;
+  servicesStatus: ServiceStatus[];
   series = [
     {
       type: 'pie',
@@ -39,11 +41,13 @@ export class SystemStatusComponent implements OnInit {
 
   ngOnInit() {
     this.storage.get('System.Status.mySupport').then((val) => {
+      console.log(val)
       let myTmp = JSON.parse(val);
-      if (myTmp) {
-        this.mySupport = myTmp;
-        this.mySupport['subject'] = "";
-        this.mySupport['text'] = "";
+      console.log(myTmp);
+      if(myTmp && myTmp.email) {
+          this.mySupport = myTmp;
+          this.mySupport['subject'] = "";
+          this.mySupport['text'] = "";
       }
     });
     this.systemStatus = {};

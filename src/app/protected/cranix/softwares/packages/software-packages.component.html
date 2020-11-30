@@ -15,35 +15,39 @@
       <ion-fab-button><ion-icon name="refresh-outline" (click)="readInstallableSoftware()"></ion-icon></ion-fab-button>
     </ion-fab-list>
   </ion-fab>
-  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('quickFilterMD')" id="quickFilterMD" showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
+  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('softwareFilterMD')" id="softwareFilterMD" showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
   <ion-card>
-    <ion-card-header class="hidden-xs hidden-sm hidden-md">
-      <ion-row class="hidden-xs hidden-sm hidden-md">
-        <ion-col size="3" class="ion-align-items-center">
+    <ion-card-header>
+      <ion-toolbar>
           <ion-item>
-            <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('quickFilter')" id="quickFilter">
+            <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('softwareFilter')" id="softwareFilter">
             </ion-input>
           </ion-item>
-        </ion-col>
-        <ion-col offset="6" size="3" class="ion-align-self-center ion-text-end hidden-xs hidden-sm hidden-md">
-          <ion-button *ngIf="authService.isAllowed('software.download')" size="small" (click)="downloadSoftwares($event)" matTooltip="{{'Download software packages.' | translate }}" >
+        <ion-buttons slot="end">
+          <ion-button *ngIf="authService.isAllowed('software.download')" size="small" fill="solid" (click)="downloadSoftwares($event)" matTooltip="{{'Download software packages.' | translate }}" >
             <ion-icon slot="icon-only" name="cloud-download"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="redirectToEdit($event,null)"  matTooltip="{{'Create a new software package' | translate }}">
+          <ion-button size="small" fill="solid" (click)="redirectToEdit($event,null)"  matTooltip="{{'Create a new software package' | translate }}">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="readInstallableSoftware()"  matTooltip="{{'Refresh package list.' | translate }}">
+          <ion-button size="small" fill="solid" (click)="readInstallableSoftware()"  matTooltip="{{'Refresh package list.' | translate }}">
             <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
           </ion-button>
-        </ion-col>
-      </ion-row>
+        </ion-buttons>
+      </ion-toolbar>
     </ion-card-header>
     <ion-card-content>
-      <ag-grid-angular style="width: 100%; height: 100%;"class="{{authService.settings.agGridThema}}" [gridOptions]="gridOptions"
-        [rowData]="softwareService.availableSoftwares" [columnDefs]="columnDefs" [context]="context"
+      <ag-grid-angular
+        style="width: 100%; height: 100%;"
+        class="{{authService.settings.agGridThema}}"
+        [gridOptions]="gridOptions"
+        [rowData]="softwareService.availableSoftwares"
+        [columnDefs]="columnDefs"
+        [context]="context"
         rowSelection="multiple"
         [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
-        (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged()" id="agGridTable">
+        (gridReady)="onGridReady($event)"
+        id="agGridTable">
       </ag-grid-angular>
     </ion-card-content>
   </ion-card>

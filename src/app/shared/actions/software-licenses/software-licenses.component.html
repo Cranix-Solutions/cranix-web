@@ -1,0 +1,108 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-card-title>{{'Manage licenses for' | translate}}: {{software.name}}</ion-card-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" size="small" (click)="modalController.dismiss()">
+        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size=12>
+        <ion-title>{{'Add new license' | translate }}</ion-title>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked">{{'licenseType' | translate}}</ion-label>
+          <ion-select [(ngModel)]="licenseType" name="licenseType">
+            <ion-select-option value="C">{{'Parameter license'|translate}}</ion-select-option>
+            <ion-select-option value="F">{{'File license'|translate}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked">{{'count' | translate}}</ion-label>
+          <ion-input type="number" [(ngModel)]="count" name="count"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size=3>
+        <ion-item [disabled]="file">
+          <ion-label position="stacked">{{'value' | translate}}</ion-label>
+          <ion-input type="text" [(ngModel)]="value" name="value"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item lines="none">
+          <div class="upload-btn-wrapper">
+            <button class="btn">
+              <div *ngIf="file">{{file.name}}</div>
+              <div *ngIf="!file">{{'Select a file'|translate}}</div>
+            </button>
+            <input type="file" (change)="onFilesAdded($event.target.files)" />
+          </div>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item lines="none">
+          <ion-button fill="clear" size="small" (click)="addLicense()">
+            <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size=12>
+        <ion-title>{{'Exsisting licenses' | translate }}</ion-title>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngFor="let license of licenses; index as i">
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked">
+          </ion-label>
+          <ion-select [(ngModel)]="licenses[i].licenseType">
+            <ion-select-option value="C">{{'Parameter license'|translate}}</ion-select-option>
+            <ion-select-option value="F">{{'File license'|translate}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-input type="number" [(ngModel)]="licenses[i].count" name="{{count + i }}"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size=3>
+        <ion-item>
+          <ion-input type="text" [(ngModel)]="licenses[i].value" name="{{value + i }}"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item lines="none">
+          <div class="upload-btn-wrapper">
+            <button class="btn">
+              <div *ngIf="files[license.id]">{{files[license.id].name}}</div>
+              <div *ngIf="!files[license.id]">{{'Select a file'|translate}}</div>
+              <input type="file" (change)="onFilesChanged($event.target.files,license.id)" />
+            </button>
+          </div>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item lines="none">
+          <ion-button fill="clear" size="small" (click)="modifyLicense(license)">
+            <ion-icon slot="icon-only" color="success" name="checkmark"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" size="small" (click)="deleteLicense(license)">
+            <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

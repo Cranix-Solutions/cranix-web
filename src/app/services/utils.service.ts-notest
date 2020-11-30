@@ -5,6 +5,14 @@ import { isDevMode } from '@angular/core';
 @Injectable()
 export class UtilsService {
 
+        public okBrowser: boolean = true;
+        constructor() {
+                let tmp = window.navigator.userAgent
+                if (tmp.indexOf("Mozilla") != -1 && tmp.indexOf("Windows") != -1) {
+                        this.okBrowser = false;
+                }
+        }
+
         public hostName(): string{
                 var hostname = window.location.hostname;
                 var protocol = window.location.protocol;

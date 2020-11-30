@@ -1,64 +1,49 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-content id="carded">
-<ion-row class="header-row">
-  <ion-col size=6>
-    <ion-title>{{ 'Software installation status:' | translate}}</ion-title>
-  </ion-col>
-</ion-row><ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
-  <ion-fab-button>
-    <ion-icon name="arrow-forward-circle"></ion-icon>
-  </ion-fab-button>
-  <ion-fab-list side="start">
-    <ion-fab-button><ion-icon name="list-outline" (click)="toggleColumnDef()"></ion-icon></ion-fab-button>
-  </ion-fab-list>
-</ion-fab>
-<ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('quickFilterMD')" id="quickFilterMD"
-showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
+  <ion-row class="header-row">
+    <ion-col size=12>
+      <ion-title>{{ 'Software installation status:' | translate}} {{grouping | translate}}</ion-title>
+    </ion-col>
+  </ion-row>
+  <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
+    <ion-fab-button>
+      <ion-icon name="arrow-forward-circle"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="start">
+      <ion-fab-button>
+        <ion-icon name="list-outline" (click)="toggleColumnDef()"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('memberFilterMD')"
+    id="memberFilterMD" showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
   <ion-card>
-    <ion-card-header class="hidden-xs hidden-sm hidden-md">
-      <ion-row class="hidden-xs hidden-sm hidden-md">
-        <ion-col size="3">
-          <ion-item>
-            <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('quickFilter')" id="memberFilter">
-            </ion-input>
-          </ion-item>
-        </ion-col>
-        <ion-col size=3>
-          <ion-item>
-            <ion-label>
-              {{grouping | translate}}
-            </ion-label>
-          </ion-item>
-        </ion-col>
-        <ion-col offset="3" size="3" class="ion-align-self-center ion-text-end hidden-xs hidden-sm hidden-md">
-          <ion-button size="small" (click)="toggleColumnDef()"
+    <ion-card-header>
+      <ion-toolbar>
+        <ion-item>
+          <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('memberFilter')"
+            id="memberFilter">
+          </ion-input>
+        </ion-item>
+        <ion-buttons slot="end">
+          <ion-button size="small" fill="solid" (click)="toggleColumnDef()"
             matTooltip="{{'Change grouping of the table' | translate }}">
             <ion-icon slot="icon-only" name="list-sharp"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="exportSelected()"
-             matTooltip="{{'Export selected objects'|translate}}">
+          <ion-button size="small" fill="solid" (click)="exportSelected()"
+            matTooltip="{{'Export selected objects'|translate}}">
             <ion-icon slot="icon-only" name="download"></ion-icon>
           </ion-button>
-        </ion-col>
-      </ion-row>
+        </ion-buttons>
+      </ion-toolbar>
     </ion-card-header>
     <ion-card-content>
-      <ag-grid-angular #agGrid
-        id="softwareStatusTable"
-        style="width: 100%; height: 100%;"
-        class="{{authService.settings.agGridThema}}"
-        rowHeight="{{authService.settings.rowHeight}}"
-        rowSelection="multiple"
-        animateRows="true"
-        deltaColumnMode="true"
-        [modules]="modules"
-        [context]="context"
-        [rowData]="memberData"
-        [columnDefs]="columnDefs"
-        [defaultColDef]="defaultColDef"
+      <ag-grid-angular #agGrid id="softwareStatusTable" style="width: 100%; height: 100%;"
+        class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}"
+        rowSelection="multiple" animateRows="true" deltaColumnMode="true" [modules]="modules" [context]="context"
+        [rowData]="memberData" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
         [autoGroupColumnDef]="autoGroupColumnDef"
-        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
-        (gridReady)="onMemberReady($event)">
+        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" (gridReady)="onMemberReady($event)">
       </ag-grid-angular>
     </ion-card-content>
   </ion-card>

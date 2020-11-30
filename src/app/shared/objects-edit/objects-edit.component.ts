@@ -10,6 +10,9 @@ import { ServerResponse } from 'src/app/shared/models/server-models';
 import { UsersService } from 'src/app/services/users.service';
 import { SystemService } from 'src/app/services/system.service';
 import { SupportTicket } from '../models/data-model';
+import { AuthenticationService } from 'src/app/services/auth.service';
+import { HttpClient } from '@angular/common/http';
+import { UtilsService } from 'src/app/services/utils.service';
 @Component({
   selector: 'cranix-objects-edit',
   templateUrl: './objects-edit.component.html',
@@ -17,9 +20,10 @@ import { SupportTicket } from '../models/data-model';
 })
 export class ObjectsEditComponent implements OnInit {
   formData: FormData = new FormData();
-  disabled: boolean  = false;
+  disabled: boolean = false;
   fileToUpload: File = null;
   result: any = {};
+  objectId: number;
   objectType: string = "";
   object: any = null;
   objectKeys: string[] = [];
@@ -30,6 +34,11 @@ export class ObjectsEditComponent implements OnInit {
   }
 
   constructor(
+
+
+    private utilsS: UtilsService,
+    public authService: AuthenticationService,
+    private http: HttpClient,
     public cephalixService: CephalixService,
     public objectService: GenericObjectService,
     public languageS: LanguageService,
@@ -43,7 +52,8 @@ export class ObjectsEditComponent implements OnInit {
   ) {
     this.objectType = this.navParams.get('objectType');
     //this.object = this.objectService.convertObject(this.navParams.get('object'));
-    this.object = this.navParams.get('object');
+    let object = this.navParams.get('object');
+    this.objectId = object.id;
     if (this.navParams.get('objectAction') == 'add') {
       this.objectActionTitle = "Add " + this.objectType;
       this.objectAction = "Create";
@@ -53,13 +63,30 @@ export class ObjectsEditComponent implements OnInit {
     }
     this.objectKeys = this.navParams.get('objectKeys');
     if (!this.objectKeys) {
-      this.objectKeys = Object.getOwnPropertyNames(this.object);
+      this.objectKeys = Object.getOwnPropertyNames(object);
     }
-    console.log(this.objectKeys);
-    console.log(this.object);
   }
   ngOnInit() {
     this.disabled = false;
+    if (this.navParams.get('objectAction') != 'add') {
+      let url = this.utilsS.hostName() + "/" + this.objectType + "s/" + this.object.id;
+      let sub = this.http.get(url, { headers: this.authService.headers }).subscribe(
+        (val) => {
+          for (let key of this.objectKeys) {
+            if (this.objectService.typeOf(key, this.object, 'edit') == 'multivalued') {
+              let s = val[key]
+              this.object[key] = s.join()
+              continue
+            }
+            this.object[key] = val[key];
+          }
+        },
+        (err) => { },
+        () => {
+          sub.unsubscribe();
+        }
+      );
+    }
   }
 
   closeWindow() {
@@ -82,8 +109,14 @@ export class ObjectsEditComponent implements OnInit {
   }
 
   onSubmit(object) {
-    if( this.disabled ) {
+    if (this.disabled) {
       return;
+    }
+    for (let key of this.objectKeys) {
+      if (this.objectService.typeOf(key, object, 'edit') == 'multivalued') {
+        let s: string = object[key];
+        object[key] = s.split(",")
+      }
     }
     this.disabled = true;
     this.splashScreen.show();
@@ -107,7 +140,6 @@ export class ObjectsEditComponent implements OnInit {
         this.defaultAcion(object);
       }
     }
-    //return this.modalController.dismiss(object);
   }
 
   handleFileInput(files: FileList) {
@@ -115,7 +147,6 @@ export class ObjectsEditComponent implements OnInit {
     console.log(this.fileToUpload)
   }
   defaultAcion(object) {
-    let serverResponse: ServerResponse;
     let subs = this.objectService.applyAction(object, this.objectType, this.objectAction).subscribe(
       async (val) => {
         this.objectService.responseMessage(val);
@@ -138,7 +169,7 @@ export class ObjectsEditComponent implements OnInit {
     )
   }
   deleteObject() {
-    this.objectService.deleteObjectDialog(this.object,this.objectType);
+    this.objectService.deleteObjectDialog(this.object, this.objectType);
     //this.modalController.dismiss("succes");
   }
   supportRequest(object: SupportTicket) {
@@ -153,7 +184,7 @@ export class ObjectsEditComponent implements OnInit {
         }
       },
       async (error) => {
-        this.objectService.errorMessage("A Server Error is accoured:"+ error.toString());
+        this.objectService.errorMessage("A Server Error is accoured:" + error.toString());
         this.splashScreen.hide();
       },
       () => {
@@ -167,15 +198,15 @@ export class ObjectsEditComponent implements OnInit {
     formData.append('role', object.role);
     formData.append('lang', object.lang);
     formData.append('identifier', object.identifier);
-    formData.append('test', object.test ? "true":"false");
+    formData.append('test', object.test ? "true" : "false");
     formData.append('password', object.password);
-    formData.append('mustChange', object.mustChange ? "true":"false");
-    formData.append('full', object.full ? "true":"false");
-    formData.append('allClasses', object.allClasses ? "true":"false");
-    formData.append('cleanClassDirs', object.cleanClassDirs ? "true":"false");
-    formData.append('resetPassword', object.resetPassword ? "true":"false");
-    formData.append('appendBirthdayToPassword', object.appendBirthdayToPassword ? "true":"false");
-    formData.append('appendClassToPassword', object.appendClassToPassword ? "true":"false");
+    formData.append('mustChange', object.mustChange ? "true" : "false");
+    formData.append('full', object.full ? "true" : "false");
+    formData.append('allClasses', object.allClasses ? "true" : "false");
+    formData.append('cleanClassDirs', object.cleanClassDirs ? "true" : "false");
+    formData.append('resetPassword', object.resetPassword ? "true" : "false");
+    formData.append('appendBirthdayToPassword', object.appendBirthdayToPassword ? "true" : "false");
+    formData.append('appendClassToPassword', object.appendClassToPassword ? "true" : "false");
     console.log(object.test);
     console.log(object.password);
     console.log(this.formData.get("role"))

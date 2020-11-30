@@ -14,6 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { PipesModule } from 'src/app/pipes/pipe-modules';
 import { AgGridModule } from 'ag-grid-angular';
 import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
+import { ApplyBTNRenderer } from 'src/app/pipes/ag-apply-renderer';
 import { ApplyCheckBoxBTNRenderer } from 'src/app/pipes/ag-apply-checkbox-renderer';
 import { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
 import { CheckBoxBTNRenderer } from 'src/app/pipes/ag-checkbox-renderer';
@@ -24,6 +25,7 @@ import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
 import { RoomActionBTNRenderer } from 'src/app/pipes/ag-room-renderer';
 import { DeviceActionBTNRenderer } from 'src/app/pipes/ag-device-renderer';
 import { EditBTNRenderer } from 'src/app/pipes/ag-edit-renderer';
+import { SoftwareEditBTNRenderer } from 'src/app/pipes/ag-software-edit-renderer';
 import { GroupIdCellRenderer } from 'src/app/pipes/ag-groupid-renderer';
 import { HwconfIdCellRenderer } from 'src/app/pipes/ag-hwconfid-renderer';
 import { PrinterActionBTNRenderer } from 'src/app/pipes/ag-printer-renderer';
@@ -37,6 +39,7 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
 
 @NgModule({
   declarations: [
+    ApplyBTNRenderer,
     ApplyCheckBoxBTNRenderer,
     ActionBTNRenderer,
     DateCellRenderer,
@@ -51,6 +54,7 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
     InstituteUUIDCellRenderer,
     PrinterActionBTNRenderer,
     RoomActionBTNRenderer,
+    SoftwareEditBTNRenderer,
     RoomIdCellRenderer,
     UpdateRenderer,
     UserActionBTNRenderer,
@@ -71,6 +75,7 @@ import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-render
       DeviceIdCellRenderer,
       DeviceActionBTNRenderer,
       EditBTNRenderer,
+      SoftwareEditBTNRenderer,
       GroupIdCellRenderer,
       GroupActionBTNRenderer,
       HwconfIdCellRenderer,

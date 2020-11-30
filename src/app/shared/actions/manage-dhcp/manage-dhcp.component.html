@@ -1,0 +1,81 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-title>{{ 'Manage DHCP Parameter of:' | translate }} {{object.name}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" size="small" (click)="modalController.dismiss()">
+        <ion-icon slot="icon-only" fill="solid" color="danger" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content fullscreen>
+  <ion-list>
+    <ion-list-header>
+      {{ 'Add new DHCP Option/Statement' | translate}}
+    </ion-list-header>
+    <ion-row>
+      <ion-col size="4">
+        <ion-item>
+          <ion-label position="stacked">{{'Select DHCP Option/Statement'| translate}}</ion-label>
+          <ionic-selectable
+            #ionicSelectable
+            item-content
+            [(ngModel)]="selectedDHCP"
+            itemValueField="id"
+            itemTextField="name"
+            [ngModelOptions]="{standalone: true}"
+            [items]="dhcpOptions"
+            [canSearch]="true">
+            <ng-template ionicSelectableHeaderTemplate>
+              <ion-toolbar>
+                <ion-title>
+                {{ "Select a DHCP Option or Statement" | translate }}
+                </ion-title>
+                <ion-buttons slot="end">
+                  <ion-button ion-button (click)="ionicSelectable.close()">
+                    <ion-icon color="danger" name="close"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ion-toolbar>
+            </ng-template>
+            <ng-template ionicSelectableItemIconTemplate>
+              <div></div>
+            </ng-template>
+          </ionic-selectable>
+        </ion-item>
+      </ion-col>
+      <ion-col size="6">
+        <ion-item>
+          <ion-label position="stacked">{{'set value'| translate}} </ion-label>
+          <ion-input [(ngModel)]="newValue" name="newValue"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="2">
+        <ion-item lines="none">
+          <ion-button slot="end" (click)="addDHCP()">
+            <ion-icon name="add-circle" color="danger"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-item>
+      <ion-label></ion-label>
+    </ion-item>
+  </ion-list>
+  <ion-list>
+    <ion-list-header>
+      {{ 'Exisiting DHCP Options/Statements' | translate}}
+    </ion-list-header>
+    <ion-item *ngFor="let dhcp of myDHCP">
+      <ion-label>
+        {{dhcp.keyword}}
+      </ion-label>
+      <ion-label>
+        {{dhcp.value}}
+      </ion-label>
+      <ion-button (click)="deletDHCP(dhcp.id)">
+        <ion-icon name="trash" color="danger"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>

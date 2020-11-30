@@ -21,7 +21,6 @@ export class ProxyComponent implements OnInit {
   whiteList: string[] = [];
   cephalixList: string[] = [];
   lists  = {};
-  listsModified: boolean = false;
   proxyOptions;
   context;
   proxyApi;
@@ -77,8 +76,16 @@ export class ProxyComponent implements OnInit {
       }
       this.authService.log(this.columnDefs);
     });
+    this.securityService.proxyChanged['basic'] =false;
+    this.securityService.proxyChanged['good'] =false;
+    this.securityService.proxyChanged['bad'] =false;
+    this.securityService.proxyChanged['cephalix'] =false;
   }
 
+  onQuickFilterChanged(){
+    this.proxyApi.setQuickFilter((<HTMLInputElement>document.getElementById('proxyQuickFilter')).value);
+    this.proxyApi.doLayout();
+  }
   segmentChanged(event) {
     this.segment   = event.detail.value;
     this.newDomain = "";
@@ -106,8 +113,9 @@ export class ProxyComponent implements OnInit {
     this.proxyColumnApi = params.columnApi;
     this.authService.log("proxyGridReady");
   }
-  proxySelectionChanged() {
-    this.proxySelected = this.proxyApi.getSelectedRows();
+  
+  setChanged(changed: boolean) {
+    this.securityService.proxyChanged[this.segment] = changed
   }
 
   redirectToEdit(event, positiveList) {
@@ -120,7 +128,10 @@ export class ProxyComponent implements OnInit {
         this.authService.log(this.rowData);
         this.objectService.requestSent();
         let sub = this.securityService.setProxyBasic(this.rowData).subscribe(
-          (val) => { this.objectService.responseMessage(val) },
+          (val) => { 
+            this.objectService.responseMessage(val)
+            this.securityService.proxyChanged[this.segment] = false;
+           },
           (err) => {
             this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
           },

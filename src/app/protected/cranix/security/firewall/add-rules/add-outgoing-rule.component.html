@@ -23,15 +23,59 @@
       </ion-item>
       <ion-item *ngIf="rule.type == 'room'">
         <ion-label position="stacked">{{'Room'| translate}}</ion-label>
-        <ion-select type="text" [(ngModel)]="rule.id" name="id" required>
-          <ion-select-option *ngFor="let obj of  roomIps" value="{{obj.key}}">{{obj.name}}</ion-select-option>
-        </ion-select>
+        <ionic-selectable
+          #ionicSelectable
+          item-content
+          [(ngModel)]="selectedSource"
+          [ngModelOptions]="{standalone: true}"
+          [items]="roomIps"
+          itemValueField="key"
+          itemTextField="name"
+          [canSearch]="true">
+          <ng-template ionicSelectableHeaderTemplate>
+            <ion-toolbar>
+              <ion-title>
+              {{ "Select a Room" | translate }}
+              </ion-title>
+              <ion-buttons slot="end">
+                <ion-button ion-button (click)="ionicSelectable.close()">
+                  <ion-icon color="danger" name="close"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ng-template>
+          <ng-template ionicSelectableItemIconTemplate>
+            <div></div>
+          </ng-template>
+        </ionic-selectable>
       </ion-item>
       <ion-item *ngIf="rule.type == 'device'">
         <ion-label position="stacked">{{'Device'| translate}}</ion-label>
-        <ion-select type="text" [(ngModel)]="rule.id" name="id" required>
-          <ion-select-option *ngFor="let obj of  deviceIps" value="{{obj.key}}">{{obj.name}}</ion-select-option>
-        </ion-select>
+        <ionic-selectable
+          #ionicSelectable
+          item-content
+          [(ngModel)]="selectedSource"
+          [ngModelOptions]="{standalone: true}"
+          [items]="deviceIps"
+          itemValueField="key"
+          itemTextField="name"
+          [canSearch]="true">
+          <ng-template ionicSelectableHeaderTemplate>
+            <ion-toolbar>
+              <ion-title>
+              {{ "Select a Device" | translate }}
+              </ion-title>
+              <ion-buttons slot="end">
+                <ion-button ion-button (click)="ionicSelectable.close()">
+                  <ion-icon color="danger" name="close"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ng-template>
+          <ng-template ionicSelectableItemIconTemplate>
+            <div></div>
+          </ng-template>
+        </ionic-selectable>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{'dest'|translate}}</ion-label>
@@ -47,7 +91,8 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{'Port'|translate}}</ion-label>
-        <ion-input type="text" [(ngModel)]="rule.port" name="port" [disabled]="rule.prot == 'all'" [required]="rule.prot != 'all'"></ion-input>
+        <ion-input type="text" [(ngModel)]="rule.port" name="port" [disabled]="rule.prot == 'all'"
+          [required]="rule.prot != 'all'"></ion-input>
       </ion-item>
     </ion-list>
   </ion-content>

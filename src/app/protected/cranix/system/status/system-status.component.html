@@ -1,50 +1,59 @@
 <cranix-toolbar></cranix-toolbar>
- <ion-content id="carded">
+<ion-content id="carded">
   <ion-row class="header-row">
-  <ion-col size=6>
-    <ion-title>{{'System status' | translate}}</ion-title>
-  </ion-col>
-</ion-row>
+    <ion-col size=6>
+      <ion-title>{{'System status' | translate}}</ion-title>
+    </ion-col>
+  </ion-row>
   <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
     <ion-fab-button>
       <ion-icon name="arrow-forward-circle"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="start">
-      <ion-fab-button><ion-icon name="help" (click)="support($event)"></ion-icon></ion-fab-button>
-      <ion-fab-button><ion-icon name="trending-up" (click)="update($event)"></ion-icon></ion-fab-button>
-      <ion-fab-button><ion-icon name="refresh" (click)="restart($event)"></ion-icon></ion-fab-button>
-      <ion-fab-button><ion-icon color="danger" name="power" (click)="shutDown($event)"></ion-icon></ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="help" (click)="support($event)"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="trending-up" color="tertiary" (click)="update($event)"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="arrow-redo" color="tertiary" (click)="restart($event)"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="power" color="danger" (click)="shutDown($event)"></ion-icon>
+      </ion-fab-button>
     </ion-fab-list>
   </ion-fab>
   <ion-card>
-    <ion-card-header class="hidden-xs hidden-sm hidden-md">
-      <ion-row class="hidden-xs hidden-sm hidden-md">
-        <ion-col size="3">
-        </ion-col>
-        <ion-col offset="5" size="4" class="ion-text-end hidden-xs hidden-sm hidden-md">
-          <ion-button size="small" (click)="support($event)"  matTooltip="{{'Add support' | translate }}">
-            <ion-icon slot="icon-only" name="help-buoy"></ion-icon>
+    <ion-card-header>
+      <ion-toolbar>
+        <ion-buttons slot="end">
+          <ion-button size="small" fill="solid" (click)="support($event)" matTooltip="{{'Add support' | translate }}">
+            <ion-icon slot="icon-only" name="help-circle"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="update($event)"  matTooltip="{{'Update the server.' | translate }}">
-            <ion-icon slot="icon-only" name="trending-up"></ion-icon>
+          <ion-button size="small" fill="solid" (click)="update($event)"
+            matTooltip="{{'Update the server.' | translate }}">
+            <ion-icon slot="icon-only" name="trending-up" color="tertiary"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="restart($event)" matTooltip="{{'Restart the server.' | translate }}" >
-            <ion-icon slot="icon-only" name="refresh"></ion-icon>
+          <ion-button size="small" fill="solid" (click)="restart($event)"
+            matTooltip="{{'Restart the server.' | translate }}">
+            <ion-icon slot="icon-only" name="arrow-redo" color="tertiary"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="shutDown($event)" matTooltip="{{'Shut down the server.' | translate }}">
+          <ion-button size="small" fill="solid" (click)="shutDown($event)"
+            matTooltip="{{'Shut down the server.' | translate }}">
             <ion-icon slot="icon-only" color="danger" name="power"></ion-icon>
           </ion-button>
-        </ion-col>
-      </ion-row>
+        </ion-buttons>
+      </ion-toolbar>
     </ion-card-header>
-     <ion-card-content>
+    <ion-content>
       <ion-grid *ngIf="systemStatus">
         <ion-row>
           <ion-col *ngFor="let key of objectKeys">
-            <ag-charts-angular  style="height: 200px"   [options]="systemStatus[key]"></ag-charts-angular>
+            <ag-charts-angular style="height: 200px" [options]="systemStatus[key]"></ag-charts-angular>
           </ion-col>
         </ion-row>
       </ion-grid>
-    </ion-card-content>
-    </ion-card>
     </ion-content>
+  </ion-card>
+</ion-content>

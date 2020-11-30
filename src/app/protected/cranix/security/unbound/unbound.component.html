@@ -1,0 +1,53 @@
+<cranix-toolbar></cranix-toolbar>
+<ion-row class="header-row">
+  <ion-col size=6>
+    <ion-title>{{ 'Manage DNS Filter Configuration' | translate}}</ion-title>
+  </ion-col>
+  <ion-col size=6>
+    <ion-button size="small" fill="solid" (click)="writeConfig()"
+      matTooltip="{{'Write the DNS filter configuration and restart the DNS server.' | translate }}">
+      <ion-icon slot="icon-only" color="success" name="checkmark"></ion-icon>
+    </ion-button>
+  </ion-col>
+</ion-row>
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-list>
+          <ion-item>
+            <ion-title>{{'Own Black List'|translate}}</ion-title>
+          </ion-item>
+          <form #addNewDomainForm="ngForm">
+            <ion-item>
+              <ion-input [(ngModel)]="newDomain" name="newDomain" placeholder="{{'Enter a new domain name'| translate}}"
+                pattern="[a-z0-9.-]+\.[a-z]{2,}$"></ion-input>
+              <ion-button slot="end" (click)="addNewDomain()" [disabled]="!addNewDomainForm.valid">
+                <ion-icon slot="icon-only" name="add"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </form>
+          <ion-item *ngFor="let dom of badList; index as i">{{dom}}
+            <ion-button slot="end" (click)="deleteDomain(i)">
+              <ion-icon color="danger" slot="icon-only" name="trash"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col>
+        <ion-list>
+          <ion-item>
+            <ion-title>{{'Denied Categories'|translate}}</ion-title>
+          </ion-item>
+          <div *ngFor="let category of categories">
+            <ion-item *ngIf="category.type == 'black'">
+              <ion-label matTooltip="{{category.description}}">{{category.desc}}</ion-label>
+              <ion-checkbox slot="end" (ionChange)="togleCategory(category.name)"
+                [checked]="activeUnboundLists.indexOf(category.name) != -1"></ion-checkbox>
+            </ion-item>
+          </div>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

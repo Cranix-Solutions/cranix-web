@@ -5,67 +5,93 @@
       <ion-title>{{ 'Manage access in the rooms' | translate}}</ion-title>
     </ion-col>
   </ion-row>
+  <ion-row>
+    <ion-col size="12">
+      <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="list">
+        <ion-segment-button value="list">
+          <ion-label>{{'Room access rules' | translate}}</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="status">
+          <ion-label>{{'Actual status' | translate}}</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </ion-col>
+  </ion-row>
   <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
     <ion-fab-button>
       <ion-icon name="arrow-forward-circle"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="start">
-      <ion-fab-button *ngIf="segment == 'list'" (click)="redirectToAddEdit($event,null)">
+      <ion-fab-button *ngIf="segment == 'list'" (click)="redirectToAddEdit($event,null)"
+        matTooltip="{{'Add new room access status' | translate }}" [disabled]="disabled">
         <ion-icon name="add-circle"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button (click)="restartFirewall()">
-        <ion-icon name="refresh"></ion-icon>
+      <ion-fab-button *ngIf="segment == 'list'" (click)="delete()"
+        matTooltip="{{'Delete selected access rules' | translate }}" [disabled]="disabled">
+        <ion-icon name="trash" color="danger"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button *ngIf="segment == 'list'" (click)="createColumnDef()"
+        matTooltip="{{'Change grouping of the table' | translate }}">
+        <ion-icon name="list-sharp" color="white"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button *ngIf="segment == 'status'" (click)="securityService.getActualAccessStatus()"
+        matTooltip="{{'Reload actual firewall status' | translate }}">
+        <ion-icon name="refresh" color="tertiary"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="restartFirewall()" matTooltip="{{'Restart firewall' | translate }}">
+        <ion-icon name="arrow-redo" color="tertiary"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="stopFirewall()" matTooltip="{{'Stop firewall' | translate }}">
+        <ion-icon name="close" color="danger"></ion-icon>
       </ion-fab-button>
     </ion-fab-list>
   </ion-fab>
   <ion-card>
-    <ion-card-header>
-      <ion-row>
-        <ion-col size="12" size-lg="6" size-xl="6">
-          <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="list">
-            <ion-segment-button value="list">
-              <ion-label>{{'Room access rules' | translate}}</ion-label>
-            </ion-segment-button>
-            <ion-segment-button value="status">
-              <ion-label>{{'Actual status' | translate}}</ion-label>
-            </ion-segment-button>
-          </ion-segment>
-        </ion-col>
-        <ion-col offset="3" size="3" class="ion-align-self-center ion-text-end hidden-xs hidden-sm hidden-md">
-          <ion-button *ngIf="segment == 'list'" size="small" (click)="redirectToAddEdit($event,null)"
+    <ion-card-header class="hidden-xs hidden-sm hidden-md">
+      <ion-toolbar>
+        <ion-item>
+          <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('roomsAccessFilter')"
+            id="roomsAccessFilter">
+          </ion-input>
+        </ion-item>
+        <ion-buttons slot="end">
+          <ion-button *ngIf="segment == 'list'" size="small" fill="solid" (click)="redirectToAddEdit($event,null)"
             matTooltip="{{'Add new room access status' | translate }}" [disabled]="disabled">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="segment == 'list'" size="small" (click)="delete()"
+          <ion-button *ngIf="segment == 'list'" size="small" fill="solid" (click)="delete()"
             matTooltip="{{'Delete selected access rules' | translate }}" [disabled]="disabled">
-            <ion-icon slot="icon-only" name="trash"></ion-icon>
+            <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="segment == 'list'" size="small" (click)="createColumnDef()"
+          <ion-button *ngIf="segment == 'list'" size="mall" fill="solid" (click)="createColumnDef()"
             matTooltip="{{'Change grouping of the table' | translate }}">
-            <ion-icon slot="icon-only" name="list-sharp" color="white"></ion-icon>
+            <ion-icon slot="icon-only" name="list-outline"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="restartFirewall()" matTooltip="{{'Restart firewall' | translate }}">
-            <ion-icon slot="icon-only" name="refresh"></ion-icon>
+          <ion-button *ngIf="segment == 'status'" size="small" fill="solid" (click)="securityService.getActualAccessStatus()"
+            matTooltip="{{'Reload actual firewall status' | translate }}">
+            <ion-icon slot="icon-only" name="refresh" color="tertiary"></ion-icon>
           </ion-button>
-        </ion-col>
-      </ion-row>
+          <ion-button size="small" (click)="restartFirewall()" size="small" fill="solid" matTooltip="{{'Restart firewall' | translate }}">
+            <ion-icon slot="icon-only" name="arrow-redo" color="tertiary"></ion-icon>
+          </ion-button>
+          <ion-button size="small" (click)="stopFirewall()" size="small" fill="solid" matTooltip="{{'Stop firewall' | translate }}">
+            <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
     </ion-card-header>
     <ion-card-content>
       <ag-grid-angular *ngIf="segment == 'list'" #accessGrid style="width: 100%; height: 100%;" id="accessGridTable"
         class="{{authService.settings.agGridThema}}" [modules]="modules"
         [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" rowSelection="multiple"
         [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [autoGroupColumnDef]="autoGroupColumnDef"
-        [animateRows]="true" [rowData]="rowData" [context]="context" [deltaColumnMode]="true"
+        [animateRows]="true" [rowData]="rowData" [context]="context" [deltaColumnMode]="true" headerHeight="150"
         (gridReady)="accessGridReady($event)">
       </ag-grid-angular>
       <ag-grid-angular *ngIf="segment == 'status'" #accessGrid style="width: 100%; height: 100%;" id="accessGridTable"
-        class="{{authService.settings.agGridThema}}" [modules]="modules"
-        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" rowSelection="multiple"
-        [columnDefs]="statusColumnDefs"
-        [defaultColDef]="defaultColDef"
-        [animateRows]="true"
-        [rowData]="statusData" [context]="context"
-        (gridReady)="statusGridReady($event)">
+        class="{{authService.settings.agGridThema}}" [modules]="modules" [columnDefs]="statusColumnDefs"
+        [defaultColDef]="defaultColDef" [animateRows]="true" [rowData]="securityService.actualStatus"
+        [context]="context" (gridReady)="statusGridReady($event)">
       </ag-grid-angular>
     </ion-card-content>
   </ion-card>

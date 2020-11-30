@@ -13,35 +13,34 @@
   <ion-card>
     <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
       <ion-card-header>
-        <ion-row class="ion-align-items-right">
-          <ion-col size=0 sizeMd=6 sizeLg=8 sizeXl=8></ion-col>
-          <ion-col size=12 sizeMd=6 sizeLg=4 sizeXl=4>
-            <ion-button size="small" fill="clear" type="submit" class="ion-no-margin" [disabled]="!editForm.valid"
+        <ion-toolbar>
+          <ion-buttons slot="end">
+            <ion-button size="small" fill="solid" fill="clear" type="submit" class="ion-no-margin" [disabled]="!editForm.valid"
               matTooltip="{{'Apply changes' | translate }}">
               <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
             </ion-button>
-            <ion-button size="small" fill="clear" (click)="setNextDefaults()"
+            <ion-button size="small" fill="solid" fill="clear" (click)="setNextDefaults()"
               matTooltip="{{'Set the next default values' | translate }}">
               <ion-icon slot="icon-only" name="refresh"></ion-icon>
             </ion-button>
-            <ion-button size="small" fill="clear" (click)="writeConfig()"
+            <ion-button size="small" fill="solid" fill="clear" (click)="writeConfig()"
               matTooltip="{{'Write configuration and create installation image' | translate }}">
               <ion-icon slot="icon-only" name="server"></ion-icon>
             </ion-button>
-            <ion-button size="small" fill="clear" href="/isos/{{isourl}}.iso"
+            <ion-button size="small" fill="solid" fill="clear" href="/isos/{{isourl}}.iso"
               matTooltip="{{'Download the installation image' | translate }}">
               <ion-icon slot="icon-only" name="arrow-down-circle"></ion-icon>
             </ion-button>
-            <ion-button size="small" fill="clear" href="/configs/{{isourl}}full-connect.sh"
+            <ion-button size="small" fill="solid" fill="clear" href="/configs/{{isourl}}full-connect.sh"
               matTooltip="{{'Download the setup script' | translate }}">
               <ion-icon slot="icon-only" name="download"></ion-icon>
             </ion-button>
-            <ion-button size="small" fill="clear" (click)="delete($event)"
+            <ion-button size="small" fill="solid" fill="clear" (click)="delete($event)"
               matTooltip="{{'Delete institute' | translate }}">
               <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
             </ion-button>
-          </ion-col>
-        </ion-row>
+          </ion-buttons>
+        </ion-toolbar>
       </ion-card-header>
       <ion-card-content>
         <ion-grid>

@@ -2,19 +2,24 @@
 <ion-row class="header-row"></ion-row>
 <ion-tabs>
     <ion-tab-bar slot="bottom">
+      <ion-tab-button tab="access">
+        <ion-icon name="key"></ion-icon>
+        <ion-label>{{ 'Room access' | translate}}</ion-label>
+      </ion-tab-button>
+
       <ion-tab-button tab="firewall">
         <ion-icon name="firewall"></ion-icon>
         <ion-label>{{ 'Firewall' | translate}}</ion-label>
       </ion-tab-button>
 
-      <ion-tab-button tab="proxy">
+      <ion-tab-button *ngIf="authS.isAllowed('system.proxy')" tab="proxy">
         <ion-icon name="proxy"></ion-icon>
         <ion-label>{{ 'Proxy' | translate}}</ion-label>
       </ion-tab-button>
 
-      <ion-tab-button tab="access">
-        <ion-icon name="key"></ion-icon>
-        <ion-label>{{ 'Room access' | translate}}</ion-label>
+      <ion-tab-button *ngIf="authS.isAllowed('system.unbound')" tab="unbound">
+        <ion-icon name="globe-outline"></ion-icon>
+        <ion-label>{{ 'DNS-Filter' | translate}}</ion-label>
       </ion-tab-button>
     </ion-tab-bar>
-  </ion-tabs>
+</ion-tabs>

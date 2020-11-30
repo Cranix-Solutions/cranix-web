@@ -19,16 +19,25 @@ export class PrintersService {
 	}
 	add(imp: FormData) {
 		this.url = this.hostname + `/printers/add`;
-		const headers = new HttpHeaders({
-			'Accept': "application/json",
-			'Authorization': "Bearer " + this.authService.session.token
-		});
-		return this.http.post<ServerResponse>(this.url, imp, { headers: headers });
+		return this.http.post<ServerResponse>(this.url, imp, { headers: this.authService.formHeaders });
+	}
+	addQueu(imp: FormData) {
+		this.url = this.hostname + `/printers/addQueue`;
+		return this.http.post<ServerResponse>(this.url, imp, { headers: this.authService.formHeaders });
+	}
+	setDrive(id: number, imp: FormData) {
+		this.url = this.hostname + `/printers/${id}/setDrive`;
+		return this.http.post<ServerResponse>(this.url, imp, { headers: this.authService.formHeaders });
 	}
 
 	getDrivers() {
 		this.url = this.hostname + '/printers/availableDrivers';
 		return this.http.get<any>(this.url, { headers: this.authService.headers });
+	}
+
+	getPrinterDevices() {
+		this.url = this.hostname + '/printers/allDevices';
+		return this.http.get<Device[]>(this.url, { headers: this.authService.headers });
 	}
 
 	reset(id: number) {

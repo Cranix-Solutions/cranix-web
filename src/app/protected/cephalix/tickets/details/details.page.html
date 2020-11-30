@@ -2,19 +2,42 @@
 <ion-content>
   <ion-card>
     <ion-card-header>
-      <ion-card-title>{{ticket.title}}</ion-card-title>
-      <ion-card-subtitle> {{ticket.recDate | date:'yy-MM-dd HH:mm'}} {{ticket.email}}:
+      <ion-toolbar>
+        <ion-card-title>{{ticket.title}}</ion-card-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="deleteTicket()">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+      <ion-card-subtitle> {{ticket.recDate | date:'yy-MM-dd HH:mm'}} {{ticket.cephalixInstituteId | idToName:'institute'}}<br>
+        {{ticket.email}}:
         {{ticket.lastname}},{{ticket.firstname}}</ion-card-subtitle>
     </ion-card-header>
   </ion-card>
 
-    <ion-card *ngFor="let article of articles">
-      <ion-card-header>
+  <ion-card *ngFor="let article of articles">
+    <ion-card-header>
+      <ion-toolbar>
         <ion-card-subtitle>{{article.recDate | date:'yy-MM-dd HH:mm'}}</ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content>
-        <a href="#" class="item-icon-right"><i class="icon ion-minus"></i></a>
-        <pre>{{article.text}}</pre>
-      </ion-card-content>
-    </ion-card>
+        <ion-buttons slot="end">
+          <ion-button fill="solid" (click)="setSeenOnArticle(article)">
+            <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+          </ion-button>
+          <ion-button fill="solid" (click)="answerArticle(article)">
+            <ion-icon slot="icon-only" name="arrow-undo"></ion-icon>
+          </ion-button>
+          <ion-button fill="solid" (click)="noticeToArticle(article)">
+            <ion-icon slot="icon-only" name="document-text"></ion-icon>
+          </ion-button>
+          <ion-button fill="solid" (click)="deleteArticle(article)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-card-header>
+    <ion-card-content>
+      <pre>{{article.text}}</pre>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

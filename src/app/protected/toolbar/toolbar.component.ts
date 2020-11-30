@@ -7,6 +7,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { Settings } from 'src/app/shared/models/server-models';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'cranix-toolbar',
@@ -24,7 +25,8 @@ export class ToolbarComponent implements OnInit {
     public storage: Storage,
     public translateService: LanguageService,
     public objectService: GenericObjectService,
-    public modalConroller: ModalController
+    public modalConroller: ModalController,
+    public utilService: UtilsService
   ) {
     this.commonName = authService.session.commonName;
     this.roomName = authService.session.roomName;

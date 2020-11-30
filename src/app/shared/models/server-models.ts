@@ -59,4 +59,17 @@ export class Settings {
         constructor() { }
 }
 
+export class Acl {
+        id: number;
+        acl: string = "";
+        allowed: boolean = true;
+        userId: number;
+        groupId: number;
+}
+
+export class ServiceStatus {
+        service: string;
+        enabled: string;
+        active: string;
+}
 export const TOKEN = 'cranix-token';

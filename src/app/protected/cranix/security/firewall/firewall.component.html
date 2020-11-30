@@ -5,12 +5,30 @@
       <ion-title>{{ 'Manage firewall configuration' | translate}}</ion-title>
     </ion-col>
   </ion-row>
+  <ion-row>
+    <ion-col size="12">
+      <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="in">
+        <ion-segment-button value="in" layout="icon-start">
+          <ion-label class="hidden-xs hidden-sm">{{'Incoming rules' | translate}}</ion-label>
+          <ion-icon name="log-in"></ion-icon>
+        </ion-segment-button>
+        <ion-segment-button value="out" layout="icon-end">
+          <ion-label class="hidden-xs hidden-sm">{{'Outgoing rules' | translate}}</ion-label>
+          <ion-icon name="log-out"></ion-icon>
+        </ion-segment-button>
+        <ion-segment-button value="remote" layout="icon-start">
+          <ion-label class="hidden-xs hidden-sm">{{'Remote access' | translate}}</ion-label>
+          <ion-icon name="shuffle"></ion-icon>
+        </ion-segment-button>
+      </ion-segment>
+    </ion-col>
+  </ion-row>
   <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
     <ion-fab-button>
       <ion-icon name="arrow-forward-circle"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="start">
-      <ion-fab-button size="small" (click)="applyChanges()">
+      <ion-fab-button (click)="applyChanges()">
         <ion-icon slot="icon-only" name="checkmark"></ion-icon>
       </ion-fab-button>
       <ion-fab-button *ngIf="segment == 'out'" (click)="addOutgoinRule()">
@@ -19,11 +37,11 @@
       <ion-fab-button *ngIf="segment == 'out'" (click)="deleteOutgoinRule()">
         <ion-icon name="trash-outline"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button *ngIf="segment == 'remote'" size="small" (click)="addRemoteRule()">
-        <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+      <ion-fab-button *ngIf="segment == 'remote'" (click)="addRemoteRule()">
+        <ion-icon name="add-circle"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button *ngIf="segment == 'remote'" size="small" (click)="deleteRemoteRule()">
-        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      <ion-fab-button *ngIf="segment == 'remote'" (click)="deleteRemoteRule()">
+        <ion-icon name="trash-outline"></ion-icon>
       </ion-fab-button>
       <ion-fab-button (click)="restartFirewall()">
         <ion-icon name="refresh-outline"></ion-icon>
@@ -35,51 +53,35 @@
   </ion-fab>
   <ion-card>
     <ion-card-header>
-      <ion-row>
-        <ion-col size="12" size-lg="8" size-xl="8">
-          <ion-segment scrollable="true" (ionChange)="segmentChanged($event)" color="secondary" value="in">
-            <ion-segment-button value="in" layout="icon-start">
-              <ion-label class="hidden-xs hidden-sm">{{'Incoming rules' | translate}}</ion-label>
-              <ion-icon name="log-in"></ion-icon>
-            </ion-segment-button>
-            <ion-segment-button value="out" layout="icon-end">
-              <ion-label class="hidden-xs hidden-sm">{{'Outgoing rules' | translate}}</ion-label>
-              <ion-icon name="log-out"></ion-icon>
-            </ion-segment-button>
-            <ion-segment-button value="remote" layout="icon-start">
-              <ion-label class="hidden-xs hidden-sm">{{'Remote access' | translate}}</ion-label>
-              <ion-icon name="shuffle"></ion-icon>
-            </ion-segment-button>
-          </ion-segment>
-        </ion-col>
-        <ion-col  size="4" class="ion-align-self-center ion-text-end hidden-xs hidden-sm hidden-md">
-          <ion-button size="small" (click)="applyChanges()" matTooltip="{{'Apply changes' | translate }}">
-            <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+      <ion-toolbar>
+        <ion-buttons slot="end">
+          <ion-button size="small" fill="solid" (click)="applyChanges()" matTooltip="{{'Apply changes' | translate }}">
+            <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="segment == 'out'" size="small" (click)="addOutgoinRule()"
+          <ion-button *ngIf="segment == 'out'" size="small" fill="solid"  (click)="addOutgoinRule()"
             matTooltip="{{'Add outgoing rule' | translate }}">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="segment == 'out'" size="small" (click)="deleteOutgoinRule()"
+          <ion-button *ngIf="segment == 'out'" size="small" fill="solid" (click)="deleteOutgoinRule()"
             matTooltip="{{'Delete selected outgoing rule' | translate }}">
-            <ion-icon slot="icon-only" name="trash"></ion-icon>
+            <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="segment == 'remote'" size="small" (click)="addRemoteRule()"
+          <ion-button *ngIf="segment == 'remote'" size="small" fill="solid" (click)="addRemoteRule()"
             matTooltip="{{'Add remote access rule' | translate }}">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="segment == 'remote'" size="small" (click)="deleteRemoteRule()"
+          <ion-button *ngIf="segment == 'remote'" size="small" fill="solid" (click)="deleteRemoteRule()"
             matTooltip="{{'Delete selected remote access rule' | translate }}">
-            <ion-icon slot="icon-only" name="trash"></ion-icon>
+            <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="restartFirewall()" matTooltip="{{'Restart firewall' | translate }}">
-            <ion-icon slot="icon-only" name="refresh"></ion-icon>
+          <ion-button size="small" (click)="restartFirewall()" fill="solid" matTooltip="{{'Restart firewall' | translate }}">
+            <ion-icon slot="icon-only" name="arrow-redo" color="tertiary"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="stopFirewall()" matTooltip="{{'Stop firewall' | translate }}">
-            <ion-icon slot="icon-only" name="close"></ion-icon>
+          <ion-button size="small" (click)="stopFirewall()" fill="solid" matTooltip="{{'Stop firewall' | translate }}">
+            <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
           </ion-button>
-        </ion-col>
-      </ion-row>
+        </ion-buttons>
+      </ion-toolbar>
     </ion-card-header>
     <ion-card-content>
       <ion-grid *ngIf="segment == 'in' && securityService.incomingRules">
@@ -120,7 +122,7 @@
           <ion-col size=2 size-xs=6 size-sm=6 size-md=6>
             <ion-item lines="none">
               <ion-checkbox slot="start" color="secondary" checked="{{securityService.incomingRules.https}}"
-                id="incoming-https"  (ionChange)="incomingChanged()">
+                id="incoming-https" (ionChange)="incomingChanged()">
               </ion-checkbox>
             </ion-item>
           </ion-col>
@@ -147,24 +149,24 @@
           </ion-col>
           <ion-col size=10 size-xs=6 size-sm=6 size-md=6>
             <ion-item>
-              <ion-input type="text" value="{{securityService.incomingRules.other}}" id="incoming-other" (ionChange)="incomingChanged()">
+              <ion-input type="text" value="{{securityService.incomingRules.other}}" id="incoming-other"
+                (ionChange)="incomingChanged()">
               </ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
       </ion-grid>
       <ag-grid-angular *ngIf="segment == 'out'" style="width: 100%; height: 100%;"
-        class="{{authService.settings.agGridThema}}" [rowData]="securityService.outgoingRules" 
-        [columnDefs]="outColumnDefs" [defaultColDef]="defaultColDef" [context]="context" rowSelection="multiple" 
-        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
-        (gridReady)="outGridReady($event)" (selectionChanged)="outSelectionChanged()" [deltaColumnMode]="true"
-        id="outGridTable">
+        class="{{authService.settings.agGridThema}}" [rowData]="securityService.outgoingRules"
+        [columnDefs]="outColumnDefs" [defaultColDef]="defaultColDef" [context]="context" rowSelection="multiple"
+        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" (gridReady)="outGridReady($event)"
+        (selectionChanged)="outSelectionChanged()" [deltaColumnMode]="true" id="outGridTable">
       </ag-grid-angular>
       <ag-grid-angular *ngIf="segment == 'remote'" style="width: 100%; height: 100%;"
         class="{{authService.settings.agGridThema}}" [rowData]="securityService.remoteRules"
-        [columnDefs]="remoteColumnDefs" [context]="context" rowSelection="multiple" 
-        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
-        (gridReady)="remoteGridReady($event)" (selectionChanged)="remoteSelectionChanged()" id="remoteGridTable">
+        [columnDefs]="remoteColumnDefs" [context]="context" rowSelection="multiple"
+        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" (gridReady)="remoteGridReady($event)"
+        (selectionChanged)="remoteSelectionChanged()" id="remoteGridTable">
       </ag-grid-angular>
     </ion-card-content>
   </ion-card>

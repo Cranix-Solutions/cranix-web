@@ -1,9 +1,8 @@
-<ion-content >
- <ion-card *ngIf="mySelf" class="toolbar-inherit">
-   <ion-card-header >
-      <h1>{{mySelf.givenName}} {{ mySelf.surName}}</h1> {{mySelf.role | translate}}
-   </ion-card-header>
-   <ion-card-content>
+<ion-card *ngIf="mySelf" class="toolbar-inherit">
+  <ion-card-header>
+    <h1>{{mySelf.givenName}} {{ mySelf.surName}}</h1> {{mySelf.role | translate}}
+  </ion-card-header>
+  <ion-card-content>
     <ion-list>
       <ion-item>
         <ion-icon slot="start" name="calendar"></ion-icon>
@@ -39,7 +38,5 @@
         </ion-button>
       </ion-item>
     </ion-list>
-   </ion-card-content>
- </ion-card>
-</ion-content>
-
+  </ion-card-content>
+</ion-card>

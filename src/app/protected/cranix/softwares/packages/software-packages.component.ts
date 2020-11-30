@@ -4,12 +4,13 @@ import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
 //Own stuff
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { DownloadSoftwaresComponent } from 'src/app/shared/actions/download-softwares/download-softwares.component';
-import { EditBTNRenderer } from 'src/app/pipes/ag-edit-renderer';
+import { SoftwareEditBTNRenderer } from 'src/app/pipes/ag-software-edit-renderer';
 import { LanguageService } from 'src/app/services/language.service';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { SoftwareService } from 'src/app/services/softwares.service';
 import { Software } from 'src/app/shared/models/data-model';
+import { SoftwareLicensesComponent } from 'src/app/shared/actions/software-licenses/software-licenses.component';
 
 @Component({
   selector: 'cranix-software-packages',
@@ -18,16 +19,14 @@ import { Software } from 'src/app/shared/models/data-model';
 })
 export class SoftwarePackagesComponent implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['name', 'description', 'version', 'weight','sourceAvailable'];
+  displayedColumns: string[] = ['name', 'description', 'version', 'weight', 'sourceAvailable'];
   gridOptions: GridOptions;
   columnDefs = [];
   gridApi: GridApi;
   columnApi: ColumnApi;
   rowSelection;
   context;
-  selected: Software[];
   title = 'app';
-  rowData: Software[] = [];
   constructor(
     public authService: AuthenticationService,
     public objectService: GenericObjectService,
@@ -68,7 +67,7 @@ export class SoftwarePackagesComponent implements OnInit {
     return new Promise(resolve => setTimeout(resolve, milliseconds));
   }
   createColumnDefs() {
-    let columnDefs = [];
+    this.columnDefs = [];
     for (let key of this.objectKeys) {
       let col = {};
       col['field'] = key;
@@ -79,13 +78,23 @@ export class SoftwarePackagesComponent implements OnInit {
           col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
-          col['width'] = 220;
+          col['minWidth'] = 220;
           col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
           col['flex'] = '1';
           col['colId'] = '1';
-          break;
+          this.columnDefs.push(col);
+          this.columnDefs.push({
+            headerName: "",
+            minWidth: 150,
+            suppressSizeToFit: true,
+            cellStyle: { 'padding': '2px', 'line-height': '36px' },
+            field: 'actions',
+            pinned: 'left',
+            cellRendererFramework: SoftwareEditBTNRenderer
+          });
+          continue;
         }
         case 'version': {
           col['valueGetter'] = function (params) {
@@ -94,27 +103,13 @@ export class SoftwarePackagesComponent implements OnInit {
           break;
         }
       }
-      columnDefs.push(col);
+      this.columnDefs.push(col);
     }
-    let action = {
-      headerName: "",
-      width: 100,
-      suppressSizeToFit: true,
-      cellStyle: { 'padding': '2px', 'line-height': '36px' },
-      field: 'actions',
-      pinned: 'left',
-      cellRendererFramework: EditBTNRenderer
-    };
-    columnDefs.splice(1, 0, action)
-    this.columnDefs = columnDefs;
   }
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
     (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
-  }
-  onSelectionChanged() {
-    this.selected = this.gridApi.getSelectedRows();
   }
 
   onQuickFilterChanged(quickFilter) {
@@ -171,24 +166,13 @@ export class SoftwarePackagesComponent implements OnInit {
    */
   async redirectToEdit(ev: Event, software: Software) {
     let action = 'modify';
-    if (software) {
-      let versions: string[]  = [];
-      let names: string[]  = [];
-      for( let a of software.softwareFullNames ) {
-        names.push(a.fullName);
-      }
-      for( let a of software.softwareVersions ) {
-        versions.push(a.version)
-      }
-      software.softwareFullNames = names;
-      software.softwareVersions = versions;
-    }else {
-      software = new Software();
-      delete software.softwareFullNames;
-      delete software.softwareVersions;
-      delete software.sourceAvailable;
+    if (!software) {
       action = 'add';
+      software = new Software();
     }
+    delete software.softwareFullNames;
+    delete software.softwareVersions;
+    delete software.sourceAvailable;
     this.authService.log(software);
     const modal = await this.modalCtrl.create({
       component: ObjectsEditComponent,
@@ -210,4 +194,22 @@ export class SoftwarePackagesComponent implements OnInit {
     (await modal).present();
   }
 
+  async redirectToLicenses(software) {
+    const modal = await this.modalCtrl.create({
+      component: SoftwareLicensesComponent,
+      componentProps: {
+        software: software
+      },
+      animated: true,
+      swipeToClose: true,
+      showBackdrop: true
+    });
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned.data) {
+        this.authService.log("Object was created or modified", dataReturned.data)
+      }
+    });
+    (await modal).present(); 
+
+  }
 }

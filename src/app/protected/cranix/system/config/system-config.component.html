@@ -1,16 +1,12 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>edit</ion-title>
-  </ion-toolbar>
-</ion-header>
-<ion-row class="header-row">
-  <ion-col size=12>
-    <ion-card-title color="primary">{{ 'System configuration' | translate}}</ion-card-title>
-  </ion-col>
-</ion-row>
-<ion-content>
-  <ion-card>
-    <ion-card-header>
+<cranix-toolbar></cranix-toolbar>
+<ion-content id="carded">
+  <ion-row class="header-row">
+    <ion-col size=12>
+      <ion-card-title color="primary">{{ 'System configuration' | translate}}</ion-card-title>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size=12>
       <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="Basic">
         <ion-segment-button value="Basic">
           <ion-label>{{'Base configuration' | translate}}</ion-label>
@@ -22,8 +18,10 @@
           <ion-label>{{'Backup' | translate}}</ion-label>
         </ion-segment-button>
       </ion-segment>
-    </ion-card-header>
-    <ion-card-content>
+    </ion-col>
+  </ion-row>
+  <ion-card>
+    <ion-content>
       <ion-grid>
         <div *ngFor="let config of configs">
           <ion-row *ngIf="config.path == toShow">
@@ -58,6 +56,6 @@
           </ion-row>
         </div>
       </ion-grid>
-    </ion-card-content>
+    </ion-content>
   </ion-card>
 </ion-content>

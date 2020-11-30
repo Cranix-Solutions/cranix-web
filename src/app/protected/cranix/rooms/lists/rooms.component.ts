@@ -14,6 +14,7 @@ import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-col
 import { Room } from 'src/app/shared/models/data-model';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { RoomPrintersPage } from '../details/printers/room-printers.page';
+import { ManageDhcpComponent } from 'src/app/shared/actions/manage-dhcp/manage-dhcp.component';
 
 @Component({
   selector: 'cranix-rooms',
@@ -86,7 +87,7 @@ export class RoomsComponent implements OnInit {
           columnDefs.push(col);
           columnDefs.push({
             headerName: "",
-            minWidth: 200,
+            minWidth: 230,
             suppressSizeToFit: true,
             cellStyle: { 'padding': '2px', 'line-height': '36px' },
             field: 'actions',
@@ -194,6 +195,22 @@ export class RoomsComponent implements OnInit {
     });
     (await modal).present();
   }
+
+  async setDhcp(room: Room) {
+    this.objectService.selectedObject = room;
+    const modal = await this.modalCtrl.create({
+      component: ManageDhcpComponent,
+      componentProps: {
+        objectType: "room",
+        object: room
+      },
+      animated: true,
+      swipeToClose: true,
+      backdropDismiss: false
+    });
+    (await modal).present();
+  }
+  
   async setPrinters(room: Room) {
     this.objectService.selectedObject = room;
     const modal = await this.modalCtrl.create({

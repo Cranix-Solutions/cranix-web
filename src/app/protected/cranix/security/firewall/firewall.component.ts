@@ -167,20 +167,10 @@ export class FirewallComponent implements OnInit {
     this.securityService.remoteChanged = true;
   }
   restartFirewall() {
-    this.objectService.requestSent();
-    let sub = this.systemService.applyServiceState('SuSEfirewall2', 'running', 'restart').subscribe(
-      (val) => { this.objectService.responseMessage(val) },
-      (err) => { this.objectService.errorMessage(err) },
-      () => { sub.unsubscribe() }
-    );
+    this.systemService.applyServiceState('SuSEfirewall2', 'activ', 'restart')
   }
   stopFirewall() {
-    this.objectService.requestSent();
-    let sub = this.systemService.applyServiceState('SuSEfirewall2', 'running', 'false').subscribe(
-      (val) => { this.objectService.responseMessage(val) },
-      (err) => { this.objectService.errorMessage(err) },
-      () => { sub.unsubscribe() }
-    );
+    this.systemService.applyServiceState('SuSEfirewall2', 'activ', 'false')
   }
   outGridReady(params) {
     this.outApi = params.api;

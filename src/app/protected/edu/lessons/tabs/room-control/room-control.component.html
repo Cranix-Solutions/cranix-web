@@ -1,45 +1,61 @@
-<ion-content>
-  <ion-toolbar style="padding-top: 50px" slot="fixed">
-    <ion-buttons *ngIf="room"  slot="start">
-      <ion-button matTooltip="{{ 'To login' | translate}}" (click)="setAccess('login')">
-        <ion-icon [ngStyle]="{'color': room.accessInRooms.login  ? '#2dd36f' : '#eb445a'}" name="key-sharp" size="large"></ion-icon>
-      </ion-button>
-      <ion-button matTooltip="{{ 'Filtered internet access' | translate}}" (click)="setAccess('proxy')">
-        <ion-icon [ngStyle]="{'color': room.accessInRooms.proxy  ? '#2dd36f' : '#eb445a'}" name="globe-sharp" size="large">
-        </ion-icon>
-      </ion-button>
-      <ion-button *ngIf="room && authS.isAllowed('room.direct')" matTooltip="{{ 'Direct internet access' | translate}}"
-        (click)="setAccess('direct')">
-        <ion-icon [ngStyle]="{'color': room.accessInRooms.direct  ? '#2dd36f' : '#eb445a'}" name="nuclear-sharp"size="large">
-        </ion-icon>
-      </ion-button>
-      <ion-button matTooltip="{{ 'Printing' | translate}}" (click)="setAccess('printing')">
-        <ion-icon [ngStyle]="{'color': room.accessInRooms.printing  ? '#2dd36f' : '#eb445a'}" name="print-sharp" size="large">
-        </ion-icon>
-      </ion-button>
-      <ion-button fill="clear" (click)="openAction($event)"
-        matTooltip="{{'Apply action on all devices in room'|translate}}">
-        <ion-icon slot="end" name="desktop" size="large"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-buttons slot="end">
-      <ion-item  matTooltip="{{'Select the room to control' | translate}}">
-        <ion-label *ngIf="room" position="stacked">{{'Select a room' | translate}}</ion-label>
-        <ion-select [(ngModel)]="selectedRoomId" #roomSelect (ionChange)="selectChanged($event)"
-          okText="OK" cancelText="{{ 'Cancel' | translate}}">
-          <ion-select-option value="{{room.id}}" *ngFor="let room of rooms | async">{{room.name}}</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-item matTooltip="{{'Select picture size' | translate}}">
-        <ion-label position="stacked">{{'Select picture size' | translate }}</ion-label>
-        <ion-select *ngIf="room" [(ngModel)]="gridSize" #roomSelect (ionChange)="sizeChange($event)"
-          okText="{{'apply' | translate }}" cancelText="{{ 'Cancel' | translate}}">
-          <ion-select-option value="{{size}}" *ngFor="let size of gridSizes">{{size}}</ion-select-option>
-        </ion-select>
-      </ion-item>
-    </ion-buttons>
-    <ion-title *ngIf="room">{{'Room' | translate}}: "{{ room.name }}"</ion-title>
-  </ion-toolbar>
+<cranix-toolbar></cranix-toolbar>
+<ion-content id="carded">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons *ngIf="room" slot="start">
+        <ion-button matTooltip="{{ 'To login' | translate}}" (click)="setAccess('login')">
+          <ion-icon [ngStyle]="{'color': room.accessInRooms.login  ? '#2dd36f' : '#eb445a'}" name="key-sharp"
+            size="large"></ion-icon>
+        </ion-button>
+        <ion-button *ngIf="room && authS.isAllowed('education.proxy')"
+          matTooltip="{{ 'Filtered internet access' | translate}}" (click)="setAccess('proxy')">
+          <ion-icon [ngStyle]="{'color': room.accessInRooms.proxy  ? '#2dd36f' : '#eb445a'}" name="globe-sharp"
+            size="large">
+          </ion-icon>
+        </ion-button>
+        <ion-button *ngIf="room && authS.isAllowed('room.direct')"
+          matTooltip="{{ 'Direct internet access' | translate}}" (click)="setAccess('direct')">
+          <ion-icon [ngStyle]="{'color': room.accessInRooms.direct  ? '#2dd36f' : '#eb445a'}" name="nuclear-sharp"
+            size="large">
+          </ion-icon>
+        </ion-button>
+        <ion-button matTooltip="{{ 'Printing' | translate}}" (click)="setAccess('printing')">
+          <ion-icon [ngStyle]="{'color': room.accessInRooms.printing  ? '#2dd36f' : '#eb445a'}" name="print-sharp"
+            size="large">
+          </ion-icon>
+        </ion-button>
+        <ion-button fill="clear" (click)="onBTNSHARE()"
+          matTooltip="{{'Post file into the Import directory of the logged on users or of the workstation users.'|translate}}">
+          <ion-icon slot="end" name="cloud-upload" size="large"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" (click)="onBTNCOLLECT()"
+          matTooltip="{{'Collect the file from the Export directory of the logged on users or of the workstation users.'|translate}}">
+          <ion-icon slot="end" name="cloud-download" size="large"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" (click)="openAction($event)"
+          matTooltip="{{'Apply an action on all devices in room'|translate}}">
+          <ion-icon slot="end" name="desktop" size="large"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-item matTooltip="{{'Select the room to control' | translate}}">
+          <ion-label *ngIf="rooms" position="stacked">{{'Select a room' | translate}}</ion-label>
+          <ion-select [(ngModel)]="selectedRoomId" #roomSelect (ionChange)="selectChanged($event)" okText="OK"
+            cancelText="{{ 'Cancel' | translate}}">
+            <ion-select-option value="{{room.id}}" *ngFor="let room of rooms | async">{{room.name}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item matTooltip="{{'Select picture size' | translate}}">
+          <ion-label position="stacked">{{'Select picture size' | translate }}</ion-label>
+          <ion-select *ngIf="rooms" [(ngModel)]="gridSize" #roomSelect (ionChange)="sizeChange($event)"
+            okText="{{'apply' | translate }}" cancelText="{{ 'Cancel' | translate}}">
+            <ion-select-option value="{{size}}" *ngFor="let size of gridSizes">{{size}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-buttons>
+      <ion-title *ngIf="room">{{'Room' | translate}}: "{{ room.name }}"</ion-title>
+    </ion-toolbar>
+  </ion-header>
   <ion-grid *ngIf="room" fiexd="true">
     <ion-row class="grid-row" *ngFor="let row of array(room.rows); index as r">
       <ion-col *ngFor="let dev of array(room.places); index as p" size="{{gridSize}}">

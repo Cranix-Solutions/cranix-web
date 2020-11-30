@@ -1,0 +1,44 @@
+<cranix-toolbar></cranix-toolbar>
+<ion-content id="carded">
+  <ion-row class="header-row">
+    <ion-col size=12>
+      <ion-title>{{ 'Manage system acls for groups and users' | translate}}
+      </ion-title>
+    </ion-col>
+  </ion-row>
+  <ion-card>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size=12 sizeMd=12 sizeLg=6 sizeXl=6>
+            <ion-title matTooltip="{{'Click on a group to edit acls.'|translate}}">
+              {{ 'groups' | translate }}</ion-title>
+            <ion-item>
+              <ion-input type="text" placeholder="{{'search' | translate }}" (input)="groupFilterChanged()"
+                id="groupFilter"></ion-input>
+            </ion-item>
+            <ag-grid-angular [context]="context" style="width: 100%; height: 100%;"
+              class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}"
+              [rowData]="groupsData" [columnDefs]="groupColumnDefs" [defaultColDef]="defaultColDef"
+              (gridReady)="groupsReady($event)" id="groupsTable">
+            </ag-grid-angular>
+          </ion-col>
+          <ion-col size=12 sizeMd=12 sizeLg=6 sizeXl=6>
+            <ion-title matTooltip="{{'Click on a group to edit acls.'|translate}}">
+              {{ 'users' | translate }}</ion-title>
+            <ion-item>
+              <ion-input type="text" placeholder="{{'search' | translate }}" (input)="userFilterChanged()"
+                id="userFilter">
+              </ion-input>
+            </ion-item>
+            <ag-grid-angular [context]="context" style="width: 100%; height: 100%;"
+              class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}"
+              [rowData]="usersData" [columnDefs]="userColumnDefs" [defaultColDef]="defaultColDef"
+              (gridReady)="usersReady($event)" id="usersTable">
+            </ag-grid-angular>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
