@@ -60,6 +60,7 @@ import { ManageAclsComponent } from './protected/cranix/system/acls/manage-acls/
 import { ManageDhcpComponent } from './shared/actions/manage-dhcp/manage-dhcp.component';
 import { SoftwareLicensesComponent } from './shared/actions/software-licenses/software-licenses.component';
 import { SetquotaComponent } from './shared/actions/setquota/setquota.component';
+import { EditArticleComponent } from 'src/app/shared/actions/edit-article/edit-article.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -100,7 +101,8 @@ const routes: Routes = [
     RoomPrintersPage,
     SelectColumnsComponent,
     SetpasswordComponent,
-    SetquotaComponent
+    SetquotaComponent,
+    EditArticleComponent
   ],
   entryComponents: [
     SoftwareLicensesComponent,
@@ -123,7 +125,8 @@ const routes: Routes = [
     RoomPrintersPage,
     SelectColumnsComponent,
     SetpasswordComponent,
-    SetquotaComponent
+    SetquotaComponent,
+    EditArticleComponent
   ],
   imports: [
     AgChartsAngularModule,

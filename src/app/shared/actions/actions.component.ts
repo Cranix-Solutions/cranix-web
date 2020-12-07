@@ -174,7 +174,7 @@ export class ActionsComponent implements OnInit {
           this.authS.log(dataReturned.data)
           if (dataReturned.data) {
             actionMap.stringValue = dataReturned.data.password;
-            actionMap.booleanValue = dataReturned.data.mustChnage;
+            actionMap.booleanValue = dataReturned.data.mustChange;
             this.executeAction(actionMap);
           }
         });

@@ -24,9 +24,8 @@ export class SetpasswordComponent implements OnInit {
 
   ngOnInit() {}
 
-  onSubmit(val) {
-   // console.log(val);
-    this.modalController.dismiss(val);
+  onSubmit() {
+    this.modalController.dismiss(this.setPassword);
   }
 
 }

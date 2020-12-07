@@ -18,17 +18,20 @@
 
   <ion-card *ngFor="let article of articles">
     <ion-card-header>
-      <ion-toolbar>
-        <ion-card-subtitle>{{article.recDate | date:'yy-MM-dd HH:mm'}}</ion-card-subtitle>
+      <ion-toolbar >
+        <ion-card-subtitle [color]="article.seen ? 'success' : 'danger'">{{article.recDate | date:'yy-MM-dd HH:mm'}}
+          <ion-icon *ngIf="article.articleType == 'O'" name="play-back"></ion-icon>
+          <ion-icon *ngIf="article.articleType == 'I'" name="play-forward"></ion-icon>
+        </ion-card-subtitle>
         <ion-buttons slot="end">
-          <ion-button fill="solid" (click)="setSeenOnArticle(article)">
+          <ion-button [color]="article.seen ? 'success' : 'danger'" fill="solid" (click)="setSeenOnArticle(article)">
             <ion-icon slot="icon-only" name="checkmark"></ion-icon>
           </ion-button>
-          <ion-button fill="solid" (click)="answerArticle(article)">
+          <ion-button *ngIf="article.articleType == 'I'" fill="solid" (click)="answerArticle(article)">
             <ion-icon slot="icon-only" name="arrow-undo"></ion-icon>
           </ion-button>
-          <ion-button fill="solid" (click)="noticeToArticle(article)">
-            <ion-icon slot="icon-only" name="document-text"></ion-icon>
+          <ion-button *ngIf="article.articleType == 'O'" fill="solid" (click)="answerArticle(article)">
+            <ion-icon slot="icon-only" name="build-outline"></ion-icon>
           </ion-button>
           <ion-button fill="solid" (click)="deleteArticle(article)">
             <ion-icon slot="icon-only" name="trash"></ion-icon>
