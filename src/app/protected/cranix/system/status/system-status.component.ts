@@ -54,7 +54,7 @@ export class SystemStatusComponent implements OnInit {
     let subM = this.systemService.getStatus().subscribe(
       (val) => {
         this.systemStatus = {};
-        this.objectKeys = Object.keys(val);
+        this.objectKeys = Object.keys(val).sort();
         for (let key of Object.keys(val)) {
           this.systemStatus[key] = {
             legend: { enabled: false },

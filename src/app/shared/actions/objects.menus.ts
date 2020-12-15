@@ -272,7 +272,7 @@ export const userMenu = [
     "enabled": true,
     "icon": "mail",
     "color": "secondary",
-    "action": "setMailSystemQuota"
+    "action": "setMailsystemQuota"
   }
 ];
 

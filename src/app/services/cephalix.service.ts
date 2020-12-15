@@ -82,12 +82,17 @@ export class CephalixService {
 		return this.http.get<SynchronizedObject[]>(this.url, { headers: this.authService.headers });
 	}
 
-	getArticklesOfTicket(id: number): Observable<Article[]> {
-		this.url = this.hostname + '/tickets/' + id + '/articles';
+	getArticklesOfTicket(ticketId: number): Observable<Article[]> {
+		this.url = this.hostname + '/tickets/' + ticketId + '/articles';
 		console.log(this.url);
 		return this.http.get<Article[]>(this.url, { headers: this.authService.headers });
 	};
 
+	addArticleToTicket(article: Article, ticketId: number){
+		this.url = this.hostname + '/tickets/' + ticketId + '/articles';
+		console.log(this.url);
+		return this.http.post<ServerResponse>(this.url, article, { headers: this.authService.headers });
+	}
 
 	getInstituteTypes(): Observable<string[]> {
 		this.url = this.hostname + `/system/enumerates/institutetype`;

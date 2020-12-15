@@ -12,6 +12,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { SetpasswordComponent } from './setpassword/setpassword.component';
+import { SetquotaComponent } from './setquota/setquota.component'
 import { FilesUploadComponent } from './files-upload/files-upload.component';
 import { FilesCollectComponent } from './files-collect/files-collect.component';
 
@@ -173,7 +174,47 @@ export class ActionsComponent implements OnInit {
           this.authS.log(dataReturned.data)
           if (dataReturned.data) {
             actionMap.stringValue = dataReturned.data.password;
-            actionMap.booleanValue = dataReturned.data.mustChnage;
+            actionMap.booleanValue = dataReturned.data.mustChange;
+            this.executeAction(actionMap);
+          }
+        });
+        (await modal).present();
+        break;
+      }
+      case 'setMailsystemQuota': {
+        this.popoverController.dismiss();
+        const modal = await this.modalController.create({
+          component: SetquotaComponent,
+          cssClass: 'small-modal',
+          animated: true,
+          swipeToClose: true,
+          showBackdrop: true,
+          componentProps: { type: 'mail' }
+        });
+        modal.onDidDismiss().then((dataReturned) => {
+          this.authS.log(dataReturned.data)
+          if (dataReturned.data) {
+            actionMap.stringValue = dataReturned.data;
+            this.executeAction(actionMap);
+          }
+        });
+        (await modal).present();
+        break;
+      }
+      case 'setFilesystemQuota': {
+        this.popoverController.dismiss();
+        const modal = await this.modalController.create({
+          component: SetquotaComponent,
+          cssClass: 'small-modal',
+          animated: true,
+          swipeToClose: true,
+          showBackdrop: true,
+          componentProps: {type: 'file' }
+        });
+        modal.onDidDismiss().then((dataReturned) => {
+          this.authS.log(dataReturned.data)
+          if (dataReturned.data) {
+            actionMap.stringValue = dataReturned.data;
             this.executeAction(actionMap);
           }
         });

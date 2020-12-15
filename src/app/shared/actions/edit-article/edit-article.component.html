@@ -1,0 +1,18 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-title>{{ 'Answer:' | translate }} {{ticket.title}}</ion-title>
+    <ion-subtitle>{{article.recDate | date:'yy-MM-dd HH:mm'}} {{article.title}} {{article.sender}}
+    </ion-subtitle>
+    <ion-buttons slot="end">
+      <ion-button class="ion-no-margin" fill="clear" size="small" (click)="sendArticle()">
+        <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" size="small" (click)="modalController.dismiss()">
+        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content fullscreen>
+  <ion-textarea rows="20" cols="60" autoGrow="true" type="text" [(ngModel)]="text" ></ion-textarea>
+</ion-content>
