@@ -242,6 +242,7 @@
     "Stop firewall": "Firewall anhalten",
     "Stop the running user import": "Laufenden Import anhalten",
     "Support request '%s' was created with ticket number '%s'. Answer will be sent to '%s'.": "Die Supportanfrage '%s' wurde mit der Nummer '%s' erstellt. Anwort wird an '%s' gesendet",
+    "Support request '%s' was not created. The reason is:'%s'": "Die Supportanfrage '%s' konnte nicht erstellt werden. Der Grund: '%s'",
     "Surfing is for '%s' disabled.": "Das Surfen ist für '%s' verboten.",
     "Surfing is for '%s' enabled.": "Das Surfen ist für '%s' erlaubt.",
     "System configuration": "Systemeinstellungen",
