@@ -287,8 +287,8 @@ export class PrintersComponent implements OnInit {
     )
   }
 
-  toggle(id: number, what: string, yesno: boolean, data) {
-    let subs = this.printersService.toggle(id,what,yesno).subscribe(
+  toggle(data, what: string, yesno: boolean, rowIndex: number) {
+    let subs = this.printersService.toggle(data.id,what,yesno).subscribe(
       (val) => {
         this.objectService.responseMessage(val);
         if (val.code == "OK") {
