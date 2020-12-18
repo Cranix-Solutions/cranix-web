@@ -63,6 +63,7 @@ export class DetailsPage implements OnInit {
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
+      this.objectS.getAllObject('ticket');
       this.readArcticles();
     });
     (await modal).present();
