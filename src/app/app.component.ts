@@ -23,7 +23,7 @@ export class AppComponent {
     private router: Router,
     private securityService: SecurityService,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar,
+    private statusBar: StatusBar
   ) {
     this.initializeApp();
   }
@@ -34,6 +34,9 @@ export class AppComponent {
       this.splashScreen.hide();
       this.languageService.setInitialAppLanguage();
       this.authService.authenticationState.subscribe(state => {
+        console.log("authenticationState",state)
+        console.log("cephalix_token",sessionStorage.getItem('cephalix_token'))
+        console.log("shortName",sessionStorage.getItem('shortName'))
         if (state) {
           if (this.authService.isAllowed('room.manage')) {
             this.securityService.getActualAccessStatus();
@@ -49,7 +52,7 @@ export class AppComponent {
             this.router.navigate(['/pages/cranix/profile/myself']);
           }
         } else if (sessionStorage.getItem('cephalix_token')) {
-          this.authService.token = sessionStorage.getItem('cephalix_token');
+          this.authService.token     = sessionStorage.getItem('cephalix_token');
           this.authService.loadSession();
           this.router.navigate(['pages/cranix/users/all']);
         } else {
