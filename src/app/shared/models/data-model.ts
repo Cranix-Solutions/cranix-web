@@ -110,7 +110,7 @@ export class Package {
 	version: string = "";
 	constructor() { }
 }
-export class SoftwareVersions {
+export class SoftwareVersion {
 	id?: number;
 	version: string = "";
 	status?: string = "";
@@ -129,7 +129,7 @@ export class Software {
 	version?: string = "";
 	manually: boolean = false;
 	sourceAvailable: boolean;
-	softwareVersions: SoftwareVersions[];
+	softwareVersions: SoftwareVersion[];
 	softwareFullNames: SoftwareFullName[];
 	constructor() { }
 }

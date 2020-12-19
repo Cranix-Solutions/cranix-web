@@ -123,7 +123,7 @@ export class RoomsComponent implements OnInit {
     this.columnApi.autoSizeColumns(allColumnIds);
   }
   public redirectToDelete = (room: Room) => {
-    this.objectService.deleteObjectDialog(room, 'room')
+    this.objectService.deleteObjectDialog(room, 'room','')
   }
   /**
  * Open the actions menu with the selected object ids.

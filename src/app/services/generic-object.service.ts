@@ -8,6 +8,7 @@ import { Package } from 'src/app/shared/models/data-model';
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 import { LanguageService } from './language.service';
+import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
@@ -107,7 +108,8 @@ export class GenericObjectService {
     private languageS: LanguageService,
     private utilsS: UtilsService,
     private modalCtrl: ModalController,
-    public toastController: ToastController) {
+    public toastController: ToastController,
+    private router: Router) {
   }
 
   initialize(force: boolean) {
@@ -285,7 +287,7 @@ export class GenericObjectService {
     return this.http.delete<ServerResponse>(url, { headers: this.authService.headers })
   }
 
-  async deleteObjectDialog(object, objectType) {
+  async deleteObjectDialog(object, objectType,route) {
     let name = "";
     if (objectType == 'user') {
       name = object.uid + " ( " + object.givenName + " " + object.surName + " )";
@@ -309,6 +311,9 @@ export class GenericObjectService {
                 if (val.code == "OK") {
                   this.getAllObject(objectType);
                   this.modalCtrl.dismiss("success");
+                  if( route != '') {
+                    this.router.navigate([route]);
+                  }
                 }
               },
               (err) => {

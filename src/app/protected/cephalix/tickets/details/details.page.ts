@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 //own 
 import { Ticket, Article } from 'src/app/shared/models/cephalix-data-model';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
@@ -45,7 +45,7 @@ export class DetailsPage implements OnInit {
     );
   }
   public deleteTicket(){
-    this.objectS.deleteObjectDialog(this.ticket,"ticket");
+    this.objectS.deleteObjectDialog(this.ticket,"ticket",'/pages/cephalix/tickets');  
   }
   async answerArticle(article: Article){
     if( ! article.sender) {

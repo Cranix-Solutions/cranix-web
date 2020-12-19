@@ -134,7 +134,16 @@ export class AuthenticationService {
     public logout() {
         this.authenticationState.next(false);
         this.session = null;
-        this.router.navigate(['/']);
+        if(sessionStorage.getItem('shortName')) {
+            sessionStorage.clear();
+            window.close()
+        } else {
+            this.http.delete(this.hostname + `/sessions`,  { headers: this.headers }).subscribe(
+                (val)=> {},
+                (err) => {},
+                ()=> { this.router.navigate(['/']) }
+            );
+        }
     }
 
     public isAuthenticated() {

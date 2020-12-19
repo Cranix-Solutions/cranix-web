@@ -129,7 +129,7 @@ export class SoftwarePackagesComponent implements OnInit {
   }
 
   public redirectToDelete = (software: Software) => {
-    this.objectService.deleteObjectDialog(software, 'software')
+    this.objectService.deleteObjectDialog(software, 'software','')
   }
 
   /**

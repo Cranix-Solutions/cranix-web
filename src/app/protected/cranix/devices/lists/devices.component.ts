@@ -156,7 +156,7 @@ export class DevicesComponent implements OnInit {
   }
 
   redirectToDelete(device: Device) {
-    this.objectService.deleteObjectDialog(device, 'device')
+    this.objectService.deleteObjectDialog(device, 'device','')
   }
   /**
  * Open the actions menu with the selected object ids.

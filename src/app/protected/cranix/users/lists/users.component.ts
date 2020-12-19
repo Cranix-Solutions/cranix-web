@@ -128,7 +128,7 @@ export class UsersComponent implements OnInit {
   }
 
   public redirectToDelete = (user: User) => {
-    this.objectService.deleteObjectDialog(user, 'user')
+    this.objectService.deleteObjectDialog(user, 'user','')
   }
   /**
  * Open the actions menu with the selected object ids.

@@ -123,7 +123,7 @@ export class AdhocComponent implements OnInit {
     this.columnApi.autoSizeColumns(allColumnIds);
   }
   public redirectToDelete = (adhoc: AdHocRoom) => {
-    this.objectService.deleteObjectDialog(adhoc, 'adhocroom')
+    this.objectService.deleteObjectDialog(adhoc, 'adhocroom','')
   }
 
   async openCollums(ev: any) {

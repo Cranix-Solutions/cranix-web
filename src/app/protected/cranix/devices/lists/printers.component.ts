@@ -145,7 +145,7 @@ export class PrintersComponent implements OnInit {
   }
 
   redirectToDelete(printer: Printer) {
-    this.objectService.deleteObjectDialog(printer, 'printer')
+    this.objectService.deleteObjectDialog(printer, 'printer','')
   }
   /**
  * Open the actions menu with the selected object ids.

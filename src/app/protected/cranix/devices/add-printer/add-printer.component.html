@@ -9,7 +9,7 @@
           <ion-icon slot="icon-only" color="success" name="checkmark-sharp" >
           </ion-icon>
         </ion-button>
-        <ion-button *ngIf="action=='modify'" fill="clear" size="small" [disabled]="submitted" (click)="objectService.deleteObjectDialog(printer,'printer')">
+        <ion-button *ngIf="action=='modify'" fill="clear" size="small" [disabled]="submitted" (click)="objectService.deleteObjectDialog(printer,'printer','')">
           <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
         </ion-button>
         <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss()" [disabled]="submitted">

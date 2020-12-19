@@ -165,7 +165,7 @@ export class InstitutesComponent implements OnInit {
   }
 
   public redirectToDelete = (institute: Institute) => {
-    this.objectService.deleteObjectDialog(institute, 'institute')
+    this.objectService.deleteObjectDialog(institute, 'institute','')
   }
   /**
  * Open the actions menu with the selected object ids.
