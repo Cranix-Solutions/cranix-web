@@ -67,7 +67,7 @@ export class HwconfsPage implements OnInit {
     this.columnDefs = [];
     let action = {
       headerName: "",
-      width: 100,
+      minWidth: 130,
       suppressSizeToFit: true,
       cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',

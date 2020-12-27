@@ -9,6 +9,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { SoftwareService } from 'src/app/services/softwares.service'
 import { Installation, Category } from 'src/app/shared/models/data-model';
 import { EditInstallationSetComponent } from 'src/app/protected/cranix/softwares/edit-set/edit-installation-set.component';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
 
 @Component({
   selector: 'cranix-installation-sets',
@@ -29,10 +30,11 @@ export class InstallationSetsComponent implements OnInit {
 
   constructor(
     public authService: AuthenticationService,
+    private languageS: LanguageService,
     public modalCtrl: ModalController,
+    public objectService: GenericObjectService,
     public router: Router,
-    public softwareService: SoftwareService,
-    private languageS: LanguageService
+    public softwareService: SoftwareService
   ) {
     this.context = { componentParent: this };
     this.defaultColDef = {
@@ -167,9 +169,17 @@ export class InstallationSetsComponent implements OnInit {
     (await modal).present();
   }
   writeConfig() {
-    //TODO
+    let sub = this.softwareService.writeStateFiles().subscribe(
+      (val) => { this.objectService.responseMessage(val) },
+      (err) => { this.objectService.errorMessage(err) },
+      () => { sub.unsubscribe()}
+    )
   }
   applyState() {
-    //TODO
+    let sub = this.softwareService.applyState().subscribe(
+      (val) => { this.objectService.responseMessage(val) },
+      (err) => { this.objectService.errorMessage(err) },
+      () => { sub.unsubscribe()}
+    )
   }
 }

@@ -109,9 +109,9 @@ export class DevicesComponent implements OnInit {
           columnDefs.push(col);
           columnDefs.push({
             headerName: "",
-            minWidth: 150,
+            minWidth: 240,
             suppressSizeToFit: true,
-            cellStyle: { 'padding': '2px', 'line-height': '36px' },
+            cellStyle: { 'padding': '1px', 'line-height': '36px' },
             field: 'actions',
             pinned: 'left',
             cellRendererFramework: DeviceActionBTNRenderer

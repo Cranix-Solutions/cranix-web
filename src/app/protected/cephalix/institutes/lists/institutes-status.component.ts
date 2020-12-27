@@ -1,5 +1,5 @@
-import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__, AfterContentInit } from '@angular/core';
-import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
@@ -18,7 +18,9 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'cranix-institutes-status',
-  templateUrl: './institutes-status.component.html'
+  templateUrl: './institutes-status.component.html',
+  styleUrls: ['./institutes-status.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class InstitutesStatusComponent implements OnInit {
   objectKeys: string[] = [];
@@ -50,10 +52,10 @@ export class InstitutesStatusComponent implements OnInit {
     this.objectKeys = Object.getOwnPropertyNames(new InstituteStatus());
     this.createColumnDefs();
     this.defaultColDef = {
-        resizable: true,
-        sortable: true,
-        hide: false
-      };
+      resizable: true,
+      sortable: true,
+      hide: false
+    };
   }
 
   ngOnInit() {
@@ -105,6 +107,7 @@ export class InstitutesStatusComponent implements OnInit {
           break;
         }
         case 'runningKernel': {
+          col['headerClass'] = "rotate-header-class"
           col['width'] = 100;
           col['valueGetter'] = function (params) {
             let index = params.data.runningKernel.indexOf("-default");
@@ -123,6 +126,7 @@ export class InstitutesStatusComponent implements OnInit {
           break;
         }
         case 'availableUpdates': {
+          col['headerClass'] = "rotate-header-class"
           col['width'] = 100;
           col['cellRendererFramework'] = UpdateRenderer;
           break;
@@ -174,8 +178,8 @@ export class InstitutesStatusComponent implements OnInit {
  * @param ev
  */
   async openActions(ev: any) {
-    if (this.gridApi.getSelectedRows().length > 0 ) {
-      for (let i = 0; i <  this.gridApi.getSelectedRows().length; i++) {
+    if (this.gridApi.getSelectedRows().length > 0) {
+      for (let i = 0; i < this.gridApi.getSelectedRows().length; i++) {
         this.objectIds.push(this.gridApi.getSelectedRows()[i].id);
       }
     }

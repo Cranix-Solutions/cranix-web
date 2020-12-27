@@ -85,7 +85,7 @@ export class UsersComponent implements OnInit {
           columnDefs.push(col);
           columnDefs.push({
             headerName: "",
-            minWidth: 130,
+            minWidth: 180,
             suppressSizeToFit: true,
             cellStyle: { 'padding': '2px', 'line-height': '36px' },
             field: 'actions',

@@ -24,7 +24,6 @@ export class InstitutesSyncObjectsComponent implements OnInit {
   autoGroupColumnDef;
   modules = [ AllModules, RowGroupingModule ];
   institute;
-
   constructor(
     public authService:     AuthenticationService,
     public cephalixService: CephalixService,
