@@ -14,6 +14,10 @@ export class SystemService {
 
 	hostname: string;
 	url: string;
+	public addons: string[] = [];
+	public addonActions = {};
+	public addonKeys    = {};
+	public selectedAddon= "";
 
 	constructor(
 		private http: HttpClient,
@@ -80,7 +84,6 @@ export class SystemService {
 		return this.http.get<SystemConfig[]>(this.url, { headers: this.authService.headers });
 	}
 
-
 	setSystemConfigValue(key, value) {
 		this.url = this.hostname + `/system/configuration`;
 		console.log(this.url);
@@ -140,5 +143,38 @@ export class SystemService {
 		this.url = this.hostname + `/system/acls/${objectType}s/${id}`;
 		console.log(this.url);
 		return this.http.post<ServerResponse>(this.url, acl, { headers: this.authService.headers });
+	}
+
+	getAddons() {
+		this.url = this.hostname + '/system/addon'
+		this.http.get<string[]>(this.url, {headers: this.authService.headers}).subscribe(
+			(addons) => {
+				this.addons = addons;
+				for( let addon of this.addons) {
+					this.http.get<string[]>(this.url + `/${addon}/listActions`, {headers: this.authService.headers}).subscribe(
+						(actions) => { this.addonActions[addon] = actions },
+						(err) => { console.log('get Actions',err) }
+					);
+					this.http.get<string[]>(this.url + `/${addon}/listKeys`, {headers: this.authService.headers}).subscribe(
+						(keys) => { this.addonKeys[addon] = keys },
+						(err) => { console.log('get Actions',err) },
+						() => { this.selectedAddon = this.addons[0]}
+					);
+				}
+			},
+			(err) => { console.log('get addons',err)}
+		)
+	}
+
+	applyAction(action) {
+		this.url = this.hostname + '/system/addon/' + this.selectedAddon + '/' + action;
+		console.log(this.url);
+		return this.http.put<ServerResponse>(this.url, { headers: this.authService.headers });
+	}
+
+	getKey(key) {
+		this.url = this.hostname + '/system/addon/' + this.selectedAddon + '/' + key;
+		console.log(this.url);
+		return this.http.get<string[]>(this.url, { headers: this.authService.headers });
 	}
 }

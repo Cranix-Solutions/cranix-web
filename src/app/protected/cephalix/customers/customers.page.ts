@@ -121,7 +121,7 @@ export class CustomersPage implements OnInit {
   }
 
   public redirectToDelete = (customer: Customer) => {
-    this.objectService.deleteObjectDialog(customer, 'customer')
+    this.objectService.deleteObjectDialog(customer, 'customer','')
   }
   /**
  * Open the actions menu with the selected object ids.

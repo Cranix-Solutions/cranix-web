@@ -76,6 +76,6 @@ export class InstituteEditComponent implements OnInit {
     )
   }
   delete(ev: Event){
-     this.objectService.deleteObjectDialog(this.object,'institute');
+     this.objectService.deleteObjectDialog(this.object,'institute','');
   }  
 }

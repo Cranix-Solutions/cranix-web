@@ -110,12 +110,21 @@ export class AuthenticationService {
     }
 
     public loadSession() {
+        console.log('loadSession', sessionStorage.getItem('shortName'))
         this.hostname = this.utilsS.hostName();
         let url = this.hostname + `/sessions`;
         console.log(url);
         this.headers = new HttpHeaders({
             'Content-Type': "application/json",
             'Accept': "application/json",
+            'Authorization': "Bearer " + this.token
+        });
+        this.formHeaders = new HttpHeaders({
+            'Accept': "application/json",
+            'Authorization': "Bearer " + this.token
+        });
+        this.textHeaders = new HttpHeaders({
+            'Accept': "text/plain",
             'Authorization': "Bearer " + this.token
         });
         let sub = this.http.get<UserResponse>(url, { headers: this.headers }).subscribe(
@@ -132,6 +141,17 @@ export class AuthenticationService {
     }
 
     public logout() {
+        if(!sessionStorage.getItem('shortName')) {
+            console.log('logout',this.session.token)
+            this.http.delete(this.hostname + `/sessions/${this.session.token}`, { headers: this.headers }).subscribe(
+                (val) => { 
+                    this.authenticationState.next(false);
+                    this.session = null;
+                    this.router.navigate(['/']) },
+                (err) => { this.router.navigate(['/']) },
+                () => { this.router.navigate(['/']) }
+            );
+        }
         this.authenticationState.next(false);
         this.session = null;
         this.router.navigate(['/']);

@@ -87,9 +87,9 @@ export class RoomsComponent implements OnInit {
           columnDefs.push(col);
           columnDefs.push({
             headerName: "",
-            minWidth: 230,
+            minWidth: 280,
             suppressSizeToFit: true,
-            cellStyle: { 'padding': '2px', 'line-height': '36px' },
+            cellStyle: { 'padding': '1px', 'line-height': '36px' },
             field: 'actions',
             pinned: 'left',
             cellRendererFramework: RoomActionBTNRenderer
@@ -123,7 +123,7 @@ export class RoomsComponent implements OnInit {
     this.columnApi.autoSizeColumns(allColumnIds);
   }
   public redirectToDelete = (room: Room) => {
-    this.objectService.deleteObjectDialog(room, 'room')
+    this.objectService.deleteObjectDialog(room, 'room','')
   }
   /**
  * Open the actions menu with the selected object ids.

@@ -108,7 +108,9 @@ export class ActionsComponent implements OnInit {
   }
 
   adaptMenu() {
-    //TODO
+    /*
+    * TODO Remove menu points based on acls.
+    */
     for (let m of this.menu) {
 
     }

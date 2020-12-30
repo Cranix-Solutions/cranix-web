@@ -34,6 +34,7 @@ export class FilesUploadComponent implements OnInit {
     let i = 0;
     this.educationController.uploadState.next(false)
     this.objectService.requestSent();
+    console.log(this.actionMap)
     let subs = this.educationController.uploadState.subscribe(state => {
       if (!state) {
         let fd = new FormData();

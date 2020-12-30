@@ -176,7 +176,7 @@ export class MyGroupsPage implements OnInit {
   }
 
   public redirectToDelete = (group: Group) => {
-    this.objectService.deleteObjectDialog(group, 'education/group')
+    this.objectService.deleteObjectDialog(group, 'education/group','')
   }
   /**
   * Open the actions menu with the selected object ids.

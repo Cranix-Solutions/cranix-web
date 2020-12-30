@@ -102,12 +102,13 @@ export class RoomAccessComponent implements OnInit {
       }
     ];
   }
-  toggle(id, field: string, value: boolean, rowIndex: number) {
-    console.log(id, field, value, rowIndex)
-    this.securityService.actualStatus[rowIndex][field] = !value
+  toggle(data, field: string, value: boolean, rowIndex: number) {
+    console.log(data, field, value, rowIndex)
     let rows = []
     rows.push(this.statusApi.getDisplayedRowAtIndex(rowIndex));
-    this.securityService.setAccessStatusInRoom(this.securityService.actualStatus[rowIndex]);
+    rows[0]['data'][field] =!value;
+    console.log(rows)
+    this.securityService.setAccessStatusInRoom(data);
     this.statusApi.redrawRows({ rowNodes: rows });
   }
 
@@ -120,7 +121,7 @@ export class RoomAccessComponent implements OnInit {
         break
       }
     }
-    if (!sent) {
+    if (sent) {
       this.securityService.getActualAccessStatus()
     } else {
       this.objectService.warningMessage(

@@ -70,7 +70,7 @@ export class GroupsPage implements OnInit {
      this.columnDefs = [];
      let action = {
       headerName: "",
-      width: 150,
+      minWidth: 150,
       suppressSizeToFit: true,
       cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
@@ -88,7 +88,7 @@ export class GroupsPage implements OnInit {
           col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
-          col['width'] = 150;
+          col['minWidth'] = 150;
           col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
@@ -145,7 +145,7 @@ export class GroupsPage implements OnInit {
   }
 
   public redirectToDelete = (group: Group) => {
-    this.objectService.deleteObjectDialog(group, 'group')
+    this.objectService.deleteObjectDialog(group, 'group','')
   }
   /**
   * Open the actions menu with the selected object ids.

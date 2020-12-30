@@ -71,6 +71,6 @@ export class HwconfEditPage implements OnInit {
     //TODO
   }
   delete(ev: Event){
-     this.objectService.deleteObjectDialog(this.object,'hwconf');
+     this.objectService.deleteObjectDialog(this.object,'hwconf','');
   }
 }

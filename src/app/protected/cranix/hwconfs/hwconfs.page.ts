@@ -67,7 +67,7 @@ export class HwconfsPage implements OnInit {
     this.columnDefs = [];
     let action = {
       headerName: "",
-      width: 100,
+      minWidth: 130,
       suppressSizeToFit: true,
       cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
@@ -116,7 +116,7 @@ export class HwconfsPage implements OnInit {
   }
 
   public redirectToDelete = (hwconf: Hwconf) => {
-    this.objectService.deleteObjectDialog(hwconf, 'hwconf')
+    this.objectService.deleteObjectDialog(hwconf, 'hwconf','')
   }
   /**
  * Open the actions menu with the selected object ids.

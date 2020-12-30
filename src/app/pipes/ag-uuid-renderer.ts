@@ -33,7 +33,8 @@ export class InstituteUUIDCellRenderer implements ICellRendererAngularComp, OnDe
     constructor(
         private win: WindowRef,
         private cephS: CephalixService,
-        private toastController: ToastController) {
+	private toastController: ToastController)
+    {
         this.nativeWindow = win.getNativeWindow();
     }
     // called on init

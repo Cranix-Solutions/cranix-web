@@ -1,4 +1,4 @@
-<form #editForm="ngForm" (ngSubmit)="onSubmit(editForm.value)">
+<form #editForm="ngForm">
   <ion-header translucent>
     <ion-toolbar>
       <ion-title>{{  objectActionTitle | translate }}</ion-title>
@@ -7,7 +7,7 @@
           matTooltip="{{'Set the next default values' | translate }}" disabled="disabled">
           <ion-icon slot="icon-only" name="refresh"></ion-icon>
         </ion-button>
-        <ion-button type="submit" class="ion-no-margin" [disabled]="!editForm.valid">
+        <ion-button class="ion-no-margin" (click)="onSubmit(editForm.value)" [disabled]="!editForm.valid">
           <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
         </ion-button>
         <ion-button *ngIf="objectAction == 'modify' && objectType != 'settings'" fill="clear" size="small"
@@ -29,8 +29,7 @@
             <button class="btn">
               <div *ngIf="!fileToUpload">{{'File to Upload'|translate}}</div>
               <div *ngIf="fileToUpload">{{fileToUpload.name}}</div>
-              <input slot="end" type="file" [(ngModel)]="object[key]" name="{{key}}"
-                (change)="handleFileInput($event.target.files)">
+              <input slot="end" type="file" (change)="handleFileInput($event.target.files)">
             </button>
           </div>
         </ion-item>

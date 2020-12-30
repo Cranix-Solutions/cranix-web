@@ -92,7 +92,7 @@ export class PrintersComponent implements OnInit {
           col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
-          col['width'] = 170;
+          col['minWidth'] = 170;
           col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
@@ -115,9 +115,9 @@ export class PrintersComponent implements OnInit {
     }
     let action = {
       headerName: "",
-      width: 100,
+      minWidth: 130,
       suppressSizeToFit: true,
-      cellStyle: { 'padding': '2px', 'line-height': '36px' },
+      cellStyle: { 'padding': '1px', 'line-height': '36px' },
       field: 'actions',
       pinned: 'left',
       cellRendererFramework: PrinterActionBTNRenderer
@@ -145,7 +145,7 @@ export class PrintersComponent implements OnInit {
   }
 
   redirectToDelete(printer: Printer) {
-    this.objectService.deleteObjectDialog(printer, 'printer')
+    this.objectService.deleteObjectDialog(printer, 'printer','')
   }
   /**
  * Open the actions menu with the selected object ids.
@@ -287,8 +287,8 @@ export class PrintersComponent implements OnInit {
     )
   }
 
-  toggle(id: number, what: string, yesno: boolean, data) {
-    let subs = this.printersService.toggle(id,what,yesno).subscribe(
+  toggle(data, what: string, yesno: boolean, rowIndex: number) {
+    let subs = this.printersService.toggle(data.id,what,yesno).subscribe(
       (val) => {
         this.objectService.responseMessage(val);
         if (val.code == "OK") {

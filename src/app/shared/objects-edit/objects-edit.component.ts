@@ -9,7 +9,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { ServerResponse } from 'src/app/shared/models/server-models';
 import { UsersService } from 'src/app/services/users.service';
 import { SystemService } from 'src/app/services/system.service';
-import { SupportTicket } from '../models/data-model';
+import { SupportTicket, SoftwareVersion, SoftwareFullName, Software } from '../models/data-model';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -136,6 +136,16 @@ export class ObjectsEditComponent implements OnInit {
         this.supportRequest(object);
         break;
       }
+      case 'software': {
+        let sv = new SoftwareVersion();
+        let fn = new SoftwareFullName();
+        sv.version = object.version;
+        sv.status  = 'C';
+        fn.fullName = object.name
+        object['softwareVersions']  = [ { 'version':object.version,'status':'C'}]
+        object['softwareFullNames'] = [ { 'fullName':object.name}]
+        console.log("new software",object)
+      }
       default: {
         this.defaultAcion(object);
       }
@@ -169,7 +179,7 @@ export class ObjectsEditComponent implements OnInit {
     )
   }
   deleteObject() {
-    this.objectService.deleteObjectDialog(this.object, this.objectType);
+    this.objectService.deleteObjectDialog(this.object, this.objectType,'');
     //this.modalController.dismiss("succes");
   }
   supportRequest(object: SupportTicket) {
