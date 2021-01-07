@@ -26,7 +26,7 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
   roomId: number;
   name: string = "";
   device: Device = new Device();
-  roomsToSelect: Observable<Room[]>;
+  roomsToSelect: Room[] = [];
   addDeviceForm: FormGroup;
   hwConfs: Observable<Hwconf[]>;
   disabled: boolean = false;
@@ -80,9 +80,13 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
       console.log('AddhocRooms', this.addDeviceForm)
     }
     if (this.addHocRooms) {
-      this.roomsToSelect = this.selfS.getMyRooms();
+      this.selfS.getMyRooms().subscribe(
+        (val) => { this.roomsToSelect = val; }
+      )
     } else {
-      this.roomsToSelect = this.roomService.getRoomsToRegister();
+      this.roomService.getRoomsToRegister().subscribe(
+        (val) => { this.roomsToSelect = val; }
+      )
       if (this.rooms) {
         this.roomId = this.rooms.id;
         this.addDeviceForm.controls['roomId'].patchValue(this.roomId);
@@ -107,6 +111,7 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
     this.objectService.requestSent()
     this.disabled = true;
     if (this.addHocRooms) {
+      devices.roomId = this.roomId;
       console.log('adding Addoc', devices);
       this.selfS.addDevice(devices)
         .pipe(takeWhile(() => this.alive))
@@ -141,7 +146,7 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
           }
         }
       }
-      this.roomService.addDevice(newDevice, newDevice[0].roomId)
+      this.roomService.addDevice(newDevice, this.roomId)
         .pipe(takeWhile(() => this.alive))
         .subscribe((responses) => {
           let response = this.languageService.trans("List of the results:");
@@ -167,15 +172,14 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
 
   roomChanged(ev) {
     console.log('rooms is: ', ev);
-    this.roomId = ev.detail.value;
-    if (this.addHocRooms) {
-      this.addDeviceForm.controls['hwconfId'].patchValue(ev.detail.value);
-    } else {
-      this.roomService.getAvailiableIPs(ev.detail.value)
-      .pipe(takeWhile(() => this.alive))
-      .subscribe((res) => {
-        this.ipAdresses = res;
-      })
+    this.roomId = ev.value.id;
+    this.addDeviceForm.controls['hwconfId'].patchValue(ev.value.hwconfId);
+    if (!this.addHocRooms) {
+      this.roomService.getAvailiableIPs(ev.value.id)
+        .pipe(takeWhile(() => this.alive))
+        .subscribe((res) => {
+          this.ipAdresses = res;
+        })
 
     }
   }
