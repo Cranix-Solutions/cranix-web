@@ -159,7 +159,7 @@ export class AddPrinterComponent implements OnInit {
       }
       case 'modify': {
         if( formData.has('file') || this.originalModel != printer.model ) {
-          let subs3 = this.printersService.setDrive(this.printer.id,formData).subscribe(
+          let subs3 = this.printersService.setDriver(this.printer.id,formData).subscribe(
             (val) => {
               this.objectService.responseMessage(val);
               if (val.code == "OK") {
