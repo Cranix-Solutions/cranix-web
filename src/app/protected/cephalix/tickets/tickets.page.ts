@@ -1,4 +1,4 @@
-import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__, AfterContentInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {  GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
@@ -95,6 +95,9 @@ export class TicketsPage implements OnInit {
         case 'recDate': {
           col['cellRendererFramework'] = DateCellRenderer;
           break;
+        }
+        case 'ticketStatus' : {
+          col['cellStyle'] = params => params.value == "N" ? {'background-color': 'red'} : params.value == "R" ? {'background-color': 'orange'} : { 'background-color': 'green'}
         }
       }
       columnDefs.push(col);

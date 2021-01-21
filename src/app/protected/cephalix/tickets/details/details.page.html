@@ -10,9 +10,8 @@
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
-      <ion-card-subtitle> {{ticket.recDate | date:'yy-MM-dd HH:mm'}} {{ticket.cephalixInstituteId | idToName:'institute'}}<br>
-        {{ticket.email}}:
-        {{ticket.lastname}},{{ticket.firstname}}</ion-card-subtitle>
+      <ion-card-subtitle> {{ticket.recDate | date:'yy-MM-dd HH:mm'}} {{ institute.name }} {{ institute.regCode }} {{ institute.ipVPN }}<br>
+        {{ticket.email}}: {{ticket.lastname}},{{ticket.firstname}}</ion-card-subtitle>
     </ion-card-header>
   </ion-card>
 

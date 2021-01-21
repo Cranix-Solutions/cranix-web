@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 //own 
-import { Ticket, Article } from 'src/app/shared/models/cephalix-data-model';
+import { Ticket, Article, Institute } from 'src/app/shared/models/cephalix-data-model';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
 import { ModalController } from '@ionic/angular';
@@ -12,9 +12,10 @@ import { EditArticleComponent } from 'src/app/shared/actions/edit-article/edit-a
   styleUrls: ['./details.page.scss'],
 })
 export class DetailsPage implements OnInit {
-  ticketId: number;
-  ticket: Ticket;
-  articles: Article[] = [new Article()];
+  ticketId:  number;
+  ticket:    Ticket;
+  articles:  Article[] = [new Article()];
+  institute: Institute;
   constructor(
     private route: ActivatedRoute,
     private cephlixS: CephalixService,
@@ -29,6 +30,10 @@ export class DetailsPage implements OnInit {
         this.ticket = t;
       }
     });
+    this.institute = this.objectS.getObjectById('institute',this.ticket.cephalixInstituteId);
+    if( this.institute == null) {
+      this.institute = this.objectS.getObjectById('institute',1);
+    }
     this.readArcticles();
   }
   public ngAfterViewInit() {
