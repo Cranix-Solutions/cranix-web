@@ -24,8 +24,8 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 })
 export class InstitutesStatusComponent implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'availableUpdates', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel'];
-  sortableColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'availableUpdates', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel'];
+  displayedColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'availableUpdates', 'errorMessages', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel'];
+  sortableColumns: string[]  = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'availableUpdates', 'errorMessages', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel'];
   columnDefs = [];
   defaultColDef = {};
   gridApi: GridApi;
@@ -134,6 +134,9 @@ export class InstitutesStatusComponent implements OnInit {
         case 'created': {
           col['cellRendererFramework'] = DateTimeCellRenderer;
           break;
+	}
+	case 'errorMessages' : {
+          col['cellStyle'] = params => params.value == "" ? {'background-color': 'green'} : { 'background-color': 'red'}
         }
       }
       columnDefs.push(col);

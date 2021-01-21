@@ -90,6 +90,7 @@ export class InstituteStatus {
     version: string ="";
     lastUpdate: any =new Date();
     availableUpdates: string = "";
+    errorMessages?: string = "";
     rootUsage: string ="";
     srvUsage: string = "";
     varUsage: string ="";
