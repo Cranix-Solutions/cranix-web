@@ -259,6 +259,12 @@ export const userMenu = [
   {
     "enabled": true,
     "icon": "file-tray",
+    "color": "success",
+    "action": "rwProfile"
+  },
+  {
+    "enabled": true,
+    "icon": "file-tray",
     "color": "danger",
     "action": "copyTemplate"
   },
