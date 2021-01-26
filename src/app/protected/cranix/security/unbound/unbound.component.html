@@ -1,9 +1,9 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-row class="header-row">
-  <ion-col size=6>
+  <ion-col size=11>
     <ion-title>{{ 'Manage DNS Filter Configuration' | translate}}</ion-title>
   </ion-col>
-  <ion-col size=6>
+  <ion-col size=1>
     <ion-button size="small" fill="solid" (click)="writeConfig()"
       matTooltip="{{'Write the DNS filter configuration and restart the DNS server.' | translate }}">
       <ion-icon slot="icon-only" color="success" name="checkmark"></ion-icon>
@@ -13,6 +13,27 @@
 <ion-content>
   <ion-grid>
     <ion-row>
+      <ion-col>
+        <ion-list>
+          <ion-item>
+            <ion-title>{{'Own White List'|translate}}</ion-title>
+          </ion-item>
+          <form #addNewDomain1Form="ngForm">
+            <ion-item>
+              <ion-input [(ngModel)]="newDomain1" name="newDomain1" placeholder="{{'Enter a new domain name'| translate}}"
+                pattern="[a-z0-9.-]+\.[a-z]{2,}$"></ion-input>
+              <ion-button slot="end" (click)="addNewDomain1()" [disabled]="!addNewDomain1Form.valid">
+                <ion-icon slot="icon-only" name="add"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </form>
+          <ion-item *ngFor="let dom of whiteList; index as i">{{dom}}
+            <ion-button slot="end" (click)="deleteDomain1(i)">
+              <ion-icon color="danger" slot="icon-only" name="trash"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-list>
+      </ion-col>
       <ion-col>
         <ion-list>
           <ion-item>
