@@ -92,7 +92,7 @@ export class SecurityService {
   resetUnbound() {
     this.url = this.hostname + "/system/unbound";
     console.log(this.url);
-    return this.http.put<ServerResponse>(this.url, { headers: this.authService.headers });
+    return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
   }
   setProxyCustom(custom,list: string[]) {
     this.url = this.hostname + `/system/proxy/custom/${custom}`;
