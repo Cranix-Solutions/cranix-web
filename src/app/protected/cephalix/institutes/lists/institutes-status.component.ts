@@ -136,7 +136,7 @@ export class InstitutesStatusComponent implements OnInit {
           break;
 	}
 	case 'errorMessages' : {
-          col['cellStyle'] = params => params.value == "" ? {'background-color': 'green'} : { 'background-color': 'red'}
+          col['cellStyle'] = params => params.value ? {'background-color': 'red'} : { 'background-color': 'green'}
         }
       }
       columnDefs.push(col);
