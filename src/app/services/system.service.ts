@@ -169,7 +169,7 @@ export class SystemService {
 	applyAction(action) {
 		this.url = this.hostname + '/system/addon/' + this.selectedAddon + '/' + action;
 		console.log(this.url);
-		return this.http.put<ServerResponse>(this.url, { headers: this.authService.headers });
+		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
 	}
 
 	getKey(key) {
