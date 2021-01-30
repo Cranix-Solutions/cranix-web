@@ -105,7 +105,7 @@ export class RoomAccessComponent implements OnInit {
   toggle(data, field: string, value: boolean, rowIndex: number) {
     console.log(data, field, value, rowIndex)
     let rows = []
-    rows.push(this.statusApi.getDisplayedRowAtIndex(rowIndex));
+    rows.push(this.statusApi.getRowNode(rowIndex));
     rows[0]['data'][field] =!value;
     console.log(rows)
     this.securityService.setAccessStatusInRoom(data);
