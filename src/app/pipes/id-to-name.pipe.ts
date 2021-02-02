@@ -9,17 +9,15 @@ export class IdToNamePipe implements PipeTransform {
   constructor(
     private gOS: GenericObjectService,
     private languageService: LanguageService
-    )
-     { }
+  ) { }
 
-  transform(value: any, objectType: string ): string {
-    if ( value == 0 ) {
+  transform(value: any, objectType: string): string {
+    if (value == 0) {
       return this.languageService.trans("nothing");
     }
-    for (let obj of this.gOS.allObjects[objectType].getValue()) {
-      if (obj.id === value) {
-        return obj.name;
-      }
+    let obj = this.gOS.getObjectById(objectType, value); 
+    if (obj) {
+      return obj.name;
     }
     return value;
   }

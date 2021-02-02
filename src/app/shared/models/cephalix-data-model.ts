@@ -19,7 +19,7 @@ export class Customer {
 }
 
 export class Institute {
-    id?: number;
+    id?: number = 0;
     name: string = '';
     uuid: string = '';
     instituteType: string = '';

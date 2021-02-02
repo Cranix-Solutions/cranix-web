@@ -9,6 +9,7 @@ import { Customer, Institute, Ticket, Article, Notice, CrxCare, SynchronizedObje
 import { ServerResponse, CrxActionMap } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from './auth.service';
 import { InstituteStatus } from 'src/app/shared/models/cephalix-data-model';
+import { User } from '../shared/models/data-model';
 
 
 export interface InstallSetSync{
@@ -174,11 +175,27 @@ export class CephalixService {
 		return this.http.put<ServerResponse>(url,null ,{ headers: this.authService.headers });
 	}
 
-
-	//DELETE
-
 	deleteNote(id : number){
 		this.url = this.hostname + `/institutes/notices/${id}`;
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
+	}
+	
+	addUserToInstitute(userId, instituteId: number){
+		this.url = this.hostname + `/institutes/${instituteId}/users/${userId}`;
+		console.log(this.url)
+		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
+	}
+	deleteUserFromInstitute(userId, instituteId: number){
+		this.url = this.hostname + `/institutes/${instituteId}/users/${userId}`;
+		console.log(this.url)
+		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
+	}
+	getUsersFromInstitute(instituteId: number){
+		this.url = this.hostname + `/institutes/${instituteId}/users`;
+		return this.http.get<User[]>(this.url, { headers: this.authService.headers });
+	}
+	getInstitutesFromUser(userId: number){
+		this.url = this.hostname + `/institutes/users/${userId}`;
+		return this.http.get<Institute[]>(this.url, { headers: this.authService.headers });
 	}
 }

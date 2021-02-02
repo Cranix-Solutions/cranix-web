@@ -1,0 +1,66 @@
+<cranix-toolbar></cranix-toolbar>
+<ion-content id="carded">
+  <ion-row class="header-row">
+    <ion-col>
+      <ion-title>{{'Manage institutes' | translate}}</ion-title>
+    </ion-col>
+  </ion-row>
+  <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
+    <ion-fab-button>
+      <ion-icon name="arrow-forward-circle"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="start">
+      <ion-fab-button>
+        <ion-icon name="ellipsis-vertical-sharp" (click)="openActions($event,null)"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="add-circle" (click)="redirectToEdit($event,null)"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="apps" (click)="openCollums($event)"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('institutesFilterMD')"
+    id="institutesFilterMD" showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
+  <ion-card>
+    <ion-card-header>
+      <ion-toolbar>
+          <ion-item>
+            <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('institutesFilter')"
+              id="institutesFilter">
+            </ion-input>
+          </ion-item>
+        <ion-buttons slot="end">
+          <ion-button size="small" fill="solid" (click)="redirectToEdit($event,null)"
+            matTooltip="{{'Create a new institute' | translate }}">
+            <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+          </ion-button>
+          <ion-button size="small" fill="solid" (click)="openActions($event,null)"
+            matTooltip="{{'Apply actions on the selected objects' | translate }}">
+            <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
+          </ion-button>
+          <ion-button size="small" fill="solid" (click)="openCollums($event)"
+            matTooltip="{{'Select the columns to show' | translate }}">
+            <ion-icon slot="icon-only" name="apps"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-card-header>
+    <ion-card-content>
+      <ag-grid-angular
+        id="agGridTable"
+        style="width: 100%; height: 100%;"
+        rowSelection="multiple"
+        class="{{authService.settings.agGridThema}}"
+        rowHeight="{{authService.settings.rowHeight}}"
+        [context]="context"
+        [rowData]="rowData"
+        [columnDefs]="columnDefs"
+        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
+        (selectionChanged)="onSelectionChanged()"
+        (gridReady)="onGridReady($event)">
+      </ag-grid-angular>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

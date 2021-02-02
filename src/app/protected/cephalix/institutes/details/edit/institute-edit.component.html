@@ -11,12 +11,12 @@
 </ion-row>
 <ion-content>
   <ion-card>
-    <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
+    <form #editForm="ngForm">
       <ion-card-header>
         <ion-toolbar>
           <ion-buttons slot="end">
-            <ion-button size="small" fill="solid" fill="clear" type="submit" class="ion-no-margin" [disabled]="!editForm.valid"
-              matTooltip="{{'Apply changes' | translate }}">
+            <ion-button size="small" fill="solid" fill="clear" class="ion-no-margin" [disabled]="!editForm.valid"
+              matTooltip="{{'Apply changes' | translate }}" (ngSubmit)="onSubmit(editForm.value)">
               <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
             </ion-button>
             <ion-button size="small" fill="solid" fill="clear" (click)="setNextDefaults()"
@@ -49,60 +49,73 @@
               [ngSwitch]="objectService.typeOf(key,object,'edit')">
               <ion-item *ngSwitchCase="'booleanTrue'">
                 <ion-label>{{ key | translate }}</ion-label>
-                <ion-toggle slot="start" formControlName="{{key}}" color="secondary" checked></ion-toggle>
+                <ion-toggle slot="start" [(ngModel)]="object[key]" name="{{key}}" color="secondary" checked>
+                </ion-toggle>
               </ion-item>
               <ion-item *ngSwitchCase="'booleanFalse'">
                 <ion-label>{{ key | translate }}</ion-label>
-                <ion-toggle slot="start" formControlName="{{key}}" color="secondary"></ion-toggle>
+                <ion-toggle slot="start" [(ngModel)]="object[key]" name="{{key}}" color="secondary"></ion-toggle>
               </ion-item>
               <ion-item *ngSwitchCase="'string'">
                 <ion-label position="stacked">{{ key | translate }}{{objectService.required[key]}}</ion-label>
-                <!--ion-item *ngIf="editForm.controls[key].hasError('required') && editForm.controls[key].touched"-->
-                <ion-label position="stacked"
-                  *ngIf="editForm.controls[key].hasError('required')  && editForm.controls[key].touched">
-                  {{ 'This field is required!' | translate }}</ion-label>
                 <ng-template [ngIf]="objectService.selects[key]" [ngIfElse]="elseBlock">
-                  <ion-select type="text" formControlName="{{key}}" [compareWith]="objectService.compareFn"
-                    [required]="objectService.required[key]">
+                  <ion-select type="text" [(ngModel)]="object[key]" name="{{key}}"
+                    [compareWith]="objectService.compareFn" [required]="objectService.required[key]">
                     <ion-select-option *ngFor="let option of  objectService.selects[key]" value="{{option}}">
                       {{option | translate}}</ion-select-option>
                   </ion-select>
                 </ng-template>
                 <ng-template #elseBlock>
-                  <ion-input type="text" formControlName="{{key}}" value="{{object[key]}}"
+                  <ion-input type="text" [(ngModel)]="object[key]" name="{{key}}" value="{{object[key]}}"
                     [required]="objectService.required[key]"></ion-input>
                 </ng-template>
               </ion-item>
               <ion-item *ngSwitchCase="'stringRO'">
                 <ion-label position="stacked">{{ key | translate }}</ion-label>
-                <ion-input color="tertiary" type="text" formControlName="{{key}}" value="{{object[key]}}" readonly>
+                <ion-input color="tertiary" type="text" [(ngModel)]="object[key]" name="{{key}}" value="{{object[key]}}"
+                  readonly>
                 </ion-input>
               </ion-item>
               <ion-item *ngSwitchCase="'text'">
                 <ion-label position="stacked">{{ key | translate }}</ion-label>
-                <ion-textarea color="tertiary" formControlName="{{key}}" value="{{object[key]}}">
+                <ion-textarea color="tertiary" [(ngModel)]="object[key]" name="{{key}}" value="{{object[key]}}">
                 </ion-textarea>
               </ion-item>
               <ion-item *ngSwitchCase="'date'">
-                <ion-label>{{ key | translate }}</ion-label>
-                <ion-datetime formControlName="{{key}}" max="2100" value="{{object[key] | date:'yyyy-MM-dd'}}">
-                </ion-datetime>
+                <ion-label position="stacked">{{ key | translate }}</ion-label>
+                <input [(ngModel)]="object[key]" name="{{key}}" type="date">
               </ion-item>
               <ion-item *ngSwitchCase="'date-time'">
-                <ion-label>{{ key | translate }}</ion-label>
-                <ion-datetime formControlName="{{key}}" max="2100"
+                <ion-label position="stacked">{{ key | translate }}</ion-label>
+                <ion-datetime [(ngModel)]="object[key]" name="{{key}}" max="2100"
                   value="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z'}}">
                 </ion-datetime>
               </ion-item>
               <ion-item *ngSwitchCase="'idPipe'">
                 <ion-label position="stacked">{{ key | translate }}</ion-label>
-                <ion-input color="tertiary" type="text" formControlName="{{key}}"
+                <ion-input color="tertiary" type="text" [(ngModel)]="object[key]" name="{{key}}"
                   value="{{object[key] | idToName:'customer'}}" readonly>
                 </ion-input>
               </ion-item>
             </ion-col>
+            <ion-col>
+            </ion-col>
           </ion-row>
         </ion-grid>
+        <ion-item>
+          <ion-label position="stacked">{{'Institute manager'| translate}}</ion-label>
+          <ionic-selectable
+            #ionicSelectable
+            item-content
+            [(ngModel)]="manager"
+            [ngModelOptions]="{standalone: true}"
+            [items]="users"
+            itemValueField="id"
+            itemTextField="fullName"
+            [canSearch]="true"
+            (onChange)="managerChanged($event)">
+          </ionic-selectable>
+        </ion-item>
       </ion-card-content>
     </form>
   </ion-card>

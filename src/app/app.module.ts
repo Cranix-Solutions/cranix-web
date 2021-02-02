@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { AgChartsAngularModule } from 'ag-charts-angular';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy, Routes, RouterModule } from '@angular/router';
@@ -105,6 +105,7 @@ const routes: Routes = [
     EditArticleComponent
   ],
   entryComponents: [
+    AppComponent,
     SoftwareLicensesComponent,
     ManageDhcpComponent,
     ManageAclsComponent,
@@ -134,7 +135,7 @@ const routes: Routes = [
     BrowserAnimationsModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot(AppComponent),
     IonicSelectableModule,
     RouterModule.forRoot(routes),
     HttpClientModule,
@@ -176,7 +177,7 @@ const routes: Routes = [
     UnboundCanDeactivate,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA,NO_ERRORS_SCHEMA],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
