@@ -5,7 +5,7 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
 @Component({
     selector: 'action-cell',
     template: `
-        <ion-button style="padding-horizontal : 2px" fill="clear" size="small" (click)="details()" matTooltip="{{'edit' | translate }}">
+        <ion-button *ngIf="printerAddAllowed" style="padding-horizontal : 2px" fill="clear" size="small" (click)="details()" matTooltip="{{'edit' | translate }}">
              <ion-icon name="build-sharp"></ion-icon>
         </ion-button>
         <ion-button style="padding-horizontal : 2px" fill="clear"  size="small" (click)="reset()" matTooltip="{{'Reset printer' | translate }}">
@@ -16,9 +16,11 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
 
 export class PrinterActionBTNRenderer implements ICellRendererAngularComp {
     private params: any;
+    public  printerAddAllowed: boolean = false;
 
     agInit(params: any ): void {
         this.params = params;
+        this.printerAddAllowed = this.params.context.componentParent.authService.isAllowed('printers.add');
     }
 
     public details() {

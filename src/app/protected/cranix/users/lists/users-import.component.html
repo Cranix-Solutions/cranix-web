@@ -1,7 +1,7 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-content id="carded">
   <ion-row class="header-row">
-    <ion-col size=6>
+    <ion-col>
       <ion-title>{{'Manage user imports' | translate}}</ion-title>
     </ion-col>
   </ion-row>
@@ -24,7 +24,7 @@
         </ion-col>
       </ion-row>
     </ion-card-header>
-    <ion-card-content id="import-content">
+    <ion-content id="import-content">
       <ion-grid>
         <ion-row>
           <ion-col size=2>{{'Start time' | translate}}</ion-col>
@@ -71,8 +71,8 @@
             </ion-icon>
           </ion-col>
         </ion-row>
-        <div *ngFor="let import of imports">
-          <ion-row *ngIf="!runningImport || runningImport.startTime != import.startTime">
+        <div *ngFor="let import of imports; index as i">
+        <ion-row *ngIf="!runningImport || runningImport.startTime != import.startTime" style="background-color : {{rowColors[i%2]}}">
             <ion-col size=2>{{import.startTime}} </ion-col>
             <ion-col size=2>
               <ion-button color="light" size="small" (click)="showImport($event,import)"
@@ -121,6 +121,6 @@
           </ion-row>
         </div>
       </ion-grid>
-    </ion-card-content>
+    </ion-content>
   </ion-card>
 </ion-content>

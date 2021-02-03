@@ -1,7 +1,7 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-content id="carded">
   <ion-row class="header-row">
-    <ion-col size=6>
+    <ion-col>
       <ion-title>{{'Manage printers' | translate}}</ion-title>
     </ion-col>
   </ion-row>
@@ -35,11 +35,11 @@
           </ion-input>
         </ion-item>
         <ion-buttons slot="end">
-          <ion-button size="small" fill="solid" (click)="addDevice($event)"
+          <ion-button *ngIf="authService.isAllowed('printers.add')" size="small" fill="solid" (click)="addDevice($event)"
             matTooltip="{{'Create a new printer device' | translate }}">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
-          <ion-button size="small" fill="solid" (click)="addPrinter($event)"
+          <ion-button *ngIf="authService.isAllowed('printers.add')" size="small" fill="solid" (click)="addPrinter($event)"
             matTooltip="{{'Create a new printer queue' | translate }}">
             <ion-icon slot="icon-only" name="print"></ion-icon>
           </ion-button>

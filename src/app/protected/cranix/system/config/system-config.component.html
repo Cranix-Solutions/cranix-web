@@ -1,12 +1,12 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-content id="carded">
   <ion-row class="header-row">
-    <ion-col size=12>
+    <ion-col>
       <ion-card-title color="primary">{{ 'System configuration' | translate}}</ion-card-title>
     </ion-col>
   </ion-row>
   <ion-row>
-    <ion-col size=12>
+    <ion-col>
       <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="Basic">
         <ion-segment-button value="Basic">
           <ion-label>{{'Base configuration' | translate}}</ion-label>
@@ -30,7 +30,7 @@
                 <ion-label>{{config.key}}</ion-label>
               </ion-item>
             </ion-col>
-            <ion-col size=6>
+            <ion-col size=8>
               <ion-item *ngIf="config.type == 'yesno'">
                 <ion-toggle slot="start" color="secondary" checked="{{config.value == 'yes'}}"
                   disabled="{{config.readOnly == 'yes'}}" (ionChange)="togle(config.key,$event.detail.checked)">
