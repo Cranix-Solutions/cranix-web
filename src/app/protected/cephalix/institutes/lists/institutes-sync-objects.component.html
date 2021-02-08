@@ -1,31 +1,38 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-content id="carded">
   <ion-row class="header-row">
-  <ion-col size=6>
-    <ion-title  matTooltip="{{ cephalixService.selectedList }}">{{'Define synchronisation of objects: institutes' | translate}}</ion-title>
-  </ion-col>
-</ion-row> 
-<ion-row *ngIf="cephalixService.selectedInstitutes.length == 0">
-  <ion-col size=12>
-    <ion-label color="danger">{{'You have to select some institutes to be able to use this site.'}}</ion-label>
-  </ion-col>
-</ion-row>
+    <ion-col size=6>
+      <ion-title>{{'Define synchronisation of objects: institutes' | translate}}</ion-title>
+    </ion-col>
+  </ion-row>
+  <ion-row *ngIf="cephalixService.selectedInstitutes.length == 0">
+    <ion-col size=12>
+      <ion-label color="danger">{{'You have to select some institutes to be able to use this site.'}}</ion-label>
+    </ion-col>
+  </ion-row>
   <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
     <ion-fab-button>
       <ion-icon name="arrow-forward-circle"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="start">
-      <ion-fab-button><ion-icon name="code-working" color="success"  (click)="startSync($event)"></ion-icon></ion-fab-button>
-      <ion-fab-button><ion-icon name="code-working" color="danger"  (click)="stopSync($event)"></ion-icon></ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="code-working" color="success" (click)="startSync($event)"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="code-working" color="danger" (click)="stopSync($event)"></ion-icon>
+      </ion-fab-button>
     </ion-fab-list>
   </ion-fab>
-  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onMemberFilterChanged()" id="quickFilter"showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
+  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onMemberFilterChanged()" id="quickFilter"
+    showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
   <ion-card>
     <ion-card-header class="hidden-xs hidden-sm hidden-md">
+      <ion-card-title matTooltip="{{ cephalixService.selectedList }}">
+        {{'Define synchronisation of objects: institutes' | translate}}</ion-card-title>
       <ion-row class="hidden-xs hidden-sm hidden-md">
         <ion-col size="3">
           <ion-item>
-            <ion-input placeholder="{{'search' | translate }}" (input)="onMemberFilterChanged()"  id="memberFilter">
+            <ion-input placeholder="{{'search' | translate }}" (input)="onMemberFilterChanged()" id="memberFilter">
             </ion-input>
           </ion-item>
         </ion-col>
@@ -42,18 +49,10 @@
       </ion-row>
     </ion-card-header>
     <ion-card-content>
-      <ag-grid-angular #agGrid
-        id="institutesSyncObjectsTable"
-        style="width: 100%; height: 100%;"
-        class="{{authService.settings.agGridThema}}"
-        rowHeight="{{authService.settings.rowHeight}}"
-        [modules]="modules"
-        [rowData]="memberData"
-        [columnDefs]="columnDefs"
-        [autoGroupColumnDef]="autoGroupColumnDef"
-        [context]="context"
-        rowSelection="multiple"
-        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
+      <ag-grid-angular #agGrid id="institutesSyncObjectsTable" style="width: 100%; height: 100%;"
+        class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}" [modules]="modules"
+        [rowData]="memberData" [columnDefs]="columnDefs" [autoGroupColumnDef]="autoGroupColumnDef" [context]="context"
+        rowSelection="multiple" [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
         (gridReady)="onMemberReady($event)">
       </ag-grid-angular>
     </ion-card-content>

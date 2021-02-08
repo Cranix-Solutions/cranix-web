@@ -28,6 +28,9 @@
   <ion-card>
     <ion-card-header>
       <ion-toolbar>
+        <ion-card-title *ngIf="!selectedRoom">{{'Manage devices' | translate}}</ion-card-title>
+        <ion-card-title *ngIf="selectedRoom">{{'Manage devices in selected room:' | translate}} {{selectedRoom.name}}
+        </ion-card-title>
         <ion-item>
           <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('devicesFilter')"
             id="devicesFilter">

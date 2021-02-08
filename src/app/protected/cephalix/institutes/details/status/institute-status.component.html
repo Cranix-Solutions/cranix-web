@@ -1,28 +1,25 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-row class="header-row">
   <ion-col>
-     <ion-title>{{'Status of the institute:' | translate}} {{ object.name }}</ion-title>
+    <ion-title>{{'Status of the institute:' | translate}} {{ object.name }}</ion-title>
   </ion-col>
 </ion-row>
 <ion-content (window:resize)="onResize($event)">
   <ion-card>
     <ion-card-header>
-      <ion-row class="ion-align-items-center">
-        <ion-col size="3">
-          <ion-item>
-            <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('quickFilter')" id="quickFilter">
-            </ion-input>
-          </ion-item>
-        </ion-col>
-        <ion-col size="7">
-        </ion-col>
-      </ion-row>
+      <ion-toolbar>
+        <ion-title>{{'Status of the institute:' | translate}} {{ object.name }}</ion-title>
+        <ion-item>
+          <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('quickFilter')"
+            id="quickFilter">
+          </ion-input>
+        </ion-item>
+      </ion-toolbar>
     </ion-card-header>
     <ion-card-content>
-      <ag-grid-angular style="width: 100%; height: 450px;" class="{{authService.settings.agGridThema}}" [gridOptions]="gridOptions"
-        [rowData]="rowData" [columnDefs]="columnDefs" [context]="context"
-        rowSelection="multiple"
-	[rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
+      <ag-grid-angular style="width: 100%; height: 450px;" class="{{authService.settings.agGridThema}}"
+        [gridOptions]="gridOptions" [rowData]="rowData" [columnDefs]="columnDefs" [context]="context"
+        rowSelection="multiple" [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
         (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged()" id="agGridTable">
       </ag-grid-angular>
     </ion-card-content>

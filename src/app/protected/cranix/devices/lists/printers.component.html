@@ -29,18 +29,19 @@
   <ion-card>
     <ion-card-header>
       <ion-toolbar>
+        <ion-card-title>{{'Manage printers' | translate}}</ion-card-title>
         <ion-item>
           <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('printerFilter')"
             id="printerFilter">
           </ion-input>
         </ion-item>
         <ion-buttons slot="end">
-          <ion-button *ngIf="authService.isAllowed('printers.add')" size="small" fill="solid" (click)="addDevice($event)"
-            matTooltip="{{'Create a new printer device' | translate }}">
+          <ion-button *ngIf="authService.isAllowed('printers.add')" size="small" fill="solid"
+            (click)="addDevice($event)" matTooltip="{{'Create a new printer device' | translate }}">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="authService.isAllowed('printers.add')" size="small" fill="solid" (click)="addPrinter($event)"
-            matTooltip="{{'Create a new printer queue' | translate }}">
+          <ion-button *ngIf="authService.isAllowed('printers.add')" size="small" fill="solid"
+            (click)="addPrinter($event)" matTooltip="{{'Create a new printer queue' | translate }}">
             <ion-icon slot="icon-only" name="print"></ion-icon>
           </ion-button>
           <ion-button size="small" fill="solid" (click)="openActions($event,null)"

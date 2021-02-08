@@ -26,11 +26,12 @@
   <ion-card>
     <ion-card-header>
       <ion-toolbar>
-          <ion-item>
-            <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('institutesFilter')"
-              id="institutesFilter">
-            </ion-input>
-          </ion-item>
+        <ion-card-title>{{'Manage institutes' | translate}}</ion-card-title>
+        <ion-item>
+          <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('institutesFilter')"
+            id="institutesFilter">
+          </ion-input>
+        </ion-item>
         <ion-buttons slot="end">
           <ion-button size="small" fill="solid" (click)="redirectToEdit($event,null)"
             matTooltip="{{'Create a new institute' | translate }}">
@@ -48,18 +49,11 @@
       </ion-toolbar>
     </ion-card-header>
     <ion-card-content>
-      <ag-grid-angular
-        id="agGridTable"
-        style="width: 100%; height: 100%;"
-        rowSelection="multiple"
-        class="{{authService.settings.agGridThema}}"
-        rowHeight="{{authService.settings.rowHeight}}"
-        [context]="context"
-        [rowData]="rowData"
-        [columnDefs]="columnDefs"
+      <ag-grid-angular id="agGridTable" style="width: 100%; height: 100%;" rowSelection="multiple"
+        class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}" [context]="context"
+        [rowData]="rowData" [columnDefs]="columnDefs"
         [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
-        (selectionChanged)="onSelectionChanged()"
-        (gridReady)="onGridReady($event)">
+        (selectionChanged)="onSelectionChanged()" (gridReady)="onGridReady($event)">
       </ag-grid-angular>
     </ion-card-content>
   </ion-card>

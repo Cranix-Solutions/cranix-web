@@ -1,5 +1,5 @@
 <cranix-toolbar></cranix-toolbar>
-<ion-content id="carded">
+<ion-content>
   <ion-header>
     <ion-toolbar>
       <ion-buttons *ngIf="room" slot="start">
@@ -42,7 +42,8 @@
           <ion-label *ngIf="rooms" position="stacked">{{'Select a room' | translate}}</ion-label>
           <ion-select [(ngModel)]="selectedRoomId" #roomSelect (ionChange)="selectChanged($event)" okText="OK"
             cancelText="{{ 'Cancel' | translate}}">
-            <ion-select-option value="{{room.id}}" *ngFor="let room of rooms | async">{{room.name}}</ion-select-option>
+            <ion-select-option value="{{room.id}}" *ngFor="let room of rooms | async">{{room.name}}
+            </ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item matTooltip="{{'Select picture size' | translate}}">

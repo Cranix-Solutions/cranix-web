@@ -2,7 +2,7 @@
 <ion-content id="carded">
   <ion-row class="header-row">
     <ion-col>
-      <ion-title>{{'Manage rooms' | translate}}</ion-title>
+      <ion-title>{{'Manage AdHoc rooms' | translate}}</ion-title>
     </ion-col>
   </ion-row>
   <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
@@ -26,6 +26,7 @@
   <ion-card>
     <ion-card-header>
       <ion-toolbar>
+        <ion-card-title>{{'Manage AdHoc rooms' | translate}}</ion-card-title>
         <ion-item>
           <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('adhocFilter')" id="adhocFilter">
           </ion-input>

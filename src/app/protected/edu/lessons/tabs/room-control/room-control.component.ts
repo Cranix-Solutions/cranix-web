@@ -74,7 +74,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       .pipe(takeWhile(() => this.alive))
       .subscribe(res => {
         this.room = res
-        console.log(`Rooms is: ${this.room}`)
+        console.log(`Rooms is: ${this.room.name}`)
       });
   }
   array(n: number): any[] {
