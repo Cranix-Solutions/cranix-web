@@ -1,7 +1,7 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-content id="carded">
   <ion-row class="header-row">
-    <ion-col size=6>
+    <ion-col>
       <ion-title>{{'Manage tickets' | translate}}</ion-title>
     </ion-col>
   </ion-row>
@@ -25,6 +25,7 @@
     id="ticketsFilterMD" showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
   <ion-card>
     <ion-card-header>
+      <ion-card-title>{{'Manage tickets' | translate}}</ion-card-title>
       <ion-toolbar>
           <ion-item>
             <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('ticketsFilter')"

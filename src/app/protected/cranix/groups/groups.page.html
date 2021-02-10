@@ -1,7 +1,7 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-content id="carded">
   <ion-row class="header-row">
-    <ion-col size=6>
+    <ion-col>
       <ion-title>{{'Manage groups' | translate}}</ion-title>
     </ion-col>
   </ion-row>
@@ -26,6 +26,7 @@
   <ion-card>
     <ion-card-header>
       <ion-toolbar>
+        <ion-card-title>{{'Manage groups' | translate}}</ion-card-title>
         <ion-item>
           <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('groupsFilter')"
             id="groupsFilter">

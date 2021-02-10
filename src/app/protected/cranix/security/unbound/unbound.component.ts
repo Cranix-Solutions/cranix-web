@@ -16,6 +16,7 @@ export class UnboundComponent implements OnInit {
   newDomain1: string = ""
   categories: any[];
   activeUnboundLists: string[] = [];
+  saving: boolean = false;
 
   constructor(
     private languageS: LanguageService,
@@ -79,6 +80,7 @@ export class UnboundComponent implements OnInit {
   }
   writeConfig() {
     this.objectService.requestSent();
+    this.saving = true;
     let sub = this.securityService.setProxyCustom('bad', this.badList).subscribe(
       (val) => {
         this.securityService.setProxyCustom('bad', this.badList).subscribe(
@@ -89,6 +91,7 @@ export class UnboundComponent implements OnInit {
                   (val3) => {
                     this.objectService.responseMessage(val3)
                     this.securityService.unboudChanged = false;
+                    this.saving = false;
                   },
                   (err3) => { console.log(err3) }
                 )

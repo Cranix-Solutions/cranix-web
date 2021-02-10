@@ -1,12 +1,12 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-content id="carded">
   <ion-row class="header-row">
-    <ion-col size=6>
+    <ion-col>
       <ion-title>{{ 'Manage firewall configuration' | translate}}</ion-title>
     </ion-col>
   </ion-row>
-  <ion-row>
-    <ion-col size="12">
+  <ion-row class="header-row">
+    <ion-col>
       <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="in">
         <ion-segment-button value="in" layout="icon-start">
           <ion-label class="hidden-xs hidden-sm">{{'Incoming rules' | translate}}</ion-label>
@@ -54,11 +54,26 @@
   <ion-card>
     <ion-card-header>
       <ion-toolbar>
+        <ion-card-title>{{ 'Manage firewall configuration' | translate}}</ion-card-title>
+        <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="in">
+          <ion-segment-button value="in" layout="icon-start">
+            <ion-label class="hidden-xs hidden-sm">{{'Incoming rules' | translate}}</ion-label>
+            <ion-icon name="log-in"></ion-icon>
+          </ion-segment-button>
+          <ion-segment-button value="out" layout="icon-end">
+            <ion-label class="hidden-xs hidden-sm">{{'Outgoing rules' | translate}}</ion-label>
+            <ion-icon name="log-out"></ion-icon>
+          </ion-segment-button>
+          <ion-segment-button value="remote" layout="icon-start">
+            <ion-label class="hidden-xs hidden-sm">{{'Remote access' | translate}}</ion-label>
+            <ion-icon name="shuffle"></ion-icon>
+          </ion-segment-button>
+        </ion-segment>
         <ion-buttons slot="end">
           <ion-button size="small" fill="solid" (click)="applyChanges()" matTooltip="{{'Apply changes' | translate }}">
             <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="segment == 'out'" size="small" fill="solid"  (click)="addOutgoinRule()"
+          <ion-button *ngIf="segment == 'out'" size="small" fill="solid" (click)="addOutgoinRule()"
             matTooltip="{{'Add outgoing rule' | translate }}">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
@@ -74,7 +89,8 @@
             matTooltip="{{'Delete selected remote access rule' | translate }}">
             <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="restartFirewall()" fill="solid" matTooltip="{{'Restart firewall' | translate }}">
+          <ion-button size="small" (click)="restartFirewall()" fill="solid"
+            matTooltip="{{'Restart firewall' | translate }}">
             <ion-icon slot="icon-only" name="arrow-redo" color="tertiary"></ion-icon>
           </ion-button>
           <ion-button size="small" (click)="stopFirewall()" fill="solid" matTooltip="{{'Stop firewall' | translate }}">

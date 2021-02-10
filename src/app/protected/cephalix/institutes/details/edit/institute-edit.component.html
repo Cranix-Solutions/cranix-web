@@ -4,16 +4,16 @@
   </ion-toolbar>
 </ion-header>
 <ion-row class="header-row">
-  <ion-col size=6>
+  <ion-col>
     <ion-title>{{ 'Modify selected institute:' | translate}} "{{object.name}}"</ion-title>
   </ion-col>
-  <ion-col size=3></ion-col>
 </ion-row>
 <ion-content>
   <ion-card>
     <form #editForm="ngForm">
       <ion-card-header>
         <ion-toolbar>
+          <ion-card-title>{{ 'Modify selected institute:' | translate}} "{{object.name}}"</ion-card-title>
           <ion-buttons slot="end">
             <ion-button size="small" fill="solid" fill="clear" class="ion-no-margin" [disabled]="!editForm.valid"
               matTooltip="{{'Apply changes' | translate }}" (ngSubmit)="onSubmit(editForm.value)">

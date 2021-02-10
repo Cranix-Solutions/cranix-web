@@ -1,12 +1,12 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-content id=carded>
   <ion-row class="header-row">
-    <ion-col size=12>
+    <ion-col>
       <ion-title>{{ 'Manage access in the rooms' | translate}}</ion-title>
     </ion-col>
   </ion-row>
-  <ion-row>
-    <ion-col size="12">
+  <ion-row class="header-row">
+    <ion-col>
       <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="list">
         <ion-segment-button value="list">
           <ion-label>{{'Room access rules' | translate}}</ion-label>
@@ -49,6 +49,15 @@
   <ion-card>
     <ion-card-header class="hidden-xs hidden-sm hidden-md">
       <ion-toolbar>
+        <ion-card-title>{{ 'Manage access in the rooms' | translate}}</ion-card-title>
+        <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="list">
+          <ion-segment-button value="list">
+            <ion-label>{{'Room access rules' | translate}}</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="status">
+            <ion-label>{{'Actual status' | translate}}</ion-label>
+          </ion-segment-button>
+        </ion-segment>
         <ion-item>
           <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('roomsAccessFilter')"
             id="roomsAccessFilter">
