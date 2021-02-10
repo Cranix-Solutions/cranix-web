@@ -22,7 +22,7 @@ export class SecurityService {
   remoteRules: RemoteRule[];
   firewallRooms: Room[];
   actualStatus: AccessInRoom[];
-  public unboudChanged:   boolean = false;
+  public unboundChanged:   boolean = false;
   public outgoinChanged:  boolean = false;
   public incomingChanged: boolean = false;
   public remoteChanged:   boolean = false;
@@ -291,7 +291,7 @@ export class UnboundCanDeactivate implements CanDeactivate<SecurityService> {
     public securityService: SecurityService
   ) { }
   canDeactivate(securityService: SecurityService) {
-    if (this.securityService.unboudChanged) {
+    if (this.securityService.unboundChanged) {
       return window.confirm(
         this.languageS.trans('The unbound configuration was changed.') +
         this.languageS.trans('The changes will be lost if you leave the module.')

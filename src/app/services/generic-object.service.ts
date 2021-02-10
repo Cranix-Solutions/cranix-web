@@ -430,6 +430,10 @@ export class GenericObjectService {
   compareFn(a: string, b: string): boolean {
     return a == b;
   }
+  compareObjects(o1, o2) {
+    console.log(o1,o2)
+    return o1.id == o2.id;
+  }
   sortByName(a, b) {
     if (a.name < b.name) {
       return -1;

@@ -16,6 +16,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Institute } from 'src/app/shared/models/cephalix-data-model'
+import { User } from 'src/app/shared/models/data-model';
 
 @Component({
   selector: 'cranix-institutes',
@@ -23,9 +24,7 @@ import { Institute } from 'src/app/shared/models/cephalix-data-model'
   styleUrls: ['./institutes.manage.scss'],
 })
 export class InstitutesManage implements OnInit {
-  objectKeys: string[] = [];
-  displayedColumns: string[] = ['name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity'];
-  sortableColumns: string[] = ['uuid', 'name', 'locality', 'ipVPN', 'regCode', 'validity'];
+  objectKeys: string[] = [ 'id','uid','givenName','surName','role'];
   columnDefs = [];
   defaultColDef = {};
   gridApi: GridApi;
@@ -41,11 +40,9 @@ export class InstitutesManage implements OnInit {
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     public languageS: LanguageService,
-    public route: Router,
-    private storage: Storage
+    public route: Router
   ) {
     this.context = { componentParent: this };
-    this.objectKeys = Object.getOwnPropertyNames(cephalixService.templateInstitute);
     this.createColumnDefs();
     this.defaultColDef = {
         resizable: true,
@@ -56,14 +53,15 @@ export class InstitutesManage implements OnInit {
   }
 
   ngOnInit() {
-    this.storage.get('InstitutesComponent.displayedColumns').then((val) => {
-      let myArray = JSON.parse(val);
-      if (myArray) {
-        this.displayedColumns = (myArray).concat(['actions']);
-        this.createColumnDefs();
+    this.objectService.getObjects('user').subscribe(
+      obj => {
+        for (let user of obj) {
+          if (user.role.toLowerCase() == "reseller" || user.role == "sysadmins") {
+            this.rowData.push(user)
+          }
+        }
       }
-    });
-    this.objectService.getObjects('institute').subscribe(obj => this.rowData = obj);
+    )
   }
 
   createColumnDefs() {
@@ -71,38 +69,34 @@ export class InstitutesManage implements OnInit {
     for (let key of this.objectKeys) {
       let col = {};
       col['field'] = key;
+      col['resizable'] = true;
       col['headerName'] = this.languageS.trans(key);
-      col['hide'] = (this.displayedColumns.indexOf(key) == -1);
-      col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
-      col['minWidth'] = 110;
       switch (key) {
-        case 'name': {
+        case 'uid': {
           col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
-          col['width'] = 300;
-          col['flex'] = '1';
-
-          col['cellStyle'] = { 'padding-left': '2px', 'padding-right': '2px' };
+          col['minWidth'] = 170;
+          col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
+          col['flex'] = '1';
           col['colId'] = '1';
           columnDefs.push(col);
           columnDefs.push({
             headerName: "",
-            width: 85,
+            minWidth: 180,
             suppressSizeToFit: true,
             cellStyle: { 'padding': '2px', 'line-height': '36px' },
             field: 'actions',
-            pinned: 'left',
-            cellRendererFramework: ActionBTNRenderer
-          })
-          continue
+            pinned: 'left'
+          });
+          continue;
         }
       }
       columnDefs.push(col);
     }
-    this.authService.log('columnsDef', columnDefs);
+    console.log(this.columnDefs);
     this.columnDefs = columnDefs;
   }
 

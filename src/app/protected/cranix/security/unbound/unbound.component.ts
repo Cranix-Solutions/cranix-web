@@ -25,7 +25,7 @@ export class UnboundComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.securityService.unboudChanged = false;
+    this.securityService.unboundChanged = false;
     this.readLists('bad').then(val => { this.badList = val.sort() });
     this.readLists('good').then(val => { this.whiteList = val.sort() });
     this.getProxyCategories().then(val => {
@@ -59,23 +59,23 @@ export class UnboundComponent implements OnInit {
 
   deleteDomain(index) {
     this.badList.splice(index, 1)
-    this.securityService.unboudChanged = true;
+    this.securityService.unboundChanged = true;
   }
   addNewDomain() {
     this.badList.push(this.newDomain)
     this.badList.sort()
-    this.securityService.unboudChanged = true;
+    this.securityService.unboundChanged = true;
     this.newDomain = "";
   }
 
   deleteDomain1(index) {
     this.whiteList.splice(index, 1)
-    this.securityService.unboudChanged = true;
+    this.securityService.unboundChanged = true;
   }
   addNewDomain1() {
     this.whiteList.push(this.newDomain1)
     this.whiteList.sort()
-    this.securityService.unboudChanged = true;
+    this.securityService.unboundChanged = true;
     this.newDomain1 = "";
   }
   writeConfig() {
@@ -90,7 +90,7 @@ export class UnboundComponent implements OnInit {
                 this.securityService.resetUnbound().subscribe(
                   (val3) => {
                     this.objectService.responseMessage(val3)
-                    this.securityService.unboudChanged = false;
+                    this.securityService.unboundChanged = false;
                     this.saving = false;
                   },
                   (err3) => { console.log(err3) }

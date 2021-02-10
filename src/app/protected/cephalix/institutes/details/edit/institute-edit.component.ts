@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { IonicSelectableComponent } from 'ionic-selectable';
 
 //Own stuff
 import { GenericObjectService } from 'src/app/services/generic-object.service';
@@ -7,8 +8,6 @@ import { CephalixService } from 'src/app/services/cephalix.service';
 import { Institute } from 'src/app/shared/models/cephalix-data-model';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { User } from 'src/app/shared/models/data-model';
-import { NumericValueAccessor } from '@ionic/angular';
-
 @Component({
   selector: 'cranix-institute-edit',
   templateUrl: './institute-edit.component.html',
@@ -19,8 +18,8 @@ export class InstituteEditComponent implements OnInit {
   object: Institute = null;
   objectKeys: string[] = [];
   isourl: string = "";
-  managerIds: string[] = [];
-  manager: User = new User();
+  managerIds: number[] = [];
+  managers: User[] = [];
   users: User[] = [];
   constructor(
     public authService: AuthenticationService,
@@ -32,7 +31,8 @@ export class InstituteEditComponent implements OnInit {
     this.cephalixService.getUsersFromInstitute(this.object.id).subscribe(
       (val) => {
         for (let man of val) {
-          this.managerIds.push(man.id.toString())
+          this.managerIds.push(man.id)
+          this.managers.push(man)
         }
         console.log(this.managerIds)
       },
@@ -69,8 +69,22 @@ export class InstituteEditComponent implements OnInit {
   }
   onSubmit(form) {
     form['id'] = this.object.id;
+    console.log(form)
     this.objectService.modifyObjectDialog(form, "institute");
   }
+
+  compareFn(o1: User, o2: User | User[]) {
+    if (!o1 || !o2) {
+      return o1 === o2;
+    }
+
+    if (Array.isArray(o2)) {
+      return o2.some((u: User) => u.id === o1.id);
+    }
+
+    return o1.id === o2.id;
+  }
+
   setNextDefaults() {
     let subs = this.cephalixService.getNextDefaults().subscribe(
       (val) => {
@@ -100,11 +114,14 @@ export class InstituteEditComponent implements OnInit {
     this.objectService.deleteObjectDialog(this.object, 'institute', '');
   }
   managerChanged(ev) {
-    let newIds = ev.detail.value;
+    let newIds: number[]= [];
+    for( let user of ev.detail.value ) {
+      newIds.push(user.id)
+    }
     console.log(this.managerIds);
     console.log(newIds)
     for (let id of this.managerIds) {
-      if (newIds.indexOf(id.toString()) == -1) {
+      if (newIds.indexOf(id) == -1) {
         this.cephalixService.deleteUserFromInstitute(id, this.object.id).subscribe(
           val => this.objectService.responseMessage(val)
         )

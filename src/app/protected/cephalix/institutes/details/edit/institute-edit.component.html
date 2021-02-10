@@ -3,12 +3,12 @@
     <ion-title>edit</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-row class="header-row">
-  <ion-col>
-    <ion-title>{{ 'Modify selected institute:' | translate}} "{{object.name}}"</ion-title>
-  </ion-col>
-</ion-row>
-<ion-content>
+<ion-content id="carded">
+  <ion-row class="header-row">
+    <ion-col>
+      <ion-title>{{ 'Modify selected institute:' | translate}} "{{object.name}}"</ion-title>
+    </ion-col>
+  </ion-row>
   <ion-card>
     <form #editForm="ngForm">
       <ion-card-header>
@@ -99,23 +99,14 @@
               </ion-item>
             </ion-col>
             <ion-col>
+              <ion-label position="stacked">{{ 'Institute manager' | translate}}</ion-label>
+              <ion-select multiple="true" [(ngModel)]="managers" [compareWith]="compareFn" name="managers" (ionChange)="managerChanged($event)">
+                <ion-select-option *ngFor="let user of  users" [value]="user">
+                  {{user.fullName}}</ion-select-option>
+              </ion-select>
             </ion-col>
           </ion-row>
         </ion-grid>
-        <ion-item>
-          <ion-label position="stacked">{{'Institute manager'| translate}}</ion-label>
-          <ionic-selectable
-            #ionicSelectable
-            item-content
-            [(ngModel)]="manager"
-            [ngModelOptions]="{standalone: true}"
-            [items]="users"
-            itemValueField="id"
-            itemTextField="fullName"
-            [canSearch]="true"
-            (onChange)="managerChanged($event)">
-          </ionic-selectable>
-        </ion-item>
       </ion-card-content>
     </form>
   </ion-card>
