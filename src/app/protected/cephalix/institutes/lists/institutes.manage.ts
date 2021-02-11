@@ -2,19 +2,12 @@ import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__, AfterContentI
 import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { Storage } from '@ionic/storage';
 
 //own modules
-import { ActionsComponent } from 'src/app/shared/actions/actions.component';
-import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
 import { AuthenticationService } from 'src/app/services/auth.service';
-import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
-import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
-import { InstituteUUIDCellRenderer } from 'src/app/pipes/ag-uuid-renderer';
 import { LanguageService } from 'src/app/services/language.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
-import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Institute } from 'src/app/shared/models/cephalix-data-model'
 import { User } from 'src/app/shared/models/data-model';
 
@@ -24,7 +17,13 @@ import { User } from 'src/app/shared/models/data-model';
   styleUrls: ['./institutes.manage.scss'],
 })
 export class InstitutesManage implements OnInit {
-  objectKeys: string[] = [ 'id','uid','givenName','surName','role'];
+  managedIds:      number[] = [];
+  userKeys:        string[] = [ 'id','uid','givenName','surName','role'];
+  instituteKeys:   string[] = [ 'id','uuid','name','locality','validity'];
+  managerUsers:    User[]   = [];
+  selectedManager: User     = new User();
+  institutes:      Institute[] = [];
+  instituteView:   boolean = false;
   columnDefs = [];
   defaultColDef = {};
   gridApi: GridApi;
@@ -43,7 +42,6 @@ export class InstitutesManage implements OnInit {
     public route: Router
   ) {
     this.context = { componentParent: this };
-    this.createColumnDefs();
     this.defaultColDef = {
         resizable: true,
         sortable: true,
@@ -53,26 +51,28 @@ export class InstitutesManage implements OnInit {
   }
 
   ngOnInit() {
+
+    this.createColumnDefs(this.userKeys);
     this.objectService.getObjects('user').subscribe(
       obj => {
         for (let user of obj) {
           if (user.role.toLowerCase() == "reseller" || user.role == "sysadmins") {
-            this.rowData.push(user)
+            this.managerUsers.push(user)
           }
         }
       }
     )
+    this.objectService.getObjects('institute').subscribe(obj => this.institutes = obj);
   }
 
-  createColumnDefs() {
+  createColumnDefs(keys: string[]) {
     let columnDefs = [];
-    for (let key of this.objectKeys) {
+    for (let key of keys) {
       let col = {};
       col['field'] = key;
-      col['resizable'] = true;
       col['headerName'] = this.languageS.trans(key);
       switch (key) {
-        case 'uid': {
+        case 'uuid': {
           col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
@@ -83,14 +83,6 @@ export class InstitutesManage implements OnInit {
           col['flex'] = '1';
           col['colId'] = '1';
           columnDefs.push(col);
-          columnDefs.push({
-            headerName: "",
-            minWidth: 180,
-            suppressSizeToFit: true,
-            cellStyle: { 'padding': '2px', 'line-height': '36px' },
-            field: 'actions',
-            pinned: 'left'
-          });
           continue;
         }
       }
@@ -103,18 +95,90 @@ export class InstitutesManage implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
+    this.gridApi.setRowData(this.managerUsers);
     params.columnApi.autoSizeColumns();
-   // this.sizeAll();
+    this.gridApi.addEventListener('rowClicked', this.userRowClickedHandler);
   }
-  onSelectionChanged() {
-    this.cephalixService.selectedInstitutes = this.gridApi.getSelectedRows();
-    this.cephalixService.selectedList = [];
-    for (let o of this.cephalixService.selectedInstitutes) {
-      this.cephalixService.selectedList.push(o.name)
+
+  userRowClickedHandler(event) {
+    console.log(event);
+    let myContent = event.context['componentParent'];
+    myContent.selectedManager = event.data;
+    myContent.gridApi.removeEventListener('rowClicked', myContent.userRowClickedHandler);
+    myContent.createColumnDefs(myContent.instituteKeys);
+    myContent.gridApi.setRowData(myContent.institutes);
+    myContent.instituteView = true;
+    (<HTMLInputElement>document.getElementById("instituteManageTable")).style.setProperty('height', '93%');
+    myContent.gridApi.addEventListener('rowClicked', myContent.instituteRowClickedHandler);
+    myContent.objectService.okMessage("Loading datas ...");
+    //select the owned schools
+    myContent.cephalixService.getInstitutesFromUser(myContent.selectedManager.id).subscribe(
+      (val) => {
+        var managedIds = [];
+        for( let obj of val) {
+          managedIds.push(obj.id)
+        }
+        myContent.managedIds = managedIds;
+        myContent.gridApi.forEachNode(
+          function (node, index) {
+            if( managedIds.indexOf(node.data.id) != -1 ) {
+              node.setSelected(true);
+            }
+          }
+        )
+      }
+    )
+  }
+
+  userList() {
+    this.gridApi.removeEventListener('rowClicked', this.instituteRowClickedHandler);
+    this.createColumnDefs(this.userKeys);
+    this.gridApi.setRowData(this.managerUsers);
+    this.instituteView = false;
+    (<HTMLInputElement>document.getElementById("instituteManageTable")).style.setProperty('height', '100%');
+    this.gridApi.addEventListener('rowClicked', this.userRowClickedHandler);
+  }
+
+  instituteRowClickedHandler(event) {
+    let myContent = event.context['componentParent'];
+    let index = myContent.managedIds.indexOf(event.data.id);
+    if( index == -1) {
+      myContent.cephalixService.addUserToInstitute(myContent.selectedManager.id, event.data.id).subscribe(
+        val => {
+          myContent.objectService.responseMessage(val);
+          myContent.managedIds.push(event.data.id);
+        }
+      )
+    } else {
+      myContent.cephalixService.deleteUserFromInstitute(myContent.selectedManager.id, event.data.id).subscribe(
+        val => {
+          myContent.objectService.responseMessage(val);
+          myContent.managedIds.splice(index,1);
+        }
+      )
     }
   }
 
+  showSelected() {
+    let selectedRows = this.gridApi.getSelectedRows();
+    this.gridApi.setRowData(selectedRows);
+    this.gridApi.selectAll();
+  }
+
+  showAll() {
+    this.gridApi.setRowData(this.institutes);
+    var managedIds = this.managedIds;
+    this.gridApi.forEachNode(
+      function (node, index) {
+        if( managedIds.indexOf(node.data.id) != -1 ) {
+          node.setSelected(true);
+        }
+      }
+    )
+  }
+
   onQuickFilterChanged(quickFilter) {
+    console.log(quickFilter,'value',(<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.doLayout();
   }
@@ -139,89 +203,4 @@ export class InstitutesManage implements OnInit {
     this.gridApi.sizeColumnsToFit();
   }
 
-  public redirectToDelete = (institute: Institute) => {
-    this.objectService.deleteObjectDialog(institute, 'institute','')
-  }
-  /**
- * Open the actions menu with the selected object ids.
- * @param ev
- */
-  async openActions(ev: any, objId: number) {
-    if (this.cephalixService.selectedInstitutes.length ==0  && !objId) {
-      this.objectService.selectObject();
-      return;
-    }
-    let objectIds = [];
-    if (objId) {
-      objectIds.push(objId)
-    } else {
-      for (let i = 0; i < this.cephalixService.selectedInstitutes.length; i++) {
-        objectIds.push(this.cephalixService.selectedInstitutes[i].id);
-      }
-    }
-    const popover = await this.popoverCtrl.create({
-      component: ActionsComponent,
-      event: ev,
-      componentProps: {
-        objectType: "institute",
-        objectIds: objectIds,
-        selection: this.cephalixService.selectedInstitutes
-      },
-      animated: true,
-      showBackdrop: true
-    });
-    (await popover).present();
-  }
-  async redirectToEdit(ev: Event, institute: Institute) {
-    if (institute) {
-      this.objectService.selectedObject = institute;
-      this.route.navigate(['/pages/cephalix/institutes/' + institute.id]);
-    } else {
-      const modal = await this.modalCtrl.create({
-        component: ObjectsEditComponent,
-        componentProps: {
-          objectType: "institute",
-          objectAction: 'add',
-          object: this.cephalixService.templateInstitute,
-          objectKeys: this.objectKeys
-        },
-        animated: true,
-        swipeToClose: true,
-        showBackdrop: true
-      });
-      modal.onDidDismiss().then((dataReturned) => {
-        if (dataReturned.data) {
-          this.authService.log("Object was created or modified", dataReturned.data)
-        }
-      });
-      (await modal).present();
-    }
-  }
-
-  /**
-  * Function to Select the columns to show
-  * @param ev
-  */
-  async openCollums(ev: any) {
-    const modal = await this.modalCtrl.create({
-      component: SelectColumnsComponent,
-      componentProps: {
-        columns: this.objectKeys,
-        selected: this.displayedColumns,
-        objectPath: "InstitutesComponent.displayedColumns"
-      },
-      animated: true,
-      swipeToClose: true,
-      backdropDismiss: false
-    });
-    modal.onDidDismiss().then((dataReturned) => {
-      if (dataReturned.data) {
-        this.displayedColumns = (dataReturned.data).concat(['actions']);
-        this.createColumnDefs();
-      }
-    });
-    (await modal).present().then((val) => {
-      this.authService.log("most lett vegrehajtva.")
-    })
-  }
 }

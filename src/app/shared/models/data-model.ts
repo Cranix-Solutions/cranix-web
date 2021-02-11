@@ -34,6 +34,7 @@ export class User {
 	fsQuota?: number = 0;
 	msQuotaUsed?: number = 0;
 	fsQuotaUsed?: number = 0;
+	fullName: string;
 	mailAliases: string[];
 	constructor() { }
 }
