@@ -51,7 +51,8 @@ export class InstitutesComponent implements OnInit {
         resizable: true,
         sortable: true,
         hide: false,
-        suppressMenu : true
+        suppressMenu : true,
+        minWidth: 110
       };
   }
 
@@ -74,22 +75,28 @@ export class InstitutesComponent implements OnInit {
       col['headerName'] = this.languageS.trans(key);
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
       col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
-      col['minWidth'] = 110;
       switch (key) {
         case 'name': {
           col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
-          col['width'] = 220;
-          col['flex'] = '1';
-
-          col['cellStyle'] = { 'padding-left': '2px', 'padding-right': '2px' };
+          col['minWidth'] = 250;
+          col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
+          col['flex'] = '1';
           col['colId'] = '1';
-       
-       //   col['cellRendererFramework'] = ActionBTNRenderer;
-          break;
+          columnDefs.push(col);
+          columnDefs.push({
+            headerName: "",
+            minWidth: 90,
+            maxWidth: 100,
+            cellStyle: { 'padding': '1px' },
+            field: 'actions',
+            pinned: 'left',
+            cellRendererFramework: ActionBTNRenderer
+          })
+          continue;
         }
         case 'uuid': {
           col['cellRendererFramework'] = InstituteUUIDCellRenderer;
@@ -107,21 +114,6 @@ export class InstitutesComponent implements OnInit {
       }
       columnDefs.push(col);
     }
-    let check = {
-      headerName: "",
-      width: 85,
-   //   headerCheckboxSelection: true,
-   //   headerCheckboxSelectionFilteredOnly: true,
-   //   checkboxSelection : true,
-      suppressSizeToFit: true,
-      cellStyle: { 'padding': '2px', 'line-height': '36px' },
-      field: 'actions',
-      pinned: 'left',
-      cellRendererFramework: ActionBTNRenderer
-    };
-
-    columnDefs.splice(1, 0, check)
-    this.authService.log('columnsDef', columnDefs);
     this.columnDefs = columnDefs;
   }
 
