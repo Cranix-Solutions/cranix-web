@@ -16,7 +16,7 @@
           <ion-card-title>{{ 'Modify selected institute:' | translate}} "{{object.name}}"</ion-card-title>
           <ion-buttons slot="end">
             <ion-button size="small" fill="solid" fill="clear" class="ion-no-margin" [disabled]="!editForm.valid"
-              matTooltip="{{'Apply changes' | translate }}" (ngSubmit)="onSubmit(editForm.value)">
+              matTooltip="{{'Apply changes' | translate }}" (click)="onSubmit(editForm.value)">
               <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
             </ion-button>
             <ion-button size="small" fill="solid" fill="clear" (click)="setNextDefaults()"
