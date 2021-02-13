@@ -3,7 +3,7 @@
     <ion-title color="primary">{{ 'Modify printers selected room' | translate}}: "{{room.name}}"
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button fill="clear" size="small" (click)="onSubmit()">
+      <ion-button fill="clear" size="small" (click)="setPrinters()">
         <ion-icon slot="icon-only" color="success" name="checkmark-sharp" ></ion-icon>
       </ion-button>
       <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss()">
@@ -11,21 +11,20 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-</ion-header>
-<ion-content fullscreen>
+</ion-header><ion-content fullscreen>
   <ion-list lines="full" class="ion-no-margin ion-no-padding">
     <ion-item>
       <ion-label>{{"Default Printer" | translate}}</ion-label>
-      <ion-select type="text" [(ngModel)]="printers.defaultPrinter" [compareWith]="objectService.compareFn">
-        <ion-select-option *ngFor="let printer of allDefaultPrinters" value="{{printer.id}}">
-          {{ printer.name }}</ion-select-option>
+      <ion-select [(ngModel)]="printers.defaultPrinter" name="defaultPrinter" [compareWith]="compareFn">
+        <ion-select-option *ngFor="let printer of allDefaultPrinters" [value]="printer">{{ printer.name }}
+        </ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item>
       <ion-label>{{"Available Printers" | translate}}</ion-label>
-      <ion-select type="text" [(ngModel)]="printers.availablePrinters" multiple="true"
-        [compareWith]="objectService.compareFn">
-        <ion-select-option *ngFor="let printer of allPrinters" value="{{printer.id}}">{{ printer.name }}
+      <ion-select multiple="true" [(ngModel)]="printers.availablePrinters" name="availablePrinters"
+        [compareWith]="compareFn">
+        <ion-select-option *ngFor="let printer of allPrinters" [value]="printer">{{ printer.name }}
         </ion-select-option>
       </ion-select>
     </ion-item>

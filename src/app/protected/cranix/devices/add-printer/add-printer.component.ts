@@ -104,7 +104,7 @@ export class AddPrinterComponent implements OnInit {
       formData.append('file', this.driverFile, this.driverFile.name);
     } else if (printer.model) {
       formData.append('model', printer.model);
-    } else if( this.action != 'modify' ) {
+    } else if (this.action != 'modify') {
       this.objectService.errorMessage(
         this.languageS.trans('You have to set either the model of the printer or upload a ppd driver file.')
       );
@@ -121,8 +121,6 @@ export class AddPrinterComponent implements OnInit {
           (val) => {
             this.objectService.responseMessage(val);
             if (val.code == "OK") {
-              this.objectService.getAllObject('device');
-              this.objectService.getAllObject('printer');
               this.modalCtrl.dismiss();
             }
             this.submitted = false;
@@ -132,7 +130,11 @@ export class AddPrinterComponent implements OnInit {
             this.authService.log(err);
             this.submitted = false;
           },
-          () => { subs.unsubscribe() }
+          () => {
+            subs.unsubscribe();
+            this.objectService.getAllObject('device');
+            this.objectService.getAllObject('printer');
+          }
         )
         break
       }
@@ -143,7 +145,7 @@ export class AddPrinterComponent implements OnInit {
           (val) => {
             this.objectService.responseMessage(val);
             if (val.code == "OK") {
-              this.objectService.getAllObject('printer');
+
               this.modalCtrl.dismiss();
             }
             this.submitted = false;
@@ -153,13 +155,16 @@ export class AddPrinterComponent implements OnInit {
             this.authService.log(err);
             this.submitted = false;
           },
-          () => { subs.unsubscribe() }
+          () => {
+            subs.unsubscribe();
+            this.objectService.getAllObject('printer');
+          }
         )
         break
       }
       case 'modify': {
-        if( formData.has('file') || this.originalModel != printer.model ) {
-          let subs3 = this.printersService.setDriver(this.printer.id,formData).subscribe(
+        if (formData.has('file') || this.originalModel != printer.model) {
+          let subs3 = this.printersService.setDriver(this.printer.id, formData).subscribe(
             (val) => {
               this.objectService.responseMessage(val);
               if (val.code == "OK") {
@@ -170,7 +175,8 @@ export class AddPrinterComponent implements OnInit {
             },
             (err) => {
               this.submitted = false;
-              console.log(err)},
+              console.log(err)
+            },
             () => { subs3.unsubscribe() }
           );
         }

@@ -18,7 +18,7 @@ export class RoomPrintersPage implements OnInit {
   allPrinters: Printer[] = [];
   room: Room;
   printers = {
-    defaultPrinter: 0,
+    defaultPrinter: null,
     availablePrinters: []
   }
 
@@ -26,56 +26,57 @@ export class RoomPrintersPage implements OnInit {
     private roomService: RoomsService,
     private languageS: LanguageService,
     public modalCtrl: ModalController,
-    public objectService: GenericObjectService,
-    private toastController: ToastController
+    public objectService: GenericObjectService
   ) {
-    this.room = <Room>this.objectService.selectedObject;
-    this.noPrinter.id = 0;
-    this.noPrinter.name = languageS.trans("No default  printer");
+
   }
 
   ngOnInit() {
+    this.room = <Room>this.objectService.selectedObject;
+    this.noPrinter.id = 0;
+    this.noPrinter.name = this.languageS.trans("No default  printer");
+    this.printers.defaultPrinter = this.noPrinter;
     this.objectService.getObjects('printer').subscribe(
       (obj) => {
         this.allPrinters = obj;
         this.allDefaultPrinters = this.allDefaultPrinters.concat(obj);
-      });
-    this.readPrinters();
-    console.log("printers");
-    console.log(this.printers);
+        this.roomService.getAvailablePrinter(this.room.id).subscribe(
+          (val) => {
+            for (let printer of val) {
+              this.printers.availablePrinters.push(printer);
+            }
+            this.roomService.getDefaultPrinter(this.room.id).subscribe(
+              (val) => {
+                if (val) {
+                  this.printers.defaultPrinter = val;
+                }
+                console.log(this.printers);
+              }
+            )
+          }
+        )
+      }
+    )
   }
   public ngAfterViewInit() {
     while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
   }
 
-  readPrinters() {
-    let subM = this.roomService.getAvailablePrinter(this.room.id).subscribe(
-      (val) => {
-        for (let printer of val) {
-          this.printers.availablePrinters.push(printer.id);
-        }
-      },
-      (err) => { console.log(err) },
-      () => { subM.unsubscribe() });
-    let subNM = this.roomService.getDefaultPrinter(this.room.id).subscribe(
-      (val) => {
-        if (val) {
-          this.printers.defaultPrinter = val.id;
-        }
-      },
-      (err) => { console.log(err) },
-      () => { subNM.unsubscribe() })
+  compareFn(o1: Printer, o2: Printer | Printer[]) {
+    if (!o1 || !o2) {
+      return o1 === o2;
+    }
+    if (Array.isArray(o2)) {
+      return o2.some((u: Printer) => u.id === o1.id);
+    }
+    return o1.id === o2.id;
   }
 
-  compareFn(a: number, b): boolean {
-    console.log(a, b);
-    return a == b;
-  }
-  onSubmit() {
+  setPrinters() {
     console.log(this.printers)
     let printers = {
-      defaultPrinter: [this.printers.defaultPrinter],
-      availablePrinters: this.printers.availablePrinters
+      defaultPrinter: [this.printers.defaultPrinter.id],
+      availablePrinters: this.printers.availablePrinters.map(a => a.id)
     };
     let sub = this.roomService.setPrinters(this.room.id, printers).subscribe(
       async (val) => {
@@ -83,7 +84,7 @@ export class RoomPrintersPage implements OnInit {
         this.modalCtrl.dismiss();
       },
       async (error) => {
-        this.objectService.errorMessage(this.languageS.trans("An Error was accoured:"));
+        this.objectService.errorMessage(error);
       },
       () => {
         sub.unsubscribe();

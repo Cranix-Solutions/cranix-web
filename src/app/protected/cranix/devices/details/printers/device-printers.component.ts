@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { ToastController, ModalController } from '@ionic/angular';
 //own stuff
 import { GenericObjectService } from 'src/app/services/generic-object.service';
@@ -14,111 +13,78 @@ import { ServerResponse } from 'src/app/shared/models/server-models';
   styleUrls: ['./device-printers.component.scss'],
 })
 export class DevicePrintersComponent implements OnInit {
-  editPrinter;
-  noPrinter: Printer = new Printer;
+  noPrinter: Printer = new Printer();
   allDefaultPrinters: Printer[] = [this.noPrinter];
   allPrinters: Printer[] = [];
   device: Device;
   printers = {
-    defaultPrinter: 0,
+    defaultPrinter: null,
     availablePrinters: []
   }
+  disabled = false
 
   constructor(
     private deviceService: DevicesService,
     private languageS: LanguageService,
-    public formBuilder: FormBuilder,
     public objectService: GenericObjectService,
-    public modalCtrl: ModalController,
-    private toastController: ToastController
+    public modalCtrl: ModalController
   ) {
-    this.device = <Device>this.objectService.selectedObject;
-    this.noPrinter.id=0;
-    this.noPrinter.name= languageS.trans("No default  printer");
+
   }
 
   ngOnInit() {
+    this.device = <Device>this.objectService.selectedObject;
+    this.noPrinter.id = 0;
+    this.noPrinter.name = this.languageS.trans("No default  printer");
+    this.printers.defaultPrinter = this.noPrinter;
     this.objectService.getObjects('printer').subscribe(
       (obj) => {
         this.allPrinters = obj;
         this.allDefaultPrinters = this.allDefaultPrinters.concat(obj);
+        this.deviceService.getAvailablePrinter(this.device.id).subscribe(
+          (val) => {
+            for (let printer of val) {
+              this.printers.availablePrinters.push(printer);
+            }
+            this.deviceService.getDefaultPrinter(this.device.id).subscribe(
+              (val) => {
+                if (val) {
+                  this.printers.defaultPrinter = val;
+                }
+              }
+            )
+          }
+        )
       });
-      this.readPrinters();
-      console.log("printers");
-      console.log(this.printers);
-      this.editPrinter = this.formBuilder.group(this.printers);
   }
-
-  readPrinters() {
-    let subM = this.deviceService.getAvailablePrinter(this.device.id).subscribe(
-      (val) => {
-        for (let printer of val) {
-          this.printers.availablePrinters.push(printer.id);
-        }
-      },
-      (err) => { console.log(err) },
-      () => { subM.unsubscribe() });
-    let subNM = this.deviceService.getDefaultPrinter(this.device.id).subscribe(
-      (val) => {
-        if (val) {
-          this.printers.defaultPrinter = val.id;
-        }
-      },
-      (err) => { console.log(err) },
-      () => { subNM.unsubscribe() })
+  compareFn(o1: Printer, o2: Printer | Printer[]) {
+    if (!o1 || !o2) {
+      return o1 === o2;
+    }
+    if (Array.isArray(o2)) {
+      return o2.some((u: Printer) => u.id === o1.id);
+    }
+    return o1.id === o2.id;
   }
-
-  compareFn(a: number, b): boolean {
-    console.log(a,b);
-    return a == b;
-  }
-  onSubmit(form) {
-    this.editPrinter.disable();
-    let serverResponse: ServerResponse;
+  setPrinters() {
+    this.disabled = true;
     let printers = {
-      defaultPrinter: [form.defaultPrinter],
-      availablePrinters: form.availablePrinters
+      defaultPrinter: [this.printers.defaultPrinter.id],
+      availablePrinters: this.printers.availablePrinters.map(a => a.id)
     };
-    console.log(form);
     console.log(printers)
     let sub = this.deviceService.setPrinters(this.device.id, printers).subscribe(
       async (val) => {
-        serverResponse = val;
-        if (serverResponse.code == "OK") {
-          const toast = this.toastController.create({
-            position: "middle",
-            header: this.languageS.trans("Success:"),
-            message: this.languageS.trans(serverResponse.value),
-            color: "success",
-            duration: 5000
-          });
-          (await toast).present();
-        } else {
-          const toast = this.toastController.create({
-            position: "middle",
-            header: this.languageS.trans("An Error was accoured:"),
-            message: serverResponse.value,
-            color: "warning",
-            duration: 6000
-          });
-          (await toast).present();
-        }
+        this.objectService.responseMessage(val);
+        this.modalCtrl.dismiss();
       },
       async (error) => {
-        const toast = this.toastController.create({
-          position: "middle",
-          header: this.languageS.trans("An Error was accoured:"),
-          message: error,
-          color: "warning",
-          duration: 6000
-        });
-        (await toast).present();
-        console.log(error);
+        this.objectService.errorMessage(error);
       },
       () => {
+        this.disabled = false;
         sub.unsubscribe();
       }
     )
-    this.editPrinter.enable();
   }
 }

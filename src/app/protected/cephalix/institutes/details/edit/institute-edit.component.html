@@ -100,7 +100,12 @@
             </ion-col>
             <ion-col>
               <ion-label position="stacked">{{ 'Institute manager' | translate}}</ion-label>
-              <ion-select multiple="true" [(ngModel)]="managers" [compareWith]="compareFn" name="managers" (ionChange)="managerChanged($event)">
+              <ion-select
+                multiple="true"
+                [(ngModel)]="managers"
+                [compareWith]="compareFn"
+                name="managers"
+                (ionChange)="managerChanged($event)">
                 <ion-select-option *ngFor="let user of  users" [value]="user">
                   {{user.fullName}}</ion-select-option>
               </ion-select>
