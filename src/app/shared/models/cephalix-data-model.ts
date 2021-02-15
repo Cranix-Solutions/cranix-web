@@ -83,18 +83,18 @@ export class Article{
 export class InstituteStatus {
     id?: number;
     cephalixInstituteId: number = 0;
-    created: any = new Date();
-    runningKernel: string ="";
-    installedKernel: string ="";
-    uptime: string ="";
-    version: string ="";
-    lastUpdate: any =new Date();
-    availableUpdates: string = "";
     errorMessages?: string = "";
     rootUsage: string ="";
     srvUsage: string = "";
     varUsage: string ="";
     homeUsage: string = "";
+    runningKernel: string ="";
+    installedKernel: string ="";
+    availableUpdates: string = "";
+    lastUpdate: any =new Date();
+    version: string ="";
+    created: any = new Date();
+    uptime: string ="";
     constructor() {}
 }
 export class Repository{

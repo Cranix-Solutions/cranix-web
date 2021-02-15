@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage';
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
+import { FileSystemUsageRenderer } from 'src/app/pipes/ag-filesystem-usage-renderer';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
@@ -25,7 +26,7 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 export class InstitutesStatusComponent implements OnInit {
   objectKeys: string[] = [];
   displayedColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'availableUpdates', 'errorMessages', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel'];
-  sortableColumns: string[]  = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'availableUpdates', 'errorMessages', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel'];
+  sortableColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'availableUpdates', 'errorMessages', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel'];
   columnDefs = [];
   defaultColDef = {};
   gridApi: GridApi;
@@ -62,6 +63,7 @@ export class InstitutesStatusComponent implements OnInit {
     this.storage.get('InstitutesStatusComponent.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
+        this.displayedColumns = myArray;
         this.createColumnDefs();
       }
     });
@@ -93,9 +95,9 @@ export class InstitutesStatusComponent implements OnInit {
       col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
       switch (key) {
         case 'cephalixInstituteId': {
-          col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
-          col['headerCheckboxSelectionFilteredOnly'] = true;
-          col['checkboxSelection'] = this.authService.settings.checkboxSelection;
+          //col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
+          //col['headerCheckboxSelectionFilteredOnly'] = true;
+          //col['checkboxSelection'] = this.authService.settings.checkboxSelection;
           col['width'] = 220;
           col['valueGetter'] = function (params) {
             return params.context['componentParent'].objectService.idToName('institute', params.data.cephalixInstituteId);
@@ -106,13 +108,37 @@ export class InstitutesStatusComponent implements OnInit {
           col['cellRendererFramework'] = DateTimeCellRenderer;
           break;
         }
+        case 'rootUsage': {
+          col['headerClass'] = "rotate-header-class"
+          col['width'] = 70
+          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          break;
+        }
+        case 'homeUsage': {
+          col['headerClass'] = "rotate-header-class"
+          col['width'] = 70
+          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          break;
+        }
+        case 'srvUsage': {
+          col['headerClass'] = "rotate-header-class"
+          col['width'] = 70
+          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          break;
+        }
+        case 'varUsage': {
+          col['headerClass'] = "rotate-header-class"
+          col['width'] = 70
+          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          break;
+        }
         case 'runningKernel': {
           col['headerClass'] = "rotate-header-class"
           col['width'] = 100;
           col['valueGetter'] = function (params) {
             let index = params.data.runningKernel.indexOf("-default");
-            let run = params.data.runningKernel.substring(0, index);
-            let inst = params.data.installedKernel.substring(0, index);
+            let run   = params.data.runningKernel.substring(0, index);
+            let inst  = params.data.installedKernel.substring(0, index);
             if (run == inst) {
               return "OK"
             } else {
@@ -134,9 +160,9 @@ export class InstitutesStatusComponent implements OnInit {
         case 'created': {
           col['cellRendererFramework'] = DateTimeCellRenderer;
           break;
-	}
-	case 'errorMessages' : {
-          col['cellStyle'] = params => params.value ? {'background-color': 'red'} : { 'background-color': 'green'}
+        }
+        case 'errorMessages': {
+          col['cellStyle'] = params => params.value ? { 'background-color': 'red' } : { 'background-color': '#2dd36f' }
         }
       }
       columnDefs.push(col);

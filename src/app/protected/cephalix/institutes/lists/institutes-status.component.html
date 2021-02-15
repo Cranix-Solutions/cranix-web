@@ -33,7 +33,8 @@
       </ion-toolbar>
     </ion-card-header>
     <ion-card-content>
-      <ag-grid-angular id="agGridTable" style="width: 100%; height: 100%;" class="{{authService.settings.agGridThema}}"
+      <ag-grid-angular 
+        id="agGridTable" style="width: 100%; height: 100%;" class="{{authService.settings.agGridThema}}"
         rowSelection="multiple" rowHeight="{{authService.settings.rowHeight}}" [context]="context" [rowData]="rowData"
         [columnDefs]="columnDefs" headerHeight="150"
         [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" (gridReady)="onGridReady($event)">
