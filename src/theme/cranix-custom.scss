@@ -119,8 +119,6 @@ $breakpoints-values: map-values($grid-breakpoints);
   border-left-width: 0px !important;
 }
 
-
-
 .ag-theme-material .ag-checkbox .ag-input-wrapper,
 .ag-theme-material .ag-radio-button .ag-input-wrapper {
   font-size : 15px;
@@ -215,7 +213,13 @@ button:focus {
 
 }
 */
-
+.rotate-header-class {
+  transform: rotate(90deg);
+  //display  : inline-block;
+  height: 150;
+  width: 200;
+  padding: 0;
+}
 /*
  * layout for carded-pages
  *
@@ -224,7 +228,6 @@ button:focus {
   ion-content {
     padding-top: 60px;
   }
-
 }
 
 #carded {

@@ -53,9 +53,13 @@ export class InstitutesStatusComponent implements OnInit {
     this.objectKeys = Object.getOwnPropertyNames(new InstituteStatus());
     this.createColumnDefs();
     this.defaultColDef = {
-      resizable: true,
+      flex: 1,
+      cellStyle: { 'justify-content': "center" },
+      minWidth: 100,
+      maxWidth: 150,
+      suppressMenu: true,
       sortable: true,
-      hide: false
+      resizable: false
     };
   }
 
@@ -86,7 +90,8 @@ export class InstitutesStatusComponent implements OnInit {
       () => { subs.unsubscribe() })
   }
   createColumnDefs() {
-    let columnDefs = [];
+    this.columnDefs = [];
+    let now = new Date();
     for (let key of this.objectKeys) {
       let col = {};
       col['field'] = key;
@@ -98,11 +103,21 @@ export class InstitutesStatusComponent implements OnInit {
           //col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           //col['headerCheckboxSelectionFilteredOnly'] = true;
           //col['checkboxSelection'] = this.authService.settings.checkboxSelection;
-          col['width'] = 220;
+          col['minWidth'] = 220;
+          col['maxWidth'] = 220;
+          col['cellStyle'] = { 'justify-content': "left" };
           col['valueGetter'] = function (params) {
             return params.context['componentParent'].objectService.idToName('institute', params.data.cephalixInstituteId);
           }
-          break;
+          this.columnDefs.push(col);
+          this.columnDefs.push({
+            headerName: this.languageS.trans('ipVPN'),
+            valueGetter: function (params) {
+              let institute = params.context['componentParent'].objectService.getObjectById('institute', params.data.cephalixInstituteId);
+              return institute.ipVPN;
+            }
+          })
+          continue;
         }
         case 'lastUpdate': {
           col['cellRendererFramework'] = DateTimeCellRenderer;
@@ -110,31 +125,26 @@ export class InstitutesStatusComponent implements OnInit {
         }
         case 'rootUsage': {
           col['headerClass'] = "rotate-header-class"
-          col['width'] = 70
           col['cellRendererFramework'] = FileSystemUsageRenderer;
           break;
         }
         case 'homeUsage': {
           col['headerClass'] = "rotate-header-class"
-          col['width'] = 70
           col['cellRendererFramework'] = FileSystemUsageRenderer;
           break;
         }
         case 'srvUsage': {
           col['headerClass'] = "rotate-header-class"
-          col['width'] = 70
           col['cellRendererFramework'] = FileSystemUsageRenderer;
           break;
         }
         case 'varUsage': {
           col['headerClass'] = "rotate-header-class"
-          col['width'] = 70
           col['cellRendererFramework'] = FileSystemUsageRenderer;
           break;
         }
         case 'runningKernel': {
           col['headerClass'] = "rotate-header-class"
-          col['width'] = 100;
           col['valueGetter'] = function (params) {
             let index = params.data.runningKernel.indexOf("-default");
             let run   = params.data.runningKernel.substring(0, index);
@@ -153,21 +163,22 @@ export class InstitutesStatusComponent implements OnInit {
         }
         case 'availableUpdates': {
           col['headerClass'] = "rotate-header-class"
-          col['width'] = 100;
+          col['widtminWidthh'] = 100;
           col['cellRendererFramework'] = UpdateRenderer;
           break;
         }
         case 'created': {
           col['cellRendererFramework'] = DateTimeCellRenderer;
+          col['cellStyle'] = params => ( now - params.value ) > 36000000 ? { 'background-color': 'red' } : { 'background-color': '#2dd36f' }
           break;
         }
         case 'errorMessages': {
+          col['headerClass'] = "rotate-header-class"
           col['cellStyle'] = params => params.value ? { 'background-color': 'red' } : { 'background-color': '#2dd36f' }
         }
       }
-      columnDefs.push(col);
+     this.columnDefs.push(col);
     }
-    this.columnDefs = columnDefs;
   }
 
   onGridReady(params) {
