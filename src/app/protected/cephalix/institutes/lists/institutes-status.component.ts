@@ -91,7 +91,7 @@ export class InstitutesStatusComponent implements OnInit {
   }
   createColumnDefs() {
     this.columnDefs = [];
-    let now = new Date();
+    let now: number = new Date().getTime();
     for (let key of this.objectKeys) {
       let col = {};
       col['field'] = key;
