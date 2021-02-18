@@ -51,7 +51,7 @@ export class Institute {
 }
 
 export class Ticket{
-    id?: number;
+    id?: number = 0;
     title: string = "";
     cephalixInstituteId: number = 0;
     ossuserId: number = 0;

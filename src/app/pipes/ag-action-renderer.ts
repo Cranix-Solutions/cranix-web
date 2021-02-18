@@ -6,9 +6,7 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
     selector: 'action-cell',
     template: `
     <div class="name-action">
-        <!--div>
-        <ion-note >{{ name }}</ion-note>
-        </div-->
+        <div *ngIf="id">#{{ id }}</div>
         <ion-button fill="clear" size="small" (click)="details()" matTooltip="{{'modify' | translate }}">
              <ion-icon name="build-sharp"></ion-icon>
         </ion-button>
@@ -24,14 +22,16 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
 
 export class ActionBTNRenderer implements ICellRendererAngularComp {
     private params: any;
-    name; 
+    public  id;
     agInit(params: any ): void {
         this.params = params;
-        this.name= params.data.name;
+        if( this.params.colDef.field == "id") {
+            this.id = this.params.value;
+        }
     }
 
     public details() {
-        console.log("Edit", this.params.data);
+        console.log("Edit", this.params);
         this.params.context.componentParent.redirectToEdit(this.params.data.id, this.params.data);
     }
     public openAction(ev: any){

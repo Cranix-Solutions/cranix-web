@@ -3,21 +3,22 @@
   <ion-card>
     <ion-card-header>
       <ion-toolbar>
-        <ion-card-title>{{ticket.title}}</ion-card-title>
+        <ion-card-title>#{{ticket.id}} {{ticket.title}}</ion-card-title>
         <ion-buttons slot="end">
           <ion-button (click)="deleteTicket()">
             <ion-icon slot="icon-only" name="trash"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
-      <ion-card-subtitle> {{ticket.recDate | date:'yy-MM-dd HH:mm'}} {{ institute.name }} {{ institute.regCode }} {{ institute.ipVPN }}<br>
+      <ion-card-subtitle> {{ticket.recDate | date:'yy-MM-dd HH:mm'}} {{ institute.name }} {{ institute.regCode }}
+        {{ institute.ipVPN }}<br>
         {{ticket.email}}: {{ticket.lastname}},{{ticket.firstname}}</ion-card-subtitle>
     </ion-card-header>
   </ion-card>
 
   <ion-card *ngFor="let article of articles">
     <ion-card-header>
-      <ion-toolbar >
+      <ion-toolbar>
         <ion-card-subtitle [color]="article.seen ? 'success' : 'danger'">{{article.recDate | date:'yy-MM-dd HH:mm'}}
           <ion-icon *ngIf="article.articleType == 'O'" name="play-back"></ion-icon>
           <ion-icon *ngIf="article.articleType == 'I'" name="play-forward"></ion-icon>
@@ -36,10 +37,14 @@
             <ion-icon slot="icon-only" name="trash"></ion-icon>
           </ion-button>
         </ion-buttons>
+
       </ion-toolbar>
     </ion-card-header>
     <ion-card-content>
       <pre>{{article.text}}</pre>
     </ion-card-content>
+    <div *ngFor="let picture of article.pictures">
+      <img [src]="picture">
+    </div>
   </ion-card>
 </ion-content>

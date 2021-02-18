@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {  GridApi, ColumnApi } from 'ag-grid-community';
+import { GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
@@ -23,8 +23,8 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 })
 export class TicketsPage implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['title', 'cephalixInstituteId', 'recDate', 'ticketStatus'];
-  sortableColumns: string[] = ['title', 'cephalixInstituteId', 'recDate', 'ticketStatus'];
+  displayedColumns: string[] = ['id', 'title', 'cephalixInstituteId', 'recDate', 'ticketStatus'];
+  sortableColumns: string[] = ['id', 'title', 'cephalixInstituteId', 'recDate', 'ticketStatus'];
   columnDefs = [];
   defaultColDef = {};
   columnApi: ColumnApi;
@@ -48,10 +48,11 @@ export class TicketsPage implements OnInit {
     this.objectKeys = Object.getOwnPropertyNames(new Ticket());
     this.createColumnDefs();
     this.defaultColDef = {
-        resizable: true,
-        sortable: true,
-        hide: false
-      };
+      resizable: true,
+      sortable: true,
+      minWidth: 110,
+      hide: false
+    };
   }
 
   ngOnInit() {
@@ -66,24 +67,27 @@ export class TicketsPage implements OnInit {
   }
 
   createColumnDefs() {
-    let columnDefs = [];
+    this.columnDefs = [];
     for (let key of this.objectKeys) {
       let col = {};
       col['field'] = key;
       col['headerName'] = this.languageS.trans(key);
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
       col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
-      col['minWidth'] = 110;
+      col['cellStyle'] = params => params.data.ticketStatus == "N" ? { 'background-color': 'red' } :
+        params.data.ticketStatus == "R" ? { 'background-color': 'orange' } : { 'background-color': 'green' }
       switch (key) {
-        case 'title': {
+        case 'id': {
           col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
-          col['width'] = 220;
-          col['cellStyle'] = { 'padding-left': '2px', 'padding-right': '2px' };
-          col['suppressSizeToFit'] = true;
+          col['cellRendererFramework'] = ActionBTNRenderer,
           col['pinned'] = 'left';
-          col['colId'] = '1';
+          col['suppressSizeToFit'] = true;
+          break;
+        }
+        case 'title': {
+          col['pinned'] = 'left';
           break;
         }
         case 'cephalixInstituteId': {
@@ -96,29 +100,19 @@ export class TicketsPage implements OnInit {
           col['cellRendererFramework'] = DateCellRenderer;
           break;
         }
-        case 'ticketStatus' : {
-          col['cellStyle'] = params => params.value == "N" ? {'background-color': 'red'} : params.value == "R" ? {'background-color': 'orange'} : { 'background-color': 'green'}
+        case 'ticketStatus': {
+          col['width'] = 80
         }
       }
-      columnDefs.push(col);
+      this.columnDefs.push(col);
     }
-    let action = {
-      headerName: "",
-      width: 85,
-      suppressSizeToFit: true,
-      cellStyle: { 'padding': '2px', 'line-height': '36px' },
-      field: 'actions',
-      pinned: 'left',
-      cellRendererFramework: ActionBTNRenderer
-    };
-    columnDefs.splice(1, 0, action)
-    this.columnDefs = columnDefs;
   }
 
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
     (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
+    this.gridApi.sizeColumnsToFit();
   }
 
   onQuickFilterChanged(quickFilter) {
@@ -139,15 +133,15 @@ export class TicketsPage implements OnInit {
   }
 
   public redirectToDelete = (ticket: Ticket) => {
-    this.objectService.deleteObjectDialog(ticket, 'institute','')
+    this.objectService.deleteObjectDialog(ticket, 'institute', '')
   }
   /**
  * Open the actions menu with the selected object ids.
- * @param ev 
+ * @param ev
  */
   async openActions(ev: any, objId: number) {
     let selected = this.gridApi.getSelectedRows();
-    if ( selected.length == 0  && !objId) {
+    if (selected.length == 0 && !objId) {
       this.objectService.selectObject();
       return;
     }
@@ -198,10 +192,10 @@ export class TicketsPage implements OnInit {
     }
   }
 
-/**
-* Function to Select the columns to show
-* @param ev 
-*/
+  /**
+  * Function to Select the columns to show
+  * @param ev
+  */
   async openCollums(ev: any) {
     const modal = await this.modalCtrl.create({
       component: SelectColumnsComponent,
