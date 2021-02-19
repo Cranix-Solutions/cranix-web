@@ -184,6 +184,9 @@ export class GenericObjectService {
    * @param objectType
    */
   getAllObject(objectType) {
+    if( this.objects.indexOf(objectType) == -1 ) {
+      return;
+    }
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";
     let sub = this.http.get(url, { headers: this.authService.headers }).subscribe(
       (val) => {
