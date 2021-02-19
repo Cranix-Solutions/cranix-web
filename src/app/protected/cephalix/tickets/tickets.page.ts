@@ -155,7 +155,7 @@ export class TicketsPage implements OnInit {
   }
 
   public redirectToDelete = (ticket: Ticket) => {
-    this.objectService.deleteObjectDialog(ticket, 'ticket', '')
+    this.objectService.deleteObjectDialog(ticket, 'ticket', '/pages/cephalix/tickets')
   }
   /**
  * Open the actions menu with the selected object ids.
