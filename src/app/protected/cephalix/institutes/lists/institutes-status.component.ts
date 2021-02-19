@@ -56,7 +56,7 @@ export class InstitutesStatusComponent implements OnInit {
       flex: 1,
       cellStyle: { 'justify-content': "center" },
       minWidth: 100,
-      maxWidth: 150,
+      maxWidth: 200,
       suppressMenu: true,
       sortable: true,
       resizable: false
@@ -112,6 +112,7 @@ export class InstitutesStatusComponent implements OnInit {
           this.columnDefs.push(col);
           this.columnDefs.push({
             headerName: this.languageS.trans('ipVPN'),
+            editable: true,
             valueGetter: function (params) {
               let institute = params.context['componentParent'].objectService.getObjectById('institute', params.data.cephalixInstituteId);
               return institute.ipVPN;

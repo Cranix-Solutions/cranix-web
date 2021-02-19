@@ -89,7 +89,6 @@ export class GroupsPage implements OnInit {
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
           col['minWidth'] = 150;
-          col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
           col['flex'] = '1';
@@ -113,7 +112,7 @@ export class GroupsPage implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-    this.sizeAll();
+    this.gridApi.sizeColumnsToFit();
   }
 
   onQuickFilterChanged(quickFilter) {

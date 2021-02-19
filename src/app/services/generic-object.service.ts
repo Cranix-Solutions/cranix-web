@@ -123,9 +123,9 @@ export class GenericObjectService {
     if (this.authService.isAllowed('customer.manage')) {
       this.objects.push('customer');
     }
-    if (this.authService.isAllowed('cephalix.ticket')) {
+    /*if (this.authService.isAllowed('cephalix.ticket')) {
       this.objects.push('ticket');
-    }
+    }*/
     for (let key of this.objects) {
       this.allObjects[key] = new BehaviorSubject([]);
     }

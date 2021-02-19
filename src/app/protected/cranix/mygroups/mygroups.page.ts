@@ -81,7 +81,6 @@ export class MyGroupsPage implements OnInit {
         headerCheckboxSelectionFilteredOnly: true,
         checkboxSelection: this.authService.settings.checkboxSelection,
         minWidth: 150,
-        cellStyle: { 'padding-left': '2px' },
         suppressSizeToFit: true,
       },
       {
@@ -123,7 +122,6 @@ export class MyGroupsPage implements OnInit {
         minWidth: 150,
         hide: true,
         rowGroup: true,
-        cellStyle: { 'padding-left': '2px' },
         suppressSizeToFit: true,
       },
       {
@@ -156,7 +154,7 @@ export class MyGroupsPage implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-    //this.sizeAll();
+    this.gridApi.sizeColumnsToFit();
   }
 
   onQuickFilterChanged(quickFilter) {

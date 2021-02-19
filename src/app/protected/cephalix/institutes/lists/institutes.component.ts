@@ -80,7 +80,6 @@ export class InstitutesComponent implements OnInit {
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
           col['minWidth'] = 230;
-          col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
           col['flex'] = '1';
@@ -114,7 +113,7 @@ export class InstitutesComponent implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-    params.columnApi.autoSizeColumns();
+    this.gridApi.sizeColumnsToFit();
    // this.sizeAll();
   }
   onSelectionChanged() {

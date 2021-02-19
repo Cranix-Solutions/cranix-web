@@ -12,10 +12,10 @@ import { EditArticleComponent } from 'src/app/shared/actions/edit-article/edit-a
   styleUrls: ['./details.page.scss'],
 })
 export class DetailsPage implements OnInit {
-  ticketId:  number;
-  ticket:    Ticket;
-  articles:  Article[] = [new Article()];
-  institute: Institute;
+  ticketId: number;
+  ticket: Ticket;
+  articles: Article[] = [new Article()];
+  institute: Institute = new Institute;
   constructor(
     private route: ActivatedRoute,
     private cephlixS: CephalixService,
@@ -25,16 +25,18 @@ export class DetailsPage implements OnInit {
 
   ngOnInit() {
     this.ticketId = this.route.snapshot.params.id;
-    this.objectS.allObjects['ticket'].getValue().forEach((t: Ticket) => {
-      if (t.id == this.ticketId) {
-        this.ticket = t;
-      }
-    });
-    this.institute = this.objectS.getObjectById('institute',this.ticket.cephalixInstituteId);
-    if( this.institute == null) {
-      this.institute = this.objectS.getObjectById('institute',1);
-    }
-    this.readArcticles();
+    let sub = this.cephlixS.getTicketById(this.ticketId).subscribe(
+      (val) => {
+        this.ticket = val
+        this.institute = this.objectS.getObjectById('institute', this.ticket.cephalixInstituteId);
+        if (this.institute == null) {
+          this.institute = this.objectS.getObjectById('institute', 1);
+        }
+        this.readArcticles();
+      },
+      (err) => { console.log(err) },
+      () => { sub.unsubscribe() }
+    )
   }
   public ngAfterViewInit() {
     while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
@@ -42,25 +44,26 @@ export class DetailsPage implements OnInit {
 
   public readArcticles() {
     let sub = this.cephlixS.getArticklesOfTicket(this.ticketId).subscribe(
-      (val) => { 
+      (val) => {
         console.log(val);
-        this.articles = val },
+        this.articles = val
+      },
       (error) => { this.articles.push(new Article()); },
       () => { sub.unsubscribe() }
     );
   }
-  public deleteTicket(){
-    this.objectS.deleteObjectDialog(this.ticket,"ticket",'/pages/cephalix/tickets');  
+  public deleteTicket() {
+    this.objectS.deleteObjectDialog(this.ticket, "ticket", '/pages/cephalix/tickets');
   }
-  async answerArticle(article: Article){
-    if( ! article.sender) {
+  async answerArticle(article: Article) {
+    if (!article.sender) {
       article.sender = this.ticket.email;
     }
-    article.title = this.ticket.firstname + " " +this.ticket.lastname;
+    article.title = this.ticket.firstname + " " + this.ticket.lastname;
     const modal = await this.modalController.create({
       component: EditArticleComponent,
       componentProps: {
-        ticket:  this.ticket,
+        ticket: this.ticket,
         article: article
       },
       animated: true,
@@ -74,13 +77,13 @@ export class DetailsPage implements OnInit {
     (await modal).present();
   }
 
-  public noticeToArticle(article: Article){
+  public noticeToArticle(article: Article) {
     //TODO
   }
-  public deleteArticle(article: Article){
+  public deleteArticle(article: Article) {
     //TODO
   }
-  public setSeenOnArticle(article: Article){
+  public setSeenOnArticle(article: Article) {
     //TODO
   }
 }

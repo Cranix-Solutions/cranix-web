@@ -1,5 +1,5 @@
-import { Component, OnInit} from '@angular/core';
-import { GridApi, ColumnApi } from '@ag-grid-enterprise/all-modules';
+import { Component, OnInit } from '@angular/core';
+import { GridApi, ColumnApi, GridOptions } from '@ag-grid-enterprise/all-modules';
 import { AlertController, PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
@@ -46,16 +46,17 @@ export class DevicesComponent implements OnInit {
     public route: Router,
     private storage: Storage
   ) {
+
     this.context = { componentParent: this };
     this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new Device());
     this.createColumnDefs();
     this.defaultColDef = {
-        resizable: true,
-        sortable: true,
-        hide: false,
-        suppressMenu : true
-      }
+      resizable: true,
+      sortable: true,
+      hide: false,
+      suppressMenu: true
+    }
   }
   ngOnInit() {
     this.storage.get('DevicesComponent.displayedColumns').then((val) => {
@@ -69,7 +70,7 @@ export class DevicesComponent implements OnInit {
       this.selectedRoom = this.objectService.selectedRoom;
       delete this.objectService.selectedRoom;
       this.objectService.getObjects('device').subscribe(obj => {
-      this.rowData = [];
+        this.rowData = [];
         for (let dev of obj) {
           if (dev.roomId == this.selectedRoom.id) {
             this.rowData.push(dev);
@@ -101,7 +102,6 @@ export class DevicesComponent implements OnInit {
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
           col['minWidth'] = 170;
-          col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
           col['flex'] = '1';
@@ -136,7 +136,12 @@ export class DevicesComponent implements OnInit {
     this.columnDefs = columnDefs;
   }
 
-  onGridReady(params) {
+  onGridReady(params: GridOptions) {
+    params.getRowStyle = function (par) {
+      if (par.node.rowIndex % 2 === 0) {
+        return { background: 'red' };
+      }
+    }
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
@@ -156,7 +161,7 @@ export class DevicesComponent implements OnInit {
   }
 
   redirectToDelete(device: Device) {
-    this.objectService.deleteObjectDialog(device, 'device','')
+    this.objectService.deleteObjectDialog(device, 'device', '')
   }
   /**
  * Open the actions menu with the selected object ids.
