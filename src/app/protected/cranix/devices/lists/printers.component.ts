@@ -114,7 +114,7 @@ export class PrintersComponent implements OnInit {
     }
     let action = {
       headerName: "",
-      minWidth: 130,
+      minWidth: 100,
       suppressSizeToFit: true,
       cellStyle: { 'padding': '1px', 'line-height': '36px' },
       field: 'actions',

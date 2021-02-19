@@ -21,7 +21,7 @@ export class PrintersService {
 		this.url = this.hostname + `/printers/add`;
 		return this.http.post<ServerResponse>(this.url, imp, { headers: this.authService.formHeaders });
 	}
-	addQueu(imp: FormData) {
+	addQueue(imp: FormData) {
 		this.url = this.hostname + `/printers/addQueue`;
 		return this.http.post<ServerResponse>(this.url, imp, { headers: this.authService.formHeaders });
 	}

@@ -141,7 +141,7 @@ export class AddPrinterComponent implements OnInit {
       case 'queue': {
         formData.append('deviceId', printer.deviceId.toString());
         formData.append('windowsDriver', "true");
-        let subs = this.printersService.add(formData).subscribe(
+        let subs = this.printersService.addQueue(formData).subscribe(
           (val) => {
             this.objectService.responseMessage(val);
             if (val.code == "OK") {
