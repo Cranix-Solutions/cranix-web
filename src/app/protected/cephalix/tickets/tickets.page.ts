@@ -105,7 +105,6 @@ export class TicketsPage implements OnInit {
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
           col['cellRendererFramework'] = ActionBTNRenderer,
           col['pinned'] = 'left';
-          col['suppressSizeToFit'] = true;
           break;
         }
         case 'title': {
