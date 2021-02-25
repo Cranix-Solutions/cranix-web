@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule,  CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -17,6 +17,7 @@ import {CranixSharedModule} from 'src/app/shared/cranix-shared.module';
     CranixSharedModule
   ],
   declarations: [DetailsPage],
-  providers: [TranslateService]
+  providers: [TranslateService],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class DetailsPageModule {}

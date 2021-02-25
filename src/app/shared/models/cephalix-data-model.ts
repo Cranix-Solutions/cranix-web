@@ -46,7 +46,7 @@ export class Institute {
     adminPW: string = '';
     cephalixPW: string = '';
     recDate: any = new Date();
-    cephalixCustomerId: number = 0;
+    cephalixCustomerId: number;
     constructor() {}
 }
 
@@ -133,10 +133,11 @@ export class DynDns {
     id?: number;
     cephalixInstituteId: number = 0;
     hostname: string = "";
-    domain: string = "";
+    domain: string = "cephalix.eu";
     ip: string = "";
-    port: string = "";
+    port: string = "22";
     ro: boolean = false;
+    ts: any = new Date();
     constructor() {}
 }
 

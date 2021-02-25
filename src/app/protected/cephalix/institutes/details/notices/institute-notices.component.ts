@@ -67,4 +67,14 @@ export class InstituteNoticesComponent implements OnInit {
     });
     (await modal).present();
   }
+
+  redirectToDelete(notice) {
+    console.log(notice)
+    this.cephalixService.deleteNotice(notice.id).subscribe(
+      (val) => {
+        this.objectService.responseMessage(val);
+        this.getNotices();
+      }
+    )
+  }
 }

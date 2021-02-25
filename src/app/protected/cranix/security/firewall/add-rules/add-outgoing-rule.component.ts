@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { OutgoingRule } from 'src/app/shared/models/secutiry-model';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
-import { Device, Room } from 'src/app/shared/models/data-model';
 import { ModalController } from '@ionic/angular';
 import { SecurityService } from 'src/app/services/security-service';
 

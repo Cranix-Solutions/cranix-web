@@ -10,7 +10,7 @@ import { SecurityPageModule }  from './security/security.module';
 import { SoftwaresPageModule } from './softwares/softwares.module';
 import { SystemPageModule }    from './system/system.module';
 import { UsersPageModule }     from './users/users.module';
-import { ProfileModule } from './profile/profile.module';
+import { ProfileModule }       from './profile/profile.module';
 
 
 

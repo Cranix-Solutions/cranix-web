@@ -5,7 +5,7 @@ import { IonicSelectableComponent } from 'ionic-selectable';
 //Own stuff
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
-import { Institute } from 'src/app/shared/models/cephalix-data-model';
+import { Institute, DynDns } from 'src/app/shared/models/cephalix-data-model';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { User } from 'src/app/shared/models/data-model';
 @Component({
@@ -21,6 +21,13 @@ export class InstituteEditComponent implements OnInit {
   managerIds: number[] = [];
   managers: User[] = [];
   users: User[] = [];
+  dynDnsDomains: string[] = ['cephalix.eu', 'cephalix.de', 'cranix.eu']
+  dynDnsName: string = "";
+  dynDnsDomain: string = "cephalix.eu";
+  dynDnsPort: string = "22";
+  dynDnsRo: boolean = false;
+  dynDnsIp: string = "";
+  dynDns: DynDns;
   constructor(
     public authService: AuthenticationService,
     public cephalixService: CephalixService,
@@ -34,10 +41,6 @@ export class InstituteEditComponent implements OnInit {
           this.managerIds.push(man.id)
           this.managers.push(man)
         }
-        console.log(this.managerIds)
-      },
-      (err) => { console.log(err) },
-      () => {
         this.objectService.getObjects('user').subscribe(
           obj => {
             for (let user of obj) {
@@ -47,7 +50,11 @@ export class InstituteEditComponent implements OnInit {
             }
           }
         )
-      }
+
+        console.log(this.managerIds)
+      },
+      (err) => { console.log(err) },
+      () => { }
     )
     if (this.objectService.cephalixDefaults.createIsoBy && this.objectService.cephalixDefaults.createIsoBy == 'regCode') {
       this.isourl = this.object.regCode;
@@ -57,6 +64,22 @@ export class InstituteEditComponent implements OnInit {
     let institute = new Institute();
     if (!this.authService.isAllowed("customer.manage")) {
       delete institute.cephalixCustomerId;
+    } else {
+      //Read dynDns settings
+      this.cephalixService.getDynDns(this.object.id).subscribe(
+        (val) => {
+          if( val ) {
+            this.dynDns = val;
+          } else {
+            this.dynDns = new DynDns();
+          }
+          this.dynDnsDomain = val.domain;
+          this.dynDnsName = val.hostname;
+          this.dynDnsPort = val.port;
+          this.dynDnsRo = val.ro;
+          this.dynDnsIp = val.ip;
+        }
+      )
     }
     this.objectKeys = Object.getOwnPropertyNames(institute);
     console.log("InstituteEditComponent:" + this.object.id);
@@ -71,6 +94,19 @@ export class InstituteEditComponent implements OnInit {
     form['id'] = this.object.id;
     console.log(form)
     this.objectService.modifyObjectDialog(form, "institute");
+
+    if( this.authService.isAllowed("customer.manage") &&
+      (this.dynDns.domain != this.dynDnsDomain || this.dynDns.hostname != this.dynDnsName ||
+        this.dynDns.port != this.dynDnsPort || this.dynDns.ro != this.dynDnsRo))
+    {
+      this.dynDns.domain   = this.dynDnsDomain
+      this.dynDns.hostname = this.dynDnsName
+      this.dynDns.port     = this.dynDnsPort
+      this.dynDns.ro       = this.dynDnsRo
+      this.cephalixService.setDynDns(this.object.id,this.dynDns).subscribe(
+        (val) => { this.objectService.responseMessage(val)}
+      )
+    }
   }
 
   compareFn(o1: User, o2: User | User[]) {
@@ -112,8 +148,8 @@ export class InstituteEditComponent implements OnInit {
     this.objectService.deleteObjectDialog(this.object, 'institute', '');
   }
   managerChanged(ev) {
-    let newIds: number[]= [];
-    for( let user of ev.detail.value ) {
+    let newIds: number[] = [];
+    for (let user of ev.detail.value) {
       newIds.push(user.id)
     }
     console.log(this.managerIds);
