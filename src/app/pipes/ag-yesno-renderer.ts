@@ -6,7 +6,7 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
     selector: 'yesno-cell',
     template: `
         <ion-button *ngIf="params.data && active" fill="clear" size="small"
-            [color]="params.value ? 'success' : 'danger'" (click)="toggle()" matTooltip="{{'Toggle yes no' | translate }}">
+            [color]="params.value ? 'success' : 'danger'" (click)="toggle()">
             <ion-icon *ngIf="params.value" name="checkmark-circle" slot="icon-only"></ion-icon>
             <ion-icon *ngIf="!params.value" name="close-circle" slot="icon-only"></ion-icon>
         </ion-button>
@@ -32,12 +32,12 @@ export class YesNoBTNRenderer implements ICellRendererAngularComp {
     public toggle() {
         console.log(this.params)
         if (this.active) {
-            this.params.context.componentParent.toggle(
-                this.params.data,
-                this.params.colDef.field,
-                this.params.value,
-                this.params.rowIndex);
+            this.params.value = !this.params.value;
+            this.params.data[this.params.colDef.field] = this.params.value;
+            this.params.context.componentParent.toggle(this.params.data, this.params.colDef.field, this.params.value);
+            this.params.refreshCell();
         }
+        console.log(this.params);
     }
     refresh(params: any): boolean {
         return true;
