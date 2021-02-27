@@ -9,21 +9,21 @@
             <ion-icon slot="icon-only" name="trash"></ion-icon>
           </ion-button>
         </ion-buttons>
+        <ion-card-subtitle *ngIf="institute.id != 0"> {{ticket.recDate | date:'yy-MM-dd HH:mm'}} {{ institute.name }}
+          {{ institute.regCode }}
+          {{ institute.ipVPN }}<br>
+          {{ticket.email}}: {{ticket.lastname}},{{ticket.firstname}}</ion-card-subtitle>
+        <ion-card-subtitle *ngIf="institute.id == 0"> {{ticket.recDate | date:'yy-MM-dd HH:mm'}}>
+          <input placeholder="{{'Select institute:'|translate}}" list="insts" name="institute" id="institute">
+          <datalist id="insts">
+            <option *ngFor="let i of institutes" [value]="i.label">
+          </datalist>
+          <ion-button fill="clear" (click)="setInstitute()">
+            <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+          </ion-button><br>
+          {{ticket.email}}: {{ticket.lastname}},{{ticket.firstname}}
+        </ion-card-subtitle>
       </ion-toolbar>
-      <ion-card-subtitle *ngIf="institute.id != 0"> {{ticket.recDate | date:'yy-MM-dd HH:mm'}} {{ institute.name }}
-        {{ institute.regCode }}
-        {{ institute.ipVPN }}<br>
-        {{ticket.email}}: {{ticket.lastname}},{{ticket.firstname}}</ion-card-subtitle>
-      <ion-card-subtitle *ngIf="institute.id == 0"> {{ticket.recDate | date:'yy-MM-dd HH:mm'}}
-        <input placeholder="{{'Select institute:'|translate}}" list="insts" name="institute" id="institute">
-        <datalist id="insts">
-          <option *ngFor="let i of institutes" [value]="i.label">
-        </datalist>
-        <ion-button (click)="setInstitute()">
-          <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
-        </ion-button><br>
-        {{ticket.email}}: {{ticket.lastname}},{{ticket.firstname}}
-      </ion-card-subtitle>
     </ion-card-header>
   </ion-card>
   <ion-card *ngFor="let article of articles">

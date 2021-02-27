@@ -113,7 +113,10 @@ export class DetailsPage implements OnInit {
     console.log(id)
     this.objectService.requestSent();
     this.cephlixS.setInstituteForTicket(this.ticketId,id).subscribe(
-      (val) => { this.objectService.responseMessage(val)}
+      (val) => {
+        this.objectService.responseMessage(val)
+        this.institute = this.objectService.getObjectById('institute', id);
+      }
     )
   }
 }
