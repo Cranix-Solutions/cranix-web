@@ -4,13 +4,14 @@ import { CommonModule }        from '@angular/common';
 import { DevicesPageModule }   from './devices/devices.module';
 import { HwconfsPageModule }   from './hwconfs/hwconfs.module';
 import { GroupsPageModule }    from './groups/groups.module';
+import { InformationsModule }    from './informations/informations.module';
 import { MyGroupsPageModule }  from './mygroups/mygroups.module';
 import { RoomsPageModule }     from './rooms/rooms.module';
 import { SecurityPageModule }  from './security/security.module';
 import { SoftwaresPageModule } from './softwares/softwares.module';
 import { SystemPageModule }    from './system/system.module';
-import { UsersPageModule }     from './users/users.module';
 import { ProfileModule }       from './profile/profile.module';
+import { UsersPageModule }     from './users/users.module';
 
 
 
@@ -21,6 +22,7 @@ import { ProfileModule }       from './profile/profile.module';
     DevicesPageModule,
     HwconfsPageModule,
     GroupsPageModule,
+    InformationsModule,
     MyGroupsPageModule,
     RoomsPageModule,
     SecurityPageModule,

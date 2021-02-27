@@ -1,0 +1,58 @@
+<form #addInfo="ngForm">
+    <ion-header translucent>
+        <ion-toolbar>
+            <ion-title>{{  'Add new ' + infoType  | translate }}</ion-title>
+            <ion-buttons slot="end">
+                <ion-button class="ion-no-margin" (click)="onSubmit(addInfo.value)" [disabled]="!addInfo.valid">
+                    <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+                </ion-button>
+                <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss('closed')" [disabled]="disabled">
+                    <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+                </ion-button>
+            </ion-buttons>
+        </ion-toolbar>
+    </ion-header>
+    <ion-content fullscreen>
+        <ion-list>
+            <ion-item>
+                <ion-label position="stacked">{{'category' | translate}}</ion-label>
+                <ion-select multiple="true" [(ngModel)]="info.categoryIds" name="categoryIds">
+                    <ion-select-option *ngFor="let category of informationsService.categories" [value]="category.id">
+                        {{category.name}}</ion-select-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label position="stacked">{{'title' | translate}}</ion-label>
+                <ion-input [(ngModel)]="info.title" name="title" required></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="stacked">{{'issue' | translate}}</ion-label>
+                <ion-input [(ngModel)]="info.issue" name="issue"></ion-input>
+            </ion-item>
+            <ion-item *ngIf="infoType != 'contact'">
+                <ion-label position="stacked">{{'abstract' | translate}}</ion-label>
+                <ion-textarea autoGrow="true" [(ngModel)]="info.abstract" name="abstract"></ion-textarea>
+            </ion-item>
+            <ion-item *ngIf="infoType != 'contact'">
+                <ion-label position="stacked">{{'keywords' | translate}}</ion-label>
+                <ion-input autoGrow="true" [(ngModel)]="info.keywords" name="keywords" required></ion-input>
+            </ion-item>
+            <ion-item *ngIf="infoType == 'contact'">
+                <ion-label position="stacked">{{'name' | translate}}</ion-label>
+                <ion-input [(ngModel)]="info.name" name="name"></ion-input>
+            </ion-item>
+            <ion-item *ngIf="infoType == 'contact'">
+                <ion-label position="stacked">{{'email' | translate}}</ion-label>
+                <ion-input [(ngModel)]="info.email" name="email"></ion-input>
+            </ion-item>
+            <ion-item *ngIf="infoType == 'contact'">
+                <ion-label position="stacked">{{'phone' | translate}}</ion-label>
+                <ion-input [(ngModel)]="info.phone" name="phone"></ion-input>
+            </ion-item>
+            <ion-item *ngIf="infoType != 'contact'">
+                <ion-label position="stacked">{{'text' | translate}}</ion-label>
+                <ion-textarea autoGrow="true" [(ngModel)]="info.text" name="text"></ion-textarea>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</form>

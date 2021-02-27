@@ -8,6 +8,7 @@ import { AuthenticationService } from './services/auth.service';
 import { GenericObjectService } from './services/generic-object.service';
 import { LanguageService } from './services/language.service';
 import { SecurityService } from './services/security-service';
+import { InformationsService } from './services/informations.services';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,7 @@ export class AppComponent {
   constructor(
     private authService: AuthenticationService,
     private genericObjectS: GenericObjectService,
+    private informationServcie: InformationsService,
     private languageService: LanguageService,
     private platform: Platform,
     private router: Router,

@@ -235,6 +235,8 @@ export class AuthenticationService {
             case "/pages/cranix/devices": { return this.isAllowed('device.manage') }
             case "/pages/cranix/devices/all": { return this.isAllowed('device.manage') }
             case "/pages/cranix/groups": { return this.isAllowed('group.manage') }
+            //TODO may be it can be configured
+            case "/pages/cranix/informations": { return true }
             case "/pages/cranix/hwconfs": { return this.isAllowed('hwconf.manage') }
             case "/pages/cranix/rooms": { return this.isAllowed('room.manage') }
             case "/pages/cranix/rooms/all": { return this.isAllowed('room.manage') }

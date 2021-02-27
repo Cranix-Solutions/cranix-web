@@ -33,6 +33,7 @@ import { EductaionService } from './services/education.service';
 import { GenericObjectService } from './services/generic-object.service';
 import { GroupsService } from './services/groups.service';
 import { HwconfsService } from './services/hwconfs.service';
+import { InformationsService } from './services/informations.services';
 import { ObjectsEditComponent } from './shared/objects-edit/objects-edit.component';
 import { RoomsService } from './services/rooms.service';
 import { SoftwareService } from './services/softwares.service';
@@ -47,6 +48,7 @@ import { DevicePrintersComponent } from 'src/app/protected/cranix/devices/detail
 import { AddDeviceComponent } from 'src/app/protected/cranix/devices/add-device/add-device.component';
 import { AddPrinterComponent } from 'src/app/protected/cranix/devices/add-printer/add-printer.component';
 //import '@ag-grid-enterprise/all-modules'
+import { AddInfoPage } from 'src/app/protected/cranix/informations/informations.component'
 import { AddOutgoingRuleComponent } from './protected/cranix/security/firewall/add-rules/add-outgoing-rule.component';
 import { AddRemoteRuleComponent } from './protected/cranix/security/firewall/add-rules/add-remote-rule.component';
 import { AddEditRoomAccessComponent } from 'src/app/protected/cranix/security/room-access/add-edit-room-access/add-edit-room-access.component';
@@ -78,6 +80,7 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
+    AddInfoPage,
     AddDeviceComponent,
     AddEditRoomAccessComponent,
     AddOutgoingRuleComponent,
@@ -103,6 +106,7 @@ const routes: Routes = [
     EditArticleComponent
   ],
   entryComponents: [
+    AddInfoPage,
     AppComponent,
     SoftwareLicensesComponent,
     ManageDhcpComponent,
@@ -150,6 +154,7 @@ const routes: Routes = [
   providers: [
     AddDeviceComponent,
     AddEditRoomAccessComponent,
+    AddInfoPage,
     AddOutgoingRuleComponent,
     AddRemoteRuleComponent,
     CanActivateViaAcls,
@@ -160,6 +165,7 @@ const routes: Routes = [
     EductaionService,
     GroupsService,
     HwconfsService,
+    InformationsService,
     StatusBar,
     ProxyCanDeactivate,
     RoomsService,
