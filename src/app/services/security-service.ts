@@ -196,6 +196,21 @@ export class SecurityService {
     );
   }
 
+  modifyAccessInRoom(accessInRoom: AccessInRoom) {
+    this.url = this.hostname + "/rooms/accessList/"
+    console.log(this.url,accessInRoom);
+    this.objectService.requestSent();
+    let sub = this.http.post<ServerResponse>(this.url, accessInRoom, { headers: this.authService.headers }).subscribe(
+      (val) => {
+        this.objectService.responseMessage(val);
+      },
+      (err) => {
+        this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
+      },
+      () => { sub.unsubscribe() }
+    );
+  }
+
   readDatas() {
     let sub1 = this.getIncomingRules().subscribe(
       (val) => { this.incomingRules = val; },

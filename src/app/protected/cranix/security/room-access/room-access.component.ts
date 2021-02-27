@@ -4,7 +4,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { SecurityService } from 'src/app/services/security-service';
 import { AccessInRoom } from 'src/app/shared/models/secutiry-model';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
-import { AllModules } from '@ag-grid-enterprise/all-modules';
+import { AllModules, RowNode } from '@ag-grid-enterprise/all-modules';
 import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
 import { ModalController } from '@ionic/angular';
 import { AddEditRoomAccessComponent } from './add-edit-room-access/add-edit-room-access.component';
@@ -21,7 +21,7 @@ import { ApplyBTNRenderer } from 'src/app/pipes/ag-apply-renderer';
 export class RoomAccessComponent implements OnInit {
   segment = 'list';
   rowData: AccessInRoom[] = [];
-  notActive: boolean = true;
+  notActive: boolean = false;
   disabled: boolean = false;
   accessOptions = {};
   context;
@@ -61,11 +61,11 @@ export class RoomAccessComponent implements OnInit {
 
   ngOnInit() {
     this.createColumnDef();
-    this.createAccesColumnDef();
+    this.createStatusColumnDefs();
     this.readDatas();
   }
 
-  createAccesColumnDef() {
+  createStatusColumnDefs() {
     this.statusColumnDefs = [
       {
         field: "id",
@@ -102,14 +102,12 @@ export class RoomAccessComponent implements OnInit {
       }
     ];
   }
-  toggle(data, field: string, value: boolean, rowIndex: number) {
-    console.log(data, field, value, rowIndex)
-    let rows = []
-    rows.push(this.statusApi.getRowNode(rowIndex));
-    rows[0]['data'][field] =!value;
-    console.log(rows)
-    this.securityService.setAccessStatusInRoom(data);
-    this.statusApi.redrawRows({ rowNodes: rows });
+  toggle(data, field: string, value: boolean) {
+    if (this.segment == 'list') {
+      this.securityService.modifyAccessInRoom(data);
+    } else {
+      this.securityService.setAccessStatusInRoom(data);
+    }
   }
 
   apply(data: AccessInRoom, rowIndex: number) {
@@ -201,11 +199,7 @@ export class RoomAccessComponent implements OnInit {
     }
   }
   segmentChanged(event) {
-    if (this.segment == 'status') {
-      this.createAccesColumnDef();
-    }
     this.segment = event.detail.value;
-    this.notActive = !this.notActive
   }
 
   readDatas() {
