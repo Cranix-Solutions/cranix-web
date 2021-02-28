@@ -12,6 +12,9 @@ import { ProxyComponent }                from './proxy/proxy.component';
 import { RoomAccessComponent }           from './room-access/room-access.component';
 import { UnboundComponent }              from './unbound/unbound.component';
 import { FirewallCanDeactivate, ProxyCanDeactivate, UnboundCanDeactivate } from 'src/app/services/security-service';
+import { AddRemoteRuleComponent } from './firewall/add-rules/add-remote-rule.component';
+import { AddOutgoingRuleComponent } from './firewall/add-rules/add-outgoing-rule.component';
+import { AddEditRoomAccessComponent } from './room-access/add-edit-room-access/add-edit-room-access.component';
 
 const routes: Routes = [
   {
@@ -51,11 +54,12 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    CranixSharedModule,
     FormsModule,
     IonicModule,
-    CranixSharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [SecurityPage,FirewallComponent,ProxyComponent,RoomAccessComponent,UnboundComponent]
+  declarations: [SecurityPage,FirewallComponent,ProxyComponent,RoomAccessComponent,UnboundComponent,AddRemoteRuleComponent,AddOutgoingRuleComponent,AddEditRoomAccessComponent],
+  providers:[FirewallCanDeactivate,ProxyCanDeactivate,UnboundCanDeactivate ]
 })
 export class SecurityPageModule { }

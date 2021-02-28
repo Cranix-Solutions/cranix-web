@@ -122,6 +122,7 @@ export class AddInfoPage implements OnInit {
     text: "",
     categoryIds: []
   }
+  categories = []
   disabled: boolean = false;
   @Input() infoType
   constructor(
@@ -133,6 +134,10 @@ export class AddInfoPage implements OnInit {
   ngOnInit() { }
   onSubmit(val) {
     console.log(val)
+    this.info.categoryIds = []
+    for( let cat of this.categories ) {
+       this.info.categoryIds.push(cat.id)
+    }
     this.informationsService.addInfo(this.infoType, val).subscribe(
       (val) => { 
         this.objectService.responseMessage(val);

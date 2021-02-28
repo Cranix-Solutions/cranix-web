@@ -6,7 +6,7 @@ import { IonicModule, ModalController } from '@ionic/angular';
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { TranslateService } from '@ngx-translate/core';
 import { PipesModule } from 'src/app/pipes/pipe-modules';
-import { InformationsComponent } from 'src/app/protected/cranix/informations/informations.component'
+import { InformationsComponent, AddInfoPage } from 'src/app/protected/cranix/informations/informations.component'
  
 const routes: Routes = [
   {
@@ -23,7 +23,7 @@ const routes: Routes = [
     IonicModule,
     CranixSharedModule
   ],
-  declarations: [InformationsComponent],
+  declarations: [InformationsComponent, AddInfoPage ],
   providers: [TranslateService]
 })
 export class InformationsModule { }

@@ -2,12 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AgChartsAngularModule } from 'ag-charts-angular';
-import {
-  MatDatepickerModule,
-  MatTooltipModule,
-  MatIconModule,
-  MatNativeDateModule
-} from "@angular/material";
+import { MatTooltipModule } from '@angular/material/tooltip'
+import { MatIconModule } from '@angular/material/icon';
 import { ToolbarComponent } from 'src/app/protected/toolbar/toolbar.component';
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
@@ -36,12 +32,16 @@ import { UpdateRenderer } from 'src/app/pipes/ag-update-renderer';
 import { UserIdCellRenderer } from 'src/app/pipes/ag-userid-renderer';
 import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-renderer';
 import { FileSystemUsageRenderer } from 'src/app/pipes/ag-filesystem-usage-renderer';
+import { CanActivateViaAcls } from '../services/auth-guard.service';
+import { ObjectsEditComponent } from './objects-edit/objects-edit.component';
+import { IonicSelectableModule } from 'ionic-selectable';
 
 @NgModule({
   declarations: [
     ApplyBTNRenderer,
     ApplyCheckBoxBTNRenderer,
     ActionBTNRenderer,
+    ObjectsEditComponent,
     DateCellRenderer,
     DateTimeCellRenderer,
     DeviceIdCellRenderer,
@@ -92,10 +92,9 @@ import { FileSystemUsageRenderer } from 'src/app/pipes/ag-filesystem-usage-rende
     ]),
     FormsModule,
     IonicModule,
-    MatDatepickerModule,
+    IonicSelectableModule,
     MatTooltipModule,
     MatIconModule,
-    MatNativeDateModule,
     ReactiveFormsModule,
     PipesModule,
     TranslateModule,
@@ -105,15 +104,14 @@ import { FileSystemUsageRenderer } from 'src/app/pipes/ag-filesystem-usage-rende
     AgGridModule,
     FormsModule,
     IonicModule,
-    MatDatepickerModule,
+    IonicSelectableModule,
     MatTooltipModule,
     MatIconModule,
-    MatNativeDateModule,
     PipesModule,
     ReactiveFormsModule,
     TranslateModule,
     ToolbarComponent,
   ],
-  providers: [WindowRef]
+  providers: [WindowRef,CanActivateViaAcls ]
 })
 export class CranixSharedModule { }

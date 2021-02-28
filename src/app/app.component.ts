@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Router } from '@angular/router';
 //own services
 import { AuthenticationService } from './services/auth.service';
@@ -24,8 +22,6 @@ export class AppComponent {
     private platform: Platform,
     private router: Router,
     private securityService: SecurityService,
-    private splashScreen: SplashScreen,
-    private statusBar: StatusBar
   ) {
     this.platform.ready();
     this.initializeApp();
@@ -33,8 +29,7 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
+      //this.statusBar.styleDefault();
       this.languageService.setInitialAppLanguage();
       this.authService.authenticationState.subscribe(state => {
         console.log("authenticationState",state)

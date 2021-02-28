@@ -16,10 +16,35 @@
         <ion-list>
             <ion-item>
                 <ion-label position="stacked">{{'category' | translate}}</ion-label>
-                <ion-select multiple="true" [(ngModel)]="info.categoryIds" name="categoryIds">
+                <!-- ion-select multiple="true" [(ngModel)]="info.categoryIds" name="categoryIds">
                     <ion-select-option *ngFor="let category of informationsService.categories" [value]="category.id">
                         {{category.name}}</ion-select-option>
-                </ion-select>
+                </ion-select  -->
+		<ionic-selectable
+			#ionicSelectable
+			[isMultiple]="true"
+			[(ngModel)]="categories"
+			[ngModelOptions]="{standalone: true}"
+			[items]="informationsService.categories"
+			itemValueField="id"
+			itemTextField="name"
+			[canSearch]="true">
+			<ng-template ionicSelectableHeaderTemplate>
+			  <ion-toolbar>
+			    <ion-title>
+			    {{ "Select a Category" | translate }}
+			    </ion-title>
+			    <ion-buttons slot="end">
+			      <ion-button ion-button (click)="ionicSelectable.close()">
+			        <ion-icon color="danger" name="close"></ion-icon>
+			      </ion-button>
+			    </ion-buttons>
+			  </ion-toolbar>
+			</ng-template>
+			<ng-template ionicSelectableItemIconTemplate>
+			 <div></div>
+			</ng-template>
+		</ionic-selectable>
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">{{'title' | translate}}</ion-label>

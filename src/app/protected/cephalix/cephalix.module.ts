@@ -12,6 +12,6 @@ import { TicketsPageModule } from 'src/app/protected/cephalix/tickets/tickets.mo
     CustomersPageModule,
     InstitutesPageModule,
     TicketsPageModule
-  ]
+  ],
 })
 export class CephalixModule { }

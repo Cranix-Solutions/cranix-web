@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams, ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
 //own
 import { CephalixService } from 'src/app/services/cephalix.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
@@ -44,7 +43,6 @@ export class ObjectsEditComponent implements OnInit {
     public languageS: LanguageService,
     private navParams: NavParams,
     private modalController: ModalController,
-    private splashScreen: SpinnerDialog,
     private usersService: UsersService,
     private systemService: SystemService,
     public translateService: TranslateService,
@@ -119,7 +117,6 @@ export class ObjectsEditComponent implements OnInit {
       }
     }
     this.disabled = true;
-    this.splashScreen.show();
     this.objectService.requestSent();
     console.log("onSubmit", object);
     if (this.objectType == 'settings') {
@@ -165,13 +162,11 @@ export class ObjectsEditComponent implements OnInit {
           this.modalController.dismiss("succes");
         } else {
           this.disabled = false;
-          this.splashScreen.hide();
         }
       },
       async (error) => {
         this.objectService.errorMessage("A Server Error is accoured:" + error);
         this.disabled = false;
-        this.splashScreen.hide();
       },
       () => {
         subs.unsubscribe();
@@ -190,12 +185,10 @@ export class ObjectsEditComponent implements OnInit {
           this.modalController.dismiss("succes");
         } else {
           this.disabled = false;
-          this.splashScreen.hide();
         }
       },
       async (error) => {
         this.objectService.errorMessage("A Server Error is accoured:" + error.toString());
-        this.splashScreen.hide();
       },
       () => {
         subs.unsubscribe();
@@ -227,14 +220,12 @@ export class ObjectsEditComponent implements OnInit {
           this.modalController.dismiss("succes");
         } else {
           this.disabled = false;
-          this.splashScreen.hide();
         }
       },
       async (error) => {
         console.log(error)
         this.objectService.errorMessage("A Server Error is accoured:" + error);
         this.disabled = false;
-        this.splashScreen.hide();
       },
       () => {
         subs.unsubscribe();
