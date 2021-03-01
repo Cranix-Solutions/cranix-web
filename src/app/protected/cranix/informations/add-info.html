@@ -41,16 +41,13 @@
 			    </ion-buttons>
 			  </ion-toolbar>
 			</ng-template>
-			<ng-template ionicSelectableItemIconTemplate>
-			 <div></div>
-			</ng-template>
 		</ionic-selectable>
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">{{'title' | translate}}</ion-label>
                 <ion-input [(ngModel)]="info.title" name="title" required></ion-input>
             </ion-item>
-            <ion-item>
+            <ion-item *ngIf="infoType == 'contact'">
                 <ion-label position="stacked">{{'issue' | translate}}</ion-label>
                 <ion-input [(ngModel)]="info.issue" name="issue"></ion-input>
             </ion-item>
@@ -74,10 +71,7 @@
                 <ion-label position="stacked">{{'phone' | translate}}</ion-label>
                 <ion-input [(ngModel)]="info.phone" name="phone"></ion-input>
             </ion-item>
-            <ion-item *ngIf="infoType != 'contact'">
-                <ion-label position="stacked">{{'text' | translate}}</ion-label>
-                <ion-textarea autoGrow="true" [(ngModel)]="info.text" name="text"></ion-textarea>
-            </ion-item>
+            <quill-editor *ngIf="infoType != 'contact'" [(ngModel)]="info.text" name="text"></quill-editor>
         </ion-list>
     </ion-content>
 </form>
