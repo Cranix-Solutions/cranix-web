@@ -15,6 +15,7 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./group-members.page.scss'],
 })
 export class GroupMembersPage implements OnInit {
+  context;
   memberOptions;
   noMemberOptions;
   columnDefs = [];
@@ -35,8 +36,45 @@ export class GroupMembersPage implements OnInit {
     private languageS: LanguageService,
     private groupS: GroupsService,
     public translateServices: TranslateService
-  ) {
+  ) {}
+
+  ngOnInit() {
+    console.log('innerWidth',window.innerWidth)
+    this.context = { componentParent: this }
     this.group = <Group>this.objectS.selectedObject;
+    if( window.innerWidth < 500 ) {
+      this.mdColDef()
+    } else {
+      this.brColDef()
+    }
+    this.readMembers();
+  }
+  mdColDef() {
+    this.columnDefs = [
+      {
+        headerName: this.languageS.trans('user'),
+        field: 'fullName',
+        sortable: true,
+        minWidth: 200,
+        headerCheckboxSelection: this.authService.settings.headerCheckboxSelection,
+        headerCheckboxSelectionFilteredOnly: true,
+        checkboxSelection: this.authService.settings.checkboxSelection,
+        suppressMenu: true
+      },
+      {
+        headerName: this.languageS.trans('role'),
+        sortable: true,
+        resizable: true,
+        field: 'role',
+        width: 100,
+        suppressMenu: true,
+        valueGetter: function (params) {
+          return params.context['componentParent'].languageS.trans(params.data.role);
+        }
+      }
+    ]
+  }
+  brColDef() {
     this.columnDefs = [
       {
         headerName: this.languageS.trans('uid'),
@@ -48,32 +86,29 @@ export class GroupMembersPage implements OnInit {
         suppressMenu: true
       },
       {
-        headerName: this.languageS.trans('role'),
+        headerName: this.languageS.trans('surName'),
         sortable: true,
         resizable: true,
-        field: 'role',
-        suppressMenu: true
+        field: 'surName'
       },
-
       {
         headerName: this.languageS.trans('givenName'),
         sortable: true,
         resizable: true,
-        field: 'givenName',
-        suppressMenu: true
+        field: 'givenName'
       },
       {
-        headerName: this.languageS.trans('surName'),
+        headerName: this.languageS.trans('role'),
         sortable: true,
         resizable: true,
-        field: 'surName',
-        suppressMenu: true
+        field: 'role',
+        width: 150,
+        suppressMenu: true,
+        valueGetter: function (params) {
+          return params.context['componentParent'].languageS.trans(params.data.role);
+        }
       }
     ]
-  }
-
-  ngOnInit() {
-    this.readMembers();
   }
   public ngAfterViewInit() {
     while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
@@ -83,7 +118,7 @@ export class GroupMembersPage implements OnInit {
     this.memberApi = params.api;
     this.memberColumnApi = params.columnApi;
     this.memberApi.sizeColumnsToFit();
-    (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
+    (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.60) + "px";
   }
   onMemberSelectionChanged() {
     this.memberSelection = this.memberApi.getSelectedRows();
@@ -98,7 +133,7 @@ export class GroupMembersPage implements OnInit {
     this.noMemberApi = params.api;
     this.noMemberColumnApi = params.columnApi;
     this.noMemberApi.sizeColumnsToFit();
-    (<HTMLInputElement>document.getElementById("noMemberTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
+    (<HTMLInputElement>document.getElementById("noMemberTable")).style.height = Math.trunc(window.innerHeight * 0.60) + "px";
   }
   onNoMemberSelectionChanged() {
     this.noMemberSelection = this.noMemberApi.getSelectedRows();

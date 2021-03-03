@@ -15,11 +15,9 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { CranixSharedModule } from './shared/cranix-shared.module';
 
 //own services
-import { CanActivateViaAcls } from './services/auth-guard.service';
 import { CephalixService } from './services/cephalix.service';
 import { DevicesService } from './services/devices.service';
 import { EductaionService } from './services/education.service';
-import { FirewallCanDeactivate, ProxyCanDeactivate, UnboundCanDeactivate } from 'src/app/services/security-service'
 import { GenericObjectService } from './services/generic-object.service';
 import { GroupsService } from './services/groups.service';
 import { HwconfsService } from './services/hwconfs.service';

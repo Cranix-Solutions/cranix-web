@@ -9,6 +9,7 @@ import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { DevicesListsPage }   from './devices-lists.page';
 import { DevicesComponent }   from './devices.component';
 import { PrintersComponent }  from './printers.component';
+import { DevicePrintersComponent } from '../details/printers/device-printers.component' 
 
 const routes: Routes = [
   {
@@ -43,7 +44,7 @@ const routes: Routes = [
     CranixSharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [DevicesListsPage,DevicesComponent,PrintersComponent]
+  declarations: [DevicesListsPage,DevicesComponent,PrintersComponent,DevicePrintersComponent]
 })
 export class DevicesListsModule { }
 

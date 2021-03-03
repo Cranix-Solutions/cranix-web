@@ -10,7 +10,7 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
   styleUrls: ['./files-upload.component.scss'],
 })
 export class FilesUploadComponent implements OnInit {
-  public files: FileList;
+  public files: any[];
   studentsOnly: boolean = true;
   cleanUp: boolean = false;
   objectType: string = "user";
@@ -61,7 +61,7 @@ export class FilesUploadComponent implements OnInit {
       }
     });
   }
-  onFilesAdded(files: FileList) {
-    this.files = files;
+  onFilesAdded(event) {
+    this.files = event.target.files;
   }
 }

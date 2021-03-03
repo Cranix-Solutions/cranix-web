@@ -2,8 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AgChartsAngularModule } from 'ag-charts-angular';
-import { MatTooltipModule } from '@angular/material/tooltip'
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ToolbarComponent } from 'src/app/protected/toolbar/toolbar.component';
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
@@ -15,6 +17,7 @@ import { ApplyCheckBoxBTNRenderer } from 'src/app/pipes/ag-apply-checkbox-render
 import { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
 import { CheckBoxBTNRenderer } from 'src/app/pipes/ag-checkbox-renderer';
 import { GroupActionBTNRenderer } from 'src/app/pipes/ag-group-renderer';
+import { GroupMembersPage } from 'src/app/shared/actions/group-members/group-members.page';
 import { UserActionBTNRenderer } from 'src/app/pipes/ag-user-renderer';
 import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
 import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
@@ -33,11 +36,23 @@ import { UserIdCellRenderer } from 'src/app/pipes/ag-userid-renderer';
 import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-renderer';
 import { FileSystemUsageRenderer } from 'src/app/pipes/ag-filesystem-usage-renderer';
 import { CanActivateViaAcls } from '../services/auth-guard.service';
-import { ObjectsEditComponent } from './objects-edit/objects-edit.component';
 import { IonicSelectableModule } from 'ionic-selectable';
-
+import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
+import { AddDeviceComponent } from 'src/app/protected/cranix/devices/add-device/add-device.component';
+import { AddPrinterComponent } from 'src/app/protected/cranix/devices/add-printer/add-printer.component';
+import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
+import { ActionsComponent } from 'src/app/shared/actions/actions.component';
+import { SetpasswordComponent } from 'src/app/shared/actions/setpassword/setpassword.component'
+import { SetquotaComponent } from 'src/app/shared/actions/setquota/setquota.component';
+import { ManageDhcpComponent } from 'src/app/shared/actions/manage-dhcp/manage-dhcp.component'
+import { FilesUploadComponent } from 'src/app/shared/actions/files-upload/files-upload.component'
+import { FilesCollectComponent } from 'src/app/shared/actions/files-collect/files-collect.component'
+import { DownloadSoftwaresComponent } from 'src/app/shared/actions/download-softwares/download-softwares.component'
 @NgModule({
   declarations: [
+    ActionsComponent,
+    AddDeviceComponent,
+    AddPrinterComponent,
     ApplyBTNRenderer,
     ApplyCheckBoxBTNRenderer,
     ActionBTNRenderer,
@@ -46,16 +61,24 @@ import { IonicSelectableModule } from 'ionic-selectable';
     DateTimeCellRenderer,
     DeviceIdCellRenderer,
     DeviceActionBTNRenderer,
+    DownloadSoftwaresComponent,
     EditBTNRenderer,
+    FilesCollectComponent,
     FileSystemUsageRenderer,
+    FilesUploadComponent,
     GroupIdCellRenderer,
     GroupActionBTNRenderer,
+    GroupMembersPage,
     HwconfIdCellRenderer,
     InstituteActionCellRenderer,
+    ManageDhcpComponent,
     PrinterActionBTNRenderer,
     RoomActionBTNRenderer,
-    SoftwareEditBTNRenderer,
     RoomIdCellRenderer,
+    SetpasswordComponent,
+    SetquotaComponent,
+    SoftwareEditBTNRenderer,
+    SelectColumnsComponent,
     UpdateRenderer,
     UserActionBTNRenderer,
     UserIdCellRenderer,
@@ -65,8 +88,8 @@ import { IonicSelectableModule } from 'ionic-selectable';
     CheckBoxBTNRenderer
   ],
   imports: [
-    AgChartsAngularModule,
     CommonModule,
+    AgChartsAngularModule,
     AgGridModule.withComponents([
       ApplyCheckBoxBTNRenderer,
       ActionBTNRenderer,
@@ -93,20 +116,24 @@ import { IonicSelectableModule } from 'ionic-selectable';
     FormsModule,
     IonicModule,
     IonicSelectableModule,
-    MatTooltipModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
     MatIconModule,
+    MatTooltipModule,
     ReactiveFormsModule,
     PipesModule,
     TranslateModule,
   ], exports: [
-    AgChartsAngularModule,
     CommonModule,
+    AgChartsAngularModule,
     AgGridModule,
     FormsModule,
     IonicModule,
     IonicSelectableModule,
-    MatTooltipModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
     MatIconModule,
+    MatTooltipModule,
     PipesModule,
     ReactiveFormsModule,
     TranslateModule,

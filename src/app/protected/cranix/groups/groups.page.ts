@@ -1,9 +1,8 @@
-import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__ } from '@angular/core';
-import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
+import { Component, OnInit } from '@angular/core';
+import { GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
-import { TranslateService } from '@ngx-translate/core';
 
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
@@ -14,7 +13,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Group } from 'src/app/shared/models/data-model'
 import { AuthenticationService } from 'src/app/services/auth.service';
-import { GroupMembersPage  } from './details/members/group-members.page';
+import { GroupMembersPage  } from 'src/app/shared/actions/group-members/group-members.page';
 
 @Component({
   selector: 'cranix-groups',
@@ -41,8 +40,7 @@ export class GroupsPage implements OnInit {
     public popoverCtrl: PopoverController,
     public languageS: LanguageService,
     public route: Router,
-    private storage: Storage,
-    public translateService: TranslateService
+    private storage: Storage
   ) {
     this.context = { componentParent: this };
     this.rowSelection = 'multiple';

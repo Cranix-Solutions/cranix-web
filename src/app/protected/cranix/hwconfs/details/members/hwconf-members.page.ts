@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
-import { AllModules } from '@ag-grid-enterprise/all-modules';
 //own stuff
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
@@ -33,7 +31,7 @@ export class HwconfMembersPage implements OnInit {
   memberData: Device[] = [];
   autoGroupColumnDef;
   hwconf;
-  modules = [AllModules, RowGroupingModule];
+  modules = [];
   roomGrouping: boolean = true;
   constructor(
     public authService: AuthenticationService,

@@ -4,8 +4,6 @@ import { LanguageService } from 'src/app/services/language.service';
 import { SecurityService } from 'src/app/services/security-service';
 import { AccessInRoom } from 'src/app/shared/models/secutiry-model';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
-import { AllModules, RowNode } from '@ag-grid-enterprise/all-modules';
-import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
 import { ModalController } from '@ionic/angular';
 import { AddEditRoomAccessComponent } from './add-edit-room-access/add-edit-room-access.component';
 import { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
@@ -34,7 +32,7 @@ export class RoomAccessComponent implements OnInit {
   autoGroupColumnDef;
   defaultColDef;
   grouping = '';
-  modules = [AllModules, RowGroupingModule];
+  modules = [];
 
   constructor(
     public authService: AuthenticationService,

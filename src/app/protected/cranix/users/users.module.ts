@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { CanActivateViaAcls } from 'src/app/services/auth-guard.service';
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
+import { ShowImportComponent } from 'src/app/shared/actions/show-import/show-import.component'
 import { PipesModule } from 'src/app/pipes/pipe-modules';
 
 const routes: Routes = [
@@ -29,7 +30,7 @@ const routes: Routes = [
     IonicModule,
     CranixSharedModule
   ],
-  declarations: [ ],
+  declarations: [ ShowImportComponent ],
   providers: [TranslateService, PipesModule]
 })
 export class UsersPageModule {}

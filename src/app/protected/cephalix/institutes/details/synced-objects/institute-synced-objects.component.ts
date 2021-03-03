@@ -7,7 +7,6 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { Institute, SynchronizedObject } from 'src/app/shared/models/cephalix-data-model';
 import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
-import { AllModules, RowGroupingModule } from '@ag-grid-enterprise/all-modules';
 
 @Component({
   selector: 'cranix-institute-synced-objects',
@@ -23,7 +22,7 @@ export class InstituteSyncedObjectsComponent implements OnInit {
   memberSelection: SynchronizedObject[] = [];
   memberData: SynchronizedObject[] = [];
   autoGroupColumnDef;
-  modules = [ AllModules, RowGroupingModule ];
+  modules = [];
   institute;
 
   constructor(

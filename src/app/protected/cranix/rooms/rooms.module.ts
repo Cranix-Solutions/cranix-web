@@ -8,6 +8,7 @@ import { IonicModule } from '@ionic/angular';
 import { CanActivateViaAcls } from 'src/app/services/auth-guard.service';
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { PipesModule } from 'src/app/pipes/pipe-modules';
+import { RoomPrintersPage } from 'src/app/protected/cranix/rooms/details/printers/room-printers.page';
 
 const routes: Routes = [
   {
@@ -29,7 +30,7 @@ const routes: Routes = [
     IonicModule,
     CranixSharedModule
   ],
-  declarations: [ ],
+  declarations: [ RoomPrintersPage ],
   providers: [TranslateService, PipesModule]
 })
 export class RoomsPageModule {}

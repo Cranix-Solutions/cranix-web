@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { GridApi, ColumnApi, GridOptions } from '@ag-grid-enterprise/all-modules';
 import { AlertController, PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
@@ -29,8 +28,8 @@ export class DevicesComponent implements OnInit {
   sortableColumns: string[] = ['name', 'mac', 'ip', 'hwconfId', 'roomId'];
   columnDefs = [];
   defaultColDef = {};
-  gridApi: GridApi;
-  columnApi: ColumnApi;
+  gridApi;
+  columnApi;
   rowSelection;
   context;
   title = 'app';
@@ -136,7 +135,7 @@ export class DevicesComponent implements OnInit {
     this.columnDefs = columnDefs;
   }
 
-  onGridReady(params: GridOptions) {
+  onGridReady(params) {
     params.getRowStyle = function (par) {
       if (par.node.rowIndex % 2 === 0) {
         return { background: 'red' };

@@ -46,7 +46,8 @@ export class SystemConfigComponent implements OnInit {
     )
   }
 
-  togle(key: string, checked: boolean){
+  togle(key: string, event){
+    let checked = event.detail.checked
     let sub = this.systemService.setSystemConfigValue(key, checked ? "yes" : "no").subscribe(
       (val) => {
         this.objectService.responseMessage(val)

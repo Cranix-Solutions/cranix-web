@@ -1,0 +1,42 @@
+<form #addEditGuest="ngForm">
+    <ion-header translucent>
+        <ion-toolbar>
+            <ion-title>{{ action + ' guest users' | translate }}</ion-title>
+            <ion-buttons slot="end">
+                <ion-button class="ion-no-margin" (click)="onSubmit(addEditGuest.value)" [disabled]="!addEditGuest.valid">
+                    <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+                </ion-button>
+                <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss('closed')" [disabled]="disabled">
+                    <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+                </ion-button>
+            </ion-buttons>
+        </ion-toolbar>
+    </ion-header>
+    <ion-content fullscreen *ngIf="guest">
+        <ion-list>
+            <ion-item>
+                <ion-label position="stacked">{{'category' | translate}}</ion-label>
+                <ionic-selectable #ionicSelectable [isMultiple]="true" [(ngModel)]="selectedRooms"
+                    [ngModelOptions]="{standalone: true}" [items]="rooms" itemValueField="id"
+                    itemTextField="name" [canSearch]="true">
+                    <ng-template ionicSelectableHeaderTemplate>
+                        <ion-toolbar>
+                            <ion-title>
+                                {{ "Select Rooms for the Guest Users" | translate }}
+                            </ion-title>
+                            <ion-buttons slot="end">
+                                <ion-button ion-button (click)="ionicSelectable.close()">
+                                    <ion-icon color="danger" name="close"></ion-icon>
+                                </ion-button>
+                            </ion-buttons>
+                        </ion-toolbar>
+                    </ng-template>
+                </ionic-selectable>
+            </ion-item>
+            <ion-item>
+                <ion-label position="stacked">{{'name' | translate}}</ion-label>
+                <ion-input [(ngModel)]="guest.name" name="name" required></ion-input>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</form>

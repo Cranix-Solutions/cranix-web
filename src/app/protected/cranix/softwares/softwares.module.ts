@@ -6,11 +6,12 @@ import { RouterModule, Routes } from '@angular/router';
 
 //own modules
 import { CranixSharedModule }            from 'src/app/shared/cranix-shared.module';
+import { EditInstallationSetComponent }  from './edit-set/edit-installation-set.component';
+import { InstallationSetsComponent }     from './sets/installation-sets.component';
 import { SoftwaresPage }                 from './softwares.page';
 import { SoftwareStatusComponent }       from './status/software-status.component';
-import { InstallationSetsComponent }     from './sets/installation-sets.component';
 import { SoftwarePackagesComponent }     from './packages/software-packages.component';
-import { EditInstallationSetComponent }  from './edit-set/edit-installation-set.component';
+import { SoftwareLicensesComponent }     from 'src/app/shared/actions/software-licenses/software-licenses.component'
 
 const routes: Routes = [
   {
@@ -53,6 +54,13 @@ const routes: Routes = [
     CranixSharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [SoftwaresPage,SoftwareStatusComponent,SoftwarePackagesComponent,InstallationSetsComponent,EditInstallationSetComponent]
+  declarations: [
+    EditInstallationSetComponent,
+    InstallationSetsComponent,
+    SoftwareLicensesComponent,
+    SoftwaresPage,
+    SoftwarePackagesComponent,
+    SoftwareStatusComponent,
+    SoftwarePackagesComponent]
 })
 export class SoftwaresPageModule { }

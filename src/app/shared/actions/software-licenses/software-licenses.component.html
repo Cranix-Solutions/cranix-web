@@ -44,7 +44,7 @@
               <div *ngIf="file">{{file.name}}</div>
               <div *ngIf="!file">{{'Select a file'|translate}}</div>
             </button>
-            <input type="file" (change)="onFilesAdded($event.target.files)" />
+            <input type="file" (change)="onFilesAdded($event)" />
           </div>
         </ion-item>
       </ion-col>

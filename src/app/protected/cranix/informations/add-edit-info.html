@@ -1,9 +1,9 @@
-<form #addInfo="ngForm">
+<form #addEditInfo="ngForm">
     <ion-header translucent>
         <ion-toolbar>
-            <ion-title>{{  'Add new ' + infoType  | translate }}</ion-title>
+            <ion-title>{{ 'Add new ' + infoType | translate }}</ion-title>
             <ion-buttons slot="end">
-                <ion-button class="ion-no-margin" (click)="onSubmit(addInfo.value)" [disabled]="!addInfo.valid">
+                <ion-button class="ion-no-margin" (click)="onSubmit(addEditInfo.value)" [disabled]="!addEditInfo.valid">
                     <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
                 </ion-button>
                 <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss('closed')" [disabled]="disabled">
@@ -12,36 +12,26 @@
             </ion-buttons>
         </ion-toolbar>
     </ion-header>
-    <ion-content fullscreen>
+    <ion-content fullscreen  *ngIf="info">
         <ion-list>
             <ion-item>
                 <ion-label position="stacked">{{'category' | translate}}</ion-label>
-                <!-- ion-select multiple="true" [(ngModel)]="info.categoryIds" name="categoryIds">
-                    <ion-select-option *ngFor="let category of informationsService.categories" [value]="category.id">
-                        {{category.name}}</ion-select-option>
-                </ion-select  -->
-		<ionic-selectable
-			#ionicSelectable
-			[isMultiple]="true"
-			[(ngModel)]="categories"
-			[ngModelOptions]="{standalone: true}"
-			[items]="informationsService.categories"
-			itemValueField="id"
-			itemTextField="name"
-			[canSearch]="true">
-			<ng-template ionicSelectableHeaderTemplate>
-			  <ion-toolbar>
-			    <ion-title>
-			    {{ "Select a Category" | translate }}
-			    </ion-title>
-			    <ion-buttons slot="end">
-			      <ion-button ion-button (click)="ionicSelectable.close()">
-			        <ion-icon color="danger" name="close"></ion-icon>
-			      </ion-button>
-			    </ion-buttons>
-			  </ion-toolbar>
-			</ng-template>
-		</ionic-selectable>
+                <ionic-selectable #ionicSelectable [isMultiple]="true" [(ngModel)]="categories"
+                    [ngModelOptions]="{standalone: true}" [items]="informationsService.categories" itemValueField="id"
+                    itemTextField="name" [canSearch]="true">
+                    <ng-template ionicSelectableHeaderTemplate>
+                        <ion-toolbar>
+                            <ion-title>
+                                {{ "Select a Category" | translate }}
+                            </ion-title>
+                            <ion-buttons slot="end">
+                                <ion-button ion-button (click)="ionicSelectable.close()">
+                                    <ion-icon color="danger" name="close"></ion-icon>
+                                </ion-button>
+                            </ion-buttons>
+                        </ion-toolbar>
+                    </ng-template>
+                </ionic-selectable>
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">{{'title' | translate}}</ion-label>
@@ -71,7 +61,8 @@
                 <ion-label position="stacked">{{'phone' | translate}}</ion-label>
                 <ion-input [(ngModel)]="info.phone" name="phone"></ion-input>
             </ion-item>
-            <quill-editor *ngIf="infoType != 'contact'" [(ngModel)]="info.text" name="text"></quill-editor>
+            <quill-editor *ngIf="infoType != 'contact'" [styles]="{height: '250px'}" [(ngModel)]="info.text"
+                name="text"></quill-editor>
         </ion-list>
     </ion-content>
 </form>

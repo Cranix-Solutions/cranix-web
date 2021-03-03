@@ -33,7 +33,7 @@
             <ion-col size=8>
               <ion-item *ngIf="config.type == 'yesno'">
                 <ion-toggle slot="start" color="secondary" checked="{{config.value == 'yes'}}"
-                  disabled="{{config.readOnly == 'yes'}}" (ionChange)="togle(config.key,$event.detail.checked)">
+                  disabled="{{config.readOnly == 'yes'}}" (ionChange)="togle(config.key,$event)">
                 </ion-toggle>
               </ion-item>
               <ion-item *ngIf="config.type == 'string'">

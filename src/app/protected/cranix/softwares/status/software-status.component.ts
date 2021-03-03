@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AllModules } from '@ag-grid-enterprise/all-modules';
-import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
 //Own stuff
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { LanguageService } from 'src/app/services/language.service';
@@ -27,7 +25,7 @@ export class SoftwareStatusComponent implements OnInit {
   };
   institute;
   rowGroupPanelShow = "always";
-  modules = [AllModules, RowGroupingModule];
+  modules = [];
   grouping = "roomGrouping"
 
   constructor(

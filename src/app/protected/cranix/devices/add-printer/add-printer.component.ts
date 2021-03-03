@@ -188,8 +188,8 @@ export class AddPrinterComponent implements OnInit {
   roomChanged(ev) {
     this.initValues(parseInt(ev));
   }
-  handleFileInput(files: FileList) {
-    this.driverFile = files.item(0);
+  handleFileInput(ev) {
+    this.driverFile = ev.target.files.item(0);
   }
   manufacturerChanged(ev) {
     this.printer.model = "";

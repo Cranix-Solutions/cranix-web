@@ -26,15 +26,18 @@
   <ion-card>
     <ion-card-header>
       <ion-toolbar>
+        <ion-card-title>{{ 'Members of the selected hwconf:' | translate}} "{{hwconf.name}}" {{hwconf.description}}
+          {{hwconf.deviceType | translate}}
+        </ion-card-title>
         <ion-item>
           <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('hwconfMembersFilter')" id="hwconfMembersFilter">
           </ion-input>
         </ion-item>
         <ion-buttons slot="end">
-          <ion-button size="small" fill="solid" (click)="createColumnDef()"
+          <!-- ion-button size="small" fill="solid" (click)="createColumnDef()"
             matTooltip="{{'Change grouping of the table' | translate }}">
             <ion-icon slot="icon-only" name="list-sharp"></ion-icon>
-          </ion-button>
+          </ion-button -->
           <ion-button size="small" fill="solid" (click)="triggerClone($event,'startmulticastclone')"
             matTooltip="{{'Start multicast cloning' | translate }}">
             <ion-icon slot="icon-only" name="logo-buffer" color="success"></ion-icon>
@@ -53,7 +56,6 @@
       class="{{authService.settings.agGridThema}}"
       rowHeight="{{authService.settings.rowHeight}}"
       rowMultiSelectWithClick="{{authService.settings.rowMultiSelectWithClick}}"
-      [modules]="modules"
       [context]="context"
       [columnDefs]="columnDefs"
       [defaultColDef]="defaultColDef"
@@ -61,7 +63,6 @@
       [autoGroupColumnDef]="autoGroupColumnDef"
       [groupSelectsChildren]="true"
       [animateRows]="true"
-      [deltaColumnMode]="true"
       id="memberTable"
       (gridReady)="onMemberReady($event)">
       </ag-grid-angular>

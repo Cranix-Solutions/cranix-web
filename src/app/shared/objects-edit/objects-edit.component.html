@@ -29,7 +29,7 @@
             <button class="btn">
               <div *ngIf="!fileToUpload">{{'File to Upload'|translate}}</div>
               <div *ngIf="fileToUpload">{{fileToUpload.name}}</div>
-              <input slot="end" type="file" (change)="handleFileInput($event.target.files)">
+              <input slot="end" type="file" (change)="handleFileInput($event)">
             </button>
           </div>
         </ion-item>

@@ -67,7 +67,7 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{ driverFile | translate }}</ion-label>
-        <input type="file" [(ngModel)]="printer.driverFile"  name="driverFile" (change)="handleFileInput($event.target.files)"  [disabled]="submitted">
+        <input type="file" id="printerDriverFile" (change)="handleFileInput($event)"  [disabled]="submitted">
       </ion-item>
       <ion-item *ngIf="action == 'add'">
         <ion-label position="stacked">{{'serial'|translate}}</ion-label>

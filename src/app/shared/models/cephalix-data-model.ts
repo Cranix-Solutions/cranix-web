@@ -78,6 +78,7 @@ export class Article{
     recDate: any = new Date();
     reminder: any = new Date();
     workTime: number = 0;
+    pictures: any[] = [];
     constructor() {}
 }
 export class InstituteStatus {

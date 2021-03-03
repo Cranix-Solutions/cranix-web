@@ -5,7 +5,6 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { DevicesService } from 'src/app/services/devices.service';
 import { Printer, Device } from 'src/app/shared/models/data-model'
-import { ServerResponse } from 'src/app/shared/models/server-models';
 
 @Component({
   selector: 'cranix-device-printers',

@@ -55,7 +55,10 @@
       </ion-toolbar>
     </ion-card-header>
     <ion-card-content>
-      <pre>{{article.text}}</pre>
+      <div class="ql-container ql-snow" style="border-width: 0;">
+        <div class="ql-editor" [innerHTML]="article.text">
+        </div>
+      </div>
     </ion-card-content>
   </ion-card>
 </ion-content>

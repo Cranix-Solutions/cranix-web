@@ -9,7 +9,7 @@ import { UtilsService } from './utils.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
 //import { ServerResponse } from 'http';
-import { AccessStatus, Room, Device, User, Group, Category, PositivList, SmartRoom, SmartRoomStatus, EduRoom } from '../shared/models/data-model';
+import { AccessStatus, Room, Device, User, Group, Category, PositivList, SmartRoom, SmartRoomStatus, EduRoom, GuestUsers } from '../shared/models/data-model';
 import { ServerResponse } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from './auth.service';
 import { GenericObjectService } from './generic-object.service';
@@ -185,6 +185,11 @@ export class EductaionService {
 			(err) => { this.objectService.errorMessage("ERROR") },
 			() => { sub.unsubscribe() }
 		)
+	}
+
+	getGuestAccounts(){
+		this.url = `${this.hostname}/education/guestUsers`;
+		return this.http.get<GuestUsers[]>(this.url, { headers: this.authService.headers });
 	}
 
 }

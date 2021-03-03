@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 //own
 import { Ticket, Article, Institute } from 'src/app/shared/models/cephalix-data-model';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
 import { ModalController } from '@ionic/angular';
-import { EditArticleComponent } from 'src/app/shared/actions/edit-article/edit-article.component';
 class InstituteList {
   id: number;
   label: string;
@@ -76,7 +75,7 @@ export class DetailsPage implements OnInit {
     }
     article.title = this.ticket.firstname + " " + this.ticket.lastname;
     const modal = await this.modalController.create({
-      component: EditArticleComponent,
+      component: EditArticle,
       componentProps: {
         ticket: this.ticket,
         article: article
@@ -118,5 +117,46 @@ export class DetailsPage implements OnInit {
         this.institute = this.objectService.getObjectById('institute', id);
       }
     )
+  }
+}
+
+@Component({
+  selector: 'cranix-edit-article',
+  templateUrl: './edit-article.html'
+  //styleUrls: ['./edit-article.scss'],
+})
+export class EditArticle implements OnInit {
+
+  @Input() article: Article;
+  @Input() ticket: Ticket;
+  text: string = "";
+  
+  constructor(
+    private cephalixService: CephalixService,
+    public modalController:  ModalController,
+    public objectService:    GenericObjectService
+  ) { }
+
+  ngOnInit() {
+    let newText: string[] = [];
+    for(let line of this.article.text.split("\n")) {
+      newText.push(">" +line);
+    }
+    this.text = newText.join("\n");
+  }
+
+  sendArticle(){
+    this.article.recipient = this.article.sender;
+    this.article.articleType = 'O';
+    let sub = this.cephalixService.addArticleToTicket(this.article,this.ticket.id).subscribe(
+      (val) => { 
+        this.objectService.responseMessage(val)
+        if(val.code == "OK") {
+          this.modalController.dismiss();
+        }
+      },
+      (err) => { this.objectService.errorMessage(err) },
+      () => { sub.unsubscribe() }   )
+    //TODO
   }
 }
