@@ -88,7 +88,7 @@
             <button class="btn">
               <div *ngIf="files[license.id]">{{files[license.id].name}}</div>
               <div *ngIf="!files[license.id]">{{'Select a file'|translate}}</div>
-              <input type="file" (change)="onFilesChanged($event.target.files,license.id)" />
+              <input type="file" (change)="onFilesChanged($event,license.id)" />
             </button>
           </div>
         </ion-item>

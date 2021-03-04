@@ -332,6 +332,7 @@ export class DNSRecord {
 }
 
 export class GuestUsers {
+	id?: number;
 	name: string = "";
 	description: string = "";
 	count: number = 0;

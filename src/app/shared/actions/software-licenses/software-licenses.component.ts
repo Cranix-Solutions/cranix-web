@@ -37,8 +37,8 @@ export class SoftwareLicensesComponent implements OnInit {
   onFilesAdded(event) {
     this.file = event.target.files.item(0);
   }
-  onFilesChanged(files: FileList, id: number) {
-    this.files[id] = files.item(0);
+  onFilesChanged(event, id: number) {
+    this.files[id] = event.target.files.item(0);
   }
   addLicense() {
     let formData: FormData = new FormData();

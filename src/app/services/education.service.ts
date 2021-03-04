@@ -192,4 +192,16 @@ export class EductaionService {
 		return this.http.get<GuestUsers[]>(this.url, { headers: this.authService.headers });
 	}
 
+
+	async addGuestUsers(guest: GuestUsers) {
+		this.url = `${this.hostname}/education/guestUsers`;
+		console.log(this.url);
+		let sub = await this.http.post<ServerResponse>(this.url, guest, { headers: this.authService.headers }).subscribe(
+			(val) => {
+				this.objectService.responseMessage(val)
+			},
+			(err) => { this.objectService.errorMessage("ERROR") },
+			() => { sub.unsubscribe() }
+		)
+	  }
 }

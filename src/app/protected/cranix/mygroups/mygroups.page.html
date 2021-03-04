@@ -6,19 +6,19 @@
         <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="group">
           <ion-segment-button value="group" layout="icon-start">
             <ion-label class="hidden-xs hidden-sm">{{'Groups' | translate}}</ion-label>
-            <ion-icon name="newspaper"></ion-icon>
+            <ion-icon name="people-circle"></ion-icon>
           </ion-segment-button>
           <ion-segment-button value="user" layout="icon-start">
             <ion-label class="hidden-xs hidden-sm">{{'Users' | translate}}</ion-label>
-            <ion-icon name="clipboard"></ion-icon>
+            <ion-icon name="people"></ion-icon>
           </ion-segment-button>
           <ion-segment-button value="guest" layout="icon-start">
             <ion-label class="hidden-xs hidden-sm">{{'Guest Users' | translate}}</ion-label>
-            <ion-icon name="information-circle"></ion-icon>
+            <ion-icon name="walk"></ion-icon>
           </ion-segment-button>
         </ion-segment>
         <ion-item>
-          <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('mygroupsFilter')"
+          <ion-input placeholder="{{ segment }} {{'search' | translate }}" (input)="onQuickFilterChanged('mygroupsFilter')"
             id="mygroupsFilter">
           </ion-input>
         </ion-item>

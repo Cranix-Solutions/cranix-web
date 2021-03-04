@@ -31,7 +31,8 @@ export class UtilsService {
                         url = protocol + "//" + hostname + "/api";
 		}
                 //console.log("From utils: " + url);
-                return "https://gif1.bbs1-gifhorn.de:444/api" ;
+                return "https://repo.cephalix.eu/api" ;
+                //return "http://192.168.178.107/api"
         }
         public log(args) {
                 var dev = isDevMode();

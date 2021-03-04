@@ -1,8 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, LOCALE_ID, OnInit } from '@angular/core';
+import {formatDate} from '@angular/common';
 import { GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 
 //own modules
@@ -24,7 +24,7 @@ import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
   styleUrls: ['./mygroups.page.scss'],
 })
 export class MyGroupsPage implements OnInit {
-  segment: string = 'groups';
+  segment: string = 'group';
   objectKeys: string[] = [];
   columnDefs = [];
   defaultColDef = {};
@@ -64,7 +64,7 @@ export class MyGroupsPage implements OnInit {
     this.segment = event.detail.value;
     switch (this.segment) {
       case 'group': { this.groupColumnDefs(); break; }
-      case 'user': { this.userColumnDefs(); break; }
+      case 'user':  { this.userColumnDefs();  break; }
       case 'guest': { this.guestColumnDefs(); break; }
     }
   }
@@ -169,12 +169,12 @@ export class MyGroupsPage implements OnInit {
         field: 'count'
       },
       {
-        headerName: this.languageS.trans('privateGroup'),
+        headerName: this.languageS.trans('private'),
         field: 'privateGroup',
         cellRendererFramework: YesNoBTNRenderer
       },
       {
-        headerName: this.languageS.trans('createAdHocRoom'),
+        headerName: this.languageS.trans('AdHoc-Room'),
         field: 'createAdHocRoom',
         cellRendererFramework: YesNoBTNRenderer
       },
@@ -297,9 +297,8 @@ export class MyGroupsPage implements OnInit {
       guest = new GuestUsers();
       action = 'add';
     }
-
     const modal = await this.modalCtrl.create({
-      component: ObjectsEditComponent,
+      component: AddEditGuestPage,
       cssClass: 'medium-modal',
       componentProps: {
         action: action,
@@ -329,20 +328,30 @@ export class MyGroupsPage implements OnInit {
 })
 export class AddEditGuestPage implements OnInit{
 
+  now: string;
   rooms: Room[]
-  selectedRooms: Room[]
-  @Input() guest
-  @Input() action
+  selectedRooms: Room[] = []
+  @Input() guest: GuestUsers
+  @Input() action: string
   constructor(
     public educationService: EductaionService,
-    public modalCtrl: ModalController
+    public modalCtrl:        ModalController,
+    public objectService:    GenericObjectService,
+    @Inject(LOCALE_ID) private locale: string
   ) {
+    this.now = formatDate(Date.now(),'yyyy-MM-dd',this.locale);
   }
+
   ngOnInit() {
+    this.objectService.getObjects('room').subscribe(obj => this.rooms = obj);
   }
 
-  onSubmit(guest){
-
+  onSubmit(){
+    console.log(this.guest)
+    for(let r of this.selectedRooms ){
+      this.guest.roomIds.push(r.id)
+    }
+    this.educationService.addGuestUsers(this.guest);
   }
 }
 
