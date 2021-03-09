@@ -3,7 +3,7 @@ import { Component } from "@angular/core";
 import { ICellRendererAngularComp } from "ag-grid-angular";
 
 @Component({
-    selector: 'action-cell',
+    selector: 'group-action-cell-renderer',
     template: `
         <ion-button fill="clear" size="small" (click)="openAction($event)" matTooltip="{{'Apply actions on the selected objects' | translate }}">
             <ion-icon  name="ellipsis-vertical-sharp"></ion-icon> 
@@ -33,16 +33,20 @@ export class GroupActionBTNRenderer implements ICellRendererAngularComp {
     }
 
     public details() {
+        console.log("GroupActionBTNRenderer", this.params.data)
         this.params.context.componentParent.redirectToEdit(this.params.data.id, this.params.data);
     }
     public members() {
+        console.log("GroupActionBTNRenderer", this.params.data)
         this.params.context.componentParent.redirectToMembers(this.params.data.id, this.params.data);
     }
     public openAction(ev: any) {
+        console.log("GroupActionBTNRenderer", this.params.data)
         this.params.context.componentParent.openActions(ev, this.params.data.id)
     }
     public delete() {
-         this.params.context.componentParent.redirectToDelete(this.params.data);
+        console.log("GroupActionBTNRenderer", this.params.data)
+        this.params.context.componentParent.redirectToDelete(this.params.data);
     }
 
     refresh(params: any): boolean {
