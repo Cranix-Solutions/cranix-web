@@ -4,7 +4,7 @@
             <ion-card-title>{{ 'guest users ' + action | translate }}</ion-card-title>
             <ion-card-subtitle>{{ 'The name of the created users have the format groupnameNN' | translate }}</ion-card-subtitle>
             <ion-buttons slot="end">
-                <ion-button class="ion-no-margin" (click)="onSubmit()" [disabled]="!addEditGuest.valid">
+                <ion-button class="ion-no-margin" (click)="onSubmit()" [disabled]="!addEditGuest.valid || disabled">
                     <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
                 </ion-button>
                 <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss('closed')">
@@ -17,35 +17,35 @@
         <ion-list>
             <ion-item>
                 <ion-label position="stacked">{{'name' | translate}}</ion-label>
-                <ion-input [(ngModel)]="guest.name" name="name" pattern="\S+" required></ion-input>
+                <ion-input [(ngModel)]="guest.name" name="name" pattern="\S+" required [disabled]="disabled"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">{{'description' | translate}}</ion-label>
-                <ion-input [(ngModel)]="guest.description" name="description" required></ion-input>
+                <ion-input [(ngModel)]="guest.description" name="description" required [disabled]="disabled"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">{{'Count of accounts' | translate}}</ion-label>
-                <ion-input [(ngModel)]="guest.count" name="count" type="number" min=1 max=200 required></ion-input>
+                <ion-input [(ngModel)]="guest.count" name="count" type="number" min=1 max=200 required [disabled]="disabled"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">{{'password' | translate}}</ion-label>
-                <ion-input [(ngModel)]="guest.password" name="password" required></ion-input>
+                <ion-input [(ngModel)]="guest.password" name="password" required [disabled]="disabled"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">{{'Valid until' | translate}}</ion-label>
-                <input [(ngModel)]="guest.validUntil" name="validUntil" type="date" min="now" required>
+                <input [(ngModel)]="guest.validUntil" name="validUntil" type="date" min="now" required [disabled]="disabled">
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">{{'Private' | translate}}</ion-label>
-                <ion-checkbox slot="end" [(ngModel)]="guest.privateGroup" name="privateGroup"></ion-checkbox>
+                <ion-checkbox slot="end" [(ngModel)]="guest.privateGroup" name="privateGroup" [disabled]="disabled"></ion-checkbox>
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">{{'Create AdHoc-Room' | translate}}</ion-label>
-                <ion-checkbox slot="end" [(ngModel)]="guest.createAdHocRoom" name="createAdHocRoom"></ion-checkbox>
+                <ion-checkbox slot="end" [(ngModel)]="guest.createAdHocRoom" name="createAdHocRoom" [disabled]="disabled"></ion-checkbox>
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">{{'Room Control' | translate}}</ion-label>
-                <ion-select [(ngModel)]="guest.roomControl" name="roomControl" [disabled]="!guest.createAdHocRoom">
+                <ion-select [(ngModel)]="guest.roomControl" name="roomControl" [disabled]="!guest.createAdHocRoom" [disabled]="disabled">
                     <ion-select-option *ngFor="let ctrl of objectService.selects['roomControl']" value="ctrl">
                         {{ ctrl | translate }}</ion-select-option>
                 </ion-select>
@@ -54,7 +54,7 @@
                 <ion-label position="stacked">{{'rooms' | translate}}</ion-label>
                 <ionic-selectable
                     #ionicSelectable
-                    [disabled]="guest.createAdHocRoom"
+                    [disabled]="guest.createAdHocRoom || disabled"
                     [isMultiple]="true"
                     [(ngModel)]="selectedRooms"
                     [ngModelOptions]="{standalone: true}"

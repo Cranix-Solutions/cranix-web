@@ -219,21 +219,20 @@ export class RoomAccessComponent implements OnInit {
     this.authService.log(this.accessApi);
     this.authService.log(this.accessColumnApi);
   }
-  async redirectToAddEdit(ev: Event, accesInRoom: AccessInRoom) {
+  async redirectToAddEdit(ev: Event, roomAccess: AccessInRoom) {
     let action = "add";
-    if (accesInRoom) {
-      this.objectService.selectedObject = accesInRoom;
+    if (roomAccess) {
+      this.objectService.selectedObject = roomAccess;
       action = "modify";
     } else {
-      accesInRoom = new AccessInRoom();
+      roomAccess = new AccessInRoom();
     }
     const modal = await this.modalCtrl.create({
       component: AddEditRoomAccessComponent,
       cssClass: 'medium-modal',
       componentProps: {
-        objectType: "access",
         objectAction: action,
-        object: accesInRoom
+        roomAccess: roomAccess
       },
       animated: true,
       swipeToClose: true,

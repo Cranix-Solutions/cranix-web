@@ -1,5 +1,5 @@
 import { Component, Inject, Input, LOCALE_ID, OnInit } from '@angular/core';
-import {formatDate} from '@angular/common';
+import { formatDate } from '@angular/common';
 import { GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
@@ -11,12 +11,13 @@ import { GroupActionBTNRenderer } from 'src/app/pipes/ag-group-renderer';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
-import { Group, GuestUsers, Room } from 'src/app/shared/models/data-model'
+import { Group, GuestUsers, Room, User } from 'src/app/shared/models/data-model'
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { GroupMembersPage } from 'src/app/shared/actions/group-members/group-members.page';
 import { EductaionService } from 'src/app/services/education.service';
 import { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
 import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
+import { EditBTNRenderer } from 'src/app/pipes/ag-edit-renderer';
 
 @Component({
   selector: 'cranix-mygroups',
@@ -64,7 +65,7 @@ export class MyGroupsPage implements OnInit {
     this.segment = event.detail.value;
     switch (this.segment) {
       case 'group': { this.groupColumnDefs(); break; }
-      case 'user':  { this.userColumnDefs();  break; }
+      case 'user': { this.userColumnDefs(); break; }
       case 'guest': { this.guestColumnDefs(); break; }
     }
   }
@@ -157,7 +158,7 @@ export class MyGroupsPage implements OnInit {
         suppressSizeToFit: true,
         cellStyle: { 'padding': '2px' },
         field: 'actions',
-        cellRendererFramework: GroupActionBTNRenderer
+        cellRendererFramework: EditBTNRenderer
       },
       {
         field: 'description',
@@ -263,21 +264,31 @@ export class MyGroupsPage implements OnInit {
     });
     (await modal).present();
   }
-  async redirectToEdit(ev: Event, group: Group) {
-    let action = 'modify';
-    if (!group) {
-      group = new Group();
-      action = 'add';
+
+  async redirectToEdit(ev: Event, anyObject: any) {
+    let action = anyObject ? 'modify' : 'add';
+    let objectType = "";
+    switch (this.segment) {
+      case 'user': {
+        if (!anyObject) { anyObject = new User }
+        objectType = 'user.students'
+      }
+      case 'group': {
+        if (!anyObject) { anyObject = new Group }
+        objectType = 'education/group'
+        delete anyObject.groupType
+      }
     }
-    delete group.groupType;
-    delete group.id;
+    if (action == 'add') {
+      delete anyObject.id;
+    }
     const modal = await this.modalCtrl.create({
       component: ObjectsEditComponent,
       cssClass: 'medium-modal',
       componentProps: {
-        objectType: "education/group",
+        objectType:   objectType,
         objectAction: action,
-        object: group
+        object:       anyObject
       },
       animated: true,
       swipeToClose: true,
@@ -311,6 +322,7 @@ export class MyGroupsPage implements OnInit {
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
         this.authService.log("Object was created or modified", dataReturned.data)
+        this.readGuestAccounts()
       }
     });
     (await modal).present();
@@ -326,32 +338,48 @@ export class MyGroupsPage implements OnInit {
   selector: 'cranix-add-edit-guest',
   templateUrl: './add-edit-guest.html'
 })
-export class AddEditGuestPage implements OnInit{
+export class AddEditGuestPage implements OnInit {
 
   now: string;
   rooms: Room[]
+  disabled: boolean = false;
   selectedRooms: Room[] = []
   @Input() guest: GuestUsers
   @Input() action: string
   constructor(
     public educationService: EductaionService,
-    public modalCtrl:        ModalController,
-    public objectService:    GenericObjectService,
+    public modalCtrl: ModalController,
+    public objectService: GenericObjectService,
     @Inject(LOCALE_ID) private locale: string
   ) {
-    this.now = formatDate(Date.now(),'yyyy-MM-dd',this.locale);
+    this.now = formatDate(Date.now(), 'yyyy-MM-dd', this.locale);
   }
 
   ngOnInit() {
     this.objectService.getObjects('room').subscribe(obj => this.rooms = obj);
   }
 
-  onSubmit(){
+  onSubmit() {
+    this.objectService.requestSent();
+    this.disabled = true;
     console.log(this.guest)
-    for(let r of this.selectedRooms ){
+    for (let r of this.selectedRooms) {
       this.guest.roomIds.push(r.id)
     }
-    this.educationService.addGuestUsers(this.guest);
+    let sub = this.educationService.addGuestUsers(this.guest).subscribe(
+      (val) => {
+        this.objectService.responseMessage(val);
+        if (val.code == "OK") {
+          this.modalCtrl.dismiss("OK")
+        }
+        this.disabled = false;
+      },
+      (err) => {
+        this.disabled = false;
+        this.objectService.errorMessage("ERROR")
+      },
+      () => { sub.unsubscribe() }
+    );
   }
 }
 

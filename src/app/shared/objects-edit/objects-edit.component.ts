@@ -1,14 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams, ToastController } from '@ionic/angular';
+import { Component, Input, OnInit } from '@angular/core';
+import { ModalController, ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 //own
 import { CephalixService } from 'src/app/services/cephalix.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
-import { ServerResponse } from 'src/app/shared/models/server-models';
 import { UsersService } from 'src/app/services/users.service';
 import { SystemService } from 'src/app/services/system.service';
-import { SupportTicket, SoftwareVersion, SoftwareFullName, Software } from '../models/data-model';
+import { SupportTicket, SoftwareVersion, SoftwareFullName } from '../models/data-model';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -23,50 +22,49 @@ export class ObjectsEditComponent implements OnInit {
   fileToUpload: File = null;
   result: any = {};
   objectId: number;
-  objectType: string = "";
-  object: any = null;
-  objectKeys: string[] = [];
   objectActionTitle: string = "";
-  objectAction: string = "";
-  pickerOptions = {
-    keyboardClose: false
-  }
+  fixedRole: string;
 
+  @Input() object: any
+  @Input() objectType: string
+  @Input() objectAction: string
+  @Input() objectKeys: string[]
   constructor(
-
-
     private utilsS: UtilsService,
     public authService: AuthenticationService,
     private http: HttpClient,
     public cephalixService: CephalixService,
     public objectService: GenericObjectService,
     public languageS: LanguageService,
-    private navParams: NavParams,
     private modalController: ModalController,
     private usersService: UsersService,
     private systemService: SystemService,
     public translateService: TranslateService,
     public toastController: ToastController
   ) {
-    this.objectType = this.navParams.get('objectType');
-    //this.object = this.objectService.convertObject(this.navParams.get('object'));
-    let object = this.navParams.get('object');
-    this.objectId = object.id;
-    if (this.navParams.get('objectAction') == 'add') {
+
+  }
+  ngOnInit() {
+    this.objectId = this.object.id;
+    //User role may be constant:
+    if (this.objectType.split("\.").length == 2) {
+      let tmp = this.objectType.split("\.")
+      this.objectType = tmp[0]
+      this.fixedRole = tmp[1]
+      this.object.role = this.fixedRole
+    }
+    if (this.objectAction == 'add') {
       this.objectActionTitle = "Add " + this.objectType;
       this.objectAction = "Create";
     } else {
       this.objectActionTitle = "Edit " + this.objectType;
       this.objectAction = "Apply";
     }
-    this.objectKeys = this.navParams.get('objectKeys');
     if (!this.objectKeys) {
-      this.objectKeys = Object.getOwnPropertyNames(object);
+      this.objectKeys = Object.getOwnPropertyNames(this.object);
     }
-  }
-  ngOnInit() {
     this.disabled = false;
-    if (this.navParams.get('objectAction') != 'add') {
+    if (this.objectAction != 'add') {
       let url = this.utilsS.hostName() + "/" + this.objectType + "s/" + this.object.id;
       let sub = this.http.get(url, { headers: this.authService.headers }).subscribe(
         (val) => {
@@ -137,11 +135,11 @@ export class ObjectsEditComponent implements OnInit {
         let sv = new SoftwareVersion();
         let fn = new SoftwareFullName();
         sv.version = object.version;
-        sv.status  = 'C';
+        sv.status = 'C';
         fn.fullName = object.name
-        object['softwareVersions']  = [ { 'version':object.version,'status':'C'}]
-        object['softwareFullNames'] = [ { 'fullName':object.name}]
-        console.log("new software",object)
+        object['softwareVersions'] = [{ 'version': object.version, 'status': 'C' }]
+        object['softwareFullNames'] = [{ 'fullName': object.name }]
+        console.log("new software", object)
       }
       default: {
         this.defaultAcion(object);
@@ -174,7 +172,7 @@ export class ObjectsEditComponent implements OnInit {
     )
   }
   deleteObject() {
-    this.objectService.deleteObjectDialog(this.object, this.objectType,'');
+    this.objectService.deleteObjectDialog(this.object, this.objectType, '');
     //this.modalController.dismiss("succes");
   }
   supportRequest(object: SupportTicket) {

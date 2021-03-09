@@ -227,6 +227,7 @@ export class GenericObjectService {
     }
     for (let obj of this.allObjects[objectType].getValue()) {
       if (obj.id === objectId) {
+        console.log(obj)
         return obj;
       }
     }
@@ -234,9 +235,15 @@ export class GenericObjectService {
   }
 
   idToName(objectType, objectId) {
+    objectType = this.idToPipe(objectType)
     for (let obj of this.allObjects[objectType].getValue()) {
       if (obj.id === objectId) {
-        return obj.name;
+        if (obj.name ) {
+          return obj.name;
+        }
+        if( obj.uid ) {
+          return obj.uid + " (" + obj.givenName + " " + obj.surName + ")";
+        }
       }
     }
     return objectId;
@@ -264,6 +271,9 @@ export class GenericObjectService {
    * @param idName
    */
   idToPipe(idName: string) {
+    if( idName == 'ownerId' ) {
+      return 'user';
+    }
     if (idName == 'cephalixCustomerId') {
       return 'customer';
     }
@@ -276,6 +286,7 @@ export class GenericObjectService {
     if (idName.substring(idName.length - 3) == 'Ids') {
       return idName.substring(0, idName.length - 3)
     }
+    return idName;
   }
 
   addObject(object, objectType) {

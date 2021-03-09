@@ -1,23 +1,23 @@
-<form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
+<form #selectColumns="ngForm" (ngSubmit)="onSubmit()">
   <ion-header translucent>
-  <ion-toolbar>
-    <ion-title>{{  'Select columns to show' | translate }}</ion-title>
-    <ion-buttons slot="end">
-      <ion-button type="submit" class="ion-no-margin">
-        <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
-      </ion-button>
-      <ion-button fill="clear" size="small" (click)="closeWindow()">
-        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-<ion-content fullscreen>
+    <ion-toolbar>
+      <ion-title>{{ 'Select columns to show' | translate }}</ion-title>
+      <ion-buttons slot="end">
+        <ion-button type="submit" class="ion-no-margin">
+          <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" size="small" (click)="closeWindow()">
+          <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen>
     <ion-list lines="full" class="ion-no-margin ion-no-padding" *ngFor="let key of columns">
       <ion-item>
         <ion-label>{{ key | translate }}</ion-label>
-        <ion-checkbox slot="start" formControlName="{{key}}" color="secondary" checked="this.selected.indexOf(key) != -1"></ion-checkbox>
+        <ion-checkbox slot="start" [(ngModel)]="object[key]" name="{{key}}" color="secondary"></ion-checkbox>
       </ion-item>
     </ion-list>
-</ion-content>
+  </ion-content>
 </form>

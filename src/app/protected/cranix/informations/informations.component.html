@@ -21,10 +21,23 @@
             <ion-icon name="people"></ion-icon>
           </ion-segment-button>
         </ion-segment>
+        <ion-buttons slot="end" *ngIf="authService.isAllowed('information.add')">
+          <ion-button *ngIf="!owned" size="small" fill="solid" (click)="getOwned()"
+            matTooltip="{{'Get owned '+segment+'s' | translate }}">
+            <ion-icon slot="icon-only" name="person"></ion-icon>
+          </ion-button>
+          <ion-button *ngIf="owned" size="small" fill="solid" (click)="getNotOwned()"
+            matTooltip="{{'Get corresponding '+segment+'s' | translate }}">
+            <ion-icon slot="icon-only" name="people-circle"></ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-card-header>
     <ion-card-content>
       <ion-toolbar>
+        <ion-card-subtitle *ngIf="owned">
+          {{'List of owned ' + segment | translate }}
+        </ion-card-subtitle>
         <ion-item>
           <ion-input placeholder="{{'search' | translate}}" id="searchInfo" (input)="searchInfo()">
           </ion-input>
@@ -34,32 +47,14 @@
             matTooltip="{{'Create a new '+segment | translate }}">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="!owned" size="small" (click)="getOwned()"
-            matTooltip="{{'Get owned '+segment+'s' | translate }}">
-            <ion-icon slot="icon-only" name="person"></ion-icon>
-          </ion-button>
-          <ion-button *ngIf="owned" size="small" (click)="getNotOwned()"
-            matTooltip="{{'Get corresponding '+segment+'s' | translate }}">
-            <ion-icon slot="icon-only" name="people"></ion-icon>
-          </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-card-content>
   </ion-card>
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title *ngIf="owned">
-        {{'List of owned ' + segment | translate }}
-      </ion-card-title>
-      <ion-card-title *ngIf="!owned">
-        {{'List of corresponding ' + segment | translate }}
-      </ion-card-title>
-    </ion-card-header>
-  </ion-card>
   <ion-list *ngFor="let categorId of informationsService.categoryIds">
     <div *ngIf="infos && infos.hasOwnProperty(categorId)">
       <ion-list-header>
-        {{informationsService.getCategoryName(categorId)}}
+        {{informationsService.getCategoryName(categorId) | translate }}
       </ion-list-header>
       <ion-item *ngFor="let info of infos[categorId]">
         <ion-label *ngIf="segment == 'contact'">
@@ -67,11 +62,22 @@
           <h3>{{info.name}} {{info.phone}} {{info.email}}</h3>
         </ion-label>
         <ion-toolbar *ngIf="segment != 'contact'">
-          <h2>{{info.title}}</h2>
-          <h3>{{info.abstract}}</h3>
+          {{info.title}}<br>
+          {{ 'validUntil' | translate }} {{ info.validUntil | date:'yyyy-MM-dd HH:mm' }}
           <ion-buttons slot="end">
-            <ion-button size="small" (click)="addEditInfo(info.id)">
-              <ion-icon slot="icon-only" name="book"></ion-icon>
+            <ion-button *ngIf="segment == 'task' && owned" (click)="openResponses(info)">
+              <ion-icon slot="icon-only" name="albums"></ion-icon>
+            </ion-button>
+            <ion-button *ngIf="taskResponses[info.id]" (click)="openResponse(taskResponses[info.id])">
+              <ion-icon slot="icon-only" color="success" name="build"></ion-icon>
+            </ion-button>
+            <ion-button *ngIf="!taskResponses[info.id]" size="small" (click)="addEditInfo(info.id)">
+              <ion-icon *ngIf="!owned && segment == 'announcement' && info.seenByMy; else elseBlock" name="book"
+                color="success"></ion-icon>
+              <ng-template #elseBlock>
+                <ion-icon *ngIf="!owned" slot="icon-only" name="book"></ion-icon>
+                <ion-icon *ngIf="owned" slot="icon-only" name="build"></ion-icon>
+              </ng-template>
             </ion-button>
           </ion-buttons>
         </ion-toolbar>

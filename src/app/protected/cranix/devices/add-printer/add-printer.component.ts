@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 //own stuff
 import { PrintersService } from 'src/app/services/printers.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { RoomsService } from 'src/app/services/rooms.service';
 import { Printer, Room, Device } from 'src/app/shared/models/data-model';
-import { ModalController, NavParams } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { LanguageService } from 'src/app/services/language.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
 
@@ -25,15 +25,15 @@ export class AddPrinterComponent implements OnInit {
   manufacturers: string[] = [];
   submitted = false;
   printerDevices: Device[] = [];
-  action = "";
   originalModel = "";
 
+  @Input() action;
+  @Input() object: Printer;
   constructor(
     public authService: AuthenticationService,
     public printersService: PrintersService,
     public languageS: LanguageService,
     public modalCtrl: ModalController,
-    private navParams: NavParams,
     public objectService: GenericObjectService,
     public roomService: RoomsService
   ) { }
@@ -47,7 +47,6 @@ export class AddPrinterComponent implements OnInit {
       (err) => { this.authService.log(err) },
       () => { subs.unsubscribe() }
     )
-    this.action = this.navParams.get('action')
     switch (this.action) {
       case 'queue':
         this.printersService.getPrinterDevices().subscribe(
@@ -62,7 +61,7 @@ export class AddPrinterComponent implements OnInit {
         this.initValues;
         break;
       case 'modify':
-        this.printer = this.navParams.get('object');
+        this.printer = this.object;
         this.originalModel = this.printer.model
     }
   }

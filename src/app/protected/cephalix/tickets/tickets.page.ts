@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
-import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
@@ -18,6 +17,7 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { CephalixService } from 'src/app/services/cephalix.service';
+import { EditBTNRenderer } from 'src/app/pipes/ag-edit-renderer';
 
 @Component({
   selector: 'cranix-tickets',
@@ -103,7 +103,7 @@ export class TicketsPage implements OnInit {
           col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
-          col['cellRendererFramework'] = ActionBTNRenderer,
+          col['cellRendererFramework'] = EditBTNRenderer,
           col['pinned'] = 'left';
           break;
         }

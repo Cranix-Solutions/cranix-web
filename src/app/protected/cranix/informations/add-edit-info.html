@@ -1,9 +1,15 @@
-<form #addEditInfo="ngForm">
+<form #addEditInfo="ngForm" *ngIf="info">
     <ion-header translucent>
         <ion-toolbar>
-            <ion-title>{{ 'Add new ' + infoType | translate }}</ion-title>
+            <ion-title *ngIf="infoId == 0">{{ 'Add new ' + infoType | translate }}</ion-title>
+            <ion-title *ngIf="infoId != 0 && owned">{{ 'Edit ' + infoType | translate }}</ion-title>
+            <ion-title *ngIf="infoId != 0 && !owned">{{ info.title }}</ion-title>
             <ion-buttons slot="end">
-                <ion-button class="ion-no-margin" (click)="onSubmit(addEditInfo.value)" [disabled]="!addEditInfo.valid">
+                <ion-button *ngIf="infoType == 'task' && !owned" class="ion-no-margin" (click)="clone()">
+                    <ion-icon slot="icon-only" color="success" name="construct"></ion-icon>
+                </ion-button>
+                <ion-button *ngIf="owned || infoType == 'taskResponse'" class="ion-no-margin" (click)="onSubmit()"
+                    [disabled]="!addEditInfo.valid">
                     <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
                 </ion-button>
                 <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss('closed')" [disabled]="disabled">
@@ -12,9 +18,9 @@
             </ion-buttons>
         </ion-toolbar>
     </ion-header>
-    <ion-content fullscreen  *ngIf="info">
+    <ion-content fullscreen>
         <ion-list>
-            <ion-item>
+            <ion-item *ngIf="owned">
                 <ion-label position="stacked">{{'category' | translate}}</ion-label>
                 <ionic-selectable #ionicSelectable [isMultiple]="true" [(ngModel)]="categories"
                     [ngModelOptions]="{standalone: true}" [items]="informationsService.categories" itemValueField="id"
@@ -33,36 +39,53 @@
                     </ng-template>
                 </ionic-selectable>
             </ion-item>
-            <ion-item>
+            <ion-item *ngIf="owned">
                 <ion-label position="stacked">{{'title' | translate}}</ion-label>
-                <ion-input [(ngModel)]="info.title" name="title" required></ion-input>
+                <ion-input [(ngModel)]="info.title" name="title" required [readonly]="!owned"></ion-input>
             </ion-item>
-            <ion-item *ngIf="infoType == 'contact'">
-                <ion-label position="stacked">{{'issue' | translate}}</ion-label>
-                <ion-input [(ngModel)]="info.issue" name="issue"></ion-input>
-            </ion-item>
-            <ion-item *ngIf="infoType != 'contact'">
-                <ion-label position="stacked">{{'abstract' | translate}}</ion-label>
-                <ion-textarea autoGrow="true" [(ngModel)]="info.abstract" name="abstract"></ion-textarea>
-            </ion-item>
-            <ion-item *ngIf="infoType != 'contact'">
-                <ion-label position="stacked">{{'keywords' | translate}}</ion-label>
-                <ion-input autoGrow="true" [(ngModel)]="info.keywords" name="keywords" required></ion-input>
-            </ion-item>
-            <ion-item *ngIf="infoType == 'contact'">
-                <ion-label position="stacked">{{'name' | translate}}</ion-label>
-                <ion-input [(ngModel)]="info.name" name="name"></ion-input>
-            </ion-item>
-            <ion-item *ngIf="infoType == 'contact'">
-                <ion-label position="stacked">{{'email' | translate}}</ion-label>
-                <ion-input [(ngModel)]="info.email" name="email"></ion-input>
-            </ion-item>
-            <ion-item *ngIf="infoType == 'contact'">
-                <ion-label position="stacked">{{'phone' | translate}}</ion-label>
-                <ion-input [(ngModel)]="info.phone" name="phone"></ion-input>
-            </ion-item>
-            <quill-editor *ngIf="infoType != 'contact'" [styles]="{height: '250px'}" [(ngModel)]="info.text"
-                name="text"></quill-editor>
+            <div *ngIf="infoType != 'contact'">
+                <ion-item *ngIf="infoType != 'taskResponse'">
+                    <ion-label position="stacked">{{'keywords' | translate}}</ion-label>
+                    <ion-input autoGrow="true" [(ngModel)]="info.keywords" name="keywords" required [readonly]="!owned">
+                    </ion-input>
+                </ion-item>
+                <ion-item *ngIf="infoType != 'taskResponse'">
+                    <ion-label position="stacked">{{'validFrom' | translate}}</ion-label>
+                    <input [(ngModel)]="info.validFrom" name="validFrom" type="datetime-local" [readonly]="!owned">
+                </ion-item>
+                <ion-item>
+                    <ion-label position="stacked">{{'validUntil' | translate}}</ion-label>
+                    <input [(ngModel)]="info.validUntil" name="validUntil" type="datetime-local" [readonly]="!owned">
+                </ion-item>
+                <quill-editor *ngIf="owned || infoType == 'taskResponse'; else elseBlock" [styles]="{height: '250px'}"
+                    [(ngModel)]="info.text" name="text">
+                </quill-editor>
+                <ng-template #elseBlock>
+                    <quill-view-html #elseBlock [content]="info.text" format="text" theme="snow"></quill-view-html>
+                </ng-template>
+                <ion-item *ngIf="infoType == 'taskResponse'">
+                    <ion-label position="stacked">{{'rating' | translate}}</ion-label>
+                    <quill-view-html [content]="info.rating" format="text" theme="snow"></quill-view-html>
+                </ion-item>
+            </div>
+            <div *ngIf="infoType == 'contact'">
+                <ion-item>
+                    <ion-label position="stacked">{{'issue' | translate}}</ion-label>
+                    <ion-input [(ngModel)]="info.issue" name="issue"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="stacked">{{'name' | translate}}</ion-label>
+                    <ion-input [(ngModel)]="info.name" name="name"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="stacked">{{'email' | translate}}</ion-label>
+                    <ion-input [(ngModel)]="info.email" name="email"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="stacked">{{'phone' | translate}}</ion-label>
+                    <ion-input [(ngModel)]="info.phone" name="phone"></ion-input>
+                </ion-item>
+            </div>
         </ion-list>
     </ion-content>
 </form>

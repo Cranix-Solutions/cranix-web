@@ -262,15 +262,26 @@ export class AccessStatus {
 
 export class Announcenement {
 	id?: number;
-	abstract: string = "";
 	issue: string = "";
 	keywords: string = "";
 	text: string = "";
 	title: string = "";
+	seenByMy: boolean = false;
 	validFrom: any = new Date();
 	validUntil: any = new Date();
 	categories: Category[] = [];
 	constructor() { }
+}
+
+export class TaskResponse {
+	id?: number;
+	parentId: number = 0;
+	ownerId: number = 0;
+	text: string = "";
+	rating: string = "";
+	title?: string = "";
+	validFrom?: any;
+	validUntil?: any;
 }
 
 export class FAQ {
