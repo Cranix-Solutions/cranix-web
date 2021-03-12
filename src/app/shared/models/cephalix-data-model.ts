@@ -109,7 +109,7 @@ export class Repository{
     constructor() {}
 }
 
-export class CrxCare{
+export class CephalixCare{
     id?: number;
     cephalixInstituteId: number = 0;
     description: string = "";
@@ -120,7 +120,7 @@ export class CrxCare{
     constructor() {}
 }
 
-export class OssCareMessage{
+export class CareMessage {
     id?: number;
     cephalixosscareId: number = 0;
     recDate: any = new Date();

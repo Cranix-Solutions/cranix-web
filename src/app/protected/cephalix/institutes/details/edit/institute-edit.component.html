@@ -30,8 +30,22 @@
         </ion-button>
       </ion-buttons>
     </ion-toolbar>
+    <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="details">
+      <ion-segment-button value="details">
+        <ion-label>{{'Details' | translate}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="manager">
+        <ion-label>{{'Manager' | translate}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="dyndns" *ngIf="authService.isAllowed('customer.manage')">
+        <ion-label>{{'dynDNS' | translate}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="contract" *ngIf="authService.isAllowed('customer.manage')">
+        <ion-label>{{'Contract' | translate}}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
   </ion-header>
-  <ion-content fullscreen>
+  <ion-content fullscreen *ngIf="segment=='details'">
     <ion-grid>
       <ion-row>
         <ion-col size=12 sizeMd=6 sizeLg=4 sizeXl=3 *ngFor="let key of objectKeys;"
@@ -61,47 +75,63 @@
             <input [(ngModel)]="object[key]" name="{{key}}" type="date">
           </ion-item>
         </ion-col>
-        <ion-col size=12 sizeMd=6 sizeLg=4 sizeXl=3>
-          <ion-item>
-            <ion-label position="stacked">{{ 'Institute manager' | translate}}</ion-label>
-            <ion-select multiple="true" [(ngModel)]="managers" [compareWith]="compareFn" name="managers"
-              (ionChange)="managerChanged($event)" selectedText="{{ 'There are manager defined' | translate }}">
-              <ion-select-option *ngFor="let user of  users" [value]="user">
-                {{user.fullName}}</ion-select-option>
-            </ion-select>
-          </ion-item>
-        </ion-col>
-        <ion-col *ngIf="authService.isAllowed('customer.manage')" size=12 sizeMd=6 sizeLg=4 sizeXl=3>
-          <ion-list style="background-color: aqua;">
-            <ion-list-header>
-              <ion-label>{{ 'Institute dyndns' | translate}}</ion-label>
-            </ion-list-header>
-            <ion-item>
-              <ion-label position="stacked">{{ 'Actuall IP' | translate}}</ion-label>
-              <ion-input type="text" [(ngModel)]="dynDnsIp" name="dynDnsIp" readonly></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">{{ 'Name' | translate}}</ion-label>
-              <ion-input type="text" [(ngModel)]="dynDnsName" name="dynDnsName"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">{{ 'Domain' | translate}}</ion-label>
-              <ion-select [(ngModel)]="dynDnsDomain" [compareWith]="objectService.compareFn" name="dynDnsDomain">
-                <ion-select-option *ngFor="let domain of dynDnsDomains" [value]="domain">
-                  {{domain}}</ion-select-option>
-              </ion-select>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">{{ 'Port' | translate}}</ion-label>
-              <ion-input type="text" [(ngModel)]="dynDnsPort" name="dynDnsPort"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">{{ 'Must not change' | translate}}</ion-label>
-              <ion-checkbox [(ngModel)]="dynDnsRo" name="dynDnsRo"></ion-checkbox>
-            </ion-item>
-          </ion-list>
-        </ion-col>
       </ion-row>
     </ion-grid>
+  </ion-content>
+  <ion-content fullscreen *ngIf="segment=='manager'">
+    <ion-list>
+      <ion-item *ngFor="let user of users">
+        <ion-label>{{user.fullName}} </ion-label>
+        <ion-checkbox slot="end" (ionChange)="managerChanged(user.id)" [checked]="managers[user.id]"></ion-checkbox>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+  <ion-content fullscreen *ngIf="segment=='dyndns'">
+    <ion-list>
+      <ion-item>
+        <ion-label position="stacked">{{ 'Actuall IP' | translate}}</ion-label>
+        <ion-input type="text" [(ngModel)]="dynDnsIp" name="dynDnsIp" readonly></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'Name' | translate}}</ion-label>
+        <ion-input type="text" [(ngModel)]="dynDnsName" name="dynDnsName"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'Domain' | translate}}</ion-label>
+        <ion-select [(ngModel)]="dynDnsDomain" [compareWith]="objectService.compareFn" name="dynDnsDomain">
+          <ion-select-option *ngFor="let domain of dynDnsDomains" [value]="domain">
+            {{domain}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'Port' | translate}}</ion-label>
+        <ion-input type="text" [(ngModel)]="dynDnsPort" name="dynDnsPort"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'Must not change' | translate}}</ion-label>
+        <ion-checkbox [(ngModel)]="dynDnsRo" name="dynDnsRo"></ion-checkbox>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+  <ion-content fullscreen *ngIf="segment=='contract'">
+    <ion-list>
+      <ion-item>
+        <ion-label position="stacked">{{ 'description' | translate}}</ion-label>
+        <ion-select [(ngModel)]="care.description" name="careDescription">
+          <ion-select-option value="CRANIX Base">{{'CRANIX Base' | translate }}</ion-select-option>
+          <ion-select-option value="CRANIX Extended">{{'CRANIX Extended' | translate }}</ion-select-option>
+          <ion-select-option value="CRANIX Plus">{{'CRANIX Plus' | translate }}</ion-select-option>
+          <ion-select-option value="CRANIX Mail">{{'CRANIX Mail' | translate }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'access' | translate}}</ion-label>
+        <ion-input type="text" [(ngModel)]="care.access" name="careAccess"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'contact' | translate}}</ion-label>
+        <ion-input type="text" [(ngModel)]="care.contact" name="careContact"></ion-input>
+      </ion-item>
+    </ion-list>
   </ion-content>
 </form>

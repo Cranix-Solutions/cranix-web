@@ -45,15 +45,28 @@ export class RoomAccessComponent implements OnInit {
     this.context = { componentParent: this };
     this.defaultColDef = {
       flex: 1,
+      resizable: true,
+      wrapText: true,
+      autoHeight: true,
       cellStyle: { 'justify-content': "center" },
       minWidth: 100,
       maxWidth: 150,
       suppressMenu: true,
       sortable: false,
-      resizable: false
-    };
-    this.autoGroupColumnDef = {
-      minWidth: 200
+       headerComponentParams: {
+        template:
+          '<div class="ag-cell-label-container" role="presentation">' +
+          '  <span ref="eMenu" class="ag-header-icon ag-header-cell-menu-button"></span>' +
+          '  <div ref="eLabel" class="ag-header-cell-label" role="presentation">' +
+          '    <span ref="eSortOrder" class="ag-header-icon ag-sort-order"></span>' +
+          '    <span ref="eSortAsc" class="ag-header-icon ag-sort-ascending-icon"></span>' +
+          '    <span ref="eSortDesc" class="ag-header-icon ag-sort-descending-icon"></span>' +
+          '    <span ref="eSortNone" class="ag-header-icon ag-sort-none-icon"></span>' +
+          '    <span ref="eText" class="ag-header-cell-text" role="columnheader" style="white-space: normal;"></span>' +
+          '    <span ref="eFilter" class="ag-header-icon ag-filter-icon"></span>' +
+          '  </div>' +
+          '</div>',
+      }
     };
   }
 
@@ -158,12 +171,12 @@ export class RoomAccessComponent implements OnInit {
           break;
         }
         case "accessType": {
-          col['headerClass'] = "rotate-header-class"
+          //col['headerClass'] = "rotate-header-class"
           col['sortable'] = true;
           break;
         }
         default: {
-          col['headerClass'] = "rotate-header-class"
+          //col['headerClass'] = "rotate-header-class"
           col['sortable'] = false;
           col['minWidth'] = 70;
           col['maxWidth'] = 100;
@@ -194,6 +207,17 @@ export class RoomAccessComponent implements OnInit {
     } else {
       this.statusApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
       this.statusApi.doLayout();
+    }
+  }
+  headerHeightSetter() {
+    var padding = 20;
+    var height = headerHeightGetter() + padding;
+    if (this.segment == 'list') {
+    this.accessApi.setHeaderHeight(height);
+    this.accessApi.resetRowHeights();
+    } else {
+      this.statusApi.setHeaderHeight(height);
+      this.statusApi.resetRowHeights();
     }
   }
   segmentChanged(event) {
@@ -266,4 +290,17 @@ export class RoomAccessComponent implements OnInit {
     this.readDatas();
     this.disabled = false;
   }
+}
+function headerHeightGetter() {
+  var columnHeaderTexts = document.querySelectorAll('.ag-header-cell-text');
+
+  var columnHeaderTextsArray = [];
+
+  columnHeaderTexts.forEach(node => columnHeaderTextsArray.push(node));
+
+  var clientHeights = columnHeaderTextsArray.map(
+    headerText => headerText.clientHeight
+  );
+  var tallestHeaderTextHeight = Math.max(...clientHeights);
+  return tallestHeaderTextHeight;
 }

@@ -1,0 +1,11 @@
+.ag-theme-alpine .ag-cell, .ag-theme-alpine .ag-full-width-row .ag-cell-wrapper.ag-row-group {
+    border: 1px solid transparent;
+    line-height: 35px;
+    padding-left: 2px;
+    padding-right: 2px;
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+.ag-theme-alpine .ag-header-cell, .ag-theme-alpine .ag-header-group-cell {
+    padding-left: 2px;
+    padding-right: 2px;
+}

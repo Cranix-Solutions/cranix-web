@@ -266,7 +266,7 @@ export class Announcenement {
 	keywords: string = "";
 	text: string = "";
 	title: string = "";
-	seenByMy: boolean = false;
+	seenByMe: boolean = false;
 	validFrom: any = new Date();
 	validUntil: any = new Date();
 	categories: Category[] = [];

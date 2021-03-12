@@ -3,9 +3,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { UtilsService } from './utils.service';
 import { Observable } from 'rxjs/internal/Observable';
-import { BehaviorSubject } from 'rxjs';
 
-import { Customer, Institute, Ticket, Article, Notice, CrxCare, SynchronizedObject, DynDns } from 'src/app/shared/models/cephalix-data-model';
+import { Customer, Institute, Ticket, Article, Notice, CephalixCare, SynchronizedObject, DynDns } from 'src/app/shared/models/cephalix-data-model';
 import { ServerResponse, CrxActionMap } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from './auth.service';
 import { InstituteStatus } from 'src/app/shared/models/cephalix-data-model';
@@ -153,7 +152,7 @@ export class CephalixService {
 	getCrxCaerOfInst(id: number){
 		this.url = this.hostname + `/customers/institutes/${id}/osscare`;
 		console.log(this.url);
-		return this.http.get<CrxCare[]>(this.url, { headers: this.authService.headers });
+		return this.http.get<CephalixCare[]>(this.url, { headers: this.authService.headers });
 	}
 
 	applyAction(actionMap: CrxActionMap ){
@@ -166,7 +165,7 @@ export class CephalixService {
 		this.url = this.hostname + `/institutes/copyFile`;
 		return this.http.post<ServerResponse>(this.url,fd, { headers: this.authService.headers});
 	}
-	setCrxCareToInst(id: number, ossCare: CrxCare){
+	setCephalixCareToInst(id: number, ossCare: CephalixCare){
 		this.url = this.hostname + `/customers/institutes/${id}/osscare`;
 		return this.http.post<ServerResponse>(this.url,ossCare, { headers: this.authService.headers});
 	}
@@ -225,5 +224,15 @@ export class CephalixService {
 	setDynDns(instituteId: number, dyndns: DynDns){
 		this.url = this.hostname + `/institutes/${instituteId}/dyndns`
 		return this.http.post<ServerResponse>(this.url, dyndns, { headers: this.authService.headers });
+	}
+
+	getCare(instituteId: number){
+		this.url = this.hostname + `/institutes/${instituteId}/care`
+		return this.http.get<CephalixCare>(this.url, { headers: this.authService.headers });
+	}
+
+	setCare(instituteId: number, cephalixCare: CephalixCare){
+		this.url = this.hostname + `/institutes/${instituteId}/care`
+		return this.http.post<ServerResponse>(this.url, cephalixCare, { headers: this.authService.headers });
 	}
 }

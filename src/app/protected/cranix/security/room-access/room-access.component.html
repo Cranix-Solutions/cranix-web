@@ -95,17 +95,15 @@
         style="width: 100%; height: 100%;"
         id="accessGridTable"
         class="{{authService.settings.agGridThema}}"
-        [modules]="modules"
-        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
         rowSelection="multiple"
+        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
         [columnDefs]="columnDefs"
         [defaultColDef]="defaultColDef"
-        [autoGroupColumnDef]="autoGroupColumnDef"
         [animateRows]="true"
         [rowData]="rowData"
-        [context]="context"
-        [deltaColumnMode]="true"
-        headerHeight="150"
+        [context]="context" 
+        (firstDataRendered)="headerHeightSetter($event)"
+        (columnResized)="headerHeightSetter($event)"
         (gridReady)="accessGridReady($event)">
       </ag-grid-angular>
       <ag-grid-angular *ngIf="segment == 'status'"
@@ -118,7 +116,9 @@
         [defaultColDef]="defaultColDef"
         [animateRows]="true"
         [rowData]="securityService.actualStatus"
-        [context]="context"
+        [context]="context" 
+        (firstDataRendered)="headerHeightSetter($event)"
+        (columnResized)="headerHeightSetter($event)"
         (gridReady)="statusGridReady($event)">
       </ag-grid-angular>
     </ion-card-content>

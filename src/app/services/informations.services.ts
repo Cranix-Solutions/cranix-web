@@ -18,7 +18,7 @@ export interface CloneCommand {
 @Injectable()
 export class InformationsService {
 
-    infoTypes: string[] = ['announcement', 'task', 'faq', 'contact']
+    infoTypes: string[] = ['task', 'announcement', 'faq', 'contact']
     hostname: string;
     url: string;
     categories: Category[] = [];

@@ -17,8 +17,6 @@ export class FileSystemUsageRenderer implements ICellRendererAngularComp {
             let result = this.value.split(" ");
             if (result) {
                 if (Number(result[1].replace('%', '')) > 80){
-                    console.log(params)
-                    console.log(this)
                     this.style = "width: 60px; background-color: red; padding: 5px"
                     this.value = result[1]
                 }

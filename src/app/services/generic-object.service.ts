@@ -227,7 +227,6 @@ export class GenericObjectService {
     }
     for (let obj of this.allObjects[objectType].getValue()) {
       if (obj.id === objectId) {
-        console.log(obj)
         return obj;
       }
     }

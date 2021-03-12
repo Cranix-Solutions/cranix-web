@@ -72,7 +72,7 @@
               <ion-icon slot="icon-only" color="success" name="build"></ion-icon>
             </ion-button>
             <ion-button *ngIf="!taskResponses[info.id]" size="small" (click)="addEditInfo(info.id)">
-              <ion-icon *ngIf="!owned && segment == 'announcement' && info.seenByMy; else elseBlock" name="book"
+              <ion-icon *ngIf="!owned && segment == 'announcement' && info.seenByMe; else elseBlock" name="book"
                 color="success"></ion-icon>
               <ng-template #elseBlock>
                 <ion-icon *ngIf="!owned" slot="icon-only" name="book"></ion-icon>
