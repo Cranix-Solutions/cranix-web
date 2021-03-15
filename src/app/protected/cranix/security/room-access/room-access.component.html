@@ -102,8 +102,8 @@
         [animateRows]="true"
         [rowData]="rowData"
         [context]="context" 
-        (firstDataRendered)="headerHeightSetter($event)"
-        (columnResized)="headerHeightSetter($event)"
+        (firstDataRendered)="headerHeightSetter()"
+        (columnResized)="headerHeightSetter()"
         (gridReady)="accessGridReady($event)">
       </ag-grid-angular>
       <ag-grid-angular *ngIf="segment == 'status'"
@@ -117,8 +117,8 @@
         [animateRows]="true"
         [rowData]="securityService.actualStatus"
         [context]="context" 
-        (firstDataRendered)="headerHeightSetter($event)"
-        (columnResized)="headerHeightSetter($event)"
+        (firstDataRendered)="headerHeightSetter()"
+        (columnResized)="headerHeightSetter()"
         (gridReady)="statusGridReady($event)">
       </ag-grid-angular>
     </ion-card-content>

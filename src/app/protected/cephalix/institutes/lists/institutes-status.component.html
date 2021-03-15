@@ -38,8 +38,8 @@
         rowSelection="multiple" rowHeight="{{authService.settings.rowHeight}}" [context]="context" [rowData]="rowData"
         [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" headerHeight="150"
         [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" 
-        (firstDataRendered)="headerHeightSetter($event)"
-        (columnResized)="headerHeightSetter($event)"
+        (firstDataRendered)="headerHeightSetter()"
+        (columnResized)="headerHeightSetter()"
         (gridReady)="onGridReady($event)">
       </ag-grid-angular>
     </ion-card-content>

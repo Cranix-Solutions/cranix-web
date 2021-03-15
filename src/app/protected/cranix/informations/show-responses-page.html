@@ -7,10 +7,10 @@
             <ion-button *ngIf="response" fill="clear" size="small" (click)="rate()">
                 <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
             </ion-button>
-            <ion-button *ngIf="response" fill="clear" size="small" (click)="response = null" [disabled]="disabled">
+            <ion-button *ngIf="response" fill="clear" size="small" (click)="response = null">
                 <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
             </ion-button>
-            <ion-button *ngIf="!response" fill="clear" size="small" (click)="modalCtrl.dismiss('closed')" [disabled]="disabled">
+            <ion-button *ngIf="!response" fill="clear" size="small" (click)="modalCtrl.dismiss('closed')">
                 <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
             </ion-button>
         </ion-buttons>
