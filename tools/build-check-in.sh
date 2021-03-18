@@ -1,5 +1,5 @@
 #!/bin/bash
-REPO="/home/OSC/home:varkoly:CRANIX-4-2:leap15.2/cranix-web"
+REPO="/home/OSC/home:varkoly:CRANIX/cranix-web"
 HERE=$( pwd )
 git status
 
