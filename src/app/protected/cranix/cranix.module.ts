@@ -1,4 +1,3 @@
-import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { NgModule }            from '@angular/core';
 import { CommonModule }        from '@angular/common';
 //Own Stuff

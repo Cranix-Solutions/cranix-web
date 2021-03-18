@@ -1,16 +1,15 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterContentInit, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/auth.service';
-import { Room, AccessStatus, AccessInRooms, SmartRoom, EduRoom } from 'src/app/shared/models/data-model';
+import { Room, AccessInRooms, EduRoom } from 'src/app/shared/models/data-model';
 import { EductaionService } from 'src/app/services/education.service';
 import { takeWhile } from 'rxjs/operators';
-import { Observable } from 'rxjs/internal/Observable';
-import { TranslateService } from '@ngx-translate/core';
 import { PopoverController, IonSelect, ModalController } from '@ionic/angular';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
-import { JsonPipe } from '@angular/common';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { FilesCollectComponent } from 'src/app/shared/actions/files-collect/files-collect.component';
 import { FilesUploadComponent } from 'src/app/shared/actions/files-upload/files-upload.component';
+
+import { IonicSelectableComponent } from 'ionic-selectable';
 import { interval, Subscription } from 'rxjs';
 
 @Component({
@@ -30,13 +29,11 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
 
   devices = [1, 2, 3, 4, 5, 6]
   room: EduRoom;
-
-  selectedRoomId: number;
-
-  rooms: Observable<Room[]>;
+  selectedRoom: Room;
+  rooms: Room[];
 
   gridSize: number = 2;
-  @ViewChild('roomSelect') selectRef: IonSelect;
+  @ViewChild('roomSelect') selectRef: IonicSelectableComponent;
 
   gridSizes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
@@ -49,17 +46,19 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     public modalController: ModalController,
     private objectS: GenericObjectService
   ) {
-    this.rooms = this.eduS.getMyRooms();
+    this.eduS.getMyRooms().subscribe(
+      (val) => { this.rooms = val}
+    )
   }
   ngOnInit() {
   }
 
   ngAfterViewInit() {
     if (this.authS.session.roomId) {
-      this.selectedRoomId = parseInt(this.authS.session.roomId);
+      this.selectedRoom = this.objectS.getObjectById('room',parseInt(this.authS.session.roomId));
       this.getRoomStatus();
       this.statusTimer();
-    } else if (!this.room && !this.authS.session.roomId) {
+    } else if (!this.room) {
       this.openSelect();
     }
   }
@@ -70,7 +69,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     }))
   }
   getRoomStatus() {
-    this.eduS.getRoomById(this.selectedRoomId)
+    this.eduS.getRoomById(this.selectedRoom.id)
       .pipe(takeWhile(() => this.alive))
       .subscribe(res => {
         this.room = res
@@ -93,7 +92,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   selectChanged(ev) {
-    console.log(`Select roomId is: ${this.selectedRoomId}`)
+    console.log(`Select roomId is: ${this.selectedRoom.id}`)
     this.statusTimer();
   }
   openSelect() {
@@ -163,7 +162,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       showBackdrop: true,
       componentProps: {
         objectType: "room",
-        actionMap: { objectIds: [this.selectedRoomId] }
+        actionMap: { objectIds: [this.selectedRoom.id] }
       }
     });
     (await modal).present();
@@ -180,7 +179,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       showBackdrop: true,
       componentProps: {
         objectType: "room",
-        actionMap: { objectIds: [this.selectedRoomId] }
+        actionMap: { objectIds: [this.selectedRoom.id] }
       }
     });
     (await modal).present();

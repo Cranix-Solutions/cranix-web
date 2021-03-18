@@ -33,17 +33,17 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'lessons/roomcontrol'
+    redirectTo: 'roomcontrol'
   }
 ];
 
 @NgModule({
   imports: [
     CommonModule,
+    CranixSharedModule,
     FormsModule,
-    RouterModule.forChild(routes),
     IonicModule,
-    CranixSharedModule
+    RouterModule.forChild(routes)
   ],
   declarations: [LessonsPage,RoomControlComponent,RoomDevComponent,MypositiveComponent],
   providers: [TranslateService, PipesModule,EductaionService]
