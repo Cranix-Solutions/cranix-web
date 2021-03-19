@@ -24,7 +24,7 @@
         <ion-buttons slot="end" *ngIf="authService.isAllowed('information.add')">
           <ion-button *ngIf="!owned" size="small" fill="solid" (click)="getOwned()"
             matTooltip="{{'Get owned '+segment+'s' | translate }}">
-            <ion-icon slot="icon-only" name="person"></ion-icon>
+            <ion-icon slot="icon-only" name="create"></ion-icon>
           </ion-button>
           <ion-button *ngIf="owned" size="small" fill="solid" (click)="getNotOwned()"
             matTooltip="{{'Get corresponding '+segment+'s' | translate }}">
@@ -36,7 +36,7 @@
     <ion-card-content>
       <ion-toolbar>
         <ion-card-subtitle *ngIf="owned">
-          {{'List of owned ' + segment | translate }}
+          {{'List of owned ' + segment + 's' | translate }}
         </ion-card-subtitle>
         <ion-item>
           <ion-input placeholder="{{'search' | translate}}" id="searchInfo" (input)="searchInfo()">
