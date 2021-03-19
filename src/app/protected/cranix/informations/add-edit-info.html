@@ -57,7 +57,7 @@
                     <ion-label position="stacked">{{'validUntil' | translate}}</ion-label>
                     <input [(ngModel)]="info.validUntil" name="validUntil" type="datetime-local" [readonly]="!owned">
                 </ion-item>
-                <quill-editor *ngIf="owned || infoType == 'taskResponse'; else elseBlock" [styles]="{height: '250px'}"
+                <quill-editor *ngIf="owned || infoType == 'taskResponse'; else elseBlock" [styles]="{height: '450px'}"
                     [(ngModel)]="info.text" name="text">
                 </quill-editor>
                 <ng-template #elseBlock>
