@@ -55,10 +55,8 @@ export class ObjectsEditComponent implements OnInit {
     }
     if (this.objectAction == 'add') {
       this.objectActionTitle = "Add " + this.objectType;
-      this.objectAction = "Create";
     } else {
       this.objectActionTitle = "Edit " + this.objectType;
-      this.objectAction = "Apply";
     }
     if (!this.objectKeys) {
       this.objectKeys = Object.getOwnPropertyNames(this.object);
@@ -142,7 +140,7 @@ export class ObjectsEditComponent implements OnInit {
         console.log("new software", object)
       }
       default: {
-        this.defaultAcion(object);
+        this.defaultAction(object);
       }
     }
   }
@@ -151,9 +149,9 @@ export class ObjectsEditComponent implements OnInit {
     this.fileToUpload = event.target.files.item(0);
     console.log(this.fileToUpload)
   }
-  defaultAcion(object) {
+  defaultAction(object) {
     let subs = this.objectService.applyAction(object, this.objectType, this.objectAction).subscribe(
-      async (val) => {
+      (val) => {
         this.objectService.responseMessage(val);
         if (val.code == "OK") {
           this.objectService.getAllObject(this.objectType);
@@ -162,7 +160,7 @@ export class ObjectsEditComponent implements OnInit {
           this.disabled = false;
         }
       },
-      async (error) => {
+      (error) => {
         this.objectService.errorMessage("A Server Error is accoured:" + error);
         this.disabled = false;
       },
@@ -177,7 +175,7 @@ export class ObjectsEditComponent implements OnInit {
   }
   supportRequest(object: SupportTicket) {
     let subs = this.systemService.createSupportRequest(object).subscribe(
-      async (val) => {
+      (val) => {
         this.objectService.responseMessage(val);
         if (val.code == "OK") {
           this.modalController.dismiss("succes");
@@ -185,7 +183,7 @@ export class ObjectsEditComponent implements OnInit {
           this.disabled = false;
         }
       },
-      async (error) => {
+      (error) => {
         this.objectService.errorMessage("A Server Error is accoured:" + error.toString());
       },
       () => {
@@ -212,7 +210,7 @@ export class ObjectsEditComponent implements OnInit {
     console.log(object.password);
     console.log(this.formData.get("role"))
     let subs = this.usersService.importUsers(formData).subscribe(
-      async (val) => {
+      (val) => {
         this.objectService.responseMessage(val);
         if (val.code == "OK") {
           this.modalController.dismiss("succes");
@@ -220,7 +218,7 @@ export class ObjectsEditComponent implements OnInit {
           this.disabled = false;
         }
       },
-      async (error) => {
+      (error) => {
         console.log(error)
         this.objectService.errorMessage("A Server Error is accoured:" + error);
         this.disabled = false;
