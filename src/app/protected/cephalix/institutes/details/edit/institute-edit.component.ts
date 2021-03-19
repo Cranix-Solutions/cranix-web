@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { IonicSelectableComponent } from 'ionic-selectable';
 
 //Own stuff
 import { GenericObjectService } from 'src/app/services/generic-object.service';
