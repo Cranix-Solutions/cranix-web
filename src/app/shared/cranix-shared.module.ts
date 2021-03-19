@@ -48,6 +48,7 @@ import { ManageDhcpComponent } from 'src/app/shared/actions/manage-dhcp/manage-d
 import { FilesUploadComponent } from 'src/app/shared/actions/files-upload/files-upload.component'
 import { FilesCollectComponent } from 'src/app/shared/actions/files-collect/files-collect.component'
 import { DownloadSoftwaresComponent } from 'src/app/shared/actions/download-softwares/download-softwares.component'
+import { SelectRoomComponent } from 'src/app/shared/actions/select-room/select-room.component'
 @NgModule({
   declarations: [
     ActionsComponent,
@@ -79,6 +80,7 @@ import { DownloadSoftwaresComponent } from 'src/app/shared/actions/download-soft
     SetquotaComponent,
     SoftwareEditBTNRenderer,
     SelectColumnsComponent,
+    SelectRoomComponent,
     UpdateRenderer,
     UserActionBTNRenderer,
     UserIdCellRenderer,

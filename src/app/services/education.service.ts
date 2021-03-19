@@ -26,6 +26,8 @@ export class EductaionService {
 	//TODO make it configurable
 	screenShotTimeDealy: number = 5000;
 	uploadState = new BehaviorSubject(false);
+	myRooms: Room[];
+	selectedRoom: Room;
 
 	constructor(
 		public objectService: GenericObjectService,
@@ -35,6 +37,7 @@ export class EductaionService {
 		private authService: AuthenticationService) {
 		this.hostname = this.utils.hostName();
 	}
+
 
 
 	// miscellaneous
@@ -108,7 +111,9 @@ export class EductaionService {
 	getMyRooms() {
 		this.url = `${this.hostname}/education/myRooms`;
 		console.log(this.url);
-		return this.http.get<Room[]>(this.url, { headers: this.authService.headers });
+		this.http.get<Room[]>(this.url, { headers: this.authService.headers }).subscribe(
+			(val) => { this.myRooms = val }
+		)
 	}
 
 	/**
