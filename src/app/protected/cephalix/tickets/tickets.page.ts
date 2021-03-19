@@ -99,18 +99,6 @@ export class TicketsPage implements OnInit {
       col['cellStyle'] = params => params.data.ticketStatus == "N" ? { 'background-color': 'red' } :
         params.data.ticketStatus == "R" ? { 'background-color': 'orange' } : { 'background-color': 'green' }
       switch (key) {
-        case 'id': {
-          col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
-          col['headerCheckboxSelectionFilteredOnly'] = true;
-          col['checkboxSelection'] = this.authService.settings.checkboxSelection;
-          col['cellRendererFramework'] = EditBTNRenderer,
-          col['pinned'] = 'left';
-          break;
-        }
-        case 'title': {
-          col['pinned'] = 'left';
-          break;
-        }
         case 'cephalixInstituteId': {
           col['valueGetter'] = function (params) {
             return params.context['componentParent'].objectService.idToName('institute', params.data.cephalixInstituteId);
@@ -134,6 +122,7 @@ export class TicketsPage implements OnInit {
     this.columnApi = params.columnApi;
     (<HTMLInputElement>document.getElementById("ticketsPageTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
     this.gridApi.sizeColumnsToFit();
+    this.gridApi.addEventListener('rowClicked', this.ticketClickHandle);
   }
 
   onQuickFilterChanged(quickFilter) {
@@ -153,6 +142,10 @@ export class TicketsPage implements OnInit {
     this.columnApi.autoSizeColumns(allColumnIds);
   }
 
+  ticketClickHandle(event){
+    console.log(event)
+    event.context.componentParent.route.navigate(['/pages/cephalix/tickets/' + event.data.id])
+  }
   public redirectToDelete = (ticket: Ticket) => {
     this.objectService.deleteObjectDialog(ticket, 'ticket', '/pages/cephalix/tickets')
   }
