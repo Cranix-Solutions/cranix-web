@@ -43,7 +43,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     public authS: AuthenticationService,
-    private eduS: EductaionService,
+    public eduS: EductaionService,
     public popoverCtrl: PopoverController,
     public modalController: ModalController,
     private objectS: GenericObjectService
