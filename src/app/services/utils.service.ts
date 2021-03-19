@@ -31,8 +31,7 @@ export class UtilsService {
                         url = protocol + "//" + hostname + "/api";
 		}
                 //console.log("From utils: " + url);
-                return "https://repo.cephalix.eu/api" ;
-                //return "http://192.168.178.107/api"
+                return url ;
         }
         public log(args) {
                 var dev = isDevMode();
