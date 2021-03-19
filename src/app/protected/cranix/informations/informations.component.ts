@@ -45,7 +45,6 @@ export class InformationsComponent implements OnInit {
     } else {
       this.infos = this.allInfos[this.segment]
     }
-    console.log(this.infos)
   }
 
   getInfos(infoType) {
