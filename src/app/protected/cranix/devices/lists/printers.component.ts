@@ -57,7 +57,7 @@ export class PrintersComponent implements OnInit {
         resizable: true,
         sortable: true,
         hide: false,
-        suppressMenu : true
+        suppressMenu: true
       },
       columnDefs: this.columnDefs,
       context: this.context,
@@ -144,7 +144,7 @@ export class PrintersComponent implements OnInit {
   }
 
   redirectToDelete(printer: Printer) {
-    this.objectService.deleteObjectDialog(printer, 'printer','')
+    this.objectService.deleteObjectDialog(printer, 'printer', '')
   }
   /**
  * Open the actions menu with the selected object ids.
@@ -152,7 +152,7 @@ export class PrintersComponent implements OnInit {
  */
   async openActions(ev: any, objId: number) {
     let selected = this.gridApi.getSelectedRows();
-    if ( selected.length == 0 && !objId) {
+    if (selected.length == 0 && !objId) {
       this.objectService.selectObject();
       return;
     }
@@ -287,13 +287,10 @@ export class PrintersComponent implements OnInit {
   }
 
   toggle(data, what: string, yesno: boolean) {
-    let subs = this.printersService.toggle(data.id,what,yesno).subscribe(
+    let subs = this.printersService.toggle(data.id, what, yesno).subscribe(
       (val) => {
         this.objectService.responseMessage(val);
-        if (val.code == "OK") {
-          this.objectService.getAllObject('printer');
-          this.modalCtrl.dismiss();
-        }
+        this.objectService.getAllObject('printer');
       },
       (error) => {
         this.objectService.errorMessage("ServerError" + error);

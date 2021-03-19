@@ -21,11 +21,14 @@ export class AddPrinterComponent implements OnInit {
   name: string = "";
   printer: Printer = new Printer();
   driverFile;
+  model  = { key: "" , label: "" };
   models = {};
-  manufacturers: string[] = [];
+  manufacturer = { key: "" , label: "" };
+  manufacturers = [];
   submitted = false;
   printerDevices: Device[] = [];
   originalModel = "";
+  originalMac   = "";
 
   @Input() action;
   @Input() object: Printer;
@@ -41,8 +44,15 @@ export class AddPrinterComponent implements OnInit {
   ngOnInit() {
     let subs = this.printersService.getDrivers().subscribe(
       (val) => {
-        this.models = val;
-        this.manufacturers = Object.keys(this.models).sort();
+        for( let man of Object.keys(val).sort() ) {
+          this.manufacturers.push( { key: man, label: man } )
+          this.models[man] = []
+          for( let mod of val[man] ) {
+            this.models[man].push({ key: mod, label: mod })
+          }
+        }
+        //this.models = val;
+        //this.manufacturers = Object.keys(this.models).sort();
       },
       (err) => { this.authService.log(err) },
       () => { subs.unsubscribe() }
@@ -63,6 +73,8 @@ export class AddPrinterComponent implements OnInit {
       case 'modify':
         this.printer = this.object;
         this.originalModel = this.printer.model
+        this.originalMac   = this.printer.mac
+        this.model = { key: this.originalModel, label: this.originalModel }
     }
   }
 
@@ -89,32 +101,35 @@ export class AddPrinterComponent implements OnInit {
       this.room = this.objectService.getObjectById('room', id);
       this.authService.log(this.room);
       this.printer.roomId = this.room.id;
-    }
-    if (this.authService.session.mac) {
-      this.printer.mac = this.authService.session.mac;
+      this.model = { key: this.printer.model, label: this.printer.model }
     }
   }
 
-  onSubmit(printer: Printer) {
+  setModel(ev){
+    this.printer.model = ev.item.key
+  }
+  onSubmit() {
+    console.log(this.printer)
+    return
     this.objectService.requestSent();
     this.submitted = true;
     let formData: FormData = new FormData();
     if (this.driverFile) {
       formData.append('file', this.driverFile, this.driverFile.name);
-    } else if (printer.model) {
-      formData.append('model', printer.model);
+    } else if (this.printer.model) {
+      formData.append('model', this.printer.model);
     } else if (this.action != 'modify') {
       this.objectService.errorMessage(
         this.languageS.trans('You have to set either the model of the printer or upload a ppd driver file.')
       );
       return;
     }
-    formData.append('name', printer.name);
+    formData.append('name', this.printer.name);
     switch (this.action) {
       case 'add': {
-        formData.append('ip', printer.ip);
-        formData.append('mac', printer.mac);
-        formData.append('roomId', printer.roomId.toString());
+        formData.append('ip', this.printer.ip);
+        formData.append('mac', this.printer.mac);
+        formData.append('roomId', this.printer.roomId.toString());
         formData.append('windowsDriver', "true");
         let subs = this.printersService.add(formData).subscribe(
           (val) => {
@@ -138,13 +153,12 @@ export class AddPrinterComponent implements OnInit {
         break
       }
       case 'queue': {
-        formData.append('deviceId', printer.deviceId.toString());
+        formData.append('deviceId', this.printer.deviceId.toString());
         formData.append('windowsDriver', "true");
         let subs = this.printersService.addQueue(formData).subscribe(
           (val) => {
             this.objectService.responseMessage(val);
             if (val.code == "OK") {
-
               this.modalCtrl.dismiss();
             }
             this.submitted = false;
@@ -162,7 +176,7 @@ export class AddPrinterComponent implements OnInit {
         break
       }
       case 'modify': {
-        if (formData.has('file') || this.originalModel != printer.model) {
+        if (formData.has('file') || this.originalModel != this.printer.model || this.originalMac != this.printer.mac) {
           let subs3 = this.printersService.setDriver(this.printer.id, formData).subscribe(
             (val) => {
               this.objectService.responseMessage(val);
