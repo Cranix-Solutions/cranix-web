@@ -60,7 +60,6 @@ export class InformationsComponent implements OnInit {
           }
         }
         if (infoType == this.segment && !this.owned) {
-          console.log(this.infos)
           this.infos = this.allInfos[this.segment]
         }
       }
@@ -79,7 +78,6 @@ export class InformationsComponent implements OnInit {
           }
         }
         if (infoType == this.segment && this.owned) {
-          console.log(this.infos)
           this.infos = this.ownedInfos[this.segment]
         }
       }
@@ -92,7 +90,6 @@ export class InformationsComponent implements OnInit {
         for (let tmp of val) {
           this.taskResponses[tmp.parentId] = tmp.id
         }
-        console.log("getTaskResponses", this.taskResponses, val)
       }
     )
   }
@@ -107,7 +104,6 @@ export class InformationsComponent implements OnInit {
       }
     });
     modal.onDidDismiss().then((dataReturned) => {
-      console.log(dataReturned)
       if (this.owned) {
         this.getOwnedInfos(this.segment);
       }
@@ -213,7 +209,6 @@ export class AddEditInfoPage implements OnInit {
             this.info.validUntil = new Date(val.validUntil).toISOString().substr(0, 16);
           }
           this.categories = val.categories
-          console.log(this.info)
         }
       )
       if (this.infoType == "announcement" && !this.owned) {
@@ -229,7 +224,6 @@ export class AddEditInfoPage implements OnInit {
         this.info.categoryIds.push(cat.id)
       }
     }
-    console.log(this.info)
     if (this.infoId == 0) {
       this.informationsService.addInfo(this.infoType, this.info).subscribe(
         (val) => {
