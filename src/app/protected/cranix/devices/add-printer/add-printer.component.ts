@@ -110,7 +110,6 @@ export class AddPrinterComponent implements OnInit {
   }
   onSubmit() {
     console.log(this.printer)
-    return
     this.objectService.requestSent();
     this.submitted = true;
     let formData: FormData = new FormData();
