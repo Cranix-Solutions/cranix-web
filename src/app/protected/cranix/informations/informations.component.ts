@@ -94,6 +94,9 @@ export class InformationsComponent implements OnInit {
     )
   }
 
+  deleteInfo(info) {
+    //TODO 
+  }
   async addEditInfo(id: number) {
     const modal = await this.modalController.create({
       component: AddEditInfoPage,
