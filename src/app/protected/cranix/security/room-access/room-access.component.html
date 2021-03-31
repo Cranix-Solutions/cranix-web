@@ -30,10 +30,10 @@
         matTooltip="{{'Delete selected access rules' | translate }}" [disabled]="disabled">
         <ion-icon name="trash" color="danger"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button *ngIf="segment == 'list'" (click)="createColumnDef()"
+      <!-- ion-fab-button *ngIf="segment == 'list'" (click)="createColumnDef()"
         matTooltip="{{'Change grouping of the table' | translate }}">
         <ion-icon name="list-sharp" color="white"></ion-icon>
-      </ion-fab-button>
+      </ion-fab-button -->
       <ion-fab-button *ngIf="segment == 'status'" (click)="securityService.getActualAccessStatus()"
         matTooltip="{{'Reload actual firewall status' | translate }}">
         <ion-icon name="refresh" color="tertiary"></ion-icon>
@@ -72,10 +72,10 @@
             matTooltip="{{'Delete selected access rules' | translate }}" [disabled]="disabled">
             <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="segment == 'list'" size="mall" fill="solid" (click)="createColumnDef()"
+          <!-- ion-button *ngIf="segment == 'list'" size="mall" fill="solid" (click)="createColumnDef()"
             matTooltip="{{'Change grouping of the table' | translate }}">
             <ion-icon slot="icon-only" name="list-outline"></ion-icon>
-          </ion-button>
+          </ion-button -->
           <ion-button *ngIf="segment == 'status'" size="small" fill="solid" (click)="securityService.getActualAccessStatus()"
             matTooltip="{{'Reload actual firewall status' | translate }}">
             <ion-icon slot="icon-only" name="refresh" color="tertiary"></ion-icon>
