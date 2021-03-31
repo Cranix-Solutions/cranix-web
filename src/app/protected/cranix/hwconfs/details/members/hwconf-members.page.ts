@@ -27,15 +27,20 @@ export class HwconfMembersPage implements OnInit {
   }
   memberApi;
   memberColumnApi;
-  memberSelection: Device[] = [];
   memberData: Device[] = [];
   autoGroupColumnDef;
   hwconf;
   modules = [];
   roomGrouping: boolean = true;
+
+  sentImage=0;
+  sendingImage: boolean = false;
+  networkCard: string = "eth0";
+  //TODO
+  networkCards: string[] = ["eth0","eth1"];
   constructor(
-    public authService: AuthenticationService,
-    public objectService: GenericObjectService,
+    public  authService: AuthenticationService,
+    public  objectService: GenericObjectService,
     private languageService: LanguageService,
     private hwconfService: HwconfsService,
     private deviceService: DevicesService
@@ -126,9 +131,6 @@ export class HwconfMembersPage implements OnInit {
     (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
     //this.memberApi.sizeColumnsToFit();
   }
-  onMemberSelectionChanged() {
-
-  }
 
   onQuickFilterChanged(quickFilter) {
     this.memberApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
@@ -176,5 +178,13 @@ export class HwconfMembersPage implements OnInit {
       (err) => { this.objectService.errorMessage(err) },
       () => { sub.unsubscribe(); }
     )
+  }
+
+  startSending(){
+    this.sendingImage = true;
+  }
+
+  sendImage(id: number){
+    this.sentImage=id;
   }
 }
