@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { CanActivateViaAcls } from 'src/app/services/auth-guard.service';
@@ -28,6 +28,7 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ],
   declarations: [InformationsComponent, AddEditInfoPage,  ShowResponses],
-  providers: [TranslateService]
+  providers: [TranslateService],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class InformationsModule { }
