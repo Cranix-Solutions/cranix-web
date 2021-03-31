@@ -59,13 +59,11 @@ export class MyGroupsPage implements OnInit {
     this.groupColumnDefs();
   }
 
-
   segmentChanged(event) {
-    console.log(event)
     this.segment = event.detail.value;
     switch (this.segment) {
       case 'group': { this.groupColumnDefs(); break; }
-      case 'user': { this.userColumnDefs(); break; }
+      case 'user':  { this.userColumnDefs(); break; }
       case 'guest': { this.guestColumnDefs(); break; }
     }
   }
