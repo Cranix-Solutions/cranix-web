@@ -21,6 +21,5 @@ export const mathToolbarOptions = [
     [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
     [{ 'font': [] }],
     [{ 'align': [] }],
-    ['link'],
-    ['formula']
+    ['link','image']
 ];

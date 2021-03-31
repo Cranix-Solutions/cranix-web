@@ -104,8 +104,6 @@ export class Repository{
     repositoryType: string = "";
     description: string = "";
     repository: string = "";
-    cephalixInstituteId: number = 0;
-    cephalixCustomerId: number = 0;
     constructor() {}
 }
 

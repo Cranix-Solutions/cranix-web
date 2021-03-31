@@ -4,11 +4,12 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { UtilsService } from './utils.service';
 import { Observable } from 'rxjs/internal/Observable';
 
-import { Customer, Institute, Ticket, Article, Notice, CephalixCare, SynchronizedObject, DynDns } from 'src/app/shared/models/cephalix-data-model';
+import { Institute, Ticket, Article, Notice, CephalixCare, SynchronizedObject, DynDns, Repository } from 'src/app/shared/models/cephalix-data-model';
 import { ServerResponse, CrxActionMap } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from './auth.service';
 import { InstituteStatus } from 'src/app/shared/models/cephalix-data-model';
 import { User } from '../shared/models/data-model';
+import { GenericObjectService } from './generic-object.service';
 
 
 export interface InstallSetSync{
@@ -30,7 +31,8 @@ export class CephalixService {
 	constructor(
 		private utilsS: UtilsService,
 		private http:   HttpClient,
-		private authService:  AuthenticationService)
+		private authService:  AuthenticationService,
+		private objectService: GenericObjectService)
 		{
 			this.hostname = this.utilsS.hostName();
 			if( ! authService.isAllowed('customer.manage') ) {
@@ -234,5 +236,31 @@ export class CephalixService {
 	setCare(instituteId: number, cephalixCare: CephalixCare){
 		this.url = this.hostname + `/institutes/${instituteId}/care`
 		return this.http.post<ServerResponse>(this.url, cephalixCare, { headers: this.authService.headers });
+	}
+
+	/**
+	 * AddOn handling
+	 */
+	getAllAddons() {
+		this.url = this.hostname + `/institutes/addons`
+		return this.http.get<Repository[]>(this.url, { headers: this.authService.headers });
+	}
+
+	getAddonsOfInstitute(instituteId: number){
+		this.url = this.hostname + `/institutes/${instituteId}/addons`
+		return this.http.get<Repository[]>(this.url, { headers: this.authService.headers });
+	}
+
+	addAddonToInstitute(instituteId: number, addonId: number){
+		this.url = this.hostname + `/institutes/${instituteId}/addons/${addonId}`
+		this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers }).subscribe(
+			(val) => { this.objectService.responseMessage(val)}
+		)
+	}
+	removeAddonFromInstitute(instituteId: number, addonId: number){
+		this.url = this.hostname + `/institutes/${instituteId}/addons/${addonId}`
+		this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers }).subscribe(
+			(val) => { this.objectService.responseMessage(val)}
+		)
 	}
 }
