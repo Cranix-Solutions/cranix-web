@@ -19,7 +19,7 @@
     </ion-card-header>
     <ion-card-content>
       <ag-grid-angular #agGrid style="width: 100%; height: 450px;" class="{{authService.settings.agGridThema}}"
-        [modules]="modules" [rowData]="memberData" [columnDefs]="columnDefs" [autoGroupColumnDef]="autoGroupColumnDef"
+        [rowData]="memberData" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
         [context]="context" rowSelection="multiple"
         [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" (gridReady)="onMemberReady($event)"
         id="memberTable">
