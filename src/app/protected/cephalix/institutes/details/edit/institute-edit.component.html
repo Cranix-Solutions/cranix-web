@@ -122,6 +122,7 @@
           <ion-select-option value="CRANIX Extended">{{'CRANIX Extended' | translate }}</ion-select-option>
           <ion-select-option value="CRANIX Plus">{{'CRANIX Plus' | translate }}</ion-select-option>
           <ion-select-option value="CRANIX Mail">{{'CRANIX Mail' | translate }}</ion-select-option>
+          <ion-select-option value="Private">{{'Private' | translate }}</ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item>
@@ -131,6 +132,12 @@
       <ion-item>
         <ion-label position="stacked">{{ 'contact' | translate}}</ion-label>
         <ion-input type="text" [(ngModel)]="care.contact" name="careContact"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'AddOns' | translate}}</ion-label>
+        <ion-select [(ngModel)]="addons" name="addons" multiple="true" [compareWith]="compareAddons" (ionChange)="addonChanged()">
+          <ion-select-option *ngFor="let addon of allAddons" [value]="addon">{{ addon.name }}</ion-select-option>
+        </ion-select>
       </ion-item>
     </ion-list>
   </ion-content>

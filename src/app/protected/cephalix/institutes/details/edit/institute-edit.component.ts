@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 //Own stuff
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
-import { Institute, DynDns, CephalixCare } from 'src/app/shared/models/cephalix-data-model';
+import { Institute, DynDns, CephalixCare, Repository } from 'src/app/shared/models/cephalix-data-model';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { User } from 'src/app/shared/models/data-model';
 @Component({
@@ -13,6 +13,9 @@ import { User } from 'src/app/shared/models/data-model';
   styleUrls: ['./institute-edit.component.scss'],
 })
 export class InstituteEditComponent implements OnInit {
+  allAddons: Repository[];
+  addons: Repository[];
+  origAddons: Repository[];
   segment = 'details';
   care: CephalixCare;
   object: Institute = null;
@@ -34,6 +37,8 @@ export class InstituteEditComponent implements OnInit {
     public objectService: GenericObjectService
   ) {
     this.object = this.objectService.selectedObject;
+    this.cephalixService.getAllAddons().subscribe((val) => { this.allAddons = val });
+    this.cephalixService.getAddonsOfInstitute(this.object.id).subscribe((val) => { this.addons = val; this.origAddons = val })
     this.cephalixService.getUsersFromInstitute(this.object.id).subscribe(
       (val) => {
         for (let man of val) {
@@ -69,14 +74,14 @@ export class InstituteEditComponent implements OnInit {
         (val) => {
           if (val) {
             this.dynDns = val;
+            this.dynDnsDomain = val.domain;
+            this.dynDnsName = val.hostname;
+            this.dynDnsPort = val.port;
+            this.dynDnsRo = val.ro;
+            this.dynDnsIp = val.ip;
           } else {
             this.dynDns = new DynDns();
           }
-          this.dynDnsDomain = val.domain;
-          this.dynDnsName = val.hostname;
-          this.dynDnsPort = val.port;
-          this.dynDnsRo = val.ro;
-          this.dynDnsIp = val.ip;
         }
       )
       this.cephalixService.getCare(this.object.id).subscribe(
@@ -163,8 +168,6 @@ export class InstituteEditComponent implements OnInit {
     this.objectService.deleteObjectDialog(this.object, 'institute', '');
   }
   managerChanged(id) {
-    console.log(id);
-    console.log(this.managers[id])
     if (this.managers[id]) {
       this.cephalixService.deleteUserFromInstitute(id, this.object.id).subscribe(
         val => this.objectService.responseMessage(val)
@@ -175,5 +178,29 @@ export class InstituteEditComponent implements OnInit {
       )
     }
     this.managers[id] = !this.managers[id];
+  }
+
+  addonChanged() {
+    console.log(this.addons)
+    console.log(this.origAddons)
+    for( let repo of this.addons ) {
+      if( !this.origAddons.some((r: Repository) => r.id === repo.id)) {
+        this.cephalixService.addAddonToInstitute(this.object.id,repo.id)
+      }
+    }
+    for( let repo of this.origAddons ) {
+      if( !this.addons.some((r: Repository) => r.id === repo.id)) {
+        this.cephalixService.removeAddonFromInstitute(this.object.id,repo.id)
+      }
+    }
+  }
+  compareAddons(o1: Repository, o2: Repository) {
+    if (!o1 || !o2) {
+      return o1 === o2;
+    }
+    if (Array.isArray(o2)) {
+      return o2.some((r: Repository) => r.id === o1.id);
+    }
+    return o1.id === o2.id;
   }
 }
