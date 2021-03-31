@@ -133,7 +133,11 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
           ip: this.ipAdresses[startIndex].split(' ')[0],
           mac: macs[0],
           hwconfId: devices.hwconfId,
-          roomId: this.roomId
+          roomId: this.roomId,
+          serial: devices.serial,
+          inventary: devices.inventary,
+          row: devices.row,
+          place: devices.place
         }
       } else {
         for (let x = 0; x < macs.length; x++) {
@@ -146,6 +150,7 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
           }
         }
       }
+      console.log(newDevice, this.roomId)
       this.roomService.addDevice(newDevice, this.roomId)
         .pipe(takeWhile(() => this.alive))
         .subscribe((responses) => {
