@@ -14,13 +14,12 @@ import { SynchronizedObject } from 'src/app/shared/models/cephalix-data-model';
 export class InstitutesSyncObjectsComponent implements OnInit {
 
   context;
+  segment = "User";
   columnDefs = [];
   memberApi;
   memberColumnApi;
-  memberSelection: SynchronizedObject[] = [];
-  memberData: SynchronizedObject[] = [];
-  autoGroupColumnDef;
-  modules = [ ];
+  memberData = {};
+  objectsToSync: string[] = [];
   institute;
   constructor(
     public authService:     AuthenticationService,
@@ -31,29 +30,18 @@ export class InstitutesSyncObjectsComponent implements OnInit {
     this.context = { componentParent: this };
     this.columnDefs = [
       {
-        field: 'objectType',
-        rowGroup: true,
-        hide: true,
-        cellStyle: { 'justify-content': "left" },
-        valueGetter: function (params) {
-          return params.context['componentParent'].languageS.trans(params.data.objectType + "s");
-        }
-      },
-      {
         headerName: this.languageS.trans('name'),
         field: 'objectName',
       }
     ];
-    this.autoGroupColumnDef = {
-      headerName: this.languageS.trans('objectType'),
-      minWidth: 250
-    };
   }
 
   ngOnInit() {
     this.readMembers();
   }
-
+  segmentChanged(event) {
+    this.segment = event.detail.value;
+  }
   onMemberReady(params) {
     this.memberApi = params.api;
     this.memberColumnApi = params.columnApi;
@@ -73,7 +61,17 @@ export class InstitutesSyncObjectsComponent implements OnInit {
   }
   readMembers() {
     let subM = this.cephalixService.getObjectsToSynchronize().subscribe(
-      (val) => { this.memberData = val; this.authService.log(val) },
+      (val) => { 
+        for( let obj of val ) {
+          if( this.objectsToSync.indexOf(obj.objectType) == -1 ) {
+            this.objectsToSync.push(obj.objectType)
+          }
+          if ( !this.memberData[obj.objectType] ) {
+            this.memberData[obj.objectType] = []
+          }
+          this.memberData[obj.objectType].push(obj)
+        }
+      },
       (err) => { this.authService.log(err) },
       () => { subM.unsubscribe() });
   }
