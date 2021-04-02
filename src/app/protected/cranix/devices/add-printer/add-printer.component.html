@@ -47,7 +47,8 @@
       <ion-item>
         <ion-label position="stacked">{{'name'|translate}}</ion-label>
         <ion-input type="text" text-right [(ngModel)]="printer.name" name="name" required
-          [disabled]="(!printer.deviceId && !room ) || submitted || action == 'modify'">
+          [disabled]="(!printer.deviceId && !room ) || submitted || action == 'modify'"
+          pattern="^([0-9a-z][-0-9a-z]+[0-9a-z])$">
         </ion-input>
       </ion-item>
       <ion-item *ngIf="action != 'queue'">
