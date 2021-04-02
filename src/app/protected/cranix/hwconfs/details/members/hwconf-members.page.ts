@@ -8,6 +8,8 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 import { CrxActionMap } from 'src/app/shared/models/server-models';
 import { DevicesService } from 'src/app/services/devices.service';
 import { RoomIdCellRenderer } from 'src/app/pipes/ag-roomid-render';
+import { interval } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'cranix-hwconf-members',
@@ -35,7 +37,7 @@ export class HwconfMembersPage implements OnInit {
 
   sentImage=0;
   sendingImage: boolean = false;
-  networkCard: string = "eth0";
+  networkCard: string    = "eth0";
   //TODO
   networkCards: string[] = ["eth0","eth1"];
   constructor(
@@ -46,9 +48,14 @@ export class HwconfMembersPage implements OnInit {
     private deviceService: DevicesService
   ) {
     this.hwconf = <Hwconf>this.objectService.selectedObject;
+    this.hwconfService.getMultiDevs().subscribe(
+      (val) => {
+        this.networkCards = val;
+        this.networkCard = val[0];
+      }
+    )
 
     this.context = { componentParent: this };
-
     this.autoGroupColumnDef = {
       headerName: this.languageService.trans('roomId'),
       field: 'roomId',
@@ -186,5 +193,28 @@ export class HwconfMembersPage implements OnInit {
 
   sendImage(id: number){
     this.sentImage=id;
+    this.hwconfService.startMultiCast(id,this.networkCard).subscribe(
+      (val) => {
+        this.objectService.responseMessage(val);
+        interval(5000).pipe(takeWhile(() => this.sentImage > 0)).subscribe(
+          (func => { this.checkSending() })
+        )
+      }
+    )
+  }
+
+  checkSending(){
+    this.hwconfService.getRunningMulticast().subscribe(
+      (val) => { if(!val) { this.sentImage = 0 }}
+    )
+  }
+
+  stopMulticast(){
+    this.sentImage = 0;
+    this.hwconfService.stopMulticast().subscribe(
+      (val) => {
+        this.objectService.responseMessage(val);
+      }
+    )
   }
 }

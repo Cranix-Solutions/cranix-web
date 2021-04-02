@@ -78,7 +78,7 @@
           </ion-select>
         </ion-item>
         <ion-buttons slot="end">
-          <ion-button size="small" fill="clear" (click)="triggerClone($event,'stopclone')"
+          <ion-button size="small" fill="clear" (click)="stopMulticast()"
             matTooltip="{{'Stop multicast cloning' | translate }}">
             <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
           </ion-button>
@@ -101,7 +101,7 @@
             <ion-label>{{'Start sendig'|translate}}</ion-label>
           </ion-col>
         </ion-row>
-        <ion-row *ngFor="let partition of hwconf.partitions">
+        <ion-row *ngFor="let partition of hwconf.partitions" [ngStyle]="{'color':sentImage == partition.id  ? '#eb445a' :''}">
           <ion-col>
             <ion-label>{{partition.name}}</ion-label>
           </ion-col>
@@ -112,7 +112,7 @@
             <ion-label *ngIf="sentImage == partition.id">{{ 'Image sending' | translate }}</ion-label>
           </ion-col>
           <ion-col>
-            <ion-button size="small" fill="clear" (click)="sendImage(partition.id)">
+            <ion-button size="small" fill="clear" (click)="sendImage(partition.id)" [disabled]="!networkCard || sentImage != 0">
               <ion-icon slot="icon-only" name="send" color="success"></ion-icon>
             </ion-button>
           </ion-col>
