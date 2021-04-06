@@ -39,7 +39,6 @@ export class UsersComponent implements OnInit {
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     public languageS: LanguageService,
-    private route: Router,
     private storage: Storage
   ) {
     this.context = { componentParent: this };
