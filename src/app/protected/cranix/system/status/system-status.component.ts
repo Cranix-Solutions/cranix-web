@@ -96,7 +96,7 @@ export class SystemStatusComponent implements OnInit {
     delete this.mySupport.ticketResponseInfo;
     const modal = await this.modalCtrl.create({
       component: CreateSupport,
-      cssClass: 'medium-modal',
+      cssClass: 'big-modal',
       componentProps: {
         support: this.mySupport,
       },

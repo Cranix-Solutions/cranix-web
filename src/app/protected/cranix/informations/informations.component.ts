@@ -100,6 +100,7 @@ export class InformationsComponent implements OnInit {
   async addEditInfo(id: number) {
     const modal = await this.modalController.create({
       component: AddEditInfoPage,
+      cssClass: 'big-modal',
       componentProps: {
         'infoId': id,
         'infoType': this.segment,
@@ -119,6 +120,7 @@ export class InformationsComponent implements OnInit {
   async openResponse(id: number) {
     const modal = await this.modalController.create({
       component: AddEditInfoPage,
+      cssClass: 'big-modal',
       componentProps: {
         'infoId': id,
         'infoType': 'taskResponse',
@@ -168,6 +170,7 @@ export class InformationsComponent implements OnInit {
   async openResponses(task: Announcenement) {
     const modal = await this.modalController.create({
       component: ShowResponses,
+      cssClass: 'big-modal',
       componentProps: {
         'task': task
       }
