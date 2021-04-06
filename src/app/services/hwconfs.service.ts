@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { UtilsService } from './utils.service';
 import { Device, Hwconf } from 'src/app/shared/models/data-model';
-import { ServerResponse } from 'src/app/shared/models/server-models';
-import { Observable } from 'rxjs/internal/Observable';
-import { BehaviorSubject } from 'rxjs';
 import { AuthenticationService } from './auth.service';
+import { ServerResponse } from 'src/app/shared/models/server-models';
 
 
 export interface CloneCommand {
@@ -50,12 +48,13 @@ export class HwconfsService {
 	getMultiDevs() {
 		this.url = `${this.hostname}/clonetool/multicastDevices`;
 		console.log(this.url);
-		return this.http.get<string>(this.url, { headers: this.authService.headers });
+		return this.http.get<string[]>(this.url, { headers: this.authService.headers });
 	}
-	isMaster(devId: number) {
-		this.url = `${this.hostname}/clonetool/devices/${devId}/isMaster`;
+
+	getRunningMulticast() {
+		this.url = `${this.hostname}/clonetool/runningMulticast`;
 		console.log(this.url);
-		return this.http.get(this.url, { headers: this.authService.headers });
+		return this.http.get<string>(this.url, { headers: this.authService.headers });
 	}
 
 	getHWConfs() {
@@ -65,11 +64,6 @@ export class HwconfsService {
 	}
 	//PUT calls
 
-	setMaster(devId: number, value: number) {
-		this.url = `${this.hostname}/clonetool/devices/${devId}/setMaster/${value}`;
-		console.log(this.url);
-		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
-	}
 	writeHWToMulti(hwId: number) {
 		this.url = `${this.hostname}/clonetool/${hwId}/cloning/1`;
 		console.log(this.url);
@@ -85,6 +79,11 @@ export class HwconfsService {
 
 	deleteHwconfById(hwconfId: number) {
 		this.url = this.hostname + `/clonetool/${hwconfId}`;
+		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
+	}
+
+	stopMulticast() {
+		this.url = this.hostname + "/clonetool/runningMulticast";
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
 	}
 }
