@@ -1,22 +1,5 @@
 <cranix-toolbar></cranix-toolbar>
-<ion-content id="carded">
-  <ion-row class="header-row">
-    <ion-col>
-      <ion-title>{{ 'Software installation status:' | translate}} {{grouping | translate}}</ion-title>
-    </ion-col>
-  </ion-row>
-  <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
-    <ion-fab-button>
-      <ion-icon name="arrow-forward-circle"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-list side="start">
-      <ion-fab-button>
-        <ion-icon name="list-outline" (click)="toggleColumnDef()"></ion-icon>
-      </ion-fab-button>
-    </ion-fab-list>
-  </ion-fab>
-  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('memberFilterMD')"
-    id="memberFilterMD" showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
+<ion-content>
   <ion-card>
     <ion-card-header>
       <ion-toolbar>
@@ -27,24 +10,56 @@
           </ion-input>
         </ion-item>
         <ion-buttons slot="end">
-          <!-- ion-button size="small" fill="solid" (click)="toggleColumnDef()"
-            matTooltip="{{'Change grouping of the table' | translate }}">
-            <ion-icon slot="icon-only" name="list-sharp"></ion-icon>
-          </ion-button -->
           <ion-button size="small" fill="solid" (click)="exportSelected()"
             matTooltip="{{'Export selected objects'|translate}}">
             <ion-icon slot="icon-only" name="download"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="stacked">{{'Softwares'|translate}}</ion-label>
+            <ionic-selectable #softwareSelect [(ngModel)]="selectedSoftwares" [ngModelOptions]="{standalone: true}"
+              [items]="softwares" itemValueField="key" itemTextField="value" [canSearch]="true" [isMultiple]="true"
+              placeholder="Select Softwares" (onChange)="readFilteredSoftwareData()">
+            </ionic-selectable>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label position="stacked">{{'Rooms'|translate}}</ion-label>
+            <ionic-selectable #roomSelect [(ngModel)]="selectedRooms" [ngModelOptions]="{standalone: true}"
+              [items]="rooms" itemValueField="key" itemTextField="value" [canSearch]="true" [isMultiple]="true"
+              placeholder="Select Rooms" (onChange)="readFilteredSoftwareData()">
+            </ionic-selectable>
+          </ion-item>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-label position="stacked">{{'Installation Status'|translate}}</ion-label>
+            <ion-select multiple="true" [(ngModel)]="selectedStati" placeholder="Select Installation Status" (ionChange)="readFilteredSoftwareData()">
+              <ion-select-option *ngFor="let status of stati" [value]="status">{{status | translate }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <!-- ion-col>
+          <ion-item>
+            <ion-button size="small" fill="solid" (click)="readFilteredSoftwareData ()"
+              matTooltip="{{'Search the software status corresponding your selection'|translate}}">
+              <ion-icon slot="icon-only" name="search"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-col -->
+      </ion-row>
     </ion-card-header>
     <ion-card-content>
-      <ag-grid-angular #agGrid id="softwareStatusTable" style="width: 100%; height: 100%;"
+      <ag-grid-angular #agGrid id="softwareStatusTable" style="width: 100%; height: 600px;"
         class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}"
-        rowSelection="multiple" animateRows="true" deltaColumnMode="true" [modules]="modules" [context]="context"
-        [rowData]="memberData" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
-        [autoGroupColumnDef]="autoGroupColumnDef"
-        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" (gridReady)="onMemberReady($event)">
+        rowSelection="multiple" animateRows="true" [context]="context" [rowData]="softwareData"
+        [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
+        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
+        (gridReady)="softwareDataReady($event)">
       </ag-grid-angular>
     </ion-card-content>
   </ion-card>
