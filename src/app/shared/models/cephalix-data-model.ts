@@ -113,8 +113,6 @@ export class CephalixCare{
     description: string = "";
     access: string = "";
     contact: string = "";
-    recDate:  any = new Date();
-    validity: any = new Date();
     constructor() {}
 }
 
