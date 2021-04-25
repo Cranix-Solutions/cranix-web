@@ -151,11 +151,6 @@ export class CephalixService {
 		console.log(this.url);
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
 	}
-	getCrxCaerOfInst(id: number){
-		this.url = this.hostname + `/customers/institutes/${id}/osscare`;
-		console.log(this.url);
-		return this.http.get<CephalixCare[]>(this.url, { headers: this.authService.headers });
-	}
 
 	applyAction(actionMap: CrxActionMap ){
 		this.url = this.hostname + `/institutes/applyAction`;
@@ -166,10 +161,6 @@ export class CephalixService {
 	syncFileToInstitutes(fd: FormData){
 		this.url = this.hostname + `/institutes/copyFile`;
 		return this.http.post<ServerResponse>(this.url,fd, { headers: this.authService.headers});
-	}
-	setCephalixCareToInst(id: number, ossCare: CephalixCare){
-		this.url = this.hostname + `/customers/institutes/${id}/osscare`;
-		return this.http.post<ServerResponse>(this.url,ossCare, { headers: this.authService.headers});
 	}
 
 	//PUT
@@ -183,6 +174,7 @@ export class CephalixService {
 		console.log(url);
 		return this.http.put<ServerResponse>(url,null ,{ headers: this.authService.headers });
 	}
+
 	deleteObjectFromInstitute(instituteId: number, ojectType: string, objectId: number ){
 		this.url = this.hostname + `/institutes/${instituteId}/objects/${ojectType.toLocaleLowerCase()}/${objectId}`;
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
@@ -193,17 +185,30 @@ export class CephalixService {
 		console.log(url);
 		return this.http.put<ServerResponse>(url,null ,{ headers: this.authService.headers });
 	}
+
 	updateById(instituteId: number){
 		const url = `${this.hostname}/institutes/${instituteId}/update`;
 		return this.http.put<ServerResponse>(url,null ,{ headers: this.authService.headers });
 	}
-
 
 	addUserToInstitute(userId, instituteId: number){
 		this.url = this.hostname + `/institutes/${instituteId}/users/${userId}`;
 		console.log(this.url)
 		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
 	}
+
+	setSeenOnArticle(articleId: number){
+		this.url = this.hostname + `/tickets/articles/${articleId}`;
+		console.log(this.url)
+		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
+	}
+
+	deleteArticle(articleId: number){
+		this.url = this.hostname + `/tickets/articles/${articleId}`;
+		console.log(this.url)
+		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
+	}
+
 	deleteUserFromInstitute(userId, instituteId: number){
 		this.url = this.hostname + `/institutes/${instituteId}/users/${userId}`;
 		console.log(this.url)
