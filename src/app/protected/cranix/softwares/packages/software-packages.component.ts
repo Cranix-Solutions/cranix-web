@@ -199,6 +199,7 @@ export class SoftwarePackagesComponent implements OnInit {
       componentProps: {
         software: software
       },
+      cssClass: 'medium-modal',
       animated: true,
       swipeToClose: true,
       showBackdrop: true
