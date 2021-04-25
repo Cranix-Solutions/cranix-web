@@ -102,45 +102,45 @@ export class ObjectsEditComponent implements OnInit {
     )
   }
 
-  onSubmit(object) {
+  onSubmit() {
     if (this.disabled) {
       return;
     }
     for (let key of this.objectKeys) {
-      if (this.objectService.typeOf(key, object, 'edit') == 'multivalued') {
-        let s: string = object[key];
-        object[key] = s.split(",")
+      if (this.objectService.typeOf(key, this.object, 'edit') == 'multivalued') {
+        let s: string = this.object[key];
+        this.object[key] = s.split(",")
       }
     }
     this.disabled = true;
     this.objectService.requestSent();
-    console.log("onSubmit", object);
+    console.log("onSubmit", this.object);
     if (this.objectType == 'settings') {
-      return this.modalController.dismiss(object);
+      return this.modalController.dismiss(this.object);
     }
     switch (this.objectType) {
       case 'userImport': {
-        this.userImport(object);
+        this.userImport(this.object);
         break;
       }
       case 'support': {
-        object['description'] = object.text;
-        delete object.text;
-        this.supportRequest(object);
+        this.object['description'] = this.object.text;
+        delete this.object.text;
+        this.supportRequest(this.object);
         break;
       }
       case 'software': {
         let sv = new SoftwareVersion();
         let fn = new SoftwareFullName();
-        sv.version = object.version;
+        sv.version = this.object.version;
         sv.status = 'C';
-        fn.fullName = object.name
-        object['softwareVersions'] = [{ 'version': object.version, 'status': 'C' }]
-        object['softwareFullNames'] = [{ 'fullName': object.name }]
-        console.log("new software", object)
+        fn.fullName = this.object.name
+        this.object['softwareVersions'] = [{ 'version': this.object.version, 'status': 'C' }]
+        this.object['softwareFullNames'] = [{ 'fullName': this.object.name }]
+        console.log("new software", this.object)
       }
       default: {
-        this.defaultAction(object);
+        this.defaultAction(this.object);
       }
     }
   }

@@ -7,7 +7,7 @@
           matTooltip="{{'Set the next default values' | translate }}" [disabled]="disabled">
           <ion-icon slot="icon-only" name="refresh"></ion-icon>
         </ion-button>
-        <ion-button class="ion-no-margin" (click)="onSubmit(editForm.value)" [disabled]="!editForm.valid">
+        <ion-button class="ion-no-margin" (click)="onSubmit()" [disabled]="!editForm.valid">
           <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
         </ion-button>
         <ion-button *ngIf="objectAction == 'modify' && objectType != 'settings'" fill="clear" size="small"
@@ -80,13 +80,8 @@
           <input [(ngModel)]="object[key]" name="{{key}}" type="date">
         </ion-item>
         <ion-item *ngSwitchCase="'date-time'">
-          <mat-form-field fxFlexOffset="2" fxFlex="32">
-            <ion-label position="stacked">{{ key | translate }}</ion-label>
-            <input matInput [(ngModel)]="object[key]" name="{{key}}"
-              placeholder="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z' }}" [matDatepicker]="picker">
-            <mat-datepicker #picker [startAt]="object[key] | date:'yyyy-MM-dd HH:mm:ss Z'"></mat-datepicker>
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          </mat-form-field>
+          <ion-label position="stacked">{{ key | translate }}</ion-label>
+          <input [(ngModel)]="object[key]" name="{{key}}" type="datetime-local">
         </ion-item>
         <ion-item *ngSwitchCase="'idPipe'">
           <ion-label position="stacked">{{ key | translate }}{{objectService.required[key]}}</ion-label>
