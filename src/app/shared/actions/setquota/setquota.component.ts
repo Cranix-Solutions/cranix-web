@@ -10,7 +10,6 @@ import { ModalController } from '@ionic/angular';
 export class SetquotaComponent implements OnInit {
 
   @Input() type: string;
-
   quota = 500;
   title = "Set filesystemquota for the selected users";
   constructor(
