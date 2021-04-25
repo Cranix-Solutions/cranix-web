@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SelfManagementService } from 'src/app/services/selfmanagement.service';
-import { AdHocLanService } from 'src/app/services/adhoclan.service';
 import { takeWhile } from 'rxjs/internal/operators/takeWhile';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { ModalController } from '@ionic/angular';
@@ -16,8 +15,6 @@ export class MyDevicesComponent implements OnInit, OnDestroy {
   alive: boolean = true;
 
   myDevs;
-
-  myRooms;
   constructor(private selfS: SelfManagementService,
     public modalCtrl: ModalController,
     public objectService: GenericObjectService) {
@@ -25,14 +22,6 @@ export class MyDevicesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.selfS.getMyRooms()
-      .pipe(takeWhile(() => this.alive))
-      .subscribe((res) => {
-        this.myRooms = res;
-        console.log('myRooms are', res);
-      }, (err) => {
-        this.objectService.errorMessage(err);
-      })
     this.myDevs = this.selfS.getMyDevices()
   }
 
@@ -48,17 +37,11 @@ export class MyDevicesComponent implements OnInit, OnDestroy {
   }
 
   async addDevice(ev: Event) {
-    let room = "";
-    if (this.myRooms.length == 1) {
-      room = this.myRooms[0];
-    } else {
-      room = this.myRooms
-    }
     const modal = await this.modalCtrl.create({
       component: AddDeviceComponent,
       cssClass: 'small-modal',
       componentProps: {
-        addHocRooms: JSON.stringify(this.myRooms)
+        adHocRoom: true
       },
       animated: true,
       swipeToClose: true,
