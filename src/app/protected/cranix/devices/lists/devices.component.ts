@@ -67,7 +67,6 @@ export class DevicesComponent implements OnInit {
     });
     if (this.objectService.selectedRoom) {
       this.selectedRoom = this.objectService.selectedRoom;
-      delete this.objectService.selectedRoom;
       this.objectService.getObjects('device').subscribe(obj => {
         this.rowData = [];
         for (let dev of obj) {
@@ -81,6 +80,11 @@ export class DevicesComponent implements OnInit {
       this.objectService.getObjects('device').subscribe(obj => this.rowData = obj);
       delete this.selectedRoom;
     }
+    delete this.objectService.selectedObject;
+  }
+  ngOnDestroy() {
+    console.log("ngOnDestroy")
+    delete this.objectService.selectedRoom;
     delete this.objectService.selectedObject;
   }
   public ngAfterViewInit() {
@@ -277,12 +281,11 @@ export class DevicesComponent implements OnInit {
   }
 
   async addDevice(ev: Event) {
-    console.log('selected room is,', this.selectedRoom);
     const modal = await this.modalCtrl.create({
       component: AddDeviceComponent,
       cssClass: 'medium-modal',
       componentProps: {
-        rooms: this.selectedRoom
+        adHocRoom: false
       },
       animated: true,
       swipeToClose: true,
