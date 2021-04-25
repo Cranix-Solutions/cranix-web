@@ -8,7 +8,6 @@ import { DetailsPageRoutingModule } from './details-routing.module';
 import { DetailsPage, EditArticle } from './details.page';
 import { TranslateService } from '@ngx-translate/core';
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
-import { simpleToolbarOptions } from 'src/app/shared/models/constants'
 
 @NgModule({
   imports: [
@@ -17,9 +16,7 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     FormsModule,
     IonicModule,
     DetailsPageRoutingModule,
-    QuillModule.forRoot({
-      modules: { toolbar: simpleToolbarOptions},
-    })
+    QuillModule.forRoot()
   ],
   declarations: [DetailsPage, EditArticle],
   providers: [TranslateService],
