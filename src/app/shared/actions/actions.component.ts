@@ -191,7 +191,7 @@ export class ActionsComponent implements OnInit {
         modal.onDidDismiss().then((dataReturned) => {
           this.authS.log(dataReturned.data)
           if (dataReturned.data) {
-            actionMap.stringValue = dataReturned.data;
+            actionMap.longValue = dataReturned.data;
             this.executeAction(actionMap);
           }
         });
@@ -211,7 +211,7 @@ export class ActionsComponent implements OnInit {
         modal.onDidDismiss().then((dataReturned) => {
           this.authS.log(dataReturned.data)
           if (dataReturned.data) {
-            actionMap.stringValue = dataReturned.data;
+            actionMap.longValue = dataReturned.data;
             this.executeAction(actionMap);
           }
         });
