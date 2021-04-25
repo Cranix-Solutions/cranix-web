@@ -39,26 +39,30 @@
               <ion-icon slot="icon-only" name="download"></ion-icon>
             </ion-button>
           </div>
-          <ion-button [color]="article.seen ? 'success' : 'danger'" fill="solid" (click)="setSeenOnArticle(article)">
+          <ion-button [color]="article.seen ? 'success' : 'danger'" fill="solid" (click)="setSeenOnArticle(article)"
+            matTooltip="{{'Set article as seen.' | translate }}">
             <ion-icon slot="icon-only" name="checkmark"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="article.articleType == 'I'" fill="solid" (click)="answerArticle(article)">
+          <ion-button *ngIf="article.articleType == 'I'" fill="solid" (click)="answerArticle(article)"
+            matTooltip="{{'Answer the article.' | translate }}">
             <ion-icon slot="icon-only" name="arrow-undo"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="article.articleType == 'O'" fill="solid" (click)="answerArticle(article)">
+          <ion-button *ngIf="article.articleType == 'O'" fill="solid" (click)="answerArticle(article)"
+            matTooltip="{{'Edit the answer and resend it.' | translate }}">
             <ion-icon slot="icon-only" name="build-outline"></ion-icon>
           </ion-button>
+          <ion-button fill="solid" (click)="toggleArticle(article.id)" matTooltip="{{'Open or close the article.' | translate }}">
+            <ion-icon *ngIf="!articleOpen[article.id]" slot="icon-only" name="mail-open"></ion-icon>
+            <ion-icon *ngIf="articleOpen[article.id]" slot="icon-only" name="mail"></ion-icon>
+          </ion-button>
           <ion-button fill="solid" (click)="deleteArticle(article)">
-            <ion-icon slot="icon-only" name="trash"></ion-icon>
+            <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-card-header>
-    <ion-card-content>
-      <div class="ql-container ql-snow" style="border-width: 0;">
-        <div class="ql-editor" [innerHTML]="article.text">
-        </div>
-      </div>
+    <ion-card-content style="height: 50px" [id]="'article' + article.id">
+      <quill-view-html [content]="article.text" format="text" theme="snow"></quill-view-html>
     </ion-card-content>
   </ion-card>
 </ion-content>

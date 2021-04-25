@@ -21,6 +21,7 @@ export class DetailsPage implements OnInit {
   institute: Institute;
   institutes: InstituteList[] = [];
   allInstitutes: InstituteList[] = [];
+  articleOpen = {};
   constructor(
     private route: ActivatedRoute,
     private cephlixS: CephalixService,
@@ -39,7 +40,7 @@ export class DetailsPage implements OnInit {
         if (!this.institute) {
           this.objectService.getObjects('institute').subscribe(
             (obj) => {
-              for( let i of obj ) {
+              for (let i of obj) {
                 this.institutes.push({ id: i.id, label: i.name + " " + i.locality })
               }
               this.institute = new Institute();
@@ -76,6 +77,7 @@ export class DetailsPage implements OnInit {
     article.title = this.ticket.firstname + " " + this.ticket.lastname;
     const modal = await this.modalController.create({
       component: EditArticle,
+      cssClass: "big-modal",
       componentProps: {
         ticket: this.ticket,
         article: article
@@ -95,28 +97,54 @@ export class DetailsPage implements OnInit {
     //TODO
   }
   public deleteArticle(article: Article) {
-    //TODO
+    let sub = this.cephlixS.deleteArticle(article.id).subscribe(
+      (val) => {
+        this.objectService.responseMessage(val)
+        if (val.code == "OK") {
+          this.readArcticles();
+        }
+      },
+      (err) => { this.objectService.errorMessage(err) },
+      () => { sub.unsubscribe() })
   }
   public setSeenOnArticle(article: Article) {
-    //TODO
+    let sub = this.cephlixS.setSeenOnArticle(article.id).subscribe(
+      (val) => {
+        this.objectService.responseMessage(val)
+        if (val.code == "OK") {
+          this.readArcticles();
+        }
+      },
+      (err) => { this.objectService.errorMessage(err) },
+      () => { sub.unsubscribe() })
   }
 
   public setInstitute() {
     let tmp = (<HTMLInputElement>document.getElementById("institute")).value;
     let id = 0;
-    for( let i of this.institutes ) {
-      if( i.label == tmp) {
+    for (let i of this.institutes) {
+      if (i.label == tmp) {
         id = i.id
       }
     }
     console.log(id)
     this.objectService.requestSent();
-    this.cephlixS.setInstituteForTicket(this.ticketId,id).subscribe(
+    this.cephlixS.setInstituteForTicket(this.ticketId, id).subscribe(
       (val) => {
         this.objectService.responseMessage(val)
         this.institute = this.objectService.getObjectById('institute', id);
       }
     )
+  }
+
+  toggleArticle(id) {
+    if( this.articleOpen[id] ) {
+      (<HTMLInputElement>document.getElementById("article" + id)).style.height = "50px"
+      this.articleOpen[id] = false
+    } else {
+      (<HTMLInputElement>document.getElementById("article" + id)).style.height = "100%"
+      this.articleOpen[id] = true
+    }
   }
 }
 
@@ -130,33 +158,34 @@ export class EditArticle implements OnInit {
   @Input() article: Article;
   @Input() ticket: Ticket;
   text: string = "";
-  
+
   constructor(
     private cephalixService: CephalixService,
-    public modalController:  ModalController,
-    public objectService:    GenericObjectService
+    public modalController: ModalController,
+    public objectService: GenericObjectService
   ) { }
 
   ngOnInit() {
     let newText: string[] = [];
-    for(let line of this.article.text.split("\n")) {
-      newText.push(">" +line);
+    for (let line of this.article.text.split("\n")) {
+      newText.push(">" + line);
     }
     this.text = newText.join("\n");
   }
 
-  sendArticle(){
+  sendArticle() {
     this.article.recipient = this.article.sender;
     this.article.articleType = 'O';
-    let sub = this.cephalixService.addArticleToTicket(this.article,this.ticket.id).subscribe(
-      (val) => { 
+    let sub = this.cephalixService.addArticleToTicket(this.article, this.ticket.id).subscribe(
+      (val) => {
         this.objectService.responseMessage(val)
-        if(val.code == "OK") {
+        if (val.code == "OK") {
           this.modalController.dismiss();
         }
       },
       (err) => { this.objectService.errorMessage(err) },
-      () => { sub.unsubscribe() }   )
+      () => { sub.unsubscribe() })
     //TODO
   }
+
 }
