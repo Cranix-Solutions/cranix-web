@@ -29,9 +29,7 @@ export class RoomAccessComponent implements OnInit {
   statusColumnApi;
   columnDefs: any[] = [];
   statusColumnDefs: any[] = [];
-  autoGroupColumnDef;
   defaultColDef;
-  grouping = '';
   modules = [];
 
   constructor(
@@ -53,7 +51,7 @@ export class RoomAccessComponent implements OnInit {
       maxWidth: 150,
       suppressMenu: true,
       sortable: false,
-       headerComponentParams: {
+      headerComponentParams: {
         template:
           '<div class="ag-cell-label-container" role="presentation">' +
           '  <span ref="eMenu" class="ag-header-icon ag-header-cell-menu-button"></span>' +
@@ -98,20 +96,27 @@ export class RoomAccessComponent implements OnInit {
         headerName: this.languageS.trans('printing'),
         field: 'printing',
         cellRendererFramework: YesNoBTNRenderer
-      }, {
-        headerName: this.languageS.trans('proxy'),
-        field: 'proxy',
-        cellRendererFramework: YesNoBTNRenderer
-      }, {
-        headerName: this.languageS.trans('direct'),
-        field: 'direct',
-        cellRendererFramework: YesNoBTNRenderer
-      }, {
-        headerName: this.languageS.trans('Apply Default'),
-        field: 'apply_default',
-        cellRendererFramework: ApplyBTNRenderer
       }
     ];
+    if (this.authService.isAllowed('system.proxy')) {
+      this.statusColumnDefs.push(
+        {
+          headerName: this.languageS.trans('proxy'),
+          field: 'proxy',
+          cellRendererFramework: YesNoBTNRenderer
+        }
+      )
+    }
+    this.statusColumnDefs.push({
+      headerName: this.languageS.trans('direct'),
+      field: 'direct',
+      cellRendererFramework: YesNoBTNRenderer
+    })
+    this.statusColumnDefs.push({
+      headerName: this.languageS.trans('Apply Default'),
+        field: 'apply_default',
+          cellRendererFramework: ApplyBTNRenderer
+    })
   }
   toggle(data, field: string, value: boolean) {
     if (this.segment == 'list') {
@@ -151,18 +156,15 @@ export class RoomAccessComponent implements OnInit {
               return params.context['componentParent'].objectService.idToName('room', params.data.roomId);
             }
           }
-          if (this.grouping == 'roomId') {
-            col['rowGroup'] = true;
-            col['hide'] = true;
-          }
           col['sortable'] = true;
           break;
         }
-        case "pointInTime": {
-          if (this.grouping == 'pointInTime') {
-            col['rowGroup'] = true;
+        case "proxy": {
+          if (!this.authService.isAllowed('system.proxy')) {
             col['hide'] = true;
           }
+        }
+        case "pointInTime": {
           col['sortable'] = true;
           break;
         }
@@ -176,28 +178,12 @@ export class RoomAccessComponent implements OnInit {
           break;
         }
         default: {
-          //col['headerClass'] = "rotate-header-class"
-          col['sortable'] = false;
           col['minWidth'] = 70;
           col['maxWidth'] = 100;
           col['cellRendererFramework'] = YesNoBTNRenderer;
         }
       }
       this.columnDefs.push(col);
-    }
-    switch (this.grouping) {
-      case '': {
-        this.grouping = 'roomId';
-        break
-      }
-      case 'roomId': {
-        this.grouping = 'pointInTime';
-        break;
-      }
-      case 'pointInTime': {
-        this.grouping = '';
-        break;
-      }
     }
   }
   onQuickFilterChanged(quickFilter) {
@@ -213,8 +199,8 @@ export class RoomAccessComponent implements OnInit {
     var padding = 20;
     var height = headerHeightGetter() + padding;
     if (this.segment == 'list') {
-    this.accessApi.setHeaderHeight(height);
-    this.accessApi.resetRowHeights();
+      this.accessApi.setHeaderHeight(height);
+      this.accessApi.resetRowHeights();
     } else {
       this.statusApi.setHeaderHeight(height);
       this.statusApi.resetRowHeights();
