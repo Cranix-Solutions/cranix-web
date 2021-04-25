@@ -28,9 +28,9 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
   name: string = "";
   roomsToSelect: Room[] = [];
   addDeviceForm: FormGroup;
-  hwConfs: Observable<Hwconf[]>;
+  hwConfs: Hwconf[];
   disabled: boolean = false;
-  macOk = true;
+  macOk = false;
 
   @Input() public adHocRoom: boolean;
   constructor(
