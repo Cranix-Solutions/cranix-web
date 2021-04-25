@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
@@ -45,11 +45,11 @@ export class RoomsComponent implements OnInit {
     this.context = { componentParent: this };
     this.createColumnDefs();
     this.defaultColDef = {
-        resizable: true,
-        sortable: true,
-        hide: false,
-        suppressMenu : true
-      }
+      resizable: true,
+      sortable: true,
+      hide: false,
+      suppressMenu: true
+    }
   }
   ngOnInit() {
     this.storage.get('RoomsComponent.displayedColumns').then((val) => {
@@ -63,10 +63,10 @@ export class RoomsComponent implements OnInit {
     delete this.objectService.selectedObject;
   }
   public ngAfterViewInit() {
-    while(document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
+    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
   }
   createColumnDefs() {
-    let columnDefs = [];
+    this.columnDefs = [];
     for (let key of this.objectKeys) {
       let col = {};
       col['field'] = key;
@@ -83,8 +83,8 @@ export class RoomsComponent implements OnInit {
           col['pinned'] = 'left';
           col['flex'] = '1';
           col['colId'] = '1';
-          columnDefs.push(col);
-          columnDefs.push({
+          this.columnDefs.push(col);
+          this.columnDefs.push({
             headerName: "",
             minWidth: 280,
             suppressSizeToFit: true,
@@ -102,9 +102,8 @@ export class RoomsComponent implements OnInit {
           break;
         }
       }
-      columnDefs.push(col);
+      this.columnDefs.push(col);
     }
-    this.columnDefs = columnDefs;
   }
   onGridReady(params) {
     this.gridApi = params.api;
@@ -123,11 +122,11 @@ export class RoomsComponent implements OnInit {
     this.columnApi.autoSizeColumns(allColumnIds);
   }
   public redirectToDelete = (room: Room) => {
-    this.objectService.deleteObjectDialog(room, 'room','')
+    this.objectService.deleteObjectDialog(room, 'room', '')
   }
   /**
  * Open the actions menu with the selected object ids.
- * @param ev 
+ * @param ev
  */
   async openActions(ev: any, objId: number) {
     let selected = this.gridApi.getSelectedRows();
@@ -139,8 +138,8 @@ export class RoomsComponent implements OnInit {
     if (objId) {
       objectIds.push(objId)
     } else {
-      for ( let obj of selected ) {
-        objectIds.push( obj.id);
+      for (let obj of selected) {
+        objectIds.push(obj.id);
       }
     }
     const popover = await this.popoverCtrl.create({
@@ -156,7 +155,7 @@ export class RoomsComponent implements OnInit {
     });
     (await popover).present();
   }
-  
+
   async redirectToEdit(ev: Event, room: Room) {
     let action = "";
     if (room) {
@@ -210,7 +209,7 @@ export class RoomsComponent implements OnInit {
     });
     (await modal).present();
   }
-  
+
   async setPrinters(room: Room) {
     this.objectService.selectedObject = room;
     const modal = await this.modalCtrl.create({
@@ -230,10 +229,10 @@ export class RoomsComponent implements OnInit {
       this.authService.log("most lett vegrehajtva.")
     })
   }
-/**
-* Function to Select the columns to show
-* @param ev 
-*/
+  /**
+  * Function to Select the columns to show
+  * @param ev
+  */
   async openCollums(ev: any) {
     const modal = await this.modalCtrl.create({
       component: SelectColumnsComponent,
