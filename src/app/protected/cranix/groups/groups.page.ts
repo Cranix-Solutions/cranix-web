@@ -118,29 +118,7 @@ export class GroupsPage implements OnInit {
     this.gridApi.doLayout();
 
   }
-  onGridSizeChange(params) {
-   /* var allColumns = params.columnApi.getAllColumns();
-    params.api.sizeColumnsToFit();*/
-    this.sizeAll();
-  }
-
-  sizeAll() {
-   /* var allColumnIds = [];
-    this.columnApi.getAllColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.columnApi.autoSizeColumns(allColumnIds);*/
-
-    this.gridApi.sizeColumnsToFit();
-    window.addEventListener('resize', function() {
-      setTimeout(function() {
-        this.gridApi.sizeColumnsToFit();
-      });
-    });
-
-    this.gridApi.sizeColumnsToFit();
-  }
-
+  
   public redirectToDelete = (group: Group) => {
     this.objectService.deleteObjectDialog(group, 'group','')
   }
@@ -179,6 +157,7 @@ export class GroupsPage implements OnInit {
     this.objectService.selectedObject = group;
     const modal = await this.modalCtrl.create({
       component: GroupMembersPage,
+      cssClass: 'big-modal',
       animated: true,
       swipeToClose: true,
       showBackdrop: true
