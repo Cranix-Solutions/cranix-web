@@ -179,6 +179,7 @@ export class GroupsPage implements OnInit {
     this.objectService.selectedObject = group;
     const modal = await this.modalCtrl.create({
       component: GroupMembersPage,
+      cssClass: 'big-modal',
       animated: true,
       swipeToClose: true,
       showBackdrop: true
