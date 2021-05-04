@@ -118,7 +118,7 @@ export class GroupsPage implements OnInit {
     this.gridApi.doLayout();
 
   }
-  
+
   public redirectToDelete = (group: Group) => {
     this.objectService.deleteObjectDialog(group, 'group','')
   }
