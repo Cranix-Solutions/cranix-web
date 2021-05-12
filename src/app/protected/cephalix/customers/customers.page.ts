@@ -73,7 +73,6 @@ export class CustomersPage implements OnInit {
       switch (key) {
         case 'name': {
           col['width'] = 220;
-          col['cellStyle'] = { 'padding-left' : '2px', 'padding-right' : '2px'};
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left'; 
           col['colId'] = '1';

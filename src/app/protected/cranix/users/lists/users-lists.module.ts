@@ -9,6 +9,7 @@ import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { UsersListsPage } from './users-lists.page';
 import { UsersComponent } from './users.component';
 import { UsersImportComponent } from './users-import.component';
+import { UserGroupsPage } from '../details/groups/user-groups.page'
 
 const routes: Routes = [
   {
@@ -43,7 +44,7 @@ const routes: Routes = [
     CranixSharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [UsersListsPage,UsersComponent,UsersImportComponent]
+  declarations: [UsersListsPage,UsersComponent,UsersImportComponent,UserGroupsPage]
 })
 export class UsersListsPageModule { }
 

@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Router } from '@angular/router';
 //own services
 import { AuthenticationService } from './services/auth.service';
 import { GenericObjectService } from './services/generic-object.service';
 import { LanguageService } from './services/language.service';
 import { SecurityService } from './services/security-service';
+import { InformationsService } from './services/informations.services';
 
 @Component({
   selector: 'app-root',
@@ -18,20 +17,19 @@ export class AppComponent {
   constructor(
     private authService: AuthenticationService,
     private genericObjectS: GenericObjectService,
+    private informationServcie: InformationsService,
     private languageService: LanguageService,
     private platform: Platform,
     private router: Router,
     private securityService: SecurityService,
-    private splashScreen: SplashScreen,
-    private statusBar: StatusBar
   ) {
+    this.platform.ready();
     this.initializeApp();
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
+      //this.statusBar.styleDefault();
       this.languageService.setInitialAppLanguage();
       this.authService.authenticationState.subscribe(state => {
         console.log("authenticationState",state)

@@ -79,7 +79,6 @@ export class SoftwarePackagesComponent implements OnInit {
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
           col['minWidth'] = 220;
-          col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
           col['flex'] = '1';
@@ -200,6 +199,7 @@ export class SoftwarePackagesComponent implements OnInit {
       componentProps: {
         software: software
       },
+      cssClass: 'medium-modal',
       animated: true,
       swipeToClose: true,
       showBackdrop: true

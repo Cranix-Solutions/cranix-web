@@ -21,12 +21,12 @@ export class PrintersService {
 		this.url = this.hostname + `/printers/add`;
 		return this.http.post<ServerResponse>(this.url, imp, { headers: this.authService.formHeaders });
 	}
-	addQueu(imp: FormData) {
+	addQueue(imp: FormData) {
 		this.url = this.hostname + `/printers/addQueue`;
 		return this.http.post<ServerResponse>(this.url, imp, { headers: this.authService.formHeaders });
 	}
-	setDrive(id: number, imp: FormData) {
-		this.url = this.hostname + `/printers/${id}/setDrive`;
+	setDriver(id: number, imp: FormData) {
+		this.url = this.hostname + `/printers/${id}/setDriver`;
 		return this.http.post<ServerResponse>(this.url, imp, { headers: this.authService.formHeaders });
 	}
 

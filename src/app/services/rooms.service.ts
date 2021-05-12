@@ -166,8 +166,7 @@ export class RoomsService {
 
 	putDefaultPrinterToRoom(roomId: number, deviceId: number) {
 		this.url = this.hostname + `/rooms/${roomId}/defaultPrinter/${deviceId}`;
-		let body = null;
-		return this.http.put<ServerResponse>(this.url, body, { headers: this.authService.headers });
+		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
 	}
 
 	putAvaiPrinterToRoom(roomId: number, printerId: number) {
@@ -176,8 +175,7 @@ export class RoomsService {
 	}
 	actionOnRoom(roomId: number, action: string) {
 		this.url = this.hostname + `/rooms/${roomId}/actions/${action}`;
-		let body = null;
-		return this.http.put<ServerResponse>(this.url, body, { headers: this.authService.headers });
+		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
 	}
 
 }

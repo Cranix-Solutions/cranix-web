@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslateService  } from '@ngx-translate/core';
 import { RouterModule, Routes } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
@@ -24,9 +23,10 @@ const routes: Routes = [
     FormsModule,
     RouterModule.forChild(routes),
     IonicModule,
-    CranixSharedModule
+    CranixSharedModule,
+    
   ],
   declarations: [ GroupsPage ],
-  providers: [TranslateService, PipesModule]
+  providers: [PipesModule ]
 })
 export class GroupsPageModule {}

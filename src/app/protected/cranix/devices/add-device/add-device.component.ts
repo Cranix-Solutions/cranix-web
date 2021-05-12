@@ -20,20 +20,19 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class AddDeviceComponent implements OnInit, OnDestroy {
 
+  selectedRoom: Room;
+  device: Device = new Device();
   alive: boolean = true;
   ipAdresses: string[];
   deviceNames = {};
-  roomId: number;
   name: string = "";
-  device: Device = new Device();
-  roomsToSelect: Observable<Room[]>;
+  roomsToSelect: Room[] = [];
   addDeviceForm: FormGroup;
-  hwConfs: Observable<Hwconf[]>;
+  hwConfs: Hwconf[];
   disabled: boolean = false;
+  macOk = false;
 
-  @Input() addHocRooms: Room[];
-  @Input() public rooms: Room;
-
+  @Input() public adHocRoom: boolean;
   constructor(
     public authService: AuthenticationService,
     public deviceService: DevicesService,
@@ -41,74 +40,45 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
     public modalCtrl: ModalController,
     public objectService: GenericObjectService,
     public roomService: RoomsService,
-    private fb: FormBuilder,
     private selfS: SelfManagementService
   ) {
   }
 
   ngOnInit() {
-    console.log('room is, :::', this.rooms);
-    if (!this.addHocRooms) {
-      console.log('no AddHOC')
-      this.addDeviceForm = this.fb.group({
-        ip: [, Validators.required],
-        name: [],
-        roomId: [],
-        wlanMac: ['', Validators.pattern(/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/)],
-        hwconfId: [, Validators.required],
-        serial: [''],
-        inventary: [''],
-        row: [''],
-        place: [''],
-        mac: ['', Validators.compose([Validators.pattern(/^((([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})))/), Validators.required])],
-
-      });
-      this.hwConfs = this.objectService.getObjects('hwconf');
-    } else {
-      this.addDeviceForm = this.fb.group({
-        name: ['', Validators.required],
-        mac: ['', Validators.compose([Validators.pattern(/^((([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})))/), Validators.required])],
-        ip: [{ value: null, disabled: true }],
-        roomId: [{ value: this.addHocRooms[0].id }, Validators.required],
-        wlanMac: [{ value: null, disabled: true }],
-        hwconfId: [{ value: this.addHocRooms[0].hwconfId, disabled: true }, Validators.required],
-        serial: [{ value: null, disabled: true }],
-        inventary: [{ value: null, disabled: true }],
-        row: [{ value: null, disabled: true }],
-        place: [{ value: null, disabled: true }],
-      });
-      console.log('AddhocRooms', this.addDeviceForm)
+    //Preset mac if any.
+    if( this.authService.session.mac ) {
+      this.device.mac = this.authService.session.mac;
     }
-    if (this.addHocRooms) {
-      this.roomsToSelect = this.selfS.getMyRooms();
+    this.objectService.getObjects('hwconf').subscribe(obj => this.hwConfs = obj);
+    console.log('room is, :::', this.objectService.selectedRoom);
+    if (this.adHocRoom) {
+      this.selfS.getMyRooms().subscribe(
+        (val) => { this.roomsToSelect = val; }
+      )
     } else {
-      this.roomsToSelect = this.roomService.getRoomsToRegister();
-      if (this.rooms) {
-        this.roomId = this.rooms.id;
-        this.addDeviceForm.controls['roomId'].patchValue(this.roomId);
-        this.addDeviceForm.controls['roomId'].disable();
-        this.addDeviceForm.controls['hwconfId'].patchValue(this.rooms.hwconfId);
-        this.roomService.getAvailiableIPs(this.roomId)
-          .pipe(takeWhile(() => this.alive))
-          .subscribe((res) => {
-            this.ipAdresses = res;
-          })
+      if (this.objectService.selectedRoom) {
+        this.selectedRoom = this.objectService.selectedRoom;
+        this.roomChanged(this.selectedRoom)
+      } else {
+        this.roomService.getRoomsToRegister().subscribe(
+          (val) => { this.roomsToSelect = val; }
+        )
       }
     }
   }
 
   public ngAfterViewInit() {
     while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
-    console.log('After view:', this.addHocRooms);
+    console.log('After view:', this.adHocRoom);
   }
 
-  onSubmit(devices: Device) {
-    console.log('devices', devices);
+  onSubmit() {
+    console.log('this.device', this.device);
     this.objectService.requestSent()
     this.disabled = true;
-    if (this.addHocRooms) {
-      console.log('adding Addoc', devices);
-      this.selfS.addDevice(devices)
+    if (this.adHocRoom) {
+      console.log('adding Addoc', this.device);
+      this.selfS.addDevice(this.device)
         .pipe(takeWhile(() => this.alive))
         .subscribe((res) => {
           this.objectService.responseMessage(res);
@@ -120,15 +90,19 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
           () => { this.disabled = false; })
     } else {
       let newDevice = [];
-      let macs = devices.mac.split('\n');
-      let startIndex = this.ipAdresses.indexOf(devices.ip);
+      let macs = this.device.mac.split('\n');
+      let startIndex = this.ipAdresses.indexOf(this.device.ip);
       if (macs.length == 1) {
         newDevice[0] = {
-          name: devices.name,
+          name: this.device.name,
           ip: this.ipAdresses[startIndex].split(' ')[0],
           mac: macs[0],
-          hwconfId: devices.hwconfId,
-          roomId: this.roomId
+          hwconfId: this.device.hwconfId,
+          roomId: this.device.roomId,
+          serial: this.device.serial,
+          inventary: this.device.inventary,
+          row: this.device.row,
+          place: this.device.place
         }
       } else {
         for (let x = 0; x < macs.length; x++) {
@@ -136,12 +110,13 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
             name: this.ipAdresses[startIndex + x].split(' ')[1],
             ip: this.ipAdresses[startIndex + x].split(' ')[0],
             mac: macs[x],
-            hwconfId: devices.hwconfId,
-            roomId: this.roomId
+            hwconfId: this.device.hwconfId,
+            roomId: this.device.roomId
           }
         }
       }
-      this.roomService.addDevice(newDevice, newDevice[0].roomId)
+      console.log(newDevice, this.device.roomId)
+      this.roomService.addDevice(newDevice, this.device.roomId)
         .pipe(takeWhile(() => this.alive))
         .subscribe((responses) => {
           let response = this.languageService.trans("List of the results:");
@@ -149,7 +124,7 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
             response = response + "<br>" + this.languageService.transResponse(resp);
           }
           this.objectService.okMessage(response)
-          this.objectService.getAllObject('devices');
+          this.objectService.getAllObject('device');
         },
           (err) => {
             this.objectService.errorMessage(err)
@@ -162,26 +137,36 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
   }
 
   ipChanged(ev) {
-    this.addDeviceForm.controls['name'].patchValue(ev.detail.value.split(" ")[1])
+    this.device.name=ev.detail.value.split(" ")[1];
   }
 
-  roomChanged(ev) {
-    console.log('rooms is: ', ev);
-    this.roomId = ev.detail.value;
-    if (this.addHocRooms) {
-      this.addDeviceForm.controls['hwconfId'].patchValue(ev.detail.value);
-    } else {
-      this.roomService.getAvailiableIPs(ev.detail.value)
-      .pipe(takeWhile(() => this.alive))
-      .subscribe((res) => {
-        this.ipAdresses = res;
-      })
+  roomChanged(room) {
+    console.log('rooms is: ', room);
+    this.device.roomId = room.id;
+    this.device.hwconfId = room.hwconfId;
+    if (!this.adHocRoom) {
+      this.roomService.getAvailiableIPs(room.id)
+        .pipe(takeWhile(() => this.alive))
+        .subscribe((res) => {
+          this.ipAdresses = res;
+        })
 
     }
   }
-  /**   onFormValuesChanged() {
-      console.log('Form value is: ', this.addDeviceForm);
-    }**/
+
+  checkMac(ev) {
+    let ok = true;
+    let pattern=/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})/;
+    let line: string;
+    for(line of ev.detail.value.split('\n') ){
+      if(!line.match(pattern) ) {
+        ok = false;
+        break;
+      }
+    }
+    this.macOk = ok;
+  }
+
   ngOnDestroy() {
     this.alive = false;
   }

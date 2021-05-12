@@ -84,6 +84,11 @@ export class ProtectedPage implements OnInit {
       title: 'MyGroups',
       url: '/pages/cranix/mygroups',
       icon: "people"
+    },
+    {
+      title: "Informations",
+      url: '/pages/cranix/informations',
+      icon: 'library'
     }
   ];
 
@@ -98,6 +103,7 @@ export class ProtectedPage implements OnInit {
       if (event.url) {
         let path = event.url.split("/");
         this.activePath = "/" + path[1] + "/" + path[2] + "/" + path[3]
+        console.log(this.activePath)
       }
     })
     for (let page of this.defAppPages) {

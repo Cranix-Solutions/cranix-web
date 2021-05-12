@@ -1,30 +1,26 @@
-<cranix-toolbar></cranix-toolbar>
+<ion-header>
+  <ion-toolbar>
+    <ion-title>My Navigation Bar</ion-title>
+  </ion-toolbar>
+</ion-header>
 <ion-content id="carded">
-  <ion-row class="header-row">
-    <ion-col size=6>
-      <ion-title>{{'Manage user imports' | translate}}</ion-title>
-    </ion-col>
-  </ion-row>
   <ion-card>
     <ion-card-header>
-      <ion-row>
-        <ion-col size="3">
-          <ion-title>
-            {{'List of  Imports' | translate}}
-          </ion-title>
-        </ion-col>
-        <ion-col offset="6" size="3">
-          <ion-button *ngIf="!runningImport" size="small" (click)="startImport()"
-            matTooltip="{{'Start a new user import' | translate }}">
-            <ion-icon slot="icon-only" name="add-circle"></ion-icon>
-          </ion-button>
-          <ion-button size="small" (click)="refreshImports()" matTooltip="{{'Refresh the import list' | translate }}">
-            <ion-icon slot="icon-only" name="refresh"></ion-icon>
-          </ion-button>
-        </ion-col>
-      </ion-row>
+        <ion-toolbar>
+          <ion-card-title>{{'Manage user imports' | translate}}</ion-card-title>
+          <ion-buttons slot="end">
+            <ion-button *ngIf="!runningImport" size="small" fill="solid" (click)="startImport()"
+              matTooltip="{{'Start a new user import' | translate }}">
+              <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+            </ion-button>
+            <ion-button size="small" fill="solid" (click)="refreshImports()"
+              matTooltip="{{'Refresh the import list' | translate }}">
+              <ion-icon slot="icon-only" name="refresh"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
     </ion-card-header>
-    <ion-card-content id="import-content">
+    <ion-card-content>
       <ion-grid>
         <ion-row>
           <ion-col size=2>{{'Start time' | translate}}</ion-col>
@@ -71,8 +67,9 @@
             </ion-icon>
           </ion-col>
         </ion-row>
-        <div *ngFor="let import of imports">
-          <ion-row *ngIf="!runningImport || runningImport.startTime != import.startTime">
+        <div *ngFor="let import of imports; index as i">
+          <ion-row *ngIf="!runningImport || runningImport.startTime != import.startTime"
+            style="background-color : {{rowColors[i%2]}}">
             <ion-col size=2>{{import.startTime}} </ion-col>
             <ion-col size=2>
               <ion-button color="light" size="small" (click)="showImport($event,import)"
@@ -105,18 +102,23 @@
             <ion-col> {{import.password}}</ion-col>
             <ion-col>
               <ion-icon *ngIf="import.mustChange" color="success" name="checkmark-sharp" size="small"></ion-icon>
+              <ion-icon *ngIf="!import.mustChange" color="danger" name="close" size="small"></ion-icon>
             </ion-col>
             <ion-col>
               <ion-icon *ngIf="import.resetPassword" color="success" name="checkmark-sharp" size="small"></ion-icon>
+              <ion-icon *ngIf="!import.resetPassword" color="danger" name="close" size="small"></ion-icon>
             </ion-col>
             <ion-col>
               <ion-icon *ngIf="import.full" color="success" name="checkmark-sharp" size="small"></ion-icon>
+              <ion-icon *ngIf="!import.full" color="danger" name="close" size="small"></ion-icon>
             </ion-col>
             <ion-col>
               <ion-icon *ngIf="import.allClasses" color="success" name="checkmark-sharp" size="small"></ion-icon>
+              <ion-icon *ngIf="!import.allClasses" color="danger" name="close" size="small"></ion-icon>
             </ion-col>
             <ion-col>
               <ion-icon *ngIf="import.cleanClassDirs" color="success" name="checkmark-sharp" size="small"></ion-icon>
+              <ion-icon *ngIf="!import.cleanClassDirs" color="danger" name="close" size="small"></ion-icon>
             </ion-col>
           </ion-row>
         </div>

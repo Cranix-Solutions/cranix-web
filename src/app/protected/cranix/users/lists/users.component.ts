@@ -39,7 +39,6 @@ export class UsersComponent implements OnInit {
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     public languageS: LanguageService,
-    private route: Router,
     private storage: Storage
   ) {
     this.context = { componentParent: this };
@@ -67,7 +66,6 @@ export class UsersComponent implements OnInit {
     for (let key of this.objectKeys) {
       let col = {};
       col['field'] = key;
-      col['resizable'] = true;
       col['headerName'] = this.languageS.trans(key);
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
       col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
@@ -77,7 +75,6 @@ export class UsersComponent implements OnInit {
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
           col['minWidth'] = 170;
-          col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
           col['flex'] = '1';
@@ -102,9 +99,7 @@ export class UsersComponent implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-  //  (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
     this.gridApi.sizeColumnsToFit();
-    this.sizeAll();
   }
 
   onQuickFilterChanged(quickFilter) {

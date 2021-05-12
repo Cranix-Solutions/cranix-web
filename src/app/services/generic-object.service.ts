@@ -123,9 +123,9 @@ export class GenericObjectService {
     if (this.authService.isAllowed('customer.manage')) {
       this.objects.push('customer');
     }
-    if (this.authService.isAllowed('cephalix.ticket')) {
+    /*if (this.authService.isAllowed('cephalix.ticket')) {
       this.objects.push('ticket');
-    }
+    }*/
     for (let key of this.objects) {
       this.allObjects[key] = new BehaviorSubject([]);
     }
@@ -184,6 +184,9 @@ export class GenericObjectService {
    * @param objectType
    */
   getAllObject(objectType) {
+    if( this.objects.indexOf(objectType) == -1 ) {
+      return;
+    }
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";
     let sub = this.http.get(url, { headers: this.authService.headers }).subscribe(
       (val) => {
@@ -219,6 +222,9 @@ export class GenericObjectService {
   }
 
   getObjectById(objectType, objectId) {
+    if( !objectId ) {
+      return null;
+    }
     for (let obj of this.allObjects[objectType].getValue()) {
       if (obj.id === objectId) {
         return obj;
@@ -228,9 +234,15 @@ export class GenericObjectService {
   }
 
   idToName(objectType, objectId) {
+    objectType = this.idToPipe(objectType)
     for (let obj of this.allObjects[objectType].getValue()) {
       if (obj.id === objectId) {
-        return obj.name;
+        if (obj.name ) {
+          return obj.name;
+        }
+        if( obj.uid ) {
+          return obj.uid + " (" + obj.givenName + " " + obj.surName + ")";
+        }
       }
     }
     return objectId;
@@ -258,6 +270,9 @@ export class GenericObjectService {
    * @param idName
    */
   idToPipe(idName: string) {
+    if( idName == 'ownerId' ) {
+      return 'user';
+    }
     if (idName == 'cephalixCustomerId') {
       return 'customer';
     }
@@ -270,6 +285,7 @@ export class GenericObjectService {
     if (idName.substring(idName.length - 3) == 'Ids') {
       return idName.substring(0, idName.length - 3)
     }
+    return idName;
   }
 
   addObject(object, objectType) {
@@ -296,7 +312,7 @@ export class GenericObjectService {
     }
     const alert = await this.alertController.create({
       header: this.languageS.trans('Confirm!'),
-      message: this.languageS.trans('Do you realy want to  delete?') + '<br>' + name,
+      message: this.languageS.trans('Do you realy want to delete?') + '<br>' + name,
       buttons: [
         {
           text: this.languageS.trans('Cancel'),
@@ -429,6 +445,10 @@ export class GenericObjectService {
   }
   compareFn(a: string, b: string): boolean {
     return a == b;
+  }
+  compareObjects(o1, o2) {
+    console.log(o1,o2)
+    return o1.id == o2.id;
   }
   sortByName(a, b) {
     if (a.name < b.name) {

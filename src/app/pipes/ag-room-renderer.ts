@@ -3,7 +3,7 @@ import { Component } from "@angular/core";
 import { ICellRendererAngularComp } from "ag-grid-angular";
 
 @Component({
-    selector: 'action-cell',
+    selector: 'room-action-cell-renderer',
     template: `
     <div *ngIf="params.data.name != 'ANON_DHCP' && params.data.roomType != 'ANON_DHCP'">
         <ion-button style="padding-horizontal : 2px" fill="clear" size="small" (click)="details()" matTooltip="{{'edit' | translate }}">

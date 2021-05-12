@@ -1,109 +1,144 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>edit</ion-title>
-  </ion-toolbar>
-</ion-header>
-<ion-row class="header-row">
-  <ion-col size=6>
-    <ion-title>{{ 'Modify selected institute:' | translate}} "{{object.name}}"</ion-title>
-  </ion-col>
-  <ion-col size=3></ion-col>
-</ion-row>
-<ion-content>
-  <ion-card>
-    <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
-      <ion-card-header>
-        <ion-toolbar>
-          <ion-buttons slot="end">
-            <ion-button size="small" fill="solid" fill="clear" type="submit" class="ion-no-margin" [disabled]="!editForm.valid"
-              matTooltip="{{'Apply changes' | translate }}">
-              <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
-            </ion-button>
-            <ion-button size="small" fill="solid" fill="clear" (click)="setNextDefaults()"
-              matTooltip="{{'Set the next default values' | translate }}">
-              <ion-icon slot="icon-only" name="refresh"></ion-icon>
-            </ion-button>
-            <ion-button size="small" fill="solid" fill="clear" (click)="writeConfig()"
-              matTooltip="{{'Write configuration and create installation image' | translate }}">
-              <ion-icon slot="icon-only" name="server"></ion-icon>
-            </ion-button>
-            <ion-button size="small" fill="solid" fill="clear" href="/isos/{{isourl}}.iso"
-              matTooltip="{{'Download the installation image' | translate }}">
-              <ion-icon slot="icon-only" name="arrow-down-circle"></ion-icon>
-            </ion-button>
-            <ion-button size="small" fill="solid" fill="clear" href="/configs/{{isourl}}full-connect.sh"
-              matTooltip="{{'Download the setup script' | translate }}">
-              <ion-icon slot="icon-only" name="download"></ion-icon>
-            </ion-button>
-            <ion-button size="small" fill="solid" fill="clear" (click)="delete($event)"
-              matTooltip="{{'Delete institute' | translate }}">
-              <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-grid>
-          <ion-row>
-            <ion-col size=12 sizeMd=6 sizeLg=4 sizeXl=3 *ngFor="let key of objectKeys;"
-              [ngSwitch]="objectService.typeOf(key,object,'edit')">
-              <ion-item *ngSwitchCase="'booleanTrue'">
-                <ion-label>{{ key | translate }}</ion-label>
-                <ion-toggle slot="start" formControlName="{{key}}" color="secondary" checked></ion-toggle>
-              </ion-item>
-              <ion-item *ngSwitchCase="'booleanFalse'">
-                <ion-label>{{ key | translate }}</ion-label>
-                <ion-toggle slot="start" formControlName="{{key}}" color="secondary"></ion-toggle>
-              </ion-item>
-              <ion-item *ngSwitchCase="'string'">
-                <ion-label position="stacked">{{ key | translate }}{{objectService.required[key]}}</ion-label>
-                <!--ion-item *ngIf="editForm.controls[key].hasError('required') && editForm.controls[key].touched"-->
-                <ion-label position="stacked"
-                  *ngIf="editForm.controls[key].hasError('required')  && editForm.controls[key].touched">
-                  {{ 'This field is required!' | translate }}</ion-label>
-                <ng-template [ngIf]="objectService.selects[key]" [ngIfElse]="elseBlock">
-                  <ion-select type="text" formControlName="{{key}}" [compareWith]="objectService.compareFn"
-                    [required]="objectService.required[key]">
-                    <ion-select-option *ngFor="let option of  objectService.selects[key]" value="{{option}}">
-                      {{option | translate}}</ion-select-option>
-                  </ion-select>
-                </ng-template>
-                <ng-template #elseBlock>
-                  <ion-input type="text" formControlName="{{key}}" value="{{object[key]}}"
-                    [required]="objectService.required[key]"></ion-input>
-                </ng-template>
-              </ion-item>
-              <ion-item *ngSwitchCase="'stringRO'">
-                <ion-label position="stacked">{{ key | translate }}</ion-label>
-                <ion-input color="tertiary" type="text" formControlName="{{key}}" value="{{object[key]}}" readonly>
-                </ion-input>
-              </ion-item>
-              <ion-item *ngSwitchCase="'text'">
-                <ion-label position="stacked">{{ key | translate }}</ion-label>
-                <ion-textarea color="tertiary" formControlName="{{key}}" value="{{object[key]}}">
-                </ion-textarea>
-              </ion-item>
-              <ion-item *ngSwitchCase="'date'">
-                <ion-label>{{ key | translate }}</ion-label>
-                <ion-datetime formControlName="{{key}}" max="2100" value="{{object[key] | date:'yyyy-MM-dd'}}">
-                </ion-datetime>
-              </ion-item>
-              <ion-item *ngSwitchCase="'date-time'">
-                <ion-label>{{ key | translate }}</ion-label>
-                <ion-datetime formControlName="{{key}}" max="2100"
-                  value="{{object[key] | date:'yyyy-MM-dd HH:mm:ss Z'}}">
-                </ion-datetime>
-              </ion-item>
-              <ion-item *ngSwitchCase="'idPipe'">
-                <ion-label position="stacked">{{ key | translate }}</ion-label>
-                <ion-input color="tertiary" type="text" formControlName="{{key}}"
-                  value="{{object[key] | idToName:'customer'}}" readonly>
-                </ion-input>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-card-content>
-    </form>
-  </ion-card>
-</ion-content>
+<form #editForm="ngForm">
+  <cranix-toolbar></cranix-toolbar>
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>{{ 'Modify selected institute:' | translate}} "{{object.name}}"</ion-title>
+      <ion-buttons slot="end">
+        <ion-button size="small" fill="solid" fill="clear" class="ion-no-margin" [disabled]="!editForm.valid"
+          matTooltip="{{'Apply changes' | translate }}" (click)="onSubmit(editForm.value)">
+          <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+        </ion-button>
+        <ion-button size="small" fill="solid" fill="clear" (click)="setNextDefaults()"
+          matTooltip="{{'Set the next default values' | translate }}">
+          <ion-icon slot="icon-only" name="refresh"></ion-icon>
+        </ion-button>
+        <ion-button size="small" fill="solid" fill="clear" (click)="writeConfig()"
+          matTooltip="{{'Write configuration and create installation image' | translate }}">
+          <ion-icon slot="icon-only" name="server"></ion-icon>
+        </ion-button>
+        <ion-button size="small" fill="solid" fill="clear" href="/isos/{{isourl}}.iso"
+          matTooltip="{{'Download the installation image' | translate }}">
+          <ion-icon slot="icon-only" name="arrow-down-circle"></ion-icon>
+        </ion-button>
+        <ion-button size="small" fill="solid" fill="clear" href="/configs/{{isourl}}full-connect.sh"
+          matTooltip="{{'Download the setup script' | translate }}">
+          <ion-icon slot="icon-only" name="download"></ion-icon>
+        </ion-button>
+        <ion-button size="small" fill="solid" fill="clear" (click)="delete($event)"
+          matTooltip="{{'Delete institute' | translate }}">
+          <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+    <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="details">
+      <ion-segment-button value="details">
+        <ion-label>{{'Details' | translate}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="manager">
+        <ion-label>{{'Manager' | translate}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="dyndns" *ngIf="authService.isAllowed('customer.manage')">
+        <ion-label>{{'dynDNS' | translate}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="contract" *ngIf="authService.isAllowed('customer.manage')">
+        <ion-label>{{'Contract' | translate}}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-header>
+  <ion-content fullscreen *ngIf="segment=='details'">
+    <ion-grid>
+      <ion-row>
+        <ion-col size=12 sizeMd=6 sizeLg=4 sizeXl=3 *ngFor="let key of objectKeys;"
+          [ngSwitch]="objectService.typeOf(key,object,'edit')">
+          <ion-item *ngSwitchCase="'string'">
+            <ion-label position="stacked">{{ key | translate }}{{objectService.required[key]}}</ion-label>
+            <ng-template [ngIf]="objectService.selects[key]" [ngIfElse]="elseBlock">
+              <ion-select type="text" [(ngModel)]="object[key]" name="{{key}}" [compareWith]="objectService.compareFn"
+                [required]="objectService.required[key]">
+                <ion-select-option *ngFor="let option of  objectService.selects[key]" value="{{option}}">
+                  {{option | translate}}</ion-select-option>
+              </ion-select>
+            </ng-template>
+            <ng-template #elseBlock>
+              <ion-input type="text" [(ngModel)]="object[key]" name="{{key}}" value="{{object[key]}}"
+                [required]="objectService.required[key]"></ion-input>
+            </ng-template>
+          </ion-item>
+          <ion-item *ngSwitchCase="'stringRO'">
+            <ion-label position="stacked">{{ key | translate }}</ion-label>
+            <ion-input color="tertiary" type="text" [(ngModel)]="object[key]" name="{{key}}" value="{{object[key]}}"
+              readonly>
+            </ion-input>
+          </ion-item>
+          <ion-item *ngSwitchCase="'date'">
+            <ion-label position="stacked">{{ key | translate }}</ion-label>
+            <input [(ngModel)]="object[key]" name="{{key}}" type="date">
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-content>
+  <ion-content fullscreen *ngIf="segment=='manager'">
+    <ion-list>
+      <ion-item *ngFor="let user of users">
+        <ion-label>{{user.fullName}} </ion-label>
+        <ion-checkbox slot="end" (ionChange)="managerChanged(user.id)" [checked]="managers[user.id]"></ion-checkbox>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+  <ion-content fullscreen *ngIf="segment=='dyndns'">
+    <ion-list>
+      <ion-item>
+        <ion-label position="stacked">{{ 'Actuall IP' | translate}}</ion-label>
+        <ion-input type="text" [(ngModel)]="dynDnsIp" name="dynDnsIp" readonly></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'Name' | translate}}</ion-label>
+        <ion-input type="text" [(ngModel)]="dynDnsName" name="dynDnsName"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'Domain' | translate}}</ion-label>
+        <ion-select [(ngModel)]="dynDnsDomain" [compareWith]="objectService.compareFn" name="dynDnsDomain">
+          <ion-select-option *ngFor="let domain of dynDnsDomains" [value]="domain">
+            {{domain}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'Port' | translate}}</ion-label>
+        <ion-input type="text" [(ngModel)]="dynDnsPort" name="dynDnsPort"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'Must not change' | translate}}</ion-label>
+        <ion-checkbox [(ngModel)]="dynDnsRo" name="dynDnsRo"></ion-checkbox>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+  <ion-content fullscreen *ngIf="segment=='contract'">
+    <ion-list>
+      <ion-item>
+        <ion-label position="stacked">{{ 'description' | translate}}</ion-label>
+        <ion-select [(ngModel)]="care.description" name="careDescription">
+          <ion-select-option value="CRANIX Base">{{'CRANIX Base' | translate }}</ion-select-option>
+          <ion-select-option value="CRANIX Extended">{{'CRANIX Extended' | translate }}</ion-select-option>
+          <ion-select-option value="CRANIX Plus">{{'CRANIX Plus' | translate }}</ion-select-option>
+          <ion-select-option value="CRANIX Mail">{{'CRANIX Mail' | translate }}</ion-select-option>
+          <ion-select-option value="Private">{{'Private' | translate }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'access' | translate}}</ion-label>
+        <ion-input type="text" [(ngModel)]="care.access" name="careAccess"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'contact' | translate}}</ion-label>
+        <ion-input type="text" [(ngModel)]="care.contact" name="careContact"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'AddOns' | translate}}</ion-label>
+        <ion-select [(ngModel)]="addons" name="addons" multiple="true" [compareWith]="compareAddons" (ionChange)="addonChanged()">
+          <ion-select-option *ngFor="let addon of allAddons" [value]="addon">{{ addon.name }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</form>

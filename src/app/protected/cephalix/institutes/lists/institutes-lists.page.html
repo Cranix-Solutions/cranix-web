@@ -14,6 +14,11 @@
         <ion-icon name="code-working"></ion-icon>
         <ion-label>{{ 'Sync objects' | translate}}</ion-label>
       </ion-tab-button>
+
+      <ion-tab-button tab="manage" *ngIf="authService.session.name == 'Administrator'">
+        <ion-icon name="people-outline"></ion-icon>
+        <ion-label>{{ 'Manage institutes' | translate}}</ion-label>
+      </ion-tab-button>
     </ion-tab-bar>
 </ion-tabs>
 

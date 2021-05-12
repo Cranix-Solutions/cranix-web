@@ -1,12 +1,12 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-content id=carded>
   <ion-row class="header-row">
-    <ion-col size=12>
+    <ion-col>
       <ion-title>{{ 'Manage access in the rooms' | translate}}</ion-title>
     </ion-col>
   </ion-row>
-  <ion-row>
-    <ion-col size="12">
+  <ion-row class="header-row">
+    <ion-col>
       <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="list">
         <ion-segment-button value="list">
           <ion-label>{{'Room access rules' | translate}}</ion-label>
@@ -30,10 +30,6 @@
         matTooltip="{{'Delete selected access rules' | translate }}" [disabled]="disabled">
         <ion-icon name="trash" color="danger"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button *ngIf="segment == 'list'" (click)="createColumnDef()"
-        matTooltip="{{'Change grouping of the table' | translate }}">
-        <ion-icon name="list-sharp" color="white"></ion-icon>
-      </ion-fab-button>
       <ion-fab-button *ngIf="segment == 'status'" (click)="securityService.getActualAccessStatus()"
         matTooltip="{{'Reload actual firewall status' | translate }}">
         <ion-icon name="refresh" color="tertiary"></ion-icon>
@@ -49,6 +45,15 @@
   <ion-card>
     <ion-card-header class="hidden-xs hidden-sm hidden-md">
       <ion-toolbar>
+        <ion-card-title>{{ 'Manage access in the rooms' | translate}}</ion-card-title>
+        <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="list">
+          <ion-segment-button value="list">
+            <ion-label>{{'Room access rules' | translate}}</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="status">
+            <ion-label>{{'Actual status' | translate}}</ion-label>
+          </ion-segment-button>
+        </ion-segment>
         <ion-item>
           <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('roomsAccessFilter')"
             id="roomsAccessFilter">
@@ -62,10 +67,6 @@
           <ion-button *ngIf="segment == 'list'" size="small" fill="solid" (click)="delete()"
             matTooltip="{{'Delete selected access rules' | translate }}" [disabled]="disabled">
             <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
-          </ion-button>
-          <ion-button *ngIf="segment == 'list'" size="mall" fill="solid" (click)="createColumnDef()"
-            matTooltip="{{'Change grouping of the table' | translate }}">
-            <ion-icon slot="icon-only" name="list-outline"></ion-icon>
           </ion-button>
           <ion-button *ngIf="segment == 'status'" size="small" fill="solid" (click)="securityService.getActualAccessStatus()"
             matTooltip="{{'Reload actual firewall status' | translate }}">
@@ -86,17 +87,15 @@
         style="width: 100%; height: 100%;"
         id="accessGridTable"
         class="{{authService.settings.agGridThema}}"
-        [modules]="modules"
-        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
         rowSelection="multiple"
+        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
         [columnDefs]="columnDefs"
         [defaultColDef]="defaultColDef"
-        [autoGroupColumnDef]="autoGroupColumnDef"
         [animateRows]="true"
         [rowData]="rowData"
-        [context]="context"
-        [deltaColumnMode]="true"
-        headerHeight="150"
+        [context]="context" 
+        (firstDataRendered)="headerHeightSetter()"
+        (columnResized)="headerHeightSetter()"
         (gridReady)="accessGridReady($event)">
       </ag-grid-angular>
       <ag-grid-angular *ngIf="segment == 'status'"
@@ -109,7 +108,9 @@
         [defaultColDef]="defaultColDef"
         [animateRows]="true"
         [rowData]="securityService.actualStatus"
-        [context]="context"
+        [context]="context" 
+        (firstDataRendered)="headerHeightSetter()"
+        (columnResized)="headerHeightSetter()"
         (gridReady)="statusGridReady($event)">
       </ag-grid-angular>
     </ion-card-content>

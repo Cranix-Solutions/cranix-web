@@ -1,22 +1,25 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { DetailsPageRoutingModule } from './details-routing.module';
-import { DetailsPage } from './details.page';
-import { TranslateService } from '@ngx-translate/core';
+import { QuillModule } from 'ngx-quill';
 
-import {CranixSharedModule} from 'src/app/shared/cranix-shared.module';
+import { DetailsPageRoutingModule } from './details-routing.module';
+import { DetailsPage, EditArticle } from './details.page';
+import { TranslateService } from '@ngx-translate/core';
+import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
+    CranixSharedModule,
     FormsModule,
     IonicModule,
     DetailsPageRoutingModule,
-    CranixSharedModule
+    QuillModule.forRoot()
   ],
-  declarations: [DetailsPage],
-  providers: [TranslateService]
+  declarations: [DetailsPage, EditArticle],
+  providers: [TranslateService],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class DetailsPageModule {}
+export class DetailsPageModule { }

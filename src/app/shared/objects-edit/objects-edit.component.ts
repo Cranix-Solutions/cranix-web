@@ -1,15 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams, ToastController } from '@ionic/angular';
+import { Component, Input, OnInit } from '@angular/core';
+import { ModalController, ToastController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
 //own
 import { CephalixService } from 'src/app/services/cephalix.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
-import { ServerResponse } from 'src/app/shared/models/server-models';
 import { UsersService } from 'src/app/services/users.service';
 import { SystemService } from 'src/app/services/system.service';
-import { SupportTicket, SoftwareVersion, SoftwareFullName, Software } from '../models/data-model';
+import { SupportTicket, SoftwareVersion, SoftwareFullName } from '../models/data-model';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -24,51 +22,47 @@ export class ObjectsEditComponent implements OnInit {
   fileToUpload: File = null;
   result: any = {};
   objectId: number;
-  objectType: string = "";
-  object: any = null;
-  objectKeys: string[] = [];
   objectActionTitle: string = "";
-  objectAction: string = "";
-  pickerOptions = {
-    keyboardClose: false
-  }
+  fixedRole: string;
 
+  @Input() object: any
+  @Input() objectType: string
+  @Input() objectAction: string
+  @Input() objectKeys: string[]
   constructor(
-
-
     private utilsS: UtilsService,
     public authService: AuthenticationService,
     private http: HttpClient,
     public cephalixService: CephalixService,
     public objectService: GenericObjectService,
     public languageS: LanguageService,
-    private navParams: NavParams,
     private modalController: ModalController,
-    private splashScreen: SpinnerDialog,
     private usersService: UsersService,
     private systemService: SystemService,
     public translateService: TranslateService,
     public toastController: ToastController
   ) {
-    this.objectType = this.navParams.get('objectType');
-    //this.object = this.objectService.convertObject(this.navParams.get('object'));
-    let object = this.navParams.get('object');
-    this.objectId = object.id;
-    if (this.navParams.get('objectAction') == 'add') {
-      this.objectActionTitle = "Add " + this.objectType;
-      this.objectAction = "Create";
-    } else {
-      this.objectActionTitle = "Edit " + this.objectType;
-      this.objectAction = "Apply";
-    }
-    this.objectKeys = this.navParams.get('objectKeys');
-    if (!this.objectKeys) {
-      this.objectKeys = Object.getOwnPropertyNames(object);
-    }
+
   }
   ngOnInit() {
+    this.objectId = this.object.id;
+    //User role may be constant:
+    if (this.objectType.split("\.").length == 2) {
+      let tmp = this.objectType.split("\.")
+      this.objectType = tmp[0]
+      this.fixedRole = tmp[1]
+      this.object.role = this.fixedRole
+    }
+    if (this.objectAction == 'add') {
+      this.objectActionTitle = "Add " + this.objectType;
+    } else {
+      this.objectActionTitle = "Edit " + this.objectType;
+    }
+    if (!this.objectKeys) {
+      this.objectKeys = Object.getOwnPropertyNames(this.object);
+    }
     this.disabled = false;
-    if (this.navParams.get('objectAction') != 'add') {
+    if (this.objectAction != 'add') {
       let url = this.utilsS.hostName() + "/" + this.objectType + "s/" + this.object.id;
       let sub = this.http.get(url, { headers: this.authService.headers }).subscribe(
         (val) => {
@@ -108,70 +102,67 @@ export class ObjectsEditComponent implements OnInit {
     )
   }
 
-  onSubmit(object) {
+  onSubmit() {
     if (this.disabled) {
       return;
     }
     for (let key of this.objectKeys) {
-      if (this.objectService.typeOf(key, object, 'edit') == 'multivalued') {
-        let s: string = object[key];
-        object[key] = s.split(",")
+      if (this.objectService.typeOf(key, this.object, 'edit') == 'multivalued') {
+        let s: string = this.object[key];
+        this.object[key] = s.split(",")
       }
     }
     this.disabled = true;
-    this.splashScreen.show();
     this.objectService.requestSent();
-    console.log("onSubmit", object);
+    console.log("onSubmit", this.object);
     if (this.objectType == 'settings') {
-      return this.modalController.dismiss(object);
+      return this.modalController.dismiss(this.object);
     }
     switch (this.objectType) {
       case 'userImport': {
-        this.userImport(object);
+        this.userImport(this.object);
         break;
       }
       case 'support': {
-        object['description'] = object.text;
-        delete object.text;
-        this.supportRequest(object);
+        this.object['description'] = this.object.text;
+        delete this.object.text;
+        this.supportRequest(this.object);
         break;
       }
       case 'software': {
         let sv = new SoftwareVersion();
         let fn = new SoftwareFullName();
-        sv.version = object.version;
-        sv.status  = 'C';
-        fn.fullName = object.name
-        object['softwareVersions']  = [ { 'version':object.version,'status':'C'}]
-        object['softwareFullNames'] = [ { 'fullName':object.name}]
-        console.log("new software",object)
+        sv.version = this.object.version;
+        sv.status = 'C';
+        fn.fullName = this.object.name
+        this.object['softwareVersions'] = [{ 'version': this.object.version, 'status': 'C' }]
+        this.object['softwareFullNames'] = [{ 'fullName': this.object.name }]
+        console.log("new software", this.object)
       }
       default: {
-        this.defaultAcion(object);
+        this.defaultAction(this.object);
       }
     }
   }
 
-  handleFileInput(files: FileList) {
-    this.fileToUpload = files.item(0);
+  handleFileInput(event) {
+    this.fileToUpload = event.target.files.item(0);
     console.log(this.fileToUpload)
   }
-  defaultAcion(object) {
+  defaultAction(object) {
     let subs = this.objectService.applyAction(object, this.objectType, this.objectAction).subscribe(
-      async (val) => {
+      (val) => {
         this.objectService.responseMessage(val);
         if (val.code == "OK") {
           this.objectService.getAllObject(this.objectType);
           this.modalController.dismiss("succes");
         } else {
           this.disabled = false;
-          this.splashScreen.hide();
         }
       },
-      async (error) => {
+      (error) => {
         this.objectService.errorMessage("A Server Error is accoured:" + error);
         this.disabled = false;
-        this.splashScreen.hide();
       },
       () => {
         subs.unsubscribe();
@@ -179,23 +170,21 @@ export class ObjectsEditComponent implements OnInit {
     )
   }
   deleteObject() {
-    this.objectService.deleteObjectDialog(this.object, this.objectType,'');
+    this.objectService.deleteObjectDialog(this.object, this.objectType, '');
     //this.modalController.dismiss("succes");
   }
   supportRequest(object: SupportTicket) {
     let subs = this.systemService.createSupportRequest(object).subscribe(
-      async (val) => {
+      (val) => {
         this.objectService.responseMessage(val);
         if (val.code == "OK") {
           this.modalController.dismiss("succes");
         } else {
           this.disabled = false;
-          this.splashScreen.hide();
         }
       },
-      async (error) => {
+      (error) => {
         this.objectService.errorMessage("A Server Error is accoured:" + error.toString());
-        this.splashScreen.hide();
       },
       () => {
         subs.unsubscribe();
@@ -221,20 +210,18 @@ export class ObjectsEditComponent implements OnInit {
     console.log(object.password);
     console.log(this.formData.get("role"))
     let subs = this.usersService.importUsers(formData).subscribe(
-      async (val) => {
+      (val) => {
         this.objectService.responseMessage(val);
         if (val.code == "OK") {
           this.modalController.dismiss("succes");
         } else {
           this.disabled = false;
-          this.splashScreen.hide();
         }
       },
-      async (error) => {
+      (error) => {
         console.log(error)
         this.objectService.errorMessage("A Server Error is accoured:" + error);
         this.disabled = false;
-        this.splashScreen.hide();
       },
       () => {
         subs.unsubscribe();

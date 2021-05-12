@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { GridApi, ColumnApi } from '@ag-grid-enterprise/all-modules';
 import { ModalController, PopoverController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 
@@ -24,8 +23,8 @@ export class AdhocComponent implements OnInit {
   sortableColumns:    string[] = ['name', 'description', 'devCount','devicesProUser', 'roomControl','groupIds', 'userIds',];
   columnDefs = [];
   defaultColDef = {};
-  gridApi: GridApi;
-  columnApi: ColumnApi;
+  gridApi;
+  columnApi;
   rowSelection;
   context;
   title = 'app';
@@ -68,7 +67,6 @@ export class AdhocComponent implements OnInit {
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
           col['width'] = 150;
-          col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
           col['flex'] = '1';

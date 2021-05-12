@@ -15,15 +15,21 @@ export class WindowRef {
 @Component({
     selector: 'uuid-cell',
     template: `<div class="uuid-flex">
-    <ion-button color="secondary" fill="clear" size="small"  (click)="routeSchool()" matTooltip="{{'Connect the institute in a separate window.' | translate }}">
-    <ion-icon name="create-outline" style="height:15px;width:15px"></ion-icon>
+    <ion-button fill="clear" size="small" (click)="details()" matTooltip="{{'modify' | translate }}">
+        <ion-icon name="build-sharp"></ion-icon>
     </ion-button>
-    {{ params.data.uuid }}
+    <ion-button fill="clear" size="small" (click)="openAction($event)" matTooltip="{{'Apply actions on the selected objects' | translate }}">
+        <ion-icon  name="ellipsis-vertical-sharp"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="data.ipVPN && data.ipVN != ''" color="secondary" fill="clear" size="small"  (click)="routeSchool()" matTooltip="{{'Connect the institute in a separate window.' | translate }}">
+        <ion-icon name="create-outline" style="height:15px;width:15px"></ion-icon>
+    </ion-button>
     </div>
     `
 })
-export class InstituteUUIDCellRenderer implements ICellRendererAngularComp, OnDestroy {
+export class InstituteActionCellRenderer implements ICellRendererAngularComp, OnDestroy {
     public params: any;
+    public data: any;
     nativeWindow: any
 
     alive: boolean = true;
@@ -40,30 +46,36 @@ export class InstituteUUIDCellRenderer implements ICellRendererAngularComp, OnDe
     // called on init
     agInit(params: any): void {
         this.params = params;
+        this.data = params.data;
     }
 
-    // called when the cell is refreshed
+    public details() {
+        this.params.context.componentParent.redirectToEdit(this.data.id, this.data);
+    }
+    public openAction(ev: any){
+        this.params.context.componentParent.openActions(ev, this.data.id )
+    }
     public routeSchool() {
         var hostname = window.location.hostname;
         var protocol = window.location.protocol;
         var port = window.location.port;
-        let sub = this.cephS.getInstituteToken(this.params.data.id)
+        let sub = this.cephS.getInstituteToken(this.data.id)
             .subscribe(
                 async (res) => {
                     this.token = res;
-                    console.log("Get token from:" + this.params.data.uuid )
+                    console.log("Get token from:" + this.data.uuid )
                     console.log(res);
                     if (!res) {
                         const toast = this.toastController.create({
                             position: "middle",
-                            message: 'Can not connect  to "' + this.params.data.name + '"',
+                            message: 'Can not connect  to "' + this.data.name + '"',
                             color: "danger",
                             duration: 3000
                         });
                         (await toast).present();
                     } else {
-                        sessionStorage.setItem('shortName', this.params.data.uuid);
-                        sessionStorage.setItem('instituteName', this.params.data.name);
+                        sessionStorage.setItem('shortName', this.data.uuid);
+                        sessionStorage.setItem('instituteName', this.data.name);
                         sessionStorage.setItem('cephalix_token', this.token);
                         if (port) {
                             this.nativeWindow.open(`${protocol}//${hostname}:${port}`);

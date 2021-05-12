@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { NavParams, ModalController } from '@ionic/angular';
+import { Component, Input, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { SystemService } from 'src/app/services/system.service';
 import { Acl } from 'src/app/shared/models/server-models';
 
@@ -11,20 +11,17 @@ import { Acl } from 'src/app/shared/models/server-models';
 export class ManageAclsComponent implements OnInit {
 
   name = "";
-  objectType;
-  object;
   availabeAcls = [];
   acls = [];
 
+  @Input() objectType;
+  @Input() object;
   constructor(
-    private navParams: NavParams,
     public  modalController: ModalController,
     private systemService: SystemService
   ) { }
 
   ngOnInit() {
-    this.objectType = this.navParams.get('objectType');
-    this.object = this.navParams.get('object');
     if (this.objectType == 'group') {
       this.name = this.object.description;
     } else {

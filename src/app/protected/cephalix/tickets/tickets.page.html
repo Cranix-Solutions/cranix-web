@@ -1,7 +1,7 @@
 <cranix-toolbar></cranix-toolbar>
 <ion-content id="carded">
   <ion-row class="header-row">
-    <ion-col size=6>
+    <ion-col>
       <ion-title>{{'Manage tickets' | translate}}</ion-title>
     </ion-col>
   </ion-row>
@@ -14,7 +14,7 @@
         <ion-icon name="ellipsis-vertical-sharp" (click)="openActions($event,null)"></ion-icon>
       </ion-fab-button>
       <ion-fab-button>
-        <ion-icon name="add-circle" (click)="redirectToEdit($event,null)"></ion-icon>
+        <ion-icon name="add-circle" (click)="redirectToEdit(null,null)"></ion-icon>
       </ion-fab-button>
       <ion-fab-button>
         <ion-icon name="apps" (click)="openCollums($event)"></ion-icon>
@@ -25,6 +25,7 @@
     id="ticketsFilterMD" showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
   <ion-card>
     <ion-card-header>
+      <ion-card-title>{{'Manage tickets' | translate}}</ion-card-title>
       <ion-toolbar>
           <ion-item>
             <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('ticketsFilter')"
@@ -32,7 +33,7 @@
             </ion-input>
           </ion-item>
         <ion-buttons slot="end">
-          <ion-button size="small" fill="solid" (click)="redirectToEdit($event,null)"
+          <ion-button size="small" fill="solid" (click)="redirectToEdit(null,null)"
             matTooltip="{{'Create a new ticket' | translate }}">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
@@ -58,7 +59,7 @@
         [columnDefs]="columnDefs"
         [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
         (gridReady)="onGridReady($event)"
-        id="agGridTable">
+        id="ticketsPageTable">
       </ag-grid-angular>
     </ion-card-content>
   </ion-card>

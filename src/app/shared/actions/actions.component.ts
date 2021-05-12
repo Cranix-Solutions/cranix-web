@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { PopoverController, NavParams, ModalController } from '@ionic/angular';
+import { Component, Input, OnInit } from '@angular/core';
+import { PopoverController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { AlertController } from '@ionic/angular';
@@ -23,11 +23,8 @@ import { FilesCollectComponent } from './files-collect/files-collect.component';
   styleUrls: ['./actions.component.scss'],
 })
 export class ActionsComponent implements OnInit {
-  objectIds: number[] = [];
-  selection: any[] = [];
   columns: string[] = [];
   count: number = 0;
-  objectType: string = '';
   menu: any[] = [];
 
   commonMenu: any[] = [{
@@ -50,10 +47,12 @@ export class ActionsComponent implements OnInit {
   hostname: string;
   headers: HttpHeaders;
 
+  @Input() objectType
+  @Input() objectIds
+  @Input() selection
   constructor(
     public alertController: AlertController,
     public modalController: ModalController,
-    private navParams: NavParams,
     private popoverController: PopoverController,
     public translateService: TranslateService,
     private languageService: LanguageService,
@@ -72,10 +71,6 @@ export class ActionsComponent implements OnInit {
 
   ngOnInit() {
     console.log("ActionsComponent")
-    console.log(this.navParams);
-    this.objectType = this.navParams.get('objectType');
-    this.objectIds = this.navParams.get('objectIds');
-    this.selection = this.navParams.get('selection');
     if (this.objectIds) {
       this.count = this.objectIds.length;
     } else {
@@ -95,14 +90,14 @@ export class ActionsComponent implements OnInit {
       this.menu = this.commonMenu.concat(instituteMenu).concat(this.commonLastMenu);
     } else if (this.objectType == "ticket") {
       this.menu = this.commonMenu.concat(ticketMenu).concat(this.commonLastMenu);
-    } else if (this.objectType == "group") {
-      this.menu = this.commonMenu.concat(groupMenu).concat(this.commonLastMenu);
     } else if (this.objectType == "hwconf") {
       this.menu = this.commonMenu.concat(hwconfMenu).concat(this.commonLastMenu);
     } else if (this.objectType == "printer") {
       this.menu = this.commonMenu.concat(printerMenu).concat(this.commonLastMenu);
     } else if (this.objectType == "education/room" || this.objectType == "education/device") {
       this.menu = eduRoomMenu;
+    } else {
+      this.menu = this.commonLastMenu;
     }
     console.log(this.menu);
   }
@@ -196,7 +191,7 @@ export class ActionsComponent implements OnInit {
         modal.onDidDismiss().then((dataReturned) => {
           this.authS.log(dataReturned.data)
           if (dataReturned.data) {
-            actionMap.stringValue = dataReturned.data;
+            actionMap.longValue = dataReturned.data;
             this.executeAction(actionMap);
           }
         });
@@ -216,7 +211,7 @@ export class ActionsComponent implements OnInit {
         modal.onDidDismiss().then((dataReturned) => {
           this.authS.log(dataReturned.data)
           if (dataReturned.data) {
-            actionMap.stringValue = dataReturned.data;
+            actionMap.longValue = dataReturned.data;
             this.executeAction(actionMap);
           }
         });
@@ -250,13 +245,22 @@ export class ActionsComponent implements OnInit {
     }
   }
 
-  executeAction(actionMap: CrxActionMap) {
+  async executeAction(actionMap: CrxActionMap) {
     this.objectService.requestSent();
     let url = this.hostname + "/" + this.objectType + "s/applyAction"
     console.log("Execute Action")
     console.log(url)
     console.log(actionMap)
-    let sub = this.http.post<ServerResponse[]>(url, actionMap, { headers: this.headers }).subscribe(
+    const val: ServerResponse[] = await this.http.post<ServerResponse[]>(url, actionMap, { headers: this.headers }).toPromise();
+    let response = this.languageService.trans("List of the results:");
+    for (let resp of val) {
+      response = response + "<br>" + this.languageService.transResponse(resp);
+    }
+    if (actionMap.name == 'delete') {
+      this.objectService.getAllObject(this.objectType);
+    }
+    this.objectService.okMessage(response)
+    /* let sub = this.http.post<ServerResponse[]>(url, actionMap, { headers: this.headers }).subscribe(
       (val) => {
         let response = this.languageService.trans("List of the results:");
         for (let resp of val) {
@@ -269,7 +273,7 @@ export class ActionsComponent implements OnInit {
       },
       (err) => { this.objectService.errorMessage(err) },
       () => { sub.unsubscribe(); }
-    )
+    )*/
   }
 
 }

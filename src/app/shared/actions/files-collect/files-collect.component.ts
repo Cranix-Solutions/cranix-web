@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+import { Component, Input, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { CrxActionMap } from '../../models/server-models';
 import { EductaionService } from 'src/app/services/education.service';
 
@@ -14,20 +14,17 @@ export class FilesCollectComponent implements OnInit {
   sortInDirs: boolean = true;
   studentsOnly: boolean = true;
   cleanUpExport: boolean = true;
-  objectType: string = "user";
-  actionMap: CrxActionMap;
 
+  @Input() actionMap: CrxActionMap;
+  @Input() objectType: string;
   constructor(
     public educationController: EductaionService,
-    public modalController: ModalController,
-    private navParams: NavParams
+    public modalController: ModalController
   ) {
   }
 
   ngOnInit() {
-    this.actionMap = this.navParams.get('actionMap');
-    let type = this.navParams.get('objectType');
-    this.objectType = type.replace("education/", "");
+    this.objectType = this.objectType.replace("education/", "");
    }
 
   onSubmit() {

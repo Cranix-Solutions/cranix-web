@@ -44,7 +44,7 @@
               <div *ngIf="file">{{file.name}}</div>
               <div *ngIf="!file">{{'Select a file'|translate}}</div>
             </button>
-            <input type="file" (change)="onFilesAdded($event.target.files)" />
+            <input type="file" (change)="onFilesAdded($event)" />
           </div>
         </ion-item>
       </ion-col>
@@ -88,7 +88,7 @@
             <button class="btn">
               <div *ngIf="files[license.id]">{{files[license.id].name}}</div>
               <div *ngIf="!files[license.id]">{{'Select a file'|translate}}</div>
-              <input type="file" (change)="onFilesChanged($event.target.files,license.id)" />
+              <input type="file" (change)="onFilesChanged($event,license.id)" />
             </button>
           </div>
         </ion-item>

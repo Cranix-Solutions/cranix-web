@@ -4,8 +4,6 @@ import { LanguageService } from 'src/app/services/language.service';
 import { SecurityService } from 'src/app/services/security-service';
 import { AccessInRoom } from 'src/app/shared/models/secutiry-model';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
-import { AllModules } from '@ag-grid-enterprise/all-modules';
-import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
 import { ModalController } from '@ionic/angular';
 import { AddEditRoomAccessComponent } from './add-edit-room-access/add-edit-room-access.component';
 import { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
@@ -21,7 +19,7 @@ import { ApplyBTNRenderer } from 'src/app/pipes/ag-apply-renderer';
 export class RoomAccessComponent implements OnInit {
   segment = 'list';
   rowData: AccessInRoom[] = [];
-  notActive: boolean = true;
+  notActive: boolean = false;
   disabled: boolean = false;
   accessOptions = {};
   context;
@@ -31,10 +29,8 @@ export class RoomAccessComponent implements OnInit {
   statusColumnApi;
   columnDefs: any[] = [];
   statusColumnDefs: any[] = [];
-  autoGroupColumnDef;
   defaultColDef;
-  grouping = '';
-  modules = [AllModules, RowGroupingModule];
+  modules = [];
 
   constructor(
     public authService: AuthenticationService,
@@ -47,25 +43,38 @@ export class RoomAccessComponent implements OnInit {
     this.context = { componentParent: this };
     this.defaultColDef = {
       flex: 1,
+      resizable: true,
+      wrapText: true,
+      autoHeight: true,
       cellStyle: { 'justify-content': "center" },
       minWidth: 100,
       maxWidth: 150,
       suppressMenu: true,
       sortable: false,
-      resizable: false
-    };
-    this.autoGroupColumnDef = {
-      minWidth: 200
+      headerComponentParams: {
+        template:
+          '<div class="ag-cell-label-container" role="presentation">' +
+          '  <span ref="eMenu" class="ag-header-icon ag-header-cell-menu-button"></span>' +
+          '  <div ref="eLabel" class="ag-header-cell-label" role="presentation">' +
+          '    <span ref="eSortOrder" class="ag-header-icon ag-sort-order"></span>' +
+          '    <span ref="eSortAsc" class="ag-header-icon ag-sort-ascending-icon"></span>' +
+          '    <span ref="eSortDesc" class="ag-header-icon ag-sort-descending-icon"></span>' +
+          '    <span ref="eSortNone" class="ag-header-icon ag-sort-none-icon"></span>' +
+          '    <span ref="eText" class="ag-header-cell-text" role="columnheader" style="white-space: normal;"></span>' +
+          '    <span ref="eFilter" class="ag-header-icon ag-filter-icon"></span>' +
+          '  </div>' +
+          '</div>',
+      }
     };
   }
 
   ngOnInit() {
     this.createColumnDef();
-    this.createAccesColumnDef();
+    this.createStatusColumnDefs();
     this.readDatas();
   }
 
-  createAccesColumnDef() {
+  createStatusColumnDefs() {
     this.statusColumnDefs = [
       {
         field: "id",
@@ -87,29 +96,34 @@ export class RoomAccessComponent implements OnInit {
         headerName: this.languageS.trans('printing'),
         field: 'printing',
         cellRendererFramework: YesNoBTNRenderer
-      }, {
-        headerName: this.languageS.trans('proxy'),
-        field: 'proxy',
-        cellRendererFramework: YesNoBTNRenderer
-      }, {
-        headerName: this.languageS.trans('direct'),
-        field: 'direct',
-        cellRendererFramework: YesNoBTNRenderer
-      }, {
-        headerName: this.languageS.trans('Apply Default'),
-        field: 'apply_default',
-        cellRendererFramework: ApplyBTNRenderer
       }
     ];
+    if (this.authService.isAllowed('system.proxy')) {
+      this.statusColumnDefs.push(
+        {
+          headerName: this.languageS.trans('proxy'),
+          field: 'proxy',
+          cellRendererFramework: YesNoBTNRenderer
+        }
+      )
+    }
+    this.statusColumnDefs.push({
+      headerName: this.languageS.trans('direct'),
+      field: 'direct',
+      cellRendererFramework: YesNoBTNRenderer
+    })
+    this.statusColumnDefs.push({
+      headerName: this.languageS.trans('Apply Default'),
+        field: 'apply_default',
+          cellRendererFramework: ApplyBTNRenderer
+    })
   }
-  toggle(data, field: string, value: boolean, rowIndex: number) {
-    console.log(data, field, value, rowIndex)
-    let rows = []
-    rows.push(this.statusApi.getDisplayedRowAtIndex(rowIndex));
-    rows[0]['data'][field] =!value;
-    console.log(rows)
-    this.securityService.setAccessStatusInRoom(data);
-    this.statusApi.redrawRows({ rowNodes: rows });
+  toggle(data, field: string, value: boolean) {
+    if (this.segment == 'list') {
+      this.securityService.modifyAccessInRoom(data);
+    } else {
+      this.securityService.setAccessStatusInRoom(data);
+    }
   }
 
   apply(data: AccessInRoom, rowIndex: number) {
@@ -142,18 +156,15 @@ export class RoomAccessComponent implements OnInit {
               return params.context['componentParent'].objectService.idToName('room', params.data.roomId);
             }
           }
-          if (this.grouping == 'roomId') {
-            col['rowGroup'] = true;
-            col['hide'] = true;
-          }
           col['sortable'] = true;
           break;
         }
-        case "pointInTime": {
-          if (this.grouping == 'pointInTime') {
-            col['rowGroup'] = true;
+        case "proxy": {
+          if (!this.authService.isAllowed('system.proxy')) {
             col['hide'] = true;
           }
+        }
+        case "pointInTime": {
           col['sortable'] = true;
           break;
         }
@@ -162,33 +173,17 @@ export class RoomAccessComponent implements OnInit {
           break;
         }
         case "accessType": {
-          col['headerClass'] = "rotate-header-class"
+          //col['headerClass'] = "rotate-header-class"
           col['sortable'] = true;
           break;
         }
         default: {
-          col['headerClass'] = "rotate-header-class"
-          col['sortable'] = false;
           col['minWidth'] = 70;
           col['maxWidth'] = 100;
           col['cellRendererFramework'] = YesNoBTNRenderer;
         }
       }
       this.columnDefs.push(col);
-    }
-    switch (this.grouping) {
-      case '': {
-        this.grouping = 'roomId';
-        break
-      }
-      case 'roomId': {
-        this.grouping = 'pointInTime';
-        break;
-      }
-      case 'pointInTime': {
-        this.grouping = '';
-        break;
-      }
     }
   }
   onQuickFilterChanged(quickFilter) {
@@ -200,12 +195,19 @@ export class RoomAccessComponent implements OnInit {
       this.statusApi.doLayout();
     }
   }
-  segmentChanged(event) {
-    if (this.segment == 'status') {
-      this.createAccesColumnDef();
+  headerHeightSetter() {
+    var padding = 20;
+    var height = headerHeightGetter() + padding;
+    if (this.segment == 'list') {
+      this.accessApi.setHeaderHeight(height);
+      this.accessApi.resetRowHeights();
+    } else {
+      this.statusApi.setHeaderHeight(height);
+      this.statusApi.resetRowHeights();
     }
+  }
+  segmentChanged(event) {
     this.segment = event.detail.value;
-    this.notActive = !this.notActive
   }
 
   readDatas() {
@@ -227,21 +229,20 @@ export class RoomAccessComponent implements OnInit {
     this.authService.log(this.accessApi);
     this.authService.log(this.accessColumnApi);
   }
-  async redirectToAddEdit(ev: Event, accesInRoom: AccessInRoom) {
+  async redirectToAddEdit(ev: Event, roomAccess: AccessInRoom) {
     let action = "add";
-    if (accesInRoom) {
-      this.objectService.selectedObject = accesInRoom;
+    if (roomAccess) {
+      this.objectService.selectedObject = roomAccess;
       action = "modify";
     } else {
-      accesInRoom = new AccessInRoom();
+      roomAccess = new AccessInRoom();
     }
     const modal = await this.modalCtrl.create({
       component: AddEditRoomAccessComponent,
       cssClass: 'medium-modal',
       componentProps: {
-        objectType: "access",
         objectAction: action,
-        object: accesInRoom
+        roomAccess: roomAccess
       },
       animated: true,
       swipeToClose: true,
@@ -275,4 +276,17 @@ export class RoomAccessComponent implements OnInit {
     this.readDatas();
     this.disabled = false;
   }
+}
+function headerHeightGetter() {
+  var columnHeaderTexts = document.querySelectorAll('.ag-header-cell-text');
+
+  var columnHeaderTextsArray = [];
+
+  columnHeaderTexts.forEach(node => columnHeaderTextsArray.push(node));
+
+  var clientHeights = columnHeaderTextsArray.map(
+    headerText => headerText.clientHeight
+  );
+  var tallestHeaderTextHeight = Math.max(...clientHeights);
+  return tallestHeaderTextHeight;
 }

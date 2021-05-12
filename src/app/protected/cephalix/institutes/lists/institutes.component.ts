@@ -1,21 +1,20 @@
-import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__, AfterContentInit } from '@angular/core';
-import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
+import { Component, OnInit } from '@angular/core';
+import { GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
-import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
 import { AuthenticationService } from 'src/app/services/auth.service';
-import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
-import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
-import { GenericObjectService } from 'src/app/services/generic-object.service';
-import { InstituteUUIDCellRenderer } from 'src/app/pipes/ag-uuid-renderer';
-import { LanguageService } from 'src/app/services/language.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
-import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
+import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { Institute } from 'src/app/shared/models/cephalix-data-model'
+import { InstituteActionCellRenderer } from 'src/app/pipes/ag-institute-action-renderer';
+import { LanguageService } from 'src/app/services/language.service';
+import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
+import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 
 @Component({
   selector: 'cranix-institutes',
@@ -51,7 +50,8 @@ export class InstitutesComponent implements OnInit {
         resizable: true,
         sortable: true,
         hide: false,
-        suppressMenu : true
+        suppressMenu : true,
+        minWidth: 110
       };
   }
 
@@ -74,27 +74,27 @@ export class InstitutesComponent implements OnInit {
       col['headerName'] = this.languageS.trans(key);
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
       col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
-      col['minWidth'] = 110;
       switch (key) {
         case 'name': {
           col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
-          col['width'] = 220;
-          col['flex'] = '1';
-
-          col['cellStyle'] = { 'padding-left': '2px', 'padding-right': '2px' };
+          col['minWidth'] = 230;
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
+          col['flex'] = '1';
           col['colId'] = '1';
-       
-       //   col['cellRendererFramework'] = ActionBTNRenderer;
-          break;
-        }
-        case 'uuid': {
-          col['cellRendererFramework'] = InstituteUUIDCellRenderer;
-          col['cellStyle'] = {'padding-left' : '2px'}
-          break;
+          columnDefs.push(col);
+          columnDefs.push({
+            headerName: "",
+            minWidth: 90,
+            maxWidth: 140,
+            cellStyle: { 'padding': '1px' },
+            field: 'actions',
+            pinned: 'left',
+            cellRendererFramework: InstituteActionCellRenderer
+          })
+          continue;
         }
         case 'validity': {
           col['cellRendererFramework'] = DateCellRenderer;
@@ -107,28 +107,13 @@ export class InstitutesComponent implements OnInit {
       }
       columnDefs.push(col);
     }
-    let check = {
-      headerName: "",
-      width: 85,
-   //   headerCheckboxSelection: true,
-   //   headerCheckboxSelectionFilteredOnly: true,
-   //   checkboxSelection : true,
-      suppressSizeToFit: true,
-      cellStyle: { 'padding': '2px', 'line-height': '36px' },
-      field: 'actions',
-      pinned: 'left',
-      cellRendererFramework: ActionBTNRenderer
-    };
-
-    columnDefs.splice(1, 0, check)
-    this.authService.log('columnsDef', columnDefs);
     this.columnDefs = columnDefs;
   }
 
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-    params.columnApi.autoSizeColumns();
+    this.gridApi.sizeColumnsToFit();
    // this.sizeAll();
   }
   onSelectionChanged() {

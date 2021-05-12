@@ -118,12 +118,12 @@ export class SoftwareService {
 	writeStateFiles() {
 		this.url = `${this.hostname}/softwares/saveState`;
 		console.log(this.url);
-		return this.http.put<ServerResponse>(this.url, { headers: this.authService.headers });
+		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
 	}
 
 	applyState() {
 		this.url = `${this.hostname}/softwares/applyState`;
 		console.log(this.url);
-		return this.http.put<ServerResponse>(this.url, { headers: this.authService.headers });
+		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
 	}
 }

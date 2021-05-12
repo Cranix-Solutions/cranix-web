@@ -13,8 +13,8 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-card>
-    <ion-card-content>
+  <ion-card stype="margin-inline: 0px;">
+    <ion-card-content style="padding-left: 0px;padding-right: 0px;">
       <ion-grid>
         <ion-row>
           <ion-col size=12 sizeMd=12 sizeLg=6 sizeXl=6>
@@ -26,13 +26,14 @@
             <ag-grid-angular
               style="width: 100%; height: 100%;"
               class="{{authService.settings.agGridThema}}"
+              [context]="context"
               rowSelection="multiple" 
               rowHeight="{{authService.settings.rowHeight}}"
               rowMultiSelectWithClick="{{authService.settings.rowMultiSelectWithClick}}"
               [rowData]="memberData"
               [columnDefs]="columnDefs"
-              (gridReady)="onMemberReady($event)"
               (selectionChanged)="onMemberSelectionChanged()"
+              (gridReady)="onMemberReady($event)"
               id="memberTable">
             </ag-grid-angular>
           </ion-col>
@@ -46,6 +47,7 @@
             <ag-grid-angular
               style="width: 100%; height: 100%;"
               class="{{authService.settings.agGridThema}}"
+              [context]="context"
               rowSelection="multiple" 
               rowHeight="{{authService.settings.rowHeight}}"
               rowMultiSelectWithClick="{{authService.settings.rowMultiSelectWithClick}}"

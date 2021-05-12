@@ -1,46 +1,68 @@
 <cranix-toolbar></cranix-toolbar>
-<ion-content>
+<ion-content *ngIf="ticket">
   <ion-card>
     <ion-card-header>
       <ion-toolbar>
-        <ion-card-title>{{ticket.title}}</ion-card-title>
+        <ion-card-title>#{{ticket.id}} {{ticket.title}}</ion-card-title>
         <ion-buttons slot="end">
           <ion-button (click)="deleteTicket()">
             <ion-icon slot="icon-only" name="trash"></ion-icon>
           </ion-button>
         </ion-buttons>
+        <ion-card-subtitle *ngIf="institute.id != 0"> {{ticket.recDate | date:'yy-MM-dd HH:mm'}} {{ institute.name }}
+          {{ institute.regCode }}
+          {{ institute.ipVPN }}<br>
+          {{ticket.email}}: {{ticket.lastname}},{{ticket.firstname}}</ion-card-subtitle>
+        <ion-card-subtitle *ngIf="institute.id == 0"> {{ticket.recDate | date:'yy-MM-dd HH:mm'}}>
+          <input placeholder="{{'Select institute:'|translate}}" list="insts" name="institute" id="institute">
+          <datalist id="insts">
+            <option *ngFor="let i of institutes" [value]="i.label">
+          </datalist>
+          <ion-button fill="clear" (click)="setInstitute()">
+            <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+          </ion-button><br>
+          {{ticket.email}}: {{ticket.lastname}},{{ticket.firstname}}
+        </ion-card-subtitle>
       </ion-toolbar>
-      <ion-card-subtitle> {{ticket.recDate | date:'yy-MM-dd HH:mm'}} {{ticket.cephalixInstituteId | idToName:'institute'}}<br>
-        {{ticket.email}}:
-        {{ticket.lastname}},{{ticket.firstname}}</ion-card-subtitle>
     </ion-card-header>
   </ion-card>
-
   <ion-card *ngFor="let article of articles">
     <ion-card-header>
-      <ion-toolbar >
+      <ion-toolbar>
         <ion-card-subtitle [color]="article.seen ? 'success' : 'danger'">{{article.recDate | date:'yy-MM-dd HH:mm'}}
           <ion-icon *ngIf="article.articleType == 'O'" name="play-back"></ion-icon>
           <ion-icon *ngIf="article.articleType == 'I'" name="play-forward"></ion-icon>
         </ion-card-subtitle>
         <ion-buttons slot="end">
-          <ion-button [color]="article.seen ? 'success' : 'danger'" fill="solid" (click)="setSeenOnArticle(article)">
+          <div *ngFor="let picture of article.pictures">
+            <ion-button size="small" fill="clear" target="_blank" [href]="picture">
+              <ion-icon slot="icon-only" name="download"></ion-icon>
+            </ion-button>
+          </div>
+          <ion-button [color]="article.seen ? 'success' : 'danger'" fill="solid" (click)="setSeenOnArticle(article)"
+            matTooltip="{{'Set article as seen.' | translate }}">
             <ion-icon slot="icon-only" name="checkmark"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="article.articleType == 'I'" fill="solid" (click)="answerArticle(article)">
+          <ion-button *ngIf="article.articleType == 'I'" fill="solid" (click)="answerArticle(article)"
+            matTooltip="{{'Answer the article.' | translate }}">
             <ion-icon slot="icon-only" name="arrow-undo"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="article.articleType == 'O'" fill="solid" (click)="answerArticle(article)">
+          <ion-button *ngIf="article.articleType == 'O'" fill="solid" (click)="answerArticle(article)"
+            matTooltip="{{'Edit the answer and resend it.' | translate }}">
             <ion-icon slot="icon-only" name="build-outline"></ion-icon>
           </ion-button>
+          <ion-button fill="solid" (click)="toggleArticle(article.id)" matTooltip="{{'Open or close the article.' | translate }}">
+            <ion-icon *ngIf="!articleOpen[article.id]" slot="icon-only" name="mail-open"></ion-icon>
+            <ion-icon *ngIf="articleOpen[article.id]" slot="icon-only" name="mail"></ion-icon>
+          </ion-button>
           <ion-button fill="solid" (click)="deleteArticle(article)">
-            <ion-icon slot="icon-only" name="trash"></ion-icon>
+            <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-card-header>
-    <ion-card-content>
-      <pre>{{article.text}}</pre>
+    <ion-card-content style="height: 50px" [id]="'article' + article.id">
+      <quill-view-html [content]="article.text" format="text" theme="snow"></quill-view-html>
     </ion-card-content>
   </ion-card>
 </ion-content>

@@ -1,0 +1,59 @@
+<ion-header translucent>
+    <ion-toolbar>
+        <ion-title>{{ 'Answer:' | translate }} {{ticket.title}}</ion-title>
+        <ion-subtitle>{{article.recDate | date:'yy-MM-dd HH:mm'}} {{article.title}} {{article.sender}}
+        </ion-subtitle>
+        <ion-buttons slot="end">
+            <ion-button class="ion-no-margin" fill="clear" size="small" (click)="sendArticle()">
+                <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" size="small" (click)="modalController.dismiss()">
+                <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content fullscreen>
+    <quill-editor [styles]="{ height: '450px'}" [(ngModel)]="article.text"
+            name="description" placeholder="{{'Insert your issue ...'| translate}}">
+            <div quill-editor-toolbar>
+                <span class="ql-formats">
+                    <select class="ql-font">
+                        <option selected></option>
+                        <option value="serif"></option>
+                        <option value="monospace"></option>
+                    </select>
+                    <select class="ql-size">
+                        <option value="small"></option>
+                        <option selected></option>
+                        <option value="large"></option>
+                        <option value="huge"></option>
+                    </select>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+                <span class="ql-formats">
+                    <select class="ql-color"></select>
+                    <select class="ql-background"></select>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-list" value="ordered"></button>
+                    <button class="ql-list" value="bullet"></button>
+                    <select class="ql-align">
+                        <option selected></option>
+                        <option value="center"></option>
+                        <option value="right"></option>
+                        <option value="justify"></option>
+                    </select>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-link"></button>
+                    <button class="ql-image"></button>
+                </span>
+            </div>
+        </quill-editor>
+</ion-content>

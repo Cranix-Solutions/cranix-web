@@ -1,0 +1,130 @@
+<form #addEditInfo="ngForm" *ngIf="info">
+    <ion-header translucent>
+        <ion-toolbar>
+            <ion-title *ngIf="infoId == 0">{{ 'Add new ' + infoType | translate }}</ion-title>
+            <ion-title *ngIf="infoId != 0 && owned">{{ 'Edit ' + infoType | translate }}</ion-title>
+            <ion-title *ngIf="infoId != 0 && !owned">{{ info.title }}</ion-title>
+            <ion-buttons slot="end">
+                <ion-button *ngIf="infoType == 'task' && !owned" class="ion-no-margin" (click)="clone()">
+                    <ion-icon slot="icon-only" color="success" name="construct"></ion-icon>
+                </ion-button>
+                <ion-button *ngIf="owned || infoType == 'taskResponse'" class="ion-no-margin" (click)="onSubmit()"
+                    [disabled]="!addEditInfo.valid">
+                    <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+                </ion-button>
+                <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss('closed')" [disabled]="disabled">
+                    <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+                </ion-button>
+            </ion-buttons>
+        </ion-toolbar>
+    </ion-header>
+    <ion-content fullscreen>
+        <ion-list>
+            <ion-item *ngIf="owned">
+                <ion-label position="stacked">{{'category' | translate}}</ion-label>
+                <ionic-selectable #ionicSelectable [isMultiple]="true" [(ngModel)]="categories"
+                    [ngModelOptions]="{standalone: true}" [items]="informationsService.categories" itemValueField="id"
+                    itemTextField="name" [canSearch]="true">
+                    <ng-template ionicSelectableHeaderTemplate>
+                        <ion-toolbar>
+                            <ion-title>
+                                {{ "Select Categories" | translate }}
+                            </ion-title>
+                            <ion-buttons slot="end">
+                                <ion-button ion-button (click)="ionicSelectable.close()">
+                                    <ion-icon color="danger" name="close"></ion-icon>
+                                </ion-button>
+                            </ion-buttons>
+                        </ion-toolbar>
+                    </ng-template>
+                </ionic-selectable>
+            </ion-item>
+            <ion-item *ngIf="owned">
+                <ion-label position="stacked">{{'title' | translate}}</ion-label>
+                <ion-input [(ngModel)]="info.title" name="title" required [readonly]="!owned"></ion-input>
+            </ion-item>
+            <div *ngIf="infoType != 'contact'">
+                <ion-item *ngIf="infoType != 'taskResponse'">
+                    <ion-label position="stacked">{{'keywords' | translate}}</ion-label>
+                    <ion-input autoGrow="true" [(ngModel)]="info.keywords" name="keywords" required [readonly]="!owned">
+                    </ion-input>
+                </ion-item>
+                <ion-item *ngIf="infoType != 'taskResponse' && infoType != 'faq'">
+                    <ion-label position="stacked">{{'validFrom' | translate}}</ion-label>
+                    <input [(ngModel)]="info.validFrom" name="validFrom" type="datetime-local" [readonly]="!owned">
+                </ion-item>
+                <ion-item *ngIf="infoType != 'faq'">
+                    <ion-label position="stacked">{{'validUntil' | translate}}</ion-label>
+                    <input [(ngModel)]="info.validUntil" name="validUntil" type="datetime-local" [readonly]="!owned">
+                </ion-item>
+                <quill-editor *ngIf="owned || infoType == 'taskResponse'; else elseBlock" [styles]="{height: '450px'}"
+                    [(ngModel)]="info.text" [ngModelOptions]="{standalone: true}">
+                    <div quill-editor-toolbar>
+                        <span class="ql-formats">
+                            <select class="ql-font">
+                                <option selected></option>
+                                <option value="serif"></option>
+                                <option value="monospace"></option>
+                            </select>
+                            <select class="ql-size">
+                                <option value="small"></option>
+                                <option selected></option>
+                                <option value="large"></option>
+                                <option value="huge"></option>
+                            </select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-bold"></button>
+                            <button class="ql-italic"></button>
+                            <button class="ql-underline"></button>
+                            <button class="ql-strike"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <select class="ql-color"></select>
+                            <select class="ql-background"></select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-list" value="ordered"></button>
+                            <button class="ql-list" value="bullet"></button>
+                            <select class="ql-align">
+                                <option selected></option>
+                                <option value="center"></option>
+                                <option value="right"></option>
+                                <option value="justify"></option>
+                            </select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-link"></button>
+                            <button class="ql-image"></button>
+                        </span>
+                    </div>
+                </quill-editor>
+                <ng-template #elseBlock>
+                    <quill-view-html #elseBlock [content]="info.text" format="text" theme="snow"></quill-view-html>
+                </ng-template>
+                <ion-item *ngIf="infoType == 'taskResponse'">
+                    <ion-label position="stacked">{{'rating' | translate}}</ion-label>
+                    <quill-view-html [content]="info.rating" format="text" theme="snow"></quill-view-html>
+                </ion-item>
+            </div>
+            <div *ngIf="infoType == 'contact'">
+                <ion-item>
+                    <ion-label position="stacked">{{'issue' | translate}}</ion-label>
+                    <ion-input [(ngModel)]="info.issue" name="issue"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="stacked">{{'name' | translate}}</ion-label>
+                    <ion-input [(ngModel)]="info.name" name="name"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="stacked">{{'email' | translate}}</ion-label>
+                    <ion-input [(ngModel)]="info.email" name="email"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="stacked">{{'phone' | translate}}</ion-label>
+                    <ion-input [(ngModel)]="info.phone" name="phone"></ion-input>
+                </ion-item>
+            </div>
+        </ion-list>
+    </ion-content>
+</form>

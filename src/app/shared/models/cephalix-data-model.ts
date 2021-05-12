@@ -19,7 +19,7 @@ export class Customer {
 }
 
 export class Institute {
-    id?: number;
+    id?: number = 0;
     name: string = '';
     uuid: string = '';
     instituteType: string = '';
@@ -46,12 +46,12 @@ export class Institute {
     adminPW: string = '';
     cephalixPW: string = '';
     recDate: any = new Date();
-    cephalixCustomerId: number = 0;
+    cephalixCustomerId: number;
     constructor() {}
 }
 
 export class Ticket{
-    id?: number;
+    id?: number = 0;
     title: string = "";
     cephalixInstituteId: number = 0;
     ossuserId: number = 0;
@@ -78,22 +78,24 @@ export class Article{
     recDate: any = new Date();
     reminder: any = new Date();
     workTime: number = 0;
+    pictures: any[] = [];
     constructor() {}
 }
 export class InstituteStatus {
     id?: number;
     cephalixInstituteId: number = 0;
-    created: any = new Date();
-    runningKernel: string ="";
-    installedKernel: string ="";
-    uptime: string ="";
-    version: string ="";
-    lastUpdate: any =new Date();
-    availableUpdates: string = "";
+    errorMessages?: string = "";
     rootUsage: string ="";
     srvUsage: string = "";
     varUsage: string ="";
     homeUsage: string = "";
+    runningKernel: string ="";
+    installedKernel: string ="";
+    availableUpdates: string = "";
+    lastUpdate: any =new Date();
+    version: string ="";
+    created: any = new Date();
+    uptime: string ="";
     constructor() {}
 }
 export class Repository{
@@ -102,23 +104,19 @@ export class Repository{
     repositoryType: string = "";
     description: string = "";
     repository: string = "";
-    cephalixInstituteId: number = 0;
-    cephalixCustomerId: number = 0;
     constructor() {}
 }
 
-export class CrxCare{
+export class CephalixCare{
     id?: number;
     cephalixInstituteId: number = 0;
     description: string = "";
     access: string = "";
     contact: string = "";
-    recDate:  any = new Date();
-    validity: any = new Date();
     constructor() {}
 }
 
-export class OssCareMessage{
+export class CareMessage {
     id?: number;
     cephalixosscareId: number = 0;
     recDate: any = new Date();
@@ -132,10 +130,11 @@ export class DynDns {
     id?: number;
     cephalixInstituteId: number = 0;
     hostname: string = "";
-    domain: string = "";
+    domain: string = "cephalix.eu";
     ip: string = "";
-    port: string = "";
+    port: string = "22";
     ro: boolean = false;
+    ts: any = new Date();
     constructor() {}
 }
 

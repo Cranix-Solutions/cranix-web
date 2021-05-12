@@ -34,6 +34,7 @@ export class User {
 	fsQuota?: number = 0;
 	msQuotaUsed?: number = 0;
 	fsQuotaUsed?: number = 0;
+	fullName: string;
 	mailAliases: string[];
 	constructor() { }
 }
@@ -261,15 +262,26 @@ export class AccessStatus {
 
 export class Announcenement {
 	id?: number;
-	abstract: string = "";
 	issue: string = "";
 	keywords: string = "";
 	text: string = "";
 	title: string = "";
+	seenByMe: boolean = false;
 	validFrom: any = new Date();
 	validUntil: any = new Date();
 	categories: Category[] = [];
 	constructor() { }
+}
+
+export class TaskResponse {
+	id?: number;
+	parentId: number = 0;
+	ownerId: number = 0;
+	text: string = "";
+	rating: string = "";
+	title?: string = "";
+	validFrom?: any;
+	validUntil?: any;
 }
 
 export class FAQ {
@@ -331,6 +343,7 @@ export class DNSRecord {
 }
 
 export class GuestUsers {
+	id?: number;
 	name: string = "";
 	description: string = "";
 	count: number = 0;

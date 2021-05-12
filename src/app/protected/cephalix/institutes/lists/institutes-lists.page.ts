@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'cranix-institutes-lists',
@@ -7,6 +8,8 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class InstitutesListsPage {
   constructor(
-    public translateService: TranslateService
-  ) {}
+    public translateService: TranslateService,
+    public authService: AuthenticationService
+  ) {
+  }
 }

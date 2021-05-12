@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 //Own stuff
@@ -95,12 +95,10 @@ export class SystemStatusComponent implements OnInit {
     delete this.mySupport.ticketno;
     delete this.mySupport.ticketResponseInfo;
     const modal = await this.modalCtrl.create({
-      component: ObjectsEditComponent,
-      cssClass: 'medium-modal',
+      component: CreateSupport,
+      cssClass: 'big-modal',
       componentProps: {
-        objectType: "support",
-        objectAction: 'add',
-        object: this.mySupport,
+        support: this.mySupport,
       },
       animated: true,
       swipeToClose: true,
@@ -115,5 +113,33 @@ export class SystemStatusComponent implements OnInit {
       }
     });
     (await modal).present();
-  }
+  } 
 }
+
+
+@Component({
+  selector: 'create-support-page',
+  templateUrl: 'create-support.html'
+})
+export class CreateSupport implements OnInit {
+
+  disabled: boolean = false;
+  @Input() support
+  constructor(
+    public modalCtrl: ModalController,
+    public systemService: SystemService,
+    public objectService: GenericObjectService
+  ) { }
+
+  ngOnInit() { }
+  onSubmit() {
+    console.log(this.support)
+    this.systemService.createSupportRequest(this.support).subscribe(
+      (val) => { 
+        this.objectService.responseMessage(val);
+        this.modalCtrl.dismiss("OK")
+      }
+    )
+  };
+}
+

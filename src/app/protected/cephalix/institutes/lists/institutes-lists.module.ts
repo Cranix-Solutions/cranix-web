@@ -10,6 +10,7 @@ import { InstitutesListsPage } from './institutes-lists.page';
 import { InstitutesComponent } from './institutes.component';
 import { InstitutesStatusComponent } from './institutes-status.component';
 import { InstitutesSyncObjectsComponent } from './institutes-sync-objects.component';
+import { InstitutesManage } from './institutes.manage';
 
 const routes: Routes = [
   {
@@ -27,6 +28,10 @@ const routes: Routes = [
       {
         path: 'sync',
         component: InstitutesSyncObjectsComponent
+      },
+      {
+        path: 'manage',
+        component: InstitutesManage
       },
       {
         path: '',
@@ -48,7 +53,7 @@ const routes: Routes = [
     CranixSharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [InstitutesListsPage,InstitutesComponent,InstitutesStatusComponent,InstitutesSyncObjectsComponent]
+  declarations: [InstitutesListsPage,InstitutesComponent,InstitutesStatusComponent,InstitutesSyncObjectsComponent,InstitutesManage]
 })
 export class InstitutesListsPageModule { }
 

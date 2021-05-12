@@ -1,8 +1,7 @@
-import { Component, OnInit, Injectable } from '@angular/core';
-import { NavParams, ModalController } from '@ionic/angular';
+import { Component, Input, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormBuilder } from '@angular/forms';
 import { Storage } from '@ionic/storage';
 
 @Component({
@@ -12,40 +11,32 @@ import { Storage } from '@ionic/storage';
 })
 export class SelectColumnsComponent implements OnInit {
 
-  editForm: FormGroup;
-  objectPath: string = "";
-  columns: string[] = [];
-  selected: string[] = [];
-
+  object: any = {};
+  @Input() objectPath: string = "";
+  @Input() columns: string[] = [];
+  @Input() selected: string[] = [];
   constructor(
     public formBuilder: FormBuilder,
-    private navParams: NavParams,
     private modalController: ModalController,
-    private router: Router,
     private storage: Storage,
     public translateService: TranslateService) {
-    this.columns = this.navParams.get('columns');
-    this.selected = this.navParams.get('selected');
-    this.objectPath = this.navParams.get('objectPath');
   }
 
   ngOnInit() {
-    var object: any = {};
     for (let key of this.columns) {
-      object[key] = this.selected.indexOf(key) != -1;
+      this.object[key] = this.selected.indexOf(key) != -1;
     }
-    console.log("Object:" + object);
-    this.editForm = this.formBuilder.group(object);
+    console.log("Object:" + this.object);
   }
 
   closeWindow() {
     this.modalController.dismiss();
   }
-  onSubmit(object) {
-    console.log(object);
+  onSubmit() {
+    console.log(this.object);
     var myArray: string[] = [];
     for (let key of this.columns) {
-      if (object[key]) {
+      if (this.object[key]) {
         myArray.push(key);
       }
     }

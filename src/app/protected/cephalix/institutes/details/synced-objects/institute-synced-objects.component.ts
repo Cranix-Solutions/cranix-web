@@ -7,7 +7,6 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { Institute, SynchronizedObject } from 'src/app/shared/models/cephalix-data-model';
 import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
-import { AllModules, RowGroupingModule } from '@ag-grid-enterprise/all-modules';
 
 @Component({
   selector: 'cranix-institute-synced-objects',
@@ -16,14 +15,17 @@ import { AllModules, RowGroupingModule } from '@ag-grid-enterprise/all-modules';
 export class InstituteSyncedObjectsComponent implements OnInit {
 
   context;
-  memberOptions;
+  defaultColDef = {
+    resizable: true,
+    sortable: true,
+    hide: false
+  };
   columnDefs = [];
   memberApi;
   memberColumnApi;
   memberSelection: SynchronizedObject[] = [];
   memberData: SynchronizedObject[] = [];
-  autoGroupColumnDef;
-  modules = [ AllModules, RowGroupingModule ];
+  modules = [];
   institute;
 
   constructor(
@@ -33,25 +35,12 @@ export class InstituteSyncedObjectsComponent implements OnInit {
     private languageS:      LanguageService
   ) {
     this.institute = <Institute>this.objectService.selectedObject;
-
     this.context = { componentParent: this };
-    this.memberOptions = {
-      defaultColDef: {
-        resizable: true,
-        sortable: true,
-        hide: false
-      },
-      columnDefs: this.columnDefs,
-      context: this.context,
-      rowSelection: 'multiple'
-    }
     this.columnDefs = [
       {
         field: 'objectType',
-        rowGroup: true,
-        hide: true,
         valueGetter: function(params) {
-          return  params.context['componentParent'].languageS.trans(params.data.objectType + "s");
+          return  params.context['componentParent'].languageS.trans(params.data.objectType);
         },
       },
       {
@@ -64,10 +53,6 @@ export class InstituteSyncedObjectsComponent implements OnInit {
         cellRendererFramework: DateTimeCellRenderer
       }
     ];
-    this.autoGroupColumnDef = {
-      headerName: this.languageS.trans('objectType'),
-      minWidth: 250
-    };
   }
 
   ngOnInit() {

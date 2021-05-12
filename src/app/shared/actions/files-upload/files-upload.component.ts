@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+import { Component, Input, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { CrxActionMap } from '../../models/server-models';
 import { EductaionService } from 'src/app/services/education.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
@@ -10,24 +10,21 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
   styleUrls: ['./files-upload.component.scss'],
 })
 export class FilesUploadComponent implements OnInit {
-  public files: FileList;
+  public files: any[];
   studentsOnly: boolean = true;
   cleanUp: boolean = false;
-  objectType: string = "user";
-  actionMap: CrxActionMap;
 
+  @Input() actionMap: CrxActionMap;
+  @Input() objectType: string;
   constructor(
     public educationController: EductaionService,
     public modalController: ModalController,
-    private navParams: NavParams,
     private objectService: GenericObjectService
   ) {
   }
 
   ngOnInit() {
-    this.actionMap = this.navParams.get('actionMap');
-    let type = this.navParams.get('objectType');
-    this.objectType = type.replace("education/", "");
+    this.objectType = this.objectType.replace("education/", "");
   }
 
   onSubmit(object) {
@@ -61,7 +58,7 @@ export class FilesUploadComponent implements OnInit {
       }
     });
   }
-  onFilesAdded(files: FileList) {
-    this.files = files;
+  onFilesAdded(event) {
+    this.files = event.target.files;
   }
 }

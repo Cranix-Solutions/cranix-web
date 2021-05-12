@@ -9,7 +9,7 @@ import { UtilsService } from './utils.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
 //import { ServerResponse } from 'http';
-import { AccessStatus, Room, Device, User, Group, Category, PositivList, SmartRoom, SmartRoomStatus, EduRoom } from '../shared/models/data-model';
+import { AccessStatus, Room, Device, User, Group, Category, PositivList, SmartRoom, SmartRoomStatus, EduRoom, GuestUsers } from '../shared/models/data-model';
 import { ServerResponse } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from './auth.service';
 import { GenericObjectService } from './generic-object.service';
@@ -26,6 +26,8 @@ export class EductaionService {
 	//TODO make it configurable
 	screenShotTimeDealy: number = 5000;
 	uploadState = new BehaviorSubject(false);
+	myRooms: Room[];
+	selectedRoom: Room;
 
 	constructor(
 		public objectService: GenericObjectService,
@@ -35,6 +37,7 @@ export class EductaionService {
 		private authService: AuthenticationService) {
 		this.hostname = this.utils.hostName();
 	}
+
 
 
 	// miscellaneous
@@ -108,7 +111,9 @@ export class EductaionService {
 	getMyRooms() {
 		this.url = `${this.hostname}/education/myRooms`;
 		console.log(this.url);
-		return this.http.get<Room[]>(this.url, { headers: this.authService.headers });
+		this.http.get<Room[]>(this.url, { headers: this.authService.headers }).subscribe(
+			(val) => { this.myRooms = val }
+		)
 	}
 
 	/**
@@ -187,4 +192,16 @@ export class EductaionService {
 		)
 	}
 
+	getGuestAccounts() {
+		this.url = `${this.hostname}/education/guestUsers`;
+		console.log(this.url)
+		return this.http.get<GuestUsers[]>(this.url, { headers: this.authService.headers });
+	}
+
+
+	addGuestUsers(guest: GuestUsers) {
+		this.url = `${this.hostname}/education/guestUsers`;
+		console.log(this.url);
+		return this.http.post<ServerResponse>(this.url, guest, { headers: this.authService.headers })
+	}
 }

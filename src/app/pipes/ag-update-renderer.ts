@@ -3,7 +3,7 @@ import { Component } from "@angular/core";
 import { ICellRendererAngularComp } from "ag-grid-angular";
 
 @Component({
-    selector: 'action-cell',
+    selector: 'update-cell-renderer',
     template: `
         <ng-template [ngIf]="doUpate" [ngIfElse]="elseBlock">
             <ion-button fill="clear" size="small" (click)="update()" matTooltip="{{ updates }}">

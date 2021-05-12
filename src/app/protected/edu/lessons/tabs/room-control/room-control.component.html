@@ -1,5 +1,5 @@
 <cranix-toolbar></cranix-toolbar>
-<ion-content id="carded">
+<ion-content>
   <ion-header>
     <ion-toolbar>
       <ion-buttons *ngIf="room" slot="start">
@@ -39,21 +39,19 @@
       </ion-buttons>
       <ion-buttons slot="end">
         <ion-item matTooltip="{{'Select the room to control' | translate}}">
-          <ion-label *ngIf="rooms" position="stacked">{{'Select a room' | translate}}</ion-label>
-          <ion-select [(ngModel)]="selectedRoomId" #roomSelect (ionChange)="selectChanged($event)" okText="OK"
-            cancelText="{{ 'Cancel' | translate}}">
-            <ion-select-option value="{{room.id}}" *ngFor="let room of rooms | async">{{room.name}}</ion-select-option>
-          </ion-select>
+          <ion-button (click)="selectRooms()">
+            <ion-label *ngIf="eduS.selectedRoom">{{ 'room' | translate }}: {{ eduS.selectedRoom.name }}</ion-label>
+            <ion-label *ngIf="!eduS.selectedRoom">{{'Select a room' | translate}}</ion-label>
+          </ion-button>
         </ion-item>
         <ion-item matTooltip="{{'Select picture size' | translate}}">
-          <ion-label position="stacked">{{'Select picture size' | translate }}</ion-label>
-          <ion-select *ngIf="rooms" [(ngModel)]="gridSize" #roomSelect (ionChange)="sizeChange($event)"
+          <ion-label>{{'Select picture size' | translate }}</ion-label>
+          <ion-select *ngIf="eduS.selectedRoom" [(ngModel)]="gridSize" #roomSelect (ionChange)="sizeChange($event)"
             okText="{{'apply' | translate }}" cancelText="{{ 'Cancel' | translate}}">
             <ion-select-option value="{{size}}" *ngFor="let size of gridSizes">{{size}}</ion-select-option>
           </ion-select>
         </ion-item>
       </ion-buttons>
-      <ion-title *ngIf="room">{{'Room' | translate}}: "{{ room.name }}"</ion-title>
     </ion-toolbar>
   </ion-header>
   <ion-grid *ngIf="room" fiexd="true">

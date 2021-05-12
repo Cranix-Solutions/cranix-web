@@ -1,0 +1,81 @@
+<form #addEditGuest="ngForm">
+    <ion-card-header translucent>
+        <ion-toolbar>
+            <ion-card-title>{{ 'guest users ' + action | translate }}</ion-card-title>
+            <ion-card-subtitle>{{ 'The name of the created users have the format groupnameNN' | translate }}</ion-card-subtitle>
+            <ion-buttons slot="end">
+                <ion-button class="ion-no-margin" (click)="onSubmit()" [disabled]="!addEditGuest.valid || disabled">
+                    <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+                </ion-button>
+                <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss('closed')">
+                    <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+                </ion-button>
+            </ion-buttons>
+        </ion-toolbar>
+    </ion-card-header>
+    <ion-card-content fullscreen *ngIf="guest">
+        <ion-list>
+            <ion-item>
+                <ion-label position="stacked">{{'name' | translate}}</ion-label>
+                <ion-input [(ngModel)]="guest.name" name="name" pattern="\S+" required [disabled]="disabled"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="stacked">{{'description' | translate}}</ion-label>
+                <ion-input [(ngModel)]="guest.description" name="description" required [disabled]="disabled"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="stacked">{{'Count of accounts' | translate}}</ion-label>
+                <ion-input [(ngModel)]="guest.count" name="count" type="number" min=1 max=200 required [disabled]="disabled"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="stacked">{{'password' | translate}}</ion-label>
+                <ion-input [(ngModel)]="guest.password" name="password" required [disabled]="disabled"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="stacked">{{'Valid until' | translate}}</ion-label>
+                <input [(ngModel)]="guest.validUntil" name="validUntil" type="date" min="now" required [disabled]="disabled">
+            </ion-item>
+            <ion-item>
+                <ion-label position="stacked">{{'Private' | translate}}</ion-label>
+                <ion-checkbox slot="end" [(ngModel)]="guest.privateGroup" name="privateGroup" [disabled]="disabled"></ion-checkbox>
+            </ion-item>
+            <ion-item>
+                <ion-label position="stacked">{{'Create AdHoc-Room' | translate}}</ion-label>
+                <ion-checkbox slot="end" [(ngModel)]="guest.createAdHocRoom" name="createAdHocRoom" [disabled]="disabled"></ion-checkbox>
+            </ion-item>
+            <ion-item>
+                <ion-label position="stacked">{{'Room Control' | translate}}</ion-label>
+                <ion-select [(ngModel)]="guest.roomControl" name="roomControl" [disabled]="!guest.createAdHocRoom" [disabled]="disabled">
+                    <ion-select-option *ngFor="let ctrl of objectService.selects['roomControl']" value="ctrl">
+                        {{ ctrl | translate }}</ion-select-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label position="stacked">{{'rooms' | translate}}</ion-label>
+                <ionic-selectable
+                    #ionicSelectable
+                    [disabled]="guest.createAdHocRoom || disabled"
+                    [isMultiple]="true"
+                    [(ngModel)]="selectedRooms"
+                    [ngModelOptions]="{standalone: true}"
+                    [items]="rooms"
+                    itemValueField="id"
+                    itemTextField="name"
+                    [canSearch]="true">
+                    <ng-template ionicSelectableHeaderTemplate>
+                        <ion-toolbar>
+                            <ion-title>
+                                {{ "Select Rooms for the Guest Users" | translate }}
+                            </ion-title>
+                            <ion-buttons slot="end">
+                                <ion-button ion-button (click)="ionicSelectable.close()">
+                                    <ion-icon color="danger" name="close"></ion-icon>
+                                </ion-button>
+                            </ion-buttons>
+                        </ion-toolbar>
+                    </ng-template>
+                </ionic-selectable>
+            </ion-item>
+        </ion-list>
+    </ion-card-content>
+</form>

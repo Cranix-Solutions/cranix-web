@@ -26,11 +26,12 @@
   <ion-card>
     <ion-card-header>
       <ion-toolbar>
-          <ion-item>
-            <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('customersFilter')"
-              id="customersFilter">
-            </ion-input>
-          </ion-item>
+        <ion-card-title>{{'Manage customers' | translate}}</ion-card-title>
+        <ion-item>
+          <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('customersFilter')"
+            id="customersFilter">
+          </ion-input>
+        </ion-item>
         <ion-buttons slot="end">
           <ion-button size="small" fill="solid" (click)="redirectToEdit($event,null)"
             matTooltip="{{'Create a new customer' | translate }}">
@@ -49,18 +50,10 @@
       </ion-toolbar>
     </ion-card-header>
     <ion-card-content>
-      <ag-grid-angular
-        id="agGridTable"
-        style="width: 100%; height: 100%;"
-        class="{{authService.settings.agGridThema}}"
-        rowSelection="multiple"
-        rowHeight="{{authService.settings.rowHeight}}"
-        [rowData]="rowData"
-        [columnDefs]="columnDefs"
-        [defaultColDef]="defaultColDef"
-        [context]="context"
-        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
-	      (gridReady)="onGridReady($event)">
+      <ag-grid-angular id="agGridTable" style="width: 100%; height: 100%;" class="{{authService.settings.agGridThema}}"
+        rowSelection="multiple" rowHeight="{{authService.settings.rowHeight}}" [rowData]="rowData"
+        [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [context]="context"
+        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" (gridReady)="onGridReady($event)">
       </ag-grid-angular>
     </ion-card-content>
   </ion-card>

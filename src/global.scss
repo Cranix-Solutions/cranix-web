@@ -25,7 +25,6 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
-@import "~ng-pick-datetime/assets/style/picker.min.css";
 
 /* AgGrifd */
 @import "~ag-grid-community/dist/styles/ag-grid.css";
@@ -42,18 +41,34 @@
 @import "theme/cranix-custom.scss";
 @import "theme/fonts.css";
 
+/*
+* ngx-quill settings
+*/
+@import '~quill/dist/quill.core.css';
+@import '~quill/dist/quill.bubble.css';
+@import '~quill/dist/quill.snow.css';
+
+[contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 @media only screen and (min-width: 768px) and (min-height: 768px) {
   .modal-wrapper {
     --height: 85%;
-    --width : 70%;
+    --width : 500px;
+  }
+  .big-modal .modal-wrapper {
+    --height: 85%;
+    --width : 80%;
   }
   .medium-modal .modal-wrapper {
     --height: 85%;
-    --width : 600px;
+    --width : 500px;
   }
   .small-modal .modal-wrapper {
     --height: 400px;
-    --width : 600px;
+    --width : 500px;
   }
 }
 

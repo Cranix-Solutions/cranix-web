@@ -1,5 +1,5 @@
-import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__, AfterContentInit } from '@angular/core';
-import {  GridApi, ColumnApi } from 'ag-grid-community';
+import { Component, OnInit } from '@angular/core';
+import { GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
@@ -8,13 +8,16 @@ import { Router } from '@angular/router';
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
-import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Ticket } from 'src/app/shared/models/cephalix-data-model'
 import { AuthenticationService } from 'src/app/services/auth.service';
+import { interval, Subscription } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
+import { CephalixService } from 'src/app/services/cephalix.service';
+import { EditBTNRenderer } from 'src/app/pipes/ag-edit-renderer';
 
 @Component({
   selector: 'cranix-tickets',
@@ -23,8 +26,8 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 })
 export class TicketsPage implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['title', 'cephalixInstituteId', 'recDate', 'ticketStatus'];
-  sortableColumns: string[] = ['title', 'cephalixInstituteId', 'recDate', 'ticketStatus'];
+  displayedColumns: string[] = ['id', 'title', 'cephalixInstituteId', 'recDate', 'ticketStatus'];
+  sortableColumns: string[] = ['id', 'title', 'cephalixInstituteId', 'recDate', 'ticketStatus'];
   columnDefs = [];
   defaultColDef = {};
   columnApi: ColumnApi;
@@ -33,9 +36,12 @@ export class TicketsPage implements OnInit {
   title = 'app';
   rowData = [];
   objectIds: number[] = [];
+  alive: boolean;
+  ticketStatus: Subscription;
 
   constructor(
     public authService: AuthenticationService,
+    public cephalixService: CephalixService,
     public objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
@@ -48,44 +54,51 @@ export class TicketsPage implements OnInit {
     this.objectKeys = Object.getOwnPropertyNames(new Ticket());
     this.createColumnDefs();
     this.defaultColDef = {
-        resizable: true,
-        sortable: true,
-        hide: false
-      };
+      resizable: true,
+      sortable: true,
+      minWidth: 110,
+      hide: false
+    };
   }
 
   ngOnInit() {
+    this.alive = true;
     this.storage.get('TicketsPage.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
         this.displayedColumns = (myArray).concat(['actions']);
         this.createColumnDefs();
       }
-    });
-    this.objectService.getObjects('ticket').subscribe(obj => this.rowData = obj);
+    }); 
+    this.getTickets();
+  }
+  ngOnDestroy() {
+    this.alive = false;
+  }
+  ngAfterViewInit() {
+    this.ticketStatus = interval(60000).pipe(takeWhile(() => this.alive)).subscribe((func => {
+      this.getTickets();
+    }))
   }
 
+  getTickets() {
+    this.cephalixService.getTickets()
+    .pipe(takeWhile(() => this.alive))
+    .subscribe( res => {
+      this.rowData = res;
+    })
+  }
   createColumnDefs() {
-    let columnDefs = [];
+    this.columnDefs = [];
     for (let key of this.objectKeys) {
       let col = {};
       col['field'] = key;
       col['headerName'] = this.languageS.trans(key);
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
       col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
-      col['minWidth'] = 110;
+      col['cellStyle'] = params => params.data.ticketStatus == "N" ? { 'background-color': 'red' } :
+        params.data.ticketStatus == "R" ? { 'background-color': 'orange' } : { 'background-color': 'green' }
       switch (key) {
-        case 'title': {
-          col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
-          col['headerCheckboxSelectionFilteredOnly'] = true;
-          col['checkboxSelection'] = this.authService.settings.checkboxSelection;
-          col['width'] = 220;
-          col['cellStyle'] = { 'padding-left': '2px', 'padding-right': '2px' };
-          col['suppressSizeToFit'] = true;
-          col['pinned'] = 'left';
-          col['colId'] = '1';
-          break;
-        }
         case 'cephalixInstituteId': {
           col['valueGetter'] = function (params) {
             return params.context['componentParent'].objectService.idToName('institute', params.data.cephalixInstituteId);
@@ -96,26 +109,20 @@ export class TicketsPage implements OnInit {
           col['cellRendererFramework'] = DateCellRenderer;
           break;
         }
+        case 'ticketStatus': {
+          col['width'] = 80
+        }
       }
-      columnDefs.push(col);
+      this.columnDefs.push(col);
     }
-    let action = {
-      headerName: "",
-      width: 85,
-      suppressSizeToFit: true,
-      cellStyle: { 'padding': '2px', 'line-height': '36px' },
-      field: 'actions',
-      pinned: 'left',
-      cellRendererFramework: ActionBTNRenderer
-    };
-    columnDefs.splice(1, 0, action)
-    this.columnDefs = columnDefs;
   }
 
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
+    (<HTMLInputElement>document.getElementById("ticketsPageTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
+    this.gridApi.sizeColumnsToFit();
+    this.gridApi.addEventListener('rowClicked', this.ticketClickHandle);
   }
 
   onQuickFilterChanged(quickFilter) {
@@ -124,7 +131,7 @@ export class TicketsPage implements OnInit {
 
   }
   onResize($event) {
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
+    (<HTMLInputElement>document.getElementById("ticketsPageTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
     this.sizeAll();
   }
   sizeAll() {
@@ -135,16 +142,20 @@ export class TicketsPage implements OnInit {
     this.columnApi.autoSizeColumns(allColumnIds);
   }
 
+  ticketClickHandle(event){
+    console.log(event)
+    event.context.componentParent.route.navigate(['/pages/cephalix/tickets/' + event.data.id])
+  }
   public redirectToDelete = (ticket: Ticket) => {
-    this.objectService.deleteObjectDialog(ticket, 'institute','')
+    this.objectService.deleteObjectDialog(ticket, 'ticket', '/pages/cephalix/tickets')
   }
   /**
  * Open the actions menu with the selected object ids.
- * @param ev 
+ * @param ev
  */
   async openActions(ev: any, objId: number) {
     let selected = this.gridApi.getSelectedRows();
-    if ( selected.length == 0  && !objId) {
+    if (selected.length == 0 && !objId) {
       this.objectService.selectObject();
       return;
     }
@@ -169,9 +180,9 @@ export class TicketsPage implements OnInit {
     });
     (await popover).present();
   }
-  async redirectToEdit(ev: Event, ticket: Ticket) {
+  async redirectToEdit(id: number, ticket: Ticket) {
     if (ticket) {
-      this.route.navigate(['/pages/cephalix/tickets/' + ticket.id]);
+      this.route.navigate(['/pages/cephalix/tickets/' + id]);
     } else {
       ticket = new Ticket();
       const modal = await this.modalCtrl.create({
@@ -195,10 +206,10 @@ export class TicketsPage implements OnInit {
     }
   }
 
-/**
-* Function to Select the columns to show
-* @param ev 
-*/
+  /**
+  * Function to Select the columns to show
+  * @param ev
+  */
   async openCollums(ev: any) {
     const modal = await this.modalCtrl.create({
       component: SelectColumnsComponent,

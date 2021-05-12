@@ -11,9 +11,12 @@ import { LanguageService } from 'src/app/services/language.service';
 export class UnboundComponent implements OnInit {
 
   badList: string[] = []
+  whiteList: string[] = []
   newDomain: string = ""
+  newDomain1: string = ""
   categories: any[];
   activeUnboundLists: string[] = [];
+  saving: boolean = false;
 
   constructor(
     private languageS: LanguageService,
@@ -22,14 +25,15 @@ export class UnboundComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.securityService.unboudChanged = false;
+    this.securityService.unboundChanged = false;
     this.readLists('bad').then(val => { this.badList = val.sort() });
+    this.readLists('good').then(val => { this.whiteList = val.sort() });
     this.getProxyCategories().then(val => {
       this.categories = val
       this.categories.sort((a, b) => (a.desc > b.desc) ? 1 : (b.desc > a.desc) ? -1 : 0)
     })
     this.securityService.getActiveUnboundLists().subscribe(
-      (val) => { if( val ) {this.activeUnboundLists = val.split(" ") }},
+      (val) => { if (val) { this.activeUnboundLists = val.split(" ") } },
       (err) => { console.log(err) }
     )
   }
@@ -55,30 +59,47 @@ export class UnboundComponent implements OnInit {
 
   deleteDomain(index) {
     this.badList.splice(index, 1)
-    this.securityService.unboudChanged = true;
+    this.securityService.unboundChanged = true;
   }
   addNewDomain() {
     this.badList.push(this.newDomain)
     this.badList.sort()
-    this.securityService.unboudChanged = true;
+    this.securityService.unboundChanged = true;
     this.newDomain = "";
   }
 
+  deleteDomain1(index) {
+    this.whiteList.splice(index, 1)
+    this.securityService.unboundChanged = true;
+  }
+  addNewDomain1() {
+    this.whiteList.push(this.newDomain1)
+    this.whiteList.sort()
+    this.securityService.unboundChanged = true;
+    this.newDomain1 = "";
+  }
   writeConfig() {
     this.objectService.requestSent();
+    this.saving = true;
     let sub = this.securityService.setProxyCustom('bad', this.badList).subscribe(
       (val) => {
-        this.securityService.setActiveUnboundLists(this.activeUnboundLists.join(" ")).subscribe(
-          (val2) => {
-            this.securityService.resetUnbound().subscribe(
-              (val3) => {
-                this.objectService.responseMessage(val3)
-                this.securityService.unboudChanged = false;
+        this.securityService.setProxyCustom('bad', this.badList).subscribe(
+          (val1) => {
+            this.securityService.setActiveUnboundLists(this.activeUnboundLists.join(" ")).subscribe(
+              (val2) => {
+                this.securityService.resetUnbound().subscribe(
+                  (val3) => {
+                    this.objectService.responseMessage(val3)
+                    this.securityService.unboundChanged = false;
+                    this.saving = false;
+                  },
+                  (err3) => { console.log(err3) }
+                )
               },
-              (err3) => { console.log(err3) }
+              (err2) => { console.log(err2) }
             )
           },
-          (err2) => { console.log(err2) }
+          (err1) => { console.log(err1) }
         )
       },
       (err) => { this.objectService.errorMessage(this.languageS.trans("An error was accoured")); },

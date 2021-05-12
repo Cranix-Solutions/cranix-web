@@ -1,5 +1,4 @@
 import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__ } from '@angular/core';
-import { AllModules } from '@ag-grid-enterprise/all-modules';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
@@ -86,7 +85,6 @@ export class HwconfsPage implements OnInit {
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
           col['width'] = 220;
-          col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
           col['flex'] = '1';
@@ -102,6 +100,7 @@ export class HwconfsPage implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
+    this.gridApi.sizeColumnsToFit();
   }
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);

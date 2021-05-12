@@ -1,55 +1,144 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { FormBuilder } from '@angular/forms';
 
 //Own stuff
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
-import { LanguageService } from 'src/app/services/language.service';
-import { Institute } from 'src/app/shared/models/cephalix-data-model';
+import { Institute, DynDns, CephalixCare, Repository } from 'src/app/shared/models/cephalix-data-model';
 import { AuthenticationService } from 'src/app/services/auth.service';
-
+import { User } from 'src/app/shared/models/data-model';
 @Component({
   selector: 'cranix-institute-edit',
   templateUrl: './institute-edit.component.html',
   styleUrls: ['./institute-edit.component.scss'],
 })
 export class InstituteEditComponent implements OnInit {
-  editForm;
+  allAddons: Repository[];
+  addons: Repository[];
+  origAddons: Repository[];
+  segment = 'details';
+  care: CephalixCare;
   object: Institute = null;
   objectKeys: string[] = [];
-  isourl: string ="";
+  isourl: string = "";
+  managers = {}
+  users: User[] = [];
+  dynDnsDomains: string[] = ['cephalix.eu', 'cephalix.de', 'cranix.eu']
+  dynDnsName: string = "";
+  dynDnsDomain: string = "cephalix.eu";
+  dynDnsPort: string = "22";
+  dynDnsRo: boolean = false;
+  dynDnsIp: string = "";
+  dynDns: DynDns;
   constructor(
     public authService: AuthenticationService,
     public cephalixService: CephalixService,
-    private languageService: LanguageService,
     public translateService: TranslateService,
-    public formBuilder: FormBuilder,
     public objectService: GenericObjectService
   ) {
     this.object = this.objectService.selectedObject;
-    if(objectService.cephalixDefaults.createIsoBy && objectService.cephalixDefaults.createIsoBy == 'regCode' ) {
+    this.cephalixService.getAllAddons().subscribe((val) => { this.allAddons = val });
+    this.cephalixService.getAddonsOfInstitute(this.object.id).subscribe((val) => { this.addons = val; this.origAddons = val })
+    this.cephalixService.getUsersFromInstitute(this.object.id).subscribe(
+      (val) => {
+        for (let man of val) {
+          this.managers[man.id] = true;
+        }
+        this.objectService.getObjects('user').subscribe(
+          obj => {
+            for (let user of obj) {
+              if (user.role.toLowerCase() == "reseller" || user.role == "sysadmins") {
+                if (!this.managers[user.id]) {
+                  this.managers[user.id] = false;
+                }
+                this.users.push(user)
+              }
+            }
+          }
+        )
+      },
+      (err) => { console.log(err) },
+      () => { }
+    )
+    if (this.objectService.cephalixDefaults.createIsoBy && this.objectService.cephalixDefaults.createIsoBy == 'regCode') {
       this.isourl = this.object.regCode;
     } else {
       this.isourl = this.object.uuid;
     }
     let institute = new Institute();
-    if( ! this.authService.isAllowed("customer.manage") ){
+    if (!this.authService.isAllowed("customer.manage")) {
       delete institute.cephalixCustomerId;
+    } else {
+      //Read dynDns settings
+      this.cephalixService.getDynDns(this.object.id).subscribe(
+        (val) => {
+          if (val) {
+            this.dynDns = val;
+            this.dynDnsDomain = val.domain;
+            this.dynDnsName = val.hostname;
+            this.dynDnsPort = val.port;
+            this.dynDnsRo = val.ro;
+            this.dynDnsIp = val.ip;
+          } else {
+            this.dynDns = new DynDns();
+          }
+        }
+      )
+      this.cephalixService.getCare(this.object.id).subscribe(
+        (val) => {
+          if (val) {
+            this.care = val;
+          } else {
+            this.care = new CephalixCare();
+          }
+        }
+      )
     }
     this.objectKeys = Object.getOwnPropertyNames(institute);
     console.log("InstituteEditComponent:" + this.object.id);
   }
-  ngOnInit() {
-    this.editForm = this.formBuilder.group(this.objectService.convertObject(this.object));
+
+  ngOnInit() { }
+
+  segmentChanged(event) {
+    this.segment = event.detail.value;
   }
   public ngAfterViewInit() {
     while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
   }
   onSubmit(form) {
     form['id'] = this.object.id;
+    console.log(form)
     this.objectService.modifyObjectDialog(form, "institute");
+
+    if (this.authService.isAllowed("customer.manage") &&
+      (this.dynDns.domain != this.dynDnsDomain || this.dynDns.hostname != this.dynDnsName ||
+        this.dynDns.port != this.dynDnsPort || this.dynDns.ro != this.dynDnsRo)) {
+      this.dynDns.domain = this.dynDnsDomain
+      this.dynDns.hostname = this.dynDnsName
+      this.dynDns.port = this.dynDnsPort
+      this.dynDns.ro = this.dynDnsRo
+      this.cephalixService.setDynDns(this.object.id, this.dynDns).subscribe(
+        (val) => { this.objectService.responseMessage(val) }
+      )
+    }
+    if (this.authService.isAllowed("customer.manage")) {
+      this.cephalixService.setCare(this.object.id, this.care).subscribe(
+        (val) => { this.objectService.responseMessage(val) }
+      )
+    }
   }
+
+  compareFn(o1: User, o2: User | User[]) {
+    if (!o1 || !o2) {
+      return o1 === o2;
+    }
+    if (Array.isArray(o2)) {
+      return o2.some((u: User) => u.id === o1.id);
+    }
+    return o1.id === o2.id;
+  }
+
   setNextDefaults() {
     let subs = this.cephalixService.getNextDefaults().subscribe(
       (val) => {
@@ -69,13 +158,49 @@ export class InstituteEditComponent implements OnInit {
     this.objectService.requestSent();
     let subs = this.cephalixService.writeConfig(this.object.id).subscribe(
       (serverResponse) => {
-          this.objectService.responseMessage(serverResponse);
+        this.objectService.responseMessage(serverResponse);
       },
       (err) => { console.log(err) },
       () => { subs.unsubscribe() }
     )
   }
-  delete(ev: Event){
-     this.objectService.deleteObjectDialog(this.object,'institute','');
-  }  
+  delete(ev: Event) {
+    this.objectService.deleteObjectDialog(this.object, 'institute', '');
+  }
+  managerChanged(id) {
+    if (this.managers[id]) {
+      this.cephalixService.deleteUserFromInstitute(id, this.object.id).subscribe(
+        val => this.objectService.responseMessage(val)
+      )
+    } else {
+      this.cephalixService.addUserToInstitute(id, this.object.id).subscribe(
+        val => this.objectService.responseMessage(val)
+      )
+    }
+    this.managers[id] = !this.managers[id];
+  }
+
+  addonChanged() {
+    console.log(this.addons)
+    console.log(this.origAddons)
+    for( let repo of this.addons ) {
+      if( !this.origAddons.some((r: Repository) => r.id === repo.id)) {
+        this.cephalixService.addAddonToInstitute(this.object.id,repo.id)
+      }
+    }
+    for( let repo of this.origAddons ) {
+      if( !this.addons.some((r: Repository) => r.id === repo.id)) {
+        this.cephalixService.removeAddonFromInstitute(this.object.id,repo.id)
+      }
+    }
+  }
+  compareAddons(o1: Repository, o2: Repository) {
+    if (!o1 || !o2) {
+      return o1 === o2;
+    }
+    if (Array.isArray(o2)) {
+      return o2.some((r: Repository) => r.id === o1.id);
+    }
+    return o1.id === o2.id;
+  }
 }

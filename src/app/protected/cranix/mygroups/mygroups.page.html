@@ -1,61 +1,57 @@
-
 <cranix-toolbar></cranix-toolbar>
-<ion-content id="carded">
-  <ion-row class="header-row">
-  <ion-col size=6>
-    <ion-title>{{'Manage groups' | translate}}</ion-title>
-  </ion-col>
-</ion-row>
-  <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
-    <ion-fab-button>
-      <ion-icon name="arrow-forward-circle"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-list side="start">
-      <ion-fab-button><ion-icon name="ellipsis-vertical-sharp" (click)="openActions($event,null)"></ion-icon></ion-fab-button>
-      <ion-fab-button><ion-icon name="list-outline" (click)="toggleColumnDef()"></ion-icon></ion-fab-button>
-      <ion-fab-button><ion-icon name="add-circle" (click)="redirectToEdit($event,null)"></ion-icon></ion-fab-button>
-    </ion-fab-list>
-  </ion-fab>
-  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('mygroupsFilterMD')" id="mygroupsFilterMD" showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
+<ion-content>
   <ion-card>
     <ion-card-header>
       <ion-toolbar>
+        <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="group">
+          <ion-segment-button value="group" layout="icon-start">
+            <ion-label class="hidden-xs hidden-sm">{{'Groups' | translate}}</ion-label>
+            <ion-icon name="people-circle"></ion-icon>
+          </ion-segment-button>
+          <ion-segment-button value="user" layout="icon-start">
+            <ion-label class="hidden-xs hidden-sm">{{'Users' | translate}}</ion-label>
+            <ion-icon name="people"></ion-icon>
+          </ion-segment-button>
+          <ion-segment-button value="guest" layout="icon-start">
+            <ion-label class="hidden-xs hidden-sm">{{'Guest Users' | translate}}</ion-label>
+            <ion-icon name="walk"></ion-icon>
+          </ion-segment-button>
+        </ion-segment>
         <ion-item>
-          <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('mygroupsFilter')" id="mygroupsFilter">
+          <ion-input placeholder="{{ segment }} {{'search' | translate }}" (input)="onQuickFilterChanged('mygroupsFilter')"
+            id="mygroupsFilter">
           </ion-input>
         </ion-item>
         <ion-buttons slot="end">
-          <ion-button size="small" fill="solid" (click)="redirectToEdit($event,null)"
-            matTooltip="{{'Create a new group' | translate }}">
+          <ion-button *ngIf="segment == 'group' || (segment == 'group' && authService.isAllowed('user.add.students'))"
+            size="small" fill="solid" (click)="redirectToEdit($event,null)"
+            matTooltip="{{'Create a new ' + segment | translate }}">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
-          <ion-button size="small" fill="solid" (click)="toggleColumnDef()"
-            matTooltip="{{'Change grouping of the table' | translate }}">
-            <ion-icon slot="icon-only" name="list-sharp"></ion-icon>
+          <ion-button *ngIf="segment == 'guest'" size="small" fill="solid" (click)="addEditGuest(null)"
+            matTooltip="{{'Create new guest accounts' | translate }}">
+            <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
-          <ion-button size="small" fill="solid" (click)="openActions($event,null)" 
-            matTooltip="{{'Apply actions on the selected objects' | translate }}" >
+          <ion-button size="small" fill="solid" (click)="openActions($event,null)"
+            matTooltip="{{'Apply actions on the selected objects' | translate }}">
             <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-card-header>
-    <ion-card-content>
-      <ag-grid-angular
-        id="myGroupsTable"
-        style="width: 100%; height: 100%;"
+    <ion-card-content style="height: 600px;">
+      <ag-grid-angular 
+        id="myGroupsTable" style="width: 100%; height: 100%;" 
         rowSelection="multiple"
-        class="{{authService.settings.agGridThema}}"
+        class="{{authService.settings.agGridThema}}" 
         rowHeight="{{authService.settings.rowHeight}}"
         rowMultiSelectWithClick="{{authService.settings.rowMultiSelectWithClick}}"
         animateRows="true"
-        deltaColumnMode="true"
         [modules]="modules"
         [context]="context"
         [rowData]="rowData"
-        [autoGroupColumnDef]="autoGroupColumnDef"
         [columnDefs]="columnDefs"
-        [defaultColDef]="defaultColDef"
+        [defaultColDef]="defaultColDef" 
         (gridReady)="onGridReady($event)">
       </ag-grid-angular>
     </ion-card-content>

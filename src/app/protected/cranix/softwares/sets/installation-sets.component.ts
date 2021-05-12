@@ -56,6 +56,7 @@ export class InstallationSetsComponent implements OnInit {
     this.installationSetApi = params.api;
     this.installationSetColumnApi = params.columnApi;
     (<HTMLInputElement>document.getElementById("installationSetTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
+    this.installationSetApi.sizeColumnsToFit();
   }
 
   onMemberSelectionChanged() {

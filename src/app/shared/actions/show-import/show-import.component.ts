@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+import { Component, Input, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertController } from '@ionic/angular';
 //Own stuff
@@ -12,15 +12,13 @@ import { UsersImport } from 'src/app/shared/models/data-model';
 })
 export class ShowImportComponent implements OnInit {
 
-  import: UsersImport;
- 
+  
+  @Input() import: UsersImport;
   constructor(
     public alertController: AlertController,
     private modalController: ModalController,
-    private navParams: NavParams,
     public translateService: TranslateService
   ) {
-    this.import = this.navParams.get('import');
   }
 
   ngOnInit() {}

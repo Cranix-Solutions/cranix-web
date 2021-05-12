@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { GridApi, ColumnApi } from '@ag-grid-enterprise/all-modules';
 
 //Our Stuff
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
@@ -26,8 +25,8 @@ export class MypositiveComponent implements OnInit {
     hide: false,
     suppressMenu: true
   };
-  gridApi: GridApi;
-  columnApi: ColumnApi;
+  gridApi;
+  columnApi;
   context;
 
   constructor(

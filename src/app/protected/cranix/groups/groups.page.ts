@@ -1,9 +1,8 @@
-import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__ } from '@angular/core';
-import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
+import { Component, OnInit } from '@angular/core';
+import { GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
-import { TranslateService } from '@ngx-translate/core';
 
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
@@ -14,7 +13,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Group } from 'src/app/shared/models/data-model'
 import { AuthenticationService } from 'src/app/services/auth.service';
-import { GroupMembersPage  } from './details/members/group-members.page';
+import { GroupMembersPage  } from 'src/app/shared/actions/group-members/group-members.page';
 
 @Component({
   selector: 'cranix-groups',
@@ -41,8 +40,7 @@ export class GroupsPage implements OnInit {
     public popoverCtrl: PopoverController,
     public languageS: LanguageService,
     public route: Router,
-    private storage: Storage,
-    public translateService: TranslateService
+    private storage: Storage
   ) {
     this.context = { componentParent: this };
     this.rowSelection = 'multiple';
@@ -89,7 +87,6 @@ export class GroupsPage implements OnInit {
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
           col['minWidth'] = 150;
-          col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
           col['flex'] = '1';
@@ -113,35 +110,13 @@ export class GroupsPage implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-    this.sizeAll();
+    this.gridApi.sizeColumnsToFit();
   }
 
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.doLayout();
 
-  }
-  onGridSizeChange(params) {
-   /* var allColumns = params.columnApi.getAllColumns();
-    params.api.sizeColumnsToFit();*/
-    this.sizeAll();
-  }
-
-  sizeAll() {
-   /* var allColumnIds = [];
-    this.columnApi.getAllColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.columnApi.autoSizeColumns(allColumnIds);*/
-
-    this.gridApi.sizeColumnsToFit();
-    window.addEventListener('resize', function() {
-      setTimeout(function() {
-        this.gridApi.sizeColumnsToFit();
-      });
-    });
-
-    this.gridApi.sizeColumnsToFit();
   }
 
   public redirectToDelete = (group: Group) => {
@@ -182,6 +157,7 @@ export class GroupsPage implements OnInit {
     this.objectService.selectedObject = group;
     const modal = await this.modalCtrl.create({
       component: GroupMembersPage,
+      cssClass: 'big-modal',
       animated: true,
       swipeToClose: true,
       showBackdrop: true

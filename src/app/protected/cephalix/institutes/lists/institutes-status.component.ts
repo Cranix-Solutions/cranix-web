@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage';
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
+import { FileSystemUsageRenderer } from 'src/app/pipes/ag-filesystem-usage-renderer';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
@@ -15,6 +16,7 @@ import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-col
 import { Institute, InstituteStatus } from 'src/app/shared/models/cephalix-data-model'
 import { UpdateRenderer } from 'src/app/pipes/ag-update-renderer';
 import { AuthenticationService } from 'src/app/services/auth.service';
+import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
 
 @Component({
   selector: 'cranix-institutes-status',
@@ -24,8 +26,8 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 })
 export class InstitutesStatusComponent implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'availableUpdates', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel'];
-  sortableColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'availableUpdates', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel'];
+  displayedColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'availableUpdates', 'errorMessages', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel'];
+  sortableColumns: string[] = ['cephalixInstituteId', 'created', 'uptime', 'version', 'lastUpdate', 'availableUpdates', 'errorMessages', 'rootUsage', 'srvUsage', 'homeUsage', 'runningKernel', 'installedKernel'];
   columnDefs = [];
   defaultColDef = {};
   gridApi: GridApi;
@@ -52,9 +54,26 @@ export class InstitutesStatusComponent implements OnInit {
     this.objectKeys = Object.getOwnPropertyNames(new InstituteStatus());
     this.createColumnDefs();
     this.defaultColDef = {
+      flex: 1,
       resizable: true,
+      wrapText: true,
+      autoHeight: true,
       sortable: true,
-      hide: false
+      width: 70,
+      headerComponentParams: {
+        template:
+          '<div class="ag-cell-label-container" role="presentation">' +
+          '  <span ref="eMenu" class="ag-header-icon ag-header-cell-menu-button"></span>' +
+          '  <div ref="eLabel" class="ag-header-cell-label" role="presentation">' +
+          '    <span ref="eSortOrder" class="ag-header-icon ag-sort-order"></span>' +
+          '    <span ref="eSortAsc" class="ag-header-icon ag-sort-ascending-icon"></span>' +
+          '    <span ref="eSortDesc" class="ag-header-icon ag-sort-descending-icon"></span>' +
+          '    <span ref="eSortNone" class="ag-header-icon ag-sort-none-icon"></span>' +
+          '    <span ref="eText" class="ag-header-cell-text" role="columnheader" style="white-space: normal;"></span>' +
+          '    <span ref="eFilter" class="ag-header-icon ag-filter-icon"></span>' +
+          '  </div>' +
+          '</div>',
+      }
     };
   }
 
@@ -62,6 +81,7 @@ export class InstitutesStatusComponent implements OnInit {
     this.storage.get('InstitutesStatusComponent.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
+        this.displayedColumns = myArray;
         this.createColumnDefs();
       }
     });
@@ -84,7 +104,17 @@ export class InstitutesStatusComponent implements OnInit {
       () => { subs.unsubscribe() })
   }
   createColumnDefs() {
-    let columnDefs = [];
+    this.columnDefs = [
+      {
+        field: 'count',
+        headerName: '#',
+        maxWidth: 30,
+        valueGetter: function (params) {
+          return params.node.id
+        }
+      }
+    ];
+    let now: number = new Date().getTime();
     for (let key of this.objectKeys) {
       let col = {};
       col['field'] = key;
@@ -93,22 +123,48 @@ export class InstitutesStatusComponent implements OnInit {
       col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
       switch (key) {
         case 'cephalixInstituteId': {
-          col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
-          col['headerCheckboxSelectionFilteredOnly'] = true;
-          col['checkboxSelection'] = this.authService.settings.checkboxSelection;
-          col['width'] = 220;
+          //col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
+          //col['headerCheckboxSelectionFilteredOnly'] = true;
+          //col['checkboxSelection'] = this.authService.settings.checkboxSelection;
+          col['minWidth'] = 220;
+          col['maxWidth'] = 220;
+          col['cellStyle'] = { 'justify-content': "left", 'wrap-text': 0 };
           col['valueGetter'] = function (params) {
             return params.context['componentParent'].objectService.idToName('institute', params.data.cephalixInstituteId);
           }
-          break;
+          this.columnDefs.push(col);
+          this.columnDefs.push({
+            headerName: this.languageS.trans('ipVPN'),
+            editable: true,
+            width: 100,
+            valueGetter: function (params) {
+              let institute = params.context['componentParent'].objectService.getObjectById('institute', params.data.cephalixInstituteId);
+              return institute.ipVPN;
+            }
+          })
+          continue;
         }
         case 'lastUpdate': {
-          col['cellRendererFramework'] = DateTimeCellRenderer;
+          col['cellRendererFramework'] = DateCellRenderer;
+          break;
+        }
+        case 'rootUsage': {
+          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          break;
+        }
+        case 'homeUsage': {
+          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          break;
+        }
+        case 'srvUsage': {
+          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          break;
+        }
+        case 'varUsage': {
+          col['cellRendererFramework'] = FileSystemUsageRenderer;
           break;
         }
         case 'runningKernel': {
-          col['headerClass'] = "rotate-header-class"
-          col['width'] = 100;
           col['valueGetter'] = function (params) {
             let index = params.data.runningKernel.indexOf("-default");
             let run = params.data.runningKernel.substring(0, index);
@@ -116,7 +172,7 @@ export class InstitutesStatusComponent implements OnInit {
             if (run == inst) {
               return "OK"
             } else {
-              return "need reboot"
+              return "reboot"
             }
           }
           break;
@@ -126,19 +182,26 @@ export class InstitutesStatusComponent implements OnInit {
           break;
         }
         case 'availableUpdates': {
-          col['headerClass'] = "rotate-header-class"
-          col['width'] = 100;
           col['cellRendererFramework'] = UpdateRenderer;
           break;
         }
         case 'created': {
+          col['width'] = 160
+          col['maxWidth'] = 160
           col['cellRendererFramework'] = DateTimeCellRenderer;
+          col['cellStyle'] = params => (now - params.value) > 36000000 ? { 'background-color': 'red' } : { 'background-color': '#2dd36f' }
           break;
         }
+        case 'errorMessages': {
+          col['cellStyle'] = params => params.value ? { 'background-color': 'red' } : { 'background-color': '#2dd36f' }
+          break
+        }
+        default: {
+          col['width'] = 150
+        }
       }
-      columnDefs.push(col);
+      this.columnDefs.push(col);
     }
-    this.columnDefs = columnDefs;
   }
 
   onGridReady(params) {
@@ -147,7 +210,12 @@ export class InstitutesStatusComponent implements OnInit {
     (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
     this.gridApi.sizeColumnsToFit();
   }
-
+  headerHeightSetter() {
+    var padding = 20;
+    var height = headerHeightGetter() + padding;
+    this.gridApi.setHeaderHeight(height);
+    this.gridApi.resetRowHeights();
+  }
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.doLayout();
@@ -247,4 +315,18 @@ export class InstitutesStatusComponent implements OnInit {
       this.authService.log("most lett vegrehajtva.")
     })
   }
+}
+
+function headerHeightGetter() {
+  var columnHeaderTexts = document.querySelectorAll('.ag-header-cell-text');
+
+  var columnHeaderTextsArray = [];
+
+  columnHeaderTexts.forEach(node => columnHeaderTextsArray.push(node));
+
+  var clientHeights = columnHeaderTextsArray.map(
+    headerText => headerText.clientHeight
+  );
+  var tallestHeaderTextHeight = Math.max(...clientHeights);
+  return tallestHeaderTextHeight;
 }

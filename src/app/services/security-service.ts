@@ -22,7 +22,7 @@ export class SecurityService {
   remoteRules: RemoteRule[];
   firewallRooms: Room[];
   actualStatus: AccessInRoom[];
-  public unboudChanged:   boolean = false;
+  public unboundChanged:   boolean = false;
   public outgoinChanged:  boolean = false;
   public incomingChanged: boolean = false;
   public remoteChanged:   boolean = false;
@@ -92,7 +92,7 @@ export class SecurityService {
   resetUnbound() {
     this.url = this.hostname + "/system/unbound";
     console.log(this.url);
-    return this.http.put<ServerResponse>(this.url, { headers: this.authService.headers });
+    return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
   }
   setProxyCustom(custom,list: string[]) {
     this.url = this.hostname + `/system/proxy/custom/${custom}`;
@@ -143,7 +143,6 @@ export class SecurityService {
 		let sub = this.http.get<AccessInRoom[]>(this.url, { headers: this.authService.headers }).subscribe(
       (val) => {
         this.actualStatus = val;
-        console.log(this.actualStatus);
       },
       (err) => {
         console.log('getActualAccessStatus',err)
@@ -186,6 +185,21 @@ export class SecurityService {
     console.log(this.url);
     this.objectService.requestSent();
     let sub = this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers }).subscribe(
+      (val) => {
+        this.objectService.responseMessage(val);
+      },
+      (err) => {
+        this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
+      },
+      () => { sub.unsubscribe() }
+    );
+  }
+
+  modifyAccessInRoom(accessInRoom: AccessInRoom) {
+    this.url = this.hostname + "/rooms/accessList/"
+    console.log(this.url,accessInRoom);
+    this.objectService.requestSent();
+    let sub = this.http.post<ServerResponse>(this.url, accessInRoom, { headers: this.authService.headers }).subscribe(
       (val) => {
         this.objectService.responseMessage(val);
       },
@@ -291,7 +305,7 @@ export class UnboundCanDeactivate implements CanDeactivate<SecurityService> {
     public securityService: SecurityService
   ) { }
   canDeactivate(securityService: SecurityService) {
-    if (this.securityService.unboudChanged) {
+    if (this.securityService.unboundChanged) {
       return window.confirm(
         this.languageS.trans('The unbound configuration was changed.') +
         this.languageS.trans('The changes will be lost if you leave the module.')
