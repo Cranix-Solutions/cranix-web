@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
@@ -50,6 +50,7 @@ export class ActionsComponent implements OnInit {
   @Input() objectType
   @Input() objectIds
   @Input() selection
+  @Input() gridApi
   constructor(
     public alertController: AlertController,
     public modalController: ModalController,
@@ -102,6 +103,11 @@ export class ActionsComponent implements OnInit {
     console.log(this.menu);
   }
 
+  ngOnDestroy(){
+    if( this.gridApi ) {
+      this.gridApi.deselectAll();
+    }
+  }
   adaptMenu() {
     /*
     * TODO Remove menu points based on acls.

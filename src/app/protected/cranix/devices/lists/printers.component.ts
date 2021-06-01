@@ -170,7 +170,8 @@ export class PrintersComponent implements OnInit {
       componentProps: {
         objectType: "printer",
         objectIds: objectIds,
-        selection: selected
+        selection: selected,
+        gridApi:   this.gridApi
       },
       animated: true,
       showBackdrop: true

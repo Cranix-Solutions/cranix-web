@@ -173,7 +173,8 @@ export class TicketsPage implements OnInit {
       componentProps: {
         objectType: "ticket",
         objectIds: this.objectIds,
-        selection: selected
+        selection: selected,
+        gridApi:   this.gridApi
       },
       animated: true,
       showBackdrop: true

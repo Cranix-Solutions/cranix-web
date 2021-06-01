@@ -146,7 +146,8 @@ export class GroupsPage implements OnInit {
       componentProps: {
         objectType: "group",
         objectIds: objectIds,
-        selection: selected
+        selection: selected,
+        gridApi:   this.gridApi
       },
       animated: true,
       showBackdrop: true
