@@ -301,6 +301,7 @@
     "Service state was set successfully.": "Dienststatus wurde erfolgreich gesetzt.",
     "Set filesystemquota for the selected users": "Dateisystemquota für die gewählten Benutzer setzen.",
     "Set mailsystemquota for the selected users": "Mailsystemquota für die gewählten Benutzer setzen.",
+    "Set printers": "Drucker einstellen";
     "Set the next default values": "Folgende Standardwerte eintragen",
     "Settings": "Einstellungen",
     "Show the import result.": "Das Ergebnis des Imports anzeigen.",
