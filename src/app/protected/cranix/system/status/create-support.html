@@ -1,7 +1,7 @@
 <form #supportTicket="ngForm">
     <ion-header translucent>
         <ion-toolbar>
-            <ion-title>{{'Add support' | translate }}</ion-title>
+            <ion-title>{{ 'Add support' | translate }}</ion-title>
             <ion-buttons slot="end">
                 <ion-button class="ion-no-margin" (click)="onSubmit()" [disabled]="!supportTicket.valid">
                     <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
@@ -15,32 +15,32 @@
     <ion-content fullscreen>
         <ion-list>
             <ion-item>
-                <ion-label position="stacked">{{'supporttype' | translate}}</ion-label>
+                <ion-label position="stacked">{{ 'supporttype' | translate }}</ion-label>
                 <ion-select [(ngModel)]="support.supporttype" name="title" required>
-                    <ion-select-option value="Error">{{ 'Error' | translate}}</ion-select-option>
-                    <ion-select-option value="Feedback">{{ 'Feedback' | translate}}</ion-select-option>
-                    <ion-select-option value="FeatureRequest">{{ 'FeatureRequest' | translate}}</ion-select-option>
-                    <ion-select-option value="ProductOrder">{{ 'ProductOrder' | translate}}</ion-select-option>
+                    <ion-select-option value="Error">{{ 'Error' | translate }}</ion-select-option>
+                    <ion-select-option value="Feedback">{{ 'Feedback' | translate }}</ion-select-option>
+                    <ion-select-option value="FeatureRequest">{{ 'FeatureRequest' | translate }}</ion-select-option>
+                    <ion-select-option value="ProductOrder">{{ 'ProductOrder' | translate }}</ion-select-option>
                 </ion-select>
             </ion-item>
             <ion-item>
-                <ion-label position="stacked">{{'email' | translate}}</ion-label>
+                <ion-label position="stacked">{{ 'email' | translate }}</ion-label>
                 <ion-input [(ngModel)]="support.email" name="email" required></ion-input>
             </ion-item>
             <ion-item>
-                <ion-label position="stacked">{{'firstname' | translate}}</ion-label>
+                <ion-label position="stacked">{{ 'firstname' | translate }}</ion-label>
                 <ion-input [(ngModel)]="support.firstname" name="firstname" required></ion-input>
             </ion-item>
             <ion-item>
-                <ion-label position="stacked">{{'lastname' | translate}}</ion-label>
+                <ion-label position="stacked">{{ 'lastname' | translate }}</ion-label>
                 <ion-input [(ngModel)]="support.lastname" name="lastname" required></ion-input>
             </ion-item>
             <ion-item>
-                <ion-label position="stacked">{{'subject' | translate}}</ion-label>
+                <ion-label position="stacked">{{ 'subject' | translate }}</ion-label>
                 <ion-input [(ngModel)]="support.subject" name="subject" required></ion-input>
             </ion-item>
             <quill-editor [styles]="{height: '250px'}" [(ngModel)]="support.description" 
-            name="description" placeholder="{{'Insert your issue ...'| translate}}"></quill-editor>
+            name="description" placeholder="{{ 'Insert your issue ...' | translate }}"></quill-editor>
         </ion-list>
     </ion-content>
 </form>
