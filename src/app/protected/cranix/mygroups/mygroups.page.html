@@ -4,13 +4,13 @@
     <ion-card-header>
       <ion-toolbar>
         <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="group">
-          <ion-segment-button value="group" layout="icon-start">
-            <ion-label class="hidden-xs hidden-sm">{{'Groups' | translate}}</ion-label>
-            <ion-icon name="people-circle"></ion-icon>
-          </ion-segment-button>
           <ion-segment-button value="user" layout="icon-start">
             <ion-label class="hidden-xs hidden-sm">{{'Users' | translate}}</ion-label>
             <ion-icon name="people"></ion-icon>
+          </ion-segment-button>
+          <ion-segment-button value="group" layout="icon-start">
+            <ion-label class="hidden-xs hidden-sm">{{'Groups' | translate}}</ion-label>
+            <ion-icon name="people-circle"></ion-icon>
           </ion-segment-button>
           <ion-segment-button value="guest" layout="icon-start">
             <ion-label class="hidden-xs hidden-sm">{{'Guest Users' | translate}}</ion-label>
