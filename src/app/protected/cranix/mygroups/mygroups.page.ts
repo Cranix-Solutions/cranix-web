@@ -76,7 +76,7 @@ export class MyGroupsPage implements OnInit {
         hide: true
       },
       {
-        field: 'name',
+        field: 'groupName',
         headerCheckboxSelectionFilteredOnly: true,
         checkboxSelection: this.authService.settings.checkboxSelection,
         minWidth: 150,
