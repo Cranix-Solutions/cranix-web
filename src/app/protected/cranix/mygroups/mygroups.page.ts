@@ -233,7 +233,8 @@ export class MyGroupsPage implements OnInit {
       componentProps: {
         objectType: "education/" + this.segment,
         objectIds: objectIds,
-        selection: selected
+        selection: selected,
+        gridApi:   this.gridApi
       },
       animated: true,
       showBackdrop: true

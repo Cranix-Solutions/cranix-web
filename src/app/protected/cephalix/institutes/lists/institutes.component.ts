@@ -175,7 +175,8 @@ export class InstitutesComponent implements OnInit {
       componentProps: {
         objectType: "institute",
         objectIds: objectIds,
-        selection: this.cephalixService.selectedInstitutes
+        selection: this.cephalixService.selectedInstitutes,
+        gridApi:   this.gridApi
       },
       animated: true,
       showBackdrop: true

@@ -189,7 +189,8 @@ export class DevicesComponent implements OnInit {
       componentProps: {
         objectType: "device",
         objectIds: objectIds,
-        selection: this.gridApi.getSelectedRows()
+        selection: this.gridApi.getSelectedRows(),
+        gridApi:   this.gridApi
       },
       animated: true,
       showBackdrop: true

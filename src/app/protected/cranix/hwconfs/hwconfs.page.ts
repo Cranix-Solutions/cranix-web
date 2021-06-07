@@ -141,7 +141,8 @@ export class HwconfsPage implements OnInit {
       componentProps: {
         objectType: "hwconf",
         objectIds: objectIds,
-        selection: this.selected
+        selection: this.selected,
+        gridApi:   this.gridApi
       },
       animated: true,
       showBackdrop: true

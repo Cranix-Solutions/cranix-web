@@ -31,6 +31,9 @@
       <ion-toolbar>
         <ion-card-title>{{'Manage printers' | translate}}</ion-card-title>
         <ion-item>
+          <ion-label *ngIf="gridApi">
+            #{{gridApi.getDisplayedRowCount()}}
+          </ion-label>
           <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('printerFilter')"
             id="printerFilter">
           </ion-input>
