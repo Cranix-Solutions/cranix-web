@@ -19,6 +19,9 @@
   <ion-card>
     <ion-card-header>
       <ion-toolbar>
+        <ion-label *ngIf="installationSetApi">
+          #{{installationSetApi.getDisplayedRowCount()}}
+        </ion-label>
         <ion-card-title>{{ 'Manage software installation sets:' | translate}}</ion-card-title>
         <ion-item>
           <ion-input placeholder="{{'search' | translate }}" (input)="setFilterChanged()" id="installationSetFilter">

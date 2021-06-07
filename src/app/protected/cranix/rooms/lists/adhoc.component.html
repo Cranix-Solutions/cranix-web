@@ -28,6 +28,9 @@
       <ion-toolbar>
         <ion-card-title>{{'Manage AdHoc rooms' | translate}}</ion-card-title>
         <ion-item>
+          <ion-label *ngIf="gridApi">
+            #{{gridApi.getDisplayedRowCount()}}
+          </ion-label>
           <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('adhocFilter')" id="adhocFilter">
           </ion-input>
         </ion-item>

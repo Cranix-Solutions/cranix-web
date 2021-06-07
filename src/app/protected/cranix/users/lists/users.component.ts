@@ -45,11 +45,11 @@ export class UsersComponent implements OnInit {
     this.objectKeys = Object.getOwnPropertyNames(new User());
     this.createColumnDefs();
     this.defaultColDef = {
-        resizable: true,
-        sortable: true,
-        hide: false,
-        suppressMenu : true
-      }
+      resizable: true,
+      sortable: true,
+      hide: false,
+      suppressMenu: true
+    }
   }
   ngOnInit() {
     this.storage.get('UsersPage.displayedColumns').then((val) => {
@@ -123,7 +123,7 @@ export class UsersComponent implements OnInit {
   }
 
   public redirectToDelete = (user: User) => {
-    this.objectService.deleteObjectDialog(user, 'user','')
+    this.objectService.deleteObjectDialog(user, 'user', '')
   }
   /**
  * Open the actions menu with the selected object ids.
@@ -149,13 +149,14 @@ export class UsersComponent implements OnInit {
       componentProps: {
         objectType: "user",
         objectIds: objectIds,
-        selection: selected
-	},
+        selection: selected,
+        gridApi: this.gridApi
+      },
       translucent: true,
       animated: true,
       showBackdrop: true
     });
-    (await popover).present();
+    await popover.present();
   }
 
   async redirectToGroups(ev: Event, user: User) {

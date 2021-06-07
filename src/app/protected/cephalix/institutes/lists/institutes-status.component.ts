@@ -257,7 +257,8 @@ export class InstitutesStatusComponent implements OnInit {
       componentProps: {
         objectType: "sync-object",
         objectIds: this.objectIds,
-        selection: this.gridApi.getSelectedRows()
+	selection: this.gridApi.getSelectedRows(),
+	gridApi:   this.gridApi
       },
       animated: true,
       showBackdrop: true

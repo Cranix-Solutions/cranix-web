@@ -148,7 +148,8 @@ export class RoomsComponent implements OnInit {
       componentProps: {
         objectType: "room",
         objectIds: objectIds,
-        selection: selected
+        selection: selected,
+        gridApi:   this.gridApi
       },
       animated: true,
       showBackdrop: true
