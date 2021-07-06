@@ -97,7 +97,7 @@
                 <ion-title>{{'Denied Categories'|translate}}</ion-title>
               </ion-item>
               <div *ngFor="let category of categories">
-                <ion-item *ngIf="category.type == 'black'">
+                <ion-item>
                   <ion-label matTooltip="{{category.description}}">{{category.desc}}</ion-label>
                   <ion-checkbox slot="end" (ionChange)="togleCategory(category.name)" [disabled]="saving"
                     [checked]="activeUnboundLists.indexOf(category.name) != -1"></ion-checkbox>
