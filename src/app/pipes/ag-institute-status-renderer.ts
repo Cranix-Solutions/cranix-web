@@ -12,7 +12,7 @@ selector: 'institut-status-cell-renderer',
 })
 
 export class InstituteStatusRenderer implements ICellRendererAngularComp {
-    private params: any;
+    public params: any;
     agInit(params: any ): void {
         this.params = params;
     }
