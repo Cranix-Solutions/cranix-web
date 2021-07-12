@@ -83,6 +83,7 @@ export class Room {
 	id?: number;
 	name: string = "";
 	description: string = "";
+	ignoreNetbios: boolean = false;
 	hwconfId: number = 0;
 	netMask?: number = 0;
 	devCount?: number = 0;

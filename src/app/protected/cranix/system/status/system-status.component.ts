@@ -27,7 +27,6 @@ export class SystemStatusComponent implements OnInit {
       labelKey: 'name'
     }
   ];
-  options;
 
   constructor(
     public genericObject: GenericObjectService,
@@ -44,10 +43,10 @@ export class SystemStatusComponent implements OnInit {
       console.log(val)
       let myTmp = JSON.parse(val);
       console.log(myTmp);
-      if(myTmp && myTmp.email) {
-          this.mySupport = myTmp;
-          this.mySupport['subject'] = "";
-          this.mySupport['text'] = "";
+      if (myTmp && myTmp.email) {
+        this.mySupport = myTmp;
+        this.mySupport['subject'] = "";
+        this.mySupport['text'] = "";
       }
     });
     this.systemStatus = {};
@@ -58,15 +57,29 @@ export class SystemStatusComponent implements OnInit {
         for (let key of Object.keys(val)) {
           this.systemStatus[key] = {
             legend: { enabled: false },
-            title: { text: this.languageService.trans(key) },
             autoSize: false,
             width: 250,
-            height: 220
+            height: 220,
+            series: this.series
           };
-          this.systemStatus[key]['series'] = this.series;
-          this.systemStatus[key]['data'] = val[key];
+          if (key.startsWith("/dev")) {
+            //Convert value into GB
+            this.systemStatus[key]['data'] = []
+            for( let a  of val[key] ) {
+              this.systemStatus[key]['data'].push(
+                {
+                  name: a['name'],
+                  count: a['count'] / 1048576
+                }
+              )
+            }
+            this.systemStatus[key]['title'] = { text: key + " in GB" }
+          } else {
+            this.systemStatus[key]['data']  = val[key];
+            this.systemStatus[key]['title'] = { text: this.languageService.trans(key) }
+          }
         }
-        console.log(this.systemStatus);
+
       },
       (err) => { console.log(err) },
       () => { subM.unsubscribe() });
@@ -113,7 +126,7 @@ export class SystemStatusComponent implements OnInit {
       }
     });
     (await modal).present();
-  } 
+  }
 }
 
 
@@ -135,7 +148,7 @@ export class CreateSupport implements OnInit {
   onSubmit() {
     console.log(this.support)
     this.systemService.createSupportRequest(this.support).subscribe(
-      (val) => { 
+      (val) => {
         this.objectService.responseMessage(val);
         this.modalCtrl.dismiss("OK")
       }

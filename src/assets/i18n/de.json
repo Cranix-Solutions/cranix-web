@@ -471,6 +471,7 @@
     "hwconfs": "Gerätekonfigurationen",
     "id": "Technisches ID",
     "identifier": "Identifizierungsmerkmal",
+    "ignoreNetbios":"Netbiosnamenskonvenzionen ignorieren",
     "import": "Importieren",
     "importFile": "Importdatei wählen",
     "installedKernel": "Installierter Kernel",

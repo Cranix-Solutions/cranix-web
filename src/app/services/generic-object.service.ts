@@ -60,6 +60,7 @@ export class GenericObjectService {
     'devCount',
     'fsQuotaUsed',
     'ip',
+    'ignoreNetbios',
     'msQuotaUsed',
     'name',
     'network',
