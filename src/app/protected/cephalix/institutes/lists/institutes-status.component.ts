@@ -8,6 +8,7 @@ import { Storage } from '@ionic/storage';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
 import { FileSystemUsageRenderer } from 'src/app/pipes/ag-filesystem-usage-renderer';
+import { InstituteStatusRenderer } from 'src/app/pipes/ag-institute-status-renderer';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
@@ -129,9 +130,7 @@ export class InstitutesStatusComponent implements OnInit {
           col['minWidth'] = 220;
           col['maxWidth'] = 220;
           col['cellStyle'] = { 'justify-content': "left", 'wrap-text': 0 };
-          col['valueGetter'] = function (params) {
-            return params.context['componentParent'].objectService.idToName('institute', params.data.cephalixInstituteId);
-          }
+          col['cellRendererFramework'] = InstituteStatusRenderer;
           this.columnDefs.push(col);
           this.columnDefs.push({
             headerName: this.languageS.trans('ipVPN'),
@@ -257,38 +256,18 @@ export class InstitutesStatusComponent implements OnInit {
       componentProps: {
         objectType: "sync-object",
         objectIds: this.objectIds,
-	selection: this.gridApi.getSelectedRows(),
-	gridApi:   this.gridApi
+        selection: this.gridApi.getSelectedRows(),
+        gridApi: this.gridApi
       },
       animated: true,
       showBackdrop: true
     });
     (await popover).present();
   }
-  async redirectToEdit(ev: Event, institute: Institute) {
-    if (institute) {
-      this.objectService.selectedObject = institute;
-      this.route.navigate(['/pages/cephalix/institutes/' + institute.id]);
-    } else {
-      const modal = await this.modalCtrl.create({
-        component: ObjectsEditComponent,
-        componentProps: {
-          objectType: "institute",
-          objectAction: 'add',
-          object: new Institute(),
-          objectKeys: this.objectKeys
-        },
-        animated: true,
-        swipeToClose: true,
-        showBackdrop: true
-      });
-      modal.onDidDismiss().then((dataReturned) => {
-        if (dataReturned.data) {
-          this.authService.log("Object was created or modified", dataReturned.data)
-        }
-      });
-      (await modal).present();
-    }
+  redirectToEdit(id) {
+    console.log("redirectToEdit:", id)
+    this.objectService.selectedObject = this.objectService.getObjectById("institute", id);
+    this.route.navigate([`/pages/cephalix/institutes/${id}`]);
   }
 
   /**
