@@ -58,7 +58,7 @@
                     [isMultiple]="true"
                     [(ngModel)]="selectedRooms"
                     [ngModelOptions]="{standalone: true}"
-                    [items]="rooms"
+                    [items]="objectService.allObjects['room']"
                     itemValueField="id"
                     itemTextField="name"
                     [canSearch]="true">

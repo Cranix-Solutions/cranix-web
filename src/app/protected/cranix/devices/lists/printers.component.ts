@@ -35,7 +35,6 @@ export class PrintersComponent implements OnInit {
   rowSelection;
   context;
   title = 'app';
-  rowData = [];
 
   constructor(
     public authService: AuthenticationService,
@@ -72,7 +71,6 @@ export class PrintersComponent implements OnInit {
         this.createColumnDefs();
       }
     });
-    this.objectService.getObjects('printer').subscribe(obj => this.rowData = obj);
     delete this.objectService.selectedObject;
   }
   public ngAfterViewInit() {

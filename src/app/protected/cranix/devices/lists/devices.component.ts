@@ -67,17 +67,14 @@ export class DevicesComponent implements OnInit {
     });
     if (this.objectService.selectedRoom) {
       this.selectedRoom = this.objectService.selectedRoom;
-      this.objectService.getObjects('device').subscribe(obj => {
         this.rowData = [];
-        for (let dev of obj) {
+        for (let dev of this.objectService.allObjects['device']) {
           if (dev.roomId == this.selectedRoom.id) {
             this.rowData.push(dev);
           }
         }
-      }
-      );
     } else {
-      this.objectService.getObjects('device').subscribe(obj => this.rowData = obj);
+      this.rowData = this.objectService.allObjects['device'];
       delete this.selectedRoom;
     }
     delete this.objectService.selectedObject;

@@ -69,7 +69,7 @@ export class MyGroupsPage implements OnInit {
   }
 
   groupColumnDefs() {
-    this.objectService.getObjects('education/group').subscribe(obj => this.rowData = obj);
+    this.rowData = this.objectService.allObjects['education/group'];
     this.columnDefs = [
       {
         field: 'id',
@@ -108,7 +108,7 @@ export class MyGroupsPage implements OnInit {
   }
 
   userColumnDefs() {
-    this.objectService.getObjects('education/user').subscribe(obj => this.rowData = obj);
+    this.rowData = this.objectService.allObjects['education/user'];
     this.columnDefs = [
       {
         field: 'groupName',
@@ -341,7 +341,6 @@ export class MyGroupsPage implements OnInit {
 export class AddEditGuestPage implements OnInit {
 
   now: string;
-  rooms: Room[]
   disabled: boolean = false;
   selectedRooms: Room[] = []
   @Input() guest: GuestUsers
@@ -356,7 +355,6 @@ export class AddEditGuestPage implements OnInit {
   }
 
   ngOnInit() {
-    this.objectService.getObjects('room').subscribe(obj => this.rooms = obj);
   }
 
   onSubmit() {

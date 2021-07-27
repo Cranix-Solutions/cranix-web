@@ -34,7 +34,6 @@ export class TicketsPage implements OnInit {
   gridApi: GridApi;
   context;
   title = 'app';
-  rowData = [];
   objectIds: number[] = [];
   alive: boolean;
   ticketStatus: Subscription;
@@ -69,25 +68,17 @@ export class TicketsPage implements OnInit {
         this.displayedColumns = (myArray).concat(['actions']);
         this.createColumnDefs();
       }
-    }); 
-    this.getTickets();
+    });
   }
   ngOnDestroy() {
     this.alive = false;
   }
   ngAfterViewInit() {
     this.ticketStatus = interval(60000).pipe(takeWhile(() => this.alive)).subscribe((func => {
-      this.getTickets();
+      this.objectService.getAllObject('ticket');
     }))
   }
 
-  getTickets() {
-    this.cephalixService.getTickets()
-    .pipe(takeWhile(() => this.alive))
-    .subscribe( res => {
-      this.rowData = res;
-    })
-  }
   createColumnDefs() {
     this.columnDefs = [];
     for (let key of this.objectKeys) {

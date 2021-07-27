@@ -30,8 +30,6 @@ export class UsersComponent implements OnInit {
   rowSelection: 'multiple';
   columnApi: ColumnApi;
   context;
-  title = 'app';
-  rowData = [];
 
   constructor(
     public authService: AuthenticationService,
@@ -59,7 +57,6 @@ export class UsersComponent implements OnInit {
         this.createColumnDefs();
       }
     });
-    this.objectService.getObjects('user').subscribe(obj => this.rowData = obj);
   }
   createColumnDefs() {
     let columnDefs = [];

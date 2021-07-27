@@ -31,7 +31,6 @@ export class RoomsComponent implements OnInit {
   defaultColDef = {};
   context;
   title = 'app';
-  rowData = [];
 
   constructor(
     public authService: AuthenticationService,
@@ -59,7 +58,6 @@ export class RoomsComponent implements OnInit {
         this.createColumnDefs();
       }
     });
-    this.objectService.getObjects('room').subscribe(obj => this.rowData = obj);
     delete this.objectService.selectedObject;
   }
   public ngAfterViewInit() {

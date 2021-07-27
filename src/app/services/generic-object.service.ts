@@ -124,11 +124,11 @@ export class GenericObjectService {
     if (this.authService.isAllowed('customer.manage')) {
       this.objects.push('customer');
     }
-    /*if (this.authService.isAllowed('cephalix.ticket')) {
+    if (this.authService.isAllowed('cephalix.ticket')) {
       this.objects.push('ticket');
-    }*/
+    }
     for (let key of this.objects) {
-      this.allObjects[key] = new BehaviorSubject([]);
+      this.allObjects[key] = []
     }
     let subs: any = {};
     if (force || !this.initialized) {
@@ -191,21 +191,19 @@ export class GenericObjectService {
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";
     let sub = this.http.get(url, { headers: this.authService.headers }).subscribe(
       (val) => {
-        this.allObjects[objectType].next(val);
+        this.allObjects[objectType] = val;
         this.selects[objectType + 'Id'] = []
         for (let obj of <any[]>val) {
           this.selects[objectType + 'Id'].push(obj.id);
         }
+        this.authService.log(objectType + "s were read");
+        this.authService.log(this.allObjects[objectType]);
       },
       (err) => { console.log('getAllObject', objectType, err); },
       () => {
         sub.unsubscribe();
       }
     );
-  }
-
-  getObjects(objectType) {
-    return this.allObjects[objectType].asObservable();
   }
 
   applyAction(object, objectType, action) {
@@ -226,7 +224,7 @@ export class GenericObjectService {
     if( !objectId ) {
       return null;
     }
-    for (let obj of this.allObjects[objectType].getValue()) {
+    for (let obj of this.allObjects[objectType]) {
       if (obj.id === objectId) {
         return obj;
       }
@@ -236,7 +234,7 @@ export class GenericObjectService {
 
   idToName(objectType, objectId) {
     objectType = this.idToPipe(objectType)
-    for (let obj of this.allObjects[objectType].getValue()) {
+    for (let obj of this.allObjects[objectType]) {
       if (obj.id === objectId) {
         if (obj.name ) {
           return obj.name;
@@ -249,7 +247,7 @@ export class GenericObjectService {
     return objectId;
   }
   idToUid(objectType, objectId) {
-    for (let obj of this.allObjects[objectType].getValue()) {
+    for (let obj of this.allObjects[objectType]) {
       if (obj.id === objectId) {
         return obj.uid;
       }
@@ -257,7 +255,7 @@ export class GenericObjectService {
     return objectId;
   }
   idToFulName(objectId) {
-    for (let obj of this.allObjects['user'].getValue()) {
+    for (let obj of this.allObjects['user']) {
       if (obj.id === objectId) {
         return obj.surName + ", " + obj.givenName;
       }

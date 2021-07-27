@@ -51,7 +51,7 @@
         class="{{authService.settings.agGridThema}}"
         [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
         rowHeight="{{authService.settings.rowHeight}}"
-        [rowData]="rowData"
+        [rowData]="objectService.allObjects['hwconf']"
         [columnDefs]="columnDefs"
         [defaultColDef]="defaultColDef"
         [context]="context"

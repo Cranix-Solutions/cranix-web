@@ -31,7 +31,6 @@ export class GroupsPage implements OnInit {
   rowSelection;
   context;
   title = 'app';
-  rowData = [];
 
   constructor(
     public authService: AuthenticationService,
@@ -61,7 +60,6 @@ export class GroupsPage implements OnInit {
         this.createColumnDefs();
       }
     });
-    this.objectService.getObjects('group').subscribe(obj => this.rowData = obj);
   }
 
   createColumnDefs() {

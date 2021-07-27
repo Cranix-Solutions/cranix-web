@@ -31,7 +31,6 @@ export class HwconfsPage implements OnInit {
   context;
   selected: Hwconf[] = [];
   title = 'app';
-  rowData = [];
   constructor(
     public authService: AuthenticationService,
     public languageS: LanguageService,
@@ -60,7 +59,6 @@ export class HwconfsPage implements OnInit {
         this.createColumnDefs();
       }
     });
-    this.objectService.getObjects('hwconf').subscribe(obj => this.rowData = obj);
   }
   createColumnDefs() {
     this.columnDefs = [];

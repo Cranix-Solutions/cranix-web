@@ -59,7 +59,7 @@
         rowHeight="{{authService.settings.rowHeight}}"
         rowMultiSelectWithClick="{{authService.settings.rowMultiSelectWithClick}}"
         [context]="context"
-        [rowData]="rowData"
+        [rowData]="objectService.allObjects['group']"
         [columnDefs]="columnDefs"
         (gridReady)="onGridReady($event)"
         id="groupsPageTable">

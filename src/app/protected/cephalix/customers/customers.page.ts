@@ -30,7 +30,6 @@ export class CustomersPage implements OnInit {
   context;
   selected: Customer[] = [];
   title = 'app';
-  rowData = [];
   objectIds: number[] = [];
 
   constructor(
@@ -58,7 +57,6 @@ export class CustomersPage implements OnInit {
         this.createColumnDefs();
       }
     });
-    this.objectService.getObjects('customer').subscribe(obj => this.rowData = obj);
   }
 
   createColumnDefs() {

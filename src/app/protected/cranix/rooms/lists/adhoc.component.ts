@@ -28,7 +28,6 @@ export class AdhocComponent implements OnInit {
   rowSelection;
   context;
   title = 'app';
-  rowData = [];
   
   constructor(
     public authService: AuthenticationService,
@@ -48,7 +47,6 @@ export class AdhocComponent implements OnInit {
         this.displayedColumns = myArray.concat(['actions']);
       }
     });
-    this.objectService.getObjects('adhocroom').subscribe(obj => this.rowData = obj);
     delete this.objectService.selectedObject;
     this.createColumnDefs();
   }

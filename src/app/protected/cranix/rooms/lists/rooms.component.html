@@ -57,7 +57,7 @@
         class="{{authService.settings.agGridThema}}"
         rowHeight="{{authService.settings.rowHeight}}"
         [context]="context"
-        [rowData]="rowData"
+        [rowData]="objectService.allObjects['room']"
         [columnDefs]="columnDefs" 
         [defaultColDef]="defaultColDef"
         rowSelection="multiple"

@@ -31,7 +31,6 @@ export class InstitutesComponent implements OnInit {
   columnApi: ColumnApi;
   context;
   title = 'app';
-  rowData = [];
 
   constructor(
     public authService: AuthenticationService,
@@ -63,7 +62,6 @@ export class InstitutesComponent implements OnInit {
         this.createColumnDefs();
       }
     });
-    this.objectService.getObjects('institute').subscribe(obj => this.rowData = obj);
   }
 
   createColumnDefs() {
@@ -114,7 +112,6 @@ export class InstitutesComponent implements OnInit {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
-   // this.sizeAll();
   }
   onSelectionChanged() {
     this.cephalixService.selectedInstitutes = this.gridApi.getSelectedRows();

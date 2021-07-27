@@ -22,7 +22,6 @@ export class InstitutesManage implements OnInit {
   instituteKeys:   string[] = [ 'id','uuid','name','locality','validity'];
   managerUsers:    User[]   = [];
   selectedManager: User     = new User();
-  institutes:      Institute[] = [];
   instituteView:   boolean = false;
   columnDefs = [];
   defaultColDef = {};
@@ -53,16 +52,11 @@ export class InstitutesManage implements OnInit {
   ngOnInit() {
 
     this.createColumnDefs(this.userKeys);
-    this.objectService.getObjects('user').subscribe(
-      obj => {
-        for (let user of obj) {
-          if (user.role.toLowerCase() == "reseller" || user.role == "sysadmins") {
-            this.managerUsers.push(user)
-          }
-        }
+    for (let user of this.objectService.allObjects['user'] ) {
+      if (user.role.toLowerCase() == "reseller" || user.role == "sysadmins") {
+        this.managerUsers.push(user)
       }
-    )
-    this.objectService.getObjects('institute').subscribe(obj => this.institutes = obj);
+    }
   }
 
   createColumnDefs(keys: string[]) {
@@ -166,7 +160,7 @@ export class InstitutesManage implements OnInit {
   }
 
   showAll() {
-    this.gridApi.setRowData(this.institutes);
+    this.gridApi.setRowData(this.objectService.allObjects['institute']);
     var managedIds = this.managedIds;
     this.gridApi.forEachNode(
       function (node, index) {

@@ -44,18 +44,14 @@ export class InstituteEditComponent implements OnInit {
         for (let man of val) {
           this.managers[man.id] = true;
         }
-        this.objectService.getObjects('user').subscribe(
-          obj => {
-            for (let user of obj) {
-              if (user.role.toLowerCase() == "reseller" || user.role == "sysadmins") {
-                if (!this.managers[user.id]) {
-                  this.managers[user.id] = false;
-                }
-                this.users.push(user)
-              }
+        for (let user of this.objectService.allObjects['user'] ) {
+          if (user.role.toLowerCase() == "reseller" || user.role == "sysadmins") {
+            if (!this.managers[user.id]) {
+              this.managers[user.id] = false;
             }
+            this.users.push(user)
           }
-        )
+        }
       },
       (err) => { console.log(err) },
       () => { }

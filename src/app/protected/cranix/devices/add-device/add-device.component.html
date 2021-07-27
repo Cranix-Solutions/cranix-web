@@ -56,7 +56,7 @@
       <ion-item *ngIf="!adHocRoom">
         <ion-label position="stacked">{{'hwconfId'| translate}}</ion-label>
         <ion-select [(ngModel)]="device.hwconfId" name="hwconfId" [compareWith]="objectService.compareFn" required>
-          <ion-select-option *ngFor="let hw of hwConfs" value="{{hw.id}}">
+          <ion-select-option *ngFor="let hw of objectService.allObjects['hwconf']" value="{{hw.id}}">
             {{hw.name}}
           </ion-select-option>
         </ion-select>

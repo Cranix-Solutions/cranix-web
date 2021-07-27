@@ -36,27 +36,23 @@ export class RoomPrintersPage implements OnInit {
     this.noPrinter.id = 0;
     this.noPrinter.name = this.languageS.trans("No default  printer");
     this.printers.defaultPrinter = this.noPrinter;
-    this.objectService.getObjects('printer').subscribe(
-      (obj) => {
-        this.allPrinters = obj;
-        this.allDefaultPrinters = this.allDefaultPrinters.concat(obj);
-        this.roomService.getAvailablePrinter(this.room.id).subscribe(
+    this.allPrinters        = this.objectService.allObjects['printer'];
+    this.allDefaultPrinters = this.allDefaultPrinters.concat(this.objectService.allObjects['printer']);
+    this.roomService.getAvailablePrinter(this.room.id).subscribe(
+      (val) => {
+        for (let printer of val) {
+          this.printers.availablePrinters.push(printer);
+        }
+        this.roomService.getDefaultPrinter(this.room.id).subscribe(
           (val) => {
-            for (let printer of val) {
-              this.printers.availablePrinters.push(printer);
+            if (val) {
+              this.printers.defaultPrinter = val;
             }
-            this.roomService.getDefaultPrinter(this.room.id).subscribe(
-              (val) => {
-                if (val) {
-                  this.printers.defaultPrinter = val;
-                }
-                console.log(this.printers);
-              }
-            )
+            console.log(this.printers);
           }
         )
       }
-    )
+    );
   }
   public ngAfterViewInit() {
     while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
