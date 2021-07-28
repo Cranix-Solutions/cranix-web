@@ -1,7 +1,8 @@
 <form #uploadFile="ngForm" (ngSubmit)="onSubmit(uploadFile.value)">
   <ion-header translucent>
     <ion-toolbar>
-      <ion-title>{{  'Upload files' | translate }}</ion-title>
+      <ion-title>{{ 'Upload files' | translate }} {{ target1 }}</ion-title>
+      <ion-title>{{ target }}</ion-title>
       <ion-buttons slot="end">
         <ion-button type="submit" class="ion-no-margin" fill="clear" size="small" [disabled]="!uploadFile.valid">
           <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>

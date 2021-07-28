@@ -76,7 +76,8 @@ export class MyGroupsPage implements OnInit {
         hide: true
       },
       {
-        field: 'groupName',
+        field: 'name',
+        headerName: this.languageS.trans('groupName'),
         headerCheckboxSelectionFilteredOnly: true,
         checkboxSelection: this.authService.settings.checkboxSelection,
         minWidth: 150,
@@ -258,6 +259,7 @@ export class MyGroupsPage implements OnInit {
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
+      this.gridApi.deselectAll();
       if (dataReturned.data) {
         this.authService.log("Object was created or modified", dataReturned.data)
       }
@@ -295,6 +297,11 @@ export class MyGroupsPage implements OnInit {
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
+      switch (this.segment) {
+        case 'group': { this.groupColumnDefs(); break; }
+        case 'user':  { this.userColumnDefs(); break; }
+        case 'guest': { this.guestColumnDefs(); break; }
+      }
       if (dataReturned.data) {
         this.authService.log("Object was created or modified", dataReturned.data)
       }

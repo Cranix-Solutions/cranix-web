@@ -171,7 +171,6 @@ export class EductaionService {
 	uploadDataToObjectsSimple(fd: FormData, objectType: string) {
 		this.url = `${this.hostname}/education/${objectType}s/upload`;
 		console.log(this.url);
-		console.log(this.authService.formHeaders);
 		return this.http.post<ServerResponse[]>(this.url, fd, { headers: this.authService.formHeaders });
 	}
 
