@@ -9,7 +9,7 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
         <ion-button *ngIf="params.data.cephalixId && to" fill="clear" size="small" (click)="syncObjectToInstitute()">
              <ion-icon name="refresh-circle"></ion-icon>
         </ion-button>
-        <ion-button *ngIf="params.data.cephalixId && !to" fill="clear" size="small" (click)="syncHWconfFromInstitute()" matTooltip="{{'Resync object from the CRANIX server' | translate }}">
+        <ion-button *ngIf="params.data.cephalixId && !to" fill="clear" size="small" (click)="syncHWconfFromInstitute($event)" matTooltip="{{'Resync object from the CRANIX server' | translate }}">
             <ion-icon name="refresh-circle"></ion-icon>
         </ion-button>
         <ion-button *ngIf="!params.data.cephalixId" fill="clear" size="small" (click)="getHWconfFromInstitute($event)" matTooltip="{{ 'Get the object from the CRANIX server' | translate }}">
