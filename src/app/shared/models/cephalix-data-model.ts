@@ -165,7 +165,7 @@ export interface SynchronizedObject {
     objectType: string,
     objectName: number,
     cephalixId: number,
-    ossId: number,
+    cranixId: number,
     lastSync: number
 }
 
