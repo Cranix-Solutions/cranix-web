@@ -160,6 +160,7 @@ export class UsersComponent implements OnInit {
     this.objectService.selectedObject = user;
     const modal = await this.modalCtrl.create({
       component: UserGroupsPage,
+      cssClass: 'big-modal',
       animated: true,
       swipeToClose: true,
       showBackdrop: true
