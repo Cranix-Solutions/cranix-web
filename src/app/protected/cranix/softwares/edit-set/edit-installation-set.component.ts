@@ -75,13 +75,13 @@ export class EditInstallationSetComponent implements OnInit {
   ngOnInit() {
     this.submitted = false;
 
-    for (let tmp of this.objectService.allObjects['hwconf'].getValue()) {
+    for (let tmp of this.objectService.allObjects['hwconf']) {
       if (tmp.deviceType == 'FatClient') {
         this.availableHwconfs.push(tmp);
       }
     }
-    this.availableRooms = this.objectService.allObjects['room'].getValue();
-    for (let tmp of this.objectService.allObjects['device'].getValue()) {
+    this.availableRooms = this.objectService.allObjects['room'];
+    for (let tmp of this.objectService.allObjects['device']) {
       let tmpHwconf = this.objectService.getObjectById('hwconf', tmp.hwconfId);
       if (tmpHwconf && tmpHwconf.deviceType == 'FatClient') {
         this.availableDevices.push(tmp);

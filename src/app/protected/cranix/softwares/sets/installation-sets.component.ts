@@ -153,6 +153,7 @@ export class InstallationSetsComponent implements OnInit {
     }
     const modal = await this.modalCtrl.create({
       component: EditInstallationSetComponent,
+      cssClass: 'big-modal',
       componentProps: {
         objectAction: action,
         installation: installation
