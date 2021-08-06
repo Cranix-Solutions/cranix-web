@@ -73,7 +73,7 @@ export class SystemStatusComponent implements OnInit {
                 }
               )
             }
-            this.systemStatus[key]['title'] = { text: key + " in GB" }
+            this.systemStatus[key]['title'] = { text: key + " [GB]" }
           } else {
             this.systemStatus[key]['data']  = val[key];
             this.systemStatus[key]['title'] = { text: this.languageService.trans(key) }
