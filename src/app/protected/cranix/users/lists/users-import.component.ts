@@ -77,6 +77,7 @@ export class UsersImportComponent implements OnInit {
   async showImport(ev: Event, userImport: UsersImport) {
     const popover = await this.modalCtrl.create({
       component: ShowImportComponent,
+      cssClass: 'big-modal',
       componentProps: {
         import: userImport
       },
