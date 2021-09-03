@@ -155,7 +155,7 @@ export class CustomersPage implements OnInit {
     });
     (await modal).present();
   }
-  async redirectToEdit(ev: Event, customer: Customer) {
+  async redirectToEdit(customer: Customer) {
     let action = 'modify';
     if (customer == null) {
       customer = new Customer();

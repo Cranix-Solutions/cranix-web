@@ -33,19 +33,15 @@ export class GroupActionBTNRenderer implements ICellRendererAngularComp {
     }
 
     public details() {
-        console.log("GroupActionBTNRenderer", this.params.data)
-        this.params.context.componentParent.redirectToEdit(this.params.data.id, this.params.data);
+        this.params.context.componentParent.redirectToEdit(this.params.data);
     }
     public members() {
-        console.log("GroupActionBTNRenderer", this.params.data)
-        this.params.context.componentParent.redirectToMembers(this.params.data.id, this.params.data);
+        this.params.context.componentParent.redirectToMembers(this.params.data);
     }
     public openAction(ev: any) {
-        console.log("GroupActionBTNRenderer", this.params.data)
-        this.params.context.componentParent.openActions(ev, this.params.data.id)
+        this.params.context.componentParent.openActions(ev, this.params.data)
     }
     public delete() {
-        console.log("GroupActionBTNRenderer", this.params.data)
         this.params.context.componentParent.redirectToDelete(this.params.data);
     }
 

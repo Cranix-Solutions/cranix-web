@@ -28,13 +28,13 @@ export class UserActionBTNRenderer implements ICellRendererAngularComp {
     }
 
     public details() {
-        this.params.context.componentParent.redirectToEdit(this.params.data.id, this.params.data);
+        this.params.context.componentParent.redirectToEdit(this.params.data);
     }
     public groups() {
-        this.params.context.componentParent.redirectToGroups(this.params.data.id, this.params.data);
+        this.params.context.componentParent.redirectToGroups(this.params.data);
     }
     public openAction(ev: any){
-        this.params.context.componentParent.openActions(ev, this.params.data.id )
+        this.params.context.componentParent.openActions(ev, this.params.data)
     }
     public delete() {
         this.params.context.componentParent.redirectToDelete(this.params.data);

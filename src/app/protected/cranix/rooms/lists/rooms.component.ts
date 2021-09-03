@@ -30,7 +30,10 @@ export class RoomsComponent implements OnInit {
   columnApi: ColumnApi;
   defaultColDef = {};
   context;
-  title = 'app';
+  rowData = [];
+  selection: Room[] = [];
+  selectedIds: number[] = [];
+
 
   constructor(
     public authService: AuthenticationService,
@@ -59,6 +62,7 @@ export class RoomsComponent implements OnInit {
       }
     });
     delete this.objectService.selectedObject;
+    this.rowData = this.objectService.allObjects['room']
   }
   public ngAfterViewInit() {
     while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
@@ -108,16 +112,40 @@ export class RoomsComponent implements OnInit {
     this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
-  onQuickFilterChanged(quickFilter) {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.doLayout();
+  selectionChanged() {
+    this.selectedIds = []
+    for (let i = 0; i < this.gridApi.getSelectedRows().length; i++) {
+      this.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
+    }
+    this.selection = this.gridApi.getSelectedRows()
   }
-  sizeAll() {
-    var allColumnIds = [];
-    this.columnApi.getAllColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.columnApi.autoSizeColumns(allColumnIds);
+  checkChange(ev: CustomEvent, obj: Room) {
+    if (ev.detail.checked) {
+      this.selectedIds.push(obj.id)
+      this.selection.push(obj)
+    } else {
+      this.selectedIds = this.selectedIds.filter(id => id != obj.id)
+      this.selection = this.selection.filter(obj => obj.id != obj.id)
+    }
+  }
+  onQuickFilterChanged(quickFilter) {
+    let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
+    if (this.authService.isMobile) {
+      this.rowData = [];
+      for (let obj of this.objectService.allObjects['room']) {
+        if (
+          obj.name.toLowerCase().indexOf(filter) != -1 ||
+          obj.description.toLowerCase().indexOf(filter) != -1 ||
+          this.languageS.trans(obj.roomType).toLowerCase().indexOf(filter) != -1 ||
+          this.languageS.trans(obj.roomControl).toLowerCase().indexOf(filter) != -1
+        ) {
+          this.rowData.push(obj)
+        }
+      }
+    } else {
+      this.gridApi.setQuickFilter(filter);
+      this.gridApi.doLayout();
+    }
   }
   public redirectToDelete = (room: Room) => {
     this.objectService.deleteObjectDialog(room, 'room', '')
@@ -126,18 +154,14 @@ export class RoomsComponent implements OnInit {
  * Open the actions menu with the selected object ids.
  * @param ev
  */
-  async openActions(ev: any, objId: number) {
-    let selected = this.gridApi.getSelectedRows();
-    if (selected.length == 0 && !objId) {
-      this.objectService.selectObject();
-      return;
-    }
-    let objectIds = [];
-    if (objId) {
-      objectIds.push(objId)
+  async openActions(ev: any, object: Room) {
+    if (object) {
+      this.selectedIds.push(object.id)
+      this.selection.push(object)
     } else {
-      for (let obj of selected) {
-        objectIds.push(obj.id);
+      if (this.selection.length == 0) {
+        this.objectService.selectObject();
+        return;
       }
     }
     const popover = await this.popoverCtrl.create({
@@ -145,9 +169,9 @@ export class RoomsComponent implements OnInit {
       event: ev,
       componentProps: {
         objectType: "room",
-        objectIds: objectIds,
-        selection: selected,
-        gridApi:   this.gridApi
+        objectIds: this.selectedIds,
+        selection: this.selection,
+        gridApi: this.gridApi
       },
       animated: true,
       showBackdrop: true
@@ -155,7 +179,7 @@ export class RoomsComponent implements OnInit {
     (await popover).present();
   }
 
-  async redirectToEdit(ev: Event, room: Room) {
+  async redirectToEdit(room: Room) {
     let action = "";
     if (room) {
       delete room.accessInRooms;
@@ -253,5 +277,10 @@ export class RoomsComponent implements OnInit {
     (await modal).present().then((val) => {
       this.authService.log("most lett vegrehajtva.")
     })
+  }
+
+  public devices(room: Room) {
+    this.objectService.selectedRoom = room;
+    this.route.navigate(['/pages/cranix/devices']);
   }
 }

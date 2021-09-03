@@ -51,7 +51,8 @@
       </ion-toolbar>
     </ion-card-header>
     <ion-card-content>
-      <ag-grid-angular 
+      <ag-grid-angular
+        *ngIf="!authService.isMobile"
         id="adhocComponentTable"
         style="width: 100%; height: 100%;"
         rowSelection="multiple"
@@ -62,8 +63,37 @@
         [rowData]="objectService.allObjects['adhocroom']"
         [columnDefs]="columnDefs"
         [defaultColDef]="defaultColDef"
+        (selectionChanged)="selectionChanged()"
         (gridReady)="onGridReady($event)">
       </ag-grid-angular>
+      <ion-list *ngIf="authService.isMobile">
+        <ion-item-sliding *ngFor="let object of rowData">
+          <ion-item>
+            <ion-note slot="start">
+              <ion-checkbox (ionChange)="checkChange($event,object)"></ion-checkbox>
+            </ion-note>
+            <ion-label>
+              <h2>{{ object.name }}</h2>
+              <p>{{ object.description }}</p>
+            </ion-label>
+            <ion-note slot="end">
+              <p>{{ object.roomType | translate }}</p>
+              <p>{{ object.roomControl | translate }}</p>
+            </ion-note>
+          </ion-item>
+          <ion-item-options side="end">
+            <ion-button fill="clear" (click)="redirectToDelete(object)">
+              <ion-icon color="danger" name="trash-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" (click)="redirectToMembers(object)">
+              <ion-icon name="people-circle"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" (click)="redirectToEdit(object)">
+              <ion-icon name="build-sharp"></ion-icon>
+            </ion-button>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
     </ion-card-content>
   </ion-card>
 </ion-content>

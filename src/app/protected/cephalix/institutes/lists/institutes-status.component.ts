@@ -220,18 +220,6 @@ export class InstitutesStatusComponent implements OnInit {
     this.gridApi.doLayout();
 
   }
-  onResize($event) {
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
-    this.sizeAll();
-    this.gridApi.sizeColumnsToFit();
-  }
-  sizeAll() {
-    var allColumnIds = [];
-    this.columnApi.getAllColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.columnApi.autoSizeColumns(allColumnIds);
-  }
   //TODO RESPONSE
   public redirectToUpdate = (cephalixInstituteId: number) => {
     let sub = this.cephalixService.updateById(cephalixInstituteId).subscribe(

@@ -37,7 +37,7 @@
 */
 
 /* Custom */
-//@import "theme/ion-custom.scss"; 
+@import "theme/ion-custom.scss";
 @import "theme/cranix-custom.scss";
 @import "theme/fonts.css";
 
@@ -100,11 +100,11 @@ ion-select {
   }
 }*/
 /*.ag-theme-material .ag-icon-checkbox-unchecked{
-    
+  
     font-size: 15px;
 }
 .ag-theme-material .ag-icon-checkbox-checked{
-    
+  
     font-size: 15px;
 }
 .ag-theme-material .ag-header-row:first-child .ag-header-cell{
@@ -135,13 +135,12 @@ ion-card {
     height: 100%;
     grid-column: 1/1;
     overflow: hidden;
-    
+  
  //   align-content: center;
 }
     //flex-direction: column;
     //#display: flex;
   //flex-direction: column;
   //justify-content: center;
-    
   }
 */

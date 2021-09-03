@@ -97,11 +97,18 @@ export class TicketsPage implements OnInit {
           break;
         }
         case 'recDate': {
+          col['sort'] = 'desc',
           col['cellRendererFramework'] = DateCellRenderer;
+          col['width'] = 80
           break;
         }
         case 'ticketStatus': {
-          col['width'] = 80
+          col['width'] = 50
+          break;
+        }
+        case 'id': {
+          col['width'] = 70
+          break;
         }
       }
       this.columnDefs.push(col);

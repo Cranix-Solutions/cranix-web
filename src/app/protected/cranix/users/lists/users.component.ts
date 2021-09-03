@@ -27,9 +27,11 @@ export class UsersComponent implements OnInit {
   columnDefs = [];
   defaultColDef = {};
   gridApi: GridApi;
-  rowSelection: 'multiple';
   columnApi: ColumnApi;
   context;
+  rowData = [];
+  selection:   User[] = [];
+  selectedIds: number[] = [];
 
   constructor(
     public authService: AuthenticationService,
@@ -57,6 +59,7 @@ export class UsersComponent implements OnInit {
         this.createColumnDefs();
       }
     });
+    this.rowData = this.objectService.allObjects['user']
   }
   createColumnDefs() {
     let columnDefs = [];
@@ -99,26 +102,41 @@ export class UsersComponent implements OnInit {
     this.gridApi.sizeColumnsToFit();
   }
 
+  selectionChanged(){
+    this.selectedIds = []
+    for (let i = 0; i < this.gridApi.getSelectedRows().length; i++) {
+      this.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
+    }
+    this.selection = this.gridApi.getSelectedRows()
+  }
+  checkChange(ev: CustomEvent,obj: User){
+    if( ev.detail.checked ) {
+      this.selectedIds.push(obj.id)
+      this.selection.push(obj)
+    } else {
+      this.selectedIds = this.selectedIds.filter(id => id != obj.id)
+      this.selection   = this.selection.filter(obj => obj.id != obj.id)
+    }
+  }
   onQuickFilterChanged(quickFilter) {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.doLayout();
+    let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
+    if (this.authService.isMobile) {
+      this.rowData = [];
+      for (let obj of this.objectService.allObjects['user']) {
+        if (
+          obj.uid.toLowerCase().indexOf(filter) != -1 ||
+          obj.givenName.toLowerCase().indexOf(filter) != -1 ||
+          obj.surName.toLowerCase().indexOf(filter) != -1 ||
+          this.languageS.trans(obj.role).toLowerCase().indexOf(filter) != -1
+        ) {
+          this.rowData.push(obj)
+        }
+      }
+    } else {
+      this.gridApi.setQuickFilter(filter);
+      this.gridApi.doLayout();
+    }
   }
-
-  onResize($event) {
-    this.authService.log("window");
-    this.authService.log(window);
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
-    this.sizeAll();
-    this.gridApi.sizeColumnsToFit();
-  }
-  sizeAll() {
-    var allColumnIds = [];
-    this.columnApi.getAllColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.columnApi.autoSizeColumns(allColumnIds);
-  }
-
   public redirectToDelete = (user: User) => {
     this.objectService.deleteObjectDialog(user, 'user', '')
   }
@@ -126,18 +144,14 @@ export class UsersComponent implements OnInit {
  * Open the actions menu with the selected object ids.
  * @param ev
  */
-  async openActions(ev: any, objId: number) {
-    let selected = this.gridApi.getSelectedRows();
-    if (selected.length == 0 && !objId) {
-      this.objectService.selectObject();
-      return;
-    }
-    let objectIds = [];
-    if (objId) {
-      objectIds.push(objId)
+  async openActions(ev: any, object: User) {
+    if (object) {
+      this.selectedIds.push(object.id)
+      this.selection.push(object)
     } else {
-      for (let i = 0; i < selected.length; i++) {
-        objectIds.push(selected[i].id);
+      if (this.selection.length == 0) {
+        this.objectService.selectObject();
+        return;
       }
     }
     const popover = await this.popoverCtrl.create({
@@ -145,8 +159,8 @@ export class UsersComponent implements OnInit {
       event: ev,
       componentProps: {
         objectType: "user",
-        objectIds: objectIds,
-        selection: selected,
+        objectIds: this.selectedIds,
+        selection: this.selection,
         gridApi: this.gridApi
       },
       translucent: true,
@@ -156,7 +170,7 @@ export class UsersComponent implements OnInit {
     await popover.present();
   }
 
-  async redirectToGroups(ev: Event, user: User) {
+  async redirectToGroups(user: User) {
     this.objectService.selectedObject = user;
     const modal = await this.modalCtrl.create({
       component: UserGroupsPage,
@@ -173,7 +187,7 @@ export class UsersComponent implements OnInit {
     (await modal).present();
   }
 
-  async redirectToEdit(ev: Event, user: User) {
+  async redirectToEdit(user: User) {
     let action = "modify";
     if (!user) {
       user = new User();

@@ -41,7 +41,7 @@ export class AppComponent {
           }
           this.genericObjectS.initialize(true);
           if( this.authService.isAllowed('cephalix.manage')) {
-            this.router.navigate(['pages/cephalix/institutes/all']);
+            this.router.navigate(['pages/cephalix/tickets']);
           } else if ( this.authService.isAllowed('user.manage') ) {
             this.router.navigate(['pages/cranix/users/all']);
           } else if ( this.authService.session['role'] == 'teachers' ) {

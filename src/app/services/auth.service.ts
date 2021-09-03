@@ -26,6 +26,7 @@ export class AuthenticationService {
     formHeaders: HttpHeaders;
     textHeaders: HttpHeaders;
     settings: Settings = new Settings();
+    isMobile: boolean = false;
 
     constructor(
         private http: HttpClient,
@@ -48,6 +49,7 @@ export class AuthenticationService {
             'Content-Type': "application/json",
             'Accept': "application/json"
         });
+        
         return this.http.post<UserResponse>(this.url, user, { headers: headers });
     }
 
@@ -89,6 +91,9 @@ export class AuthenticationService {
                     'Authorization': "Bearer " + this.session.token
                 });
                 this.authenticationState.next(true);
+                if( window.innerWidth < 532 ) {
+                    this.isMobile = true
+                }
             },
             async (err) => {
                 console.log('error is', err);

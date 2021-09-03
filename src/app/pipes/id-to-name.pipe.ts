@@ -15,7 +15,6 @@ export class IdToNamePipe implements PipeTransform {
     if (value == 0) {
       return this.languageService.trans("nothing");
     }
-    console.log("IdToNamePipe",objectType,value)
     let obj = this.gOS.getObjectById(objectType, value); 
     if (obj.name ) {
       return obj.name;

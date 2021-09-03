@@ -31,10 +31,10 @@ export class DeviceActionBTNRenderer implements ICellRendererAngularComp {
     }
 
     public details() {
-        this.params.context.componentParent.redirectToEdit(this.params.data.id, this.params.data);
+        this.params.context.componentParent.redirectToEdit(this.params.data);
     }
     public openAction(ev: any){
-        this.params.context.componentParent.openActions(ev, this.params.data.id )
+        this.params.context.componentParent.openActions(ev, this.params.data )
     }
     public setPrinters() {
         this.params.context.componentParent.setPrinters(this.params.data);

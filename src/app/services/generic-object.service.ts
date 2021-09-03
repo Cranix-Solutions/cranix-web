@@ -115,9 +115,7 @@ export class GenericObjectService {
 
   initialize(force: boolean) {
     this.objects = []
-    for( let obj of this.objectsTemlate ) {
-      this.objects.push(obj)
-    }
+
     if (this.authService.isAllowed('cephalix.manage')) {
       this.initializeCephalixObjects();
     }
@@ -126,6 +124,9 @@ export class GenericObjectService {
     }
     if (this.authService.isAllowed('cephalix.ticket')) {
       this.objects.push('ticket');
+    }
+    for( let obj of this.objectsTemlate ) {
+      this.objects.push(obj)
     }
     for (let key of this.objects) {
       this.allObjects[key] = []
@@ -269,7 +270,7 @@ export class GenericObjectService {
    * @param idName
    */
   idToPipe(idName: string) {
-    if( idName == 'ownerId' ) {
+    if( idName == 'ownerId' || idName == 'loggedInId' ) {
       return 'user';
     }
     if (idName == 'cephalixCustomerId') {

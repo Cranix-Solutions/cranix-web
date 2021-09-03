@@ -32,9 +32,10 @@ export class PrintersComponent implements OnInit {
   gridOptions: GridOptions;
   gridApi: GridApi;
   columnApi: ColumnApi;
-  rowSelection;
   context;
-  title = 'app';
+  rowData: Printer[] = [];
+  selection: Printer[] = [];
+  selectedIds: number[] = [];
 
   constructor(
     public authService: AuthenticationService,
@@ -48,7 +49,6 @@ export class PrintersComponent implements OnInit {
     private storage: Storage
   ) {
     this.context = { componentParent: this };
-    this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new Printer());
     this.createColumnDefs();
     this.gridOptions = <GridOptions>{
@@ -71,6 +71,7 @@ export class PrintersComponent implements OnInit {
         this.createColumnDefs();
       }
     });
+    this.rowData = this.objectService.allObjects['printer'];
     delete this.objectService.selectedObject;
   }
   public ngAfterViewInit() {
@@ -128,10 +129,38 @@ export class PrintersComponent implements OnInit {
     this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
-
+  selectionChanged(){
+    this.selectedIds = []
+    for (let i = 0; i < this.gridApi.getSelectedRows().length; i++) {
+      this.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
+    }
+    this.selection = this.gridApi.getSelectedRows()
+  }
+  checkChange(ev: CustomEvent,dev: Printer){
+    if( ev.detail.checked ) {
+      this.selectedIds.push(dev.id)
+      this.selection.push(dev)
+    } else {
+      this.selectedIds = this.selectedIds.filter(id => id != dev.id)
+      this.selection   = this.selection.filter(obj => obj.id != dev.id)
+    }
+  }
   onQuickFilterChanged(quickFilter) {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.doLayout();
+    let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
+    if (this.authService.isMobile) {
+      this.rowData = [];
+      for (let dev of this.objectService.allObjects['printer']) {
+        if (
+          dev.name.toLowerCase().indexOf(filter) != -1 ||
+          dev.model.toLowerCase().indexOf(filter) != -1
+        ) {
+          this.rowData.push(dev)
+        }
+      }
+    } else {
+      this.gridApi.setQuickFilter(filter);
+      this.gridApi.doLayout();
+    }
   }
   sizeAll() {
     var allColumnIds = [];
@@ -146,20 +175,16 @@ export class PrintersComponent implements OnInit {
   }
   /**
  * Open the actions menu with the selected object ids.
- * @param ev 
+ * @param ev
  */
-  async openActions(ev: any, objId: number) {
-    let selected = this.gridApi.getSelectedRows();
-    if (selected.length == 0 && !objId) {
-      this.objectService.selectObject();
-      return;
-    }
-    let objectIds = [];
-    if (objId) {
-      objectIds.push(objId)
+  async openActions(ev: any, object: Printer) {
+    if (object) {
+      this.selectedIds.push(object.id)
+      this.selection.push(object)
     } else {
-      for (let i = 0; i < selected.length; i++) {
-        objectIds.push(selected[i].id);
+      if (this.selection.length == 0) {
+        this.objectService.selectObject();
+        return;
       }
     }
     const popover = await this.popoverCtrl.create({
@@ -167,9 +192,9 @@ export class PrintersComponent implements OnInit {
       event: ev,
       componentProps: {
         objectType: "printer",
-        objectIds: objectIds,
-        selection: selected,
-        gridApi:   this.gridApi
+        objectIds: this.selectedIds,
+        selection: this.selection,
+        gridApi: this.gridApi
       },
       animated: true,
       showBackdrop: true
@@ -177,7 +202,7 @@ export class PrintersComponent implements OnInit {
     (await popover).present();
   }
 
-  async redirectToEdit(ev: Event, printer: Printer) {
+  async redirectToEdit(printer: Printer) {
     const modal = await this.modalCtrl.create({
       component: AddPrinterComponent,
       cssClass: "medium-modal",
@@ -199,7 +224,7 @@ export class PrintersComponent implements OnInit {
 
   /**
 * Function to Select the columns to show
-* @param ev 
+* @param ev
 */
   async openCollums(ev: any) {
     const modal = await this.modalCtrl.create({

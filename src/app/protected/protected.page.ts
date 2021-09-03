@@ -103,14 +103,13 @@ export class ProtectedPage implements OnInit {
       if (event.url) {
         let path = event.url.split("/");
         this.activePath = "/" + path[1] + "/" + path[2] + "/" + path[3]
-        console.log(this.activePath)
       }
     })
     for (let page of this.defAppPages) {
       if (this.authService.isRouteAllowed(page.url)) {
         this.appPages.push(page);
       }
-    } 
+    }
   }
   ngOnInit() {
   }
