@@ -151,7 +151,7 @@ export class DevicesComponent implements OnInit {
 
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    if (this.authService.isMobile) {
+    if (this.authService.isMD()) {
       this.rowData = [];
       for (let dev of this.origData) {
         if (
@@ -186,7 +186,7 @@ export class DevicesComponent implements OnInit {
     }
     this.selection = this.gridApi.getSelectedRows()
   }
-  checkChange(ev: CustomEvent,dev: Device){
+  checkChange(ev,dev: Device){
     if( ev.detail.checked ) {
       this.selectedIds.push(dev.id)
       this.selection.push(dev)

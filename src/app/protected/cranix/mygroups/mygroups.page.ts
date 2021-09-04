@@ -206,7 +206,7 @@ export class MyGroupsPage implements OnInit {
     }
     this.selection = this.gridApi.getSelectedRows()
   }
-  checkChange(ev: CustomEvent, obj) {
+  checkChange(ev, obj) {
     if (ev.detail.checked) {
       this.selectedIds.push(obj.id)
       this.selection.push(obj)
@@ -217,7 +217,7 @@ export class MyGroupsPage implements OnInit {
   }
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    if (this.authService.isMobile) {
+    if (this.authService.isMD()) {
       this.rowData = [];
       switch (this.segment) {
         case 'group': {

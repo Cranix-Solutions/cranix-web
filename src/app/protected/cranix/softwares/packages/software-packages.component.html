@@ -11,7 +11,7 @@
     </ion-fab-button>
     <ion-fab-list side="start">
       <ion-fab-button *ngIf="authService.isAllowed('software.download')" ><ion-icon name="cloud-download" (click)="downloadSoftwares($event)"></ion-icon></ion-fab-button>
-      <ion-fab-button><ion-icon name="add-circle" (click)="redirectToEdit($event,null)"></ion-icon></ion-fab-button>
+      <ion-fab-button><ion-icon name="add-circle" (click)="redirectToEdit(null)"></ion-icon></ion-fab-button>
       <ion-fab-button><ion-icon name="refresh-outline" (click)="readInstallableSoftware()"></ion-icon></ion-fab-button>
     </ion-fab-list>
   </ion-fab>
@@ -31,7 +31,7 @@
           <ion-button *ngIf="authService.isAllowed('software.download')" size="small" fill="solid" (click)="downloadSoftwares($event)" matTooltip="{{'Download software packages.' | translate }}" >
             <ion-icon slot="icon-only" name="cloud-download"></ion-icon>
           </ion-button>
-          <ion-button size="small" fill="solid" (click)="redirectToEdit($event,null)"  matTooltip="{{'Create a new software package' | translate }}">
+          <ion-button size="small" fill="solid" (click)="redirectToEdit(null)"  matTooltip="{{'Create a new software package' | translate }}">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
           <ion-button size="small" fill="solid" (click)="readInstallableSoftware()"  matTooltip="{{'Refresh package list.' | translate }}">

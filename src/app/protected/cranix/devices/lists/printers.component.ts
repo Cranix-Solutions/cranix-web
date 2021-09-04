@@ -136,7 +136,7 @@ export class PrintersComponent implements OnInit {
     }
     this.selection = this.gridApi.getSelectedRows()
   }
-  checkChange(ev: CustomEvent,dev: Printer){
+  checkChange(ev,dev: Printer){
     if( ev.detail.checked ) {
       this.selectedIds.push(dev.id)
       this.selection.push(dev)
@@ -147,7 +147,7 @@ export class PrintersComponent implements OnInit {
   }
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    if (this.authService.isMobile) {
+    if (this.authService.isMD()) {
       this.rowData = [];
       for (let dev of this.objectService.allObjects['printer']) {
         if (

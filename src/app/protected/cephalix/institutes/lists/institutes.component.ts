@@ -128,7 +128,7 @@ export class InstitutesComponent implements OnInit {
     }
   }
 
-  checkChange(ev: CustomEvent, obj: Institute) {
+  checkChange(ev, obj: Institute) {
     if (ev.detail.checked) {
       this.selectedIds.push(obj.id)
       this.cephalixService.selectedInstitutes.push(obj)
@@ -139,7 +139,7 @@ export class InstitutesComponent implements OnInit {
   }
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    if (this.authService.isMobile) {
+    if (this.authService.isMD()) {
       this.rowData = [];
       for (let obj of this.objectService.allObjects['institute']) {
         if (

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 //Own module
@@ -16,6 +16,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class ToolbarComponent implements OnInit {
 
+  @Input() title: string;
   roomName: string = "";
   commonName: string = "";
   instituteName: string = "";

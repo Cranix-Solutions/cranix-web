@@ -27,8 +27,10 @@ export class AdhocComponent implements OnInit {
   columnApi;
   rowSelection;
   context;
-  title = 'app';
-  
+  rowData = [];
+  selection: AdHocRoom[] = [];
+  selectedIds: number[] = [];
+
   constructor(
     public authService: AuthenticationService,
     public languageS: LanguageService,
@@ -36,7 +38,7 @@ export class AdhocComponent implements OnInit {
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     public storage: Storage
-  ) { 
+  ) {
     this.context = { componentParent: this };
   }
 
@@ -49,6 +51,7 @@ export class AdhocComponent implements OnInit {
     });
     delete this.objectService.selectedObject;
     this.createColumnDefs();
+    this.rowData = this.objectService.allObjects['addhocroom']
   }
 
   createColumnDefs() {
@@ -107,16 +110,39 @@ export class AdhocComponent implements OnInit {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
   }
-  onQuickFilterChanged(quickFilter) {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.doLayout();
+
+  selectionChanged() {
+    this.selectedIds = []
+    for (let i = 0; i < this.gridApi.getSelectedRows().length; i++) {
+      this.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
+    }
+    this.selection = this.gridApi.getSelectedRows()
   }
-  sizeAll() {
-    var allColumnIds = [];
-    this.columnApi.getAllColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.columnApi.autoSizeColumns(allColumnIds);
+  checkChange(ev, obj: AdHocRoom) {
+    if (ev.detail.checked) {
+      this.selectedIds.push(obj.id)
+      this.selection.push(obj)
+    } else {
+      this.selectedIds = this.selectedIds.filter(id => id != obj.id)
+      this.selection = this.selection.filter(obj => obj.id != obj.id)
+    }
+  }
+  onQuickFilterChanged(quickFilter) {
+    let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
+    if (this.authService.isMD()) {
+      this.rowData = [];
+      for (let obj of this.objectService.allObjects['room']) {
+        if (
+          obj.name.toLowerCase().indexOf(filter) != -1 ||
+          obj.description.toLowerCase().indexOf(filter) != -1
+        ) {
+          this.rowData.push(obj)
+        }
+      }
+    } else {
+      this.gridApi.setQuickFilter(filter);
+      this.gridApi.doLayout();
+    }
   }
   public redirectToDelete = (adhoc: AdHocRoom) => {
     this.objectService.deleteObjectDialog(adhoc, 'adhocroom','')
@@ -146,10 +172,10 @@ export class AdhocComponent implements OnInit {
   }
 
   openActions(event,adhocroom){
-  
+
   }
 
-  async redirectToEdit(event,adhocroom: AdHocRoom) {
+  async redirectToEdit(adhocroom: AdHocRoom) {
     let action = "";
     if (adhocroom) {
       action = 'modify';

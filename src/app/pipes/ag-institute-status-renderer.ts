@@ -19,7 +19,7 @@ export class InstituteStatusRenderer implements ICellRendererAngularComp {
 
     public details() {
         console.log("Edit", this.params);
-        this.params.context.componentParent.redirectToEdit(this.params.data.cephalixInstituteId);
+        this.params.context.componentParent.redirectToEdit(this.params.data);
     }
 
     refresh(params: any): boolean {

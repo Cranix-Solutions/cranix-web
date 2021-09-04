@@ -118,7 +118,7 @@ export class ProxyComponent implements OnInit {
     this.securityService.proxyChanged[this.segment] = changed
   }
 
-  redirectToEdit(event, positiveList) {
+  redirectToEdit( positiveList) {
     //TODO
   }
   writeConfig() {

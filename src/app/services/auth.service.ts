@@ -26,7 +26,7 @@ export class AuthenticationService {
     formHeaders: HttpHeaders;
     textHeaders: HttpHeaders;
     settings: Settings = new Settings();
-    isMobile: boolean = false;
+    minLgSize = 769;
 
     constructor(
         private http: HttpClient,
@@ -91,9 +91,6 @@ export class AuthenticationService {
                     'Authorization': "Bearer " + this.session.token
                 });
                 this.authenticationState.next(true);
-                if( window.innerWidth < 532 ) {
-                    this.isMobile = true
-                }
             },
             async (err) => {
                 console.log('error is', err);
@@ -271,6 +268,10 @@ export class AuthenticationService {
         if (this.settings.debug || isDevMode()) {
             console.log(arguments)
         }
+    }
+
+    public isMD(){
+        return window.innerWidth < this.minLgSize;
     }
 }
 

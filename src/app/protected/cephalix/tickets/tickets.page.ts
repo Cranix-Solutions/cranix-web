@@ -37,6 +37,14 @@ export class TicketsPage implements OnInit {
   objectIds: number[] = [];
   alive: boolean;
   ticketStatus: Subscription;
+  ticketColor = {
+    'N': 'red',
+    'R': 'orange',
+    'W': 'green'
+  }
+  rowData = [];
+  selectedIds: number[] = [];
+  selection: Ticket[] = [];
 
   constructor(
     public authService: AuthenticationService,
@@ -69,13 +77,17 @@ export class TicketsPage implements OnInit {
         this.createColumnDefs();
       }
     });
+    this.rowData = this.objectService.allObjects['ticket'];
   }
+
   ngOnDestroy() {
     this.alive = false;
   }
+
   ngAfterViewInit() {
-    this.ticketStatus = interval(60000).pipe(takeWhile(() => this.alive)).subscribe((func => {
+    this.ticketStatus = interval(20000).pipe(takeWhile(() => this.alive)).subscribe((func => {
       this.objectService.getAllObject('ticket');
+      this.rowData = this.objectService.allObjects['ticket'];
     }))
   }
 
@@ -118,26 +130,47 @@ export class TicketsPage implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("ticketsPageTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
     this.gridApi.sizeColumnsToFit();
     this.gridApi.addEventListener('rowClicked', this.ticketClickHandle);
   }
 
-  onQuickFilterChanged(quickFilter) {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.doLayout();
+  selectionChanged() {
+    this.selectedIds = []
+    this.cephalixService.selectedInstitutes = this.gridApi.getSelectedRows();
+    this.cephalixService.selectedList = [];
+    for (let o of this.cephalixService.selectedInstitutes) {
+      this.cephalixService.selectedList.push(o.name)
+      this.selectedIds.push(o.id)
+    }
+  }
 
+  checkChange(ev, obj: Ticket) {
+    if (ev.detail.checked) {
+      this.selectedIds.push(obj.id)
+      this.selection.push(obj)
+    } else {
+      this.selectedIds = this.selectedIds.filter(id => id != obj.id)
+      this.selection = this.selection.filter(obj => obj.id != obj.id)
+    }
   }
-  onResize($event) {
-    (<HTMLInputElement>document.getElementById("ticketsPageTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
-    this.sizeAll();
-  }
-  sizeAll() {
-    var allColumnIds = [];
-    this.columnApi.getAllColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.columnApi.autoSizeColumns(allColumnIds);
+  onQuickFilterChanged(quickFilter) {
+    let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
+    if (this.authService.isMD()) {
+      this.rowData = [];
+      for (let obj of this.objectService.allObjects['ticket']) {
+        if (
+          obj.title.toLowerCase().indexOf(filter) != -1 ||
+          (obj.email     && obj.email.toLowerCase().indexOf(filter) != -1) ||
+          (obj.firstname && obj.firstname.toLowerCase().indexOf(filter) != -1) ||
+          (obj.lastname  && obj.lastname.toLowerCase().indexOf(filter) != -1)
+        ) {
+          this.rowData.push(obj)
+        }
+      }
+    } else {
+      this.gridApi.setQuickFilter(filter);
+      this.gridApi.doLayout();
+    }
   }
 
   ticketClickHandle(event){
@@ -179,9 +212,9 @@ export class TicketsPage implements OnInit {
     });
     (await popover).present();
   }
-  async redirectToEdit(id: number, ticket: Ticket) {
+  async redirectToEdit(ticket: Ticket) {
     if (ticket) {
-      this.route.navigate(['/pages/cephalix/tickets/' + id]);
+      this.route.navigate(['/pages/cephalix/tickets/' + ticket.id]);
     } else {
       ticket = new Ticket();
       const modal = await this.modalCtrl.create({

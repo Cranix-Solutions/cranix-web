@@ -29,7 +29,7 @@ export class EditBTNRenderer implements ICellRendererAngularComp {
     }
 
     public details() {
-        this.params.context.componentParent.redirectToEdit(this.params.data.id,this.params.data);
+        this.params.context.componentParent.redirectToEdit(this.params.data);
     }
     public delete() {
         this.params.context.componentParent.redirectToDelete(this.params.data);

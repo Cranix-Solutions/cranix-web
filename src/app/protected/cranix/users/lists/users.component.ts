@@ -109,7 +109,7 @@ export class UsersComponent implements OnInit {
     }
     this.selection = this.gridApi.getSelectedRows()
   }
-  checkChange(ev: CustomEvent,obj: User){
+  checkChange(ev,obj: User){
     if( ev.detail.checked ) {
       this.selectedIds.push(obj.id)
       this.selection.push(obj)
@@ -120,7 +120,7 @@ export class UsersComponent implements OnInit {
   }
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    if (this.authService.isMobile) {
+    if (this.authService.isMD()) {
       this.rowData = [];
       for (let obj of this.objectService.allObjects['user']) {
         if (

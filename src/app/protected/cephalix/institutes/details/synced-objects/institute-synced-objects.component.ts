@@ -74,7 +74,6 @@ export class InstituteSyncedObjectsComponent implements OnInit {
   onMemberReady(params) {
     this.memberApi = params.api;
     this.memberColumnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
   }
 
   onMemberFilterChanged() {
@@ -83,7 +82,6 @@ export class InstituteSyncedObjectsComponent implements OnInit {
   }
 
   onResize($event) {
-    (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
     //this.sizeAll();
   }
   sizeAll() {

@@ -1,28 +1,10 @@
 <cranix-toolbar></cranix-toolbar>
-<ion-content id="carded">
-  <ion-row class="header-row">
-    <ion-col>
-      <ion-title>{{'Manage AdHoc rooms' | translate}}</ion-title>
-    </ion-col>
-  </ion-row>
-  <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
-    <ion-fab-button>
-      <ion-icon name="arrow-forward-circle"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-list side="start">
-      <ion-fab-button>
-        <ion-icon name="ellipsis-vertical-sharp" (click)="openActions($event,null)"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-button>
-        <ion-icon name="add-circle" (click)="redirectToEdit($event,null)"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-button>
-        <ion-icon name="apps" (click)="openCollums($event)"></ion-icon>
-      </ion-fab-button>
-    </ion-fab-list>
-  </ion-fab>
-  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('adhocFilterMD')" id="adhocFilterMD"
-    showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
+<ion-row class="header-row">
+  <ion-col>
+    <ion-title>{{'Manage AdHoc rooms' | translate}}</ion-title>
+  </ion-col>
+</ion-row>
+<ion-content *ngIf="!authService.isMD()" id="carded">
   <ion-card>
     <ion-card-header>
       <ion-toolbar>
@@ -35,13 +17,9 @@
           </ion-input>
         </ion-item>
         <ion-buttons slot="end">
-          <ion-button size="small" fill="solid" (click)="redirectToEdit($event,null)"
+          <ion-button size="small" fill="solid" (click)="redirectToEdit(null)"
             matTooltip="{{'Create a new room' | translate }}">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
-          </ion-button>
-          <ion-button size="small" fill="solid" (click)="openActions($event,null)"
-            matTooltip="{{'Apply actions on the selected objects' | translate }}">
-            <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
           </ion-button>
           <ion-button size="small" fill="solid" (click)="openCollums($event)"
             matTooltip="{{'Select the columns to show' | translate }}">
@@ -52,7 +30,6 @@
     </ion-card-header>
     <ion-card-content>
       <ag-grid-angular
-        *ngIf="!authService.isMobile"
         id="adhocComponentTable"
         style="width: 100%; height: 100%;"
         rowSelection="multiple"
@@ -66,35 +43,53 @@
         (selectionChanged)="selectionChanged()"
         (gridReady)="onGridReady($event)">
       </ag-grid-angular>
-      <ion-list *ngIf="authService.isMobile">
-        <ion-item-sliding *ngFor="let object of rowData">
-          <ion-item>
-            <ion-note slot="start">
-              <ion-checkbox (ionChange)="checkChange($event,object)"></ion-checkbox>
-            </ion-note>
-            <ion-label>
-              <h2>{{ object.name }}</h2>
-              <p>{{ object.description }}</p>
-            </ion-label>
-            <ion-note slot="end">
-              <p>{{ object.roomType | translate }}</p>
-              <p>{{ object.roomControl | translate }}</p>
-            </ion-note>
-          </ion-item>
-          <ion-item-options side="end">
-            <ion-button fill="clear" (click)="redirectToDelete(object)">
-              <ion-icon color="danger" name="trash-outline"></ion-icon>
-            </ion-button>
-            <ion-button fill="clear" (click)="redirectToMembers(object)">
-              <ion-icon name="people-circle"></ion-icon>
-            </ion-button>
-            <ion-button fill="clear" (click)="redirectToEdit(object)">
-              <ion-icon name="build-sharp"></ion-icon>
-            </ion-button>
-          </ion-item-options>
-        </ion-item-sliding>
-      </ion-list>
     </ion-card-content>
   </ion-card>
+</ion-content>
+<ion-content *ngIf="authService.isMD()">
+  <ion-fab vertical="top" horizontal="end" slot="fixed">
+    <ion-fab-button size="small">
+      <ion-icon name="arrow-forward-circle"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="start" (click)="openActions($event,null)">
+      <ion-fab-button>
+        <ion-icon name="ellipsis-vertical-sharp"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="redirectToEdit(null)">
+        <ion-icon name="add-circle"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="openCollums($event)">
+        <ion-icon name="apps"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('adhocFilterMD')" id="adhocFilterMD"
+    showCancelButton="never"></ion-searchbar>
+  <ion-list>
+    <ion-item-sliding *ngFor="let object of rowData">
+      <ion-item>
+        <ion-note slot="start">
+          <ion-checkbox (ionChange)="checkChange($event,object)"></ion-checkbox>
+        </ion-note>
+        <ion-label (click)="redirectToEdit(object)">
+          <h2>{{ object.name }}</h2>
+          {{ object.description }}
+        </ion-label>
+        <ion-note style="max-width: 200px;" slot="end">
+          {{ object.roomType | translate }}
+          {{ object.roomControl | translate }}
+        </ion-note>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-button fill="clear" (click)="redirectToDelete(object)">
+          <ion-icon color="danger" name="trash-outline"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" (click)="redirectToEdit(object)">
+          <ion-icon name="build-sharp"></ion-icon>
+        </ion-button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
 </ion-content>
 

@@ -109,7 +109,7 @@ export class HwconfsPage implements OnInit {
     }
     this.selection = this.gridApi.getSelectedRows()
   }
-  checkChange(ev: CustomEvent,dev: Hwconf){
+  checkChange(ev,dev: Hwconf){
     if( ev.detail.checked ) {
       this.selectedIds.push(dev.id)
       this.selection.push(dev)
@@ -120,7 +120,7 @@ export class HwconfsPage implements OnInit {
   }
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    if (this.authService.isMobile) {
+    if (this.authService.isMD()) {
       this.rowData = [];
       for (let obj of this.objectService.allObjects['hwconf']) {
         if (

@@ -49,7 +49,7 @@ export class InstituteActionCellRenderer implements ICellRendererAngularComp, On
     }
 
     public details() {
-        this.params.context.componentParent.redirectToEdit(this.data.id, this.data);
+        this.params.context.componentParent.redirectToEdit(this.data);
     }
     public openAction(ev: any) {
         this.params.context.componentParent.openActions(ev, this.data.id)

@@ -11,7 +11,7 @@
     </ion-fab-button>
     <ion-fab-list side="start">
       <ion-fab-button>
-        <ion-icon name="add-circle" (click)="redirectToEdit($event,null)"></ion-icon>
+        <ion-icon name="add-circle" (click)="redirectToEdit(null)"></ion-icon>
       </ion-fab-button>
       <ion-fab-button>
         <ion-icon name="business-outline" (click)="redirectToAddInstitute($event)"></ion-icon>
@@ -36,7 +36,7 @@
           </ion-input>
         </ion-item>
         <ion-buttons slot="end">
-          <ion-button size="small" fill="solid" (click)="redirectToEdit($event,null)"
+          <ion-button size="small" fill="solid" (click)="redirectToEdit(null)"
             matTooltip="{{'Create a new customer' | translate }}">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>

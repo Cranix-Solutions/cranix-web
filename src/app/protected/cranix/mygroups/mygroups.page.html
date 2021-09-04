@@ -1,32 +1,32 @@
 <cranix-toolbar></cranix-toolbar>
-<ion-content>
+<ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="group">
+  <ion-segment-button value="user" layout="icon-start">
+    <ion-label class="hidden-xs hidden-sm">{{'Users' | translate}}</ion-label>
+    <ion-icon name="people"></ion-icon>
+  </ion-segment-button>
+  <ion-segment-button value="group" layout="icon-start">
+    <ion-label class="hidden-xs hidden-sm">{{'Groups' | translate}}</ion-label>
+    <ion-icon name="people-circle"></ion-icon>
+  </ion-segment-button>
+  <ion-segment-button value="guest" layout="icon-start">
+    <ion-label class="hidden-xs hidden-sm">{{'Guest Users' | translate}}</ion-label>
+    <ion-icon name="walk"></ion-icon>
+  </ion-segment-button>
+</ion-segment>
+<ion-content *ngIf="!authService.isMD()" id="carded">
   <ion-card>
     <ion-card-header>
       <ion-toolbar>
-        <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="group">
-          <ion-segment-button value="user" layout="icon-start">
-            <ion-label class="hidden-xs hidden-sm">{{'Users' | translate}}</ion-label>
-            <ion-icon name="people"></ion-icon>
-          </ion-segment-button>
-          <ion-segment-button value="group" layout="icon-start">
-            <ion-label class="hidden-xs hidden-sm">{{'Groups' | translate}}</ion-label>
-            <ion-icon name="people-circle"></ion-icon>
-          </ion-segment-button>
-          <ion-segment-button value="guest" layout="icon-start">
-            <ion-label class="hidden-xs hidden-sm">{{'Guest Users' | translate}}</ion-label>
-            <ion-icon name="walk"></ion-icon>
-          </ion-segment-button>
-        </ion-segment>
         <ion-item>
           <ion-label *ngIf="gridApi">
             #{{gridApi.getDisplayedRowCount()}}
           </ion-label>
-          <ion-input placeholder="{{ segment }} {{'search' | translate }}" (input)="onQuickFilterChanged('mygroupsFilter')"
-            id="mygroupsFilter">
+          <ion-input placeholder="{{ segment }} {{'search' | translate }}"
+            (input)="onQuickFilterChanged('mygroupsFilter')" id="mygroupsFilter">
           </ion-input>
         </ion-item>
         <ion-buttons slot="end">
-          <ion-button *ngIf="segment == 'group' || (segment == 'group' && authService.isAllowed('user.add.students'))"
+          <ion-button *ngIf="segment == 'group' || (segment == 'user' && authService.isAllowed('user.add.students'))"
             size="small" fill="solid" (click)="redirectToEdit(null)"
             matTooltip="{{'Create a new ' + segment | translate }}">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
@@ -43,54 +43,66 @@
       </ion-toolbar>
     </ion-card-header>
     <ion-card-content style="height: 600px;">
-      <ag-grid-angular
-        *ngIf="!authService.isMobile"
-        id="myGroupsTable"
-        style="width: 100%; height: 100%;"
-        rowSelection="multiple"
-        class="{{authService.settings.agGridThema}}"
-        rowHeight="{{authService.settings.rowHeight}}"
-        rowMultiSelectWithClick="{{authService.settings.rowMultiSelectWithClick}}"
-        animateRows="true"
-        [modules]="modules"
-        [context]="context"
-        [rowData]="rowData"
-        [columnDefs]="columnDefs"
-        [defaultColDef]="defaultColDef"
-        (selectionChanged)="selectionChanged()"
-        (gridReady)="onGridReady($event)">
+      <ag-grid-angular id="myGroupsTable" style="width: 100%; height: 100%;" rowSelection="multiple"
+        class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}"
+        rowMultiSelectWithClick="{{authService.settings.rowMultiSelectWithClick}}" animateRows="true"
+        [modules]="modules" [context]="context" [rowData]="rowData" [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef" (selectionChanged)="selectionChanged()" (gridReady)="onGridReady($event)">
       </ag-grid-angular>
-      <ion-list *ngIf="authService.isMobile">
-        <ion-item-sliding *ngFor="let object of rowData">
-          <ion-item>
-            <ion-note slot="start">
-              <ion-checkbox (ionChange)="checkChange($event,object)"></ion-checkbox>
-            </ion-note>
-            <ion-label *ngIf="segment == 'group'">
-              {{ object.name }}
-            </ion-label>
-            <ion-label *ngIf="segment == 'user'">
-              <h2>{{ object.surName }}, {{ object.givenName }}, ( {{ object.uid }} )</h2>
-              <p>{{ object.groupName }}</p>
-            </ion-label>
-            <ion-note *ngIf="segment == 'group'" slot="end">
-              {{ object.description }}<br>
-              {{ object.groupType | translate }}
-            </ion-note>
-          </ion-item>
-          <ion-item-options *ngIf="segment == 'group' && (authService.isAllowed('group.modify') || authService.session.userId == object.ownerId)" side="end">
-            <ion-button fill="clear" (click)="redirectToDelete(object)">
-              <ion-icon color="danger" name="trash-outline"></ion-icon>
-            </ion-button>
-            <ion-button fill="clear" (click)="redirectToMembers(object)">
-              <ion-icon name="people-circle"></ion-icon>
-            </ion-button>
-            <ion-button fill="clear" (click)="redirectToEdit(object)">
-              <ion-icon name="build-sharp"></ion-icon>
-            </ion-button>
-          </ion-item-options>
-        </ion-item-sliding>
-      </ion-list>
     </ion-card-content>
   </ion-card>
+</ion-content>
+<ion-content *ngIf="authService.isMD()">
+  <ion-fab vertical="top" horizontal="end" slot="fixed">
+    <ion-fab-button size="small">
+      <ion-icon name="arrow-forward-circle"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="start">
+      <ion-fab-button (click)="openActions($event,null)">
+        <ion-icon name="ellipsis-vertical-sharp"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button *ngIf="segment == 'group' || (segment == 'user' && authService.isAllowed('user.add.students'))"
+        (click)="redirectToEdit(null)">
+        <ion-icon name="add-circle"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button *ngIf="segment == 'guest'" (click)="addEditGuest(null)">
+        <ion-icon name="add-circle"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('hwconfsFilterMD')"
+    id="hwconfsFilterMD"></ion-searchbar>
+  <ion-list>
+    <ion-item-sliding *ngFor="let object of rowData">
+      <ion-item>
+        <ion-note slot="start">
+          <ion-checkbox (ionChange)="checkChange($event,object)"></ion-checkbox>
+        </ion-note>
+        <ion-label *ngIf="segment != 'user'" (click)="redirectToEdit(object)">
+          {{ object.name }}
+        </ion-label>
+        <ion-label *ngIf="segment == 'user'" (click)="redirectToEdit(object)">
+          <h2>{{ object.surName }}, {{ object.givenName }}, ( {{ object.uid }} )</h2>
+          <p>{{ object.groupName }}</p>
+        </ion-label>
+        <ion-note style="max-width: 200px;" *ngIf="segment == 'group'" slot="end">
+          {{ object.description }}<br>
+          {{ object.groupType | translate }}
+        </ion-note>
+      </ion-item>
+      <ion-item-options
+        *ngIf="segment == 'group' && (authService.isAllowed('group.modify') || authService.session.userId == object.ownerId)"
+        side="end">
+        <ion-button fill="clear" (click)="redirectToDelete(object)">
+          <ion-icon color="danger" name="trash-outline"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" (click)="redirectToMembers(object)">
+          <ion-icon name="people-circle"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" (click)="redirectToEdit(object)">
+          <ion-icon name="build-sharp"></ion-icon>
+        </ion-button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
 </ion-content>

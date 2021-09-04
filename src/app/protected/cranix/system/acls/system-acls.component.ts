@@ -98,7 +98,6 @@ export class SystemAclsComponent implements OnInit {
     this.groupsApi = params.api;
     this.groupsColumnApi = params.columnApi;
     this.groupsApi.sizeColumnsToFit();
-    (<HTMLInputElement>document.getElementById("groupsTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
     this.groupsApi.addEventListener('rowClicked', this.groupRowClickedHandler);
   }
 
@@ -106,7 +105,6 @@ export class SystemAclsComponent implements OnInit {
     this.usersApi = params.api;
     this.usersColumnApi = params.columnApi;
     this.usersApi.sizeColumnsToFit();
-    (<HTMLInputElement>document.getElementById("usersTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
     this.usersApi.addEventListener('rowClicked', this.userRowClickedHandler);
   }
   groupFilterChanged() {
