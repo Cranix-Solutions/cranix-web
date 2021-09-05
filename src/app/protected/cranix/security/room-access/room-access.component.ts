@@ -229,7 +229,7 @@ export class RoomAccessComponent implements OnInit {
     this.authService.log(this.accessApi);
     this.authService.log(this.accessColumnApi);
   }
-  async redirectToAddEdit(ev: Event, roomAccess: AccessInRoom) {
+  async redirectToAddEdit(roomAccess: AccessInRoom) {
     let action = "add";
     if (roomAccess) {
       this.objectService.selectedObject = roomAccess;
