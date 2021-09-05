@@ -27,6 +27,7 @@ export class AuthenticationService {
     textHeaders: HttpHeaders;
     settings: Settings = new Settings();
     minLgSize = 769;
+    rowColors: string[] = [ "#D2E3D5", "#AFC2B2"]
 
     constructor(
         private http: HttpClient,
