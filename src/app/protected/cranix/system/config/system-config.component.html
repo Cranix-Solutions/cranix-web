@@ -20,17 +20,22 @@
       </ion-segment>
     </ion-col>
   </ion-row>
-  <ion-card>
+  <ion-card *ngIf="!editingConfig">
     <ion-card-content>
       <ion-grid>
         <div *ngFor="let config of configs">
           <ion-row *ngIf="config.path == toShow">
-            <ion-col size=4>
-              <ion-item matTooltip="{{config.help | translate}}">
+            <ion-col *ngIf="authService.isMD()">
+              <ion-item button (click)="editConfig(config)">
                 <ion-label>{{config.key}}</ion-label>
               </ion-item>
             </ion-col>
-            <ion-col size=8>
+            <ion-col *ngIf="!authService.isMD()" size=4>
+              <ion-item matTooltip="{{config.help | translate}}" button (click)="editConfig(config)">
+                <ion-label>{{config.key}}</ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col *ngIf="!authService.isMD()" size=8>
               <ion-item *ngIf="config.type == 'yesno'">
                 <ion-toggle slot="start" color="secondary" checked="{{config.value == 'yes'}}"
                   disabled="{{config.readOnly == 'yes'}}" (ionChange)="togle(config.key,$event)">
@@ -56,6 +61,56 @@
           </ion-row>
         </div>
       </ion-grid>
+    </ion-card-content>
+  </ion-card>
+  <ion-card  *ngIf="editingConfig">
+    <ion-card-header>
+      <ion-toolbar>
+        <ion-title>
+          {{ config.key }}
+        </ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="editingConfig = false">
+            <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label position="stacked">{{ 'description' | translate }}</ion-label>
+          {{ config.help | translate }}
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">{{ 'type' | translate }}</ion-label>
+          {{ config.type | translate }} {{ ( config.readOnly == 'yes' ? 'readonly' : 'writable' ) | translate  }}
+        </ion-item>
+        <ion-item *ngIf="config.type == 'yesno'">
+          <ion-label position="stacked">{{ 'value' | translate }}</ion-label>
+          <ion-toggle slot="start" color="secondary" checked="{{config.value == 'yes'}}"
+            disabled="{{config.readOnly == 'yes'}}" (ionChange)="togle(config.key,$event)">
+          </ion-toggle>
+        </ion-item>
+        <ion-item *ngIf="config.type == 'string'">
+          <ion-label position="stacked">{{ 'value' | translate }}</ion-label>
+          <ion-input type="text" value="{{config.value}}" disabled="{{config.readOnly == 'yes'}}"
+            id="{{config.key}}"></ion-input>
+          <ion-button *ngIf="config.readOnly == 'no'" slot="end" fill="clear" size="small"
+            (click)="save(config.key)">
+            <ion-icon slot="icon-only" color="success" name="save"></ion-icon>
+          </ion-button>
+        </ion-item>
+        <ion-item *ngIf="config.type.substring(0,3) == 'int'">
+          <ion-label position="stacked">{{ 'value' | translate }}</ion-label>
+          <ion-input type="text" value="{{config.value}}" disabled="{{config.readOnly == 'yes'}}"
+            id="{{config.key}}"></ion-input>
+          <ion-button *ngIf="config.readOnly == 'no'" slot="end" fill="clear" size="small"
+            (click)="save(config.key)">
+            <ion-icon slot="icon-only" color="success" name="save"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
     </ion-card-content>
   </ion-card>
 </ion-content>
