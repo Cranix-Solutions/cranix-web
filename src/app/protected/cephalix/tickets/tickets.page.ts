@@ -17,7 +17,6 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { CephalixService } from 'src/app/services/cephalix.service';
-import { EditBTNRenderer } from 'src/app/pipes/ag-edit-renderer';
 
 @Component({
   selector: 'cranix-tickets',

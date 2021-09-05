@@ -42,7 +42,13 @@
 </ion-content>
 <ion-content *ngIf="authService.isMD()">
   <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('ticketsFilterMD')"
-    id="ticketsFilterMD" showCancelButton="never"></ion-searchbar>
+    id="ticketsFilterMD" showCancelButton="never">
+  </ion-searchbar>
+  <ion-item *ngIf="rowData.length == 0">
+    <ion-label class="ion-text-center">
+      {{ 'Loading datas ...' | translate }}
+    </ion-label>
+  </ion-item>
   <ion-list>
     <ion-item-sliding *ngFor="let object of rowData">
       <ion-item style="color: {{ticketColor[object.ticketStatus]}}" (click)="redirectToEdit(object)">
