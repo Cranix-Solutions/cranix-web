@@ -1,55 +1,32 @@
 <cranix-toolbar></cranix-toolbar>
-<ion-content id="carded">
-  <ion-row class="header-row">
-    <ion-col size=11>
-      <ion-title>{{ 'Manage DNS Filter Configuration' | translate}}</ion-title>
-    </ion-col>
-  </ion-row>
-  <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
-    <ion-fab-button>
-      <ion-icon name="arrow-forward-circle"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-list side="start">
-      <ion-fab-button (click)="writeConfig()" [disabled]="saving">
-        <ion-icon name="checkmark"></ion-icon>
-      </ion-fab-button>
-    </ion-fab-list>
-  </ion-fab>
+<ion-toolbar *ngIf="authService.isMD()">
+  <ion-card-title>{{ 'Manage DNS Filter Configuration' | translate}}</ion-card-title>
+  <ion-buttons slot="end">
+    <ion-button size="small" fill="clear" (click)="writeConfig()" [disabled]="saving"
+      matTooltip="{{'Write the DNS filter configuration and restart the DNS server.' | translate }}">
+      <ion-icon slot="icon-only" color="success" name="checkmark"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+<ion-content>
   <ion-card>
-    <ion-card-header>
+    <ion-card-header *ngIf="!authService.isMD()">
       <ion-toolbar>
         <ion-card-title>{{ 'Manage DNS Filter Configuration' | translate}}</ion-card-title>
         <ion-buttons slot="end">
-          <ion-button size="small" fill="solid" (click)="writeConfig()" [disabled]="saving"
+          <ion-button size="small" fill="clear" (click)="writeConfig()" [disabled]="saving"
             matTooltip="{{'Write the DNS filter configuration and restart the DNS server.' | translate }}">
             <ion-icon slot="icon-only" color="success" name="checkmark"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
-      <ion-row>
-        <ion-col>
-          <ion-item lines="none">
-            <ion-title>{{'Own White List'|translate}}</ion-title>
-          </ion-item>
-        </ion-col>
-        <ion-col>
-          <ion-item lines="none">
-            <ion-title>{{'Own Black List'|translate}}</ion-title>
-          </ion-item>
-        </ion-col>
-        <ion-col>
-          <ion-item lines="none">
-            <ion-title>{{'Denied Categories'|translate}}</ion-title>
-          </ion-item>
-        </ion-col>
-      </ion-row>
     </ion-card-header>
     <ion-card-content>
       <ion-grid>
         <ion-row>
-          <ion-col>
+          <ion-col size="authService.isMD() ? 11 : 4">
             <ion-list>
-              <ion-item lines="none" class="hidden-lg hidden-xl">
+              <ion-item lines="none">
                 <ion-title>{{'Own White List'|translate}}</ion-title>
               </ion-item>
               <form #addNewDomain1Form="ngForm">
@@ -57,21 +34,22 @@
                   <ion-input [(ngModel)]="newDomain1" name="newDomain1"
                     placeholder="{{'Enter a new domain name'| translate}}" pattern="[a-z0-9.-]+\.[a-z]{2,}$">
                   </ion-input>
-                  <ion-button slot="end" (click)="addNewDomain1()" [disabled]="!addNewDomain1Form.valid || saving">
-                    <ion-icon slot="icon-only" name="add"></ion-icon>
+                  <ion-button fill="clear" slot="end" (click)="addNewDomain1()" [disabled]="!addNewDomain1Form.valid || saving">
+                    <ion-icon slot="icon-only" name="add-circle"></ion-icon>
                   </ion-button>
                 </ion-item>
               </form>
-              <ion-item *ngFor="let dom of whiteList; index as i">{{dom}}
-                <ion-button slot="end" (click)="deleteDomain1(i)" [disabled]="saving">
+              <ion-item *ngFor="let dom of whiteList; index as i">
+                <ion-label class="label-max-width">{{dom}}</ion-label>
+                <ion-button fill="clear" slot="end" (click)="deleteDomain1(i)" [disabled]="saving">
                   <ion-icon color="danger" slot="icon-only" name="trash"></ion-icon>
                 </ion-button>
               </ion-item>
             </ion-list>
           </ion-col>
-          <ion-col>
+          <ion-col size="authService.isMD() ? 12 : 4">
             <ion-list>
-              <ion-item lines="none" class="hidden-lg hidden-xl">
+              <ion-item lines="none">
                 <ion-title>{{'Own Black List'|translate}}</ion-title>
               </ion-item>
               <form #addNewDomainForm="ngForm">
@@ -79,21 +57,22 @@
                   <ion-input [(ngModel)]="newDomain" name="newDomain"
                     placeholder="{{'Enter a new domain name'| translate}}" pattern="[a-z0-9.-]+\.[a-z]{2,}$">
                   </ion-input>
-                  <ion-button slot="end" (click)="addNewDomain()" [disabled]="!addNewDomainForm.valid || saving">
-                    <ion-icon slot="icon-only" name="add"></ion-icon>
+                  <ion-button fill="clear" slot="end" (click)="addNewDomain()" [disabled]="!addNewDomainForm.valid || saving">
+                    <ion-icon slot="icon-only" name="add-circle"></ion-icon>
                   </ion-button>
                 </ion-item>
               </form>
-              <ion-item *ngFor="let dom of badList; index as i">{{dom}}
-                <ion-button slot="end" (click)="deleteDomain(i)" [disabled]="saving">
+              <ion-item *ngFor="let dom of badList; index as i">
+                <ion-label class="label-max-width">{{dom}}</ion-label>
+                <ion-button fill="clear" slot="end" (click)="deleteDomain(i)" [disabled]="saving">
                   <ion-icon color="danger" slot="icon-only" name="trash"></ion-icon>
                 </ion-button>
               </ion-item>
             </ion-list>
           </ion-col>
-          <ion-col>
+          <ion-col size="authService.isMD() ? 12 : 4">
             <ion-list>
-              <ion-item lines="none" class="hidden-lg hidden-xl">
+              <ion-item lines="none">
                 <ion-title>{{'Denied Categories'|translate}}</ion-title>
               </ion-item>
               <div *ngFor="let category of categories">

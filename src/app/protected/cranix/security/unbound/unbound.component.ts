@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { SecurityService } from 'src/app/services/security-service';
 import { LanguageService } from 'src/app/services/language.service';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'cranix-unbound',
@@ -19,6 +20,7 @@ export class UnboundComponent implements OnInit {
   saving: boolean = false;
 
   constructor(
+    public  authService: AuthenticationService,
     private languageS: LanguageService,
     public objectService: GenericObjectService,
     public securityService: SecurityService
