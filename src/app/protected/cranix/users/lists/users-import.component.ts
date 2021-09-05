@@ -23,7 +23,6 @@ export class UsersImportComponent implements OnInit {
   alive: boolean = true;
   imports: UsersImport[] = [];
   runningImport: UsersImport = null;
-  rowColors: string[] = [ "#D2E3D5", "#AFC2B2"]
   constructor(
     public authService: AuthenticationService,
     public objectService: GenericObjectService,

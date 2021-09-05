@@ -70,7 +70,7 @@
         </ion-row>
         <div *ngFor="let import of imports; index as i">
           <ion-row *ngIf="!runningImport || runningImport.startTime != import.startTime"
-            style="background-color : {{rowColors[i%2]}}">
+            style="background-color : {{authService.rowColors[i%2]}}">
             <ion-col size=2>{{import.startTime}} </ion-col>
             <ion-col size=2>
               <ion-button color="light" size="small" (click)="showImport($event,import)"
@@ -166,7 +166,7 @@
     </ion-row>
     <div *ngFor="let import of imports; index as i">
       <ion-row *ngIf="!runningImport || runningImport.startTime != import.startTime"
-        style="background-color : {{rowColors[i%2]}}">
+        style="background-color : {{authService.rowColors[i%2]}}">
         <ion-col size=4>{{import.startTime}} </ion-col>
         <ion-col size=6>
           <ion-button color="light" size="small" (click)="showImport($event,import)"
