@@ -148,7 +148,15 @@ export class UsersImportComponent implements OnInit {
 
   refreshImports(){
     let subs = this.usersService.getAllImports().subscribe(
-      (val) => { this.imports = val },
+      (val) => { this.imports = val.sort(function (a, b) {
+        if (a.startTime < b.startTime) {
+          return 1;
+        }
+        if (a.startTime > b.startTime) {
+          return -1;
+        }
+        return 0;
+      } },
       (err) => { console.log(err) },
       () => { subs.unsubscribe() }
     )
