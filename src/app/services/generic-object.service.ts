@@ -459,7 +459,15 @@ export class GenericObjectService {
     }
     return 0;
   }
-
+  sortByRecDate(a, b) {
+    if (a.recDate < b.recDate) {
+      return 1;
+    }
+    if (a.recDate > b.recDate) {
+      return -1;
+    }
+    return 0;
+  }
   /**
    * Helper script fot the template to detect the type of the variables
    * @param val

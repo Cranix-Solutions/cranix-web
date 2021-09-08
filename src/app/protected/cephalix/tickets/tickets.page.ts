@@ -67,7 +67,7 @@ export class TicketsPage implements OnInit {
     };
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.alive = true;
     this.storage.get('TicketsPage.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
@@ -76,7 +76,11 @@ export class TicketsPage implements OnInit {
         this.createColumnDefs();
       }
     });
-    this.rowData = this.objectService.allObjects['ticket'];
+    while (this.rowData.length == 0) {
+      this.rowData = this.objectService.allObjects['ticket'];
+      await new Promise(f => setTimeout(f, 1000));
+    }
+    this.rowData = this.rowData.sort(this.objectService.sortByRecDate)
   }
 
   ngOnDestroy() {
@@ -109,7 +113,7 @@ export class TicketsPage implements OnInit {
         }
         case 'recDate': {
           col['sort'] = 'desc',
-          col['cellRendererFramework'] = DateCellRenderer;
+            col['cellRendererFramework'] = DateCellRenderer;
           col['width'] = 80
           break;
         }
@@ -141,6 +145,7 @@ export class TicketsPage implements OnInit {
       this.cephalixService.selectedList.push(o.name)
       this.selectedIds.push(o.id)
     }
+    this.objectService.sortByName
   }
 
   checkChange(ev, obj: Ticket) {
@@ -156,12 +161,12 @@ export class TicketsPage implements OnInit {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
     if (this.authService.isMD()) {
       this.rowData = [];
-      for (let obj of this.objectService.allObjects['ticket']) {
+      for (let obj of this.objectService.allObjects['ticket'].sort(this.objectService.sortByRecDate) ) {
         if (
           obj.title.toLowerCase().indexOf(filter) != -1 ||
-          (obj.email     && obj.email.toLowerCase().indexOf(filter) != -1) ||
+          (obj.email && obj.email.toLowerCase().indexOf(filter) != -1) ||
           (obj.firstname && obj.firstname.toLowerCase().indexOf(filter) != -1) ||
-          (obj.lastname  && obj.lastname.toLowerCase().indexOf(filter) != -1)
+          (obj.lastname && obj.lastname.toLowerCase().indexOf(filter) != -1)
         ) {
           this.rowData.push(obj)
         }
@@ -172,7 +177,7 @@ export class TicketsPage implements OnInit {
     }
   }
 
-  ticketClickHandle(event){
+  ticketClickHandle(event) {
     console.log(event)
     event.context.componentParent.route.navigate(['/pages/cephalix/tickets/' + event.data.id])
   }
@@ -204,7 +209,7 @@ export class TicketsPage implements OnInit {
         objectType: "ticket",
         objectIds: this.objectIds,
         selection: selected,
-        gridApi:   this.gridApi
+        gridApi: this.gridApi
       },
       animated: true,
       showBackdrop: true
