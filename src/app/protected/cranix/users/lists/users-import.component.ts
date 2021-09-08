@@ -156,7 +156,7 @@ export class UsersImportComponent implements OnInit {
           return -1;
         }
         return 0;
-      } },
+      }) },
       (err) => { console.log(err) },
       () => { subs.unsubscribe() }
     )
