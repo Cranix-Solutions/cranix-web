@@ -41,13 +41,17 @@ export class AppComponent {
           }
           this.genericObjectS.initialize(true);
           if( this.authService.isAllowed('cephalix.manage')) {
-            this.router.navigate(['pages/cephalix/tickets']);
+            console.log('pages/cephalix/institutes/all');
+            this.router.navigate(['pages/cephalix/institutes/all']);
           } else if ( this.authService.isAllowed('user.manage') ) {
+            console.log('pages/cranix/users/all');
             this.router.navigate(['pages/cranix/users/all']);
           } else if ( this.authService.session['role'] == 'teachers' ) {
+            console.log('pages/cranix/mygroups');
             this.router.navigate(['pages/cranix/mygroups']);
           } else {
-            this.router.navigate(['/pages/cranix/profile/myself']);
+            console.log('pages/cranix/profile/myself');
+            this.router.navigate(['pages/cranix/profile/myself']);
           }
         } else if (sessionStorage.getItem('cephalix_token')) {
           this.authService.token     = sessionStorage.getItem('cephalix_token');

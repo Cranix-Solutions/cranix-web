@@ -1,10 +1,10 @@
 <cranix-toolbar></cranix-toolbar>
+<ion-row class="header-row">
+  <ion-col>
+    <ion-title>{{'Manage institutes' | translate}}</ion-title>
+  </ion-col>
+</ion-row>
 <ion-content id="carded">
-  <ion-row class="header-row">
-    <ion-col>
-      <ion-title>{{'Manage institutes' | translate}}</ion-title>
-    </ion-col>
-  </ion-row>
   <ion-fab *ngIf="instituteView" vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
     <ion-fab-button>
       <ion-icon name="arrow-forward-circle"></ion-icon>
@@ -26,8 +26,10 @@
   <ion-card>
     <ion-card-header>
       <ion-toolbar>
-        <ion-card-title *ngIf="instituteView">{{'Select institutes to manage by:' | translate}} {{selectedManager.fullName}}</ion-card-title>
-        <ion-card-title *ngIf="!instituteView">{{'Click on user to select managed institutes' | translate}}</ion-card-title>
+        <ion-card-title *ngIf="instituteView">{{'Select institutes to manage by:' | translate}}
+          {{selectedManager.fullName}}</ion-card-title>
+        <ion-card-title *ngIf="!instituteView">{{'Click on user to select managed institutes' | translate}}
+        </ion-card-title>
         <ion-item>
           <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('managedInstitutesFilter')"
             id="managedInstitutesFilter">
@@ -54,17 +56,10 @@
         <ion-label>{{ 'Count of managed institutes:' | translate}}</ion-label>
         <ion-label>{{managedIds.length}}</ion-label>
       </ion-item>
-      <ag-grid-angular id="instituteManageTable"
-        style="width: 100%; height: 100%;"
-        rowSelection="multiple"
-        class="{{authService.settings.agGridThema}}"
-        rowHeight="{{authService.settings.rowHeight}}"
-        [context]="context"
-        [rowData]="rowData"
-        [defaultColDef]="defaultColDef"
-        [columnDefs]="columnDefs"
-        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
-        (gridReady)="onGridReady($event)">
+      <ag-grid-angular id="instituteManageTable" style="width: 100%; height: 100%;" rowSelection="multiple"
+        class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}" [context]="context"
+        [rowData]="rowData" [defaultColDef]="defaultColDef" [columnDefs]="columnDefs"
+        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" (gridReady)="onGridReady($event)">
       </ag-grid-angular>
     </ion-card-content>
   </ion-card>

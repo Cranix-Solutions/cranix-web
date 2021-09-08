@@ -58,7 +58,7 @@ export class InstitutesComponent implements OnInit {
     this.nativeWindow = win.getNativeWindow();
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.storage.get('InstitutesComponent.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
@@ -66,7 +66,10 @@ export class InstitutesComponent implements OnInit {
         this.createColumnDefs();
       }
     });
-    this.rowData = this.objectService.allObjects['institute']
+    while( this.rowData.length == 0 ) {
+      this.rowData = this.objectService.allObjects['institute'];
+      await new Promise(f => setTimeout(f, 1000));
+    };
   }
 
   createColumnDefs() {

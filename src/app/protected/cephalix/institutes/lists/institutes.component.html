@@ -71,6 +71,11 @@
   <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('institutesFilterMD')"
     id="institutesFilterMD" showCancelButton="never"></ion-searchbar>
   <ion-list >
+    <ion-item *ngIf="rowData.length == 0">
+      <ion-label>
+        {{ 'Loading datas ...' | translate }}
+      </ion-label>
+    </ion-item>
     <ion-item-sliding *ngFor="let object of rowData">
       <ion-item>
         <ion-note slot="start">
