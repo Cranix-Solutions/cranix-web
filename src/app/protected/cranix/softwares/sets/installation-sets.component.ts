@@ -55,7 +55,6 @@ export class InstallationSetsComponent implements OnInit {
   installationSetReady(params) {
     this.installationSetApi = params.api;
     this.installationSetColumnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("installationSetTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
     this.installationSetApi.sizeColumnsToFit();
   }
 
@@ -69,7 +68,6 @@ export class InstallationSetsComponent implements OnInit {
   }
 
   onResize(ev: Event) {
-    (<HTMLInputElement>document.getElementById("installationSetTable")).style.height = Math.trunc(window.innerHeight * 0.70) + "px";
     //this.sizeAll();
   }
   sizeAll() {
@@ -143,7 +141,7 @@ export class InstallationSetsComponent implements OnInit {
       }
     ];
   }
-  async redirectToEdit(event, installation: Category) {
+  async redirectToEdit(installation: Category) {
     let action = "add"
     if (installation) {
       this.softwareService.selectedInstallationSet = installation;
@@ -153,6 +151,7 @@ export class InstallationSetsComponent implements OnInit {
     }
     const modal = await this.modalCtrl.create({
       component: EditInstallationSetComponent,
+      cssClass: 'big-modal',
       componentProps: {
         objectAction: action,
         installation: installation

@@ -37,7 +37,7 @@ export class RoomActionBTNRenderer implements ICellRendererAngularComp {
 
     public details() {
         console.log("Edit", this.params.data);
-        this.params.context.componentParent.redirectToEdit(this.params.data.id, this.params.data);
+        this.params.context.componentParent.redirectToEdit(this.params.data);
     }
     public devices() {
         this.params.context.componentParent.objectService.selectedRoom = this.params.data;

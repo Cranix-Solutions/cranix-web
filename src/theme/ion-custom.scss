@@ -1,4 +1,11 @@
 ion-item {
-    --min-height: 80px;
-  }
+    --max-height: 70px;
+}
 
+::slotted([slot="start"]) {
+    margin-right: unset;
+    margin-inline-end: 2px;
+}
+::slotted(ion-note[slot]) {
+    padding: 1px 0px 1px;
+}

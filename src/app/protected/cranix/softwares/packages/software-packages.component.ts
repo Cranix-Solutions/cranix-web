@@ -108,7 +108,6 @@ export class SoftwarePackagesComponent implements OnInit {
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
   }
 
   onQuickFilterChanged(quickFilter) {
@@ -116,7 +115,6 @@ export class SoftwarePackagesComponent implements OnInit {
     this.gridApi.doLayout();
   }
   onResize($event) {
-    (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
     this.sizeAll();
   }
   sizeAll() {
@@ -163,7 +161,7 @@ export class SoftwarePackagesComponent implements OnInit {
    * @param ev
    * @param software
    */
-  async redirectToEdit(ev: Event, software: Software) {
+  async redirectToEdit(software: Software) {
     let action = 'modify';
     if (!software) {
       action = 'add';

@@ -51,7 +51,6 @@ export class SoftwareStatusComponent implements OnInit {
   softwareDataReady(params) {
     this.softwareApi = params.api;
     this.softwareColumnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("softwareStatusTable")).style.height = Math.trunc(window.innerHeight * 0.75) + "px";
   }
   onQuickFilterChanged(quickFilter) {
     this.softwareApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);

@@ -23,7 +23,6 @@ export class UsersImportComponent implements OnInit {
   alive: boolean = true;
   imports: UsersImport[] = [];
   runningImport: UsersImport = null;
-  rowColors: string[] = [ "#D2E3D5", "#AFC2B2"]
   constructor(
     public authService: AuthenticationService,
     public objectService: GenericObjectService,
@@ -77,6 +76,7 @@ export class UsersImportComponent implements OnInit {
   async showImport(ev: Event, userImport: UsersImport) {
     const popover = await this.modalCtrl.create({
       component: ShowImportComponent,
+      cssClass: 'big-modal',
       componentProps: {
         import: userImport
       },
@@ -148,7 +148,15 @@ export class UsersImportComponent implements OnInit {
 
   refreshImports(){
     let subs = this.usersService.getAllImports().subscribe(
-      (val) => { this.imports = val },
+      (val) => { this.imports = val.sort(function (a, b) {
+        if (a.startTime < b.startTime) {
+          return 1;
+        }
+        if (a.startTime > b.startTime) {
+          return -1;
+        }
+        return 0;
+      }) },
       (err) => { console.log(err) },
       () => { subs.unsubscribe() }
     )

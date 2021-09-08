@@ -30,10 +30,12 @@ export class DevicesComponent implements OnInit {
   defaultColDef = {};
   gridApi;
   columnApi;
-  rowSelection;
   context;
   title = 'app';
   rowData = [];
+  origData = [];
+  selection:   Device[] = [];
+  selectedIds: number[] = [];
 
   constructor(
     public authService: AuthenticationService,
@@ -47,7 +49,6 @@ export class DevicesComponent implements OnInit {
   ) {
 
     this.context = { componentParent: this };
-    this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new Device());
     this.createColumnDefs();
     this.defaultColDef = {
@@ -67,19 +68,17 @@ export class DevicesComponent implements OnInit {
     });
     if (this.objectService.selectedRoom) {
       this.selectedRoom = this.objectService.selectedRoom;
-      this.objectService.getObjects('device').subscribe(obj => {
-        this.rowData = [];
-        for (let dev of obj) {
-          if (dev.roomId == this.selectedRoom.id) {
-            this.rowData.push(dev);
-          }
+      this.rowData = [];
+      for (let dev of this.objectService.allObjects['device']) {
+        if (dev.roomId == this.selectedRoom.id && dev.hwconfId != 2) {
+          this.rowData.push(dev);
         }
       }
-      );
     } else {
-      this.objectService.getObjects('device').subscribe(obj => this.rowData = obj);
+      this.rowData = this.objectService.allObjects['device'].filter(obj => obj.hwconfId != 2);
       delete this.selectedRoom;
     }
+    this.origData = this.rowData;
     delete this.objectService.selectedObject;
   }
   ngOnDestroy() {
@@ -151,9 +150,22 @@ export class DevicesComponent implements OnInit {
   }
 
   onQuickFilterChanged(quickFilter) {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.doLayout();
-
+    let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
+    if (this.authService.isMD()) {
+      this.rowData = [];
+      for (let dev of this.origData) {
+        if (
+          dev.name.toLowerCase().indexOf(filter) != -1 ||
+          dev.ip.indexOf(filter) != -1 ||
+          dev.mac.toLowerCase().indexOf(filter) != -1
+        ) {
+          this.rowData.push(dev)
+        }
+      }
+    } else {
+      this.gridApi.setQuickFilter(filter);
+      this.gridApi.doLayout();
+    }
   }
   sizeAll() {
     var allColumnIds = [];
@@ -166,21 +178,36 @@ export class DevicesComponent implements OnInit {
   redirectToDelete(device: Device) {
     this.objectService.deleteObjectDialog(device, 'device', '')
   }
+
+  selectionChanged(){
+    this.selectedIds = []
+    for (let i = 0; i < this.gridApi.getSelectedRows().length; i++) {
+      this.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
+    }
+    this.selection = this.gridApi.getSelectedRows()
+  }
+  checkChange(ev,dev: Device){
+    if( ev.detail.checked ) {
+      this.selectedIds.push(dev.id)
+      this.selection.push(dev)
+    } else {
+      this.selectedIds = this.selectedIds.filter(id => id != dev.id)
+      this.selection   = this.selection.filter(obj => obj.id != dev.id)
+    }
+  }
+
   /**
  * Open the actions menu with the selected object ids.
- * @param ev 
+ * @param ev
  */
-  async openActions(ev: any, objId: number) {
-    if (this.gridApi.getSelectedRows().length == 0 && !objId) {
-      this.objectService.selectObject();
-      return;
-    }
-    let objectIds = [];
-    if (objId) {
-      objectIds.push(objId)
+  async openActions(ev: any, object: Device) {
+    if (object) {
+      this.selectedIds.push(object.id)
+      this.selection.push(object)
     } else {
-      for (let i = 0; i < this.gridApi.getSelectedRows().length; i++) {
-        objectIds.push(this.gridApi.getSelectedRows()[i].id);
+      if (this.selection.length == 0) {
+        this.objectService.selectObject();
+        return;
       }
     }
     const popover = await this.popoverCtrl.create({
@@ -188,16 +215,16 @@ export class DevicesComponent implements OnInit {
       event: ev,
       componentProps: {
         objectType: "device",
-        objectIds: objectIds,
-        selection: this.gridApi.getSelectedRows(),
-        gridApi:   this.gridApi
+        objectIds: this.selectedIds,
+        selection: this.selection,
+        gridApi: this.gridApi
       },
       animated: true,
       showBackdrop: true
     });
     (await popover).present();
   }
-  async redirectToEdit(ev: Event, device: Device) {
+  async redirectToEdit(device: Device) {
     let action = "modify";
     if (!device) {
       device = new Device();
@@ -256,7 +283,7 @@ export class DevicesComponent implements OnInit {
   }
   /**
 * Function to Select the columns to show
-* @param ev 
+* @param ev
 */
   async openCollums(ev: any) {
     const modal = await this.modalCtrl.create({

@@ -1,21 +1,10 @@
 <cranix-toolbar></cranix-toolbar>
-<ion-content id="carded">
-  <ion-row class="header-row">
-    <ion-col>
-      <ion-title>{{'Manage hwconfs' | translate}}</ion-title>
-    </ion-col>
-  </ion-row>
-    <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
-      <ion-fab-button>
-        <ion-icon name="arrow-forward-circle"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-list side="start">
-        <ion-fab-button><ion-icon name="ellipsis-vertical-sharp" (click)="openActions($event,null)"></ion-icon></ion-fab-button>
-        <ion-fab-button><ion-icon name="add-circle" (click)="redirectToEdit($event,null)"></ion-icon></ion-fab-button>
-        <ion-fab-button><ion-icon name="apps" (click)="openCollums($event)"></ion-icon></ion-fab-button>
-      </ion-fab-list>
-    </ion-fab>
-    <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('hwconfsFilterMD')" id="hwconfsFilterMD" showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
+<ion-row class="header-row">
+  <ion-col>
+    <ion-title>{{'Manage hwconfs' | translate}}</ion-title>
+  </ion-col>
+</ion-row>
+<ion-content *ngIf="!authService.isMD()" id="carded">
   <ion-card>
     <ion-card-header>
       <ion-toolbar>
@@ -24,11 +13,12 @@
           <ion-label *ngIf="gridApi">
             #{{gridApi.getDisplayedRowCount()}}
           </ion-label>
-          <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('hwconfsFilter')" id="hwconfsFilter">
+          <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('hwconfsFilter')"
+            id="hwconfsFilter">
           </ion-input>
         </ion-item>
         <ion-buttons slot="end">
-          <ion-button size="small" fill="solid" (click)="redirectToEdit($event,null)"
+          <ion-button size="small" fill="solid" (click)="redirectToEdit(null)"
             matTooltip="{{'Create a new hardware configuration' | translate }}">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
@@ -44,19 +34,59 @@
       </ion-toolbar>
     </ion-card-header>
     <ion-card-content>
-      <ag-grid-angular
-        id="agGridTable"
-        style="width: 100%; height: 100%;"
-        rowSelection="multiple"
-        class="{{authService.settings.agGridThema}}"
+      <ag-grid-angular *ngIf="!authService.isMD()" id="agGridTable" style="width: 100%; height: 100%;"
+        rowSelection="multiple" class="{{authService.settings.agGridThema}}"
         [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
-        rowHeight="{{authService.settings.rowHeight}}"
-        [rowData]="rowData"
-        [columnDefs]="columnDefs"
-        [defaultColDef]="defaultColDef"
-        [context]="context"
-        (gridReady)="onGridReady($event)">
+        rowHeight="{{authService.settings.rowHeight}}" [rowData]="objectService.allObjects['hwconf']"
+        [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [context]="context" (gridReady)="onGridReady($event)"
+        (selectionChanged)="selectionChanged()">
       </ag-grid-angular>
+
     </ion-card-content>
   </ion-card>
+</ion-content>
+<ion-content *ngIf="authService.isMD()">
+  <ion-fab vertical="top" horizontal="end" slot="fixed">
+    <ion-fab-button size="small">
+      <ion-icon name="arrow-forward-circle"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="start">
+      <ion-fab-button>
+        <ion-icon name="ellipsis-vertical-sharp" (click)="openActions($event,null)"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="add-circle" (click)="redirectToEdit(null)"></ion-icon>
+      </ion-fab-button>
+      <!-- ion-fab-button><ion-icon name="apps" (click)="openCollums($event)"></ion-icon></ion-fab-button -->
+    </ion-fab-list>
+  </ion-fab>
+  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('hwconfsFilterMD')"
+    id="hwconfsFilterMD"></ion-searchbar>
+  <ion-list *ngIf="authService.isMD()">
+    <ion-item-sliding *ngFor="let object of rowData">
+      <ion-item>
+        <ion-note slot="start">
+          <ion-checkbox (ionChange)="checkChange($event,object)"></ion-checkbox>
+        </ion-note>
+        <ion-label (click)="redirectToEdit(object)">
+          {{ object.name }}
+        </ion-label>
+        <ion-note style="max-width: 200px;" slot="end">
+          {{ object.description }}<br>
+          {{ object.deviceType | translate }}
+        </ion-note>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-button fill="clear" (click)="redirectToDelete(object)">
+          <ion-icon color="danger" name="trash-outline"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" (click)="openActions($event,object)">
+          <ion-icon name="ellipsis-vertical-sharp"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" (click)="redirectToEdit(object)">
+          <ion-icon name="build-sharp"></ion-icon>
+        </ion-button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
 </ion-content>

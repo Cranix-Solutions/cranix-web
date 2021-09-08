@@ -30,7 +30,6 @@ export class CustomersPage implements OnInit {
   context;
   selected: Customer[] = [];
   title = 'app';
-  rowData = [];
   objectIds: number[] = [];
 
   constructor(
@@ -58,7 +57,6 @@ export class CustomersPage implements OnInit {
         this.createColumnDefs();
       }
     });
-    this.objectService.getObjects('customer').subscribe(obj => this.rowData = obj);
   }
 
   createColumnDefs() {
@@ -157,7 +155,7 @@ export class CustomersPage implements OnInit {
     });
     (await modal).present();
   }
-  async redirectToEdit(ev: Event, customer: Customer) {
+  async redirectToEdit(customer: Customer) {
     let action = 'modify';
     if (customer == null) {
       customer = new Customer();

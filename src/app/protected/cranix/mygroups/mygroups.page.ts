@@ -36,6 +36,10 @@ export class MyGroupsPage implements OnInit {
   title = 'app';
   rowData = [];
   modules = [];
+  guestAccounts: GuestUsers[] = [];
+  userData: User[] = [];
+  selection = [];
+  selectedIds: number[] = [];
 
   constructor(
     public authService: AuthenticationService,
@@ -56,6 +60,10 @@ export class MyGroupsPage implements OnInit {
     }
   }
   ngOnInit() {
+    this.readGuestAccounts();
+    this.userData = this.objectService.allObjects['education/user'].sort(
+      (a, b) => (a.groupName > b.groupName) ? 1 : (b.groupName > a.groupName) ? -1 : 0
+    );
     this.groupColumnDefs();
   }
 
@@ -63,20 +71,21 @@ export class MyGroupsPage implements OnInit {
     this.segment = event.detail.value;
     switch (this.segment) {
       case 'group': { this.groupColumnDefs(); break; }
-      case 'user':  { this.userColumnDefs(); break; }
+      case 'user': { this.userColumnDefs(); break; }
       case 'guest': { this.guestColumnDefs(); break; }
     }
   }
 
   groupColumnDefs() {
-    this.objectService.getObjects('education/group').subscribe(obj => this.rowData = obj);
+    this.rowData = this.objectService.allObjects['education/group'];
     this.columnDefs = [
       {
         field: 'id',
         hide: true
       },
       {
-        field: 'groupName',
+        field: 'name',
+        headerName: this.languageS.trans('groupName'),
         headerCheckboxSelectionFilteredOnly: true,
         checkboxSelection: this.authService.settings.checkboxSelection,
         minWidth: 150,
@@ -108,7 +117,7 @@ export class MyGroupsPage implements OnInit {
   }
 
   userColumnDefs() {
-    this.objectService.getObjects('education/user').subscribe(obj => this.rowData = obj);
+    this.rowData = this.userData;
     this.columnDefs = [
       {
         field: 'groupName',
@@ -137,7 +146,7 @@ export class MyGroupsPage implements OnInit {
   }
 
   guestColumnDefs() {
-    this.readGuestAccounts();
+    this.rowData = this.guestAccounts;
     this.columnDefs = [
       {
         field: 'id',
@@ -190,22 +199,70 @@ export class MyGroupsPage implements OnInit {
     this.gridApi.sizeColumnsToFit();
   }
 
+  selectionChanged() {
+    this.selectedIds = []
+    for (let i = 0; i < this.gridApi.getSelectedRows().length; i++) {
+      this.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
+    }
+    this.selection = this.gridApi.getSelectedRows()
+  }
+  checkChange(ev, obj) {
+    if (ev.detail.checked) {
+      this.selectedIds.push(obj.id)
+      this.selection.push(obj)
+    } else {
+      this.selectedIds = this.selectedIds.filter(id => id != obj.id)
+      this.selection = this.selection.filter(obj => obj.id != obj.id)
+    }
+  }
   onQuickFilterChanged(quickFilter) {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.doLayout();
+    let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
+    if (this.authService.isMD()) {
+      this.rowData = [];
+      switch (this.segment) {
+        case 'group': {
+          for (let obj of this.objectService.allObjects['education/group']) {
+            if (
+              obj.name.toLowerCase().indexOf(filter) != -1 ||
+              obj.description.toLowerCase().indexOf(filter) != -1 ||
+              this.languageS.trans(obj.groupType).toLowerCase().indexOf(filter) != -1
+            ) {
+              this.rowData.push(obj)
+            }
+          }
+          break;
+        }
+        case 'user': {
+          for (let obj of this.userData) {
+            if (
+              obj.uid.toLowerCase().indexOf(filter) != -1 ||
+              obj.givenName.toLowerCase().indexOf(filter) != -1 ||
+              obj.surName.toLowerCase().indexOf(filter) != -1 ||
+              ( obj.classes && obj.classes.toLowerCase().indexOf(filter) != -1 )
+            ) {
+              this.rowData.push(obj)
+            }
+          }
+          break;
+        }
+        case 'guest': {
+          for (let obj of this.guestAccounts) {
+            if (
+              obj.name.toLowerCase().indexOf(filter) != -1 ||
+              obj.description.toLowerCase().indexOf(filter) != -1
+            ) {
+              this.rowData.push(obj)
+            }
+          }
+          break;
+        }
+      }
 
+    } else {
+      this.gridApi.setQuickFilter(filter);
+      this.gridApi.doLayout();
+    }
   }
-
-  sizeAll() {
-    this.gridApi.sizeColumnsToFit();
-    window.addEventListener('resize', function () {
-      setTimeout(function () {
-        this.gridApi.sizeColumnsToFit();
-      });
-    });
-    this.gridApi.sizeColumnsToFit();
-  }
-
   public redirectToDelete = (group: Group) => {
     this.objectService.deleteObjectDialog(group, 'education/group', '')
   }
@@ -213,18 +270,14 @@ export class MyGroupsPage implements OnInit {
   * Open the actions menu with the selected object ids.
   * @param ev
   */
-  async openActions(ev: any, objId: number) {
-    let selected = this.gridApi.getSelectedRows();
-    if (selected.length == 0 && !objId) {
-      this.objectService.selectObject();
-      return;
-    }
-    let objectIds = [];
-    if (objId) {
-      objectIds.push(objId)
+  async openActions(ev: any, object ) {
+    if (object) {
+      this.selectedIds.push(object.id)
+      this.selection.push(object)
     } else {
-      for (let i = 0; i < selected.length; i++) {
-        objectIds.push(selected[i].id);
+      if (this.selection.length == 0) {
+        this.objectService.selectObject();
+        return;
       }
     }
     const popover = await this.popoverCtrl.create({
@@ -232,9 +285,9 @@ export class MyGroupsPage implements OnInit {
       event: ev,
       componentProps: {
         objectType: "education/" + this.segment,
-        objectIds: objectIds,
-        selection: selected,
-        gridApi:   this.gridApi
+        objectIds: this.selectedIds,
+        selection: this.selection,
+        gridApi: this.gridApi
       },
       animated: true,
       showBackdrop: true
@@ -245,10 +298,10 @@ export class MyGroupsPage implements OnInit {
   /**
    * Function to add or edit a group.
    * Group is null a new group will be created.
-   * @param ev 
-   * @param group 
+   * @param ev
+   * @param group
    */
-  async redirectToMembers(ev: Event, group: Group) {
+  async redirectToMembers(group: Group) {
     this.objectService.selectedObject = group;
     const modal = await this.modalCtrl.create({
       component: GroupMembersPage,
@@ -258,6 +311,7 @@ export class MyGroupsPage implements OnInit {
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
+      this.gridApi.deselectAll();
       if (dataReturned.data) {
         this.authService.log("Object was created or modified", dataReturned.data)
       }
@@ -265,7 +319,7 @@ export class MyGroupsPage implements OnInit {
     (await modal).present();
   }
 
-  async redirectToEdit(ev: Event, anyObject: any) {
+  async redirectToEdit(anyObject: any) {
     let action = anyObject ? 'modify' : 'add';
     let objectType = "";
     switch (this.segment) {
@@ -286,15 +340,20 @@ export class MyGroupsPage implements OnInit {
       component: ObjectsEditComponent,
       cssClass: 'medium-modal',
       componentProps: {
-        objectType:   objectType,
+        objectType: objectType,
         objectAction: action,
-        object:       anyObject
+        object: anyObject
       },
       animated: true,
       swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
+      switch (this.segment) {
+        case 'group': { this.groupColumnDefs(); break; }
+        case 'user': { this.userColumnDefs(); break; }
+        case 'guest': { this.guestColumnDefs(); break; }
+      }
       if (dataReturned.data) {
         this.authService.log("Object was created or modified", dataReturned.data)
       }
@@ -329,7 +388,7 @@ export class MyGroupsPage implements OnInit {
   }
   readGuestAccounts() {
     this.educationService.getGuestAccounts().subscribe(
-      (val) => { this.rowData = val }
+      (val) => { this.guestAccounts = val }
     )
   }
 }
@@ -341,7 +400,6 @@ export class MyGroupsPage implements OnInit {
 export class AddEditGuestPage implements OnInit {
 
   now: string;
-  rooms: Room[]
   disabled: boolean = false;
   selectedRooms: Room[] = []
   @Input() guest: GuestUsers
@@ -356,7 +414,6 @@ export class AddEditGuestPage implements OnInit {
   }
 
   ngOnInit() {
-    this.objectService.getObjects('room').subscribe(obj => this.rooms = obj);
   }
 
   onSubmit() {

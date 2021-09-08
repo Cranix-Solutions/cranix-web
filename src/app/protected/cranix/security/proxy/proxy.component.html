@@ -1,32 +1,32 @@
 <cranix-toolbar></cranix-toolbar>
-<ion-content id="carded">
-  <ion-row class="header-row">
-    <ion-col>
-      <ion-title>{{ 'Manage proxy configuration' | translate}}</ion-title>
-    </ion-col>
-  </ion-row>
-  <ion-row class="header-row">
-    <ion-col>
-      <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="basic">
-        <ion-segment-button value="basic">
-          <ion-label>{{'Basic configuration' | translate}}</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="good">
-          <ion-label>{{'White list' | translate}}</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="bad">
-          <ion-label>{{'Black list' | translate}}</ion-label>
-        </ion-segment-button>
-        <ion-segment-button *ngIf="authService.session.name == 'cephalix' || authService.isAllowed('cephalix.manage')"
-          value="cephalix">
-          <ion-label>{{'Cephalix list' | translate}}</ion-label>
-        </ion-segment-button>
-        <!-- ion-segment-button value="positive">
-        <ion-label>{{'Positive lists' | translate}}</ion-label>
-      </ion-segment-button -->
-      </ion-segment>
-    </ion-col>
-  </ion-row>
+<ion-row class="header-row">
+  <ion-col>
+    <ion-title>{{ 'Manage proxy configuration' | translate}}</ion-title>
+  </ion-col>
+</ion-row>
+<ion-row *ngIf="authService.isMD()">
+  <ion-col>
+    <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="basic">
+      <ion-segment-button value="basic">
+        <ion-label>{{'Basic configuration' | translate}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="good">
+        <ion-label>{{'White list' | translate}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="bad">
+        <ion-label>{{'Black list' | translate}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button *ngIf="authService.session.name == 'cephalix' || authService.isAllowed('cephalix.manage')"
+        value="cephalix">
+        <ion-label>{{'Cephalix list' | translate}}</ion-label>
+      </ion-segment-button>
+      <!-- ion-segment-button value="positive">
+      <ion-label>{{'Positive lists' | translate}}</ion-label>
+    </ion-segment-button -->
+    </ion-segment>
+  </ion-col>
+</ion-row>
+<ion-content *ngIf="!authService.isMD()" id="carded">
   <ion-card>
     <ion-card-header>
       <ion-toolbar>
@@ -63,7 +63,7 @@
           </ion-input>
         </ion-item>
         <ion-buttons slot="end">
-          <ion-button *ngIf="segment == 'positive'" size="small" fill="solid" (click)="redirectToEdit($event,null)"
+          <ion-button *ngIf="segment == 'positive'" size="small" fill="solid" (click)="redirectToEdit(null)"
             matTooltip="{{'Create a new positive list.' | translate }}">
             <ion-icon slot="icon-only" name="add-circle"></ion-icon>
           </ion-button>
@@ -97,4 +97,7 @@
       </ion-grid>
     </ion-card-content>
   </ion-card>
+</ion-content>
+<ion-content *ngIf="authService.isMD()">
+
 </ion-content>

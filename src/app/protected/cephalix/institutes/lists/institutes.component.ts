@@ -11,7 +11,7 @@ import { CephalixService } from 'src/app/services/cephalix.service';
 import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { Institute } from 'src/app/shared/models/cephalix-data-model'
-import { InstituteActionCellRenderer } from 'src/app/pipes/ag-institute-action-renderer';
+import { InstituteActionCellRenderer, WindowRef } from 'src/app/pipes/ag-institute-action-renderer';
 import { LanguageService } from 'src/app/services/language.service';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
@@ -30,10 +30,12 @@ export class InstitutesComponent implements OnInit {
   gridApi: GridApi;
   columnApi: ColumnApi;
   context;
-  title = 'app';
   rowData = [];
+  selectedIds: number[] = [];
+  nativeWindow: any
 
   constructor(
+    private win: WindowRef,
     public authService: AuthenticationService,
     public cephalixService: CephalixService,
     public objectService: GenericObjectService,
@@ -47,15 +49,16 @@ export class InstitutesComponent implements OnInit {
     this.objectKeys = Object.getOwnPropertyNames(cephalixService.templateInstitute);
     this.createColumnDefs();
     this.defaultColDef = {
-        resizable: true,
-        sortable: true,
-        hide: false,
-        suppressMenu : true,
-        minWidth: 110
-      };
+      resizable: true,
+      sortable: true,
+      hide: false,
+      suppressMenu: true,
+      minWidth: 110
+    };
+    this.nativeWindow = win.getNativeWindow();
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.storage.get('InstitutesComponent.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
@@ -63,7 +66,10 @@ export class InstitutesComponent implements OnInit {
         this.createColumnDefs();
       }
     });
-    this.objectService.getObjects('institute').subscribe(obj => this.rowData = obj);
+    while( this.rowData.length == 0 ) {
+      this.rowData = this.objectService.allObjects['institute'];
+      await new Promise(f => setTimeout(f, 1000));
+    };
   }
 
   createColumnDefs() {
@@ -114,59 +120,59 @@ export class InstitutesComponent implements OnInit {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
-   // this.sizeAll();
   }
-  onSelectionChanged() {
+  selectionChanged() {
+    this.selectedIds = []
     this.cephalixService.selectedInstitutes = this.gridApi.getSelectedRows();
     this.cephalixService.selectedList = [];
     for (let o of this.cephalixService.selectedInstitutes) {
       this.cephalixService.selectedList.push(o.name)
+      this.selectedIds.push(o.id)
     }
   }
 
+  checkChange(ev, obj: Institute) {
+    if (ev.detail.checked) {
+      this.selectedIds.push(obj.id)
+      this.cephalixService.selectedInstitutes.push(obj)
+    } else {
+      this.selectedIds = this.selectedIds.filter(id => id != obj.id)
+      this.cephalixService.selectedInstitutes = this.cephalixService.selectedInstitutes.filter(obj => obj.id != obj.id)
+    }
+  }
   onQuickFilterChanged(quickFilter) {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.doLayout();
+    let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
+    if (this.authService.isMD()) {
+      this.rowData = [];
+      for (let obj of this.objectService.allObjects['institute']) {
+        if (
+          obj.name.toLowerCase().indexOf(filter) != -1 ||
+          (obj.regCode && obj.regCode.toLowerCase().indexOf(filter) != -1) ||
+          (obj.locality && obj.locality.toLowerCase().indexOf(filter) != -1)
+        ) {
+          this.rowData.push(obj)
+        }
+      }
+    } else {
+      this.gridApi.setQuickFilter(filter);
+      this.gridApi.doLayout();
+    }
   }
-
-  onGridSizeChange(params) {
-    var allColumns = params.columnApi.getAllColumns();
-    params.api.sizeColumnsToFit();
-    params.columnApi.autoSizeColumns();
-    //this.sizeAll();
-  }
-
-  sizeAll(skip) {
-    var allColumnIds = [];
-    this.columnApi.getAllColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    //this.gridApi.sizeColumnsToFit();
-    this.columnApi.autoSizeColumns(allColumnIds, skip);
-  }
-
-  sizeToFit() {
-    this.gridApi.sizeColumnsToFit();
-  }
-
   public redirectToDelete = (institute: Institute) => {
-    this.objectService.deleteObjectDialog(institute, 'institute','')
+    this.objectService.deleteObjectDialog(institute, 'institute', '')
   }
   /**
  * Open the actions menu with the selected object ids.
  * @param ev
  */
-  async openActions(ev: any, objId: number) {
-    if (this.cephalixService.selectedInstitutes.length ==0  && !objId) {
-      this.objectService.selectObject();
-      return;
-    }
-    let objectIds = [];
-    if (objId) {
-      objectIds.push(objId)
+  async openActions(ev, object: Institute) {
+    if (object) {
+      this.selectedIds.push(object.id)
+      this.cephalixService.selectedInstitutes.push(object)
     } else {
-      for (let i = 0; i < this.cephalixService.selectedInstitutes.length; i++) {
-        objectIds.push(this.cephalixService.selectedInstitutes[i].id);
+      if (this.cephalixService.selectedInstitutes.length == 0) {
+        this.objectService.selectObject();
+        return;
       }
     }
     const popover = await this.popoverCtrl.create({
@@ -174,16 +180,16 @@ export class InstitutesComponent implements OnInit {
       event: ev,
       componentProps: {
         objectType: "institute",
-        objectIds: objectIds,
+        objectIds: this.selectedIds,
         selection: this.cephalixService.selectedInstitutes,
-        gridApi:   this.gridApi
+        gridApi: this.gridApi
       },
       animated: true,
       showBackdrop: true
     });
     (await popover).present();
   }
-  async redirectToEdit(ev: Event, institute: Institute) {
+  async redirectToEdit(institute: Institute) {
     if (institute) {
       this.objectService.selectedObject = institute;
       this.route.navigate(['/pages/cephalix/institutes/' + institute.id]);
@@ -235,4 +241,33 @@ export class InstitutesComponent implements OnInit {
       this.authService.log("most lett vegrehajtva.")
     })
   }
+
+  public routeInstitute(institute: Institute) {
+    var hostname = window.location.hostname;
+    var protocol = window.location.protocol;
+    var port = window.location.port;
+    let sub = this.cephalixService.getInstituteToken(institute.id)
+        .subscribe(
+            async (res) => {
+                let token = res;
+                console.log("Get token from:" + institute.uuid)
+                console.log(res);
+                if (!res) {
+                  this.objectService.errorMessage('Can not connect  to "' + institute.name + '"')
+                } else {
+                    sessionStorage.setItem('shortName', institute.uuid);
+                    sessionStorage.setItem('instituteName', institute.name);
+                    sessionStorage.setItem('cephalix_token', token);
+                    if (port) {
+                        this.nativeWindow.open(`${protocol}//${hostname}:${port}`);
+                    } else {
+                        this.nativeWindow.open(`${protocol}//${hostname}`);
+                    }
+                    sessionStorage.removeItem('shortName');
+                }
+            },
+            (err) => { console.log(err) },
+            () => { sub.unsubscribe() }
+        )
+}
 }

@@ -36,25 +36,22 @@ export class DevicePrintersComponent implements OnInit {
     this.noPrinter.id = 0;
     this.noPrinter.name = this.languageS.trans("No default  printer");
     this.printers.defaultPrinter = this.noPrinter;
-    this.objectService.getObjects('printer').subscribe(
-      (obj) => {
-        this.allPrinters = obj;
-        this.allDefaultPrinters = this.allDefaultPrinters.concat(obj);
-        this.deviceService.getAvailablePrinter(this.device.id).subscribe(
+    this.allPrinters = this.objectService.allObjects['printer'];
+    this.allDefaultPrinters = this.allDefaultPrinters.concat(this.objectService.allObjects['printer']);
+    this.deviceService.getAvailablePrinter(this.device.id).subscribe(
+      (val) => {
+        for (let printer of val) {
+          this.printers.availablePrinters.push(printer);
+        }
+        this.deviceService.getDefaultPrinter(this.device.id).subscribe(
           (val) => {
-            for (let printer of val) {
-              this.printers.availablePrinters.push(printer);
+            if (val) {
+              this.printers.defaultPrinter = val;
             }
-            this.deviceService.getDefaultPrinter(this.device.id).subscribe(
-              (val) => {
-                if (val) {
-                  this.printers.defaultPrinter = val;
-                }
-              }
-            )
           }
         )
-      });
+      }
+    );
   }
   compareFn(o1: Printer, o2: Printer | Printer[]) {
     if (!o1 || !o2) {

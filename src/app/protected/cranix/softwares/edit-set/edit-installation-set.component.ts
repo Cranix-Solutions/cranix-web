@@ -75,13 +75,13 @@ export class EditInstallationSetComponent implements OnInit {
   ngOnInit() {
     this.submitted = false;
 
-    for (let tmp of this.objectService.allObjects['hwconf'].getValue()) {
+    for (let tmp of this.objectService.allObjects['hwconf']) {
       if (tmp.deviceType == 'FatClient') {
         this.availableHwconfs.push(tmp);
       }
     }
-    this.availableRooms = this.objectService.allObjects['room'].getValue();
-    for (let tmp of this.objectService.allObjects['device'].getValue()) {
+    this.availableRooms = this.objectService.allObjects['room'];
+    for (let tmp of this.objectService.allObjects['device']) {
       let tmpHwconf = this.objectService.getObjectById('hwconf', tmp.hwconfId);
       if (tmpHwconf && tmpHwconf.deviceType == 'FatClient') {
         this.availableDevices.push(tmp);
@@ -128,7 +128,6 @@ export class EditInstallationSetComponent implements OnInit {
       }
     )
     this.availableSoftwaresApi.sizeColumnsToFit();
-    (<HTMLInputElement>document.getElementById("availableSoftwaresTable")).style.height = Math.trunc(window.innerHeight * 0.60) + "px";
   }
   availableSoftwaresChanged() {
     this.softwares = this.availableSoftwaresApi.getSelectedRows();
@@ -151,7 +150,6 @@ export class EditInstallationSetComponent implements OnInit {
       }
     )
     this.availableHwconfsApi.sizeColumnsToFit();
-    (<HTMLInputElement>document.getElementById("availableHwconfsTable")).style.height = Math.trunc(window.innerHeight * 0.60) + "px";
   }
   availableHwconfsChanged() {
     this.hwconfs = this.availableHwconfsApi.getSelectedRows();
@@ -174,7 +172,6 @@ export class EditInstallationSetComponent implements OnInit {
       }
     )
     this.availableRoomsApi.sizeColumnsToFit();
-    (<HTMLInputElement>document.getElementById("availableRoomsTable")).style.height = Math.trunc(window.innerHeight * 0.60) + "px";
   }
   availableRoomsChanged() {
     this.rooms = this.availableRoomsApi.getSelectedRows();
@@ -197,7 +194,6 @@ export class EditInstallationSetComponent implements OnInit {
       }
     )
     this.availableDevicesApi.sizeColumnsToFit();
-    (<HTMLInputElement>document.getElementById("availableDevicesTable")).style.height = Math.trunc(window.innerHeight * 0.60) + "px";
   }
   availableDevicesChanged() {
     this.devices = this.availableDevicesApi.getSelectedRows();
@@ -211,7 +207,6 @@ export class EditInstallationSetComponent implements OnInit {
   softwaresReady(params) {
     this.softwaresApi = params.api;
     this.softwaresApi.sizeColumnsToFit();
-    (<HTMLInputElement>document.getElementById("softwaresTable")).style.height = Math.trunc(window.innerHeight * 0.60) + "px";
   }
   softwaresChanged() {
     this.softwares = this.softwaresApi.getSelectedRows();
@@ -225,7 +220,6 @@ export class EditInstallationSetComponent implements OnInit {
   hwconfsReady(params) {
     this.hwconfsApi = params.api;
     this.hwconfsApi.sizeColumnsToFit();
-    (<HTMLInputElement>document.getElementById("hwconfsTable")).style.height = Math.trunc(window.innerHeight * 0.60) + "px";
   }
   hwconfsChanged() {
     this.hwconfs = this.hwconfsApi.getSelectedRows();
@@ -239,7 +233,6 @@ export class EditInstallationSetComponent implements OnInit {
   roomsReady(params) {
     this.roomsApi = params.api;
     this.roomsApi.sizeColumnsToFit();
-    (<HTMLInputElement>document.getElementById("roomsTable")).style.height = Math.trunc(window.innerHeight * 0.60) + "px";
   }
   roomsChanged() {
     this.rooms = this.roomsApi.getSelectedRows();
@@ -253,7 +246,6 @@ export class EditInstallationSetComponent implements OnInit {
   devicesReady(params) {
     this.devicesApi = params.api;
     this.devicesApi.sizeColumnsToFit();
-    (<HTMLInputElement>document.getElementById("devicesTable")).style.height = Math.trunc(window.innerHeight * 0.60) + "px";
   }
   devicesChanged() {
     this.devices = this.devicesApi.getSelectedRows();

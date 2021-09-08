@@ -32,7 +32,7 @@ export class AddOutgoingRuleComponent implements OnInit {
     for (let room of this.securityService.firewallRooms) {
       this.roomIps.push({ key: room.id, name: room.name })
     }
-    for (let dev of this.objectService.allObjects['device'].getValue()) {
+    for (let dev of this.objectService.allObjects['device']) {
       this.deviceIps.push({ key: dev.id, name: dev.name })
     }
   }

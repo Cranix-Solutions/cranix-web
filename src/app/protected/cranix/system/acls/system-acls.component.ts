@@ -36,8 +36,8 @@ export class SystemAclsComponent implements OnInit {
 
   ngOnInit() {
     this.context = { componentParent: this };
-    this.objectService.getObjects('group').subscribe(obj => this.groupsData = obj);
-    this.objectService.getObjects('user').subscribe(obj => this.usersData = obj);
+    this.groupsData = this.objectService.allObjects['group'];
+    this.usersData  = this.objectService.allObjects['user'];
     this.groupColumnDefs = [
       {
         headerName: this.languageS.trans('name'),

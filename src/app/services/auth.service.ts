@@ -26,6 +26,8 @@ export class AuthenticationService {
     formHeaders: HttpHeaders;
     textHeaders: HttpHeaders;
     settings: Settings = new Settings();
+    minLgSize = 769;
+    rowColors: string[] = [ "#D2E3D5", "#AFC2B2"]
 
     constructor(
         private http: HttpClient,
@@ -48,6 +50,7 @@ export class AuthenticationService {
             'Content-Type': "application/json",
             'Accept': "application/json"
         });
+        
         return this.http.post<UserResponse>(this.url, user, { headers: headers });
     }
 
@@ -266,6 +269,10 @@ export class AuthenticationService {
         if (this.settings.debug || isDevMode()) {
             console.log(arguments)
         }
+    }
+
+    public isMD(){
+        return window.innerWidth < this.minLgSize;
     }
 }
 

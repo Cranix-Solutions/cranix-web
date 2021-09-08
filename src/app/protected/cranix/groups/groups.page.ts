@@ -13,7 +13,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { Group } from 'src/app/shared/models/data-model'
 import { AuthenticationService } from 'src/app/services/auth.service';
-import { GroupMembersPage  } from 'src/app/shared/actions/group-members/group-members.page';
+import { GroupMembersPage } from 'src/app/shared/actions/group-members/group-members.page';
 
 @Component({
   selector: 'cranix-groups',
@@ -28,10 +28,10 @@ export class GroupsPage implements OnInit {
   defaultColDef = {};
   gridApi: GridApi;
   columnApi: ColumnApi;
-  rowSelection;
   context;
-  title = 'app';
   rowData = [];
+  selection: Group[] = [];
+  selectedIds: number[] = [];
 
   constructor(
     public authService: AuthenticationService,
@@ -43,15 +43,14 @@ export class GroupsPage implements OnInit {
     private storage: Storage
   ) {
     this.context = { componentParent: this };
-    this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new Group());
     this.createColumnDefs();
     this.defaultColDef = {
-        resizable: true,
-        sortable: true,
-        hide: false,
-        suppressMenu : true
-      }
+      resizable: true,
+      sortable: true,
+      hide: false,
+      suppressMenu: true
+    }
   }
   ngOnInit() {
     this.storage.get('GroupsPage.displayedColumns').then((val) => {
@@ -61,12 +60,12 @@ export class GroupsPage implements OnInit {
         this.createColumnDefs();
       }
     });
-    this.objectService.getObjects('group').subscribe(obj => this.rowData = obj);
+    this.rowData = this.objectService.allObjects['group']
   }
 
   createColumnDefs() {
-     this.columnDefs = [];
-     let action = {
+    this.columnDefs = [];
+    let action = {
       headerName: "",
       minWidth: 150,
       suppressSizeToFit: true,
@@ -94,7 +93,6 @@ export class GroupsPage implements OnInit {
           this.columnDefs.push(col);
           this.columnDefs.push(action);
           continue;
-          break;
         }
         case 'groupType': {
           col['valueGetter'] = function (params) {
@@ -112,32 +110,56 @@ export class GroupsPage implements OnInit {
     this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
-
+  selectionChanged() {
+    this.selectedIds = []
+    for (let i = 0; i < this.gridApi.getSelectedRows().length; i++) {
+      this.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
+    }
+    this.selection = this.gridApi.getSelectedRows()
+  }
+  checkChange(ev, obj: Group) {
+    if (ev.detail.checked) {
+      this.selectedIds.push(obj.id)
+      this.selection.push(obj)
+    } else {
+      this.selectedIds = this.selectedIds.filter(id => id != obj.id)
+      this.selection = this.selection.filter(obj => obj.id != obj.id)
+    }
+  }
   onQuickFilterChanged(quickFilter) {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.doLayout();
-
+    let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
+    if (this.authService.isMD()) {
+      this.rowData = [];
+      for (let obj of this.objectService.allObjects['group']) {
+        if (
+          obj.name.toLowerCase().indexOf(filter) != -1 ||
+          obj.description.toLowerCase().indexOf(filter) != -1 ||
+          this.languageS.trans(obj.groupType).toLowerCase().indexOf(filter) != -1
+        ) {
+          this.rowData.push(obj)
+        }
+      }
+    } else {
+      this.gridApi.setQuickFilter(filter);
+      this.gridApi.doLayout();
+    }
   }
 
   public redirectToDelete = (group: Group) => {
-    this.objectService.deleteObjectDialog(group, 'group','')
+    this.objectService.deleteObjectDialog(group, 'group', '')
   }
   /**
   * Open the actions menu with the selected object ids.
   * @param ev
   */
-  async openActions(ev: any, objId: number) {
-    let selected = this.gridApi.getSelectedRows();
-    if ( selected.length == 0 && !objId) {
-      this.objectService.selectObject();
-      return;
-    }
-    let objectIds = [];
-    if (objId) {
-      objectIds.push(objId)
+  async openActions(ev: any, object: Group) {
+    if (object) {
+      this.selectedIds.push(object.id)
+      this.selection.push(object)
     } else {
-      for (let i = 0; i < selected.length; i++) {
-        objectIds.push(selected[i].id);
+      if (this.selection.length == 0) {
+        this.objectService.selectObject();
+        return;
       }
     }
     const popover = await this.popoverCtrl.create({
@@ -145,16 +167,16 @@ export class GroupsPage implements OnInit {
       event: ev,
       componentProps: {
         objectType: "group",
-        objectIds: objectIds,
-        selection: selected,
-        gridApi:   this.gridApi
+        objectIds: this.selectedIds,
+        selection: this.selection,
+        gridApi: this.gridApi
       },
       animated: true,
       showBackdrop: true
     });
     (await popover).present();
   }
-  async redirectToMembers(ev: Event, group: Group) {
+  async redirectToMembers(group: Group) {
     this.objectService.selectedObject = group;
     const modal = await this.modalCtrl.create({
       component: GroupMembersPage,
@@ -170,7 +192,7 @@ export class GroupsPage implements OnInit {
     });
     (await modal).present();
   }
-  async redirectToEdit(ev: Event, group: Group) {
+  async redirectToEdit(group: Group) {
     let action = 'modify';
     if (!group) {
       group = new Group();

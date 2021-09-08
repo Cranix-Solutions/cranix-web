@@ -82,6 +82,11 @@ export class HwconfsService {
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
 	}
 
+	deletePartition(hwconfId: number, partName: string) {
+		this.url = this.hostname + `/hwconfs/${hwconfId}/${partName}`;
+		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
+	}
+
 	stopMulticast() {
 		this.url = this.hostname + "/clonetool/runningMulticast";
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });

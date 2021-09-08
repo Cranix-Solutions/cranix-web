@@ -27,11 +27,12 @@ export class HwconfsPage implements OnInit {
   columnDefs = [];
   gridApi;
   columnApi;
-  rowSelection;
   context;
   selected: Hwconf[] = [];
   title = 'app';
   rowData = [];
+  selection:   Hwconf[] = [];
+  selectedIds: number[] = [];
   constructor(
     public authService: AuthenticationService,
     public languageS: LanguageService,
@@ -42,7 +43,6 @@ export class HwconfsPage implements OnInit {
     private storage: Storage
   ) {
     this.context = { componentParent: this };
-    this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new Hwconf());
     this.createColumnDefs();
     this.defaultColDef = {
@@ -60,7 +60,7 @@ export class HwconfsPage implements OnInit {
         this.createColumnDefs();
       }
     });
-    this.objectService.getObjects('hwconf').subscribe(obj => this.rowData = obj);
+    this.rowData = this.objectService.allObjects['hwconf']
   }
   createColumnDefs() {
     this.columnDefs = [];
@@ -102,16 +102,38 @@ export class HwconfsPage implements OnInit {
     this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
-  onQuickFilterChanged(quickFilter) {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.doLayout();
+  selectionChanged(){
+    this.selectedIds = []
+    for (let i = 0; i < this.gridApi.getSelectedRows().length; i++) {
+      this.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
+    }
+    this.selection = this.gridApi.getSelectedRows()
   }
-  sizeAll() {
-    var allColumnIds = [];
-    this.columnApi.getAllColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.columnApi.autoSizeColumns(allColumnIds);
+  checkChange(ev,dev: Hwconf){
+    if( ev.detail.checked ) {
+      this.selectedIds.push(dev.id)
+      this.selection.push(dev)
+    } else {
+      this.selectedIds = this.selectedIds.filter(id => id != dev.id)
+      this.selection   = this.selection.filter(obj => obj.id != dev.id)
+    }
+  }
+  onQuickFilterChanged(quickFilter) {
+    let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
+    if (this.authService.isMD()) {
+      this.rowData = [];
+      for (let obj of this.objectService.allObjects['hwconf']) {
+        if (
+          obj.name.toLowerCase().indexOf(filter) != -1 ||
+          obj.description.toLowerCase().indexOf(filter) != -1
+        ) {
+          this.rowData.push(obj)
+        }
+      }
+    } else {
+      this.gridApi.setQuickFilter(filter);
+      this.gridApi.doLayout();
+    }
   }
 
   public redirectToDelete = (hwconf: Hwconf) => {
@@ -119,20 +141,16 @@ export class HwconfsPage implements OnInit {
   }
   /**
  * Open the actions menu with the selected object ids.
- * @param ev 
+ * @param ev
  */
-  async openActions(ev: any, objId: number) {
-    this.selected = this.gridApi.getSelectedRows();
-    if (this.selected.length == 0 && !objId) {
-      this.objectService.selectObject();
-      return;
-    }
-    let objectIds = [];
-    if (objId) {
-      objectIds.push(objId)
+  async openActions(ev: any, object: Hwconf) {
+    if (object) {
+      this.selectedIds.push(object.id)
+      this.selection.push(object)
     } else {
-      for (let i = 0; i < this.selected.length; i++) {
-        objectIds.push(this.selected[i].id);
+      if (this.selection.length == 0) {
+        this.objectService.selectObject();
+        return;
       }
     }
     const popover = await this.popoverCtrl.create({
@@ -140,8 +158,8 @@ export class HwconfsPage implements OnInit {
       event: ev,
       componentProps: {
         objectType: "hwconf",
-        objectIds: objectIds,
-        selection: this.selected,
+        objectIds: this.selectedIds,
+        selection: this.selection,
         gridApi:   this.gridApi
       },
       animated: true,
@@ -150,7 +168,7 @@ export class HwconfsPage implements OnInit {
     (await popover).present();
   }
 
-  async redirectToEdit(ev: Event, hwconf: Hwconf) {
+  async redirectToEdit(hwconf: Hwconf) {
     if (hwconf) {
       this.objectService.selectedObject = hwconf;
       this.route.navigate(['/pages/cranix/hwconfs/' + hwconf.id]);
@@ -176,9 +194,9 @@ export class HwconfsPage implements OnInit {
     }
   }
 
-  /**
+/**
 * Function to Select the columns to show
-* @param ev 
+* @param ev
 */
   async openCollums(ev: any) {
     const modal = await this.modalCtrl.create({

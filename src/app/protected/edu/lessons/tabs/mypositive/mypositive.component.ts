@@ -101,7 +101,7 @@ export class MypositiveComponent implements OnInit {
    * @param ev 
    * @param positivList 
    */
-  async redirectToEdit(ev: Event, positivList: PositivList) {
+  async redirectToEdit(positivList: PositivList) {
     let action = 'modify';
     if (!positivList) {
       positivList = new PositivList();

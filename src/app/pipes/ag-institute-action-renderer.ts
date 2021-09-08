@@ -39,8 +39,7 @@ export class InstituteActionCellRenderer implements ICellRendererAngularComp, On
     constructor(
         private win: WindowRef,
         private cephS: CephalixService,
-	private toastController: ToastController)
-    {
+        private toastController: ToastController) {
         this.nativeWindow = win.getNativeWindow();
     }
     // called on init
@@ -50,10 +49,10 @@ export class InstituteActionCellRenderer implements ICellRendererAngularComp, On
     }
 
     public details() {
-        this.params.context.componentParent.redirectToEdit(this.data.id, this.data);
+        this.params.context.componentParent.redirectToEdit(this.data);
     }
-    public openAction(ev: any){
-        this.params.context.componentParent.openActions(ev, this.data.id )
+    public openAction(ev: any) {
+        this.params.context.componentParent.openActions(ev, this.data.id)
     }
     public routeSchool() {
         var hostname = window.location.hostname;
@@ -63,7 +62,7 @@ export class InstituteActionCellRenderer implements ICellRendererAngularComp, On
             .subscribe(
                 async (res) => {
                     this.token = res;
-                    console.log("Get token from:" + this.data.uuid )
+                    console.log("Get token from:" + this.data.uuid)
                     console.log(res);
                     if (!res) {
                         const toast = this.toastController.create({

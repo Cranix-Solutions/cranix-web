@@ -175,7 +175,6 @@ export class FirewallComponent implements OnInit {
   outGridReady(params) {
     this.outApi = params.api;
     this.outColumnApi = params.columnApi;
-    //  (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
     this.outApi.sizeColumnsToFit();
     this.outSizeAll();
   }
@@ -192,7 +191,6 @@ export class FirewallComponent implements OnInit {
   remoteGridReady(params) {
     this.remoteApi = params.api;
     this.remoteColumnApi = params.columnApi;
-    //  (<HTMLInputElement>document.getElementById("agGridTable")).style.height = Math.trunc(window.innerHeight * 0.7) + "px";
     this.remoteApi.sizeColumnsToFit();
     this.remoteSizeAll();
   }

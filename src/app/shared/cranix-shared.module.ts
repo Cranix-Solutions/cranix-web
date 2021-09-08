@@ -30,6 +30,8 @@ import { HwconfIdCellRenderer } from 'src/app/pipes/ag-hwconfid-renderer';
 import { PrinterActionBTNRenderer } from 'src/app/pipes/ag-printer-renderer';
 import { RoomIdCellRenderer } from 'src/app/pipes/ag-roomid-render';
 import { DeviceIdCellRenderer } from 'src/app/pipes/ag-deviceid-renderer';
+import { InstituteStatusRenderer } from 'src/app/pipes/ag-institute-status-renderer'
+import { SyncObjectRenderer } from 'src/app/pipes/ag-sync-object-renderer'
 import { InstituteActionCellRenderer, WindowRef } from 'src/app/pipes/ag-institute-action-renderer';
 import { UpdateRenderer } from 'src/app/pipes/ag-update-renderer';
 import { UserIdCellRenderer } from 'src/app/pipes/ag-userid-renderer';
@@ -72,6 +74,7 @@ import { SelectRoomComponent } from 'src/app/shared/actions/select-room/select-r
     GroupMembersPage,
     HwconfIdCellRenderer,
     InstituteActionCellRenderer,
+    InstituteStatusRenderer,
     ManageDhcpComponent,
     PrinterActionBTNRenderer,
     RoomActionBTNRenderer,
@@ -80,6 +83,7 @@ import { SelectRoomComponent } from 'src/app/shared/actions/select-room/select-r
     SetquotaComponent,
     SoftwareEditBTNRenderer,
     SelectColumnsComponent,
+    SyncObjectRenderer,
     SelectRoomComponent,
     UpdateRenderer,
     UserActionBTNRenderer,
@@ -105,6 +109,7 @@ import { SelectRoomComponent } from 'src/app/shared/actions/select-room/select-r
       GroupActionBTNRenderer,
       HwconfIdCellRenderer,
       InstituteActionCellRenderer,
+      InstituteStatusRenderer,
       PrinterActionBTNRenderer,
       RoomIdCellRenderer,
       RoomActionBTNRenderer,

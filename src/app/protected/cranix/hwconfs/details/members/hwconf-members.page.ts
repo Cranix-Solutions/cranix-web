@@ -93,7 +93,6 @@ export class HwconfMembersPage implements OnInit {
   onMemberReady(params) {
     this.memberApi = params.api;
     this.memberColumnApi = params.columnApi;
-    (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
     //this.memberApi.sizeColumnsToFit();
   }
 
@@ -103,7 +102,6 @@ export class HwconfMembersPage implements OnInit {
   }
 
   onResize($event) {
-    (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
     this.sizeAll();
     //this.gridApi.sizeColumnsToFit();
   }

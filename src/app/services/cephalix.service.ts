@@ -79,16 +79,14 @@ export class CephalixService {
 		return this.http.get<SynchronizedObject[]>(this.url, { headers: this.authService.headers });
 	}
 	getSynchronizedObjects(instituteId: number){
-		this.url = this.hostname + `/institutes/${instituteId}/objects`;
+		this.url = this.hostname + `/institutes/${instituteId}/sync`;
 		console.log(this.url);
 		return this.http.get<SynchronizedObject[]>(this.url, { headers: this.authService.headers });
 	}
-
-	getTickets(): Observable<Ticket[]> {
-		this.url = this.hostname + '/tickets/all';
-		console.log(this.url);
-		return this.http.get<Ticket[]>(this.url, { headers: this.authService.headers });
-	};
+	getObjectsFromInstitute(instituteId: number, objectType: string){
+		this.url = this.hostname + `/institutes/${instituteId}/objects/${objectType}`; 
+		return this.http.get<any[]>(this.url, { headers: this.authService.headers });
+	}
 	getTicketById(id: number): Observable<Ticket> {
 		this.url = this.hostname + `/tickets/${id}`;
 		console.log(this.url);
@@ -119,7 +117,7 @@ export class CephalixService {
 	}
 
 	getCategorieTypes() {
-		this.url = this.hostname + `/institutes/objects`;
+		this.url = this.hostname + `/institutes/sync`;
 		console.log(this.url);
 		return this.http.get<string[]>(this.url, { headers: this.authService.headers });
 	}
@@ -163,6 +161,14 @@ export class CephalixService {
 		return this.http.post<ServerResponse>(this.url,fd, { headers: this.authService.headers});
 	}
 
+	getHWconfFromInstitute(instituteId: number, hwconfid: number, hwconf) {
+		this.url = this.hostname + `/institutes/${instituteId}/objects/hwconf/${hwconfid}`;
+		return this.http.post<ServerResponse>(this.url,hwconf, { headers: this.authService.headers});
+	}
+	syncHWconfFromInstitute(instituteId: number, mapping) {
+		this.url = this.hostname + `/institutes/${instituteId}/objects/hwconf`;
+		return this.http.post<ServerResponse>(this.url,mapping, { headers: this.authService.headers});
+	}
 	//PUT
 	putInstallSetToSync(instituteId	: number, categoryId: number){
 		const url = `${this.hostname}/institutes/${instituteId}/categories/${categoryId}`;
@@ -170,13 +176,13 @@ export class CephalixService {
 	}
 
 	putObjectToInstitute(instituteId	: number, objectType: string, objectId: number|string){
-		const url = `${this.hostname}/institutes/${instituteId}/objects/${objectType.toLocaleLowerCase()}/${objectId}`;
+		const url = `${this.hostname}/institutes/${instituteId}/sync/${objectType.toLocaleLowerCase()}/${objectId}`;
 		console.log(url);
 		return this.http.put<ServerResponse>(url,null ,{ headers: this.authService.headers });
 	}
 
 	deleteObjectFromInstitute(instituteId: number, ojectType: string, objectId: number ){
-		this.url = this.hostname + `/institutes/${instituteId}/objects/${ojectType.toLocaleLowerCase()}/${objectId}`;
+		this.url = this.hostname + `/institutes/${instituteId}/sync/${ojectType.toLocaleLowerCase()}/${objectId}`;
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
 	}
 

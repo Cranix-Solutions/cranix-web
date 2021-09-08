@@ -19,7 +19,7 @@ export class AddRemoteRuleComponent implements OnInit {
     public securityService: SecurityService,
     public modalCtrl: ModalController
   ) {
-    for (let dev of this.objectService.allObjects['device'].getValue()) {
+    for (let dev of this.objectService.allObjects['device']) {
       this.deviceIps.push({ key: dev.id, name: dev.name })
     }
   }

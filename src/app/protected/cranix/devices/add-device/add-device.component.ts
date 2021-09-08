@@ -28,7 +28,6 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
   name: string = "";
   roomsToSelect: Room[] = [];
   addDeviceForm: FormGroup;
-  hwConfs: Hwconf[];
   disabled: boolean = false;
   macOk = false;
 
@@ -49,7 +48,6 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
     if( this.authService.session.mac ) {
       this.device.mac = this.authService.session.mac;
     }
-    this.objectService.getObjects('hwconf').subscribe(obj => this.hwConfs = obj);
     console.log('room is, :::', this.objectService.selectedRoom);
     if (this.adHocRoom) {
       this.selfS.getMyRooms().subscribe(

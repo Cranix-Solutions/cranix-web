@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 //own
 import { Ticket, Article, Institute } from 'src/app/shared/models/cephalix-data-model';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
@@ -24,6 +24,7 @@ export class DetailsPage implements OnInit {
   articleOpen = {};
   constructor(
     private route: ActivatedRoute,
+    public  router: Router,
     private cephlixS: CephalixService,
     private objectService: GenericObjectService,
     private modalController: ModalController
@@ -38,15 +39,11 @@ export class DetailsPage implements OnInit {
         this.institute = this.objectService.getObjectById('institute', val.cephalixInstituteId);
         this.readArcticles();
         if (!this.institute) {
-          this.objectService.getObjects('institute').subscribe(
-            (obj) => {
-              for (let i of obj) {
-                this.institutes.push({ id: i.id, label: i.name + " " + i.locality })
-              }
-              this.institute = new Institute();
-              console.log(this.institutes, this.institute)
-            }
-          )
+           for (let i of this.objectService.allObjects['institute']) {
+             this.institutes.push({ id: i.id, label: i.name + " " + i.locality })
+           }
+           this.institute = new Institute();
+           console.log(this.institutes, this.institute)
         }
       },
       (err) => { console.log(err) },

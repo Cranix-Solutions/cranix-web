@@ -25,7 +25,7 @@ export class PrinterActionBTNRenderer implements ICellRendererAngularComp {
 
     public details() {
         console.log("Edit", this.params.data);
-        this.params.context.componentParent.redirectToEdit(this.params.data.id, this.params.data);
+        this.params.context.componentParent.redirectToEdit(this.params.data);
     }
     public reset(){
         this.params.context.componentParent.reset(this.params.data.id )

@@ -11,6 +11,14 @@
       <ion-toolbar>
         <ion-card-title>{{ 'List of synchronized objects in the selected institute:' | translate}} {{institute.name}}
         </ion-card-title>
+        <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="list">
+          <ion-segment-button value="to">
+            <ion-label>{{'To' | translate}}</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="from">
+            <ion-label>{{'From' | translate}}</ion-label>
+          </ion-segment-button>
+        </ion-segment>
         <ion-item>
           <ion-input placeholder="{{'search' | translate }}" (input)="onMemberFilterChanged()" id="memberFilter">
           </ion-input>
