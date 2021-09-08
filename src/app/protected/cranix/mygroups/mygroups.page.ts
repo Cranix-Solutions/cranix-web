@@ -25,7 +25,7 @@ import { EditBTNRenderer } from 'src/app/pipes/ag-edit-renderer';
   styleUrls: ['./mygroups.page.scss'],
 })
 export class MyGroupsPage implements OnInit {
-  segment: string = 'group';
+  segment: string = 'user';
   objectKeys: string[] = [];
   columnDefs = [];
   defaultColDef = {};
