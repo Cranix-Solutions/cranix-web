@@ -37,7 +37,6 @@ export class YesNoBTNRenderer implements ICellRendererAngularComp {
             this.params.context.componentParent.toggle(this.params.data, this.params.colDef.field, this.params.value);
             this.params.refreshCell();
         }
-        console.log(this.params);
     }
     refresh(params: any): boolean {
         return true;

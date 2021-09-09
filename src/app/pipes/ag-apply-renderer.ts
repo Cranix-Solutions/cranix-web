@@ -23,7 +23,6 @@ export class ApplyBTNRenderer implements ICellRendererAngularComp {
     }
 
     public apply() {
-        console.log(this.params)
         if (this.active) {
             this.params.context.componentParent.apply(
                 this.params.data,

@@ -251,10 +251,10 @@ export class InstitutesStatusComponent implements OnInit {
     });
     (await popover).present();
   }
-  redirectToEdit(id) {
-    console.log("redirectToEdit:", id)
-    this.objectService.selectedObject = this.objectService.getObjectById("institute", id);
-    this.route.navigate([`/pages/cephalix/institutes/${id}`]);
+  redirectToEdit(status: InstituteStatus) {
+    console.log("redirectToEdit:", status)
+    this.objectService.selectedObject = this.objectService.getObjectById("institute", status.cephalixInstituteId);
+    this.route.navigate([`/pages/cephalix/institutes/${status.cephalixInstituteId}`]);
   }
 
   /**
