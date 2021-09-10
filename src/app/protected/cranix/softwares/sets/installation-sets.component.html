@@ -19,11 +19,11 @@
   <ion-card>
     <ion-card-header>
       <ion-toolbar>
-        <ion-label *ngIf="installationSetApi">
-          #{{installationSetApi.getDisplayedRowCount()}}
-        </ion-label>
         <ion-card-title>{{ 'Manage software installation sets:' | translate}}</ion-card-title>
         <ion-item>
+          <ion-label *ngIf="installationSetApi">
+            #{{installationSetApi.getDisplayedRowCount()}}
+          </ion-label>
           <ion-input placeholder="{{'search' | translate }}" (input)="setFilterChanged()" id="installationSetFilter">
           </ion-input>
         </ion-item>
@@ -43,7 +43,7 @@
     <ion-card-content>
       <ag-grid-angular 
         #agGrid
-        style="width: 100%; height: 200px;"
+        style="width: 100%; height: 100%;"
         class="{{authService.settings.agGridThema}}"
         rowHeight="{{authService.settings.rowHeight}}"
         [rowData]="installationSetData"

@@ -228,7 +228,11 @@ button:focus {
     display: none;
   }
 }
-
+ion-card {
+  @media only screen and (max-width: 768px) {
+    margin-inline: 0;
+  }
+}
 /*
  * layout for carded-pages
  *

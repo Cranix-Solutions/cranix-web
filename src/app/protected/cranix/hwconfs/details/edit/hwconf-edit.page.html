@@ -14,11 +14,11 @@
   <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
     <ion-card>
       <ion-card-header>
-        <ion-row>
-          <ion-col offset=9 size=3>
+        <ion-toolbar>
+          <ion-buttons slot="end">
             <ion-button size="small" type="submit" [disabled]="!editForm.valid"
               matTooltip="{{'Apply changes' | translate }}">
-              <ion-icon slot="icon-only" name="checkmark-sharp"></ion-icon>
+              <ion-icon color="success" slot="icon-only" name="checkmark-sharp"></ion-icon>
             </ion-button>
             <ion-button size="small" (click)="cleanUp($event)" matTooltip="{{'Remove arhived images' | translate }}">
               <ion-icon slot="icon-only" name="remove-circle"></ion-icon>
@@ -26,8 +26,8 @@
             <ion-button size="small" (click)="delete($event)" matTooltip="{{'Delete hwconf' | translate }}">
               <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
             </ion-button>
-          </ion-col>
-        </ion-row>
+          </ion-buttons>
+        </ion-toolbar>
       </ion-card-header>
       <ion-card-content>
         <ion-grid>
@@ -73,27 +73,27 @@
       <ion-card-content>
         <ion-grid>
           <ion-row *ngFor="let part of object.partitions;">
-            <ion-col size=1>
+            <ion-col size=12 sizeMd=1 sizeLg=1 sizeXl=1>
               <ion-item>
                 <ion-label position="stacked">{{ 'name' | translate}}</ion-label>
                 <ion-input type="text" formControlName="part-{{part.id}}-name" value="{{part.name}}"></ion-input>
               </ion-item>
             </ion-col>
-            <ion-col size=1>
+            <ion-col size=12 sizeMd=1 sizeLg=1 sizeXl=1>
               <ion-item lines="none">
                 <ion-button fill="clear" size="small" (click)="deletePartition(part.name)" matTooltip="{{'Delete partition' | translate }}">
                   <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
                 </ion-button>
               </ion-item>
             </ion-col>
-            <ion-col size=2>
+            <ion-col size=12 sizeMd=2 sizeLg=2 sizeXl=2>
               <ion-item>
                 <ion-label position="stacked">{{ 'description' | translate}}</ion-label>
                 <ion-input type="text" formControlName="part-{{part.id}}-description" value="{{part.description}}">
                 </ion-input>
               </ion-item>
             </ion-col>
-            <ion-col size=2>
+            <ion-col size=12 sizeMd=2 sizeLg=2 sizeXl=2>
               <ion-item>
                 <ion-label position="stacked">{{ 'OS' | translate}}</ion-label>
                 <ion-select type="text" formControlName="part-{{part.id}}-os" [compareWith]="objectService.compareFn">
@@ -101,7 +101,7 @@
                 </ion-select>
               </ion-item>
             </ion-col>
-            <ion-col size=2>
+            <ion-col size=12 sizeMd=2 sizeLg=2 sizeXl=2>
               <ion-item>
                 <ion-label position="stacked">{{'joinType' | translate}}</ion-label>
                 <ion-select type="text" formControlName="part-{{part.id}}-joinType"
@@ -110,7 +110,7 @@
                 </ion-select>
               </ion-item>
             </ion-col>
-            <ion-col size=2>
+            <ion-col size=12 sizeMd=2 sizeLg=2 sizeXl=2>
               <ion-item>
                 <ion-label position="stacked">{{'cloneTool' | translate}}</ion-label>
                 <ion-select type="text" formControlName="part-{{part.id}}-tool" [compareWith]="objectService.compareFn">
@@ -118,7 +118,7 @@
                 </ion-select>
               </ion-item>
             </ion-col>
-            <ion-col size=2>
+            <ion-col size=12 sizeMd=2 sizeLg=2 sizeXl=2>
               <ion-item>
                 <ion-label position="stacked">{{ 'lastCloned' | translate}}</ion-label>
                 <ion-input type="text" value="{{part.lastCloned | date:'yyyy-MM-dd HH:mm:ss Z' }}" readonly>

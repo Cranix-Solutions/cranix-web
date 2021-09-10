@@ -132,19 +132,19 @@
         {{ 'room' | translate}}
       </ion-col>
       <ion-col>
-        {{ 'login' | translate}}
+        <ion-icon name="log-in"></ion-icon>
       </ion-col>
       <ion-col>
-        {{ 'portal' | translate}}
+        <ion-icon name="mail"></ion-icon>
       </ion-col>
       <ion-col>
-        {{ 'printing' | translate}}
+        <ion-icon name="print"></ion-icon>
       </ion-col>
-      <ion-col>
-        {{ 'proxy' | translate}}
+      <ion-col *ngIf="authService.isAllowed('system.proxy')">
+        <ion-icon color="success" name="globe"></ion-icon>
       </ion-col>
-      <ion-col>
-        {{ 'direct' | translate}}
+      <ion-col *ngIf="authService.isAllowed('room.direct')">
+        <ion-icon color="warning" name="globe"></ion-icon>
       </ion-col>
     </ion-row>
     <ion-row *ngFor="let obj of securityService.actualStatus; index as i" button (click)="redirectToAddEdit(obj)"  style="background-color : {{authService.rowColors[i%2]}}">
@@ -160,10 +160,10 @@
       <ion-col>
         {{ obj.printing }}
       </ion-col>
-      <ion-col>
+      <ion-col *ngIf="authService.isAllowed('system.proxy')">
         {{ obj.proxy }}
       </ion-col>
-      <ion-col>
+      <ion-col *ngIf="authService.isAllowed('room.direct')">
         {{ obj.direct }}
       </ion-col>
     </ion-row>
