@@ -99,7 +99,7 @@
         <ion-button fill="clear" *ngIf="segment == 'group'" (click)="redirectToMembers(object)">
           <ion-icon name="people-circle"></ion-icon>
         </ion-button>
-        <ion-button fill="clear" (click)="openActions(object)">
+        <ion-button fill="clear" (click)="openActions($event,object)">
           <ion-icon name="ellipsis-vertical-sharp"></ion-icon>
         </ion-button>
       </ion-item-options>
