@@ -126,6 +126,16 @@ export class RoomAccessComponent implements OnInit {
     }
   }
 
+  toggleButton(data, field: string) {
+    data[field] = !data[field]
+    if (this.segment == 'list') {
+      this.securityService.modifyAccessInRoom(data);
+    } else {
+      this.securityService.setAccessStatusInRoom(data);
+    }
+    this.securityService.getActualAccessStatus()
+  }
+
   apply(data: AccessInRoom, rowIndex: number) {
     let sent = false
     for (let access of this.rowData) {
