@@ -167,41 +167,27 @@ export class FirewallComponent implements OnInit {
     this.securityService.remoteChanged = true;
   }
   restartFirewall() {
-    this.systemService.applyServiceState('SuSEfirewall2', 'activ', 'restart')
+    this.securityService.setFirewallStatus('restart')
   }
   stopFirewall() {
-    this.systemService.applyServiceState('SuSEfirewall2', 'activ', 'false')
+    this.securityService.setFirewallStatus('stop')
   }
   outGridReady(params) {
     this.outApi = params.api;
     this.outColumnApi = params.columnApi;
     this.outApi.sizeColumnsToFit();
-    this.outSizeAll();
+    (<HTMLInputElement>document.getElementById("outGridTable")).style.height = Math.trunc(window.innerHeight * 0.63) + "px";
   }
   outSelectionChanged() {
     this.outSelected = this.outApi.getSelectedRows();
-  }
-  outSizeAll() {
-    var allColumnIds = [];
-    this.outColumnApi.getAllColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.outColumnApi.autoSizeColumns(allColumnIds);
   }
   remoteGridReady(params) {
     this.remoteApi = params.api;
     this.remoteColumnApi = params.columnApi;
     this.remoteApi.sizeColumnsToFit();
-    this.remoteSizeAll();
+    (<HTMLInputElement>document.getElementById("remoteGridTable")).style.height = Math.trunc(window.innerHeight * 0.63) + "px";
   }
   remoteSelectionChanged() {
     this.remoteSelected = this.remoteApi.getSelectedRows();
-  }
-  remoteSizeAll() {
-    var allColumnIds = [];
-    this.remoteColumnApi.getAllColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.remoteColumnApi.autoSizeColumns(allColumnIds);
   }
 }

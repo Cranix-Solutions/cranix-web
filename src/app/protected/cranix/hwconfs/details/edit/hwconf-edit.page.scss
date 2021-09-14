@@ -1,0 +1,13 @@
+.toolbar-background {
+    inset: 0px;
+    position: absolute;
+    transform: translateZ(0px);
+    border-width: var(--border-width);
+    border-style: var(--border-style);
+    border-color: var(--border-color);
+    /* background: var(--background); */
+    contain: strict;
+    opacity: var(--opacity);
+    z-index: -1;
+    pointer-events: none;
+}

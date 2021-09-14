@@ -233,6 +233,28 @@ ion-card {
     margin-inline: 0;
   }
 }
+
+.card-content-ios {
+  padding-inline-start: 0%;
+  padding-inline-end: 0%;
+}
+/*
+* ion-item should inherit background from its container for example ion-row
+*/
+ion-item::part(native) {
+  background: inherit;
+  margin: 0px;
+  padding-left: calc(var(--padding-start) + var(--ion-safe-area-left, 0px));
+  padding-right: var(--padding-end);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+  background: inherit;
+  overflow: inherit;
+  box-sizing: border-box;
+  z-index: 1;
+  border-radius: var(--border-radius);
+}
+
 /*
  * layout for carded-pages
  *

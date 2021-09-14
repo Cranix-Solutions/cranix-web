@@ -5,105 +5,165 @@
 </ion-header>
 <ion-row class="header-row">
   <ion-col>
-    <ion-title color="primary">{{ 'Modify selected hwconf' | translate}}: "{{object.name}}"
+    <ion-title color="primary">{{ 'Modify selected hwconf' | translate}}:"{{object.name}}"
       {{object.deviceType | translate }} {{object.description}}
     </ion-title>
   </ion-col>
 </ion-row>
-<ion-content>
+<ion-content *ngIf="editForm">
   <form [formGroup]="editForm" (ngSubmit)="onSubmit(editForm.value)">
     <ion-card>
       <ion-card-header>
-        <ion-toolbar>
-          <ion-buttons slot="end">
-            <ion-button size="small" type="submit" [disabled]="!editForm.valid"
-              matTooltip="{{'Apply changes' | translate }}">
-              <ion-icon color="success" slot="icon-only" name="checkmark-sharp"></ion-icon>
-            </ion-button>
-            <ion-button size="small" (click)="cleanUp($event)" matTooltip="{{'Remove arhived images' | translate }}">
-              <ion-icon slot="icon-only" name="remove-circle"></ion-icon>
-            </ion-button>
-            <ion-button size="small" (click)="delete($event)" matTooltip="{{'Delete hwconf' | translate }}">
-              <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-card-header>
-      <ion-card-content>
         <ion-grid>
-          <ion-row>
-            <ion-col size=12 sizeMd=6 sizeLg=4 sizeXl=3>
-              <ion-item>
+          <ion-row style="background-color : {{authService.rowColors[2]}}">
+            <ion-col *ngIf="authService.isMD()" size=12>
+              <ion-toolbar [color]="authService.rowColors[2]">
+                <ion-buttons slot="end">
+                  <ion-button size="small" type="submit" [disabled]="!editForm.valid"
+                    matTooltip="{{'Apply changes' | translate }}">
+                    <ion-icon color="success" slot="icon-only" name="checkmark-sharp"></ion-icon>
+                  </ion-button>
+                  <ion-button size="small" (click)="cleanUp($event)"
+                    matTooltip="{{'Remove arhived images' | translate }}">
+                    <ion-icon slot="icon-only" name="remove-circle"></ion-icon>
+                  </ion-button>
+                  <ion-button size="small" (click)="delete($event)" matTooltip="{{'Delete hwconf' | translate }}">
+                    <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ion-toolbar>
+            </ion-col>
+            <ion-col size=12 sizeMd=2 sizeLg=2 sizeXl=2>
+              <ion-item lines="none">
                 <ion-label position="stacked">{{ 'id' | translate }}</ion-label>
                 <ion-input color="tertiary" type="text" formControlName="id" value="{{object.id}}" readonly>
                 </ion-input>
               </ion-item>
             </ion-col>
-            <ion-col size=12 sizeMd=6 sizeLg=4 sizeXl=3>
+            <ion-col size=12 sizeMd=2 sizeLg=2 sizeXl=2>
               <ion-item>
                 <ion-label position="stacked">{{ 'name' | translate }}*</ion-label>
                 <ion-input type="text" formControlName="name" value="{{object.name}}" required>
                 </ion-input>
               </ion-item>
             </ion-col>
-            <ion-col size=12 sizeMd=6 sizeLg=4 sizeXl=3>
+            <ion-col size=12 sizeMd=2 sizeLg=2 sizeXl=2>
               <ion-item>
                 <ion-label position="stacked">{{ 'description' | translate }}*</ion-label>
                 <ion-input type="text" formControlName="description" value="{{object.description}}" required>
                 </ion-input>
               </ion-item>
             </ion-col>
-            <ion-col size=12 sizeMd=6 sizeLg=4 sizeXl=3>
+            <ion-col size=12 sizeMd=2 sizeLg=2 sizeXl=2>
               <ion-item>
                 <ion-label position="stacked">{{ 'deviceType' | translate }}*</ion-label>
                 <ion-select type="text" formControlName="deviceType" [compareWith]="objectService.compareFn" required>
-                    <ion-select-option *ngFor="let option of  objectService.selects['deviceType']" value="{{option}}">
-                      {{option | translate}}</ion-select-option>
-                  </ion-select>
+                  <ion-select-option *ngFor="let option of  objectService.selects['deviceType']" value="{{option}}">
+                    {{option | translate}}</ion-select-option>
+                </ion-select>
               </ion-item>
+            </ion-col>
+            <ion-col *ngIf="!authService.isMD()" size=4>
+              <ion-toolbar [color]="authService.rowColors[2]">
+                <ion-buttons slot="end">
+                  <ion-button size="small" type="submit" [disabled]="!editForm.valid"
+                    matTooltip="{{'Apply changes' | translate }}">
+                    <ion-icon color="success" slot="icon-only" name="checkmark-sharp"></ion-icon>
+                  </ion-button>
+                  <ion-button size="small" (click)="cleanUp($event)"
+                    matTooltip="{{'Remove arhived images' | translate }}">
+                    <ion-icon slot="icon-only" name="remove-circle"></ion-icon>
+                  </ion-button>
+                  <ion-button size="small" (click)="delete($event)" matTooltip="{{'Delete hwconf' | translate }}">
+                    <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ion-toolbar>
             </ion-col>
           </ion-row>
         </ion-grid>
-      </ion-card-content>
-    </ion-card>
-    <ion-card>
-      <ion-card-header>
       </ion-card-header>
-      <ion-title>{{ 'Partitions' | translate}}</ion-title>
       <ion-card-content>
         <ion-grid>
-          <ion-row *ngFor="let part of object.partitions;">
-            <ion-col size=12 sizeMd=1 sizeLg=1 sizeXl=1>
-              <ion-item>
-                <ion-label position="stacked">{{ 'name' | translate}}</ion-label>
-                <ion-input type="text" formControlName="part-{{part.id}}-name" value="{{part.name}}"></ion-input>
+          <ion-row>
+            <ion-col>
+              <ion-item size=12 sizeMd=3 sizeLg=3 sizeXl=3>
+                <h1>{{ 'Partitions' | translate}}:</h1>
               </ion-item>
             </ion-col>
-            <ion-col size=12 sizeMd=1 sizeLg=1 sizeXl=1>
+          </ion-row>
+          <ion-row *ngIf="!authService.isMD()" style="background-color : {{authService.rowColors[2]}}">
+            <ion-col size=1>
               <ion-item lines="none">
-                <ion-button fill="clear" size="small" (click)="deletePartition(part.name)" matTooltip="{{'Delete partition' | translate }}">
+                <ion-label>{{ 'name' | translate}}</ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col size=1>
+              <ion-item lines="none">
+                <ion-label>{{ 'delete' | translate}}</ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col size=2>
+              <ion-item lines="none">
+                <ion-label>{{ 'description' | translate}}</ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col size=2>
+              <ion-item lines="none">
+                <ion-label>{{ 'OS' | translate}}</ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col size=2>
+              <ion-item lines="none">
+                <ion-label>{{ 'joinType' | translate}}</ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col size=2>
+              <ion-item lines="none">
+                <ion-label>{{ 'cloneTool' | translate}}</ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col size=2>
+              <ion-item lines="none">
+                <ion-label>{{ 'lastCloned' | translate}}</ion-label>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngFor="let part of object.partitions; index as i"
+            style="background-color : {{authService.rowColors[i%2]}}">
+            <ion-col size=8 sizeMd=1 sizeLg=1 sizeXl=1>
+              <ion-item>
+                <ion-label *ngIf="authService.isMD()" position="stacked">{{ 'name' | translate}}</ion-label>
+                <ion-input type="text" formControlName="part-{{part.id}}-name" value="{{part.name}}"
+                  style="background-color : {{authService.rowColors[i%2]}}"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size=4 sizeMd=1 sizeLg=1 sizeXl=1>
+              <ion-item lines="none">
+                <ion-button fill="clear" size="small" (click)="deletePartition(part.name)"
+                  matTooltip="{{'Delete partition' | translate }}">
                   <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
                 </ion-button>
               </ion-item>
             </ion-col>
             <ion-col size=12 sizeMd=2 sizeLg=2 sizeXl=2>
               <ion-item>
-                <ion-label position="stacked">{{ 'description' | translate}}</ion-label>
+                <ion-label *ngIf="authService.isMD()" position="stacked">{{ 'description' | translate}}</ion-label>
                 <ion-input type="text" formControlName="part-{{part.id}}-description" value="{{part.description}}">
                 </ion-input>
               </ion-item>
             </ion-col>
             <ion-col size=12 sizeMd=2 sizeLg=2 sizeXl=2>
-              <ion-item>
-                <ion-label position="stacked">{{ 'OS' | translate}}</ion-label>
+              <ion-item [lines]="authService.isMD() ? 'full' : 'none'">
+                <ion-label *ngIf="authService.isMD()" position="stacked">{{ 'OS' | translate}}</ion-label>
                 <ion-select type="text" formControlName="part-{{part.id}}-os" [compareWith]="objectService.compareFn">
                   <ion-select-option *ngFor="let os of  operatingSystems" value="{{os}}">{{os}}</ion-select-option>
                 </ion-select>
               </ion-item>
             </ion-col>
             <ion-col size=12 sizeMd=2 sizeLg=2 sizeXl=2>
-              <ion-item>
-                <ion-label position="stacked">{{'joinType' | translate}}</ion-label>
+              <ion-item [lines]="authService.isMD() ? 'full' : 'none'">
+                <ion-label *ngIf="authService.isMD()" position="stacked">{{'joinType' | translate}}</ion-label>
                 <ion-select type="text" formControlName="part-{{part.id}}-joinType"
                   [compareWith]="objectService.compareFn">
                   <ion-select-option *ngFor="let join of  joinTypes" value="{{join}}">{{join}}</ion-select-option>
@@ -111,16 +171,16 @@
               </ion-item>
             </ion-col>
             <ion-col size=12 sizeMd=2 sizeLg=2 sizeXl=2>
-              <ion-item>
-                <ion-label position="stacked">{{'cloneTool' | translate}}</ion-label>
+              <ion-item [lines]="authService.isMD() ? 'full' : 'none'">
+                <ion-label *ngIf="authService.isMD()" position="stacked">{{'cloneTool' | translate}}</ion-label>
                 <ion-select type="text" formControlName="part-{{part.id}}-tool" [compareWith]="objectService.compareFn">
                   <ion-select-option *ngFor="let tool of  tools" value="{{tool}}">{{tool}}</ion-select-option>
                 </ion-select>
               </ion-item>
             </ion-col>
             <ion-col size=12 sizeMd=2 sizeLg=2 sizeXl=2>
-              <ion-item>
-                <ion-label position="stacked">{{ 'lastCloned' | translate}}</ion-label>
+              <ion-item [lines]="authService.isMD() ? 'full' : 'none'">
+                <ion-label *ngIf="authService.isMD()" position="stacked">{{ 'lastCloned' | translate}}</ion-label>
                 <ion-input type="text" value="{{part.lastCloned | date:'yyyy-MM-dd HH:mm:ss Z' }}" readonly>
                 </ion-input>
               </ion-item>

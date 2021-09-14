@@ -18,6 +18,7 @@ export class UnboundComponent implements OnInit {
   categories: any[];
   activeUnboundLists: string[] = [];
   saving: boolean = false;
+  segment: string = "categories";
 
   constructor(
     public  authService: AuthenticationService,
@@ -40,6 +41,11 @@ export class UnboundComponent implements OnInit {
     )
   }
 
+
+  segmentChanged(event) {
+    this.segment   = event.detail.value;
+    this.newDomain = "";
+  }
   getProxyCategories(): Promise<any[]> {
     return new Promise((resolve, reject) => {
       let sub1 = this.securityService.getProxyCategories().subscribe(

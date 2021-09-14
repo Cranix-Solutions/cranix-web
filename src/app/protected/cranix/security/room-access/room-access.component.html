@@ -81,14 +81,10 @@
     <ion-fab-button size="small">
       <ion-icon name="arrow-forward-circle"></ion-icon>
     </ion-fab-button>
-    <ion-fab-list side="start">
+    <ion-fab-list>
       <ion-fab-button *ngIf="segment == 'list'" (click)="redirectToAddEdit(null)"
         matTooltip="{{'Add new room access status' | translate }}" [disabled]="disabled">
         <ion-icon name="add-circle"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-button *ngIf="segment == 'list'" (click)="delete()"
-        matTooltip="{{'Delete selected access rules' | translate }}" [disabled]="disabled">
-        <ion-icon name="trash" color="danger"></ion-icon>
       </ion-fab-button>
       <ion-fab-button *ngIf="segment == 'status'" (click)="securityService.getActualAccessStatus()"
         matTooltip="{{'Reload actual firewall status' | translate }}">
@@ -148,12 +144,12 @@
         </ion-button>
       </ion-col>
       <ion-col *ngIf="authService.isAllowed('system.proxy')">
-        <ion-button fill="clear" size="small">
+        <ion-button fill="clear" size="small" matTooltip="{{'proxy' | translate }}">
           <ion-icon color="success" name="globe" slot="icon-only"></ion-icon>
         </ion-button>
       </ion-col>
       <ion-col *ngIf="authService.isAllowed('room.direct')">
-        <ion-button fill="clear" size="small">
+        <ion-button fill="clear" size="small" matTooltip="{{'direct' | translate }}">
           <ion-icon color="warning" name="globe" slot="icon-only"></ion-icon>
         </ion-button>
       </ion-col>
