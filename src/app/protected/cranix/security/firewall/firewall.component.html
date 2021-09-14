@@ -202,8 +202,7 @@
               {{ 'port' | translate}}
             </ion-col>
           </ion-row>
-          <ion-row *ngFor="let obj of securityService.outgoingRules; index as i" button (click)="redirectToAddEdit(obj)"
-            style="background-color : {{authService.rowColors[i%2]}}">
+          <ion-row *ngFor="let obj of securityService.outgoingRules; index as i" style="background-color : {{authService.rowColors[i%2]}}">
             <ion-col size=4>
               {{ obj.name }}
             </ion-col>
@@ -233,8 +232,7 @@
               {{ 'port' | translate}}
             </ion-col>
           </ion-row>
-          <ion-row *ngFor="let obj of securityService.remoteRules; index as i" button (click)="redirectToAddEdit(obj)"
-            style="background-color : {{authService.rowColors[i%2]}}">
+          <ion-row *ngFor="let obj of securityService.remoteRules; index as i" style="background-color : {{authService.rowColors[i%2]}}">
             <ion-col>
               {{ obj.name }}
             </ion-col>
