@@ -71,14 +71,14 @@
         <ion-item>
           <ion-label position="stacked">{{'mac'|translate}}</ion-label>
           <ion-input type="text" [(ngModel)]="device.mac" name="mac"
-            pattern="/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/" required>
+            pattern="^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$" required>
           </ion-input>
         </ion-item>
       </ng-template>
       <ion-item *ngIf="!adHocRoom">
         <ion-label position="stacked">{{'wlanMac'|translate}}</ion-label>
         <ion-input type="text" [(ngModel)]="device.wlanMac" name="wlanMac"
-          pattern="/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/"></ion-input>
+          pattern="^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$"></ion-input>
       </ion-item>
       <ion-item *ngIf="!adHocRoom">
         <ion-label position="stacked">{{'serial'|translate}}</ion-label>
