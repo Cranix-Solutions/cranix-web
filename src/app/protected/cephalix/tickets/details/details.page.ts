@@ -71,6 +71,9 @@ export class DetailsPage implements OnInit {
     if (!article.sender) {
       article.sender = this.ticket.email;
     }
+    article.text = "Hallo "+this.ticket.firstname + " " + this.ticket.lastname + ",<br><br>"
+      "Viele Grüße<br>Cranix-Solutions-Support-Team<br><br>" +
+      "--------------------------------------------" + article.text
     article.title = this.ticket.firstname + " " + this.ticket.lastname;
     const modal = await this.modalController.create({
       component: EditArticle,
