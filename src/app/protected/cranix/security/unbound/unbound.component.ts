@@ -13,6 +13,7 @@ export class UnboundComponent implements OnInit {
 
   badList: string[] = []
   whiteList: string[] = []
+  cephalixList: string[] = []
   newDomain: string = ""
   newDomain1: string = ""
   categories: any[];
@@ -31,6 +32,7 @@ export class UnboundComponent implements OnInit {
     this.securityService.unboundChanged = false;
     this.readLists('bad').then(val => { this.badList = val.sort() });
     this.readLists('good').then(val => { this.whiteList = val.sort() });
+    this.readLists('cephalix').then(val => { this.cephalixList = val.sort() });
     this.getProxyCategories().then(val => {
       this.categories = val
       this.categories.sort((a, b) => (a.desc > b.desc) ? 1 : (b.desc > a.desc) ? -1 : 0)
@@ -89,9 +91,12 @@ export class UnboundComponent implements OnInit {
   writeConfig() {
     this.objectService.requestSent();
     this.saving = true;
+    if( this.authService.session.name == 'cephalix') {
+      this.securityService.setProxyCustom('cephalix', this.cephalixList).subscribe();
+    }
     let sub = this.securityService.setProxyCustom('bad', this.badList).subscribe(
       (val) => {
-        this.securityService.setProxyCustom('bad', this.badList).subscribe(
+        this.securityService.setProxyCustom('good', this.whiteList).subscribe(
           (val1) => {
             this.securityService.setActiveUnboundLists(this.activeUnboundLists.join(" ")).subscribe(
               (val2) => {

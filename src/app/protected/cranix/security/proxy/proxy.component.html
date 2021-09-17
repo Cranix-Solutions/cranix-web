@@ -16,7 +16,7 @@
       <ion-segment-button value="bad">
         <ion-icon name="sad" color="danger"></ion-icon>
       </ion-segment-button>
-      <ion-segment-button *ngIf="authService.session.name == 'cephalix' || authService.isAllowed('cephalix.manage')"
+      <ion-segment-button *ngIf="authService.session.name == 'cephalix'"
         value="cephalix">
         <img src="assets/images/logo/cranix_school.svg" width="30">
       </ion-segment-button>
@@ -52,7 +52,7 @@
           <ion-segment-button value="bad">
             <ion-label>{{'Black list' | translate}}</ion-label>
           </ion-segment-button>
-          <ion-segment-button *ngIf="authService.session.name == 'cephalix' || authService.isAllowed('cephalix.manage')"
+          <ion-segment-button *ngIf="authService.session.name == 'cephalix'"
             value="cephalix">
             <ion-label>{{'Cephalix list' | translate}}</ion-label>
           </ion-segment-button>
