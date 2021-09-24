@@ -70,17 +70,17 @@
   <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('printerFilterMD')"
     id="printerFilterMD" showCancelButton="never"></ion-searchbar><ion-list>
     <ion-item-sliding *ngFor="let object of rowData">
-      <ion-item>
+      <ion-item button (click)="redirectToEdit(object)">
         <ion-note slot="start">
           <ion-checkbox (ionChange)="checkChange($event,object)"></ion-checkbox>
         </ion-note>
-        <ion-label (click)="redirectToEdit(object)">
-          {{ object.name }}
+        <ion-label>
+          <h3>{{ object.name }}</h3>
         </ion-label>
-        <ion-note style="max-width: 200px;" slot="end">
-          {{ object.model }}<br>
-          {{ object.activeJobs }}
-        </ion-note>
+        <ion-label>
+          <h5>{{ object.model }}</h5>
+          <h5>{{ object.activeJobs }}</h5>
+        </ion-label>
       </ion-item>
       <ion-item-options side="end">
         <ion-button fill="clear" (click)="redirectToDelete(object)">

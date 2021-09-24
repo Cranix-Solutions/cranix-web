@@ -19,7 +19,7 @@ export class LoginPage implements OnInit {
     authForm: FormGroup;
     instName: Observable<string>;
     instituteName: string = "";
-    allowSavePassword: boolean = false;
+    allowSavePassword: boolean = true;
 
     constructor(
         private authService: AuthenticationService,

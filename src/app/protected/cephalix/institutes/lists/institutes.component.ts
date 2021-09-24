@@ -33,6 +33,7 @@ export class InstitutesComponent implements OnInit {
   rowData = [];
   selectedIds: number[] = [];
   nativeWindow: any
+  now: number = 0;
 
   constructor(
     private win: WindowRef,
@@ -59,6 +60,7 @@ export class InstitutesComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.now = new Date().getTime();
     this.storage.get('InstitutesComponent.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
@@ -66,7 +68,7 @@ export class InstitutesComponent implements OnInit {
         this.createColumnDefs();
       }
     });
-    while( this.rowData.length == 0 ) {
+    while (this.rowData.length == 0) {
       this.rowData = this.objectService.allObjects['institute'];
       await new Promise(f => setTimeout(f, 1000));
     };
@@ -247,27 +249,31 @@ export class InstitutesComponent implements OnInit {
     var protocol = window.location.protocol;
     var port = window.location.port;
     let sub = this.cephalixService.getInstituteToken(institute.id)
-        .subscribe(
-            async (res) => {
-                let token = res;
-                console.log("Get token from:" + institute.uuid)
-                console.log(res);
-                if (!res) {
-                  this.objectService.errorMessage('Can not connect  to "' + institute.name + '"')
-                } else {
-                    sessionStorage.setItem('shortName', institute.uuid);
-                    sessionStorage.setItem('instituteName', institute.name);
-                    sessionStorage.setItem('cephalix_token', token);
-                    if (port) {
-                        this.nativeWindow.open(`${protocol}//${hostname}:${port}`);
-                    } else {
-                        this.nativeWindow.open(`${protocol}//${hostname}`);
-                    }
-                    sessionStorage.removeItem('shortName');
-                }
-            },
-            (err) => { console.log(err) },
-            () => { sub.unsubscribe() }
-        )
-}
+      .subscribe(
+        async (res) => {
+          let token = res;
+          console.log("Get token from:" + institute.uuid)
+          console.log(res);
+          if (!res) {
+            this.objectService.errorMessage('Can not connect  to "' + institute.name + '"')
+          } else {
+            sessionStorage.setItem('shortName', institute.uuid);
+            sessionStorage.setItem('instituteName', institute.name);
+            sessionStorage.setItem('cephalix_token', token);
+            if (port) {
+              this.nativeWindow.open(`${protocol}//${hostname}:${port}`);
+            } else {
+              this.nativeWindow.open(`${protocol}//${hostname}`);
+            }
+            sessionStorage.removeItem('shortName');
+          }
+        },
+        (err) => { console.log(err) },
+        () => { sub.unsubscribe() }
+      )
+  }
+
+  regcodeValid(institute: Institute){
+    return institute.validity < this.now ? "danger" : "succes"
+  }
 }

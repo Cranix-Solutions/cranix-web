@@ -4,17 +4,17 @@
         <ion-subtitle>{{article.recDate | date:'yy-MM-dd HH:mm'}} {{article.title}} {{article.sender}}
         </ion-subtitle>
         <ion-buttons slot="end">
-            <ion-button class="ion-no-margin" fill="clear" size="small" (click)="sendArticle()">
+            <ion-button class="ion-no-margin" fill="clear" size="small" (click)="sendArticle()" [disabled]="disabled">
                 <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
             </ion-button>
-            <ion-button fill="clear" size="small" (click)="modalController.dismiss()">
+            <ion-button fill="clear" size="small" (click)="modalController.dismiss()" [disabled]="disabled">
                 <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
             </ion-button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
 <ion-content fullscreen>
-    <quill-editor [styles]="{ height: '450px'}" [(ngModel)]="article.text"
+    <quill-editor [styles]="{ height: '450px'}" [(ngModel)]="newText"
             name="description" placeholder="{{'Insert your issue ...'| translate}}">
             <div quill-editor-toolbar>
                 <span class="ql-formats">

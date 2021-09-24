@@ -1,54 +1,124 @@
-<cranix-toolbar></cranix-toolbar>
-<ion-content id="carded">
+<div *ngIf="!selectedStatus">
+  <cranix-toolbar></cranix-toolbar>
   <ion-row class="header-row">
     <ion-col>
       <ion-title>{{'Status of the institutes' | translate}}</ion-title>
     </ion-col>
   </ion-row>
-  <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
-    <ion-fab-button size="small">
-      <ion-icon name="arrow-forward-circle"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-list side="start">
-      <ion-fab-button>
-        <ion-icon name="apps" (click)="openCollums($event)"></ion-icon>
+  <ion-content *ngIf="!authService.isMD()" id="carded">
+    <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
+      <ion-fab-button size="small">
+        <ion-icon name="arrow-forward-circle"></ion-icon>
       </ion-fab-button>
-    </ion-fab-list>
-  </ion-fab>
-  <ion-card>
-    <ion-card-header>
-      <ion-toolbar>
-        <ion-card-title>{{'Status of the institutes' | translate}}</ion-card-title>
-        <ion-item>
-          <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('quickFilter')"
-            id="quickFilter">
-          </ion-input>
-        </ion-item>
-        <ion-buttons slot="end">
-          <ion-button size="small" (click)="openCollums($event)"
-            matTooltip="{{'Select the columns to show' | translate }}">
-            <ion-icon slot="icon-only" name="apps"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-card-header>
-    <ion-card-content>
-      <ag-grid-angular
-        id="agGridTable"
-        style="width: 100%; height: 100%;"
-        class="{{authService.settings.agGridThema}}"
-        rowSelection="multiple"
-        rowHeight="{{authService.settings.rowHeight}}"
-        [context]="context"
-        [rowData]="rowData"
-        [columnDefs]="columnDefs"
-        [defaultColDef]="defaultColDef"
-        headerHeight="150"
-        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" 
-        (firstDataRendered)="headerHeightSetter()"
-        (columnResized)="headerHeightSetter()"
-        (gridReady)="onGridReady($event)">
-      </ag-grid-angular>
-    </ion-card-content>
-  </ion-card>
-</ion-content>
+      <ion-fab-list side="start">
+        <ion-fab-button>
+          <ion-icon name="apps" (click)="openCollums($event)"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
+    <ion-card>
+      <ion-card-header>
+        <ion-toolbar>
+          <ion-card-title>{{'Status of the institutes' | translate}}</ion-card-title>
+          <ion-item>
+            <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('quickFilter')"
+              id="quickFilter">
+            </ion-input>
+          </ion-item>
+          <ion-buttons slot="end">
+            <ion-button size="small" (click)="openCollums($event)"
+              matTooltip="{{'Select the columns to show' | translate }}">
+              <ion-icon slot="icon-only" name="apps"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-card-header>
+      <ion-card-content>
+        <ag-grid-angular id="agGridTable" style="width: 100%; height: 100%;"
+          class="{{authService.settings.agGridThema}}" rowSelection="multiple"
+          rowHeight="{{authService.settings.rowHeight}}" [context]="context" [rowData]="rowData"
+          [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" headerHeight="150"
+          [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
+          (firstDataRendered)="headerHeightSetter()" (columnResized)="headerHeightSetter()"
+          (gridReady)="onGridReady($event)">
+        </ag-grid-angular>
+      </ion-card-content>
+    </ion-card>
+  </ion-content>
+  <ion-content *ngIf="authService.isMD()" fullscreen>
+    <ion-list>
+      <ion-item *ngFor="let object of rowData" button (click)="showStatus(object)">
+        <ion-label>
+          <h3>{{ object.cephalixInstituteId | idToName:'institute' }}</h3>
+        </ion-label>
+        <ion-icon size="small" name="stats-chart" [color]="errorStatus(object)"></ion-icon>
+        <ion-icon size="small" name="save"        [color]="fsStatus(object)"></ion-icon>
+        <ion-icon size="small" name="alarm"       [color]="connectStatus(object)"></ion-icon>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</div>
+<div *ngIf="selectedStatus">
+  <ion-header>
+    <ion-toolbar>
+      <ion-label>{{ selectedStatus.cephalixInstituteId | idToName:'institute' }}
+      </ion-label>
+      <ion-buttons slot="end">
+        <ion-button (click)="redirectToEdit(selectedStatus)">
+          <ion-icon name="build"></ion-icon>
+        </ion-button>
+        <ion-button (click)="selectedStatus=null">
+          <ion-icon name="close" color="danger"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen>
+    <ion-list>
+      <ion-item>
+        <ion-label position="stacked">{{ 'errorMessages' | translate }}</ion-label>
+        <ion-label [color]="errorStatus(selectedStatus)">{{ selectedStatus.errorMessages }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'version' | translate }}</ion-label>
+        <ion-label>{{ selectedStatus.version }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'rootUsage' | translate }}</ion-label>
+        <ion-label [color]="fileSystemError(selectedStatus.rootUsage) ? 'danger' : 'success'">{{ selectedStatus.rootUsage }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'homeUsage' | translate }}</ion-label>
+        <ion-label [color]="fileSystemError(selectedStatus.homeUsage) ? 'danger' : 'success'">{{ selectedStatus.homeUsage }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'varUsage' | translate }}</ion-label>
+        <ion-label [color]="fileSystemError(selectedStatus.varUsage) ? 'danger' : 'success'">{{ selectedStatus.varUsage }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'srvUsage' | translate }}</ion-label>
+        <ion-label [color]="fileSystemError(selectedStatus.srvUsage) ? 'danger' : 'success'">{{ selectedStatus.srvUsage }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'created' | translate }}</ion-label>
+        <ion-label [color]="connectStatus(selectedStatus)">{{ selectedStatus.created | date:'yyyy-MM-dd HH:mm:ss' }}
+        </ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'availableUpdates' | translate }}</ion-label>
+        <ion-button *ngIf="selectedStatus.availableUpdates.split(' ').length > 0" fill="clear"
+          (click)="redirectToUpdate(selectedStatus.cephalixInstituteId)">
+          <ion-badge color="danger">{{selectedStatus.availableUpdates.split(' ').length }}</ion-badge>
+        </ion-button>
+        <ion-label *ngIf="selectedStatus.availableUpdates.split(' ').length == 0">
+          {{ 'No updates' | translate }}
+        </ion-label>
+        <ion-label>{{ selectedStatus.availableUpdates }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{ 'lastUpdate' | translate }}</ion-label>
+        <ion-label>{{ selectedStatus.lastUpdate | date:'yyyy-MM-dd HH:mm:ss' }}</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</div>
