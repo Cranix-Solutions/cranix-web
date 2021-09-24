@@ -1,9 +1,10 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Device } from 'src/app/shared/models/data-model';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
-import { PopoverController } from '@ionic/angular';
+import { ModalController, PopoverController } from '@ionic/angular';
 import { Subscription, interval } from 'rxjs';
 import { takeWhile } from 'rxjs/internal/operators/takeWhile';
+import { ShowScreenComponent } from 'src/app/shared/show-screen/show-screen.component';
 
 @Component({
   selector: 'cranix-roomdev',
@@ -22,8 +23,11 @@ export class RoomDevComponent implements OnInit,OnDestroy {
   devStatusSub: Subscription;
   alive:        boolean = true;
 
-  constructor(public popoverCtrl: PopoverController,
-  ) { }
+  constructor(
+    public popoverCtrl: PopoverController,
+    public modalCtrl: ModalController
+  ) { 
+  }
 
   ngOnInit() {
     if (this.device) {
@@ -37,6 +41,19 @@ export class RoomDevComponent implements OnInit,OnDestroy {
     this.screenShot = "data:image/jpg;base64," + this.device.screenShot;
   }
 
+  async showScreen() {
+    const modal = await this.modalCtrl.create({
+      component: ShowScreenComponent,
+      cssClass: 'big-modal',
+      animated: true,
+      swipeToClose: true,
+      showBackdrop: true,
+      componentProps: {
+        device: this.device
+      },
+    });
+    (await modal).present();console.log(this.device)
+  }
   async openAction(ev) {
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
