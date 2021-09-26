@@ -4,7 +4,7 @@ import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { ModalController, PopoverController } from '@ionic/angular';
 import { Subscription, interval } from 'rxjs';
 import { takeWhile } from 'rxjs/internal/operators/takeWhile';
-import { ShowScreenComponent } from 'src/app/shared/show-screen/show-screen.component';
+import { EductaionService } from 'src/app/services/education.service';
 
 @Component({
   selector: 'cranix-roomdev',
@@ -22,15 +22,18 @@ export class RoomDevComponent implements OnInit,OnDestroy {
 
   devStatusSub: Subscription;
   alive:        boolean = true;
+  nativeWindow: any;
 
   constructor(
     public popoverCtrl: PopoverController,
-    public modalCtrl: ModalController
-  ) { 
+    public modalCtrl: ModalController,
+    public eduService: EductaionService
+  ) {
   }
 
   ngOnInit() {
     if (this.device) {
+      this.getScreen();
       this.devStatusSub = interval(5000).pipe(takeWhile(() => this.alive)).subscribe((func => {
         this.getScreen();
       }))
@@ -41,18 +44,12 @@ export class RoomDevComponent implements OnInit,OnDestroy {
     this.screenShot = "data:image/jpg;base64," + this.device.screenShot;
   }
 
-  async showScreen() {
-    const modal = await this.modalCtrl.create({
-      component: ShowScreenComponent,
-      cssClass: 'big-modal',
-      animated: true,
-      swipeToClose: true,
-      showBackdrop: true,
-      componentProps: {
-        device: this.device
-      },
-    });
-    (await modal).present();console.log(this.device)
+  showScreen(){
+    sessionStorage.setItem('screenShot', this.screenShot);
+    sessionStorage.setItem('deviceName', this.device.name);
+    sessionStorage.setItem('userName', this.device.loggedInName);
+    window.open('/public/showScreen');
+    sessionStorage.removeItem('screenShot')
   }
   async openAction(ev) {
     const popover = await this.popoverCtrl.create({

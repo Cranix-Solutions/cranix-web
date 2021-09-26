@@ -14,6 +14,7 @@ import { InformationsService } from './services/informations.services';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
+  screenShot: string;
   constructor(
     private authService: AuthenticationService,
     private genericObjectS: GenericObjectService,
@@ -32,6 +33,7 @@ export class AppComponent {
       //this.statusBar.styleDefault();
       this.languageService.setInitialAppLanguage();
       this.authService.authenticationState.subscribe(state => {
+        console.log(sessionStorage.getItem('screenShot'))
         console.log("authenticationState",state)
         console.log("cephalix_token",sessionStorage.getItem('cephalix_token'))
         console.log("shortName",sessionStorage.getItem('shortName'))
@@ -53,6 +55,9 @@ export class AppComponent {
             console.log('pages/cranix/profile/myself');
             this.router.navigate(['pages/cranix/profile/myself']);
           }
+        } else if( sessionStorage.getItem('screenShot') ) {
+          this.screenShot = sessionStorage.getItem('screenShot');
+          this.router.navigate(['public/showScreen']);
         } else if (sessionStorage.getItem('cephalix_token')) {
           this.authService.token     = sessionStorage.getItem('cephalix_token');
           this.authService.loadSession();

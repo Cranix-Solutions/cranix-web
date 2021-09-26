@@ -12,9 +12,11 @@
     </ion-toolbar>
   </ion-card-header>
   <ion-card-content class="ion-justify-content-center">
-    <button *ngIf="device" (click)="showScreen()">
-      <img src="{{screenShot}}" />
-    </button>
+    <form>
+      <button *ngIf="device" (click)="showScreen()">
+        <img src="{{screenShot}}" />
+      </button>
+    </form>
     <h3 *ngIf="!device">{{ 'NODEVICE' | translate}}</h3>
   </ion-card-content>
 </ion-card>

@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { ShowScreenComponent } from './show-screen.component';
+import { ShowScreenshotComponent } from './show-screenshot.component';
 
-describe('ShowScreenComponent', () => {
-  let component: ShowScreenComponent;
-  let fixture: ComponentFixture<ShowScreenComponent>;
+describe('ShowScreenshotComponent', () => {
+  let component: ShowScreenshotComponent;
+  let fixture: ComponentFixture<ShowScreenshotComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ShowScreenComponent ],
+      declarations: [ ShowScreenshotComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ShowScreenComponent);
+    fixture = TestBed.createComponent(ShowScreenshotComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

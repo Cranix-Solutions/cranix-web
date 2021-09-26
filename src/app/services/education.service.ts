@@ -28,6 +28,7 @@ export class EductaionService {
 	uploadState = new BehaviorSubject(false);
 	myRooms: Room[];
 	selectedRoom: Room;
+	screenShots = {};
 
 	constructor(
 		public objectService: GenericObjectService,

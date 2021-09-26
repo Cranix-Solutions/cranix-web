@@ -51,7 +51,6 @@ import { FilesUploadComponent } from 'src/app/shared/actions/files-upload/files-
 import { FilesCollectComponent } from 'src/app/shared/actions/files-collect/files-collect.component'
 import { DownloadSoftwaresComponent } from 'src/app/shared/actions/download-softwares/download-softwares.component'
 import { SelectRoomComponent } from 'src/app/shared/actions/select-room/select-room.component'
-import { ShowScreenComponent } from 'src/app/shared/show-screen/show-screen.component'
 @NgModule({
   declarations: [
     ActionsComponent,
@@ -86,7 +85,6 @@ import { ShowScreenComponent } from 'src/app/shared/show-screen/show-screen.comp
     SelectColumnsComponent,
     SyncObjectRenderer,
     SelectRoomComponent,
-    ShowScreenComponent,
     UpdateRenderer,
     UserActionBTNRenderer,
     UserIdCellRenderer,

@@ -56,7 +56,7 @@ export class InstitutesComponent implements OnInit {
       suppressMenu: true,
       minWidth: 110
     };
-    this.nativeWindow = win.getNativeWindow();
+    this.nativeWindow = win.getNativeWindow()
   }
 
   async ngOnInit() {
