@@ -21,6 +21,7 @@ const routes: Routes = [
     CranixSharedModule,
     RouterModule.forChild(routes)
   ],
-  exports: [RouterModule]
+  exports: [RouterModule,ShowScreenshotComponent],
+  declarations: [ShowScreenshotComponent]
 })
 export class PublicPageModule {}
