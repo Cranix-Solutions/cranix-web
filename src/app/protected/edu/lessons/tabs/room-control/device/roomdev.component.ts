@@ -48,7 +48,7 @@ export class RoomDevComponent implements OnInit,OnDestroy {
     sessionStorage.setItem('screenShot', this.screenShot);
     sessionStorage.setItem('deviceName', this.device.name);
     sessionStorage.setItem('userName', this.device.loggedInName);
-    window.open('/public/showScreen');
+    window.open('/public/showScreen',this.device.name,"menubar=no,location=no,resizable=yes,scrollbars=yes,status=no");
     sessionStorage.removeItem('screenShot')
   }
   async openAction(ev) {
