@@ -11,10 +11,11 @@ import { CephalixService } from 'src/app/services/cephalix.service';
 import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { Institute } from 'src/app/shared/models/cephalix-data-model'
-import { InstituteActionCellRenderer, WindowRef } from 'src/app/pipes/ag-institute-action-renderer';
+import { InstituteActionCellRenderer } from 'src/app/pipes/ag-institute-action-renderer';
 import { LanguageService } from 'src/app/services/language.service';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
+import { WindowRef } from 'src/app/shared/models/ohters';
 
 @Component({
   selector: 'cranix-institutes',
