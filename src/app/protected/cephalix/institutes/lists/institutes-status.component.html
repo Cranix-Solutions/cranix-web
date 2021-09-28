@@ -6,16 +6,6 @@
     </ion-col>
   </ion-row>
   <ion-content *ngIf="!authService.isMD()" id="carded">
-    <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
-      <ion-fab-button size="small">
-        <ion-icon name="arrow-forward-circle"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-list side="start">
-        <ion-fab-button>
-          <ion-icon name="apps" (click)="openCollums($event)"></ion-icon>
-        </ion-fab-button>
-      </ion-fab-list>
-    </ion-fab>
     <ion-card>
       <ion-card-header>
         <ion-toolbar>
