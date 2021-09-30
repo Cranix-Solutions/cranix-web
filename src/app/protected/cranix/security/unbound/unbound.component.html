@@ -8,6 +8,25 @@
     </ion-button>
   </ion-buttons>
 </ion-toolbar>
+<ion-row *ngIf="authService.isMD()">
+  <ion-col>
+    <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="basic">
+      <ion-segment-button value="good">
+        <ion-icon name="happy" color="success"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="bad">
+        <ion-icon name="sad" color="danger"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button *ngIf="authService.session.name == 'cephalix'"
+        value="cephalix">
+        <img src="assets/images/logo/cranix_school.svg" width="30">
+      </ion-segment-button>
+      <ion-segment-button value="categories">
+        <ion-icon name="sad" color="danger"></ion-icon>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-col>
+</ion-row>
 <ion-content>
   <ion-card>
     <ion-card-header *ngIf="!authService.isMD()">
@@ -24,61 +43,87 @@
     <ion-card-content>
       <ion-grid>
         <ion-row>
-          <ion-col size="authService.isMD() ? 11 : 4">
+          <ion-col *ngIf="!authService.isMD() || segment=='good'" size="authService.isMD() ? 11 : 4">
             <ion-list>
               <ion-item lines="none">
-                <ion-title>{{'Own White List'|translate}}</ion-title>
+                <H1>{{'Own White List'|translate}}</H1>
               </ion-item>
               <form #addNewDomain1Form="ngForm">
                 <ion-item>
                   <ion-input [(ngModel)]="newDomain1" name="newDomain1"
                     placeholder="{{'Enter a new domain name'| translate}}" pattern="[a-z0-9.-]+\.[a-z]{2,}$">
                   </ion-input>
-                  <ion-button fill="clear" slot="end" (click)="addNewDomain1()" [disabled]="!addNewDomain1Form.valid || saving">
+                  <ion-button fill="clear" slot="start" (click)="addNewDomain1()"
+                    [disabled]="!addNewDomain1Form.valid || saving">
                     <ion-icon slot="icon-only" name="add-circle"></ion-icon>
                   </ion-button>
                 </ion-item>
               </form>
               <ion-item *ngFor="let dom of whiteList; index as i">
                 <ion-label class="label-max-width">{{dom}}</ion-label>
-                <ion-button fill="clear" slot="end" (click)="deleteDomain1(i)" [disabled]="saving">
+                <ion-button fill="clear" slot="start" (click)="deleteDomain1(i)" [disabled]="saving">
                   <ion-icon color="danger" slot="icon-only" name="trash"></ion-icon>
                 </ion-button>
               </ion-item>
             </ion-list>
           </ion-col>
-          <ion-col size="authService.isMD() ? 12 : 4">
+          <ion-col *ngIf="!authService.isMD() || segment=='bad'" size="authService.isMD() ? 12 : 4">
             <ion-list>
               <ion-item lines="none">
-                <ion-title>{{'Own Black List'|translate}}</ion-title>
+                <H1>{{'Own Black List'|translate}}</H1>
               </ion-item>
               <form #addNewDomainForm="ngForm">
                 <ion-item>
                   <ion-input [(ngModel)]="newDomain" name="newDomain"
                     placeholder="{{'Enter a new domain name'| translate}}" pattern="[a-z0-9.-]+\.[a-z]{2,}$">
                   </ion-input>
-                  <ion-button fill="clear" slot="end" (click)="addNewDomain()" [disabled]="!addNewDomainForm.valid || saving">
+                  <ion-button fill="clear" slot="start" (click)="addNewDomain()"
+                    [disabled]="!addNewDomainForm.valid || saving">
                     <ion-icon slot="icon-only" name="add-circle"></ion-icon>
                   </ion-button>
                 </ion-item>
               </form>
               <ion-item *ngFor="let dom of badList; index as i">
                 <ion-label class="label-max-width">{{dom}}</ion-label>
-                <ion-button fill="clear" slot="end" (click)="deleteDomain(i)" [disabled]="saving">
+                <ion-button fill="clear" slot="start" (click)="deleteDomain(i)" [disabled]="saving">
                   <ion-icon color="danger" slot="icon-only" name="trash"></ion-icon>
                 </ion-button>
               </ion-item>
             </ion-list>
           </ion-col>
-          <ion-col size="authService.isMD() ? 12 : 4">
+          <ion-col *ngIf="authService.session.name == 'cephalix' && (!authService.isMD() || segment=='cephalix')" size="authService.isMD() ? 12 : 4">
             <ion-list>
               <ion-item lines="none">
-                <ion-title>{{'Denied Categories'|translate}}</ion-title>
+                <H2>{{'CEPHALIX List'|translate}}</H2>
+              </ion-item>
+              <form #addNewDomainForm="ngForm">
+                <ion-item>
+                  <ion-input [(ngModel)]="newDomain" name="newDomain"
+                    placeholder="{{'Enter a new domain name'| translate}}" pattern="[a-z0-9.-]+\.[a-z]{2,}$">
+                  </ion-input>
+                  <ion-button fill="clear" slot="start" (click)="addNewDomain()"
+                    [disabled]="!addNewDomainForm.valid || saving">
+                    <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+                  </ion-button>
+                </ion-item>
+              </form>
+              <ion-item *ngFor="let dom of cephalixList; index as i">
+                <ion-label class="label-max-width">{{dom}}</ion-label>
+                <ion-button fill="clear" slot="start" (click)="deleteDomain(i)" [disabled]="saving">
+                  <ion-icon color="danger" slot="icon-only" name="trash"></ion-icon>
+                </ion-button>
+              </ion-item>
+            </ion-list>
+          </ion-col>
+          <ion-col *ngIf="!authService.isMD() || segment=='categories'" size="authService.isMD() ? 12 : 4">
+            <ion-list>
+              <ion-item lines="none">
+                <H2>{{'Denied Categories'|translate}}</H2>
               </ion-item>
               <div *ngFor="let category of categories">
                 <ion-item>
                   <ion-label matTooltip="{{category.description}}">{{category.desc}}</ion-label>
-                  <ion-checkbox slot="end" (ionChange)="togleCategory(category.name)" [disabled]="saving"
+                  <ion-checkbox slot="start" (ionChange)="togleCategory(category.name)" [disabled]="saving"
                     [checked]="activeUnboundLists.indexOf(category.name) != -1"></ion-checkbox>
                 </ion-item>
               </div>

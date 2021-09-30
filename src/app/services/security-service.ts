@@ -124,7 +124,20 @@ export class SecurityService {
     return this.http.get<Room[]>(this.url, { headers: this.authService.headers });
   }
 
-
+  setFirewallStatus(status){
+    this.url = this.hostname + `/system/firewall/${status}`;
+    console.log(this.url);
+    this.objectService.requestSent();
+		let sub = this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers }).subscribe(
+			(val) => {
+				this.objectService.responseMessage(val);
+			},
+			(err) => {
+				this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
+			},
+			() => { sub.unsubscribe() }
+		);
+  }
   async applyChange(rules, rulesName) {
     this.url = this.hostname + '/system/firewall/' + rulesName;
     let sub = this.http.post<ServerResponse>(this.url, rules, { headers: this.authService.headers }).subscribe(

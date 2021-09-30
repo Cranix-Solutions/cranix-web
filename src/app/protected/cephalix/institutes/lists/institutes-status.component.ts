@@ -18,6 +18,7 @@ import { Institute, InstituteStatus } from 'src/app/shared/models/cephalix-data-
 import { UpdateRenderer } from 'src/app/pipes/ag-update-renderer';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
+import { ignoreElements } from 'rxjs/operators';
 
 @Component({
   selector: 'cranix-institutes-status',
@@ -38,6 +39,8 @@ export class InstitutesStatusComponent implements OnInit {
   title = 'app';
   rowData = [];
   objectIds: number[] = [];
+  now: number = 0;
+  selectedStatus: InstituteStatus= null;
 
   constructor(
     public authService: AuthenticationService,
@@ -49,7 +52,6 @@ export class InstitutesStatusComponent implements OnInit {
     public route: Router,
     private storage: Storage
   ) {
-
     this.context = { componentParent: this };
     this.rowSelection = 'multiple';
     this.objectKeys = Object.getOwnPropertyNames(new InstituteStatus());
@@ -79,6 +81,7 @@ export class InstitutesStatusComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.now = new Date().getTime();
     this.storage.get('InstitutesStatusComponent.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
@@ -115,7 +118,6 @@ export class InstitutesStatusComponent implements OnInit {
         }
       }
     ];
-    let now: number = new Date().getTime();
     for (let key of this.objectKeys) {
       let col = {};
       col['field'] = key;
@@ -188,7 +190,7 @@ export class InstitutesStatusComponent implements OnInit {
           col['width'] = 160
           col['maxWidth'] = 160
           col['cellRendererFramework'] = DateTimeCellRenderer;
-          col['cellStyle'] = params => (now - params.value) > 36000000 ? { 'background-color': 'red' } : { 'background-color': '#2dd36f' }
+          col['cellStyle'] = params => (this.now - params.value) > 36000000 ? { 'background-color': 'red' } : { 'background-color': '#2dd36f' }
           break;
         }
         case 'errorMessages': {
@@ -203,6 +205,46 @@ export class InstitutesStatusComponent implements OnInit {
     }
   }
 
+  errorStatus(status: InstituteStatus) {
+    if (status.errorMessages) {
+      return "danger";
+    }
+    return "success"
+  }
+
+  fileSystemError(fs: string) {
+    if (!fs) {
+      return false
+    }
+    let result = fs.split(" ");
+    if (result) {
+      if (Number(result[1].replace('%', '')) > 80) {
+        return true
+      }
+      else if (Number(result[2].replace('%', '')) > 80) {
+        return true
+      }
+    }
+    return false
+  }
+  fsStatus(status: InstituteStatus) {
+    if (this.fileSystemError(status.rootUsage) ||
+      this.fileSystemError(status.srvUsage) ||
+      this.fileSystemError(status.homeUsage)) {
+      return "danger"
+    }
+    return "success"
+  }
+
+  connectStatus(status: InstituteStatus) {
+    if (this.now - status.created > 36000000) {
+      return "danger"
+    }
+    return "success"
+  }
+  showStatus(status: InstituteStatus) {
+    this.selectedStatus = status;
+  }
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
@@ -251,10 +293,9 @@ export class InstitutesStatusComponent implements OnInit {
     });
     (await popover).present();
   }
-  redirectToEdit(id) {
-    console.log("redirectToEdit:", id)
-    this.objectService.selectedObject = this.objectService.getObjectById("institute", id);
-    this.route.navigate([`/pages/cephalix/institutes/${id}`]);
+  redirectToEdit(status: InstituteStatus) {
+    this.objectService.selectedObject = this.objectService.getObjectById("institute", status.cephalixInstituteId);
+    this.route.navigate([`/pages/cephalix/institutes/${status.cephalixInstituteId}`]);
   }
 
   /**

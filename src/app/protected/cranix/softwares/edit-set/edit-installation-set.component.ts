@@ -109,6 +109,7 @@ export class EditInstallationSetComponent implements OnInit {
     }
   }
   public ngAfterViewInit() {
+    (<HTMLInputElement>document.getElementById("editSoftware")).style.height = Math.trunc(window.innerHeight * 0.90) + "px";
     while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
   }
 
@@ -127,6 +128,9 @@ export class EditInstallationSetComponent implements OnInit {
         }
       }
     )
+    if (!this.authService.isMD()) {
+      (<HTMLInputElement>document.getElementById("availableSoftwaresTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
+    }
     this.availableSoftwaresApi.sizeColumnsToFit();
   }
   availableSoftwaresChanged() {
@@ -149,6 +153,9 @@ export class EditInstallationSetComponent implements OnInit {
         }
       }
     )
+    if (!this.authService.isMD()) {
+      (<HTMLInputElement>document.getElementById("availableHwconfsTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
+    }
     this.availableHwconfsApi.sizeColumnsToFit();
   }
   availableHwconfsChanged() {
@@ -171,6 +178,9 @@ export class EditInstallationSetComponent implements OnInit {
         }
       }
     )
+    if (!this.authService.isMD()) {
+      (<HTMLInputElement>document.getElementById("availableRoomsTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
+    }
     this.availableRoomsApi.sizeColumnsToFit();
   }
   availableRoomsChanged() {
@@ -194,6 +204,9 @@ export class EditInstallationSetComponent implements OnInit {
       }
     )
     this.availableDevicesApi.sizeColumnsToFit();
+    if (!this.authService.isMD()) {
+      (<HTMLInputElement>document.getElementById("availableDevicesTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
+    }
   }
   availableDevicesChanged() {
     this.devices = this.availableDevicesApi.getSelectedRows();
@@ -207,6 +220,9 @@ export class EditInstallationSetComponent implements OnInit {
   softwaresReady(params) {
     this.softwaresApi = params.api;
     this.softwaresApi.sizeColumnsToFit();
+    if (!this.authService.isMD()) {
+      (<HTMLInputElement>document.getElementById("softwaresTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
+    }
   }
   softwaresChanged() {
     this.softwares = this.softwaresApi.getSelectedRows();
@@ -220,6 +236,9 @@ export class EditInstallationSetComponent implements OnInit {
   hwconfsReady(params) {
     this.hwconfsApi = params.api;
     this.hwconfsApi.sizeColumnsToFit();
+    if (!this.authService.isMD()) {
+      (<HTMLInputElement>document.getElementById("hwconfsTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
+    }
   }
   hwconfsChanged() {
     this.hwconfs = this.hwconfsApi.getSelectedRows();
@@ -233,6 +252,9 @@ export class EditInstallationSetComponent implements OnInit {
   roomsReady(params) {
     this.roomsApi = params.api;
     this.roomsApi.sizeColumnsToFit();
+    if (!this.authService.isMD()) {
+      (<HTMLInputElement>document.getElementById("roomsTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
+    }
   }
   roomsChanged() {
     this.rooms = this.roomsApi.getSelectedRows();
@@ -246,6 +268,9 @@ export class EditInstallationSetComponent implements OnInit {
   devicesReady(params) {
     this.devicesApi = params.api;
     this.devicesApi.sizeColumnsToFit();
+    if (!this.authService.isMD()) {
+      (<HTMLInputElement>document.getElementById("devicesTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
+    }
   }
   devicesChanged() {
     this.devices = this.devicesApi.getSelectedRows();
@@ -259,9 +284,9 @@ export class EditInstallationSetComponent implements OnInit {
   }
 
   delete() {
-    this.objectService.deleteObjectDialog(this.softwareService.selectedInstallationSet, "categorie",'');
+    this.objectService.deleteObjectDialog(this.softwareService.selectedInstallationSet, "categorie", '');
   }
-  
+
   onSubmit(installationSet: Category) {
     this.submitted = true;
     installationSet.deviceIds = [];
@@ -286,8 +311,8 @@ export class EditInstallationSetComponent implements OnInit {
     }
     let subs = this.softwareService.addModifyInstallationsSets(installationSet).subscribe(
       (val) => {
-          this.objectService.responseMessage(val);
-          this.modalCtrl.dismiss();
+        this.objectService.responseMessage(val);
+        this.modalCtrl.dismiss();
       },
       (err) => {
         this.objectService.errorMessage(err);

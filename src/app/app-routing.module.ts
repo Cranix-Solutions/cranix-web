@@ -8,6 +8,10 @@ const routes: Routes = [
     loadChildren: () => import('./public/login/login.module').then(m => m.LoginPageModule)
   },
   {
+    path: 'public',
+    loadChildren: () => import('./public/public.module').then(m => m.PublicPageModule)
+  },
+  {
     path: 'pages',
     loadChildren: () => import('./protected/protected.module').then(m => m.ProtectedPageModule)
   }

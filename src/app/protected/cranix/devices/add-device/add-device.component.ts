@@ -50,6 +50,7 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
     }
     console.log('room is, :::', this.objectService.selectedRoom);
     if (this.adHocRoom) {
+      this.macOk = true
       this.selfS.getMyRooms().subscribe(
         (val) => { this.roomsToSelect = val; }
       )

@@ -4,6 +4,7 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { Hwconf } from 'src/app/shared/models/data-model';
 import { FormBuilder } from '@angular/forms';
 import { HwconfsService } from 'src/app/services/hwconfs.service';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'cranix-hwconf-edit',
@@ -19,44 +20,50 @@ export class HwconfEditPage implements OnInit {
   joinTypes: string[] = ["no", "Domain"];
   tools: string[] = ["partimage", "partclone", "dd", "dd_rescue", "Zpartclone"];
   constructor(
+    public authService: AuthenticationService,
     public translateService: TranslateService,
     public formBuilder: FormBuilder,
     public objectService: GenericObjectService,
     public hwconfsService: HwconfsService
   ) {
-    this.object     = <Hwconf>this.objectService.selectedObject;
+    this.object = <Hwconf>this.objectService.selectedObject;
     this.objectKeys = Object.getOwnPropertyNames(new Hwconf());
     console.log("HwconfEditPage:");
     console.log(this.object);
     console.log(this.objectKeys);
   }
   ngOnInit() {
-    //this.editForm = this.formBuilder.group(this.objectService.convertObject(this.object));
-    let myObject = {}
-    for (let key of this.objectKeys) {
-      if (key != "partitions") {
-        myObject[key] = this.object[key]
+    this.hwconfsService.getHwconfById(this.objectService.selectedObject.id).subscribe(
+      (val) => {
+        this.object = val;
+        let myObject = {}
+        for (let key of this.objectKeys) {
+          if (key != "partitions") {
+            myObject[key] = this.object[key]
+          }
+        }
+        let partitions = this.object.partitions.sort(function (a, b) {
+          var nameA = a.name.toUpperCase();
+          var nameB = b.name.toUpperCase();
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+          return 0;
+        })
+        for (let part of partitions) {
+          myObject['part-' + part.id + "-name"] = part.name
+          myObject['part-' + part.id + "-description"] = part.description
+          myObject['part-' + part.id + "-os"] = part.os
+          myObject['part-' + part.id + "-tool"] = part.tool
+          myObject['part-' + part.id + "-joinType"] = part.joinType
+          myObject['part-' + part.id + "-lastCloned"] = part.lastCloned
+        }
+        this.editForm = this.formBuilder.group(myObject);
       }
-    }
-    let partitions = this.object.partitions.sort(function (a, b) {
-      var nameA = a.name.toUpperCase();
-      var nameB = b.name.toUpperCase();
-      if (nameA < nameB) {
-        return -1;
-      }
-      if (nameA > nameB) {
-        return 1;
-      }
-      return 0;
-    })
-    for (let part of partitions) {
-      myObject['part-' + part.id + "-name"] = part.name
-      myObject['part-' + part.id + "-description"] = part.description
-      myObject['part-' + part.id + "-os"] = part.os
-      myObject['part-' + part.id + "-tool"] = part.tool
-      myObject['part-' + part.id + "-joinType"] = part.joinType
-    }
-    this.editForm = this.formBuilder.group(myObject);
+    )
   }
   public ngAfterViewInit() {
     while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }

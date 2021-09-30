@@ -1,7 +1,8 @@
 <form #editForm="ngForm">
   <ion-header translucent>
     <ion-toolbar>
-      <ion-title>{{  objectActionTitle | translate }}</ion-title>
+      <ion-title *ngIf="!authService.isMD()">{{  objectActionTitle | translate }}</ion-title>
+      <ion-label *ngIf="authService.isMD()">{{  objectActionTitle | translate }}</ion-label>
       <ion-buttons slot="end">
         <ion-button *ngIf="objectType == 'institute'" fill="clear" size="small" (click)="setNextDefaults()"
           matTooltip="{{'Set the next default values' | translate }}" [disabled]="disabled">

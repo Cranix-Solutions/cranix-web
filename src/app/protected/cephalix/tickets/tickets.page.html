@@ -59,11 +59,11 @@
           <h2>{{ object.title }}</h2>
           {{ object.recDate | date:'yy-MM-dd HH:mm' }}
         </ion-label>
-        <ion-note style="max-width: 200px;" slot="end">
+        <ion-label>
           {{ object.email }} <br>
           {{ object.firstname }} {{ object.lastname }}<br>
           <div *ngIf="object.cephalixInstituteId">{{ object.cephalixInstituteId | idToName:'institute' }}</div>
-        </ion-note>
+        </ion-label>
       </ion-item>
       <ion-item-options side="end">
         <ion-button fill="clear" (click)="redirectToDelete(object)">

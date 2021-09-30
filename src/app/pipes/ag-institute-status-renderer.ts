@@ -18,7 +18,6 @@ export class InstituteStatusRenderer implements ICellRendererAngularComp {
     }
 
     public details() {
-        console.log("Edit", this.params);
         this.params.context.componentParent.redirectToEdit(this.params.data);
     }
 

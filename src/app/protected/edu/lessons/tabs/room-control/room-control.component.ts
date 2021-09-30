@@ -3,7 +3,6 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 import { Room, AccessInRooms, EduRoom } from 'src/app/shared/models/data-model';
 import { EductaionService } from 'src/app/services/education.service';
 import { takeWhile } from 'rxjs/operators';
-import { Observable } from 'rxjs/internal/Observable';
 import { PopoverController, IonSelect, ModalController } from '@ionic/angular';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';

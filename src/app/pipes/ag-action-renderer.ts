@@ -31,7 +31,7 @@ export class ActionBTNRenderer implements ICellRendererAngularComp {
     }
 
     public details() {
-        console.log("Edit", this.params);
+        //console.log("Edit", this.params);
         this.params.context.componentParent.redirectToEdit(this.params.data);
     }
     public openAction(ev: any){

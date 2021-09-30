@@ -33,7 +33,6 @@ export class UpdateRenderer implements ICellRendererAngularComp {
     }
 
     public update() {
-        console.log("Edit", this.params.data);
         this.params.context.componentParent.redirectToUpdate(this.params.data.cephalixInstituteId);
     }
 

@@ -1,17 +1,10 @@
 import { ICellRendererAngularComp } from "ag-grid-angular";
-import { Injectable, Component, OnDestroy } from '@angular/core';
-import { Platform, ToastController } from '@ionic/angular';
+import { Component, OnDestroy } from '@angular/core';
+import { ToastController } from '@ionic/angular';
 //Own Stuff
 import { CephalixService } from 'src/app/services/cephalix.service';
+import { WindowRef } from 'src/app/shared/models/ohters'
 
-@Injectable()
-export class WindowRef {
-    constructor() { }
-
-    getNativeWindow() {
-        return window;
-    }
-}
 @Component({
     selector: 'uuid-cell',
     template: `<div class="uuid-flex">

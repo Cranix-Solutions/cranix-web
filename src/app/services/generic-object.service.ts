@@ -125,7 +125,7 @@ export class GenericObjectService {
     if (this.authService.isAllowed('cephalix.ticket')) {
       this.objects.push('ticket');
     }
-    for( let obj of this.objectsTemlate ) {
+    for (let obj of this.objectsTemlate) {
       this.objects.push(obj)
     }
     for (let key of this.objects) {
@@ -186,7 +186,7 @@ export class GenericObjectService {
    * @param objectType
    */
   getAllObject(objectType) {
-    if( this.objects.indexOf(objectType) == -1 ) {
+    if (this.objects.indexOf(objectType) == -1) {
       return;
     }
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";
@@ -222,7 +222,7 @@ export class GenericObjectService {
   }
 
   getObjectById(objectType, objectId) {
-    if( !objectId ) {
+    if (!objectId) {
       return null;
     }
     for (let obj of this.allObjects[objectType]) {
@@ -237,10 +237,10 @@ export class GenericObjectService {
     objectType = this.idToPipe(objectType)
     for (let obj of this.allObjects[objectType]) {
       if (obj.id === objectId) {
-        if (obj.name ) {
+        if (obj.name) {
           return obj.name;
         }
-        if( obj.uid ) {
+        if (obj.uid) {
           return obj.uid + " (" + obj.givenName + " " + obj.surName + ")";
         }
       }
@@ -270,7 +270,7 @@ export class GenericObjectService {
    * @param idName
    */
   idToPipe(idName: string) {
-    if( idName == 'ownerId' || idName == 'loggedInId' ) {
+    if (idName == 'ownerId' || idName == 'loggedInId') {
       return 'user';
     }
     if (idName == 'cephalixCustomerId') {
@@ -303,12 +303,20 @@ export class GenericObjectService {
     return this.http.delete<ServerResponse>(url, { headers: this.authService.headers })
   }
 
-  async deleteObjectDialog(object, objectType,route) {
+  async deleteObjectDialog(object, objectType, route) {
     let name = "";
-    if (objectType == 'user') {
-      name = object.uid + " ( " + object.givenName + " " + object.surName + " )";
-    } else {
-      name = object.name;
+    switch (objectType) {
+      case 'user': {
+        name = object.uid + " ( " + object.givenName + " " + object.surName + " )";
+        break;
+      }
+      case 'ticket': {
+        name = object.title;
+        break;
+      }
+      default: {
+        name = object.name;
+      }
     }
     const alert = await this.alertController.create({
       header: this.languageS.trans('Confirm!'),
@@ -327,7 +335,7 @@ export class GenericObjectService {
                 if (val.code == "OK") {
                   this.getAllObject(objectType);
                   this.modalCtrl.dismiss("success");
-                  if( route != '') {
+                  if (route != '') {
                     this.router.navigate([route]);
                   }
                 }
@@ -447,7 +455,7 @@ export class GenericObjectService {
     return a == b;
   }
   compareObjects(o1, o2) {
-    console.log(o1,o2)
+    console.log(o1, o2)
     return o1.id == o2.id;
   }
   sortByName(a, b) {

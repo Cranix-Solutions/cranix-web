@@ -23,7 +23,7 @@
     </ion-card-header>
     <ion-card-content>
       <ion-grid>
-        <ion-row>
+        <ion-row style="background-color : {{authService.rowColors[2]}}">
           <ion-col size=2>{{'Start time' | translate}}</ion-col>
           <ion-col size=2></ion-col>
           <ion-col size=1>{{'role' | translate}}</ion-col>
@@ -145,10 +145,10 @@
     </ion-fab-list>
   </ion-fab>
   <ion-grid>
-    <ion-row>
+    <ion-row style="background-color : {{authService.rowColors[2]}}">
       <ion-col size=4>{{'Start time' | translate}}</ion-col>
-      <ion-col size=6></ion-col>
-      <ion-col size=2>{{'role' | translate}}</ion-col>
+      <ion-col size=5></ion-col>
+      <ion-col size=3>{{'role' | translate}}</ion-col>
     </ion-row>
     <ion-row *ngIf="runningImport" [ngStyle]="{'color':'#eb445a'}">
       <ion-col size=4>{{runningImport.startTime}}</ion-col>
@@ -168,7 +168,7 @@
       <ion-row *ngIf="!runningImport || runningImport.startTime != import.startTime"
         style="background-color : {{authService.rowColors[i%2]}}">
         <ion-col size=4>{{import.startTime}} </ion-col>
-        <ion-col size=6>
+        <ion-col size=5>
           <ion-button color="light" size="small" (click)="showImport($event,import)"
             matTooltip="{{'Show the import result.' | translate }}">
             <ion-icon *ngIf="import.test" slot="icon-only" color="warning" name="eye-outline"></ion-icon>
@@ -192,7 +192,7 @@
             <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
           </ion-button>
         </ion-col>
-        <ion-col size=2>{{import.role | translate}}</ion-col>
+        <ion-col size=3>{{import.role | translate}}</ion-col>
       </ion-row>
     </div>
   </ion-grid>

@@ -32,7 +32,7 @@ import { RoomIdCellRenderer } from 'src/app/pipes/ag-roomid-render';
 import { DeviceIdCellRenderer } from 'src/app/pipes/ag-deviceid-renderer';
 import { InstituteStatusRenderer } from 'src/app/pipes/ag-institute-status-renderer'
 import { SyncObjectRenderer } from 'src/app/pipes/ag-sync-object-renderer'
-import { InstituteActionCellRenderer, WindowRef } from 'src/app/pipes/ag-institute-action-renderer';
+import { InstituteActionCellRenderer } from 'src/app/pipes/ag-institute-action-renderer';
 import { UpdateRenderer } from 'src/app/pipes/ag-update-renderer';
 import { UserIdCellRenderer } from 'src/app/pipes/ag-userid-renderer';
 import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-renderer';
@@ -51,6 +51,7 @@ import { FilesUploadComponent } from 'src/app/shared/actions/files-upload/files-
 import { FilesCollectComponent } from 'src/app/shared/actions/files-collect/files-collect.component'
 import { DownloadSoftwaresComponent } from 'src/app/shared/actions/download-softwares/download-softwares.component'
 import { SelectRoomComponent } from 'src/app/shared/actions/select-room/select-room.component'
+import { WindowRef } from 'src/app/shared/models/ohters'
 @NgModule({
   declarations: [
     ActionsComponent,

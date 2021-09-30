@@ -24,7 +24,7 @@ export class DetailsPage implements OnInit {
   articleOpen = {};
   constructor(
     private route: ActivatedRoute,
-    public  router: Router,
+    public router: Router,
     private cephlixS: CephalixService,
     private objectService: GenericObjectService,
     private modalController: ModalController
@@ -39,11 +39,11 @@ export class DetailsPage implements OnInit {
         this.institute = this.objectService.getObjectById('institute', val.cephalixInstituteId);
         this.readArcticles();
         if (!this.institute) {
-           for (let i of this.objectService.allObjects['institute']) {
-             this.institutes.push({ id: i.id, label: i.name + " " + i.locality })
-           }
-           this.institute = new Institute();
-           console.log(this.institutes, this.institute)
+          for (let i of this.objectService.allObjects['institute']) {
+            this.institutes.push({ id: i.id, label: i.name + " " + i.locality })
+          }
+          this.institute = new Institute();
+          console.log(this.institutes, this.institute)
         }
       },
       (err) => { console.log(err) },
@@ -135,7 +135,7 @@ export class DetailsPage implements OnInit {
   }
 
   toggleArticle(id) {
-    if( this.articleOpen[id] ) {
+    if (this.articleOpen[id]) {
       (<HTMLInputElement>document.getElementById("article" + id)).style.height = "50px"
       this.articleOpen[id] = false
     } else {
@@ -154,7 +154,8 @@ export class EditArticle implements OnInit {
 
   @Input() article: Article;
   @Input() ticket: Ticket;
-  text: string = "";
+  newText: string = "";
+  disabled: boolean = false;
 
   constructor(
     private cephalixService: CephalixService,
@@ -163,16 +164,22 @@ export class EditArticle implements OnInit {
   ) { }
 
   ngOnInit() {
-    let newText: string[] = [];
-    for (let line of this.article.text.split("\n")) {
-      newText.push(">" + line);
-    }
-    this.text = newText.join("\n");
+    console.log(this.article)
+    this.newText = "".concat(
+      "Hallo " + this.ticket.firstname + " " + this.ticket.lastname + ",<br><br>",
+      "Viele Grüße<br>Cranix-Solutions-Support-Team<br><br>",
+      "--------------------------------------------",
+      this.article.text
+    )
+    console.log(this.newText)
   }
 
   sendArticle() {
     this.article.recipient = this.article.sender;
     this.article.articleType = 'O';
+    this.article.text = this.newText;
+    this.disabled = true;
+    this.objectService.requestSent();
     let sub = this.cephalixService.addArticleToTicket(this.article, this.ticket.id).subscribe(
       (val) => {
         this.objectService.responseMessage(val)
@@ -181,8 +188,11 @@ export class EditArticle implements OnInit {
         }
       },
       (err) => { this.objectService.errorMessage(err) },
-      () => { sub.unsubscribe() })
-    //TODO
+      () => {
+        this.disabled = false
+        sub.unsubscribe()
+      }
+    )
   }
 
 }

@@ -77,18 +77,14 @@
   </ion-card>
 </ion-content>
 <ion-content *ngIf="authService.isMD()">
-  <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
+  <ion-fab vertical="top" horizontal="start" slot="fixed" class="hidden-lg hidden-xl">
     <ion-fab-button size="small">
       <ion-icon name="arrow-forward-circle"></ion-icon>
     </ion-fab-button>
-    <ion-fab-list side="start">
+    <ion-fab-list>
       <ion-fab-button *ngIf="segment == 'list'" (click)="redirectToAddEdit(null)"
         matTooltip="{{'Add new room access status' | translate }}" [disabled]="disabled">
         <ion-icon name="add-circle"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-button *ngIf="segment == 'list'" (click)="delete()"
-        matTooltip="{{'Delete selected access rules' | translate }}" [disabled]="disabled">
-        <ion-icon name="trash" color="danger"></ion-icon>
       </ion-fab-button>
       <ion-fab-button *ngIf="segment == 'status'" (click)="securityService.getActualAccessStatus()"
         matTooltip="{{'Reload actual firewall status' | translate }}">
@@ -103,7 +99,7 @@
     </ion-fab-list>
   </ion-fab>
   <ion-grid *ngIf="segment == 'list'">
-    <ion-row>
+    <ion-row style="background-color : {{authService.rowColors[2]}}">
       <ion-col>
         {{ 'room' | translate}}
       </ion-col>
@@ -114,7 +110,8 @@
         {{ 'accessType' | translate}}
       </ion-col>
     </ion-row>
-    <ion-row *ngFor="let obj of rowData; index as i" button (click)="redirectToAddEdit(obj)" style="background-color : {{authService.rowColors[i%2]}}">
+    <ion-row *ngFor="let obj of rowData; index as i" button (click)="redirectToAddEdit(obj)"
+      style="background-color : {{authService.rowColors[i%2]}}">
       <ion-col>
         {{ obj.roomId | idToName:'room' }}
       </ion-col>
@@ -127,44 +124,70 @@
     </ion-row>
   </ion-grid>
   <ion-grid *ngIf="segment == 'status'">
-    <ion-row>
+    <ion-row style="background-color : {{authService.rowColors[2]}}">
       <ion-col>
         {{ 'room' | translate}}
       </ion-col>
       <ion-col>
-        {{ 'login' | translate}}
+        <ion-button fill="clear" size="small" matTooltip="{{'login' | translate }}" >
+          <ion-icon name="log-in" slot="icon-only"></ion-icon>
+        </ion-button>
       </ion-col>
       <ion-col>
-        {{ 'portal' | translate}}
+        <ion-button fill="clear" size="small" matTooltip="{{'portal' | translate }}">
+          <ion-icon name="mail" slot="icon-only"></ion-icon>
+        </ion-button>
       </ion-col>
       <ion-col>
-        {{ 'printing' | translate}}
+        <ion-button fill="clear" size="small" matTooltip="{{'printing' | translate }}">
+          <ion-icon name="print" slot="icon-only"></ion-icon>
+        </ion-button>
       </ion-col>
-      <ion-col>
-        {{ 'proxy' | translate}}
+      <ion-col *ngIf="authService.isAllowed('system.proxy')">
+        <ion-button fill="clear" size="small" matTooltip="{{'proxy' | translate }}">
+          <ion-icon color="success" name="globe" slot="icon-only"></ion-icon>
+        </ion-button>
       </ion-col>
-      <ion-col>
-        {{ 'direct' | translate}}
+      <ion-col *ngIf="authService.isAllowed('room.direct')">
+        <ion-button fill="clear" size="small" matTooltip="{{'direct' | translate }}">
+          <ion-icon color="warning" name="globe" slot="icon-only"></ion-icon>
+        </ion-button>
       </ion-col>
     </ion-row>
-    <ion-row *ngFor="let obj of securityService.actualStatus; index as i" button (click)="redirectToAddEdit(obj)"  style="background-color : {{authService.rowColors[i%2]}}">
+    <ion-row *ngFor="let obj of securityService.actualStatus; index as i"
+      style="background-color : {{authService.rowColors[i%2]}}">
       <ion-col>
         {{ obj.roomId | idToName:'room' }}
       </ion-col>
       <ion-col>
-        {{ obj.login }}
+        <ion-button fill="clear" size="small" [color]="obj.login ? 'success' : 'danger'"
+          (click)="toggleButton(obj,'login')">
+          <ion-icon [name]="obj.login ? 'checkmark-circle' : 'close-circle'" slot="icon-only"></ion-icon>
+        </ion-button>
       </ion-col>
       <ion-col>
-        {{ obj.portal }}
+        <ion-button fill="clear" size="small" [color]="obj.portal ? 'success' : 'danger'"
+          (click)="toggleButton(obj,'portal')">
+          <ion-icon [name]="obj.portal ? 'checkmark-circle' : 'close-circle'" slot="icon-only"></ion-icon>
+        </ion-button>
       </ion-col>
       <ion-col>
-        {{ obj.printing }}
+        <ion-button fill="clear" size="small" [color]="obj.printing ? 'success' : 'danger'"
+          (click)="toggleButton(obj,'printing')">
+          <ion-icon [name]="obj.printing ? 'checkmark-circle' : 'close-circle'" slot="icon-only"></ion-icon>
+        </ion-button>
       </ion-col>
-      <ion-col>
-        {{ obj.proxy }}
+      <ion-col *ngIf="authService.isAllowed('system.proxy')">
+        <ion-button fill="clear" size="small" [color]="obj.proxy ? 'success' : 'danger'"
+          (click)="toggleButton(obj,'proxy')">
+          <ion-icon [name]="obj.proxy ? 'checkmark-circle' : 'close-circle'" slot="icon-only"></ion-icon>
+        </ion-button>
       </ion-col>
-      <ion-col>
-        {{ obj.direct }}
+      <ion-col *ngIf="authService.isAllowed('room.direct')">
+        <ion-button fill="clear" size="small" [color]="obj.direct ? 'success' : 'danger'"
+          (click)="toggleButton(obj,'direct')">
+          <ion-icon [name]="obj.direct ? 'checkmark-circle' : 'close-circle'" slot="icon-only"></ion-icon>
+        </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
