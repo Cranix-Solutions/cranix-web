@@ -9,17 +9,14 @@ import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
 import { FileSystemUsageRenderer } from 'src/app/pipes/ag-filesystem-usage-renderer';
 import { InstituteStatusRenderer } from 'src/app/pipes/ag-institute-status-renderer';
-import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
-import { Institute, InstituteStatus } from 'src/app/shared/models/cephalix-data-model'
+import { InstituteStatus } from 'src/app/shared/models/cephalix-data-model'
 import { UpdateRenderer } from 'src/app/pipes/ag-update-renderer';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
-import { ignoreElements } from 'rxjs/operators';
-
 @Component({
   selector: 'cranix-institutes-status',
   templateUrl: './institutes-status.component.html',
@@ -40,7 +37,7 @@ export class InstitutesStatusComponent implements OnInit {
   rowData = [];
   objectIds: number[] = [];
   now: number = 0;
-  selectedStatus: InstituteStatus= null;
+  selectedStatus: InstituteStatus = null;
 
   constructor(
     public authService: AuthenticationService,
@@ -89,23 +86,21 @@ export class InstitutesStatusComponent implements OnInit {
         this.createColumnDefs();
       }
     });
-    let subs = this.cephalixService.getStatusOfInstitutes().subscribe(
-      (val) => {
-        this.rowData = val;
-      },
-      (err) => { this.authService.log(err) },
-      () => { subs.unsubscribe() }
-    )
   }
   ionViewWillEnter() {
     this.authService.log('WillEnter EVENT')
     let subs = this.cephalixService.getStatusOfInstitutes().subscribe(
       (val) => {
-        this.authService.log('new data in event:', val);
-        this.rowData = val
+        val.sort((status1: InstituteStatus, status2: InstituteStatus) => {
+          let i1 = this.objectService.getObjectById('institute', status1.cephalixInstituteId)
+          let i2 = this.objectService.getObjectById('institute', status2.cephalixInstituteId)
+          return i1.name.toUpperCase() < i2.name.toUpperCase() ? -1 : 1
+        });
+        this.rowData = val;
       },
       (err) => { this.authService.log(err) },
-      () => { subs.unsubscribe() })
+      () => { subs.unsubscribe() }
+    )
   }
   createColumnDefs() {
     this.columnDefs = [
@@ -322,6 +317,16 @@ export class InstitutesStatusComponent implements OnInit {
     (await modal).present().then((val) => {
       this.authService.log("most lett vegrehajtva.")
     })
+  }
+
+  sortStatus(status1: InstituteStatus, status2: InstituteStatus) {
+    console.log(status1, status2)
+    if (status1 && status2) {
+      let i1 = this.objectService.getObjectById('institute', status1.cephalixInstituteId)
+      let i2 = this.objectService.getObjectById('institute', status2.cephalixInstituteId)
+      return i1.name < i2.name ? 1 : -1
+    }
+    return 0
   }
 }
 

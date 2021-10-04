@@ -76,11 +76,9 @@ export class TicketsPage implements OnInit {
         this.createColumnDefs();
       }
     });
-    while (this.rowData.length == 0) {
-      this.rowData = this.objectService.allObjects['ticket'];
+    while (this.objectService.allObjects['ticket'].length == 0) {
       await new Promise(f => setTimeout(f, 1000));
     }
-    this.rowData = this.rowData.sort(this.objectService.sortByRecDate)
   }
 
   ngOnDestroy() {
@@ -90,7 +88,6 @@ export class TicketsPage implements OnInit {
   ngAfterViewInit() {
     this.ticketStatus = interval(20000).pipe(takeWhile(() => this.alive)).subscribe((func => {
       this.objectService.getAllObject('ticket');
-      this.rowData = this.objectService.allObjects['ticket'];
     }))
   }
 

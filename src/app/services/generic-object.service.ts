@@ -190,8 +190,11 @@ export class GenericObjectService {
       return;
     }
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";
-    let sub = this.http.get(url, { headers: this.authService.headers }).subscribe(
+    let sub = this.http.get<any[]>(url, { headers: this.authService.headers }).subscribe(
       (val) => {
+        switch(objectType) {
+          case 'ticket': val.sort(this.sortByRecDate)
+        }
         this.allObjects[objectType] = val;
         this.selects[objectType + 'Id'] = []
         for (let obj of <any[]>val) {
