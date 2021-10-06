@@ -17,10 +17,12 @@ export class SetpasswordComponent implements OnInit {
     password2:""
   }
 
+  showPassword: boolean = false
+
   constructor(
     public modalController: ModalController,
     public systemService: SystemService
-  ) { 
+  ) {
     console.log('type is:', this.type);
     this.systemService.getSystemConfigValue("DEFAULT_MUST_CHANGE").subscribe(
       (val) => {
