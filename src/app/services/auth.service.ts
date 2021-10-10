@@ -25,8 +25,10 @@ export class AuthenticationService {
     headers: HttpHeaders;
     formHeaders: HttpHeaders;
     textHeaders: HttpHeaders;
+    anyHeaders: HttpHeaders;
     settings: Settings = new Settings();
-    minLgSize = 769;
+    minLgWidth  = 769;
+    minLgHeight = 600;
     rowColors: string[] = [ "#D2E3D5", "#E2F3E5", "#AFC2B2"]
 
     constructor(
@@ -49,8 +51,7 @@ export class AuthenticationService {
         const headers = new HttpHeaders({
             'Content-Type': "application/json",
             'Accept': "application/json"
-        });
-        
+        });      
         return this.http.post<UserResponse>(this.url, user, { headers: headers });
     }
 
@@ -85,6 +86,10 @@ export class AuthenticationService {
                 });
                 this.formHeaders = new HttpHeaders({
                     'Accept': "application/json",
+                    'Authorization': "Bearer " + this.session.token
+                });
+                this.anyHeaders = new HttpHeaders({
+                    'Accept': "*/*",
                     'Authorization': "Bearer " + this.session.token
                 });
                 this.textHeaders = new HttpHeaders({
@@ -272,7 +277,11 @@ export class AuthenticationService {
     }
 
     public isMD(){
-        return window.innerWidth < this.minLgSize;
+        return window.innerWidth < this.minLgWidth || window.innerHeight < this.minLgHeight;
+    }
+
+    public getSize() {
+        return window.innerWidth + "x" + window.innerHeight
     }
 }
 

@@ -76,7 +76,7 @@
     <ion-item-sliding *ngFor="let object of rowData">
       <ion-item button  (click)="redirectToEdit(object)">
         <ion-note slot="start">
-          <ion-checkbox (ionChange)="checkChange($event,object)"></ion-checkbox>
+          <ion-checkbox (click)="$event.stopPropagation()" (ionChange)="checkChange($event,object)"></ion-checkbox>
         </ion-note>
         <ion-label *ngIf="segment != 'user'">
           <h3>{{ object.name }}</h3>
@@ -93,15 +93,15 @@
       <ion-item-options
         *ngIf="segment == 'group' && (authService.isAllowed('group.modify') || authService.session.userId == object.ownerId)"
         side="end">
-        <ion-button fill="clear" (click)="redirectToDelete(object)">
-          <ion-icon color="danger" name="trash-outline"></ion-icon>
-        </ion-button>
-        <ion-button fill="clear" *ngIf="segment == 'group'" (click)="redirectToMembers(object)">
-          <ion-icon name="people-circle"></ion-icon>
-        </ion-button>
-        <ion-button fill="clear" (click)="openActions($event,object)">
-          <ion-icon name="ellipsis-vertical-sharp"></ion-icon>
-        </ion-button>
+        <ion-item-option color="danger" (click)="redirectToDelete(object)">
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-item-option>
+        <ion-item-option *ngIf="segment == 'group'" (click)="redirectToMembers(object)">
+          <ion-icon slot="icon-only" name="people-circle"></ion-icon>
+        </ion-item-option>
+        <ion-item-option (click)="openActions($event,object)">
+          <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
+        </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
