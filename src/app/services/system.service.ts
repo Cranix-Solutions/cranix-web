@@ -166,4 +166,12 @@ export class SystemService {
 		console.log(this.url);
 		return this.http.get<string[]>(this.url, { headers: this.authService.headers });
 	}
+
+	getFile(path: string){
+		this.url = this.hostname + "/system/file";
+		console.log(this.url);
+		let formData: FormData = new FormData();
+		formData.append('path', path);
+		return this.http.post(this.url, formData, { headers: this.authService.anyHeaders, responseType: 'text' });
+	}
 }
