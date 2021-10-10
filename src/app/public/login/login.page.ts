@@ -20,6 +20,7 @@ export class LoginPage implements OnInit {
     instName: Observable<string>;
     instituteName: string = "";
     allowSavePassword: boolean = true;
+    showPassword: boolean = false;
 
     constructor(
         private authService: AuthenticationService,

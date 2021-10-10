@@ -50,7 +50,7 @@
     </ion-label>
   </ion-item>
   <ion-list>
-    <ion-item-sliding *ngFor="let object of rowData">
+    <ion-item-sliding *ngFor="let object of objectService.allObjects['ticket']">
       <ion-item style="color: {{ticketColor[object.ticketStatus]}}" (click)="redirectToEdit(object)">
         <!-- ion-note slot="start">
           <ion-checkbox (ionChange)="checkChange($event,object)"></ion-checkbox>

@@ -46,30 +46,19 @@ export class SystemService {
 	getInstituteName() {
 		this.url = this.hostname + `/system/name`;
 		console.log(this.url);
-		let textHeaders = new HttpHeaders({
-			'Accept': "text/plain"
-		});
-		return this.http.get(this.url, { headers: textHeaders, responseType: 'text' });
+		return this.http.get(this.url, { headers: this.authService.textHeaders, responseType: 'text' });
 	}
 
 	getRegCode() {
 		this.url = this.hostname + `/system/configuration/REG_CODE`;
 		console.log(this.url);
-		let textHeaders = new HttpHeaders({
-			'Accept': "text/plain",
-			'Authorization': "Bearer " + this.authService.session.token
-		});
-		return this.http.get(this.url, { headers: textHeaders, responseType: 'text' });
+		return this.http.get(this.url, { headers: this.authService.textHeaders, responseType: 'text' });
 	}
 
 	getInstituteType() {
 		this.url = this.hostname + `/system/type`;
 		console.log(this.url);
-		let textHeaders = new HttpHeaders({
-			'Accept': "text/plain",
-			'Authorization': "Bearer " + this.authService.session.token
-		});
-		return this.http.get(this.url, { headers: textHeaders, responseType: 'text' });
+		return this.http.get(this.url, { headers: this.authService.textHeaders, responseType: 'text' });
 	}
 
 	update() {
@@ -94,10 +83,10 @@ export class SystemService {
 		return this.http.post<ServerResponse>(this.url, tmp, { headers: this.authService.headers });
 	}
 
-	getSystemConfigValue(key, value) {
-		this.url = this.hostname + `/system/configuration`;
+	getSystemConfigValue(key) {
+		this.url = this.hostname + `/system/configuration/${key}`;
 		console.log(this.url);
-		return this.http.get<string>(this.url, { headers: this.authService.textHeaders });
+		return this.http.get(this.url, { headers: this.authService.textHeaders, responseType: 'text' });
 	}
 
 	createSupportRequest(support) {
