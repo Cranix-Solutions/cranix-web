@@ -6,7 +6,6 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
-import { Settings } from 'src/app/shared/models/server-models';
 import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({

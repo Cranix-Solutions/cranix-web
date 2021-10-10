@@ -1,9 +1,4 @@
-<cranix-toolbar></cranix-toolbar>
-<ion-row class="header-row">
-  <ion-col>
-    <ion-title>{{ 'Manage proxy configuration' | translate}}</ion-title>
-  </ion-col>
-</ion-row>
+<cranix-toolbar title="{{ 'Manage proxy configuration' | translate}}"></cranix-toolbar>
 <ion-row *ngIf="authService.isMD()">
   <ion-col>
     <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="basic">
@@ -41,7 +36,6 @@
     </ion-card-header>
     <ion-card-header *ngIf="!authService.isMD()">
       <ion-toolbar>
-        <ion-card-title>{{ 'Manage proxy configuration' | translate}}</ion-card-title>
         <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="basic">
           <ion-segment-button value="basic">
             <ion-label>{{'Basic configuration' | translate}}</ion-label>

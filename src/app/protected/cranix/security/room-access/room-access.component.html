@@ -1,9 +1,4 @@
-<cranix-toolbar></cranix-toolbar>
-<ion-row class="header-row">
-  <ion-col>
-    <ion-title>{{ 'Manage access in the rooms' | translate}}</ion-title>
-  </ion-col>
-</ion-row>
+<cranix-toolbar title="{{ 'Manage access in the rooms' | translate}}"></cranix-toolbar>
 <ion-row *ngIf="authService.isMD()">
   <ion-col>
     <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="list">
@@ -20,7 +15,6 @@
   <ion-card>
     <ion-card-header class="hidden-xs hidden-sm hidden-md">
       <ion-toolbar>
-        <ion-card-title>{{ 'Manage access in the rooms' | translate}}</ion-card-title>
         <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="list">
           <ion-segment-button value="list">
             <ion-label>{{'Room access rules' | translate}}</ion-label>
@@ -77,7 +71,7 @@
   </ion-card>
 </ion-content>
 <ion-content *ngIf="authService.isMD()">
-  <ion-fab vertical="top" horizontal="start" slot="fixed" class="hidden-lg hidden-xl">
+  <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
     <ion-fab-button size="small">
       <ion-icon name="arrow-forward-circle"></ion-icon>
     </ion-fab-button>

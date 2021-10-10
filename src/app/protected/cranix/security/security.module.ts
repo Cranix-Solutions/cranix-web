@@ -5,16 +5,17 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule, Routes } from '@angular/router';
 
 //own modules
-import { CranixSharedModule }            from 'src/app/shared/cranix-shared.module';
-import { SecurityPage }                  from './security.page';
-import { FirewallComponent }             from './firewall/firewall.component';
-import { ProxyComponent }                from './proxy/proxy.component';
-import { RoomAccessComponent }           from './room-access/room-access.component';
-import { UnboundComponent }              from './unbound/unbound.component';
+import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
+import { SecurityPage } from './security.page';
+import { FirewallComponent } from './firewall/firewall.component';
+import { ProxyComponent } from './proxy/proxy.component';
+import { RoomAccessComponent } from './room-access/room-access.component';
+import { UnboundComponent } from './unbound/unbound.component';
 import { FirewallCanDeactivate, ProxyCanDeactivate, UnboundCanDeactivate } from 'src/app/services/security-service';
 import { AddRemoteRuleComponent } from './firewall/add-rules/add-remote-rule.component';
 import { AddOutgoingRuleComponent } from './firewall/add-rules/add-outgoing-rule.component';
 import { AddEditRoomAccessComponent } from './room-access/add-edit-room-access/add-edit-room-access.component';
+import { AccessLogComponent } from './access-log/access-log.component';
 
 const routes: Routes = [
   {
@@ -29,17 +30,19 @@ const routes: Routes = [
       {
         path: 'proxy',
         canDeactivate: [ProxyCanDeactivate],
-        component:  ProxyComponent
+        component: ProxyComponent
       },
       {
         path: 'unbound',
         canDeactivate: [UnboundCanDeactivate],
-        component:  UnboundComponent
-      },{
+        component: UnboundComponent
+      }, {
         path: 'access',
-        component:  RoomAccessComponent
-      },
-      {
+        component: RoomAccessComponent
+      }, {
+        path: 'access-log',
+        component: AccessLogComponent
+      }, {
         path: '',
         redirectTo: 'access'
       }
@@ -59,7 +62,16 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [SecurityPage,FirewallComponent,ProxyComponent,RoomAccessComponent,UnboundComponent,AddRemoteRuleComponent,AddOutgoingRuleComponent,AddEditRoomAccessComponent],
-  providers:[FirewallCanDeactivate,ProxyCanDeactivate,UnboundCanDeactivate ]
+  declarations: [
+    AccessLogComponent,
+    SecurityPage,
+    FirewallComponent,
+    ProxyComponent,
+    RoomAccessComponent,
+    UnboundComponent,
+    AddRemoteRuleComponent,
+    AddOutgoingRuleComponent,
+    AddEditRoomAccessComponent],
+  providers: [FirewallCanDeactivate, ProxyCanDeactivate, UnboundCanDeactivate]
 })
 export class SecurityPageModule { }

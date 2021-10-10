@@ -4,23 +4,31 @@
       <ion-menu-button authoHide="utilService.okBrowser">
         <img src="assets/images/logo/cranix_school.svg" width="32" height="32">
       </ion-menu-button>
-    </ion-buttons>  
+    </ion-buttons>
+    <ion-title *ngIf="!authService.isMD()">
+      {{authService.session.commonName}} {{authService.session.instituteName}} {{authService.session.roomName}} <span class="title-class">{{title}}</span>
+    </ion-title>
+    <ion-title *ngIf="authService.isMD()">
+      {{authService.session.commonName}} {{authService.session.instituteName}} {{authService.session.roomName}}
+    </ion-title>
     <ion-buttons slot="end">
-      <ion-button fill="clear" (click)="objectService.initialize(true)" matTooltip="{{ 'Refresh all objects' | translate }}">
+      <ion-button fill="clear" (click)="objectService.initialize(true)"
+        matTooltip="{{ 'Refresh all objects' | translate }}">
         <ion-icon color="tertiary" name="refresh"></ion-icon>
       </ion-button>
       <ion-button fill="clear" target="_blank" href="https://wiki.cephalix.eu">
         <ion-icon color="tertiary" name="book"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" (click)="retirectToSettings($event)" matTooltip="{{ 'Edit user preferences' | translate }}">
+      <ion-button fill="clear" (click)="retirectToSettings($event)"
+        matTooltip="{{ 'Edit user preferences' | translate }}">
         <ion-icon color="success" name="person"></ion-icon>
       </ion-button>
-      <ion-button  fill="clear" (click)="logOut($event)">
+      <ion-button fill="clear" (click)="logOut($event)">
         <ion-icon color="danger" name="log-out"></ion-icon>
       </ion-button>
-    </ion-buttons> 
-    <ion-title>{{authService.session.commonName}}  {{authService.session.instituteName}} {{authService.session.roomName}}</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar *ngIf="authService.isMD() && title" color="secondary" id="toolbarSubtitle">
+    <ion-title>{{title}}</ion-title>
   </ion-toolbar>
 </ion-header>
-
-
