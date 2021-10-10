@@ -186,11 +186,7 @@ export class DevicesComponent implements OnInit {
     }
     this.selection = this.gridApi.getSelectedRows()
   }
-  checkChange(ev: CustomEvent,dev: Device){
-    //ev.stopImmediatePropagation()
-    ev.stopPropagation()
-    //ev.preventDefault()
-    console.log(ev)
+  checkChange(ev, dev: Device){
     if( ev.detail.checked ) {
       this.selectedIds.push(dev.id)
       this.selection.push(dev)

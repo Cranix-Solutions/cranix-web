@@ -83,12 +83,12 @@
         </ion-label>
       </ion-item>
       <ion-item-options side="end">
-        <ion-ion-option color="danger" (click)="redirectToDelete(object)">
+        <ion-item-option color="danger" (click)="redirectToDelete(object)">
           <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
-        </ion-ion-option>
-        <ion-ion-option fill="clear" (click)="reset(object.id)">
+        </ion-item-option>
+        <ion-item-option fill="clear" (click)="reset(object.id)">
           <ion-icon slot="icon-only" name="refresh"></ion-icon>
-        </ion-ion-option>
+        </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
