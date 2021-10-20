@@ -12,7 +12,7 @@ export class OutgoingRule {
     type: string = "room";
     name: string="";
     dest: string ="0/0";
-    prot: string = "tcp";
+    prot: string = "all";
     port: string = "";
     constructor() { }
 }

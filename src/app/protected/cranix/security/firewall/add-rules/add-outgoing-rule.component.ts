@@ -40,7 +40,7 @@ export class AddOutgoingRuleComponent implements OnInit {
     console.log(this.selectedSource);
     rule.id= this.selectedSource.key;
     let name = this.selectedSource.name;
-    this.securityService.outgoingRules.push({
+    this.securityService.addOutgoingRule({
         prot: rule.prot,
         port: rule.port,
         name: name,

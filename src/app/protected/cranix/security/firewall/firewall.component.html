@@ -20,7 +20,7 @@
       <ion-icon name="arrow-forward-circle"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="start">
-      <ion-fab-button (click)="applyChanges()">
+      <ion-fab-button *ngIf="segment == 'in'" (click)="securityService.setIncommingRules()">
         <ion-icon color="success" name="checkmark"></ion-icon>
       </ion-fab-button>
       <ion-fab-button *ngIf="segment == 'out'" (click)="addOutgoinRule()">
@@ -61,7 +61,8 @@
           </ion-segment-button>
         </ion-segment>
         <ion-buttons slot="end">
-          <ion-button size="small" fill="solid" (click)="applyChanges()" matTooltip="{{'Apply changes' | translate }}">
+          <ion-button *ngIf="segment == 'in'" size="small" fill="solid" (click)="securityService.setIncommingRules()()"
+            matTooltip="{{'Apply changes' | translate }}">
             <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
           </ion-button>
           <ion-button *ngIf="segment == 'out'" size="small" fill="solid" (click)="addOutgoinRule()"
@@ -84,7 +85,8 @@
             matTooltip="{{'Restart firewall' | translate }}">
             <ion-icon slot="icon-only" name="arrow-redo" color="tertiary"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="securityService.setFirewallStatus('stop')" fill="solid" matTooltip="{{'Stop firewall' | translate }}">
+          <ion-button size="small" (click)="securityService.setFirewallStatus('stop')" fill="solid"
+            matTooltip="{{'Stop firewall' | translate }}">
             <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -199,7 +201,8 @@
               {{ 'port' | translate}}
             </ion-col>
           </ion-row>
-          <ion-row *ngFor="let obj of securityService.outgoingRules; index as i" style="background-color : {{authService.rowColors[i%2]}}">
+          <ion-row *ngFor="let obj of securityService.outgoingRules; index as i"
+            style="background-color : {{authService.rowColors[i%2]}}">
             <ion-col size=4>
               {{ obj.name }}
             </ion-col>
@@ -229,7 +232,8 @@
               {{ 'port' | translate}}
             </ion-col>
           </ion-row>
-          <ion-row *ngFor="let obj of securityService.remoteRules; index as i" style="background-color : {{authService.rowColors[i%2]}}">
+          <ion-row *ngFor="let obj of securityService.remoteRules; index as i"
+            style="background-color : {{authService.rowColors[i%2]}}">
             <ion-col>
               {{ obj.name }}
             </ion-col>
