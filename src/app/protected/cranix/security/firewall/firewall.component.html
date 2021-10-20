@@ -91,6 +91,9 @@
       </ion-toolbar>
     </ion-card-header>
     <ion-card-content>
+      <ion-label *ngIf="segment == 'in' && !securityService.incomingRules">
+        {{ 'Loading data ...' | translate}}
+      </ion-label>
       <ion-grid *ngIf="segment == 'in' && securityService.incomingRules">
         <ion-row>
           <ion-col size=2 size-xs=6 size-sm=6 size-md=6>
