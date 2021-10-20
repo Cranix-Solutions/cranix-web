@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { MenuController } from '@ionic/angular';
 import { Router, RouterEvent } from '@angular/router';
 
 import { AuthenticationService } from 'src/app/services/auth.service';
-import { UtilsService } from '../services/utils.service';
 
 @Component({
   selector: 'cranix-protected',
@@ -92,12 +89,11 @@ export class ProtectedPage implements OnInit {
     }
   ];
 
+  public disabled: boolean = false;
+
   constructor(
     private router: Router,
-    public authService: AuthenticationService,
-    public translateService: TranslateService,
-    public menuCtrl: MenuController,
-    public utilService: UtilsService
+    public authService: AuthenticationService
   ) {
     this.router.events.subscribe((event: RouterEvent) => {
       if (event.url) {
@@ -112,17 +108,5 @@ export class ProtectedPage implements OnInit {
     }
   }
   ngOnInit() {
-  }
-
-  async openMenu() {
-    await this.menuCtrl.open('main');
-  }
-
-  async closeMenu() {
-    console.log("close menu called")
-    await this.menuCtrl.open('close');
-  }
-  async toggleMenu() {
-    await this.menuCtrl.toggle('main'); //Add this method to your button click function
   }
 }
