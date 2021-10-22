@@ -29,8 +29,8 @@ export class AddRemoteRuleComponent implements OnInit {
 
   addRemoteRule(rule) {
     console.log(rule);
-    this.securityService.remoteRules.push({
-        ext: rule.ext,
+    this.securityService.addRemoteRule({
+        ext:  rule.ext,
         id:   this.selectedDevice.key,
         name: this.selectedDevice.name,
         port: rule.port

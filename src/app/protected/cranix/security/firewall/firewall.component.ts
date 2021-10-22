@@ -26,6 +26,9 @@ export class FirewallComponent implements OnInit {
   remoteApi;
   remoteColumnApi;
   remoteSelected;
+  newPort = "";
+  newService = "";
+
 
   constructor(
     public authService: AuthenticationService,
@@ -49,7 +52,7 @@ export class FirewallComponent implements OnInit {
       },
       { field: 'type', headerName: this.languageS.trans('type') },
       { field: 'dest', headerName: this.languageS.trans('dest') },
-      { field: 'prot', headerName: this.languageS.trans('prot') },
+      { field: 'protocol', headerName: this.languageS.trans('prot') },
       { field: 'port', headerName: this.languageS.trans('port') }
     ];
     this.remoteColumnDefs = [
@@ -70,15 +73,28 @@ export class FirewallComponent implements OnInit {
   segmentChanged(event) {
     this.segment = event.detail.value;
   }
-  incomingChanged() {
-    this.securityService.incomingRules.ssh = (<HTMLInputElement>document.getElementById('incoming-ssh')).checked;
-    this.securityService.incomingRules.admin = (<HTMLInputElement>document.getElementById('incoming-admin')).checked;
-    this.securityService.incomingRules.https = (<HTMLInputElement>document.getElementById('incoming-https')).checked;
-    this.securityService.incomingRules.rdesktop = (<HTMLInputElement>document.getElementById('incoming-rdesktop')).checked;
-    this.securityService.incomingRules.other = (<HTMLInputElement>document.getElementById('incoming-other')).value;
-    this.securityService.incomingChanged = true;
+
+  addIncomingService(){
+    if( !this.securityService.incomingRules.services.includes(this.newService) ) {
+      this.securityService.incomingRules.services.push(this.newService);
+      this.securityService.incomingChanged = true;
+      this.newService = ""
+    }
+  }
+  addIncomingPort(){
+    if( !this.securityService.incomingRules.ports.includes(this.newPort) ) {
+      this.securityService.incomingRules.ports.push(this.newPort);
+      this.securityService.incomingChanged = true;
+      this.newPort = ""
+    }
+  }
+  removeIncomingPort(port){
+    this.securityService.incomingRules.ports = this.securityService.incomingRules.ports.filter( a => a != port )
   }
 
+  removeIncomingService(service){
+    this.securityService.incomingRules.services = this.securityService.incomingRules.services.filter( a => a != service )
+  }
   /**
    * Add a new outgoin rule
    */
