@@ -69,10 +69,8 @@ export class AccessLogComponent implements OnInit {
           )
         }
         (<HTMLInputElement>document.getElementById("logsTable")).style.height = Math.trunc(window.innerHeight * 0.63) + "px";
-        console.log(this.rowData)
       }
     )
-    console.log(this.columnDefs)
   }
 
   onGridReady(params) {

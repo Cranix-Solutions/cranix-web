@@ -25,7 +25,7 @@ import { EditBTNRenderer } from 'src/app/pipes/ag-edit-renderer';
   styleUrls: ['./mygroups.page.scss'],
 })
 export class MyGroupsPage implements OnInit {
-  segment: string = 'user';
+  segment: string = 'group';
   objectKeys: string[] = [];
   columnDefs = [];
   defaultColDef = {};
@@ -70,9 +70,9 @@ export class MyGroupsPage implements OnInit {
   segmentChanged(event) {
     this.segment = event.detail.value;
     switch (this.segment) {
-      case 'group': { this.groupColumnDefs(); break; }
-      case 'user': { this.userColumnDefs(); break; }
-      case 'guest': { this.guestColumnDefs(); break; }
+      case 'group':   { this.groupColumnDefs(); break; }
+      case 'student': { this.userColumnDefs(); break; }
+      case 'guest':   { this.guestColumnDefs(); break; }
     }
   }
 
@@ -232,7 +232,7 @@ export class MyGroupsPage implements OnInit {
           }
           break;
         }
-        case 'user': {
+        case 'student': {
           for (let obj of this.userData) {
             if (
               obj.uid.toLowerCase().indexOf(filter) != -1 ||
@@ -323,7 +323,7 @@ export class MyGroupsPage implements OnInit {
     let action = anyObject ? 'modify' : 'add';
     let objectType = "";
     switch (this.segment) {
-      case 'user': {
+      case 'student': {
         if (!anyObject) { anyObject = new User }
         objectType = 'user.students'
       }
@@ -350,9 +350,9 @@ export class MyGroupsPage implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       switch (this.segment) {
-        case 'group': { this.groupColumnDefs(); break; }
-        case 'user': { this.userColumnDefs(); break; }
-        case 'guest': { this.guestColumnDefs(); break; }
+        case 'group':   { this.groupColumnDefs(); break; }
+        case 'student': { this.userColumnDefs();  break; }
+        case 'guest':   { this.guestColumnDefs(); break; }
       }
       if (dataReturned.data) {
         this.authService.log("Object was created or modified", dataReturned.data)

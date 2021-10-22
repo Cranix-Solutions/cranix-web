@@ -21,6 +21,7 @@ export class SecurityService {
   outgoingRules: OutgoingRule[];
   remoteRules: RemoteRule[];
   firewallRooms: Room[];
+  firewallServices: string[];
   actualStatus: AccessInRoom[];
   public unboundChanged: boolean = false;
   public incomingChanged: boolean = false;
@@ -102,7 +103,9 @@ export class SecurityService {
     this.url = this.hostname + `/system/firewall/incomingRules`;
     console.log(this.url);
     this.http.get<IncomingRules>(this.url, { headers: this.authService.headers }).subscribe(
-      (val) => { this.incomingRules = val },
+      (val) => { 
+        this.incomingRules = val
+       },
       (err) => { console.log(err)}
     )
   }
@@ -134,6 +137,15 @@ export class SecurityService {
     )
   }
 
+  getFirewallServices() {
+    this.url = this.hostname + `/system/firewall/services`;
+    console.log(this.url);
+    this.http.get<string[]>(this.url, { headers: this.authService.headers }).subscribe(
+      (val) => { this.firewallServices = val },
+      (err) => { console.log(err)}
+    )
+  }
+
   setFirewallStatus(status) {
     this.url = this.hostname + `/system/firewall/${status}`;
     console.log(this.url);
@@ -149,8 +161,10 @@ export class SecurityService {
       () => { sub.unsubscribe() }
     );
   }
-  async setIncommingRules() {
+  setIncommingRules() {
     this.url = this.hostname + '/system/firewall/incomingRules';
+    console.log(this.url);
+    this.objectService.requestSent();
     let sub = this.http.post<ServerResponse>(this.url, this.incomingRules, { headers: this.authService.headers }).subscribe(
       (val) => {
         if (val.code = "OK") {
@@ -167,6 +181,7 @@ export class SecurityService {
 
   addOutgoingRule(rule) {
     this.url = this.hostname + '/system/firewall/outgoingRules';
+    console.log(this.url);
     this.objectService.requestSent();
     let sub = this.http.post<ServerResponse>(this.url, rule, { headers: this.authService.headers }).subscribe(
       (val) => {
@@ -182,6 +197,7 @@ export class SecurityService {
 
   deleteOutgoingRule(rule) {
     this.url = this.hostname + '/system/firewall/outgoingRules/delete';
+    console.log(this.url);
     this.objectService.requestSent();
     let sub = this.http.post<ServerResponse>(this.url, rule, { headers: this.authService.headers }).subscribe(
       (val) => {
@@ -196,7 +212,8 @@ export class SecurityService {
   }
 
   addRemoteRule(rule) {
-    this.url = this.hostname + '/system/firewall/remoteRules';
+    this.url = this.hostname + '/system/firewall/remoteAccessRules';
+    console.log(this.url);
     this.objectService.requestSent();
     let sub = this.http.post<ServerResponse>(this.url, rule, { headers: this.authService.headers }).subscribe(
       (val) => {
@@ -211,7 +228,8 @@ export class SecurityService {
   }
 
   deleteRemoteRule(rule) {
-    this.url = this.hostname + '/system/firewall/remoteRules/delete';
+    this.url = this.hostname + '/system/firewall/remoteAccessRules/delete';
+    console.log(this.url);
     this.objectService.requestSent();
     let sub = this.http.post<ServerResponse>(this.url, rule, { headers: this.authService.headers }).subscribe(
       (val) => {
@@ -298,6 +316,10 @@ export class SecurityService {
   }
 
   readDatas() {
+    this.incomingRules = null;
+    this.outgoingRules = null;
+    this.remoteRules   = null;
+    this.getFirewallServices();
     this.getIncomingRules();
     this.getOutgoingRules();
     this.getRemoteRules();

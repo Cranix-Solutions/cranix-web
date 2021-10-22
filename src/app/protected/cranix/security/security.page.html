@@ -22,7 +22,7 @@
         <ion-label>{{ 'DNS-Filter' | translate}}</ion-label>
       </ion-tab-button>
 
-      <ion-tab-button *ngIf="authS.isAllowed('system.unbound')" tab="access-log">
+      <ion-tab-button *ngIf="authS.isAllowed('system.superuser')" tab="access-log">
         <ion-icon name="receipt-outline"></ion-icon>
         <ion-label>{{ 'Access log' | translate}}</ion-label>
       </ion-tab-button>

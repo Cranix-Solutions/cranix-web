@@ -1,41 +1,29 @@
-<cranix-toolbar></cranix-toolbar>
-<ion-content id="carded">
-  <ion-row class="header-row">
-    <ion-col>
-      <ion-title>{{'Status of the Services' | translate}}</ion-title>
+<cranix-toolbar title="{{'Status of the Services' | translate}}"></cranix-toolbar>
+<ion-content id="carded">>
+  <ion-row>
+    <ion-col class="sub-header-row">
+      <ion-label>{{ 'Name' | translate}}</ion-label>
+    </ion-col>
+    <ion-col class="sub-header-row">
+      <ion-label>{{ 'enabled' | translate }}</ion-label>
+    </ion-col>
+    <ion-col class="sub-header-row">
+      <ion-label>{{ 'active' | translate }}</ion-label>
     </ion-col>
   </ion-row>
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>{{'Status of the Services' | translate}}</ion-card-title>
-      <ion-row>
-        <ion-col class="sub-header-row">
-          <ion-label>{{ 'Name' | translate}}</ion-label>
-        </ion-col>
-        <ion-col class="sub-header-row">
-          <ion-label>{{ 'enabled' | translate }}</ion-label>
-        </ion-col>
-        <ion-col class="sub-header-row">
-          <ion-label>{{ 'active' | translate }}</ion-label>
-        </ion-col>
-      </ion-row>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-grid *ngIf="servicesStatus">
-        <ion-row *ngFor="let service of servicesStatus">
-          <ion-col [class]="service.enabled != 'true' ? 'neutral-row' : service.active == 'true' ? 'ok-row' : 'bad-row' ">
-            <ion-label>{{service.service}}</ion-label>
-          </ion-col>
-          <ion-col [class]="service.enabled != 'true' ? 'neutral-row' : service.active == 'true' ? 'ok-row' : 'bad-row' ">
-            <ion-checkbox [checked]="service.enabled =='true'"
-            (ionChange)="togleStatus(service.service,'enabled')"></ion-checkbox>
-          </ion-col>
-          <ion-col [class]="service.enabled != 'true' ? 'neutral-row' : service.active == 'true' ? 'ok-row' : 'bad-row' ">
-            <ion-checkbox [checked]="service.active =='true'"
-            (ionChange)="togleStatus(service.service,'active')"></ion-checkbox>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-card-content>
-  </ion-card>
+  <ion-grid *ngIf="servicesStatus">
+    <ion-row *ngFor="let service of servicesStatus">
+      <ion-col [class]="service.enabled != 'true' ? 'neutral-row' : service.active == 'true' ? 'ok-row' : 'bad-row' ">
+        <ion-label>{{service.service}}</ion-label>
+      </ion-col>
+      <ion-col [class]="service.enabled != 'true' ? 'neutral-row' : service.active == 'true' ? 'ok-row' : 'bad-row' ">
+        <ion-checkbox [checked]="service.enabled =='true'" (ionChange)="togleStatus(service.service,'enabled')">
+        </ion-checkbox>
+      </ion-col>
+      <ion-col [class]="service.enabled != 'true' ? 'neutral-row' : service.active == 'true' ? 'ok-row' : 'bad-row' ">
+        <ion-checkbox [checked]="service.active =='true'" (ionChange)="togleStatus(service.service,'active')">
+        </ion-checkbox>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
