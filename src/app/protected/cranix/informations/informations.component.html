@@ -1,56 +1,47 @@
-<cranix-toolbar></cranix-toolbar>
+<cranix-toolbar title="{{ title | translate }}"></cranix-toolbar>
+<ion-toolbar>
+  <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="announcement">
+    <ion-segment-button value="announcement" layout="icon-start">
+      <ion-label class="hidden-xs hidden-sm">{{ 'announcements' | translate}}</ion-label>
+      <ion-icon name="newspaper"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="task" layout="icon-start">
+      <ion-label class="hidden-xs hidden-sm">{{ 'tasks' | translate}}</ion-label>
+      <ion-icon name="clipboard"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="faq" layout="icon-start">
+      <ion-label class="hidden-xs hidden-sm">{{ 'faqs' | translate}}</ion-label>
+      <ion-icon name="information-circle"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="contact" layout="icon-start">
+      <ion-label class="hidden-xs hidden-sm">{{ 'contacts' | translate}}</ion-label>
+      <ion-icon name="people"></ion-icon>
+    </ion-segment-button>
+  </ion-segment>
+  <ion-buttons slot="end" *ngIf="authService.isAllowed('information.add')">
+    <ion-button *ngIf="!owned" size="small" fill="solid" (click)="getOwned()"
+      matTooltip="{{'Get owned '+segment+'s' | translate }}">
+      <ion-icon slot="icon-only" name="create"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="owned" size="small" fill="solid" (click)="getNotOwned()"
+      matTooltip="{{'Get corresponding '+segment+'s' | translate }}">
+      <ion-icon slot="icon-only" name="people-circle"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
 <ion-content>
-  <ion-card>
-    <ion-card-header>
-      <ion-toolbar>
-        <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="announcement">
-          <ion-segment-button value="announcement" layout="icon-start">
-            <ion-label class="hidden-xs hidden-sm">{{'Announcements' | translate}}</ion-label>
-            <ion-icon name="newspaper"></ion-icon>
-          </ion-segment-button>
-          <ion-segment-button value="task" layout="icon-start">
-            <ion-label class="hidden-xs hidden-sm">{{'Tasks' | translate}}</ion-label>
-            <ion-icon name="clipboard"></ion-icon>
-          </ion-segment-button>
-          <ion-segment-button value="faq" layout="icon-start">
-            <ion-label class="hidden-xs hidden-sm">{{'FAQs' | translate}}</ion-label>
-            <ion-icon name="information-circle"></ion-icon>
-          </ion-segment-button>
-          <ion-segment-button value="contact" layout="icon-start">
-            <ion-label class="hidden-xs hidden-sm">{{'Contacts' | translate}}</ion-label>
-            <ion-icon name="people"></ion-icon>
-          </ion-segment-button>
-        </ion-segment>
-        <ion-buttons slot="end" *ngIf="authService.isAllowed('information.add')">
-          <ion-button *ngIf="!owned" size="small" fill="solid" (click)="getOwned()"
-            matTooltip="{{'Get owned '+segment+'s' | translate }}">
-            <ion-icon slot="icon-only" name="create"></ion-icon>
-          </ion-button>
-          <ion-button *ngIf="owned" size="small" fill="solid" (click)="getNotOwned()"
-            matTooltip="{{'Get corresponding '+segment+'s' | translate }}">
-            <ion-icon slot="icon-only" name="people-circle"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-toolbar>
-        <ion-card-subtitle *ngIf="owned">
-          {{'List of owned ' + segment + 's' | translate }}
-        </ion-card-subtitle>
-        <ion-item>
-          <ion-input placeholder="{{'search' | translate}}" id="searchInfo" (input)="searchInfo()">
-          </ion-input>
-        </ion-item>
-        <ion-buttons slot="end" *ngIf="authService.isAllowed('information.add')">
-          <ion-button *ngIf="owned" size="small" (click)="addEditInfo(0)"
-            matTooltip="{{'Create a new '+segment | translate }}">
-            <ion-icon slot="icon-only" name="add-circle"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-card-content>
-  </ion-card>
+  <ion-toolbar>
+    <ion-item>
+      <ion-input placeholder="{{'search' | translate}}" id="searchInfo" (input)="searchInfo()">
+      </ion-input>
+    </ion-item>
+    <ion-buttons slot="end" *ngIf="authService.isAllowed('information.add')">
+      <ion-button *ngIf="owned" size="small" (click)="addEditInfo(0)"
+        matTooltip="{{'Create a new '+segment | translate }}">
+        <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
   <ion-list *ngFor="let categorId of informationsService.categoryIds">
     <div *ngIf="infos && infos.hasOwnProperty(categorId)">
       <ion-list-header>

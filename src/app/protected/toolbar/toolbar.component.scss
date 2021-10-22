@@ -8,6 +8,11 @@ ion-toolbar{
     border-left: none;
     border-right: none;
     border-top: none;
+    ion-title {
+        padding-inline-start: 38px;
+        padding-inline-end: 38px;
+        text-align: left;
+    }
 }
 .ios ion-toolbar {
     height: 54px;
@@ -18,4 +23,21 @@ ion-toolbar{
     border-left: none;
     border-right: none;
     border-top: none;
+    ion-title {
+        padding-inline-start: 38px;
+        padding-inline-end: 38px;
+        text-align: left;
+    }
+}
+#toolbarSubtitle {
+    height: 40px;
+    ion-title {
+        padding-inline-start: 0;
+        padding-inline-end: 0;
+        text-align: center;
+    }
+}
+
+.title-class {
+    color: burlywood;
 }

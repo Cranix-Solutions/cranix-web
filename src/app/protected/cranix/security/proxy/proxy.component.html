@@ -1,111 +1,60 @@
-<cranix-toolbar></cranix-toolbar>
-<ion-row class="header-row">
-  <ion-col>
-    <ion-title>{{ 'Manage proxy configuration' | translate}}</ion-title>
-  </ion-col>
-</ion-row>
-<ion-row *ngIf="authService.isMD()">
-  <ion-col>
-    <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="basic">
-      <ion-segment-button value="basic">
-        <ion-icon name="settings"></ion-icon>
-      </ion-segment-button>
-      <ion-segment-button value="good">
-        <ion-icon name="happy" color="success"></ion-icon>
-      </ion-segment-button>
-      <ion-segment-button value="bad">
-        <ion-icon name="sad" color="danger"></ion-icon>
-      </ion-segment-button>
-      <ion-segment-button *ngIf="authService.session.name == 'cephalix'"
-        value="cephalix">
-        <img src="assets/images/logo/cranix_school.svg" width="30">
-      </ion-segment-button>
-      <!-- ion-segment-button value="positive">
-      <ion-label>{{'Positive lists' | translate}}</ion-label>
-    </ion-segment-button -->
-    </ion-segment>
-  </ion-col>
-</ion-row>
-<ion-content id="carded">
-  <ion-card>
-    <ion-card-header *ngIf="authService.isMD()">
-      <form #addNewDomainForm="ngForm" *ngIf="segment == 'good' || segment == 'bad' || segment == 'cephalix'">
-        <ion-item>
-          <ion-input [(ngModel)]="newDomain" name="newDomain" placeholder="{{'Enter a new domain name'| translate}}"
-            pattern="[a-z0-9.-]+\.[a-z]{2,}$"></ion-input>
-          <ion-button slot="start" (click)="addNewDomain()" [disabled]="!addNewDomainForm.valid">
-            <ion-icon slot="icon-only" name="add"></ion-icon>
-          </ion-button>
-        </ion-item>
-      </form>
-    </ion-card-header>
-    <ion-card-header *ngIf="!authService.isMD()">
-      <ion-toolbar>
-        <ion-card-title>{{ 'Manage proxy configuration' | translate}}</ion-card-title>
-        <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="basic">
-          <ion-segment-button value="basic">
-            <ion-label>{{'Basic configuration' | translate}}</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="good">
-            <ion-label>{{'White list' | translate}}</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="bad">
-            <ion-label>{{'Black list' | translate}}</ion-label>
-          </ion-segment-button>
-          <ion-segment-button *ngIf="authService.session.name == 'cephalix'"
-            value="cephalix">
-            <ion-label>{{'Cephalix list' | translate}}</ion-label>
-          </ion-segment-button>
-          <!-- ion-segment-button value="positive">
-          <ion-label>{{'Positive lists' | translate}}</ion-label>
-        </ion-segment-button -->
-        </ion-segment>
-        <form #addNewDomainForm="ngForm" *ngIf="segment == 'good' || segment == 'bad' || segment == 'cephalix'">
-          <ion-item>
-            <ion-input [(ngModel)]="newDomain" name="newDomain" placeholder="{{'Enter a new domain name'| translate}}"
-              pattern="[a-z0-9.-]+\.[a-z]{2,}$"></ion-input>
-            <ion-button fill="clear"  slot="start" (click)="addNewDomain()" [disabled]="!addNewDomainForm.valid">
-              <ion-icon slot="icon-only" name="add-circle"></ion-icon>
-            </ion-button>
-          </ion-item>
-        </form>
-        <ion-item *ngIf="segment == 'basic'">
-          <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="proxyQuickFilter">
-          </ion-input>
-        </ion-item>
-        <ion-buttons slot="end">
-          <ion-button *ngIf="segment == 'positive'" size="small" fill="solid" (click)="redirectToEdit(null)"
-            matTooltip="{{'Create a new positive list.' | translate }}">
-            <ion-icon slot="icon-only" name="add-circle"></ion-icon>
-          </ion-button>
-          <ion-button *ngIf="segment != 'positive'" size="small" fill="solid" (click)="writeConfig()"
-            matTooltip="{{'Write proxy configuration and restart proxy.' | translate }}">
-            <ion-icon slot="icon-only" color="success" name="checkmark"></ion-icon>
-          </ion-button>
-          <ion-button size="small" fill="solid" (click)="restartProxy()" matTooltip="{{'Restart proxy.' | translate }}">
-            <ion-icon slot="icon-only" name="arrow-redo" color="tertiary"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-card-header>
-    <ion-card-content *ngIf="segment == 'basic' &&  !authService.isMD()">
-      <ag-grid-angular style="width: 100%; height: 100%;" class="{{authService.settings.agGridThema}}"
-        rowHeight="{{authService.settings.rowHeight}}" [rowData]="rowData" [columnDefs]="columnDefs" [context]="context"
-        (gridReady)="proxyGridReady($event)" id="proxyGridTable">
-      </ag-grid-angular>
-    </ion-card-content>
-    <ion-card-content *ngIf="segment == 'good' || segment == 'bad' || segment == 'cephalix' || segment == 'positive'">
-      <ion-list>
-        <ion-item *ngFor="let dom of lists[segment]; index as i">{{dom}}
-          <ion-button fill="clear" slot="start" (click)="deleteDomain(i)">
-            <ion-icon color="danger" slot="icon-only" name="trash"></ion-icon>
-          </ion-button>
-        </ion-item>
-      </ion-list>
-      <ion-grid *ngIf="segment == 'positive'">
-        <ion-row>
-        </ion-row>
-      </ion-grid>
-    </ion-card-content>
-  </ion-card>
+<cranix-toolbar title="{{ 'Manage proxy configuration' | translate}}"></cranix-toolbar>
+<ion-toolbar>
+  <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="basic">
+    <ion-segment-button value="basic">
+      <ion-icon name="settings"></ion-icon>
+      <ion-label *ngIf="!authService.isMD()">{{'Basic configuration' | translate}}</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="good">
+      <ion-icon name="happy" color="success"></ion-icon>
+      <ion-label *ngIf="!authService.isMD()">{{'White list' | translate}}</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="bad">
+      <ion-icon name="sad" color="danger"></ion-icon>
+      <ion-label *ngIf="!authService.isMD()">{{'Black list' | translate}}</ion-label>
+    </ion-segment-button>
+    <ion-segment-button *ngIf="authService.session.name == 'cephalix'" value="cephalix">
+      <img src="assets/images/logo/cranix_school.svg" width="30">
+      <ion-label *ngIf="!authService.isMD()">{{'Cephalix list' | translate}}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <ion-buttons *ngIf="!authService.isMD()" slot="end">
+    <ion-button *ngIf="segment == 'positive'" size="small" fill="solid" (click)="redirectToEdit(null)"
+      matTooltip="{{'Create a new positive list.' | translate }}">
+      <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="segment != 'positive'" size="small" fill="solid" (click)="writeConfig()"
+      matTooltip="{{'Write proxy configuration and restart proxy.' | translate }}">
+      <ion-icon slot="icon-only" color="success" name="checkmark"></ion-icon>
+    </ion-button>
+    <ion-button size="small" fill="solid" (click)="restartProxy()" matTooltip="{{'Restart proxy.' | translate }}">
+      <ion-icon slot="icon-only" name="arrow-redo" color="tertiary"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+<ion-content>
+  <form #addNewDomainForm="ngForm" *ngIf="segment == 'good' || segment == 'bad' || segment == 'cephalix'">
+    <ion-item>
+      <ion-input [(ngModel)]="newDomain" name="newDomain" placeholder="{{'Enter a new domain name'| translate}}"
+        pattern="[a-z0-9.-]+\.[a-z]{2,}$"></ion-input>
+      <ion-button slot="start" (click)="addNewDomain()" [disabled]="!addNewDomainForm.valid">
+        <ion-icon slot="icon-only" name="add"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </form>
+  <ion-item *ngIf="segment == 'basic'">
+    <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="proxyQuickFilter">
+    </ion-input>
+  </ion-item>
+  <ag-grid-angular *ngIf="segment == 'basic'" style="width: 100%; height: 100%;"
+    class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}" [rowData]="rowData"
+    [columnDefs]="columnDefs" [context]="context" (gridReady)="proxyGridReady($event)" id="proxyGridTable">
+  </ag-grid-angular>
+  <ion-list *ngIf="segment == 'good' || segment == 'bad' || segment == 'cephalix'">
+      <ion-item *ngFor=" let dom of lists[segment]; index as i">{{dom}}
+    <ion-button fill="clear" slot="start" (click)="deleteDomain(i)">
+      <ion-icon color="danger" slot="icon-only" name="trash"></ion-icon>
+    </ion-button>
+    </ion-item>
+  </ion-list>
 </ion-content>

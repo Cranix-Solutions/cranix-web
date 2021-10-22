@@ -8,6 +8,7 @@ import { SystemService } from 'src/app/services/system.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SupportTicket } from 'src/app/shared/models/data-model';
 import { ServiceStatus } from 'src/app/shared/models/server-models';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'cranix-system-status',
@@ -33,16 +34,15 @@ export class SystemStatusComponent implements OnInit {
     public languageService: LanguageService,
     public modalCtrl: ModalController,
     public storage: Storage,
-    public systemService: SystemService
+    public systemService: SystemService,
+    public authService: AuthenticationService
   ) {
     this.systemService.initModule();
   }
 
   ngOnInit() {
     this.storage.get('System.Status.mySupport').then((val) => {
-      console.log(val)
       let myTmp = JSON.parse(val);
-      console.log(myTmp);
       if (myTmp && myTmp.email) {
         this.mySupport = myTmp;
         this.mySupport['subject'] = "";
@@ -73,10 +73,10 @@ export class SystemStatusComponent implements OnInit {
                 }
               )
             }
-            this.systemStatus[key]['title'] = { text: key + " [GB]" }
+            this.systemStatus[key]['header'] = key + " [GB]"
           } else {
             this.systemStatus[key]['data']  = val[key];
-            this.systemStatus[key]['title'] = { text: this.languageService.trans(key) }
+            this.systemStatus[key]['header'] = this.languageService.trans(key)
           }
         }
 

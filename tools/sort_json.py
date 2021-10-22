@@ -6,7 +6,7 @@ import sys
 fileName=sys.argv[1]
 fileNameEN=""
 fileContentEN=""
-if len(sys.argv) > 1:
+if len(sys.argv) > 2:
     fileNameEN=sys.argv[2]
 fileContent=json.loads(open(fileName,"r").read())
 with open(fileName,'w') as f:

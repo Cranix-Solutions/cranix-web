@@ -1,0 +1,17 @@
+<cranix-toolbar title="{{ 'Evaluate Internet Access Logs' | translate}}"></cranix-toolbar>
+<ion-content id="carded">
+  <ion-item>
+    <ion-label *ngIf="gridApi">
+      #{{gridApi.getDisplayedRowCount()}}
+    </ion-label>
+    <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('logsFilter')" id="logsFilter">
+    </ion-input>
+  </ion-item>
+  <ag-grid-angular 
+    *ngIf="rowData.length > 1"
+    style="width: 100%; height: 100%;" rowSelection="multiple"
+    class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}"
+    rowMultiSelectWithClick="{{authService.settings.rowMultiSelectWithClick}}" [rowData]="rowData"
+    [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" (gridReady)="onGridReady($event)" id="logsTable">
+  </ag-grid-angular>
+</ion-content>

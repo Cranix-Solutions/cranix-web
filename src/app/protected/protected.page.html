@@ -1,9 +1,9 @@
-<ion-split-pane contentId="main-content">
+<ion-split-pane contentId="main-content" [disabled]="disabled">
   <ion-menu start=side contentId="main-content" type=overlay>
     <ion-content>
       <ion-list id="menu">
         <ion-list-header>
-          <ion-item lines="none">
+          <ion-item lines="none" button (click)="disabled = !disabled">
             <ion-thumbnail>
               <img src="assets/images/logo/cranix_school.svg">
             </ion-thumbnail>

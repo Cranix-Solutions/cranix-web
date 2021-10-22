@@ -1,9 +1,6 @@
 export class IncomingRules {
-    other: string ="";
-    ssh: boolean = false;
-    admin: boolean = false;
-    https: boolean = false;
-    rdesktop: boolean= false;
+    services: string[];
+    ports: string[];
     constructor() { }
 }
 
@@ -12,7 +9,7 @@ export class OutgoingRule {
     type: string = "room";
     name: string="";
     dest: string ="0/0";
-    prot: string = "tcp";
+    protocol: string = "all";
     port: string = "";
     constructor() { }
 }

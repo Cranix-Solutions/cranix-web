@@ -186,7 +186,7 @@ export class DevicesComponent implements OnInit {
     }
     this.selection = this.gridApi.getSelectedRows()
   }
-  checkChange(ev,dev: Device){
+  checkChange(ev, dev: Device){
     if( ev.detail.checked ) {
       this.selectedIds.push(dev.id)
       this.selection.push(dev)

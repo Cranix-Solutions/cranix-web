@@ -17,6 +17,7 @@ export class InformationsComponent implements OnInit {
   allInfos = {};
   owned: boolean = false;
   taskResponses = {};
+  title = "announcements";
 
   constructor(
     public authService: AuthenticationService,
@@ -41,8 +42,10 @@ export class InformationsComponent implements OnInit {
   segmentChanged(event) {
     this.segment = event.detail.value;
     if (this.owned) {
+      this.title = 'List of owned ' + this.segment + 's'
       this.infos = this.ownedInfos[this.segment]
     } else {
+      this.title = this.segment + 's'
       this.infos = this.allInfos[this.segment]
     }
   }
@@ -131,10 +134,12 @@ export class InformationsComponent implements OnInit {
   }
   getOwned() {
     this.owned = true;
+    this.title = 'List of owned ' + this.segment + 's'
     this.infos = this.ownedInfos[this.segment];
   }
   getNotOwned() {
     this.owned = false;
+    this.title = this.segment + 's'
     this.infos = this.allInfos[this.segment]
   }
   searchInfo() {

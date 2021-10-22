@@ -24,11 +24,6 @@ export class AddOutgoingRuleComponent implements OnInit {
     public securityService: SecurityService,
     public modalCtrl: ModalController
   ) {
-    let counter = 0;
-    for (let ip of this.objectService.selects['network']) {
-      this.roomIps.push({ key: counter, name: ip });
-      counter--;
-    }
     for (let room of this.securityService.firewallRooms) {
       this.roomIps.push({ key: room.id, name: room.name })
     }
@@ -45,7 +40,7 @@ export class AddOutgoingRuleComponent implements OnInit {
     console.log(this.selectedSource);
     rule.id= this.selectedSource.key;
     let name = this.selectedSource.name;
-    this.securityService.outgoingRules.push({
+    this.securityService.addOutgoingRule({
         prot: rule.prot,
         port: rule.port,
         name: name,

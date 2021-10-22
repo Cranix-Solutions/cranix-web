@@ -83,7 +83,7 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{'Protocol'|translate}}</ion-label>
-        <ion-select type="text" [(ngModel)]="rule.prot" name="prot">
+        <ion-select type="text" [(ngModel)]="rule.protocol" name="protocol">
           <ion-select-option value="all">{{'all'| translate}}</ion-select-option>
           <ion-select-option value="tcp">{{'TCP'| translate}}</ion-select-option>
           <ion-select-option value="udp">{{'UDP'| translate}}</ion-select-option>
@@ -91,8 +91,8 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{'Port'|translate}}</ion-label>
-        <ion-input type="text" [(ngModel)]="rule.port" name="port" [disabled]="rule.prot == 'all'"
-          [required]="rule.prot != 'all'"></ion-input>
+        <ion-input type="text" [(ngModel)]="rule.port" name="port" [disabled]="rule.protocol == 'all'"
+          [required]="rule.protocol != 'all'"></ion-input>
       </ion-item>
     </ion-list>
   </ion-content>

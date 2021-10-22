@@ -26,6 +26,9 @@ export class FirewallComponent implements OnInit {
   remoteApi;
   remoteColumnApi;
   remoteSelected;
+  newPort = "";
+  newService = "";
+
 
   constructor(
     public authService: AuthenticationService,
@@ -49,7 +52,7 @@ export class FirewallComponent implements OnInit {
       },
       { field: 'type', headerName: this.languageS.trans('type') },
       { field: 'dest', headerName: this.languageS.trans('dest') },
-      { field: 'prot', headerName: this.languageS.trans('prot') },
+      { field: 'protocol', headerName: this.languageS.trans('prot') },
       { field: 'port', headerName: this.languageS.trans('port') }
     ];
     this.remoteColumnDefs = [
@@ -70,35 +73,28 @@ export class FirewallComponent implements OnInit {
   segmentChanged(event) {
     this.segment = event.detail.value;
   }
-  incomingChanged() {
-    this.securityService.incomingRules.ssh = (<HTMLInputElement>document.getElementById('incoming-ssh')).checked;
-    this.securityService.incomingRules.admin = (<HTMLInputElement>document.getElementById('incoming-admin')).checked;
-    this.securityService.incomingRules.https = (<HTMLInputElement>document.getElementById('incoming-https')).checked;
-    this.securityService.incomingRules.rdesktop = (<HTMLInputElement>document.getElementById('incoming-rdesktop')).checked;
-    this.securityService.incomingRules.other = (<HTMLInputElement>document.getElementById('incoming-other')).value;
-    this.securityService.incomingChanged = true;
-  }
-  applyChanges() {
-    this.objectService.requestSent();
-    switch (this.segment) {
-      case 'in': {
-        this.securityService.applyChange(this.securityService.incomingRules, 'incomingRules');
-        this.securityService.incomingChanged = false;
-        break;
-      }
-      case 'out': {
-        this.securityService.applyChange(this.securityService.outgoingRules, 'outgoingRules');
-        this.securityService.outgoinChanged = false;
-        break;
-      }
-      case 'remote': {
-        this.securityService.applyChange(this.securityService.remoteRules, 'remoteAccessRules');
-        this.securityService.remoteChanged = false;
-        break;
-      }
+
+  addIncomingService(){
+    if( !this.securityService.incomingRules.services.includes(this.newService) ) {
+      this.securityService.incomingRules.services.push(this.newService);
+      this.securityService.incomingChanged = true;
+      this.newService = ""
     }
   }
+  addIncomingPort(){
+    if( !this.securityService.incomingRules.ports.includes(this.newPort) ) {
+      this.securityService.incomingRules.ports.push(this.newPort);
+      this.securityService.incomingChanged = true;
+      this.newPort = ""
+    }
+  }
+  removeIncomingPort(port){
+    this.securityService.incomingRules.ports = this.securityService.incomingRules.ports.filter( a => a != port )
+  }
 
+  removeIncomingService(service){
+    this.securityService.incomingRules.services = this.securityService.incomingRules.services.filter( a => a != service )
+  }
   /**
    * Add a new outgoin rule
    */
@@ -110,13 +106,6 @@ export class FirewallComponent implements OnInit {
       swipeToClose: true,
       backdropDismiss: false
     });
-    modal.onDidDismiss().then((val) => {
-      if (val.data) {
-        this.authService.log(this.securityService.outgoingRules);
-        this.outApi.setRowData(this.securityService.outgoingRules);
-        this.securityService.outgoinChanged = true;
-      }
-    });
     (await modal).present();
   }
   /**
@@ -125,14 +114,11 @@ export class FirewallComponent implements OnInit {
   deleteOutgoinRule() {
     let newRules: OutgoingRule[] = [];
     for (let rule of this.securityService.outgoingRules) {
-      if (this.outSelected.indexOf(rule) == -1) {
-        newRules.push(rule);
+      if (this.outSelected.indexOf(rule) != -1) {
+        console.log(rule)
+        this.securityService.deleteOutgoingRule(rule);
       }
     }
-    this.authService.log(newRules);
-    this.securityService.outgoinChanged = true;
-    this.securityService.outgoingRules = newRules;
-    this.outApi.setRowData(newRules);
   }
   async addRemoteRule() {
     const modal = await this.modalCtrl.create({
@@ -146,7 +132,6 @@ export class FirewallComponent implements OnInit {
       if (val.data) {
         this.authService.log(this.securityService.remoteRules);
         this.remoteApi.setRowData(this.securityService.remoteRules);
-        this.securityService.remoteChanged = true;
       }
     });
     (await modal).present();
@@ -164,7 +149,6 @@ export class FirewallComponent implements OnInit {
     this.authService.log(newRules);
     this.securityService.remoteRules = newRules;
     this.remoteApi.setRowData(newRules);
-    this.securityService.remoteChanged = true;
   }
   restartFirewall() {
     this.securityService.setFirewallStatus('restart')

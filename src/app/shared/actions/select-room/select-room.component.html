@@ -10,8 +10,14 @@
     </ion-toolbar>
   </ion-header>
   <ion-item>
-    <ionic-selectable #roomSelect item-content [(ngModel)]="eduS.selectedRoom" [ngModelOptions]="{standalone: true}"
-      [items]="eduS.myRooms" itemValueField="id" itemTextField="name" [canSearch]="true">
+    <ionic-selectable
+      #roomSelect item-content
+      [(ngModel)]="eduS.selectedRoom"
+      [ngModelOptions]="{standalone: true}"
+      [items]="eduS.myRooms"
+      itemValueField="id"
+      itemTextField="name"
+      [canSearch]="true">
       <ng-template ionicSelectableHeaderTemplate>
         <ion-toolbar>
           <ion-title>
