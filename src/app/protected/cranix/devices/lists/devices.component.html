@@ -1,52 +1,36 @@
-<cranix-toolbar></cranix-toolbar>
-<ion-row class="header-row">
-  <ion-col>
-    <ion-title *ngIf="!selectedRoom">{{'Manage devices' | translate}}</ion-title>
-    <ion-title *ngIf="selectedRoom">{{'Manage devices in selected room:' | translate}} {{selectedRoom.name}}
-    </ion-title>
-  </ion-col>
-</ion-row>
+<cranix-toolbar *ngIf="!selectedRoom" title="{{'Manage devices' | translate}}"></cranix-toolbar>
+<cranix-toolbar *ngIf="selectedRoom" title="{{'Manage devices in selected room:' | translate}} {{selectedRoom.name}}">
+</cranix-toolbar>
 <ion-content *ngIf="!authService.isMD()" id="carded">
-  <ion-card>
-    <ion-card-header>
-      <ion-toolbar>
-        <ion-card-title *ngIf="!selectedRoom">{{'Manage devices' | translate}}</ion-card-title>
-        <ion-card-title *ngIf="selectedRoom">{{'Manage devices in selected room:' | translate}} {{selectedRoom.name}}
-        </ion-card-title>
-        <ion-item>
-          <ion-label *ngIf="gridApi">
-            #{{gridApi.getDisplayedRowCount()}}
-          </ion-label>
-          <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('devicesFilter')"
-            id="devicesFilter">
-          </ion-input>
-        </ion-item>
-        <ion-buttons slot="end">
-          <ion-button size="small" fill="solid" (click)="addDevice($event)"
-            matTooltip="{{'Create a new device.' | translate }}">
-            <ion-icon slot="icon-only" name="add-circle"></ion-icon>
-          </ion-button>
-          <ion-button size="small" fill="solid" (click)="openActions($event,null)"
-            matTooltip="{{'Apply actions on the selected objects' | translate }}">
-            <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
-          </ion-button>
-          <!-- ion-button size="small" fill="solid" (click)="openCollums($event)"
-            matTooltip="{{'Select the columns to show' | translate }}">
-            <ion-icon slot="icon-only" name="apps"></ion-icon>
-          </ion-button -->
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-card-header>
-    <ion-card-content>
-      <ag-grid-angular style="width: 100%; height:  100%;" rowSelection="multiple"
-        class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}"
-        rowMultiSelectWithClick="{{authService.settings.rowMultiSelectWithClick}}" [context]="context"
-        [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [rowData]="rowData" (gridReady)="onGridReady($event)"
-        (selectionChanged)="selectionChanged()" id="agGridTable">
-      </ag-grid-angular>
-    </ion-card-content>
-  </ion-card>
+  <ion-toolbar>
+    <ion-item>
+      <ion-label *ngIf="gridApi">
+        #{{gridApi.getDisplayedRowCount()}}
+      </ion-label>
+      <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('devicesFilter')"
+        id="devicesFilter">
+      </ion-input>
+    </ion-item>
+    <ion-buttons slot="end">
+      <ion-button size="small" fill="solid" (click)="addDevice($event)"
+        matTooltip="{{'Create a new device.' | translate }}">
+        <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+      </ion-button>
+      <ion-button size="small" fill="solid" (click)="openActions($event,null)"
+        matTooltip="{{'Apply actions on the selected objects' | translate }}">
+        <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ag-grid-angular style="width: 100%; height:  100%;" rowSelection="multiple"
+    class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}"
+    rowMultiSelectWithClick="{{authService.settings.rowMultiSelectWithClick}}" [context]="context"
+    [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [rowData]="rowData" (gridReady)="onGridReady($event)"
+    (selectionChanged)="selectionChanged()" id="agGridTable">
+  </ag-grid-angular>
 </ion-content>
+<ion-searchbar *ngIf="authService.isMD()" placeholder="{{'search' | translate }}"
+  (input)="onQuickFilterChanged('devicesFilterMD')" id="devicesFilterMD" showCancelButton="never"></ion-searchbar>
 <ion-content *ngIf="authService.isMD()">
   <ion-fab vertical="top" horizontal="end" slot="fixed">
     <ion-fab-button size="small">
@@ -59,13 +43,8 @@
       <ion-fab-button>
         <ion-icon name="add-circle" (click)="addDevice($event)"></ion-icon>
       </ion-fab-button>
-      <!-- ion-fab-button>
-        <ion-icon name="apps" (click)="openCollums($event)"></ion-icon>
-      </ion-fab-button -->
     </ion-fab-list>
   </ion-fab>
-  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('devicesFilterMD')"
-    id="devicesFilterMD" showCancelButton="never"></ion-searchbar>
   <ion-list>
     <ion-item-sliding *ngFor="let object of rowData">
       <ion-item button (click)="redirectToEdit(object)">
@@ -83,10 +62,10 @@
         </ion-label>
       </ion-item>
       <ion-item-options side="end">
-        <ion-item-option color="warning"  (click)="setDhcp(object)">
+        <ion-item-option color="warning" (click)="setDhcp(object)">
           <ion-icon slot="icon-only" name="server"></ion-icon>
         </ion-item-option>
-        <ion-item-option color="danger"  (click)="redirectToDelete(object)">
+        <ion-item-option color="danger" (click)="redirectToDelete(object)">
           <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
         </ion-item-option>
         <ion-item-option (click)="setPrinters(object)">

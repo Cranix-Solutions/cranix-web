@@ -1,5 +1,5 @@
 <cranix-toolbar title="{{ 'System configuration' | translate}}"></cranix-toolbar>
-<ion-content id="carded">
+<ion-content *ngIf="!editingConfig">
   <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="Basic">
     <ion-segment-button value="Basic">
       <ion-label>{{'Base configuration' | translate}}</ion-label>
@@ -48,4 +48,48 @@
       </ion-row>
     </div>
   </ion-grid>
+</ion-content>
+<ion-content *ngIf="editingConfig">
+  <ion-toolbar>
+    <ion-title>
+      {{ config.key }}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="editingConfig = false">
+        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-list>
+    <ion-item>
+      <ion-label position="stacked">{{ 'description' | translate }}</ion-label>
+      {{ config.help | translate }}
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">{{ 'type' | translate }}</ion-label>
+      {{ config.type | translate }} {{ ( config.readOnly == 'yes' ? 'readonly' : 'writable' ) | translate }}
+    </ion-item>
+    <ion-item *ngIf="config.type == 'yesno'">
+      <ion-label position="stacked">{{ 'value' | translate }}</ion-label>
+      <ion-toggle slot="start" color="secondary" checked="{{config.value == 'yes'}}"
+        disabled="{{config.readOnly == 'yes'}}" (ionChange)="togle(config.key,$event)">
+      </ion-toggle>
+    </ion-item>
+    <ion-item *ngIf="config.type.substring(0,6) == 'string'">
+      <ion-label position="stacked">{{ 'value' | translate }}</ion-label>
+      <ion-input type="text" value="{{config.value}}" disabled="{{config.readOnly == 'yes'}}" id="{{config.key}}">
+      </ion-input>
+      <ion-button *ngIf="config.readOnly == 'no'" slot="end" fill="clear" size="small" (click)="save(config.key)">
+        <ion-icon slot="icon-only" color="success" name="save"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-item *ngIf="config.type.substring(0,3) == 'int'">
+      <ion-label position="stacked">{{ 'value' | translate }}</ion-label>
+      <ion-input type="text" value="{{config.value}}" disabled="{{config.readOnly == 'yes'}}" id="{{config.key}}">
+      </ion-input>
+      <ion-button *ngIf="config.readOnly == 'no'" slot="end" fill="clear" size="small" (click)="save(config.key)">
+        <ion-icon slot="icon-only" color="success" name="save"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
 </ion-content>

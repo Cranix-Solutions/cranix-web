@@ -1,19 +1,12 @@
-<cranix-toolbar></cranix-toolbar>
+<cranix-toolbar title="{{ 'Notices to the selected institute' | translate}}: {{object.name}}"></cranix-toolbar>
 <ion-content>
-  <ion-card>
-    <ion-card-header>
-      <ion-toolbar>
-        <ion-card-title>
-          {{ 'Notices to the selected institute' | translate}}: "{{object.name}}"
-        </ion-card-title>
-        <ion-buttons slot="end">
-          <ion-button size="small" (click)="redirectToAdd($event)" matTooltip="{{'Create a new notice' | translate }}">
-            <ion-icon name="add-circle"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-card-header>
-  </ion-card>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button size="small" (click)="redirectToAdd($event)" matTooltip="{{'Create a new notice' | translate }}">
+        <ion-icon name="add-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
   <ion-card *ngFor="let notice of notices">
     <ion-card-header>
       <ion-toolbar>

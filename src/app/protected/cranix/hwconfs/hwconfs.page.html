@@ -1,50 +1,39 @@
-<cranix-toolbar></cranix-toolbar>
-<ion-row class="header-row">
-  <ion-col>
-    <ion-title>{{'Manage hwconfs' | translate}}</ion-title>
-  </ion-col>
-</ion-row>
-<ion-content *ngIf="!authService.isMD()" id="carded">
-  <ion-card>
-    <ion-card-header>
-      <ion-toolbar>
-        <ion-card-title>{{'Manage hwconfs' | translate}}</ion-card-title>
-        <ion-item>
-          <ion-label *ngIf="gridApi">
-            #{{gridApi.getDisplayedRowCount()}}
-          </ion-label>
-          <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('hwconfsFilter')"
-            id="hwconfsFilter">
-          </ion-input>
-        </ion-item>
-        <ion-buttons slot="end">
-          <ion-button size="small" fill="solid" (click)="redirectToEdit(null)"
-            matTooltip="{{'Create a new hardware configuration' | translate }}">
-            <ion-icon slot="icon-only" name="add-circle"></ion-icon>
-          </ion-button>
-          <ion-button size="small" fill="solid" (click)="openActions($event,null)"
-            matTooltip="{{'Apply actions on the selected objects' | translate }}">
-            <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
-          </ion-button>
-          <ion-button size="small" fill="solid" (click)="openCollums($event)"
-            matTooltip="{{'Select the columns to show' | translate }}">
-            <ion-icon slot="icon-only" name="apps"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-card-header>
-    <ion-card-content>
-      <ag-grid-angular *ngIf="!authService.isMD()" id="agGridTable" style="width: 100%; height: 100%;"
-        rowSelection="multiple" class="{{authService.settings.agGridThema}}"
-        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
-        rowHeight="{{authService.settings.rowHeight}}" [rowData]="objectService.allObjects['hwconf']"
-        [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [context]="context" (gridReady)="onGridReady($event)"
-        (selectionChanged)="selectionChanged()">
-      </ag-grid-angular>
-
-    </ion-card-content>
-  </ion-card>
+<cranix-toolbar title="{{'Manage hwconfs' | translate}}"></cranix-toolbar>
+<ion-content *ngIf="!authService.isMD()">
+  <ion-toolbar>
+    <ion-item>
+      <ion-label *ngIf="gridApi">
+        #{{gridApi.getDisplayedRowCount()}}
+      </ion-label>
+      <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('hwconfsFilter')"
+        id="hwconfsFilter">
+      </ion-input>
+    </ion-item>
+    <ion-buttons slot="end">
+      <ion-button size="small" fill="solid" (click)="redirectToEdit(null)"
+        matTooltip="{{'Create a new hardware configuration' | translate }}">
+        <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+      </ion-button>
+      <ion-button size="small" fill="solid" (click)="openActions($event,null)"
+        matTooltip="{{'Apply actions on the selected objects' | translate }}">
+        <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
+      </ion-button>
+      <ion-button size="small" fill="solid" (click)="openCollums($event)"
+        matTooltip="{{'Select the columns to show' | translate }}">
+        <ion-icon slot="icon-only" name="apps"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ag-grid-angular *ngIf="!authService.isMD()" id="agGridTable" style="width: 100%; height: 100%;"
+    rowSelection="multiple" class="{{authService.settings.agGridThema}}"
+    [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
+    rowHeight="{{authService.settings.rowHeight}}" [rowData]="objectService.allObjects['hwconf']"
+    [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [context]="context" (gridReady)="onGridReady($event)"
+    (selectionChanged)="selectionChanged()">
+  </ag-grid-angular>
 </ion-content>
+<ion-searchbar *ngIf="authService.isMD()" placeholder="{{'search' | translate }}"
+  (input)="onQuickFilterChanged('hwconfsFilterMD')" id="hwconfsFilterMD"></ion-searchbar>
 <ion-content *ngIf="authService.isMD()">
   <ion-fab vertical="top" horizontal="end" slot="fixed">
     <ion-fab-button size="small">
@@ -57,12 +46,9 @@
       <ion-fab-button>
         <ion-icon name="add-circle" (click)="redirectToEdit(null)"></ion-icon>
       </ion-fab-button>
-      <!-- ion-fab-button><ion-icon name="apps" (click)="openCollums($event)"></ion-icon></ion-fab-button -->
     </ion-fab-list>
   </ion-fab>
-  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('hwconfsFilterMD')"
-    id="hwconfsFilterMD"></ion-searchbar>
-  <ion-list *ngIf="authService.isMD()">
+  <ion-list>
     <ion-item-sliding *ngFor="let object of rowData">
       <ion-item button (click)="redirectToEdit(object)">
         <ion-note slot="start">

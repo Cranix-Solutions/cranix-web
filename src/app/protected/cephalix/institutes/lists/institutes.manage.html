@@ -1,9 +1,8 @@
-<cranix-toolbar></cranix-toolbar>
-<ion-row class="header-row">
-  <ion-col>
-    <ion-title>{{'Manage institutes' | translate}}</ion-title>
-  </ion-col>
-</ion-row>
+<cranix-toolbar title="{{'Manage institutes' | translate}}"></cranix-toolbar>
+
+<ion-searchbar *ngIf="authService.isMD()" placeholder="{{'search' | translate }}"
+  (input)="onQuickFilterChanged('managedInstitutesFilterMD')" id="managedInstitutesFilterMD" showCancelButton="never"
+  class="hidden-lg hidden-xl"></ion-searchbar>
 <ion-content id="carded">
   <ion-fab *ngIf="instituteView" vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
     <ion-fab-button>
@@ -16,51 +15,38 @@
       <ion-fab-button>
         <ion-icon name="checkmark" (click)="showSelected()"></ion-icon>
       </ion-fab-button>
-      <!-- ion-fab-button>
-        <ion-icon name="close" (click)="showAll()"></ion-icon>
-      </ion-fab-button -->
     </ion-fab-list>
   </ion-fab>
-  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('managedInstitutesFilterMD')"
-    id="managedInstitutesFilterMD" showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
-  <ion-card>
-    <ion-card-header>
-      <ion-toolbar>
-        <ion-card-title *ngIf="instituteView">{{'Select institutes to manage by:' | translate}}
-          {{selectedManager.fullName}}</ion-card-title>
-        <ion-card-title *ngIf="!instituteView">{{'Click on user to select managed institutes' | translate}}
-        </ion-card-title>
-        <ion-item>
-          <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('managedInstitutesFilter')"
-            id="managedInstitutesFilter">
-          </ion-input>
-        </ion-item>
-        <ion-buttons *ngIf="instituteView" slot="end">
-          <ion-button size="small" fill="solid" (click)="userList()"
-            matTooltip="{{'Go back to user list' | translate }}">
-            <ion-icon slot="icon-only" name="arrow-undo"></ion-icon>
-          </ion-button>
-          <ion-button size="small" fill="solid" (click)="showSelected()"
-            matTooltip="{{'Show the managed institutes.' | translate }}">
-            <ion-icon slot="icon-only" name="checkmark"></ion-icon>
-          </ion-button>
-          <ion-button size="small" fill="solid" (click)="showAll()"
-            matTooltip="{{'Show all institutes.' | translate }}">
-            <ion-icon slot="icon-only" name="close"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-item *ngIf="instituteView">
-        <ion-label>{{ 'Count of managed institutes:' | translate}}</ion-label>
-        <ion-label>{{managedIds.length}}</ion-label>
-      </ion-item>
-      <ag-grid-angular id="instituteManageTable" style="width: 100%; height: 100%;" rowSelection="multiple"
-        class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}" [context]="context"
-        [rowData]="rowData" [defaultColDef]="defaultColDef" [columnDefs]="columnDefs"
-        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" (gridReady)="onGridReady($event)">
-      </ag-grid-angular>
-    </ion-card-content>
-  </ion-card>
+  <ion-toolbar>
+    <ion-card-title *ngIf="instituteView">{{'Select institutes to manage by:' | translate}}
+      {{selectedManager.fullName}}</ion-card-title>
+    <ion-card-title *ngIf="!instituteView">{{'Click on user to select managed institutes' | translate}}
+    </ion-card-title>
+    <ion-item>
+      <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('managedInstitutesFilter')"
+        id="managedInstitutesFilter">
+      </ion-input>
+    </ion-item>
+    <ion-buttons *ngIf="instituteView" slot="end">
+      <ion-button size="small" fill="solid" (click)="userList()" matTooltip="{{'Go back to user list' | translate }}">
+        <ion-icon slot="icon-only" name="arrow-undo"></ion-icon>
+      </ion-button>
+      <ion-button size="small" fill="solid" (click)="showSelected()"
+        matTooltip="{{'Show the managed institutes.' | translate }}">
+        <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+      </ion-button>
+      <ion-button size="small" fill="solid" (click)="showAll()" matTooltip="{{'Show all institutes.' | translate }}">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-item *ngIf="instituteView">
+    <ion-label>{{ 'Count of managed institutes:' | translate}}</ion-label>
+    <ion-label>{{managedIds.length}}</ion-label>
+  </ion-item>
+  <ag-grid-angular id="instituteManageTable" style="width: 100%; height: 100%;" rowSelection="multiple"
+    class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}" [context]="context"
+    [rowData]="rowData" [defaultColDef]="defaultColDef" [columnDefs]="columnDefs"
+    [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" (gridReady)="onGridReady($event)">
+  </ag-grid-angular>
 </ion-content>

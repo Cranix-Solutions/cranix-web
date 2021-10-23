@@ -2,23 +2,23 @@
 <cranix-toolbar *ngIf="eduS.selectedRoom" title="{{'Room control in' | translate}} {{eduS.selectedRoom.name}}"></cranix-toolbar>
 <ion-toolbar>
   <ion-buttons *ngIf="room" slot="start">
-    <ion-button matTooltip="{{ 'To login' | translate}}" (click)="setAccess('login')">
+    <ion-button matTooltip="{{ 'To login' | translate}}" (click)="setAccess('login')" [disabled]="disableChange">
       <ion-icon [ngStyle]="{'color': room.accessInRooms.login  ? '#2dd36f' : '#eb445a'}" name="key-sharp" size="large">
       </ion-icon>
     </ion-button>
-    <ion-button *ngIf="room && authS.isAllowed('education.proxy')"
+    <ion-button *ngIf="room && authS.isAllowed('education.proxy')" [disabled]="disableChange"
       matTooltip="{{ 'Filtered internet access' | translate}}" (click)="setAccess('proxy')">
       <ion-icon [ngStyle]="{'color': room.accessInRooms.proxy  ? '#2dd36f' : '#eb445a'}" name="globe-sharp"
         size="large">
       </ion-icon>
     </ion-button>
     <ion-button *ngIf="room && authS.isAllowed('room.direct')" matTooltip="{{ 'Direct internet access' | translate}}"
-      (click)="setAccess('direct')">
+      (click)="setAccess('direct')" [disabled]="disableChange">
       <ion-icon [ngStyle]="{'color': room.accessInRooms.direct  ? '#2dd36f' : '#eb445a'}" name="nuclear-sharp"
         size="large">
       </ion-icon>
     </ion-button>
-    <ion-button matTooltip="{{ 'Printing' | translate}}" (click)="setAccess('printing')">
+    <ion-button matTooltip="{{ 'Printing' | translate}}" (click)="setAccess('printing')" [disabled]="disableChange">
       <ion-icon [ngStyle]="{'color': room.accessInRooms.printing  ? '#2dd36f' : '#eb445a'}" name="print-sharp"
         size="large">
       </ion-icon>
@@ -38,12 +38,14 @@
   </ion-buttons>
   <ion-buttons slot="end">
     <ion-item lines="none" matTooltip="{{'Select the room to control' | translate}}">
-      <ion-button (click)="selectRooms()">
-        <ion-label>{{'Select a room' | translate}}</ion-label>
+      <ion-button (click)="selectRooms()" fill="clear">
+        <ion-icon name="room"></ion-icon>
+        <!-- ion-label>{{'Select a room' | translate}}</ion-label -->
       </ion-button>
     </ion-item>
     <ion-item lines="none" matTooltip="{{'Select picture size' | translate}}">
-      <ion-label position="stacked">{{'Select picture size' | translate }}</ion-label>
+      <ion-icon name="resize"></ion-icon>
+      <!-- ion-label position="stacked">{{'Select picture size' | translate }}</ion-label -->
       <ion-select *ngIf="eduS.selectedRoom" [(ngModel)]="gridSize" name="gridSize" #roomSelect (ionChange)="sizeChange($event)"
         okText="{{'apply' | translate }}" cancelText="{{ 'Cancel' | translate}}">
         <ion-select-option value="{{size}}" *ngFor="let size of gridSizes">{{size}}</ion-select-option>

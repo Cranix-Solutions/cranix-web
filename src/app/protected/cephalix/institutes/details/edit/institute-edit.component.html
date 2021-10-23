@@ -1,35 +1,7 @@
+
 <form #editForm="ngForm">
-  <cranix-toolbar></cranix-toolbar>
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>{{ 'Modify selected institute:' | translate}} "{{object.name}}"</ion-title>
-      <ion-buttons slot="end">
-        <ion-button size="small" fill="solid" fill="clear" class="ion-no-margin" [disabled]="!editForm.valid"
-          matTooltip="{{'Apply changes' | translate }}" (click)="onSubmit(editForm.value)">
-          <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
-        </ion-button>
-        <ion-button size="small" fill="solid" fill="clear" (click)="setNextDefaults()"
-          matTooltip="{{'Set the next default values' | translate }}">
-          <ion-icon slot="icon-only" name="refresh"></ion-icon>
-        </ion-button>
-        <ion-button size="small" fill="solid" fill="clear" (click)="writeConfig()"
-          matTooltip="{{'Write configuration and create installation image' | translate }}">
-          <ion-icon slot="icon-only" name="server"></ion-icon>
-        </ion-button>
-        <ion-button size="small" fill="solid" fill="clear" href="/isos/{{isourl}}.iso"
-          matTooltip="{{'Download the installation image' | translate }}">
-          <ion-icon slot="icon-only" name="arrow-down-circle"></ion-icon>
-        </ion-button>
-        <ion-button size="small" fill="solid" fill="clear" href="/configs/{{isourl}}full-connect.sh"
-          matTooltip="{{'Download the setup script' | translate }}">
-          <ion-icon slot="icon-only" name="download"></ion-icon>
-        </ion-button>
-        <ion-button size="small" fill="solid" fill="clear" (click)="delete($event)"
-          matTooltip="{{'Delete institute' | translate }}">
-          <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
+  <cranix-toolbar title="{{ 'Modify selected institute:' | translate}} {{object.name}}"></cranix-toolbar>
+  <ion-toolbar>
     <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="details">
       <ion-segment-button value="details">
         <ion-label>{{'Details' | translate}}</ion-label>
@@ -44,8 +16,56 @@
         <ion-label>{{'Contract' | translate}}</ion-label>
       </ion-segment-button>
     </ion-segment>
-  </ion-header>
+    <ion-buttons  *ngIf="!authService.isMD()" slot="end">
+      <ion-button size="small" fill="solid" fill="clear" class="ion-no-margin" [disabled]="!editForm.valid"
+        matTooltip="{{'Apply changes' | translate }}" (click)="onSubmit(editForm.value)">
+        <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+      </ion-button>
+      <ion-button size="small" fill="solid" fill="clear" (click)="setNextDefaults()"
+        matTooltip="{{'Set the next default values' | translate }}">
+        <ion-icon slot="icon-only" name="refresh"></ion-icon>
+      </ion-button>
+      <ion-button size="small" fill="solid" fill="clear" (click)="writeConfig()"
+        matTooltip="{{'Write configuration and create installation image' | translate }}">
+        <ion-icon slot="icon-only" name="server"></ion-icon>
+      </ion-button>
+      <ion-button size="small" fill="solid" fill="clear" href="/isos/{{isourl}}.iso"
+        matTooltip="{{'Download the installation image' | translate }}">
+        <ion-icon slot="icon-only" name="arrow-down-circle"></ion-icon>
+      </ion-button>
+      <ion-button size="small" fill="solid" fill="clear" href="/configs/{{isourl}}full-connect.sh"
+        matTooltip="{{'Download the setup script' | translate }}">
+        <ion-icon slot="icon-only" name="download"></ion-icon>
+      </ion-button>
+      <ion-button size="small" fill="solid" fill="clear" (click)="delete($event)"
+        matTooltip="{{'Delete institute' | translate }}">
+        <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
   <ion-content fullscreen *ngIf="segment=='details'">
+    <ion-fab *ngIf="authService.isMD()" vertical="top" horizontal="end" slot="fixed">
+      <ion-fab-button size="small">
+        <ion-icon name="arrow-forward-circle"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-list side="start">
+        <ion-fab-button (click)="onSubmit(editForm.value)">
+          <ion-icon color="success" name="checkmark"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button (click)="setNextDefaults()">
+          <ion-icon name="refresh"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button (click)="writeConfig()">
+          <ion-icon name="server"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button href="/configs/{{isourl}}full-connect.sh">
+          <ion-icon name="download"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button (click)="delete($event)">
+          <ion-icon color="danger" name="trash"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
     <ion-grid>
       <ion-row>
         <ion-col size=12 sizeMd=6 sizeLg=4 sizeXl=3 *ngFor="let key of objectKeys;"
@@ -135,7 +155,8 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{ 'AddOns' | translate}}</ion-label>
-        <ion-select [(ngModel)]="addons" name="addons" multiple="true" [compareWith]="compareAddons" (ionChange)="addonChanged()">
+        <ion-select [(ngModel)]="addons" name="addons" multiple="true" [compareWith]="compareAddons"
+          (ionChange)="addonChanged()">
           <ion-select-option *ngFor="let addon of allAddons" [value]="addon">{{ addon.name }}</ion-select-option>
         </ion-select>
       </ion-item>

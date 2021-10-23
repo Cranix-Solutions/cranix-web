@@ -1,32 +1,25 @@
-<ion-content>
-  <ion-card class="toolbar-inherit">
-    <ion-card-header >
-       <h1>{{ 'Download VPN' | translate}}</h1>
-    </ion-card-header>
-    <ion-card-content *ngIf="supportedOSlist">
-     <ion-list>
-       <ion-item>
-         <ion-icon slot="start" name="cube"></ion-icon>
-         <ion-label>
-           <h2>{{ 'Select OS' | translate}}</h2>
-        </ion-label>
-         <ion-select type="text" [(ngModel)]="selectedOS" (ionChange)="log()">
-              <ion-select-option value="{{os}}" *ngFor="let os of  supportedOSlist | async" >
-                {{ os | translate }}</ion-select-option>
-          </ion-select>
-       </ion-item>
-       <ion-item lines="none">
-        <ion-button (click)="downloadConfig()" [disabled]="!selectedOS">  
-          {{ 'Download config' | translate }}
-        </ion-button>
-      </ion-item>
-      <ion-item lines="none">
-        <ion-button (click)="downloadExec()" [disabled]="!selectedOS">  
-          {{ 'Download Installer' | translate }}
-        </ion-button>
-      </ion-item>
-      
-     </ion-list>
-    </ion-card-content>
-  </ion-card>
- </ion-content>
+<cranix-toolbar title="{{'Download VPN' | translate}}"></cranix-toolbar>
+<ion-content *ngIf="supportedOSlist">
+  <ion-list>
+    <ion-item>
+      <ion-icon slot="start" name="cube"></ion-icon>
+      <ion-label>
+        <h2>{{ 'Select OS' | translate}}</h2>
+      </ion-label>
+      <ion-select type="text" [(ngModel)]="selectedOS" (ionChange)="log()">
+        <ion-select-option value="{{os}}" *ngFor="let os of  supportedOSlist | async">
+          {{ os | translate }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-button (click)="downloadConfig()" [disabled]="!selectedOS">
+        {{ 'Download config' | translate }}
+      </ion-button>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-button (click)="downloadExec()" [disabled]="!selectedOS">
+        {{ 'Download Installer' | translate }}
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>

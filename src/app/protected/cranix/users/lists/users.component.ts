@@ -1,12 +1,10 @@
-import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__ } from '@angular/core';
-import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
+import { Component, OnInit } from '@angular/core';
+import { GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
-import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
-import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
 import { UserActionBTNRenderer } from 'src/app/pipes/ag-user-renderer';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
@@ -61,6 +59,14 @@ export class UsersComponent implements OnInit {
     });
     this.rowData = this.objectService.allObjects['user']
   }
+
+  async ngAfterViewInit() {
+    while ( this.rowData.length == 0) {
+      this.rowData = this.objectService.allObjects['user']
+      await new Promise(f => setTimeout(f, 1000));
+    }
+  }
+
   createColumnDefs() {
     let columnDefs = [];
     for (let key of this.objectKeys) {
