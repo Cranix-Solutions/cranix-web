@@ -1,37 +1,23 @@
-<cranix-toolbar></cranix-toolbar>
+<cranix-toolbar title="{{ 'List of synchronized objects in the selected institute:' | translate}} {{institute.name}}">
+</cranix-toolbar>
 <ion-content id="carded">
-  <ion-row class="header-row">
-    <ion-col>
-      <ion-title>{{ 'List of synchronized objects in the selected institute:' | translate}} {{institute.name}}
-      </ion-title>
-    </ion-col>
-  </ion-row>
-  <ion-card>
-    <ion-card-header>
-      <ion-toolbar>
-        <ion-card-title>{{ 'List of synchronized objects in the selected institute:' | translate}} {{institute.name}}
-        </ion-card-title>
-        <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="list">
-          <ion-segment-button value="to">
-            <ion-label>{{'To' | translate}}</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="from">
-            <ion-label>{{'From' | translate}}</ion-label>
-          </ion-segment-button>
-        </ion-segment>
-        <ion-item>
-          <ion-input placeholder="{{'search' | translate }}" (input)="onMemberFilterChanged()" id="memberFilter">
-          </ion-input>
-        </ion-item>
-      </ion-toolbar>
-    </ion-card-header>
-    <ion-card-content>
-      <ag-grid-angular #agGrid style="width: 100%; height: 450px;" class="{{authService.settings.agGridThema}}"
-        [rowData]="memberData" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
-        [context]="context" rowSelection="multiple"
-        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" (gridReady)="onMemberReady($event)"
-        id="memberTable">
-      </ag-grid-angular>
-    </ion-card-content>
-  </ion-card>
+  <ion-toolbar>
+    <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="list">
+      <ion-segment-button value="to">
+        <ion-label>{{'To' | translate}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="from">
+        <ion-label>{{'From' | translate}}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+    <ion-item>
+      <ion-input placeholder="{{'search' | translate }}" (input)="onMemberFilterChanged()" id="memberFilter">
+      </ion-input>
+    </ion-item>
+  </ion-toolbar>
+  <ag-grid-angular #agGrid style="width: 100%; height: 450px;" class="{{authService.settings.agGridThema}}"
+    [rowData]="memberData" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [context]="context"
+    rowSelection="multiple" [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
+    (gridReady)="onMemberReady($event)" id="memberTable">
+  </ag-grid-angular>
 </ion-content>

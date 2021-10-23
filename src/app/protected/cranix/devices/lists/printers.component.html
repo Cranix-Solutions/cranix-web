@@ -1,54 +1,44 @@
-<cranix-toolbar></cranix-toolbar>
-<ion-row class="header-row">
-  <ion-col>
-    <ion-title>{{'Manage printers' | translate}}</ion-title>
-  </ion-col>
-</ion-row>
+<cranix-toolbar title="{{'Manage printers' | translate}}"></cranix-toolbar>
 <ion-content *ngIf="!authService.isMD()" id="carded">
-  <ion-card>
-    <ion-card-header>
-      <ion-toolbar>
-        <ion-card-title>{{'Manage printers' | translate}}</ion-card-title>
-        <ion-item>
-          <ion-label *ngIf="gridApi">
-            #{{gridApi.getDisplayedRowCount()}}
-          </ion-label>
-          <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('printerFilter')"
-            id="printerFilter">
-          </ion-input>
-        </ion-item>
-        <ion-buttons slot="end">
-          <ion-button *ngIf="authService.isAllowed('printers.add')" size="small" fill="solid"
-            (click)="addDevice($event)" matTooltip="{{'Create a new printer device' | translate }}">
-            <ion-icon slot="icon-only" name="add-circle"></ion-icon>
-          </ion-button>
-          <ion-button *ngIf="authService.isAllowed('printers.add')" size="small" fill="solid"
-            (click)="addPrinter($event)" matTooltip="{{'Create a new printer queue' | translate }}">
-            <ion-icon slot="icon-only" name="print"></ion-icon>
-          </ion-button>
-          <ion-button size="small" fill="solid" (click)="openActions($event,null)"
-            matTooltip="{{'Apply actions on the selected objects' | translate }}">
-            <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
-          </ion-button>
-          <ion-button size="small" fill="solid" (click)="openCollums($event)"
-            matTooltip="{{'Select the columns to show' | translate }}">
-            <ion-icon slot="icon-only" name="apps"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-card-header>
-    <ion-card-content>
-      <ag-grid-angular style="width: 100%; height:  100%;" class="{{authService.settings.agGridThema}}"
-        rowSelection="multiple" rowHeight="{{authService.settings.rowHeight}}" [context]="context" [rowData]="objectService.allObjects['printer']"
-        [columnDefs]="columnDefs" [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
-        (selectionChanged)="selectionChanged()"
-        (gridReady)="onGridReady($event)" id="agGridTable">
-      </ag-grid-angular>
-    </ion-card-content>
-  </ion-card>
+  <ion-toolbar>
+    <ion-item>
+      <ion-label *ngIf="gridApi">
+        #{{gridApi.getDisplayedRowCount()}}
+      </ion-label>
+      <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('printerFilter')"
+        id="printerFilter">
+      </ion-input>
+    </ion-item>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="authService.isAllowed('printers.add')" size="small" fill="solid" (click)="addDevice($event)"
+        matTooltip="{{'Create a new printer device' | translate }}">
+        <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="authService.isAllowed('printers.add')" size="small" fill="solid" (click)="addPrinter($event)"
+        matTooltip="{{'Create a new printer queue' | translate }}">
+        <ion-icon slot="icon-only" name="print"></ion-icon>
+      </ion-button>
+      <ion-button size="small" fill="solid" (click)="openActions($event,null)"
+        matTooltip="{{'Apply actions on the selected objects' | translate }}">
+        <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
+      </ion-button>
+      <ion-button size="small" fill="solid" (click)="openCollums($event)"
+        matTooltip="{{'Select the columns to show' | translate }}">
+        <ion-icon slot="icon-only" name="apps"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ag-grid-angular style="width: 100%; height:  100%;" class="{{authService.settings.agGridThema}}"
+    rowSelection="multiple" rowHeight="{{authService.settings.rowHeight}}" [context]="context"
+    [rowData]="objectService.allObjects['printer']" [columnDefs]="columnDefs"
+    [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" (selectionChanged)="selectionChanged()"
+    (gridReady)="onGridReady($event)" id="agGridTable">
+  </ag-grid-angular>
 </ion-content>
+<ion-searchbar *ngIf="authService.isMD()" placeholder="{{'search' | translate }}"
+  (input)="onQuickFilterChanged('printerFilterMD')" id="printerFilterMD" showCancelButton="never"></ion-searchbar>
 <ion-content *ngIf="authService.isMD()">
-  <ion-fab vertical="top" horizontal="end" slot="fixed" >
+  <ion-fab vertical="top" horizontal="end" slot="fixed">
     <ion-fab-button size="small">
       <ion-icon name="arrow-forward-circle"></ion-icon>
     </ion-fab-button>
@@ -62,13 +52,9 @@
       <ion-fab-button>
         <ion-icon name="print-outline" (click)="addPrinter($event)" disabled></ion-icon>
       </ion-fab-button>
-      <!-- ion-fab-button>
-        <ion-icon name="apps" (click)="openCollums($event)"></ion-icon>
-      </ion-fab-button -->
     </ion-fab-list>
   </ion-fab>
-  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('printerFilterMD')"
-    id="printerFilterMD" showCancelButton="never"></ion-searchbar><ion-list>
+  <ion-list>
     <ion-item-sliding *ngFor="let object of rowData">
       <ion-item button (click)="redirectToEdit(object)">
         <ion-note slot="start">

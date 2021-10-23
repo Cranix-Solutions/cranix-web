@@ -1,32 +1,26 @@
+<cranix-toolbar title="{{'Manage owned devices' | translate}}"></cranix-toolbar>
 <ion-content>
-  <ion-card class="toolbar-inherit">
-    <ion-card-header>
-      <ion-toolbar>
-      <ion-buttons slot="end">
-        <ion-button>
-          <ion-button size="small" (click)="addDevice($event)"
-            matTooltip="{{'Add Device' | translate }}">
-            <ion-icon slot="icon-only" name="add-circle"></ion-icon>
-          </ion-button>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-button size="small" (click)="addDevice($event)" matTooltip="{{'Add Device' | translate }}">
+          <ion-icon slot="icon-only" name="add-circle"></ion-icon>
         </ion-button>
-      </ion-buttons>
-        <ion-title>{{ 'My Devices' | translate}}</ion-title>
-      </ion-toolbar>
-    </ion-card-header>
-    <ion-card-content >
-     <ion-list *ngIf="myDevs">
-       <ion-item *ngFor="let dev of myDevs | async">
-         <ion-icon slot="start" name="cube"></ion-icon>
-         <ion-label>
-           <h2>{{ dev.name }}</h2>
-           <h3>{{ dev.ip }}</h3>
-           <h3>{{ dev.mac }}</h3>
-        </ion-label>
-         <ion-button (click)="deleteDev(dev.id)" fill="clear">
-           <ion-icon color="danger" name="trash"></ion-icon>
-        </ion-button>
-       </ion-item>
-     </ion-list>
-    </ion-card-content>
-  </ion-card>
- </ion-content>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ 'My Devices' | translate}}</ion-title>
+  </ion-toolbar>
+  <ion-list *ngIf="myDevs">
+    <ion-item *ngFor="let dev of myDevs | async">
+      <ion-icon slot="start" name="cube"></ion-icon>
+      <ion-label>
+        <h2>{{ dev.name }}</h2>
+        <h3>{{ dev.ip }}</h3>
+        <h3>{{ dev.mac }}</h3>
+      </ion-label>
+      <ion-button (click)="deleteDev(dev.id)" fill="clear">
+        <ion-icon color="danger" name="trash"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>

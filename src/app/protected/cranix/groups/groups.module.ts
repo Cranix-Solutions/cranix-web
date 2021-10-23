@@ -23,8 +23,7 @@ const routes: Routes = [
     FormsModule,
     RouterModule.forChild(routes),
     IonicModule,
-    CranixSharedModule,
-    
+    CranixSharedModule
   ],
   declarations: [ GroupsPage ],
   providers: [PipesModule ]

@@ -1,49 +1,33 @@
-<cranix-toolbar></cranix-toolbar>
-<ion-content>
-  <ion-card>
-    <ion-card-header class="hidden-xs hidden-sm hidden-md">
-      <ion-card-title matTooltip="{{ cephalixService.selectedList }}">
-        {{'Define synchronisation of objects for the selected institutes' | translate}}
-      </ion-card-title>
-      <ion-card-subtitle *ngIf="cephalixService.selectedInstitutes.length == 0">
-        {{'You have to select some institutes to be able to use this site.'}}
-      </ion-card-subtitle>
-      <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="User">
-        <ion-segment-button *ngFor="let seg of objectsToSync" [value]="seg">
-          <ion-label>{{ seg | translate}}</ion-label>
-        </ion-segment-button>
-      </ion-segment>
-      <ion-toolbar *ngIf="cephalixService.selectedInstitutes.length != 0">
-        <ion-item>
-          <ion-input placeholder="{{'search' | translate }}" (input)="onMemberFilterChanged()" id="memberFilter">
-          </ion-input>
-        </ion-item>
-        <ion-buttons slot="end">
-          <ion-button size="small" (click)="startSync($event)"
-            matTooltip="{{'Start  synchronisation of selected objects to the selected institutes.' | translate }} {{ cephalixService.selectedList }}">
-            <ion-icon slot="icon-only" color="success" name="code-working"></ion-icon>
-          </ion-button>
-          <ion-button size="small" (click)="stopSync($event)"
-            matTooltip="{{'Stop  synchronisation of selected objects to the selected institutes.' | translate }}  {{ cephalixService.selectedList }}">
-            <ion-icon slot="icon-only" color="danger" name="code-working"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>   
-    </ion-card-header>
-    <ion-card-content>
-      <ag-grid-angular
-        #agGrid
-        id="institutesSyncObjectsTable"
-        style="width: 100%; height: 600px;"
-        class="{{authService.settings.agGridThema}}"
-        rowHeight="{{authService.settings.rowHeight}}"
-        [rowData]="memberData[segment]"
-        [columnDefs]="columnDefs"
-        [context]="context"
-        rowSelection="multiple"
-        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
-        (gridReady)="onMemberReady($event)">
-      </ag-grid-angular>
-    </ion-card-content>
-  </ion-card>
+<cranix-toolbar title="{{'Define synchronisation of objects for the selected institutes' | translate}}">
+</cranix-toolbar>
+<ion-title *ngIf="cephalixService.selectedInstitutes.length == 0">
+  {{'You have to select some institutes to be able to use this site.'}}
+</ion-title>
+<ion-segment  *ngIf="cephalixService.selectedInstitutes.length != 0" (ionChange)="segmentChanged($event)" color="secondary" value="User">
+  <ion-segment-button *ngFor="let seg of objectsToSync" [value]="seg">
+    <ion-label>{{ seg | translate}}</ion-label>
+  </ion-segment-button>
+</ion-segment>
+<ion-content *ngIf="cephalixService.selectedInstitutes.length != 0">
+  <ion-toolbar>
+    <ion-item>
+      <ion-input placeholder="{{'search' | translate }}" (input)="onMemberFilterChanged()" id="memberFilter">
+      </ion-input>
+    </ion-item>
+    <ion-buttons slot="end">
+      <ion-button size="small" (click)="startSync($event)"
+        matTooltip="{{'Start  synchronisation of selected objects to the selected institutes.' | translate }} {{ cephalixService.selectedList }}">
+        <ion-icon slot="icon-only" color="success" name="code-working"></ion-icon>
+      </ion-button>
+      <ion-button size="small" (click)="stopSync($event)"
+        matTooltip="{{'Stop  synchronisation of selected objects to the selected institutes.' | translate }}  {{ cephalixService.selectedList }}">
+        <ion-icon slot="icon-only" color="danger" name="code-working"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ag-grid-angular #agGrid id="institutesSyncObjectsTable" style="width: 100%; height: 600px;"
+    class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}"
+    [rowData]="memberData[segment]" [columnDefs]="columnDefs" [context]="context" rowSelection="multiple"
+    [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" (gridReady)="onMemberReady($event)">
+  </ag-grid-angular>
 </ion-content>

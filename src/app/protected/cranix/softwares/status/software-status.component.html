@@ -1,66 +1,54 @@
-<cranix-toolbar></cranix-toolbar>
+<cranix-toolbar title="{{ 'Software installation status:' | translate}}"></cranix-toolbar>
 <ion-content>
-  <ion-card>
-    <ion-card-header>
-      <ion-toolbar>
-        <ion-card-title>{{ 'Software installation status:' | translate}}</ion-card-title>
-        <ion-item>
-          <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('memberFilter')"
-            id="memberFilter">
-          </ion-input>
-        </ion-item>
-        <ion-buttons slot="end">
-          <ion-button size="small" fill="solid" (click)="exportSelected()"
-            matTooltip="{{'Export selected objects'|translate}}">
-            <ion-icon slot="icon-only" name="download"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-      <ion-row>
-        <ion-col>
-          <ion-item>
-            <ion-label position="stacked">{{'Softwares'|translate}}</ion-label>
-            <ionic-selectable #softwareSelect [(ngModel)]="selectedSoftwares" [ngModelOptions]="{standalone: true}"
-              [items]="softwares" itemValueField="key" itemTextField="value" [canSearch]="true" [isMultiple]="true"
-              placeholder="Select Softwares" (onChange)="readFilteredSoftwareData()">
-            </ionic-selectable>
-          </ion-item>
-        </ion-col>
-        <ion-col>
-          <ion-item>
-            <ion-label position="stacked">{{'Rooms'|translate}}</ion-label>
-            <ionic-selectable #roomSelect [(ngModel)]="selectedRooms" [ngModelOptions]="{standalone: true}"
-              [items]="rooms" itemValueField="key" itemTextField="value" [canSearch]="true" [isMultiple]="true"
-              placeholder="Select Rooms" (onChange)="readFilteredSoftwareData()">
-            </ionic-selectable>
-          </ion-item>
-        </ion-col>
-        <ion-col>
-          <ion-item>
-            <ion-label position="stacked">{{'Installation Status'|translate}}</ion-label>
-            <ion-select multiple="true" [(ngModel)]="selectedStati" placeholder="Select Installation Status" (ionChange)="readFilteredSoftwareData()">
-              <ion-select-option *ngFor="let status of stati" [value]="status">{{status | translate }}</ion-select-option>
-            </ion-select>
-          </ion-item>
-        </ion-col>
-        <!-- ion-col>
-          <ion-item>
-            <ion-button size="small" fill="solid" (click)="readFilteredSoftwareData ()"
-              matTooltip="{{'Search the software status corresponding your selection'|translate}}">
-              <ion-icon slot="icon-only" name="search"></ion-icon>
-            </ion-button>
-          </ion-item>
-        </ion-col -->
-      </ion-row>
-    </ion-card-header>
-    <ion-card-content>
-      <ag-grid-angular #agGrid id="softwareStatusTable" style="width: 100%; height: 600px;"
-        class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}"
-        rowSelection="multiple" animateRows="true" [context]="context" [rowData]="softwareData"
-        [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
-        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
-        (gridReady)="softwareDataReady($event)">
-      </ag-grid-angular>
-    </ion-card-content>
-  </ion-card>
+  <ion-toolbar>
+    <ion-item>
+      <ion-label *ngIf="softwareApi">
+        #{{softwareApi.getDisplayedRowCount()}}
+      </ion-label>
+      <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('memberFilter')"
+        id="memberFilter">
+      </ion-input>
+    </ion-item>
+    <ion-buttons slot="end">
+      <ion-button size="small" fill="solid" (click)="exportSelected()"
+        matTooltip="{{'Export selected objects'|translate}}">
+        <ion-icon slot="icon-only" name="download"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label position="stacked">{{'Softwares'|translate}}</ion-label>
+        <ionic-selectable #softwareSelect [(ngModel)]="selectedSoftwares" [ngModelOptions]="{standalone: true}"
+          [items]="softwares" itemValueField="key" itemTextField="value" [canSearch]="true" [isMultiple]="true"
+          placeholder="Select Softwares" (onChange)="readFilteredSoftwareData()">
+        </ionic-selectable>
+      </ion-item>
+    </ion-col>
+    <ion-col>
+      <ion-item>
+        <ion-label position="stacked">{{'Rooms'|translate}}</ion-label>
+        <ionic-selectable #roomSelect [(ngModel)]="selectedRooms" [ngModelOptions]="{standalone: true}" [items]="rooms"
+          itemValueField="key" itemTextField="value" [canSearch]="true" [isMultiple]="true" placeholder="Select Rooms"
+          (onChange)="readFilteredSoftwareData()">
+        </ionic-selectable>
+      </ion-item>
+    </ion-col>
+    <ion-col>
+      <ion-item>
+        <ion-label position="stacked">{{'Installation Status'|translate}}</ion-label>
+        <ion-select multiple="true" [(ngModel)]="selectedStati" placeholder="Select Installation Status"
+          (ionChange)="readFilteredSoftwareData()">
+          <ion-select-option *ngFor="let status of stati" [value]="status">{{status | translate }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ag-grid-angular #agGrid id="softwareStatusTable" style="width: 100%; height: 600px;"
+    class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}" rowSelection="multiple"
+    animateRows="true" [context]="context" [rowData]="softwareData" [columnDefs]="columnDefs"
+    [defaultColDef]="defaultColDef" [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
+    (gridReady)="softwareDataReady($event)">
+  </ag-grid-angular>
 </ion-content>

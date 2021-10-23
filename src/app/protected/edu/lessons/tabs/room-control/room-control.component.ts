@@ -25,6 +25,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   portal: boolean;
   printing: boolean;
   proxy: boolean;
+  disableChange = false;
 
   devices = [1, 2, 3, 4, 5, 6]
   room: EduRoom;
@@ -50,12 +51,14 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     this.eduS.getMyRooms();
   }
   ngOnInit() {
+    if (this.authS.isMD()) {
+      this.gridSize = 12
+    }
   }
 
   ngAfterViewInit() {
     if (this.authS.session.roomId) {
       this.selectedRoomId = parseInt(this.authS.session.roomId);
-      this.eduS.selectedRoom = this.objectS.getObjectById('room',this.selectedRoomId)
       this.getRoomStatus();
       this.statusTimer();
     } else if (!this.room && !this.authS.session.roomId) {
@@ -69,12 +72,15 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     }))
   }
   getRoomStatus() {
-    this.eduS.getRoomById(this.selectedRoomId)
-      .pipe(takeWhile(() => this.alive))
-      .subscribe(res => {
-        this.room = res
-        console.log(`Rooms is: ${this.room.name}`)
-      });
+    if (!this.disableChange) {
+      this.eduS.getRoomById(this.selectedRoomId)
+        .pipe(takeWhile(() => this.alive))
+        .subscribe(res => {
+          if (!this.disableChange) {
+            this.room = res
+          }
+        });
+    }
   }
   array(n: number): any[] {
     return Array(n);
@@ -130,7 +136,9 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     (await popover).present();
   }
-  setAccess(type: string) {
+  setAccess(type: string, value: boolean) {
+    this.objectS.requestSent();
+    this.disableChange = true;
     switch (type) {
       case 'login':
         this.room.accessInRooms.login = !this.room.accessInRooms.login;
@@ -142,26 +150,18 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
         this.room.accessInRooms.direct = !this.room.accessInRooms.direct;
         break;
       case 'printing':
-        this.room.accessInRooms.proxy = !this.room.accessInRooms.proxy;
+        this.room.accessInRooms.printing = !this.room.accessInRooms.printing;
         break;
-    }
-    let status: AccessInRooms = {
-      accessType: "FW",
-      roomId: this.room.id,
-      printing: this.room.accessInRooms.printing,
-      proxy: this.room.accessInRooms.proxy,
-      portal: this.room.accessInRooms.portal,
-      direct: this.room.accessInRooms.direct,
-      login: this.room.accessInRooms.login
     }
     this.eduS.setAccessStatus(this.room.accessInRooms)
       .pipe(takeWhile(() => this.alive))
       .subscribe((res) => {
-        console.log(JSON.stringify(res));
+        this.disableChange = false;
         this.objectS.responseMessage(res);
       }, err => {
         this.objectS.errorMessage(err);
-      })
+      },
+      )
   }
 
   /**
