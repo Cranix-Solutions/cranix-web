@@ -1,4 +1,12 @@
 <cranix-toolbar title="{{ 'Manage DNS Filter Configuration' | translate}}"></cranix-toolbar>
+<ion-toolbar *ngIf="!authService.isMD()">
+  <ion-buttons slot="end">
+    <ion-button size="small" fill="solid" (click)="writeConfig()" [disabled]="saving"
+      matTooltip="{{'Save DNS-Confiugration and restart'| translate }}">
+      <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
 <ion-content>
   <ion-row *ngIf="authService.isMD()">
     <ion-col>
@@ -117,14 +125,7 @@
           </div>
         </ion-list>
       </ion-col>
-      <ion-col *ngIf="!authService.isMD()">
-        <ion-item lines="none">
-          <ion-button size="small" fill="solid" (click)="writeConfig()" [disabled]="saving"
-            matTooltip="{{'Save DNS-Confiugration and restart'| translate }}">
-            <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
-          </ion-button>
-        </ion-item>
-      </ion-col>
+      
     </ion-row>
   </ion-grid>
 </ion-content>
