@@ -1,24 +1,24 @@
 <cranix-toolbar title="{{'Manage AdHoc rooms' | translate}}"></cranix-toolbar>
+<ion-toolbar *ngIf="!authService.isMD()">
+  <ion-item>
+    <ion-label *ngIf="gridApi">
+      #{{gridApi.getDisplayedRowCount()}}
+    </ion-label>
+    <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('adhocFilter')" id="adhocFilter">
+    </ion-input>
+  </ion-item>
+  <ion-buttons slot="end">
+    <ion-button size="small" fill="solid" (click)="redirectToEdit(null)"
+      matTooltip="{{'Create a new room' | translate }}">
+      <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+    </ion-button>
+    <ion-button size="small" fill="solid" (click)="openCollums($event)"
+      matTooltip="{{'Select the columns to show' | translate }}">
+      <ion-icon slot="icon-only" name="apps"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
 <ion-content *ngIf="!authService.isMD()" id="carded">
-  <ion-toolbar>
-    <ion-item>
-      <ion-label *ngIf="gridApi">
-        #{{gridApi.getDisplayedRowCount()}}
-      </ion-label>
-      <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('adhocFilter')" id="adhocFilter">
-      </ion-input>
-    </ion-item>
-    <ion-buttons slot="end">
-      <ion-button size="small" fill="solid" (click)="redirectToEdit(null)"
-        matTooltip="{{'Create a new room' | translate }}">
-        <ion-icon slot="icon-only" name="add-circle"></ion-icon>
-      </ion-button>
-      <ion-button size="small" fill="solid" (click)="openCollums($event)"
-        matTooltip="{{'Select the columns to show' | translate }}">
-        <ion-icon slot="icon-only" name="apps"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
   <ag-grid-angular id="adhocComponentTable" style="width: 100%; height: 100%;" rowSelection="multiple"
     class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}"
     [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" [context]="context"

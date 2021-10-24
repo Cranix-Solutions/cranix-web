@@ -1,27 +1,27 @@
 <cranix-toolbar *ngIf="!selectedRoom" title="{{'Manage devices' | translate}}"></cranix-toolbar>
 <cranix-toolbar *ngIf="selectedRoom" title="{{'Manage devices in selected room:' | translate}} {{selectedRoom.name}}">
 </cranix-toolbar>
+<ion-toolbar *ngIf="!authService.isMD()">
+  <ion-item>
+    <ion-label *ngIf="gridApi">
+      #{{gridApi.getDisplayedRowCount()}}
+    </ion-label>
+    <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('devicesFilter')"
+      id="devicesFilter">
+    </ion-input>
+  </ion-item>
+  <ion-buttons slot="end">
+    <ion-button size="small" fill="solid" (click)="addDevice($event)"
+      matTooltip="{{'Create a new device.' | translate }}">
+      <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+    </ion-button>
+    <ion-button size="small" fill="solid" (click)="openActions($event,null)"
+      matTooltip="{{'Apply actions on the selected objects' | translate }}">
+      <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
 <ion-content *ngIf="!authService.isMD()" id="carded">
-  <ion-toolbar>
-    <ion-item>
-      <ion-label *ngIf="gridApi">
-        #{{gridApi.getDisplayedRowCount()}}
-      </ion-label>
-      <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('devicesFilter')"
-        id="devicesFilter">
-      </ion-input>
-    </ion-item>
-    <ion-buttons slot="end">
-      <ion-button size="small" fill="solid" (click)="addDevice($event)"
-        matTooltip="{{'Create a new device.' | translate }}">
-        <ion-icon slot="icon-only" name="add-circle"></ion-icon>
-      </ion-button>
-      <ion-button size="small" fill="solid" (click)="openActions($event,null)"
-        matTooltip="{{'Apply actions on the selected objects' | translate }}">
-        <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
   <ag-grid-angular style="width: 100%; height:  100%;" rowSelection="multiple"
     class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}"
     rowMultiSelectWithClick="{{authService.settings.rowMultiSelectWithClick}}" [context]="context"
