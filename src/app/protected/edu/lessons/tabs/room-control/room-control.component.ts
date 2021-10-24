@@ -136,7 +136,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     (await popover).present();
   }
-  setAccess(type: string, value: boolean) {
+  setAccess(type: string) {
     this.objectS.requestSent();
     this.disableChange = true;
     switch (type) {
