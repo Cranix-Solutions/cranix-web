@@ -108,6 +108,12 @@ export class PrintersComponent implements OnInit {
           col['cellRendererFramework'] = YesNoBTNRenderer
           break;
         }
+        case 'roomId': {
+          col['valueGetter'] = function (params) {
+            return params.context['componentParent'].objectService.idToName('room', params.data.roomId);
+          }
+          break;
+        }
       }
       columnDefs.push(col);
     }
