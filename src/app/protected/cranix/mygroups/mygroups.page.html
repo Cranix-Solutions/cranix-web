@@ -15,7 +15,7 @@
     </ion-segment-button>
   </ion-segment>
   <ion-item>
-    <ion-label *ngIf="gridApi">
+    <ion-label *ngIf="gridApi && !authService.isMD()">
       #{{gridApi.getDisplayedRowCount()}}
     </ion-label>
     <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('mygroupsFilter')"

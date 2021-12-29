@@ -31,7 +31,7 @@ export class InstitutesComponent implements OnInit {
   gridApi: GridApi;
   columnApi: ColumnApi;
   context;
-  rowData = [];
+  rowData;
   selectedIds: number[] = [];
   nativeWindow: any
   now: number = 0;
@@ -69,7 +69,7 @@ export class InstitutesComponent implements OnInit {
         this.createColumnDefs();
       }
     });
-    while (this.rowData.length == 0) {
+    while ( !this.rowData ) {
       this.rowData = this.objectService.allObjects['institute'];
       await new Promise(f => setTimeout(f, 1000));
     };
