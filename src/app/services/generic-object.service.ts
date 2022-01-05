@@ -488,6 +488,14 @@ export class GenericObjectService {
    */
   typeOf(key: string, object, action: string) {
     let obj = object[key];
+    console.log(key,obj, typeof obj)
+    if( typeof obj == "number" && this.readOnlyAttributes.indexOf(key) != -1 ) {
+      return "numberRo"
+    }
+    if( typeof obj == "number"  ) {
+      console.log(key,"number")
+      return "number"
+    }
     if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
       return "date";
     }
