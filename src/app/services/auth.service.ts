@@ -26,10 +26,10 @@ export class AuthenticationService {
     formHeaders: HttpHeaders;
     textHeaders: HttpHeaders;
     anyHeaders: HttpHeaders;
-    settings: Settings = new Settings();
-    minLgWidth  = 769;
+    settings: Settings;
+    minLgWidth = 769;
     minLgHeight = 600;
-    rowColors: string[] = [ "#D2E3D5", "#E2F3E5", "#AFC2B2"]
+    rowColors: string[] = ["#D2E3D5", "#E2F3E5", "#AFC2B2"]
 
     constructor(
         private http: HttpClient,
@@ -51,7 +51,7 @@ export class AuthenticationService {
         const headers = new HttpHeaders({
             'Content-Type': "application/json",
             'Accept': "application/json"
-        });      
+        });
         return this.http.post<UserResponse>(this.url, user, { headers: headers });
     }
 
@@ -60,18 +60,24 @@ export class AuthenticationService {
         this.authenticationState.next(false);
         let subscription = this.login(user).subscribe(
             (val) => {
-                // Load settings from the local storage
+                this.settings = new Settings();
                 this.storage.get('myCranixSettings').then((myCranixSettings) => {
                     if (myCranixSettings && myCranixSettings != "") {
                         console.log("myCranixSettings");
                         console.log(myCranixSettings);
                         let myCranixSettingsHash = JSON.parse(myCranixSettings);
                         console.log(myCranixSettingsHash);
-                        for (let key in Object.getOwnPropertyNames(this.settings)) {
+                        for (let key of Object.getOwnPropertyNames(this.settings)) {
+                            console.log(key, myCranixSettingsHash.hasOwnProperty(key))
                             if (myCranixSettingsHash.hasOwnProperty(key)) {
-                                this.settings[key] = myCranixSettingsHash[key];
+                                if (typeof this.settings[key] == "number") {
+                                    this.settings[key] = Number(myCranixSettingsHash[key]);
+                                } else {
+                                    this.settings[key] = myCranixSettingsHash[key];
+                                }
                             }
                         }
+                        console.log(this.settings);
                     }
                 });
                 console.log('login respons is', val);
@@ -149,13 +155,14 @@ export class AuthenticationService {
     }
 
     public logout() {
-        if(!sessionStorage.getItem('shortName')) {
-            console.log('logout',this.session.token)
+        if (!sessionStorage.getItem('shortName')) {
+            console.log('logout', this.session.token)
             this.http.delete(this.hostname + `/sessions/${this.session.token}`, { headers: this.headers }).subscribe(
-                (val) => { 
+                (val) => {
                     this.authenticationState.next(false);
                     this.session = null;
-                    this.router.navigate(['/']) },
+                    this.router.navigate(['/'])
+                },
                 (err) => { this.router.navigate(['/']) },
                 () => { this.router.navigate(['/']) }
             );
@@ -276,7 +283,7 @@ export class AuthenticationService {
         }
     }
 
-    public isMD(){
+    public isMD() {
         return window.innerWidth < this.minLgWidth || window.innerHeight < this.minLgHeight;
     }
 
