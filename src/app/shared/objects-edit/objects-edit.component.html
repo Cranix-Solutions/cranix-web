@@ -34,6 +34,17 @@
             </button>
           </div>
         </ion-item>
+        <ion-item *ngSwitchCase="'number'">
+          <ion-label position="stacked">{{ key | translate }}</ion-label>
+          <ion-input type="number" [(ngModel)]="object[key]" name="{{key}}" value="{{object[key]}}">
+          </ion-input>
+        </ion-item>
+        <ion-item *ngSwitchCase="'numberRO'">
+          <ion-label position="stacked">{{ key | translate }}</ion-label>
+          <ion-input color="tertiary" type="number" [(ngModel)]="object[key]" name="{{key}}" value="{{object[key]}}"
+            readonly>
+          </ion-input>
+        </ion-item>
         <ion-item *ngSwitchCase="'booleanTrue'">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
           <ion-toggle slot="end" [(ngModel)]="object[key]" name="{{key}}" color="secondary" checked></ion-toggle>
