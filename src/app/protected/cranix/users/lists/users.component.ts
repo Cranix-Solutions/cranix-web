@@ -30,6 +30,9 @@ export class UsersComponent implements OnInit {
   rowData = [];
   selection:   User[] = [];
   selectedIds: number[] = [];
+  min:  number = -1;
+  step: number = 200
+  max:  number = 201;
 
   constructor(
     public authService: AuthenticationService,
@@ -65,6 +68,25 @@ export class UsersComponent implements OnInit {
       this.rowData = this.objectService.allObjects['user']
       await new Promise(f => setTimeout(f, 1000));
     }
+  }
+
+  back(){
+    this.min -= this.step;
+    if (this.min < -1 ) {
+      this.min = -1
+    }
+    this.max = this.min + this.step + 2;
+  }
+
+  forward(){
+    this.max += this.step;
+    if( this.max > (this.rowData.length + 1 )) {
+      this.max = this.rowData.length + 1
+    }
+    if( this.max < ( this.step +1 )) {
+      this.max = this.step +1
+    }
+    this.min = this.max - this.step -2;
   }
 
   createColumnDefs() {
@@ -127,6 +149,8 @@ export class UsersComponent implements OnInit {
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
     if (this.authService.isMD()) {
+      this.min = -1;
+      this.max = 1 + this.step;
       this.rowData = [];
       for (let obj of this.objectService.allObjects['user']) {
         if (
@@ -137,6 +161,10 @@ export class UsersComponent implements OnInit {
         ) {
           this.rowData.push(obj)
         }
+      }
+      if( this.rowData.length < this.step ) {
+        this.min = -1
+        this.max = this.rowData.length +1
       }
     } else {
       this.gridApi.setQuickFilter(filter);

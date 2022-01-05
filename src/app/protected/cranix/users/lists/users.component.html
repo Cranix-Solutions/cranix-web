@@ -30,8 +30,18 @@
     (gridReady)="onGridReady($event)" (selectionChanged)="selectionChanged()" id="agGridTable">
   </ag-grid-angular>
 </ion-content>
-<ion-searchbar *ngIf="authService.isMD()" placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('usersFilterMD')"
-id="usersFilterMD" showCancelButton="never"></ion-searchbar>
+<ion-item *ngIf="authService.isMD()">
+  <ion-button size="small" fill="clear" (click)="back()">
+    <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+  </ion-button>
+  {{ min +1 }}
+  <ion-searchbar  placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('usersFilterMD')"
+  id="usersFilterMD" showCancelButton="never"></ion-searchbar>
+  {{ max - 1 }}
+  <ion-button size="small" fill="clear" (click)="forward()">
+    <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
+  </ion-button>
+</ion-item>
 <ion-content *ngIf="authService.isMD()">
   <ion-fab vertical="top" horizontal="end" slot="fixed">
     <ion-fab-button size="small">
@@ -47,8 +57,8 @@ id="usersFilterMD" showCancelButton="never"></ion-searchbar>
     </ion-fab-list>
   </ion-fab>
   <ion-list>
-    <ion-item-sliding *ngFor="let object of rowData">
-      <ion-item button (click)="redirectToEdit(object)">
+    <ion-item-sliding *ngFor="let object of rowData; let i = index">
+      <ion-item *ngIf="i > min && i < max" button (click)="redirectToEdit(object)">
         <ion-note slot="start">
           <ion-checkbox (click)="$event.stopPropagation()" (ionChange)="checkChange($event,object)"></ion-checkbox>
         </ion-note>
