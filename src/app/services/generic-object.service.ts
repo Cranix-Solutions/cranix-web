@@ -461,7 +461,6 @@ export class GenericObjectService {
     return a == b;
   }
   compareObjects(o1, o2) {
-    console.log(o1, o2)
     return o1.id == o2.id;
   }
   sortByName(a, b) {
@@ -488,12 +487,10 @@ export class GenericObjectService {
    */
   typeOf(key: string, object, action: string) {
     let obj = object[key];
-    console.log(key,obj, typeof obj)
     if( typeof obj == "number" && this.readOnlyAttributes.indexOf(key) != -1 ) {
       return "numberRo"
     }
     if( typeof obj == "number"  ) {
-      console.log(key,"number")
       return "number"
     }
     if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
