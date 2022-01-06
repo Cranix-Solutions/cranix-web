@@ -1,7 +1,6 @@
-import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__ } from '@angular/core';
-import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
+import { Component, OnInit } from '@angular/core';
+import { GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
-import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 
 //own modules
@@ -29,7 +28,7 @@ export class UsersComponent implements OnInit {
   gridApi: GridApi;
   columnApi: ColumnApi;
   context;
-  rowData = [];
+  rowData: User[] = [];
   selection:   User[] = [];
   selectedIds: number[] = [];
   min:  number = -1;
@@ -57,7 +56,7 @@ export class UsersComponent implements OnInit {
     this.max  = this.step + 1;
     console.log("this.authService.settings",this.authService.settings);
   }
-  ngOnInit() {
+  async ngOnInit() {
     this.storage.get('UsersPage.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
@@ -65,6 +64,9 @@ export class UsersComponent implements OnInit {
         this.createColumnDefs();
       }
     });
+    while ( !this.objectService.allObjects['user'] ) {
+      await new Promise(f => setTimeout(f, 1000));
+    }
     this.rowData = this.objectService.allObjects['user']
     if( this.max > (this.rowData.length + 1 )) {
       this.max = this.rowData.length + 1
