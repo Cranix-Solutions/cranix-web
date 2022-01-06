@@ -31,8 +31,8 @@ export class UsersComponent implements OnInit {
   selection:   User[] = [];
   selectedIds: number[] = [];
   min:  number = -1;
-  step: number = 200
-  max:  number = 201;
+  step: number;
+  max:  number;
 
   constructor(
     public authService: AuthenticationService,
@@ -51,6 +51,9 @@ export class UsersComponent implements OnInit {
       hide: false,
       suppressMenu: true
     }
+    this.step = this.authService.settings.lineProPageMD;
+    this.max  = this.step + 1;
+    console.log("this.authService.settings",this.authService.settings);
   }
   ngOnInit() {
     this.storage.get('UsersPage.displayedColumns').then((val) => {
@@ -61,32 +64,30 @@ export class UsersComponent implements OnInit {
       }
     });
     this.rowData = this.objectService.allObjects['user']
-  }
-
-  async ngAfterViewInit() {
-    while ( this.rowData.length == 0) {
-      this.rowData = this.objectService.allObjects['user']
-      await new Promise(f => setTimeout(f, 1000));
+    if( this.max > (this.rowData.length + 1 )) {
+      this.max = this.rowData.length + 1
     }
   }
-
   back(){
     this.min -= this.step;
     if (this.min < -1 ) {
       this.min = -1
     }
     this.max = this.min + this.step + 2;
+    if( this.max > (this.rowData.length + 1 )) {
+      this.max = this.rowData.length + 1
+    }
   }
 
   forward(){
     this.max += this.step;
-    if( this.max > (this.rowData.length + 1 )) {
-      this.max = this.rowData.length + 1
-    }
     if( this.max < ( this.step +1 )) {
       this.max = this.step +1
     }
     this.min = this.max - this.step -2;
+    if( this.max > (this.rowData.length + 1 )) {
+      this.max = this.rowData.length + 1
+    }
   }
 
   createColumnDefs() {

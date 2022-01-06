@@ -31,14 +31,14 @@
   </ag-grid-angular>
 </ion-content>
 <ion-item *ngIf="authService.isMD()">
-  <ion-button size="small" fill="clear" (click)="back()">
+  <ion-button size="small" fill="clear" (click)="back()" [disabled]="min < 0">
     <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
   </ion-button>
   {{ min +1 }}
   <ion-searchbar  placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('usersFilterMD')"
   id="usersFilterMD" showCancelButton="never"></ion-searchbar>
   {{ max - 1 }}
-  <ion-button size="small" fill="clear" (click)="forward()">
+  <ion-button size="small" fill="clear" (click)="forward()" [disabled]="max > rowData.length">
     <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
   </ion-button>
 </ion-item>
