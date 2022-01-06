@@ -26,7 +26,7 @@ export class AuthenticationService {
     formHeaders: HttpHeaders;
     textHeaders: HttpHeaders;
     anyHeaders: HttpHeaders;
-    settings: Settings;
+    settings: Settings = new Settings();
     minLgWidth = 769;
     minLgHeight = 600;
     rowColors: string[] = ["#D2E3D5", "#E2F3E5", "#AFC2B2"]
@@ -60,7 +60,6 @@ export class AuthenticationService {
         this.authenticationState.next(false);
         let subscription = this.login(user).subscribe(
             (val) => {
-                this.settings = new Settings();
                 this.storage.get('myCranixSettings').then((myCranixSettings) => {
                     if (myCranixSettings && myCranixSettings != "") {
                         console.log("myCranixSettings");
