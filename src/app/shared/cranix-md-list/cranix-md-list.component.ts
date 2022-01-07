@@ -34,21 +34,20 @@ export class CranixMdListComponent implements OnInit {
     this.left2 = 'description'
     this.left3 = ''
     switch (this.objectType) {
+      case "education/user":
       case "user": {
         this.left1 = "uid"
         this.left2 = "surName"
         this.left3 = "givenName"
-      }
-      case "education/user": {
-        this.left1 = "uid"
-        this.left2 = "surName"
-        this.left3 = "givenName"
+        break
       }
       case 'device': {
-        this.left2 = "ip"
+        this.left2 = 'ip'
+        break
       }
       case 'institute': {
         this.left2 = "regCode"
+        break
       }
     }
     while (!this.objectService.allObjects[this.objectType]) {
