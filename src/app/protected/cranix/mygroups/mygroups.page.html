@@ -75,13 +75,9 @@
           <h3>{{ object.name }}</h3>
         </ion-label>
       </ion-item>
-      <ion-item-options
-        side="end">
+      <ion-item-options side="end">
         <ion-item-option color="danger" (click)="redirectToDelete(object)">
           <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
-        </ion-item-option>
-        <ion-item-option *ngIf="segment == 'group'" (click)="redirectToMembers(object)">
-          <ion-icon slot="icon-only" name="people-circle"></ion-icon>
         </ion-item-option>
         <ion-item-option (click)="openActions($event,object)">
           <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
