@@ -3,8 +3,7 @@
     <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
   </ion-button>
   {{ min +1 }}
-  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="filterMD"
-    showCancelButton="never"></ion-searchbar>
+  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="filterMD"></ion-searchbar>
   {{ max - 1 }}
   <ion-button size="small" fill="clear" (click)="forward()" [disabled]="max >= rowData.length">
     <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
@@ -20,10 +19,10 @@
         <ion-icon name="ellipsis-vertical-sharp"></ion-icon>
       </ion-fab-button>
       <ion-fab-button *ngIf="objectType == 'printer'">
-        <ion-icon name="add-circle" (click)="addDevice($event)"></ion-icon>
+        <ion-icon name="add-circle" (click)="context.componentParent.addDevice($event)"></ion-icon>
       </ion-fab-button>
       <ion-fab-button *ngIf="objectType == 'printer'">
-        <ion-icon name="print-outline" (click)="addPrinter($event)" disabled></ion-icon>
+        <ion-icon name="print-outline" (click)="context.componentParent.addPrinter($event)" disabled></ion-icon>
       </ion-fab-button>
       <ion-fab-button *ngIf="objectType != 'printer'" (click)="context.componentParent.redirectToEdit(null)">
         <ion-icon name="add-circle"></ion-icon>
@@ -67,7 +66,7 @@
       </ion-item>
       <ion-item-options side="end">
         <ion-item-option *ngIf="objectType == 'institute' && object.ipVPN && object.ipVPN != ''" color="secondary"
-          (click)="routeInstitute(object)">
+          (click)="context.componentParent.routeInstitute(object)">
           <ion-icon slot="icon-only" name="create-outline" style="height:15px;width:15px"></ion-icon>
         </ion-item-option>
         <ion-item-option *ngIf="objectType == 'room' || objectType == 'device'" color="warning"
@@ -84,7 +83,7 @@
         <ion-item-option *ngIf="objectType == 'user'" (click)="context.componentParent.redirectToGroups(object)">
           <ion-icon slot="icon-only" name="people"></ion-icon>
         </ion-item-option>
-        <ion-item-option *ngIf="objectType.indexOf('group') != -1" (click)="context.componentParent.redirectToMembers(object)">
+        <ion-item-option *ngIf="objectType.indexOf('group') != -1 && (authService.isAllowed('group.modify') || authService.session.userId == object.ownerId)" (click)="context.componentParent.redirectToMembers(object)">
           <ion-icon slot="icon-only" name="people-circle"></ion-icon>
         </ion-item-option>
         <ion-item-option color="danger" (click)="context.componentParent.redirectToDelete(object)">

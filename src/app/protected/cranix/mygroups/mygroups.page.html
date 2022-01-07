@@ -76,7 +76,6 @@
         </ion-label>
       </ion-item>
       <ion-item-options
-        *ngIf="segment == 'group' && (authService.isAllowed('group.modify') || authService.session.userId == object.ownerId)"
         side="end">
         <ion-item-option color="danger" (click)="redirectToDelete(object)">
           <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
