@@ -1,0 +1,99 @@
+<ion-item>
+  <ion-button size="small" fill="clear" (click)="back()" [disabled]="min <= 0">
+    <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+  </ion-button>
+  {{ min +1 }}
+  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="filterMD"
+    showCancelButton="never"></ion-searchbar>
+  {{ max - 1 }}
+  <ion-button size="small" fill="clear" (click)="forward()" [disabled]="max >= rowData.length">
+    <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
+  </ion-button>
+</ion-item>
+<ion-content>
+  <ion-fab vertical="top" horizontal="end" slot="fixed">
+    <ion-fab-button size="small">
+      <ion-icon name="arrow-forward-circle"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="start" [ngSwitch]="objectType">
+      <ion-fab-button (click)="context.componentParent.openActions($event,null)">
+        <ion-icon name="ellipsis-vertical-sharp"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button *ngIf="objectType == 'printer'">
+        <ion-icon name="add-circle" (click)="addDevice($event)"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button *ngIf="objectType == 'printer'">
+        <ion-icon name="print-outline" (click)="addPrinter($event)" disabled></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button *ngIf="objectType != 'printer'" (click)="context.componentParent.redirectToEdit(null)">
+        <ion-icon name="add-circle"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+  <ion-list>
+    <ion-item-sliding *ngFor="let object of rowData; let i = index">
+      <ion-item *ngIf="i > min && i < max" button (click)="context.componentParent.redirectToEdit(object)">
+        <ion-note slot="start">
+          <ion-checkbox (click)="$event.stopPropagation()" (ionChange)="checkChange($event,object)"></ion-checkbox>
+        </ion-note>
+        <ion-label>
+          <h3>{{ object[left1] }}</h3>
+          <h5>{{ object[left2] }} {{ object[left3] }}</h5>
+        </ion-label>
+        <ion-label *ngIf="objectType == 'device'">
+          <h5>{{ object.mac }}</h5>
+          <h5>{{ object.hwconfId | idToName:'hwconf' }}</h5>
+          <h5>{{ object.roomId | idToName:'room' }}</h5>
+        </ion-label>
+        <ion-label *ngIf="objectType.indexOf('group') != -1">
+          <h5>{{ object.groupType | translate }}</h5>
+        </ion-label>
+        <ion-label *ngIf="objectType == 'hwconf'">
+          <h5>{{ object.hwconfType | translate }}</h5>
+        </ion-label>
+        <ion-label *ngIf="objectType == 'printer'">
+          <h5>{{ object.model }}</h5>
+          <h5>{{ object.activeJobs }}</h5>
+        </ion-label>
+        <ion-label *ngIf="objectType.indexOf('room') != -1">
+          <h5>{{ object.roomType | translate }}</h5>
+          <h5>{{ object.roomControl | translate }}</h5>
+          <h5 *ngIf="object.hwconfId">{{ object.hwconfId | idToName:'hwconf' }}</h5>
+        </ion-label>
+        <ion-label *ngIf="objectType.indexOf('user') != -1">
+          <h5>{{ object.role | translate }}</h5>
+          <h5>{{ object.classes }}</h5>
+        </ion-label>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option *ngIf="objectType == 'institute' && object.ipVPN && object.ipVPN != ''" color="secondary"
+          (click)="routeInstitute(object)">
+          <ion-icon slot="icon-only" name="create-outline" style="height:15px;width:15px"></ion-icon>
+        </ion-item-option>
+        <ion-item-option *ngIf="objectType == 'room' || objectType == 'device'" color="warning"
+          (click)="context.componentParent.setDhcp(object)">
+          <ion-icon slot="icon-only" name="server"></ion-icon>
+        </ion-item-option>
+        <ion-item-option *ngIf="objectType == 'room' || objectType == 'device'"
+          (click)="context.componentParent.setPrinters(object)">
+          <ion-icon slot="icon-only" name="print"></ion-icon>
+        </ion-item-option>
+        <ion-item-option *ngIf="objectType == 'room'" (click)="context.componentParent.devices(object)">
+          <ion-icon slot="icon-only" name="desktop"></ion-icon>
+        </ion-item-option>
+        <ion-item-option *ngIf="objectType == 'user'" (click)="context.componentParent.redirectToGroups(object)">
+          <ion-icon slot="icon-only" name="people"></ion-icon>
+        </ion-item-option>
+        <ion-item-option *ngIf="objectType.indexOf('group') != -1" (click)="context.componentParent.redirectToMembers(object)">
+          <ion-icon slot="icon-only" name="people-circle"></ion-icon>
+        </ion-item-option>
+        <ion-item-option color="danger" (click)="context.componentParent.redirectToDelete(object)">
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-item-option>
+        <ion-item-option (click)="context.componentParent.openActions($event,object)">
+          <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>

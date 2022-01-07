@@ -77,7 +77,7 @@ export class InstitutesSyncObjectsComponent implements OnInit {
   }
   startSync(en: Event) {
     this.objectService.requestSent();
-    for (let institute of this.cephalixService.selectedInstitutes) {
+    for (let institute of this.objectService.selection) {
       for (let sel of this.memberApi.getSelectedRows()) {
         let sub = this.cephalixService.putObjectToInstitute(institute.id, sel.objectType, sel.cephalixId)
           .subscribe(
@@ -89,7 +89,7 @@ export class InstitutesSyncObjectsComponent implements OnInit {
   }
   stopSync(en: Event) {
     this.objectService.requestSent();
-    for (let institute of this.cephalixService.selectedInstitutes) {
+    for (let institute of this.objectService.selection) {
       for (let sel of this.memberApi.getSelectedRows()) {
         let sub = this.cephalixService.deleteObjectFromInstitute(institute.id, sel.objectType, sel.cephalixId)
           .subscribe(

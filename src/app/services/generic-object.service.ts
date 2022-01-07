@@ -16,10 +16,11 @@ export class GenericObjectService {
   allObjects: any = {};
   selectedObject: any = null;
   selectedObjectType: string = null;
+  selection:       any[] = [];
+  selectedIds:     number[] = [];
   selectedRoom: any = null;
   selectedGroup: any = null;
   packagesAvailable: Package[] = [];
-
   /**
    * The base objects which need to be loaded by the initialisations
    */

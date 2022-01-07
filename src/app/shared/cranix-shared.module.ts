@@ -52,6 +52,7 @@ import { FilesCollectComponent } from 'src/app/shared/actions/files-collect/file
 import { DownloadSoftwaresComponent } from 'src/app/shared/actions/download-softwares/download-softwares.component'
 import { SelectRoomComponent } from 'src/app/shared/actions/select-room/select-room.component'
 import { WindowRef } from 'src/app/shared/models/ohters'
+import { CranixMdListComponent } from 'src/app/shared/cranix-md-list/cranix-md-list.component'
 @NgModule({
   declarations: [
     ActionsComponent,
@@ -60,6 +61,7 @@ import { WindowRef } from 'src/app/shared/models/ohters'
     ApplyBTNRenderer,
     ApplyCheckBoxBTNRenderer,
     ActionBTNRenderer,
+    CranixMdListComponent,
     ObjectsEditComponent,
     DateCellRenderer,
     DateTimeCellRenderer,
@@ -146,6 +148,7 @@ import { WindowRef } from 'src/app/shared/models/ohters'
     ReactiveFormsModule,
     TranslateModule,
     ToolbarComponent,
+    CranixMdListComponent
   ],
   providers: [WindowRef,CanActivateViaAcls ]
 })

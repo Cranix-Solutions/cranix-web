@@ -51,7 +51,7 @@ export class Settings {
         errorMessageDuration: number = 10;
         okMessageDuration: number = 10;
 	warningMessageDuration: number = 6;
-	lineProPageMD: number = 50;
+	lineProPageMD: number = 25;
         rowHeight = 35;
         rowMultiSelectWithClick: boolean = true;
         checkboxSelection: boolean = true;

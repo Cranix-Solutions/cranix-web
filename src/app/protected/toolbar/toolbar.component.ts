@@ -15,10 +15,11 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class ToolbarComponent implements OnInit {
 
-  @Input() title: string;
   roomName: string = "";
   commonName: string = "";
   instituteName: string = "";
+
+  @Input() title: string;
   constructor(
     public authService: AuthenticationService,
     public alertController: AlertController,
@@ -28,8 +29,8 @@ export class ToolbarComponent implements OnInit {
     public modalConroller: ModalController,
     public utilService: UtilsService
   ) {
-    this.commonName = authService.session.commonName;
-    this.roomName = authService.session.roomName;
+    this.commonName    = authService.session.commonName;
+    this.roomName      = authService.session.roomName;
     this.instituteName = authService.session.instituteName;
   }
 
@@ -80,6 +81,5 @@ export class ToolbarComponent implements OnInit {
     });
     (await modal).present();
   }
-
   closeWindow() { }
 }

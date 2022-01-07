@@ -63,7 +63,6 @@ export class InstituteSyncedObjectsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.cephalixService.selectedInstitutes.length;
     this.readMembers();
   }
 

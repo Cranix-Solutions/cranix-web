@@ -28,8 +28,6 @@ export class UsersComponent implements OnInit {
   columnApi: ColumnApi;
   context;
   rowData = [];
-  selection:   User[] = [];
-  selectedIds: number[] = [];
   min:  number = -1;
   step: number;
   max:  number;
@@ -55,7 +53,7 @@ export class UsersComponent implements OnInit {
     this.max  = this.step + 1;
     console.log("this.authService.settings",this.authService.settings);
   }
-  ngOnInit() {
+  async ngOnInit() {
     this.storage.get('UsersPage.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
@@ -63,32 +61,15 @@ export class UsersComponent implements OnInit {
         this.createColumnDefs();
       }
     });
+    while ( !this.objectService.allObjects['user'] ) {
+      await new Promise(f => setTimeout(f, 1000));
+    }
     this.rowData = this.objectService.allObjects['user']
     if( this.max > (this.rowData.length + 1 )) {
       this.max = this.rowData.length + 1
     }
   }
-  back(){
-    this.min -= this.step;
-    if (this.min < -1 ) {
-      this.min = -1
-    }
-    this.max = this.min + this.step + 2;
-    if( this.max > (this.rowData.length + 1 )) {
-      this.max = this.rowData.length + 1
-    }
-  }
 
-  forward(){
-    this.max += this.step;
-    if( this.max < ( this.step +1 )) {
-      this.max = this.step +1
-    }
-    this.min = this.max - this.step -2;
-    if( this.max > (this.rowData.length + 1 )) {
-      this.max = this.rowData.length + 1
-    }
-  }
 
   createColumnDefs() {
     let columnDefs = [];
@@ -132,19 +113,19 @@ export class UsersComponent implements OnInit {
   }
 
   selectionChanged(){
-    this.selectedIds = []
+    this.objectService.selectedIds = []
     for (let i = 0; i < this.gridApi.getSelectedRows().length; i++) {
-      this.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
+      this.objectService.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
     }
-    this.selection = this.gridApi.getSelectedRows()
+    this.objectService.selection = this.gridApi.getSelectedRows()
   }
   checkChange(ev,obj: User){
     if( ev.detail.checked ) {
-      this.selectedIds.push(obj.id)
-      this.selection.push(obj)
+      this.objectService.selectedIds.push(obj.id)
+      this.objectService.selection.push(obj)
     } else {
-      this.selectedIds = this.selectedIds.filter(id => id != obj.id)
-      this.selection   = this.selection.filter(obj => obj.id != obj.id)
+      this.objectService.selectedIds = this.objectService.selectedIds.filter(id => id != obj.id)
+      this.objectService.selection   = this.objectService.selection.filter(obj => obj.id != obj.id)
     }
   }
   onQuickFilterChanged(quickFilter) {
@@ -181,10 +162,10 @@ export class UsersComponent implements OnInit {
  */
   async openActions(ev: any, object: User) {
     if (object) {
-      this.selectedIds.push(object.id)
-      this.selection.push(object)
+      this.objectService.selectedIds.push(object.id)
+      this.objectService.selection.push(object)
     } else {
-      if (this.selection.length == 0) {
+      if (this.objectService.selection.length == 0) {
         this.objectService.selectObject();
         return;
       }
@@ -194,8 +175,8 @@ export class UsersComponent implements OnInit {
       event: ev,
       componentProps: {
         objectType: "user",
-        objectIds: this.selectedIds,
-        selection: this.selection,
+        objectIds: this.objectService.selectedIds,
+        selection: this.objectService.selection,
         gridApi: this.gridApi
       },
       translucent: true,
