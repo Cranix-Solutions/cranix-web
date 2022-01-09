@@ -135,23 +135,23 @@ export class TicketsPage implements OnInit {
   }
 
   selectionChanged() {
-    this.selectedIds = []
-    this.cephalixService.selectedInstitutes = this.gridApi.getSelectedRows();
+    this.objectService.selectedIds = []
+    this.objectService.selection = this.gridApi.getSelectedRows();
     this.cephalixService.selectedList = [];
-    for (let o of this.cephalixService.selectedInstitutes) {
+    for (let o of this.objectService.selection ) {
       this.cephalixService.selectedList.push(o.name)
-      this.selectedIds.push(o.id)
+      this.objectService.selectedIds.push(o.id)
     }
     this.objectService.sortByName
   }
 
   checkChange(ev, obj: Ticket) {
     if (ev.detail.checked) {
-      this.selectedIds.push(obj.id)
-      this.selection.push(obj)
+      this.objectService.selectedIds.push(obj.id)
+      this.objectService.selection.push(obj)
     } else {
-      this.selectedIds = this.selectedIds.filter(id => id != obj.id)
-      this.selection = this.selection.filter(obj => obj.id != obj.id)
+      this.objectService.selectedIds = this.objectService.selectedIds.filter(id => id != obj.id)
+      this.objectService.selection = this.objectService.selection.filter(obj => obj.id != obj.id)
     }
   }
   onQuickFilterChanged(quickFilter) {

@@ -59,8 +59,11 @@ export class MyGroupsPage implements OnInit {
       suppressMenu: true
     }
   }
-  ngOnInit() {
+  async ngOnInit() {
     this.readGuestAccounts();
+    while ( !this.objectService.allObjects['education/user'] ) {
+      await new Promise(f => setTimeout(f, 1000));
+    }
     this.userData = this.objectService.allObjects['education/user'].sort(
       (a, b) => (a.groupName > b.groupName) ? 1 : (b.groupName > a.groupName) ? -1 : 0
     );
@@ -71,7 +74,7 @@ export class MyGroupsPage implements OnInit {
     this.segment = event.detail.value;
     switch (this.segment) {
       case 'group':   { this.groupColumnDefs(); break; }
-      case 'student': { this.userColumnDefs(); break; }
+      case 'student': { this.userColumnDefs();  break; }
       case 'guest':   { this.guestColumnDefs(); break; }
     }
   }
@@ -200,19 +203,19 @@ export class MyGroupsPage implements OnInit {
   }
 
   selectionChanged() {
-    this.selectedIds = []
+    this.objectService.selectedIds = []
     for (let i = 0; i < this.gridApi.getSelectedRows().length; i++) {
-      this.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
+      this.objectService.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
     }
-    this.selection = this.gridApi.getSelectedRows()
+    this.objectService.selection = this.gridApi.getSelectedRows()
   }
   checkChange(ev, obj) {
     if (ev.detail.checked) {
-      this.selectedIds.push(obj.id)
-      this.selection.push(obj)
+      this.objectService.selectedIds.push(obj.id)
+      this.objectService.selection.push(obj)
     } else {
-      this.selectedIds = this.selectedIds.filter(id => id != obj.id)
-      this.selection = this.selection.filter(obj => obj.id != obj.id)
+      this.objectService.selectedIds = this.objectService.selectedIds.filter(id => id != obj.id)
+      this.objectService.selection = this.objectService.selection.filter(obj => obj.id != obj.id)
     }
   }
   onQuickFilterChanged(quickFilter) {
@@ -272,10 +275,10 @@ export class MyGroupsPage implements OnInit {
   */
   async openActions(ev: any, object ) {
     if (object) {
-      this.selectedIds.push(object.id)
-      this.selection.push(object)
+      this.objectService.selectedIds.push(object.id)
+      this.objectService.selection.push(object)
     } else {
-      if (this.selection.length == 0) {
+      if (this.objectService.selection.length == 0) {
         this.objectService.selectObject();
         return;
       }
@@ -285,8 +288,8 @@ export class MyGroupsPage implements OnInit {
       event: ev,
       componentProps: {
         objectType: "education/" + this.segment,
-        objectIds: this.selectedIds,
-        selection: this.selection,
+        objectIds: this.objectService.selectedIds,
+        selection: this.objectService.selection,
         gridApi: this.gridApi
       },
       animated: true,

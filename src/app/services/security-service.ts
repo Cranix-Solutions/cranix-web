@@ -245,9 +245,11 @@ export class SecurityService {
 
   getActualAccessStatus() {
     this.url = `${this.hostname}/rooms/accessStatus`;
+    console.log(this.url);
     let sub = this.http.get<AccessInRoom[]>(this.url, { headers: this.authService.headers }).subscribe(
       (val) => {
         this.actualStatus = val;
+        console.log(this.actualStatus );
       },
       (err) => {
         console.log('getActualAccessStatus', err)

@@ -33,7 +33,6 @@ export class PrintersComponent implements OnInit {
   gridApi: GridApi;
   columnApi: ColumnApi;
   context;
-  rowData: Printer[] = [];
   selection: Printer[] = [];
   selectedIds: number[] = [];
 
@@ -71,7 +70,6 @@ export class PrintersComponent implements OnInit {
         this.createColumnDefs();
       }
     });
-    this.rowData = this.objectService.allObjects['printer'];
     delete this.objectService.selectedObject;
   }
   public ngAfterViewInit() {
@@ -108,6 +106,12 @@ export class PrintersComponent implements OnInit {
           col['cellRendererFramework'] = YesNoBTNRenderer
           break;
         }
+        case 'roomId': {
+          col['valueGetter'] = function (params) {
+            return params.context['componentParent'].objectService.idToName('room', params.data.roomId);
+          }
+          break;
+        }
       }
       columnDefs.push(col);
     }
@@ -130,37 +134,16 @@ export class PrintersComponent implements OnInit {
     this.gridApi.sizeColumnsToFit();
   }
   selectionChanged(){
-    this.selectedIds = []
+    this.objectService.selectedIds = []
     for (let i = 0; i < this.gridApi.getSelectedRows().length; i++) {
-      this.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
+      this.objectService.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
     }
-    this.selection = this.gridApi.getSelectedRows()
-  }
-  checkChange(ev,dev: Printer){
-    if( ev.detail.checked ) {
-      this.selectedIds.push(dev.id)
-      this.selection.push(dev)
-    } else {
-      this.selectedIds = this.selectedIds.filter(id => id != dev.id)
-      this.selection   = this.selection.filter(obj => obj.id != dev.id)
-    }
+    this.objectService.selection = this.gridApi.getSelectedRows()
   }
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    if (this.authService.isMD()) {
-      this.rowData = [];
-      for (let dev of this.objectService.allObjects['printer']) {
-        if (
-          dev.name.toLowerCase().indexOf(filter) != -1 ||
-          dev.model.toLowerCase().indexOf(filter) != -1
-        ) {
-          this.rowData.push(dev)
-        }
-      }
-    } else {
-      this.gridApi.setQuickFilter(filter);
-      this.gridApi.doLayout();
-    }
+    this.gridApi.setQuickFilter(filter);
+    this.gridApi.doLayout();
   }
   sizeAll() {
     var allColumnIds = [];
@@ -179,10 +162,10 @@ export class PrintersComponent implements OnInit {
  */
   async openActions(ev: any, object: Printer) {
     if (object) {
-      this.selectedIds.push(object.id)
-      this.selection.push(object)
+      this.objectService.selectedIds.push(object.id)
+      this.objectService.selection.push(object)
     } else {
-      if (this.selection.length == 0) {
+      if (this.objectService.selection.length == 0) {
         this.objectService.selectObject();
         return;
       }
@@ -192,8 +175,8 @@ export class PrintersComponent implements OnInit {
       event: ev,
       componentProps: {
         objectType: "printer",
-        objectIds: this.selectedIds,
-        selection: this.selection,
+        objectIds: this.objectService.selectedIds,
+        selection: this.objectService.selection,
         gridApi: this.gridApi
       },
       animated: true,

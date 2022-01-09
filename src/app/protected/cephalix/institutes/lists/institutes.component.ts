@@ -31,8 +31,6 @@ export class InstitutesComponent implements OnInit {
   gridApi: GridApi;
   columnApi: ColumnApi;
   context;
-  rowData = [];
-  selectedIds: number[] = [];
   nativeWindow: any
   now: number = 0;
 
@@ -69,8 +67,7 @@ export class InstitutesComponent implements OnInit {
         this.createColumnDefs();
       }
     });
-    while (this.rowData.length == 0) {
-      this.rowData = this.objectService.allObjects['institute'];
+    while ( !this.objectService.allObjects['institute'] ) {
       await new Promise(f => setTimeout(f, 1000));
     };
   }
@@ -125,41 +122,19 @@ export class InstitutesComponent implements OnInit {
     this.gridApi.sizeColumnsToFit();
   }
   selectionChanged() {
-    this.selectedIds = []
-    this.cephalixService.selectedInstitutes = this.gridApi.getSelectedRows();
+    this.objectService.selectedIds = []
+    this.objectService.selection = this.gridApi.getSelectedRows();
     this.cephalixService.selectedList = [];
-    for (let o of this.cephalixService.selectedInstitutes) {
+    for (let o of this.objectService.selection) {
       this.cephalixService.selectedList.push(o.name)
-      this.selectedIds.push(o.id)
+      this.objectService.selectedIds.push(o.id)
     }
   }
 
-  checkChange(ev, obj: Institute) {
-    if (ev.detail.checked) {
-      this.selectedIds.push(obj.id)
-      this.cephalixService.selectedInstitutes.push(obj)
-    } else {
-      this.selectedIds = this.selectedIds.filter(id => id != obj.id)
-      this.cephalixService.selectedInstitutes = this.cephalixService.selectedInstitutes.filter(obj => obj.id != obj.id)
-    }
-  }
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    if (this.authService.isMD()) {
-      this.rowData = [];
-      for (let obj of this.objectService.allObjects['institute']) {
-        if (
-          obj.name.toLowerCase().indexOf(filter) != -1 ||
-          (obj.regCode && obj.regCode.toLowerCase().indexOf(filter) != -1) ||
-          (obj.locality && obj.locality.toLowerCase().indexOf(filter) != -1)
-        ) {
-          this.rowData.push(obj)
-        }
-      }
-    } else {
-      this.gridApi.setQuickFilter(filter);
-      this.gridApi.doLayout();
-    }
+    this.gridApi.setQuickFilter(filter);
+    this.gridApi.doLayout();
   }
   public redirectToDelete = (institute: Institute) => {
     this.objectService.deleteObjectDialog(institute, 'institute', '')
@@ -169,22 +144,19 @@ export class InstitutesComponent implements OnInit {
  * @param ev
  */
   async openActions(ev, object: Institute) {
-    if (object) {
-      this.selectedIds.push(object.id)
-      this.cephalixService.selectedInstitutes.push(object)
-    } else {
-      if (this.cephalixService.selectedInstitutes.length == 0) {
-        this.objectService.selectObject();
-        return;
-      }
+  if (object) {
+      this.objectService.selectedIds = []
+      this.objectService.selection   = []
+      this.objectService.selectedIds.push(object.id)
+      this.objectService.selection.push(object)
     }
     const popover = await this.popoverCtrl.create({
       component: ActionsComponent,
       event: ev,
       componentProps: {
         objectType: "institute",
-        objectIds: this.selectedIds,
-        selection: this.cephalixService.selectedInstitutes,
+        objectIds: this.objectService.selectedIds,
+        selection: this.objectService.selection,
         gridApi: this.gridApi
       },
       animated: true,

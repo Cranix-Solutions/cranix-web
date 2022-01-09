@@ -30,9 +30,8 @@ export class UtilsService {
                 else{
                         url = protocol + "//" + hostname + "/api";
 		}
-		//console.log("From utils: " + url);
-                return "https://192.168.178.19/api"
-		return "https://admin.cephalix.eu/api";
+                //console.log("From utils: " + url);
+                return "https://admin.cephalix.eu/api"
                 return url ;
         }
         public log(args) {

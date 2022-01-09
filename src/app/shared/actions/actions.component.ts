@@ -75,7 +75,7 @@ export class ActionsComponent implements OnInit {
     if (this.objectIds) {
       this.count = this.objectIds.length;
     } else {
-      this.count = this.selection.length;
+      this.count = this.objectService.selection.length;
     }
     if (this.objectType == "user") {
       this.menu = this.commonMenu.concat(userMenu).concat(this.commonLastMenu);
@@ -128,7 +128,7 @@ export class ActionsComponent implements OnInit {
     switch (ev) {
       case 'csv-export': {
         let header: string[] = [];
-        new AngularCsv(this.selection, this.objectType, { showLabels: true, headers: Object.getOwnPropertyNames(this.selection[0]) });
+        new AngularCsv(this.objectService.selection, this.objectType, { showLabels: true, headers: Object.getOwnPropertyNames(this.objectService.selection[0]) });
         this.popoverController.dismiss();
         break;
       }

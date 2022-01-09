@@ -30,7 +30,6 @@ export class HwconfsPage implements OnInit {
   context;
   selected: Hwconf[] = [];
   title = 'app';
-  rowData = [];
   selection:   Hwconf[] = [];
   selectedIds: number[] = [];
   constructor(
@@ -60,7 +59,6 @@ export class HwconfsPage implements OnInit {
         this.createColumnDefs();
       }
     });
-    this.rowData = this.objectService.allObjects['hwconf']
   }
   createColumnDefs() {
     this.columnDefs = [];
@@ -103,37 +101,25 @@ export class HwconfsPage implements OnInit {
     this.gridApi.sizeColumnsToFit();
   }
   selectionChanged(){
-    this.selectedIds = []
+    this.objectService.selectedIds = []
     for (let i = 0; i < this.gridApi.getSelectedRows().length; i++) {
-      this.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
+      this.objectService.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
     }
-    this.selection = this.gridApi.getSelectedRows()
+    this.objectService.selection = this.gridApi.getSelectedRows()
   }
   checkChange(ev,dev: Hwconf){
     if( ev.detail.checked ) {
-      this.selectedIds.push(dev.id)
-      this.selection.push(dev)
+      this.objectService.selectedIds.push(dev.id)
+      this.objectService.selection.push(dev)
     } else {
-      this.selectedIds = this.selectedIds.filter(id => id != dev.id)
-      this.selection   = this.selection.filter(obj => obj.id != dev.id)
+      this.objectService.selectedIds = this.objectService.selectedIds.filter(id => id != dev.id)
+      this.objectService.selection   = this.objectService.selection.filter(obj => obj.id != dev.id)
     }
   }
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    if (this.authService.isMD()) {
-      this.rowData = [];
-      for (let obj of this.objectService.allObjects['hwconf']) {
-        if (
-          obj.name.toLowerCase().indexOf(filter) != -1 ||
-          obj.description.toLowerCase().indexOf(filter) != -1
-        ) {
-          this.rowData.push(obj)
-        }
-      }
-    } else {
-      this.gridApi.setQuickFilter(filter);
-      this.gridApi.doLayout();
-    }
+    this.gridApi.setQuickFilter(filter);
+    this.gridApi.doLayout();
   }
 
   public redirectToDelete = (hwconf: Hwconf) => {
@@ -145,10 +131,10 @@ export class HwconfsPage implements OnInit {
  */
   async openActions(ev: any, object: Hwconf) {
     if (object) {
-      this.selectedIds.push(object.id)
-      this.selection.push(object)
+      this.objectService.selectedIds.push(object.id)
+      this.objectService.selection.push(object)
     } else {
-      if (this.selection.length == 0) {
+      if (this.objectService.selection.length == 0) {
         this.objectService.selectObject();
         return;
       }
@@ -158,8 +144,8 @@ export class HwconfsPage implements OnInit {
       event: ev,
       componentProps: {
         objectType: "hwconf",
-        objectIds: this.selectedIds,
-        selection: this.selection,
+        objectIds: this.objectService.selectedIds,
+        selection: this.objectService.selection,
         gridApi:   this.gridApi
       },
       animated: true,

@@ -25,11 +25,7 @@ export class AdhocComponent implements OnInit {
   defaultColDef = {};
   gridApi;
   columnApi;
-  rowSelection;
   context;
-  rowData = [];
-  selection: AdHocRoom[] = [];
-  selectedIds: number[] = [];
 
   constructor(
     public authService: AuthenticationService,
@@ -51,7 +47,6 @@ export class AdhocComponent implements OnInit {
     });
     delete this.objectService.selectedObject;
     this.createColumnDefs();
-    this.rowData = this.objectService.allObjects['addhocroom']
   }
 
   createColumnDefs() {
@@ -112,37 +107,16 @@ export class AdhocComponent implements OnInit {
   }
 
   selectionChanged() {
-    this.selectedIds = []
+    this.objectService.selectedIds = []
     for (let i = 0; i < this.gridApi.getSelectedRows().length; i++) {
-      this.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
+      this.objectService.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
     }
-    this.selection = this.gridApi.getSelectedRows()
-  }
-  checkChange(ev, obj: AdHocRoom) {
-    if (ev.detail.checked) {
-      this.selectedIds.push(obj.id)
-      this.selection.push(obj)
-    } else {
-      this.selectedIds = this.selectedIds.filter(id => id != obj.id)
-      this.selection = this.selection.filter(obj => obj.id != obj.id)
-    }
+    this.objectService.selection = this.gridApi.getSelectedRows()
   }
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    if (this.authService.isMD()) {
-      this.rowData = [];
-      for (let obj of this.objectService.allObjects['room']) {
-        if (
-          obj.name.toLowerCase().indexOf(filter) != -1 ||
-          obj.description.toLowerCase().indexOf(filter) != -1
-        ) {
-          this.rowData.push(obj)
-        }
-      }
-    } else {
-      this.gridApi.setQuickFilter(filter);
-      this.gridApi.doLayout();
-    }
+    this.gridApi.setQuickFilter(filter);
+    this.gridApi.doLayout();
   }
   public redirectToDelete = (adhoc: AdHocRoom) => {
     this.objectService.deleteObjectDialog(adhoc, 'adhocroom','')

@@ -51,17 +51,23 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     this.eduS.getMyRooms();
   }
   ngOnInit() {
+    this.selectedRoomId = null;
     if (this.authS.isMD()) {
       this.gridSize = 12
     }
   }
 
   ngAfterViewInit() {
-    if (this.authS.session.roomId) {
-      this.selectedRoomId = parseInt(this.authS.session.roomId);
+    if(this.authS.session.roomId) {
+      let room: Room = this.objectS.getObjectById('room',this.authS.session.roomId);
+      if( room.roomControl == 'inRoom') {
+        this.selectedRoomId = parseInt(this.authS.session.roomId);
+      }
+    }
+    if( this.selectedRoomId ) {
       this.getRoomStatus();
       this.statusTimer();
-    } else if (!this.room && !this.authS.session.roomId) {
+    } else {
       this.selectRooms();
     }
   }

@@ -30,10 +30,6 @@ export class RoomsComponent implements OnInit {
   columnApi: ColumnApi;
   defaultColDef = {};
   context;
-  rowData = [];
-  selection: Room[] = [];
-  selectedIds: number[] = [];
-
 
   constructor(
     public authService: AuthenticationService,
@@ -62,7 +58,6 @@ export class RoomsComponent implements OnInit {
       }
     });
     delete this.objectService.selectedObject;
-    this.rowData = this.objectService.allObjects['room']
   }
   public ngAfterViewInit() {
     while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
@@ -113,39 +108,16 @@ export class RoomsComponent implements OnInit {
     this.gridApi.sizeColumnsToFit();
   }
   selectionChanged() {
-    this.selectedIds = []
+    this.objectService.selectedIds = []
     for (let i = 0; i < this.gridApi.getSelectedRows().length; i++) {
-      this.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
+      this.objectService.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
     }
-    this.selection = this.gridApi.getSelectedRows()
-  }
-  checkChange(ev, obj: Room) {
-    if (ev.detail.checked) {
-      this.selectedIds.push(obj.id)
-      this.selection.push(obj)
-    } else {
-      this.selectedIds = this.selectedIds.filter(id => id != obj.id)
-      this.selection = this.selection.filter(obj => obj.id != obj.id)
-    }
+    this.objectService.selection = this.gridApi.getSelectedRows()
   }
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    if (this.authService.isMD()) {
-      this.rowData = [];
-      for (let obj of this.objectService.allObjects['room']) {
-        if (
-          obj.name.toLowerCase().indexOf(filter) != -1 ||
-          obj.description.toLowerCase().indexOf(filter) != -1 ||
-          this.languageS.trans(obj.roomType).toLowerCase().indexOf(filter) != -1 ||
-          this.languageS.trans(obj.roomControl).toLowerCase().indexOf(filter) != -1
-        ) {
-          this.rowData.push(obj)
-        }
-      }
-    } else {
-      this.gridApi.setQuickFilter(filter);
-      this.gridApi.doLayout();
-    }
+    this.gridApi.setQuickFilter(filter);
+    this.gridApi.doLayout();
   }
   public redirectToDelete = (room: Room) => {
     this.objectService.deleteObjectDialog(room, 'room', '')
@@ -156,10 +128,10 @@ export class RoomsComponent implements OnInit {
  */
   async openActions(ev: any, object: Room) {
     if (object) {
-      this.selectedIds.push(object.id)
-      this.selection.push(object)
+      this.objectService.selectedIds.push(object.id)
+      this.objectService.selection.push(object)
     } else {
-      if (this.selection.length == 0) {
+      if (this.objectService.selection.length == 0) {
         this.objectService.selectObject();
         return;
       }
@@ -169,8 +141,8 @@ export class RoomsComponent implements OnInit {
       event: ev,
       componentProps: {
         objectType: "room",
-        objectIds: this.selectedIds,
-        selection: this.selection,
+        objectIds: this.objectService.selectedIds,
+        selection: this.objectService.selection,
         gridApi: this.gridApi
       },
       animated: true,
