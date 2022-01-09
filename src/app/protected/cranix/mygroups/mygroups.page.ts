@@ -59,8 +59,11 @@ export class MyGroupsPage implements OnInit {
       suppressMenu: true
     }
   }
-  ngOnInit() {
+  async ngOnInit() {
     this.readGuestAccounts();
+    while ( !this.objectService.allObjects['education/user'] ) {
+      await new Promise(f => setTimeout(f, 1000));
+    }
     this.userData = this.objectService.allObjects['education/user'].sort(
       (a, b) => (a.groupName > b.groupName) ? 1 : (b.groupName > a.groupName) ? -1 : 0
     );

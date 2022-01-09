@@ -50,6 +50,18 @@
     </ion-card-content>
   </ion-card>
 </ion-content>
+<ion-item *ngIf="authService.isMD()">
+  <ion-button size="small" fill="clear" (click)="back()" [disabled]="min < 0">
+    <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+  </ion-button>
+  {{ min +1 }}
+  <ion-searchbar  placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('usersFilterMD')"
+  id="usersFilterMD" showCancelButton="never"></ion-searchbar>
+  {{ max - 1 }}
+  <ion-button size="small" fill="clear" (click)="forward()" [disabled]="max > rowData.length">
+    <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
+  </ion-button>
+</ion-item>
 <ion-content *ngIf="authService.isMD()">
   <ion-fab vertical="top" horizontal="end" slot="fixed">
     <ion-fab-button size="small">
@@ -64,11 +76,9 @@
       </ion-fab-button>
     </ion-fab-list>
   </ion-fab>
-  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('usersFilterMD')"
-    id="usersFilterMD" showCancelButton="never"></ion-searchbar>
   <ion-list>
-    <ion-item-sliding *ngFor="let object of rowData">
-      <ion-item button (click)="redirectToEdit(object)">
+    <ion-item-sliding *ngFor="let object of rowData; let i = index">
+      <ion-item *ngIf="i > min && i < max" button (click)="redirectToEdit(object)">
         <ion-note slot="start">
           <ion-checkbox (click)="$event.stopPropagation()" (ionChange)="checkChange($event,object)"></ion-checkbox>
         </ion-note>

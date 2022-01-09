@@ -24,7 +24,7 @@ export class GenericObjectService {
    * The base objects which need to be loaded by the initialisations
    */
   private objectsTemlate: string[] = [
-    'user', 'group', 'room', 'device', 'hwconf', 'printer', 'adhocroom', 'education/user', 'education/group'
+    'education/user', 'education/group', 'user', 'group', 'room', 'device', 'hwconf', 'printer', 'adhocroom'
   ]
   objects: string[] = [];
   /**
@@ -128,9 +128,6 @@ export class GenericObjectService {
     for (let obj of this.objectsTemlate) {
       this.objects.push(obj)
     }
-    for (let key of this.objects) {
-      this.allObjects[key] = []
-    }
     let subs: any = {};
     if (force || !this.initialized) {
       this.authService.log("initialize all objects")
@@ -192,7 +189,7 @@ export class GenericObjectService {
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";
     let sub = this.http.get<any[]>(url, { headers: this.authService.headers }).subscribe(
       (val) => {
-        switch(objectType) {
+        switch (objectType) {
           case 'ticket': val.sort(this.sortByRecDate)
         }
         this.allObjects[objectType] = val;
@@ -203,7 +200,13 @@ export class GenericObjectService {
         this.authService.log(objectType + "s were read");
         this.authService.log(this.allObjects[objectType]);
       },
-      (err) => { console.log('getAllObject', objectType, err); },
+      (err) => {
+        if (!this.allObjects[objectType]) {
+          this.allObjects[objectType] = [];
+          this.selects[objectType + 'Id'] = [];
+        }
+        console.log('getAllObject', objectType, err);
+      },
       () => {
         sub.unsubscribe();
       }
@@ -458,7 +461,6 @@ export class GenericObjectService {
     return a == b;
   }
   compareObjects(o1, o2) {
-    console.log(o1, o2)
     return o1.id == o2.id;
   }
   sortByName(a, b) {
@@ -485,6 +487,12 @@ export class GenericObjectService {
    */
   typeOf(key: string, object, action: string) {
     let obj = object[key];
+    if( typeof obj == "number" && this.readOnlyAttributes.indexOf(key) != -1 ) {
+      return "numberRo"
+    }
+    if( typeof obj == "number"  ) {
+      return "number"
+    }
     if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
       return "date";
     }
