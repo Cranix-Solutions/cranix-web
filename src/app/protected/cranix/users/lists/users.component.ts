@@ -21,16 +21,15 @@ import { UserGroupsPage } from '../details/groups/user-groups.page';
 export class UsersComponent implements OnInit {
   objectKeys: string[] = [];
   displayedColumns: string[] = ['uid', 'uuid', 'givenName', 'surName', 'role', 'classes', 'actions'];
-  sortableColumns: string[] = ['uid', 'uuid', 'givenName', 'surName', 'role', 'classes'];
   columnDefs = [];
   defaultColDef = {};
   gridApi: GridApi;
   columnApi: ColumnApi;
   context;
   rowData = [];
-  min:  number = -1;
+  min: number = -1;
   step: number;
-  max:  number;
+  max: number;
 
   constructor(
     public authService: AuthenticationService,
@@ -50,8 +49,8 @@ export class UsersComponent implements OnInit {
       suppressMenu: true
     }
     this.step = this.authService.settings.lineProPageMD;
-    this.max  = this.step + 1;
-    console.log("this.authService.settings",this.authService.settings);
+    this.max = this.step + 1;
+    console.log("this.authService.settings", this.authService.settings);
   }
   async ngOnInit() {
     this.storage.get('UsersPage.displayedColumns').then((val) => {
@@ -61,11 +60,11 @@ export class UsersComponent implements OnInit {
         this.createColumnDefs();
       }
     });
-    while ( !this.objectService.allObjects['user'] ) {
+    while (!this.objectService.allObjects['user']) {
       await new Promise(f => setTimeout(f, 1000));
     }
     this.rowData = this.objectService.allObjects['user']
-    if( this.max > (this.rowData.length + 1 )) {
+    if (this.max > (this.rowData.length + 1)) {
       this.max = this.rowData.length + 1
     }
   }
@@ -78,7 +77,6 @@ export class UsersComponent implements OnInit {
       col['field'] = key;
       col['headerName'] = this.languageS.trans(key);
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
-      col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
       switch (key) {
         case 'uid': {
           col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
@@ -112,46 +110,26 @@ export class UsersComponent implements OnInit {
     this.gridApi.sizeColumnsToFit();
   }
 
-  selectionChanged(){
+  selectionChanged() {
     this.objectService.selectedIds = []
     for (let i = 0; i < this.gridApi.getSelectedRows().length; i++) {
       this.objectService.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
     }
     this.objectService.selection = this.gridApi.getSelectedRows()
   }
-  checkChange(ev,obj: User){
-    if( ev.detail.checked ) {
+  checkChange(ev, obj: User) {
+    if (ev.detail.checked) {
       this.objectService.selectedIds.push(obj.id)
       this.objectService.selection.push(obj)
     } else {
       this.objectService.selectedIds = this.objectService.selectedIds.filter(id => id != obj.id)
-      this.objectService.selection   = this.objectService.selection.filter(obj => obj.id != obj.id)
+      this.objectService.selection = this.objectService.selection.filter(obj => obj.id != obj.id)
     }
   }
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    if (this.authService.isMD()) {
-      this.min = -1;
-      this.max = 1 + this.step;
-      this.rowData = [];
-      for (let obj of this.objectService.allObjects['user']) {
-        if (
-          obj.uid.toLowerCase().indexOf(filter) != -1 ||
-          obj.givenName.toLowerCase().indexOf(filter) != -1 ||
-          obj.surName.toLowerCase().indexOf(filter) != -1 ||
-          this.languageS.trans(obj.role).toLowerCase().indexOf(filter) != -1
-        ) {
-          this.rowData.push(obj)
-        }
-      }
-      if( this.rowData.length < this.step ) {
-        this.min = -1
-        this.max = this.rowData.length +1
-      }
-    } else {
-      this.gridApi.setQuickFilter(filter);
-      this.gridApi.doLayout();
-    }
+    this.gridApi.setQuickFilter(filter);
+    this.gridApi.doLayout();
   }
   public redirectToDelete = (user: User) => {
     this.objectService.deleteObjectDialog(user, 'user', '')
