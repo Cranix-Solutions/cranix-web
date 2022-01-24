@@ -44,7 +44,7 @@ export class InstituteEditComponent implements OnInit {
         for (let man of val) {
           this.managers[man.id] = true;
         }
-        for (let user of this.objectService.allObjects['user'] ) {
+        for (let user of this.objectService.allObjects['user']) {
           if (user.role.toLowerCase() == "reseller" || user.role == "sysadmins") {
             if (!this.managers[user.id]) {
               this.managers[user.id] = false;
@@ -179,14 +179,14 @@ export class InstituteEditComponent implements OnInit {
   addonChanged() {
     console.log(this.addons)
     console.log(this.origAddons)
-    for( let repo of this.addons ) {
-      if( !this.origAddons.some((r: Repository) => r.id === repo.id)) {
-        this.cephalixService.addAddonToInstitute(this.object.id,repo.id)
+    for (let repo of this.addons) {
+      if (!this.origAddons.some((r: Repository) => r.id === repo.id)) {
+        this.cephalixService.addAddonToInstitute(this.object.id, repo.id)
       }
     }
-    for( let repo of this.origAddons ) {
-      if( !this.addons.some((r: Repository) => r.id === repo.id)) {
-        this.cephalixService.removeAddonFromInstitute(this.object.id,repo.id)
+    for (let repo of this.origAddons) {
+      if (!this.addons.some((r: Repository) => r.id === repo.id)) {
+        this.cephalixService.removeAddonFromInstitute(this.object.id, repo.id)
       }
     }
   }
