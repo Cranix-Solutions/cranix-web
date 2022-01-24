@@ -42,6 +42,7 @@
         rowMultiSelectWithClick="{{authService.settings.rowMultiSelectWithClick}}"
         [rowData]="objectService.allObjects['user']"
         [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
         [context]="context"
         (gridReady)="onGridReady($event)"
         (selectionChanged)="selectionChanged()"
