@@ -489,7 +489,7 @@ export class GenericObjectService {
   typeOf(key: string, object, action: string) {
     let obj = object[key];
     if( typeof obj == "number" && this.readOnlyAttributes.indexOf(key) != -1 ) {
-      return "numberRo"
+      return "numberRO"
     }
     if( typeof obj == "number"  ) {
       return "number"
