@@ -489,7 +489,7 @@ export class GenericObjectService {
   typeOf(key: string, object, action: string) {
     let obj = object[key];
     if (key == 'id') {
-      return 'numberR0'
+      return 'numberRO'
     }
     if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
       return 'date';
@@ -528,7 +528,7 @@ export class GenericObjectService {
       return 'multivalued';
     }
     if( typeof obj == 'number' && this.readOnlyAttributes.indexOf(key) != -1 ) {
-      return 'numberRo'
+      return 'numberRO'
     }
     if( typeof obj == 'number'  ) {
       return 'number'

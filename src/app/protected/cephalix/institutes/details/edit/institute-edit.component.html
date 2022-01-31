@@ -146,11 +146,7 @@
       <ion-item>
         <ion-label position="stacked">{{ 'description' | translate}}</ion-label>
         <ion-select [(ngModel)]="care.description" name="careDescription">
-          <ion-select-option value="CRANIX Base">{{'CRANIX Base' | translate }}</ion-select-option>
-          <ion-select-option value="CRANIX Extended">{{'CRANIX Extended' | translate }}</ion-select-option>
-          <ion-select-option value="CRANIX Plus">{{'CRANIX Plus' | translate }}</ion-select-option>
-          <ion-select-option value="CRANIX Mail">{{'CRANIX Mail' | translate }}</ion-select-option>
-          <ion-select-option value="Private">{{'Private' | translate }}</ion-select-option>
+          <ion-select-option *ngFor="let contract of myContracts" [value]="contract">{{ contract | translate }}</ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item>

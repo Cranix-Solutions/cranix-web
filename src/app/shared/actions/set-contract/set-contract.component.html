@@ -1,0 +1,23 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-title>{{ 'setContract' | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="ion-no-margin"  fill="clear" size="small" (click)="onSubmit()">
+        <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" size="small" (click)="modalController.dismiss()">
+        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content fullscreen>
+  <ion-list>
+    <ion-item>
+      <ion-label position="stacked">{{ 'description' | translate}}</ion-label>
+      <ion-select [(ngModel)]="care.description" name="carDescription">
+        <ion-select-option *ngFor="let contract of myContracts" [value]="contract">{{ contract | translate }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+</ion-content>

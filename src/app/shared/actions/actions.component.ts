@@ -15,6 +15,8 @@ import { SetpasswordComponent } from './setpassword/setpassword.component';
 import { SetquotaComponent } from './setquota/setquota.component'
 import { FilesUploadComponent } from './files-upload/files-upload.component';
 import { FilesCollectComponent } from './files-collect/files-collect.component';
+import { SetContractComponent } from './set-contract/set-contract.component';
+import { SetValidityComponent } from './set-validity/set-validity.component';
 
 
 @Component({
@@ -220,6 +222,32 @@ export class ActionsComponent implements OnInit {
             actionMap.longValue = dataReturned.data;
             this.executeAction(actionMap);
           }
+        });
+        (await modal).present();
+        break;
+      }
+      case 'setContract': {
+        this.popoverController.dismiss();
+        const modal = await this.modalController.create({
+          component: SetContractComponent,
+          cssClass: 'small-modal',
+          animated: true,
+          swipeToClose: true,
+          showBackdrop: true,
+          componentProps: { objectIds: this.objectIds }
+        });
+        (await modal).present();
+        break;
+      }
+      case 'setValidity': {
+        this.popoverController.dismiss();
+        const modal = await this.modalController.create({
+          component: SetValidityComponent,
+          cssClass: 'small-modal',
+          animated: true,
+          swipeToClose: true,
+          showBackdrop: true,
+          componentProps: { objectIds: this.objectIds }
         });
         (await modal).present();
         break;

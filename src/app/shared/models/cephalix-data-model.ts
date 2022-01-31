@@ -169,3 +169,12 @@ export interface SynchronizedObject {
     lastSync: number
 }
 
+export const contracts = [
+    "CRANIX Base",
+    "CRANIX Extended",
+    "CRANIX Plus",
+    "CRANIX Mail",
+    "CEPHALIX",
+    "Customized",
+    "Private"
+]

@@ -88,6 +88,17 @@ export const hwconfMenu = [
 export const instituteMenu = [
   {
     "enabled": true,
+    "icon": "alarm",
+    "color": "success",
+    "action": "setValidity"
+  },{
+    "enabled": true,
+    "icon": "card",
+    "color": "success",
+    "action": "setContract"
+  },
+  {
+    "enabled": true,
     "icon": "trending-up",
     "color": "seconary",
     "action": "serverUpdate"

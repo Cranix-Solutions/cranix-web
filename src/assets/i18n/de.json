@@ -1,4 +1,6 @@
 {
+    "setValidity" : "Gültigkeit setzten",
+    "setContract" : "Vertrag setzten",
     "Manage printers" : "Drucker verwalten",
     "%s ( %s %s ) was created with password '%s'": "%s ( %s %s ) wurde mit dem Passwort '%s' angelegt.",
     "%s was created successfully.": "%s wurde erfolgreich erstellt.",
