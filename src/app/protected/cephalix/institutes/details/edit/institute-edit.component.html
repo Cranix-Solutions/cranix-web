@@ -94,6 +94,14 @@
             <ion-label position="stacked">{{ key | translate }}</ion-label>
             <input [(ngModel)]="object[key]" name="{{key}}" type="date">
           </ion-item>
+          <ion-item *ngSwitchCase="'number'">
+            <ion-label position="stacked">{{ key | translate }}</ion-label>
+            <input [(ngModel)]="object[key]" name="{{key}}" type="number">
+          </ion-item>
+          <ion-item *ngSwitchCase="'numberRO'">
+            <ion-label position="stacked">{{ key | translate }}</ion-label>
+            <input [(ngModel)]="object[key]" name="{{key}}" type="number" readonly>
+          </ion-item>
         </ion-col>
       </ion-row>
     </ion-grid>
@@ -138,11 +146,7 @@
       <ion-item>
         <ion-label position="stacked">{{ 'description' | translate}}</ion-label>
         <ion-select [(ngModel)]="care.description" name="careDescription">
-          <ion-select-option value="CRANIX Base">{{'CRANIX Base' | translate }}</ion-select-option>
-          <ion-select-option value="CRANIX Extended">{{'CRANIX Extended' | translate }}</ion-select-option>
-          <ion-select-option value="CRANIX Plus">{{'CRANIX Plus' | translate }}</ion-select-option>
-          <ion-select-option value="CRANIX Mail">{{'CRANIX Mail' | translate }}</ion-select-option>
-          <ion-select-option value="Private">{{'Private' | translate }}</ion-select-option>
+          <ion-select-option *ngFor="let contract of myContracts" [value]="contract">{{ contract | translate }}</ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item>

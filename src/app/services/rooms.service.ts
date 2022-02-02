@@ -46,10 +46,6 @@ export class RoomsService {
 		return this.http.post<ServerResponse>(this.url, body, { headers: this.authService.headers });
 
 	}
-	addAvaiPrintersToRoom(roomId: number, printers: number[]) {
-		this.url = `${this.hostname}/rooms/${roomId}/availablePrinters`;
-		return this.http.post<ServerResponse>(this.url, printers, { headers: this.authService.headers });
-	}
 	importRooms(fd: FormData) {
 		this.url = this.hostname + `/rooms/import`;
 		return this.http.post<ServerResponse>(this.url, fd, { headers: this.authService.headers });
@@ -134,9 +130,7 @@ export class RoomsService {
 
 	}
 
-
 	//DELETE
-
 	deleteDHCPrecord(rId: number, paramId: number) {
 		this.url = this.hostname + `/rooms/${rId}/dhcp/${paramId}`;
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
@@ -147,32 +141,12 @@ export class RoomsService {
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
 	}
 
-	deleteDefaultPrinter(id: number) {
-		this.url = this.hostname + `/rooms/${id}/defaultPrinter`;
-		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
-
-	}
-
-	deleteAvaiPrinters(roomId: number, devId: number) {
-		this.url = this.hostname + `/rooms/${roomId}/availablePrinters/${devId}`;
-		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
-	}
-
 	deleteAccessList(id: number) {
 		this.url = this.hostname + `/rooms/accessList/${id}`;
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
 	}
 	//PUT
 
-	putDefaultPrinterToRoom(roomId: number, deviceId: number) {
-		this.url = this.hostname + `/rooms/${roomId}/defaultPrinter/${deviceId}`;
-		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
-	}
-
-	putAvaiPrinterToRoom(roomId: number, printerId: number) {
-		this.url = `${this.hostname}/rooms/${roomId}/availablePrinters/${printerId}`;
-		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
-	}
 	actionOnRoom(roomId: number, action: string) {
 		this.url = this.hostname + `/rooms/${roomId}/actions/${action}`;
 		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });

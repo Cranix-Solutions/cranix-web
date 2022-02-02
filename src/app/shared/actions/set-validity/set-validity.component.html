@@ -1,0 +1,21 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-title>{{ 'setValidity' | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="ion-no-margin" fill="clear" size="small" (click)="onSubmit()" [disabled]="inactive">
+        <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" size="small" (click)="modalController.dismiss()" [disabled]="inactive">
+        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content fullscreen>
+  <ion-list>
+    <ion-item>
+      <ion-label position="stacked">{{ 'validity' | translate }}</ion-label>
+      <input [(ngModel)]="institute.validity" name="validity" type="date">
+    </ion-item>
+  </ion-list>
+</ion-content>

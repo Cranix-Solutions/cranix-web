@@ -57,25 +57,7 @@ export class DevicesService {
 		return this.http.get<Printer[]>(this.url, { headers: this.authService.headers });
 	}
 
-	//PUT
-	putDefPrinter(dId: number, pId: number) {
-		this.url = `${this.hostname}/devices/${dId}/defaultPrinter/${pId}`;
-		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
-	}
-	putAvaiPrinter(dId: number, pId: number) {
-		this.url = `${this.hostname}/devices/${dId}/availablePrinters/${pId}`;
-		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
-	}
-
 	//DELETE
-	deleteDefPrinter(id: number) {
-		this.url = this.hostname + `/devices/${id}/defaultPrinter`;
-		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
-	}
-	deleteAvaiPrinter(dId: number, pId: number) {
-		this.url = this.hostname + `/devices/${dId}/availablePrinters/${pId}`;
-		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
-	}
 	executeAction(actionMap: CrxActionMap) {
 		let url = this.hostname + "/devices/applyAction"
 		console.log(url)

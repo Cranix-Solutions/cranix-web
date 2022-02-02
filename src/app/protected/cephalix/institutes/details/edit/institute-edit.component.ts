@@ -7,6 +7,7 @@ import { CephalixService } from 'src/app/services/cephalix.service';
 import { Institute, DynDns, CephalixCare, Repository } from 'src/app/shared/models/cephalix-data-model';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { User } from 'src/app/shared/models/data-model';
+import { contracts } from 'src/app/shared/models/cephalix-data-model';
 @Component({
   selector: 'cranix-institute-edit',
   templateUrl: './institute-edit.component.html',
@@ -23,6 +24,7 @@ export class InstituteEditComponent implements OnInit {
   isourl: string = "";
   managers = {}
   users: User[] = [];
+  myContracts: string[] = contracts;
   dynDnsDomains: string[] = ['cephalix.eu', 'cephalix.de', 'cranix.eu']
   dynDnsName: string = "";
   dynDnsDomain: string = "cephalix.eu";
@@ -44,7 +46,7 @@ export class InstituteEditComponent implements OnInit {
         for (let man of val) {
           this.managers[man.id] = true;
         }
-        for (let user of this.objectService.allObjects['user'] ) {
+        for (let user of this.objectService.allObjects['user']) {
           if (user.role.toLowerCase() == "reseller" || user.role == "sysadmins") {
             if (!this.managers[user.id]) {
               this.managers[user.id] = false;
@@ -179,14 +181,14 @@ export class InstituteEditComponent implements OnInit {
   addonChanged() {
     console.log(this.addons)
     console.log(this.origAddons)
-    for( let repo of this.addons ) {
-      if( !this.origAddons.some((r: Repository) => r.id === repo.id)) {
-        this.cephalixService.addAddonToInstitute(this.object.id,repo.id)
+    for (let repo of this.addons) {
+      if (!this.origAddons.some((r: Repository) => r.id === repo.id)) {
+        this.cephalixService.addAddonToInstitute(this.object.id, repo.id)
       }
     }
-    for( let repo of this.origAddons ) {
-      if( !this.addons.some((r: Repository) => r.id === repo.id)) {
-        this.cephalixService.removeAddonFromInstitute(this.object.id,repo.id)
+    for (let repo of this.origAddons) {
+      if (!this.addons.some((r: Repository) => r.id === repo.id)) {
+        this.cephalixService.removeAddonFromInstitute(this.object.id, repo.id)
       }
     }
   }

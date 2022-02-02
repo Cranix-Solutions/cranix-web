@@ -45,7 +45,8 @@ export class InstitutesManage implements OnInit {
         resizable: true,
         sortable: true,
         hide: false,
-        suppressMenu : true
+        suppressMenu : true,
+        checkboxSelection : false
       };
   }
 
@@ -69,7 +70,6 @@ export class InstitutesManage implements OnInit {
         case 'uuid': {
           col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
-          col['checkboxSelection'] = this.authService.settings.checkboxSelection;
           col['minWidth'] = 170;
           col['cellStyle'] = { 'padding-left': '2px' };
           col['suppressSizeToFit'] = true;
@@ -95,12 +95,12 @@ export class InstitutesManage implements OnInit {
   }
 
   userRowClickedHandler(event) {
-    console.log(event);
+    console.log("userRowClickedHandler:" + event);
     let myContent = event.context['componentParent'];
     myContent.selectedManager = event.data;
     myContent.gridApi.removeEventListener('rowClicked', myContent.userRowClickedHandler);
     myContent.createColumnDefs(myContent.instituteKeys);
-    myContent.gridApi.setRowData(myContent.institutes);
+    myContent.gridApi.setRowData(myContent.objectService.allObjects['institute']);
     myContent.instituteView = true;
     (<HTMLInputElement>document.getElementById("instituteManageTable")).style.setProperty('height', '93%');
     myContent.gridApi.addEventListener('rowClicked', myContent.instituteRowClickedHandler);
@@ -108,6 +108,7 @@ export class InstitutesManage implements OnInit {
     //select the owned schools
     myContent.cephalixService.getInstitutesFromUser(myContent.selectedManager.id).subscribe(
       (val) => {
+        console.log(val)
         var managedIds = [];
         for( let obj of val) {
           managedIds.push(obj.id)
