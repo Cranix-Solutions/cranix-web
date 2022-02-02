@@ -22,7 +22,6 @@ import { UserGroupsPage } from '../details/groups/user-groups.page';
 export class UsersComponent implements OnInit {
   objectKeys: string[] = [];
   displayedColumns: string[] = ['uid', 'uuid', 'givenName', 'surName', 'role', 'classes', 'actions'];
-  sortableColumns: string[] = ['uid', 'uuid', 'givenName', 'surName', 'role', 'classes'];
   columnDefs = [];
   defaultColDef = {};
   gridApi: GridApi;
@@ -101,7 +100,6 @@ export class UsersComponent implements OnInit {
       col['field'] = key;
       col['headerName'] = this.languageS.trans(key);
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
-      col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
       switch (key) {
         case 'uid': {
           col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;

@@ -487,41 +487,38 @@ export class GenericObjectService {
    */
   typeOf(key: string, object, action: string) {
     let obj = object[key];
-    if( typeof obj == "number" && this.readOnlyAttributes.indexOf(key) != -1 ) {
-      return "numberRo"
-    }
-    if( typeof obj == "number"  ) {
-      return "number"
+    if (key == 'id' ) {
+      return 'numberRo'
     }
     if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
-      return "date";
+      return 'date';
     }
     if (key == 'reminder' || key == 'created') {
-      return "date-time";
+      return 'date-time';
     }
     if (key == 'text' || key == 'domains') {
-      return "text";
+      return 'text';
     }
     if (typeof obj === 'boolean' && obj) {
-      return "booleanTrue";
+      return 'booleanTrue';
     }
     if (typeof obj === 'boolean') {
-      return "booleanFalse";
+      return 'booleanFalse';
     }
     if (action == 'modify' && this.hiddenAttributes.indexOf(key) != -1) {
-      return "hidden";
+      return 'hidden';
     }
     if (key == 'name' && object.regCode) {
       return 'string';
     }
     if (action == 'modify' && this.readOnlyAttributes.indexOf(key) != -1) {
-      return "stringRO";
+      return 'stringRO';
     }
     if (key.substring(key.length - 2) == 'Id') {
-      return "idPipe";
+      return 'idPipe';
     }
     if (key.substring(key.length - 3) == 'Ids') {
-      return "idsPipe";
+      return 'idsPipe';
     }
     if (key.substring(key.length - 4) == 'File') {
       return 'file';
@@ -529,7 +526,13 @@ export class GenericObjectService {
     if (this.multivalued.indexOf(key) != -1) {
       return 'multivalued';
     }
-    return "string";
+    if( typeof obj == 'number' && this.readOnlyAttributes.indexOf(key) != -1 ) {
+      return 'numberRo'
+    }
+    if( typeof obj == 'number'  ) {
+      return 'number'
+    }
+    return 'string';
   }
 
   convertObject(object) {
