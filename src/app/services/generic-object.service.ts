@@ -527,7 +527,7 @@ export class GenericObjectService {
     if (this.multivalued.indexOf(key) != -1) {
       return 'multivalued';
     }
-    if( typeof obj == 'number' && this.readOnlyAttributes.indexOf(key) != -1 ) {
+    if( typeof obj == 'number' && action == 'edit' && this.readOnlyAttributes.indexOf(key) != -1 ) {
       return 'numberRO'
     }
     if( typeof obj == 'number'  ) {
