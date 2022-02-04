@@ -31,16 +31,15 @@ export class ActionBTNRenderer implements ICellRendererAngularComp {
     }
 
     public details(event) {
-	event.stopPropagation();
+        event.stopPropagation();
         this.params.context.componentParent.redirectToEdit(this.params.data);
     }
     public openAction(event){
-	event.stopPropagation();
-	this.params.context.componentParent.openActions(evenrc/app/pipes/ag-action-renderer.ts
-	, this.params.data)
+        event.stopPropagation();
+        this.params.context.componentParent.openActions(event,this.params.data);
     }
     public delete(event) {
-	event.stopPropagation();
+        event.stopPropagation();
         this.params.context.componentParent.redirectToDelete(this.params.data);
     }
 
