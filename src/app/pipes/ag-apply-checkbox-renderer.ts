@@ -28,6 +28,7 @@ export class ApplyCheckBoxBTNRenderer implements ICellRendererAngularComp {
     }
 
     public toggle(event) {
+       event.stopPropagation();
        this.checked = !this.checked;
        for( let key of Object.getOwnPropertyNames( this.params.context.componentParent.rowData[this.index])) {
            if( key != "name") {

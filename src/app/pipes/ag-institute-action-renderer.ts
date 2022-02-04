@@ -8,13 +8,13 @@ import { WindowRef } from 'src/app/shared/models/ohters'
 @Component({
     selector: 'uuid-cell',
     template: `<div class="uuid-flex">
-    <ion-button fill="clear" size="small" (click)="details()" matTooltip="{{'modify' | translate }}">
+    <ion-button fill="clear" size="small" (click)="details($event)" matTooltip="{{'modify' | translate }}">
         <ion-icon name="build-sharp"></ion-icon>
     </ion-button>
     <ion-button fill="clear" size="small" (click)="openAction($event)" matTooltip="{{'Apply actions on the selected objects' | translate }}">
         <ion-icon  name="ellipsis-vertical-sharp"></ion-icon>
     </ion-button>
-    <ion-button *ngIf="data.ipVPN && data.ipVN != ''" color="secondary" fill="clear" size="small"  (click)="routeSchool()" matTooltip="{{'Connect the institute in a separate window.' | translate }}">
+    <ion-button *ngIf="data.ipVPN && data.ipVN != ''" color="secondary" fill="clear" size="small"  (click)="routeSchool($event)" matTooltip="{{'Connect the institute in a separate window.' | translate }}">
         <ion-icon name="create-outline" style="height:15px;width:15px"></ion-icon>
     </ion-button>
     </div>
@@ -41,13 +41,16 @@ export class InstituteActionCellRenderer implements ICellRendererAngularComp, On
         this.data = params.data;
     }
 
-    public details() {
+    public details(event) {
+        event.stopPropagation();
         this.params.context.componentParent.redirectToEdit(this.data);
     }
-    public openAction(ev: any) {
-        this.params.context.componentParent.openActions(ev, this.data.id)
+    public openAction(event) {
+        event.stopPropagation();
+        this.params.context.componentParent.openActions(event, this.data.id)
     }
-    public routeSchool() {
+    public routeSchool(event) {
+        event.stopPropagation();
         var hostname = window.location.hostname;
         var protocol = window.location.protocol;
         var port = window.location.port;

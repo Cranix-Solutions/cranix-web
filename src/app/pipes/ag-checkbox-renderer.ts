@@ -24,6 +24,7 @@ export class CheckBoxBTNRenderer implements ICellRendererAngularComp {
     }
 
     public toggle(event) {
+       event.stopPropagation();
        let field = this.params.colDef.field;
        let index = this.params.rowIndex;
        this.params.context.componentParent.rowData[index][field] = event.detail.checked;

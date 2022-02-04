@@ -7,10 +7,10 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
     template: `
         <div class="name-action">
             <div *ngIf="id">#{{ id }}</div>
-            <ion-button style="padding-horizontal : 2px" fill="clear" size="small" (click)="details()" matTooltip="{{'edit' | translate }}">
+            <ion-button style="padding-horizontal : 2px" fill="clear" size="small" (click)="details($event)" matTooltip="{{'edit' | translate }}">
                 <ion-icon name="build-sharp"></ion-icon>
             </ion-button>
-            <ion-button style="padding-horizontal : 2px" fill="clear"  size="small" (click)="delete()" matTooltip="{{'delete' | translate }}">
+            <ion-button style="padding-horizontal : 2px" fill="clear"  size="small" (click)="delete($event)" matTooltip="{{'delete' | translate }}">
                 <ion-icon color="danger" name="trash-outline" ></ion-icon>
             </ion-button>
         </div>
@@ -28,10 +28,12 @@ export class EditBTNRenderer implements ICellRendererAngularComp {
         }
     }
 
-    public details() {
+    public details(event) {
+        event.stopPropagation();
         this.params.context.componentParent.redirectToEdit(this.params.data);
     }
-    public delete() {
+    public delete(event) {
+        event.stopPropagation();
         this.params.context.componentParent.redirectToDelete(this.params.data);
     }
 
