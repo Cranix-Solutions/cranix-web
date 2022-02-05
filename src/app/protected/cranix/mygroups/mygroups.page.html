@@ -14,7 +14,7 @@
       <ion-icon name="walk"></ion-icon>
     </ion-segment-button>
   </ion-segment>
-  <ion-item *ngIf="!authService.isMD()">
+  <ion-item *ngIf="!authService.isMD()" lines="none">
     <ion-label *ngIf="gridApi">
       #{{gridApi.getDisplayedRowCount()}}
     </ion-label>

@@ -1,6 +1,6 @@
 <cranix-toolbar title="{{'Manage printers' | translate}}"></cranix-toolbar>
 <ion-toolbar *ngIf="!authService.isMD()">
-  <ion-item>
+  <ion-item lines="none">
     <ion-label *ngIf="gridApi">
       #{{gridApi.getDisplayedRowCount()}}
     </ion-label>

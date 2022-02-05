@@ -66,12 +66,14 @@ $breakpoints-values: map-values($grid-breakpoints);
 
 .ok-row {
   background: lightgreen;
+  color     : black;
   text-align: center;
   margin    : 6px;
 }
 
 .neutral-row {
   background: lightblue;
+  color     : black;
   text-align: center;
   margin    : 6px;
 }
@@ -87,8 +89,9 @@ $breakpoints-values: map-values($grid-breakpoints);
   background: lightgray;
   color     : black;
   text-align: center;
-  padding   : 16px;
-  margin    : 16px;
+  padding-bottom: 15px;
+  padding-top: 15px;
+  margin    : 6px;
 }
 
 @for $i from 1 to length($breakpoints-keys)+1 {
@@ -316,4 +319,12 @@ ion-item::part(native) {
 .error-text {
   color    : red;
   font-size: smaller;
+}
+
+/*
+* We need a small divieder between head and body
+*/
+ion-item-divider{
+  margin-top: 0px;
+  min-height: 1px!important;
 }

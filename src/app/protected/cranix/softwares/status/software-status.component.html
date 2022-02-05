@@ -1,7 +1,7 @@
 <cranix-toolbar title="{{ 'Software installation status:' | translate}}"></cranix-toolbar>
 <ion-content>
   <ion-toolbar>
-    <ion-item>
+    <ion-item lines="none">
       <ion-label *ngIf="softwareApi">
         #{{softwareApi.getDisplayedRowCount()}}
       </ion-label>

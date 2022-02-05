@@ -32,6 +32,7 @@
     </ion-button>
   </ion-buttons>
 </ion-toolbar>
+<ion-item-divider></ion-item-divider>
 <ion-content>
   <form #addNewDomainForm="ngForm" *ngIf="segment == 'good' || segment == 'bad' || segment == 'cephalix'">
     <ion-item>
@@ -42,7 +43,7 @@
       </ion-button>
     </ion-item>
   </form>
-  <ion-item *ngIf="segment == 'basic'">
+  <ion-item *ngIf="segment == 'basic'" lines="none">
     <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="proxyQuickFilter">
     </ion-input>
   </ion-item>

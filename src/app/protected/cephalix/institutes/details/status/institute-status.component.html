@@ -2,7 +2,7 @@
 <ion-content id="carded">
   <ion-toolbar>
     <ion-title>{{'Status of the institute:' | translate}} {{ object.name }}</ion-title>
-    <ion-item>
+    <ion-item lines="none">
       <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('instituteStatusFilter')"
         id="instituteStatusFilter">
       </ion-input>

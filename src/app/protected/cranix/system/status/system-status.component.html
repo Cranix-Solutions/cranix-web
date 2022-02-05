@@ -37,6 +37,7 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
+  <ion-item-divider *ngIf="!authService.isMD()"></ion-item-divider>
   <ion-grid *ngIf="systemStatus">
     <ion-row>
       <ion-col *ngFor="let key of objectKeys">

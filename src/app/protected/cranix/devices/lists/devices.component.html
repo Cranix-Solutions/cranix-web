@@ -2,7 +2,7 @@
 <cranix-toolbar *ngIf="selectedRoom" title="{{'Manage devices in selected room:' | translate}} {{selectedRoom.name}}">
 </cranix-toolbar>
 <ion-toolbar *ngIf="!authService.isMD()">
-  <ion-item>
+  <ion-item lines="none">
     <ion-label *ngIf="gridApi">
       #{{gridApi.getDisplayedRowCount()}}
     </ion-label>

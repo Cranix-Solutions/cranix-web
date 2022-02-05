@@ -1,7 +1,7 @@
 <cranix-toolbar title="{{'Manage institutes' | translate}}"></cranix-toolbar>
 <ion-content *ngIf="!authService.isMD()" id=carded>
   <ion-toolbar>
-    <ion-item>
+    <ion-item lines="none">
       <ion-label *ngIf="gridApi">
         #{{gridApi.getDisplayedRowCount()}}
       </ion-label>

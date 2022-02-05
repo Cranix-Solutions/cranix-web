@@ -45,6 +45,7 @@
     </ion-button>
   </ion-buttons>
 </ion-toolbar>
+<ion-item-divider></ion-item-divider>
 <ion-content>
   <ion-fab *ngIf="authService.isMD()" vertical="top" horizontal="end" slot="fixed">
     <ion-fab-button size="small">
@@ -83,9 +84,11 @@
         <ion-list-header>
           <ion-label>{{ 'Services' | translate }}</ion-label>
         </ion-list-header>
+        <ion-item-divider></ion-item-divider>
         <ion-list>
           <ion-item>
-            <ion-select type="text" [(ngModel)]="newService" name="newService" placeholder="{{ 'Select a new service' | translate }}">
+            <ion-select type="text" [(ngModel)]="newService" name="newService"
+              placeholder="{{ 'Select a new service' | translate }}">
               <ion-select-option *ngFor="let service of securityService.firewallServices" value="{{service}}">{{ service
                 }}</ion-select-option>
             </ion-select>
@@ -107,6 +110,7 @@
         <ion-list-header>
           <ion-label>{{ 'Ports' | translate }}</ion-label>
         </ion-list-header>
+        <ion-item-divider></ion-item-divider>
         <ion-list>
           <ion-item>
             <ion-input placeholder="port/protocol" [(ngModel)]="newPort" name="newPort"></ion-input>

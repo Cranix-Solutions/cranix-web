@@ -21,7 +21,7 @@
       {{selectedManager.fullName}}</ion-card-title>
     <ion-card-title *ngIf="!instituteView">{{'Click on user to select managed institutes' | translate}}
     </ion-card-title>
-    <ion-item>
+    <ion-item lines="none">
       <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('managedInstitutesFilter')"
         id="managedInstitutesFilter">
       </ion-input>
