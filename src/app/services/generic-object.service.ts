@@ -198,8 +198,7 @@ export class GenericObjectService {
         for (let obj of <any[]>val) {
           this.selects[objectType + 'Id'].push(obj.id);
         }
-        this.authService.log(objectType + "s were read");
-        this.authService.log(this.allObjects[objectType]);
+        this.authService.log("GenericObjectService: ", objectType + "s were read", this.allObjects[objectType]);
       },
       (err) => {
         if (!this.allObjects[objectType]) {
