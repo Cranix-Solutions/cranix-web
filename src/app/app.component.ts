@@ -18,8 +18,7 @@ export class AppComponent {
     private genericObjectS: GenericObjectService,
     private languageService: LanguageService,
     private platform: Platform,
-    private router: Router,
-    private securityService: SecurityService,
+    private router: Router
   ) {
     this.platform.ready();
     this.initializeApp();
@@ -34,11 +33,12 @@ export class AppComponent {
         console.log("cephalix_token",sessionStorage.getItem('cephalix_token'))
         console.log("shortName",sessionStorage.getItem('shortName'))
         if (state) {
-          if (this.authService.isAllowed('room.manage')) {
-            this.securityService.getActualAccessStatus();
-          }
           this.genericObjectS.initialize(true);
-          if( this.authService.isAllowed('cephalix.manage')) {
+          if(this.authService.session.mustChange) {
+            this.genericObjectS.warningMessage(this.languageService.trans('Your password is expired. You have to change it.'));
+            console.log('pages/cranix/profile/myself');
+            this.router.navigate(['pages/cranix/profile/myself']);
+          } else if( this.authService.isAllowed('cephalix.manage')) {
             console.log('pages/cephalix/institutes/all');
             this.router.navigate(['pages/cephalix/institutes/all']);
           } else if ( this.authService.isAllowed('user.manage') ) {

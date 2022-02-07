@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ModalController } from '@ionic/angular';
 import { SetpasswordComponent } from 'src/app/shared/actions/setpassword/setpassword.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'cranix-myself',
@@ -17,10 +18,12 @@ export class MyselfComponent implements OnInit, OnDestroy {
   alive: boolean = true;
   mySelf: User;
 
-  constructor(private mySelfs: SelfManagementService,
+  constructor(
+    private mySelfs: SelfManagementService,
     public translateService: TranslateService,
     public objectService: GenericObjectService,
     public modalController: ModalController,
+    public authService: AuthenticationService
   ) {
     this.mySelfs.getMySelf()
       .pipe(takeWhile(() => this.alive))
@@ -54,6 +57,9 @@ export class MyselfComponent implements OnInit, OnDestroy {
           .subscribe((res) => {
             console.log('response is:', res);
             this.objectService.responseMessage(res)
+            if( res.code == "OK") {
+              this.authService.session.mustChange = false;
+            }
           }, (err) => {
             this.objectService.errorMessage(err);
           })
