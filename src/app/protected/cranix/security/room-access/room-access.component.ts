@@ -220,7 +220,6 @@ export class RoomAccessComponent implements OnInit {
     console.log(event.detail.value)
     if( event.detail.value == "status") {
       this.securityService.getActualAccessStatus();
-      console.log("Mi a fasz van?")
       this.objectService.okMessage(this.languageS.trans('Loading data ...'));
     }
     this.segment = event.detail.value;

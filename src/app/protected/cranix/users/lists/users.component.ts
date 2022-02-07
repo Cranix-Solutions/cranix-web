@@ -27,10 +27,6 @@ export class UsersComponent implements OnInit {
   columnApi: ColumnApi;
   context;
   rowData = [];
-  min: number = -1;
-  step: number;
-  max: number;
-
   constructor(
     public authService: AuthenticationService,
     public objectService: GenericObjectService,
@@ -48,9 +44,6 @@ export class UsersComponent implements OnInit {
       hide: false,
       suppressMenu: true
     }
-    this.step = this.authService.settings.lineProPageMD;
-    this.max = this.step + 1;
-    console.log("this.authService.settings", this.authService.settings);
   }
   async ngOnInit() {
     this.storage.get('UsersPage.displayedColumns').then((val) => {
@@ -64,9 +57,6 @@ export class UsersComponent implements OnInit {
       await new Promise(f => setTimeout(f, 1000));
     }
     this.rowData = this.objectService.allObjects['user']
-    if (this.max > (this.rowData.length + 1)) {
-      this.max = this.rowData.length + 1
-    }
   }
 
 
