@@ -28,7 +28,6 @@ export class LoginPage implements OnInit {
         private systemService: SystemService,
     ) {
         this.instName = this.systemService.getInstituteName();
-        //TODO read allowSavePassword from server
     }
 
     ngOnInit() {
@@ -42,8 +41,6 @@ export class LoginPage implements OnInit {
         if (this.authForm.valid) {
             this.authService.setUpSession(user,  this.instituteName);
         }
-        console.log("settings");
-        console.log(this.authService.settings);
     }
 
     ngOnDestroy() {
