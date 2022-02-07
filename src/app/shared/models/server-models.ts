@@ -9,7 +9,7 @@ export interface UserResponse {
   mac: string,
   name: string,
   role: string,
-  dnsname: string,
+  dnsName: string,
   roomId: string,
   roomName?: string,
   instituteName?: string,
@@ -46,13 +46,13 @@ export class CrxActionMap {
 }
 
 export class Settings {
-        agGridThema: string = "ag-theme-alpine";
         lang: string = "";
         errorMessageDuration: number = 10;
         okMessageDuration: number = 10;
 	warningMessageDuration: number = 6;
-	lineProPageMD: number = 25;
-        rowHeight = 35;
+	lineProPageMD: number = 15;
+        agGridThema: string = "ag-theme-alpine";
+        rowHeight: number = 35;
         rowMultiSelectWithClick: boolean = true;
         checkboxSelection: boolean = true;
 	headerCheckboxSelection: boolean = true;
