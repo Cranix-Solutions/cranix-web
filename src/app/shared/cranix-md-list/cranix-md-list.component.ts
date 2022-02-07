@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'cranix-md-list',
@@ -10,7 +11,7 @@ import { LanguageService } from 'src/app/services/language.service';
 })
 export class CranixMdListComponent implements OnInit {
 
-  min: number = -1;
+  min: number;
   step: number;
   max: number;
   rowData = [];
@@ -22,14 +23,25 @@ export class CranixMdListComponent implements OnInit {
   constructor(
     public authService: AuthenticationService,
     public objectService: GenericObjectService,
-    public languageS: LanguageService
-  ) { }
+    public languageS: LanguageService,
+    public utilService: UtilsService
+  ) {
+    this.authService.log("CranixMdListComponent constructor was called")
+    this.utilService.actMdList = this;
+   }
 
   async ngOnInit() {
     this.objectService.selection = []
     this.objectService.selectedIds = []
-    this.step = this.authService.settings.lineProPageMD;
-    this.max = this.step + 1;
+    this.step = Number(this.authService.settings.lineProPageMD);
+    if( !this.min ) {
+      this.min = -1;
+    }
+    if( !this.step || this.step < 3 ) {
+      this.step = 3;
+    }
+    this.max = this.min + this.step + 1;
+    this.authService.log("CranixMdListComponent Min Max Step",this.min,this.max,this.step)
     this.left1 = 'name'
     this.left2 = 'description'
     this.left3 = ''
@@ -69,7 +81,6 @@ export class CranixMdListComponent implements OnInit {
     if (this.max > (this.rowData.length)) {
       this.max = this.rowData.length
     }
-
   }
 
   back() {
@@ -107,7 +118,7 @@ export class CranixMdListComponent implements OnInit {
   onQuickFilterChanged() {
     let filter = (<HTMLInputElement>document.getElementById('filterMD')).value.toLowerCase();
     this.min = -1;
-    this.max = 1 + this.step;
+    this.max = this.step;
     this.rowData = [];
     switch (this.objectType) {
       case "adhocroom": {
@@ -215,7 +226,7 @@ export class CranixMdListComponent implements OnInit {
 
     if (this.rowData.length < this.step) {
       this.min = -1
-      this.max = this.rowData.length + 1
+      this.max = this.rowData.length
     }
   }
 }
