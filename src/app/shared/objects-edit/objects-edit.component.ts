@@ -62,7 +62,7 @@ export class ObjectsEditComponent implements OnInit {
       this.objectKeys = Object.getOwnPropertyNames(this.object);
     }
     this.disabled = false;
-    if (this.objectAction != 'add') {
+    if (this.objectAction != 'add' && this.objectType != 'settings') {
       let url = this.utilsS.hostName() + "/" + this.objectType + "s/" + this.object.id;
       let sub = this.http.get(url, { headers: this.authService.headers }).subscribe(
         (val) => {
