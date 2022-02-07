@@ -26,7 +26,7 @@ export class AuthenticationService {
     formHeaders: HttpHeaders;
     textHeaders: HttpHeaders;
     anyHeaders: HttpHeaders;
-    settings: Settings = new Settings();
+    settings: Settings;
     minLgWidth = 769;
     minLgHeight = 600;
     rowColors: string[] = ["#D2E3D5", "#E2F3E5", "#AFC2B2"]
@@ -39,6 +39,7 @@ export class AuthenticationService {
         private utilsS: UtilsService,
         private router: Router
     ) {
+        this.loadSettings();
         this.plt.ready().then(() => {
             this.checkSession();
         });
@@ -55,30 +56,32 @@ export class AuthenticationService {
         return this.http.post<UserResponse>(this.url, user, { headers: headers });
     }
 
+    loadSettings() {
+        this.settings = new Settings();
+        console.log(this.settings)
+        this.storage.get('myCranixSettings').then((myCranixSettings) => {
+            if (myCranixSettings && myCranixSettings != "") {
+                console.log("myCranixSettings");
+                let myCranixSettingsHash = JSON.parse(myCranixSettings);
+                console.log(myCranixSettingsHash);
+                for (let key of Object.getOwnPropertyNames(this.settings)) {
+                    if (myCranixSettingsHash.hasOwnProperty(key)) {
+                        if (typeof this.settings[key] == "number") {
+                            this.settings[key] = Number(myCranixSettingsHash[key]);
+                        } else {
+                            this.settings[key] = myCranixSettingsHash[key];
+                        }
+                    }
+                }
+                console.log(this.settings);
+            }
+        });
+    }
     setUpSession(user: LoginForm, instituteName: string) {
         this.session = null;
         this.authenticationState.next(false);
         let subscription = this.login(user).subscribe(
             (val) => {
-                this.storage.get('myCranixSettings').then((myCranixSettings) => {
-                    if (myCranixSettings && myCranixSettings != "") {
-                        console.log("myCranixSettings");
-                        console.log(myCranixSettings);
-                        let myCranixSettingsHash = JSON.parse(myCranixSettings);
-                        console.log(myCranixSettingsHash);
-                        for (let key of Object.getOwnPropertyNames(this.settings)) {
-                            console.log(key, myCranixSettingsHash.hasOwnProperty(key))
-                            if (myCranixSettingsHash.hasOwnProperty(key)) {
-                                if (typeof this.settings[key] == "number") {
-                                    this.settings[key] = Number(myCranixSettingsHash[key]);
-                                } else {
-                                    this.settings[key] = myCranixSettingsHash[key];
-                                }
-                            }
-                        }
-                        console.log(this.settings);
-                    }
-                });
                 console.log('login respons is', val);
                 this.session = val;
                 this.session['instituteName'] = instituteName;
