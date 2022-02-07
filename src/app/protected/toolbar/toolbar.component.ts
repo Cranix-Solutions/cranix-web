@@ -7,6 +7,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { Settings } from 'src/app/shared/models/server-models';
 
 @Component({
   selector: 'cranix-toolbar',
@@ -57,7 +58,16 @@ export class ToolbarComponent implements OnInit {
   }
 
   async retirectToSettings(ev: Event) {
-    let settings = this.authService.settings;
+    let settings: Settings = this.authService.settings;
+    if( this.authService.isMD() ) {
+      delete settings.agGridThema
+      delete settings.rowHeight
+      delete settings.rowMultiSelectWithClick
+      delete settings.checkboxSelection
+      delete settings.headerCheckboxSelection
+    } else {
+      delete settings.lineProPageMD
+    }
     settings.lang = this.translateService.language.toUpperCase();
     const modal = await this.modalConroller.create({
       component: ObjectsEditComponent,
@@ -73,13 +83,15 @@ export class ToolbarComponent implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        this.authService.settings = dataReturned.data;
-        let ret = this.storage.set("myCranixSettings", JSON.stringify(dataReturned.data));
-        this.translateService.setLanguage(dataReturned.data.lang);
-        this.authService.log("Object was created or modified", dataReturned.data)
+        for (let key of Object.getOwnPropertyNames(dataReturned.data)) {
+          this.authService.settings[key] = dataReturned.data[key]
+        }   
+        this.storage.set("myCranixSettings", JSON.stringify(this.authService.settings));
+        this.translateService.setLanguage(this.authService.settings.lang);
+        this.utilService.actMdList.ngOnInit();
+        this.authService.log("ToolbarComponent", "Settings was modified", this.authService.settings)
       }
     });
     (await modal).present();
   }
-  closeWindow() { }
 }
