@@ -2,11 +2,9 @@
   <ion-menu start=side contentId="main-content" type=overlay>
     <ion-content>
       <ion-list id="menu">
-        <ion-list-header>
+        <ion-list-header style="height: 52px;">
           <ion-item lines="none" button (click)="disabled = !disabled">
-            <ion-thumbnail>
-              <img src="assets/images/logo/cranix_school.svg">
-            </ion-thumbnail>
+            <img src="assets/images/logo/cranix_school.svg" style="height: 32px; width: 32px;">
             <ion-label>
               <h3 *ngIf="authService.isAllowed('cephalix.manage'); else elseBlock">CEPHALIX</h3>
               <ng-template #elseBlock>
@@ -17,8 +15,8 @@
         </ion-list-header>
         <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
           <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false"
-            [class.active-menu]="p.url.startsWith(activePath)">
-            <ion-icon size="small" color="#ffffff" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'">
+            style="background-color : {{ p.url.startsWith(activePath) ? 'var(--ion-color-secondary)' : 'var(--ion-color-primary-tint)' }};">
+            <ion-icon size="small" style="margin-right: 10px;" color="#ffffff" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'">
             </ion-icon>
             <ion-label>{{ p.title | translate }}</ion-label>
           </ion-item>

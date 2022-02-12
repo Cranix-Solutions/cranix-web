@@ -1,8 +1,3 @@
-.active-menu {
-  //border-left: 5px solid var(--ion-color-success);
-  //border-bottom: 2px solid var(--ion-color-danger);
-  --ion-background-color: var(--ion-color-secondary);
-}
 ion-menu {
    .list-md{
          padding-top: 0px;
@@ -12,41 +7,8 @@ ion-menu {
     max-width: 200px;
     border-color : var(--ion-color-primary-tint);
     border-width: 2px;
- /*  maybe remove next merge 
-     ion-toolbar {
-      --ion-background-color: var(--ion-color-primary-tint);
-    }*/
-    ion-list {/* optional, but it needs when you use gradient as a background color.*/
-      background: transparent;
-      //background: var(--ion-color-primary-tint)
-    }
-    ion-list-header{
-      height: 100%;
-        padding: 0px;
-        height: 56px;
-        background-color: var(--ion-color-primary);
-        --ion-background-color: var(--ion-color-primary);
-        border-color: var(--ion-color-primary-tint);
-        border-width: 2px;
-        border-left: none;
-        border-right: none;
-        border-top: none;
-        h3 {
-            padding-left: 15px;
-            font-size: 20px;
-            font-weight: 300;
-            letter-spacing: .4px;
-            transition: opacity 200ms ease;
-        }
-    //    border-bottom: medium;
-    //    border-color: var(--ion-color-primary-tint)!important; 
-    //    border-bottom-width: 2px !important;
-    }
-    img {
-        padding: 3px;
-        object-fit: contain;
-    }
-   /* ion-list-header{
-      --background: var(--ion-color-primary-tint);
-    }*/
-  }
+}
+.split-pane-visible >.split-pane-side {
+  min-width: 215px!important;
+  max-width: 215px!important;
+}

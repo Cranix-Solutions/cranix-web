@@ -21,4 +21,4 @@ cd ${REPO}
 osc vc
 osc ci
 cd ${HERE}
-cp src/app/services/utils.service.ts-test src/app/services/utils.service.ts
+git stash
