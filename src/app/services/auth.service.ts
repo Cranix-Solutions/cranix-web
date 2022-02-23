@@ -27,6 +27,7 @@ export class AuthenticationService {
     textHeaders: HttpHeaders;
     anyHeaders: HttpHeaders;
     settings: Settings;
+    requestedPath: string;
     minLgWidth = 769;
     minLgHeight = 600;
     rowColors: string[] = ["#D2E3D5", "#E2F3E5", "#AFC2B2"]
@@ -234,6 +235,8 @@ export class AuthenticationService {
     public isAllowed(acl: string) {
         if (acl == 'permitall') {
             return true;
+        } else if( !this.session || !this.session.acls ) {
+            return false
         }
         return (this.session.acls.indexOf(acl) > 0);
     }
