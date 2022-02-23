@@ -59,6 +59,30 @@ export const groupMenu = [
 ]
 
 export const printerMenu = [
+  {
+    "enabled": true,
+    "icon": "play-circle",
+    "color": "success",
+    "action": "enablePrinter"
+  },
+  {
+    "enabled": true,
+    "icon": "stop-circle",
+    "color": "danger",
+    "action": "disablePrinter"
+  },
+  {
+    "enabled": true,
+    "icon": "reload-circle",
+    "color": "success",
+    "action": "reset"
+  },
+  {
+    "enabled": true,
+    "icon": "logo-windows",
+    "color": "success",
+    "action": "activateWindowsDriver"
+  }
 ]
 
 export const ticketMenu = [
