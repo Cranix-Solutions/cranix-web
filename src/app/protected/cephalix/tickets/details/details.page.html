@@ -18,9 +18,16 @@
           </ion-button><br>
           {{ticket.email}}: {{ticket.lastname}},{{ticket.firstname}}
         </ion-card-subtitle>
+        <!-- ion-item>
+          <ion-label slot="stacked">{{ 'Owner' | translate }}</ion-label>
+          <ion-label *ngIf="ticke.ownerId">{{ ticke.ownerId }}</ion-label>
+        </ion-item -->
         <ion-buttons slot="end">
           <ion-button (click)="deleteTicket()">
             <ion-icon color="danger" slot="icon-only" name="trash"></ion-icon>
+          </ion-button>
+          <ion-button (click)="assigneTicketToMe()">
+            <ion-icon color="warning" slot="icon-only" name="lock-closed"></ion-icon>
           </ion-button>
           <ion-button (click)="router.navigate(['/pages/cephalix/tickets'])">
             <ion-icon slot="icon-only" name="caret-back"></ion-icon>

@@ -43,7 +43,7 @@
     <ion-label>{{ 'Count of managed institutes:' | translate}}</ion-label>
     <ion-label>{{managedIds.length}}</ion-label>
   </ion-item>
-  <ag-grid-angular id="instituteManageTable" style="width: 100%; height: 100%;" rowSelection="multiple"
+  <ag-grid-angular id="instituteManageTable" style="width: 100%; height: 92%;" rowSelection="multiple"
     class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}" [context]="context"
     [rowData]="rowData" [defaultColDef]="defaultColDef" [columnDefs]="columnDefs"
     [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" (gridReady)="onGridReady($event)">

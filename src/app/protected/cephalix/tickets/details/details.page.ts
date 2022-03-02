@@ -64,9 +64,34 @@ export class DetailsPage implements OnInit {
       () => { sub.unsubscribe() }
     );
   }
+
   public deleteTicket() {
     this.objectService.deleteObjectDialog(this.ticket, "ticket", '/pages/cephalix/tickets');
   }
+
+  public assigneTicketToMe(){
+    this.cephlixS.modifyTicket(this.ticket).subscribe(
+      (val) => {
+       this.objectService.responseMessage(val);
+      },
+      (err) => {
+        this.objectService.errorMessage(err)
+      }
+    )
+  }
+
+  public assigneTicketToUser(id: number){
+    this.ticket.ownerId = id
+    this.cephlixS.modifyTicket(this.ticket).subscribe(
+      (val) => {
+       this.objectService.responseMessage(val);
+      },
+      (err) => {
+        this.objectService.errorMessage(err)
+      }
+    )
+  }
+
   async answerArticle(article: Article) {
     if (!article.sender) {
       article.sender = this.ticket.email;

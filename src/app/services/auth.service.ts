@@ -144,10 +144,11 @@ export class AuthenticationService {
             'Accept': "text/plain",
             'Authorization': "Bearer " + this.token
         });
-        let sub = this.http.get<UserResponse>(url, { headers: this.headers }).subscribe(
+        let sub = this.http.get(url, { headers: this.headers }).subscribe(
             (val) => {
                 console.log("loadSession");
-                this.session = val;
+                console.log(val);
+                this.session = <UserResponse>val;
                 this.session['instituteName'] = sessionStorage.getItem('instituteName');
                 console.log(this.session);
                 this.authenticationState.next(true);

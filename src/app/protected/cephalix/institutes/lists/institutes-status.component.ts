@@ -254,8 +254,8 @@ export class InstitutesStatusComponent implements OnInit {
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.doLayout();
-
   }
+
   //TODO RESPONSE
   public redirectToUpdate = (cephalixInstituteId: number) => {
     let sub = this.cephalixService.updateById(cephalixInstituteId).subscribe(
