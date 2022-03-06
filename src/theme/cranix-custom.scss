@@ -177,7 +177,17 @@ $breakpoints-values: map-values($grid-breakpoints);
 input {
   border      : none;
   border-width: 0;
-  box-shadow  : none;
+  box-shadow  : aqua;
+}
+
+input[type=text] {
+  width: 250px;
+  padding: 4px 4px;
+  margin: 4px 4px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
 input:focus,
