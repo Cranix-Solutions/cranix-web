@@ -30,9 +30,9 @@ export class DetailsPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     public  router: Router,
+    public  objectService: GenericObjectService,
     private authService: AuthenticationService,
     private cephlixS: CephalixService,
-    private objectService: GenericObjectService,
     private modalController: ModalController
   ) {
     this.ticketId = this.route.snapshot.params.id;
