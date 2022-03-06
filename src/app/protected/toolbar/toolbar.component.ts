@@ -17,7 +17,7 @@ import { Settings } from 'src/app/shared/models/server-models';
 export class ToolbarComponent implements OnInit {
 
   roomName: string = "";
-  commonName: string = "";
+  fullName: string = "";
   instituteName: string = "";
 
   @Input() title: string;
@@ -30,7 +30,7 @@ export class ToolbarComponent implements OnInit {
     public modalConroller: ModalController,
     public utilService: UtilsService
   ) {
-    this.commonName    = authService.session.commonName;
+    this.fullName    = authService.session.fullName;
     this.roomName      = authService.session.roomName;
     this.instituteName = authService.session.instituteName;
   }
