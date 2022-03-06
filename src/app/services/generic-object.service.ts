@@ -16,8 +16,8 @@ export class GenericObjectService {
   allObjects: any = {};
   selectedObject: any = null;
   selectedObjectType: string = null;
-  selection:       any[] = [];
-  selectedIds:     number[] = [];
+  selection: any[] = [];
+  selectedIds: number[] = [];
   selectedRoom: any = null;
   selectedGroup: any = null;
   packagesAvailable: Package[] = [];
@@ -42,7 +42,7 @@ export class GenericObjectService {
     'status': ['N', 'A', 'D'],
     'supporttype': ['Error', 'FeatureRequest', 'Feedback', 'ProductOrder']
   }
-  initialized: boolean = false;
+  initialized: number = 0;
   enumerates: string[] = [
     'instituteType', 'groupType', 'deviceType', 'roomType', 'roomControl', 'network', 'accessType', 'role', 'noticeType'
   ];
@@ -130,24 +130,23 @@ export class GenericObjectService {
       this.objects.push(obj)
     }
     let subs: any = {};
-    if (force || !this.initialized) {
-      this.authService.log("initialize all objects")
-      for (let key of this.objects) {
-        this.getAllObject(key);
-      }
-      for (let key of this.enumerates) {
-        let url = this.utilsS.hostName() + "/system/enumerates/" + key;
-        subs[key] = this.http.get<string[]>(url, { headers: this.authService.headers }).subscribe(
-          (val) => { this.selects[key] = val; },
-          (err) => { },
-          () => { subs[key].unsubscribe() });
-      }
-      if (this.authService.isAllowed('software.download')) {
-        this.getSoftwaresToDowload();
-      }
-      this.initialized = true;
+    this.authService.log("initialize all objects")
+    for (let key of this.objects) {
+      this.getAllObject(key);
     }
+    for (let key of this.enumerates) {
+      let url = this.utilsS.hostName() + "/system/enumerates/" + key;
+      subs[key] = this.http.get<string[]>(url, { headers: this.authService.headers }).subscribe(
+        (val) => { this.selects[key] = val; },
+        (err) => { },
+        () => { subs[key].unsubscribe() });
+    }
+    if (this.authService.isAllowed('software.download')) {
+      this.getSoftwaresToDowload();
+    }
+    console.log("initialized");
   }
+
 
   initializeCephalixObjects() {
     this.objects.push('institute');
@@ -199,6 +198,8 @@ export class GenericObjectService {
           this.selects[objectType + 'Id'].push(obj.id);
         }
         this.authService.log("GenericObjectService: ", objectType + "s were read", this.allObjects[objectType]);
+        this.initialized++;
+        console.log(this.objects.length, this.initialized)
       },
       (err) => {
         if (!this.allObjects[objectType]) {
@@ -211,6 +212,13 @@ export class GenericObjectService {
         sub.unsubscribe();
       }
     );
+  }
+
+  isInitialized(){
+    if( this.initialized > 0 && this.initialized >= this.objects.length ) {
+      return true;
+    }
+    return false;
   }
 
   applyAction(object, objectType, action) {
@@ -526,10 +534,10 @@ export class GenericObjectService {
     if (this.multivalued.indexOf(key) != -1) {
       return 'multivalued';
     }
-    if( typeof obj == 'number' && action == 'edit' && this.readOnlyAttributes.indexOf(key) != -1 ) {
+    if (typeof obj == 'number' && action == 'edit' && this.readOnlyAttributes.indexOf(key) != -1) {
       return 'numberRO'
     }
-    if( typeof obj == 'number'  ) {
+    if (typeof obj == 'number') {
       return 'number'
     }
     return 'string';
