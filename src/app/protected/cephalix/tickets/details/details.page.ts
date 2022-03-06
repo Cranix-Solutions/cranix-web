@@ -5,7 +5,9 @@ import { Ticket, Article, Institute } from 'src/app/shared/models/cephalix-data-
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
 import { ModalController } from '@ionic/angular';
-class InstituteList {
+import { User } from 'src/app/shared/models/data-model';
+import { AuthenticationService } from 'src/app/services/auth.service';
+class ObjectList {
   id: number;
   label: string;
 }
@@ -19,12 +21,16 @@ export class DetailsPage implements OnInit {
   ticket: Ticket;
   articles: Article[] = [new Article()];
   institute: Institute;
-  institutes: InstituteList[] = [];
-  allInstitutes: InstituteList[] = [];
+  institutes: ObjectList[] = [];
+  allInstitutes: ObjectList[] = [];
   articleOpen = {};
+  ticketOwner: string = "";
+  ticketOwnerId: number;
+  ticketWorkers: ObjectList[] = [];
   constructor(
     private route: ActivatedRoute,
-    public router: Router,
+    public  router: Router,
+    private authService: AuthenticationService,
     private cephlixS: CephalixService,
     private objectService: GenericObjectService,
     private modalController: ModalController
@@ -32,10 +38,22 @@ export class DetailsPage implements OnInit {
     this.ticketId = this.route.snapshot.params.id;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    while(!this.objectService.isInitialized() ) {
+      await new Promise(f => setTimeout(f, 1000));
+    }
+    for (let i of this.objectService.allObjects['user']) {
+      if (i.role == 'sysadmins') {
+        this.ticketWorkers.push({ id: i.id, label: i.fullName })
+      }
+    }
+    console.log("Ticket workers" + this.ticketWorkers)
+    this.ticketWorkers.sort((a,b) => a.label < b.label ? 0:1  )
     let sub = this.cephlixS.getTicketById(this.ticketId).subscribe(
       (val) => {
+        console.log(val)
         this.ticket = val;
+        let ticketOwnerObject: User = this.objectService.getObjectById('user', this.ticket.ownerId);
         this.institute = this.objectService.getObjectById('institute', val.cephalixInstituteId);
         this.readArcticles();
         if (!this.institute) {
@@ -45,11 +63,16 @@ export class DetailsPage implements OnInit {
           this.institute = new Institute();
           console.log(this.institutes, this.institute)
         }
+        if (ticketOwnerObject) {
+          this.ticketOwnerId = ticketOwnerObject.id;
+          this.ticketOwner = ticketOwnerObject.fullName;
+        }
       },
       (err) => { console.log(err) },
       () => { sub.unsubscribe() }
     )
   }
+
   public ngAfterViewInit() {
     while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
   }
@@ -65,14 +88,13 @@ export class DetailsPage implements OnInit {
     );
   }
 
-  public deleteTicket() {
-    this.objectService.deleteObjectDialog(this.ticket, "ticket", '/pages/cephalix/tickets');
-  }
-
-  public assigneTicketToMe(){
+  public assigneTicketToMe() {
+    this.ticket.ownerId = this.authService.session.userId;
+    this.ticketOwner = this.authService.session.fullName;
     this.cephlixS.modifyTicket(this.ticket).subscribe(
       (val) => {
-       this.objectService.responseMessage(val);
+        this.objectService.responseMessage(val);
+        this.objectService.getAllObject('ticket');
       },
       (err) => {
         this.objectService.errorMessage(err)
@@ -80,11 +102,21 @@ export class DetailsPage implements OnInit {
     )
   }
 
-  public assigneTicketToUser(id: number){
+  public setOwner() {
+    let tmp = (<HTMLInputElement>document.getElementById("ownerId")).value;
+    let id = 0;
+    for (let i of this.ticketWorkers) {
+      if (i.label == tmp) {
+        id = i.id
+        break
+      }
+    }
     this.ticket.ownerId = id
+    console.log(this.ticket)
     this.cephlixS.modifyTicket(this.ticket).subscribe(
       (val) => {
-       this.objectService.responseMessage(val);
+        this.objectService.responseMessage(val);
+        this.objectService.getAllObject('ticket');
       },
       (err) => {
         this.objectService.errorMessage(err)
@@ -155,6 +187,7 @@ export class DetailsPage implements OnInit {
       (val) => {
         this.objectService.responseMessage(val)
         this.institute = this.objectService.getObjectById('institute', id);
+        this.objectService.getAllObject('ticket');
       }
     )
   }
@@ -193,7 +226,7 @@ export class EditArticle implements OnInit {
     this.newText = "".concat(
       "Hallo " + this.ticket.firstname + " " + this.ticket.lastname + ",<br><br>",
       "Viele Grüße<br>Cranix-Solutions-Support-Team<br><br>",
-      "--------------------------------------------",
+      "--------------------------------------------<br>",
       this.article.text
     )
     console.log(this.newText)

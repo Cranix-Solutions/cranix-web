@@ -9,7 +9,7 @@
           {{ institute.ipVPN }}<br>
           {{ticket.email}}: {{ticket.lastname}},{{ticket.firstname}}</ion-card-subtitle>
         <ion-card-subtitle *ngIf="institute.id == 0"> {{ticket.recDate | date:'yy-MM-dd HH:mm'}}>
-          <input placeholder="{{'Select institute:'|translate}}" list="insts" name="institute" id="institute">
+          <input type="text" placeholder="{{'Select institute:'|translate}}" list="insts" name="institute" id="institute">
           <datalist id="insts">
             <option *ngFor="let i of institutes" [value]="i.label">
           </datalist>
@@ -18,23 +18,30 @@
           </ion-button><br>
           {{ticket.email}}: {{ticket.lastname}},{{ticket.firstname}}
         </ion-card-subtitle>
-        <!-- ion-item>
-          <ion-label slot="stacked">{{ 'Owner' | translate }}</ion-label>
-          <ion-label *ngIf="ticke.ownerId">{{ ticke.ownerId }}</ion-label>
-        </ion-item -->
         <ion-buttons slot="end">
-          <ion-button (click)="deleteTicket()">
-            <ion-icon color="danger" slot="icon-only" name="trash"></ion-icon>
+          <ion-button fill="solid" (click)="router.navigate(['/pages/cephalix/tickets'])">
+            <ion-icon slot="icon-only" name="caret-back"></ion-icon>
           </ion-button>
-          <ion-button (click)="assigneTicketToMe()">
+          <ion-button fill="solid" (click)="assigneTicketToMe()">
             <ion-icon color="warning" slot="icon-only" name="lock-closed"></ion-icon>
           </ion-button>
-          <ion-button (click)="router.navigate(['/pages/cephalix/tickets'])">
-            <ion-icon slot="icon-only" name="caret-back"></ion-icon>
+          <ion-button fill="solid" (click)="objectService.deleteObjectDialog(this.ticket, 'ticket', '/pages/cephalix/tickets')">
+            <ion-icon color="danger" slot="icon-only" name="trash"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-card-header>
+    <ion-card-content>
+      <ion-label>{{ 'Ticket Owner' | translate }}</ion-label>
+      <input type="text" placeholder="{{'Select the owner of the ticket'}}" list="ticketOwners" name="ticketOwner" id="ownerId"
+        [value]="ticketOwner">
+      <datalist id="ticketOwners">
+        <option *ngFor="let i of ticketWorkers" [value]="i.label">
+      </datalist>
+      <ion-button fill="clear" (click)="setOwner()">
+        <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+      </ion-button>
+    </ion-card-content>
   </ion-card>
   <ion-card *ngFor="let article of articles">
     <ion-card-header>
@@ -61,7 +68,8 @@
             matTooltip="{{'Edit the answer and resend it.' | translate }}">
             <ion-icon slot="icon-only" name="build-outline"></ion-icon>
           </ion-button>
-          <ion-button fill="solid" (click)="toggleArticle(article.id)" matTooltip="{{'Open or close the article.' | translate }}">
+          <ion-button fill="solid" (click)="toggleArticle(article.id)"
+            matTooltip="{{'Open or close the article.' | translate }}">
             <ion-icon *ngIf="!articleOpen[article.id]" slot="icon-only" name="mail-open"></ion-icon>
             <ion-icon *ngIf="articleOpen[article.id]" slot="icon-only" name="mail"></ion-icon>
           </ion-button>
