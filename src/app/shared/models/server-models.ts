@@ -14,7 +14,7 @@ export interface UserResponse {
   roomName?: string,
   instituteName?: string,
   mustChange: boolean,
-  commonName: string,
+  fullName: string,
   acls: string[]
 }
 
