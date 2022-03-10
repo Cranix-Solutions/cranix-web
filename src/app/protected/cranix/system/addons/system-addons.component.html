@@ -1,32 +1,26 @@
-<cranix-toolbar></cranix-toolbar>
-<ion-content id="carded">
-    <ion-row class="header-row">
-        <ion-col>
-            <ion-title>{{'System addons' | translate}}</ion-title>
-        </ion-col>
-    </ion-row>
-    <ion-card>
-        <ion-list>
-            <ion-item>
-                <ion-label>{{'Select an addon' | translate}}</ion-label>
-                <ion-select [(ngModel)]="systemService.selectedAddon" (ionChange)="changeAddon()">
-                    <ion-select-option *ngFor="let addon of systemService.addons" [value]="addon">{{addon}}
-                    </ion-select-option>
-                </ion-select>
-            </ion-item>
-            <ion-item>
-                <ion-label>{{'Select an action' | translate}}</ion-label>
-                <ion-select [(ngModel)]="action" (ionChange)="applyAction()">
-                    <ion-select-option *ngFor="let action of systemService.addonActions[systemService.selectedAddon]"
-                        [value]="action">{{action}}</ion-select-option>
-                </ion-select>
-            </ion-item>
-            <ion-item>
-                <ion-label>{{'Select a key' | translate}}</ion-label>
-                <ion-select [(ngModel)]="key" (ionChange)="getKey()">
-                    <ion-select-option *ngFor="let key of systemService.addonKeys[systemService.selectedAddon]"
-                        [value]="key">{{key}}</ion-select-option>
-                </ion-select>
-            </ion-item>
-        </ion-list>
-    </ion-card>
+<cranix-toolbar title="{{'System addons' | translate}}"></cranix-toolbar>
+<ion-content>
+    <ion-list>
+        <ion-item>
+            <ion-label>{{'Select an addon' | translate}}</ion-label>
+            <ion-select [disabled]="disabled" [(ngModel)]="systemService.selectedAddon" (ionChange)="changeAddon()">
+                <ion-select-option *ngFor="let addon of systemService.addons" [value]="addon">{{addon}}
+                </ion-select-option>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+            <ion-label>{{'Select an action' | translate}}</ion-label>
+            <ion-select [disabled]="disabled" [(ngModel)]="action" (ionChange)="applyAction()">
+                <ion-select-option *ngFor="let action of systemService.addonActions[systemService.selectedAddon]"
+                    [value]="action">{{action}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+            <ion-label>{{'Select a key' | translate}}</ion-label>
+            <ion-select [disabled]="disabled" [(ngModel)]="key" (ionChange)="getKey()">
+                <ion-select-option *ngFor="let key of systemService.addonKeys[systemService.selectedAddon]"
+                    [value]="key">{{key}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+    </ion-list>
+</ion-content>

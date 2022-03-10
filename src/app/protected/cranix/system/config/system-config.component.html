@@ -25,7 +25,7 @@
           </ion-item>
         </ion-col>
         <ion-col *ngIf="!authService.isMD()" size=8>
-          <ion-item *ngIf="config.type == 'yesno'">
+          <ion-item *ngIf="config.type == 'yesno'" lines="none">
             <ion-toggle slot="start" color="secondary" checked="{{config.value == 'yes'}}"
               disabled="{{config.readOnly == 'yes'}}" (ionChange)="togle(config.key,$event)">
             </ion-toggle>
@@ -70,8 +70,8 @@
       {{ config.type | translate }} {{ ( config.readOnly == 'yes' ? 'readonly' : 'writable' ) | translate }}
     </ion-item>
     <ion-item *ngIf="config.type == 'yesno'">
-      <ion-label position="stacked">{{ 'value' | translate }}</ion-label>
-      <ion-toggle slot="start" color="secondary" checked="{{config.value == 'yes'}}"
+      <ion-label>{{ 'value' | translate }}</ion-label>
+      <ion-toggle slot="end" color="secondary" checked="{{config.value == 'yes'}}"
         disabled="{{config.readOnly == 'yes'}}" (ionChange)="togle(config.key,$event)">
       </ion-toggle>
     </ion-item>
