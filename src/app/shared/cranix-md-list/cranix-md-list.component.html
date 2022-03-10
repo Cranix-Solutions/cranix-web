@@ -43,7 +43,7 @@
         <ion-label *ngIf="objectType == 'device'">
           <h5>{{ object.mac }}</h5>
           <h5>{{ object.hwconfId | idToName:'hwconf' }}</h5>
-          <h5>{{ object.roomId | idToName:'room' }}</h5>
+          <!-- h5>{{ object.roomId | idToName:'room' }}</h5 -->
         </ion-label>
         <ion-label *ngIf="objectType.indexOf('group') != -1">
           <h5>{{ object.groupType | translate }}</h5>
