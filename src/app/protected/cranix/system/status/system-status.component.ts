@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 //Own stuff
-import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { SystemService } from 'src/app/services/system.service';
 import { LanguageService } from 'src/app/services/language.service';
@@ -30,7 +29,7 @@ export class SystemStatusComponent implements OnInit {
   ];
 
   constructor(
-    public genericObject: GenericObjectService,
+    public objectService: GenericObjectService,
     public languageService: LanguageService,
     public modalCtrl: ModalController,
     public storage: Storage,
