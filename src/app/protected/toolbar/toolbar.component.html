@@ -8,9 +8,9 @@
     <ion-title *ngIf="!authService.isMD()">
       {{authService.session.fullName}} {{authService.session.instituteName}} {{authService.session.roomName}} <span class="title-class">{{title}}</span>
     </ion-title>
-    <ion-title *ngIf="authService.isMD()">
+    <ion-label *ngIf="authService.isMD()">
       {{authService.session.fullName}} {{authService.session.instituteName}} {{authService.session.roomName}}
-    </ion-title>
+    </ion-label>
     <ion-buttons slot="end">
       <ion-button fill="clear" (click)="objectService.initialize(true)"
         matTooltip="{{ 'Refresh all objects' | translate }}">
