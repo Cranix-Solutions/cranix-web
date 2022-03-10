@@ -14,6 +14,7 @@ export class SystemAddonsComponent implements OnInit {
 
   action = "";
   key = "";
+  disabled = false;
 
   constructor(
     public alertController: AlertController,
@@ -26,7 +27,7 @@ export class SystemAddonsComponent implements OnInit {
     this.systemService.getAddons();
   }
 
-  changeAddon(){
+  changeAddon() {
     this.action = ""
     this.key = ""
     console.log(this.systemService.selectedAddon,
@@ -34,14 +35,15 @@ export class SystemAddonsComponent implements OnInit {
       this.systemService.addonKeys)
   }
 
-  async applyAction(){
-    if( !this.action) {
+  async applyAction() {
+    if (!this.action) {
       return
     }
+    this.disabled = true;
     const alert = await this.alertController.create({
       header: this.languageService.trans("Do you want to execute following addon action:")
         + " '" + this.systemService.selectedAddon + "'"
-        + " '" + this.action +"'",
+        + " '" + this.action + "'",
       buttons: [
         {
           text: this.languageService.trans('Cancel'),
@@ -55,6 +57,7 @@ export class SystemAddonsComponent implements OnInit {
           handler: () => {
             this.systemService.applyAction(this.action).subscribe(
               (val) => {
+                this.disabled = false;
                 this.objectService.responseMessage(val)
                 this.action = "";
               }
@@ -67,14 +70,16 @@ export class SystemAddonsComponent implements OnInit {
     await alert.present();
   }
 
-  getKey(){
-    if( !this.key) {
+  getKey() {
+    if (!this.key) {
       return
     }
     this.objectService.requestSent();
+    this.disabled = true;
     this.systemService.getKey(this.key).subscribe(
       (val) => {
-        this.objectService.okMessage(this.key+":<br>"+val.join("<br>"))
+        this.objectService.okMessage(this.key + ":<br>" + val.join("<br>"))
+        this.disabled = false;
         this.key = "";
       }
     )
