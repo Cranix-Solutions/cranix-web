@@ -212,8 +212,7 @@ export class DevicesComponent implements OnInit {
   async redirectToEdit(device: Device) {
     let action = "modify";
     if (!device) {
-      device = new Device();
-      action = "add";
+      return this.addDevice(null);
     }
     const modal = await this.modalCtrl.create({
       component: ObjectsEditComponent,
