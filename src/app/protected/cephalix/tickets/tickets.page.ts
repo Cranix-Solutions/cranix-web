@@ -127,11 +127,13 @@ export class TicketsPage implements OnInit {
           break;
         }
         case 'ticketStatus': {
-          col['width'] = 50
+          col['minWidth'] = 40
+          col['maxWidth'] = 50
           break;
         }
         case 'id': {
-          col['width'] = 70
+          col['minWidth'] = 50
+          col['maxWidth'] = 70
           break;
         }
       }
