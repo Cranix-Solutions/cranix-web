@@ -70,10 +70,11 @@ export class ObjectsEditComponent implements OnInit {
             if (this.objectService.typeOf(key, this.object, 'edit') == 'multivalued') {
               let s = val[key]
               this.object[key] = s.join()
-              continue
+            } else {
+              this.object[key] = val[key];
             }
-            this.object[key] = val[key];
           }
+          console.log(this.object)
         },
         (err) => { },
         () => {
