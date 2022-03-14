@@ -81,8 +81,7 @@
         </ion-item>
         <ion-item *ngSwitchCase="'stringRO'">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
-          <ion-input color="tertiary" type="text" [(ngModel)]="object[key]" name="{{key}}" value="{{object[key]}}"
-            readonly>
+          <ion-input color="tertiary" type="text" value="{{object[key]}}" readonly>
           </ion-input>
         </ion-item>
         <ion-item *ngSwitchCase="'text'" lines="none">
@@ -98,6 +97,11 @@
         <ion-item *ngSwitchCase="'date-time'">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
           <input [(ngModel)]="object[key]" name="{{key}}" type="datetime-local">
+        </ion-item>
+        <ion-item *ngSwitchCase="'idPipeRO'">
+          <ion-label position="stacked">{{ key | translate }}{{objectService.required[key]}}</ion-label>
+          <ion-input color="tertiary" type="text" [value]="objectService.idToName(key,object[key])" readonly>
+          </ion-input>
         </ion-item>
         <ion-item *ngSwitchCase="'idPipe'">
           <ion-label position="stacked">{{ key | translate }}{{objectService.required[key]}}</ion-label>
