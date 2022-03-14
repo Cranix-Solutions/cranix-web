@@ -25,7 +25,15 @@ export class GenericObjectService {
    * The base objects which need to be loaded by the initialisations
    */
   private objectsTemlate: string[] = [
-    'education/user', 'education/group', 'user', 'group', 'room', 'device', 'hwconf', 'printer', 'adhocroom'
+    'education/user',
+    'education/group',
+    'user',
+    'group',
+    'room',
+    'device',
+    'hwconf',
+    'printer',
+    'adhocroom'
   ]
   objects: string[] = [];
   /**
@@ -58,16 +66,19 @@ export class GenericObjectService {
     'id',
     'accessType',
     'classes',
+    'counter',
     'devCount',
     'fsQuotaUsed',
     'ip',
     'ignoreNetbios',
+    'loggedInName',
     'msQuotaUsed',
     'name',
     'network',
     'ownerName',
     'recDate',
     'role',
+    'roomId',
     'sourceAvailable',
     'startIp',
     'uid',
@@ -81,12 +92,14 @@ export class GenericObjectService {
     'cephalixInstituteId',
     'deleted',
     'devices',
+    'fullName',
+    'loggedInId',
     'network',
     'ownerId',
     'partitions',
     'saveNext',
-    'users',
-    'fullName'
+    'screenShot',
+    'users'
   ]
   /**
    * Required attributes
@@ -199,7 +212,6 @@ export class GenericObjectService {
         }
         this.authService.log("GenericObjectService: ", objectType + "s were read", this.allObjects[objectType]);
         this.initialized++;
-        console.log(this.objects.length, this.initialized)
       },
       (err) => {
         if (!this.allObjects[objectType]) {
@@ -411,14 +423,6 @@ export class GenericObjectService {
     (await toast).present();
   }
 
-  responseMessage(resp: ServerResponse) {
-    if (resp.code == 'OK') {
-      return this.okMessage(this.languageS.transResponse(resp));
-    } else {
-      return this.errorMessage(this.languageS.transResponse(resp));
-    }
-  }
-
   async okMessage(message: string) {
     const toast = await this.toastController.create({
       position: "middle",
@@ -439,6 +443,7 @@ export class GenericObjectService {
     });
     (await toast).present();
   }
+
   async warningMessage(message) {
     const toast = await this.toastController.create({
       position: "middle",
@@ -459,6 +464,15 @@ export class GenericObjectService {
     });
     (await toast).present();
   }
+
+  responseMessage(resp: ServerResponse) {
+    if (resp.code == 'OK') {
+      return this.okMessage(this.languageS.transResponse(resp));
+    } else {
+      return this.errorMessage(this.languageS.transResponse(resp));
+    }
+  }
+
   selectObject() {
     return this.warningMessage(this.languageS.trans('Please select at last one object!'));
   }
@@ -519,6 +533,12 @@ export class GenericObjectService {
     if (key == 'name' && object.regCode) {
       return 'string';
     }
+    if (key.substring(key.length - 2) == 'Id' && this.readOnlyAttributes.indexOf(key) != -1) {
+      return 'idPipeRO';
+    }
+    if (typeof obj == 'number' && action == 'modify' && this.readOnlyAttributes.indexOf(key) != -1) {
+      return 'numberRO'
+    }
     if (action == 'modify' && this.readOnlyAttributes.indexOf(key) != -1) {
       return 'stringRO';
     }
@@ -534,9 +554,7 @@ export class GenericObjectService {
     if (this.multivalued.indexOf(key) != -1) {
       return 'multivalued';
     }
-    if (typeof obj == 'number' && action == 'edit' && this.readOnlyAttributes.indexOf(key) != -1) {
-      return 'numberRO'
-    }
+
     if (typeof obj == 'number') {
       return 'number'
     }
