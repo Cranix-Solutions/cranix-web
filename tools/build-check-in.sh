@@ -1,7 +1,7 @@
 #!/bin/bash
 REPO="/home/OSC/home:pvarkoly:CRANIX/cranix-web"
 HERE=$( pwd )
-DATE==$( date -u +"Build at: %Y-%m-%d %H:%M" )
+DATE=$( date -u +"Build at: %Y-%m-%d %H:%M" )
 git status
 
 echo -n "Can we build y/n "; read b
