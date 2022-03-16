@@ -2,14 +2,19 @@
 <ion-content *ngIf="!authService.isMD() && !selectedStatus" id="carded">
   <ion-toolbar>
     <ion-item lines="none">
+      <ion-label *ngIf="gridApi">
+        #{{gridApi.getDisplayedRowCount()}}
+      </ion-label>
       <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('quickFilter')" id="quickFilter">
       </ion-input>
     </ion-item>
     <ion-buttons slot="end">
-      <ion-button size="small" fill="solid" (click)="cephalixService.reloadStatusOfInstitutes()" matTooltip="{{'Reload status of institutes' | translate }}">
+      <ion-button size="small" fill="solid" (click)="cephalixService.reloadStatusOfInstitutes()"
+        matTooltip="{{'Reload status of institutes' | translate }}">
         <ion-icon slot="icon-only" name="reload"></ion-icon>
       </ion-button>
-      <ion-button size="small" fill="solid" (click)="openCollums($event)" matTooltip="{{'Select the columns to show' | translate }}">
+      <ion-button size="small" fill="solid" (click)="openCollums($event)"
+        matTooltip="{{'Select the columns to show' | translate }}">
         <ion-icon slot="icon-only" name="apps"></ion-icon>
       </ion-button>
     </ion-buttons>
