@@ -326,6 +326,7 @@ export class GenericObjectService {
   }
   deleteObject(object, objectType) {
     let url = this.utilsS.hostName() + "/" + objectType + "s/" + object.id;
+    console.log(url)
     return this.http.delete<ServerResponse>(url, { headers: this.authService.headers })
   }
 
