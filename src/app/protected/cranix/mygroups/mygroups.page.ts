@@ -287,7 +287,7 @@ export class MyGroupsPage implements OnInit {
       component: ActionsComponent,
       event: ev,
       componentProps: {
-        objectType: "education/" + this.segment,
+        objectType: this.getObjectType(),
         objectIds: this.objectService.selectedIds,
         selection: this.objectService.selection,
         gridApi: this.gridApi
@@ -322,17 +322,28 @@ export class MyGroupsPage implements OnInit {
     (await modal).present();
   }
 
+  getObjectType(){
+    switch (this.segment) {
+      case 'student': {
+        return 'education/user'
+      }
+      case 'group': {
+        return 'education/group';
+      }
+    }
+    return this.segment;
+  }
+
   async redirectToEdit(anyObject: any) {
     let action = anyObject ? 'modify' : 'add';
-    let objectType = "";
+    let objectType = this.getObjectType()
+
     switch (this.segment) {
       case 'student': {
         if (!anyObject) { anyObject = new User }
-        objectType = 'user.students'
       }
       case 'group': {
         if (!anyObject) { anyObject = new Group }
-        objectType = 'education/group'
         delete anyObject.groupType
       }
     }
