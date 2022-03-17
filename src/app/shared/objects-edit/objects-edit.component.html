@@ -26,7 +26,7 @@
       <div *ngFor="let key of objectKeys" [ngSwitch]="objectService.typeOf(key,object,objectAction)">
         <ion-item *ngSwitchCase="'file'">
           <ion-label>{{ key | translate }}{{objectService.required[key]}}</ion-label>
-          <ion-input type="file" multiple (change)="handleFileInput($event)"(change)="onFilesAdded($event)">
+          <ion-input type="file" multiple (change)="handleFileInput($event)">
           </ion-input>
         </ion-item>
         <ion-item *ngSwitchCase="'number'">
