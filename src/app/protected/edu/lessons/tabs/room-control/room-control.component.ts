@@ -26,8 +26,6 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   printing: boolean;
   proxy: boolean;
   disableChange = false;
-
-  devices = [1, 2, 3, 4, 5, 6]
   room: EduRoom;
 
   selectedRoomId: number;
@@ -37,7 +35,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   gridSize: number = 2;
   @ViewChild('roomSelect') selectRef: IonSelect;
 
-  gridSizes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  gridSizes = [1, 2, 3, 4, 6, 12]
 
   roomStatusSub: Subscription;
 

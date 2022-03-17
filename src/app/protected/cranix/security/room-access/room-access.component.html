@@ -1,5 +1,5 @@
 <cranix-toolbar title="{{ 'Manage access in the rooms' | translate}}"></cranix-toolbar>
-<ion-toolbar *ngIf="!authService.isMD()">
+<ion-toolbar *ngIf="!authService.isMD()" class="page-toolbar">
   <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="list">
     <ion-segment-button value="list">
       <ion-label>{{'Room access rules' | translate}}</ion-label>

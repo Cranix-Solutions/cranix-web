@@ -1,6 +1,6 @@
 <cranix-toolbar *ngIf="!selectedStatus" title="{{'Status of the institutes' | translate}}"></cranix-toolbar>
 <ion-content *ngIf="!authService.isMD() && !selectedStatus" id="carded">
-  <ion-toolbar>
+  <ion-toolbar class="page-toolbar">
     <ion-item lines="none">
       <ion-label *ngIf="gridApi">
         #{{gridApi.getDisplayedRowCount()}}

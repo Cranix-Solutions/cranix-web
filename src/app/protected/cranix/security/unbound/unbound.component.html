@@ -1,5 +1,5 @@
 <cranix-toolbar title="{{ 'Manage DNS Filter Configuration' | translate}}"></cranix-toolbar>
-<ion-toolbar *ngIf="!authService.isMD()">
+<ion-toolbar *ngIf="!authService.isMD()" class="page-toolbar">
   <ion-buttons slot="end">
     <ion-button size="small" fill="solid" (click)="writeConfig()" [disabled]="saving"
       matTooltip="{{'Save DNS-Confiugration and restart'| translate }}">

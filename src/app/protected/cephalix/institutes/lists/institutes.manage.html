@@ -16,15 +16,17 @@
       </ion-fab-button>
     </ion-fab-list>
   </ion-fab>
-  <ion-toolbar>
-    <ion-card-title *ngIf="instituteView">{{'Select institutes to manage by:' | translate}}
-      {{selectedManager.fullName}}</ion-card-title>
-    <ion-card-title *ngIf="!instituteView">{{'Click on user to select managed institutes' | translate}}
-    </ion-card-title>
+  <ion-toolbar class="page-toolbar">
     <ion-item lines="none">
+      <ion-label position="stacked" *ngIf="instituteView">{{'Select institutes to manage by:' | translate}}
+        {{selectedManager.fullName}}</ion-label>
+      <ion-label position="stacked" *ngIf="!instituteView">{{'Click on user to select managed institutes' | translate}}
+      </ion-label>
       <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('managedInstitutesFilter')"
         id="managedInstitutesFilter">
       </ion-input>
+      <ion-label *ngIf="instituteView">{{ 'Count of managed institutes:' | translate}}</ion-label>
+      <ion-label *ngIf="instituteView">{{managedIds.length}}</ion-label>
     </ion-item>
     <ion-buttons *ngIf="instituteView" slot="end">
       <ion-button size="small" fill="solid" (click)="userList()" matTooltip="{{'Go back to user list' | translate }}">
@@ -39,10 +41,7 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-item *ngIf="instituteView">
-    <ion-label>{{ 'Count of managed institutes:' | translate}}</ion-label>
-    <ion-label>{{managedIds.length}}</ion-label>
-  </ion-item>
+
   <ag-grid-angular id="instituteManageTable" style="width: 100%; height: 92%;" rowSelection="multiple"
     class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}" [context]="context"
     [rowData]="rowData" [defaultColDef]="defaultColDef" [columnDefs]="columnDefs"
