@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
-
 //Own modules
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { SystemService } from 'src/app/services/system.service';

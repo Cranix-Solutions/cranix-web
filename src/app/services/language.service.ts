@@ -1,8 +1,8 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage';
-import  { sprintf } from "sprintf-js";
+import { sprintf } from "sprintf-js";
 import { ServerResponse } from '../shared/models/server-models';
+import { StorageService } from 'src/app/services/storage.service';
 
 const LNG_KEY = 'SELECTED_LANGUAGE';
 
@@ -10,27 +10,19 @@ const LNG_KEY = 'SELECTED_LANGUAGE';
   providedIn: 'root'
 })
 export class LanguageService {
-  language = 'de';
+  language: string = 'de';
   translations = {};
   constructor(
     private translate: TranslateService,
-    private storage: Storage,
+    private storage: StorageService,
   ) {
-    this.setInitialAppLanguage();
+    this.initializeAppLanguage();
   }
 
-  setInitialAppLanguage() {
-    this.language = this.translate.getBrowserLang();
+  initializeAppLanguage() {
+    this.setLanguage(this.translate.getBrowserLang());
     console.log('language is', this.language);
-    this.translate.setDefaultLang(this.language);
     this.translations = this.translate.translations;
-    console.log('trans is:', this.translate.translations);
-    this.storage.get(LNG_KEY).then(val => {
-      if (val) {
-        this.setLanguage(val);
-        this.language = val;
-      }
-    });
   }
 
   getLanguages() {
@@ -40,11 +32,18 @@ export class LanguageService {
     ];
   }
 
-  setLanguage(lng: string) {
-    let lang = lng.toLowerCase();
-    this.translate.use(lang);
-    this.language = lang;
+  setLanguage(lang: string) {
+    this.language =  lang.toLowerCase();
+    this.translate.use(this.language);
+    this.translate.setDefaultLang(this.language);
+  }
+  saveLanguage(lang: string) {
     this.storage.set(LNG_KEY, lang);
+    this.setLanguage(lang);
+  }
+
+  setCustomLanguage(){
+    this.setLanguage(this.storage.get(LNG_KEY, this.language));
   }
 
   trans(val: string) {
@@ -53,13 +52,13 @@ export class LanguageService {
 
   transResponse(resp: ServerResponse) {
     let form = this.trans(resp.value);
-    switch(resp.parameters.length){
+    switch (resp.parameters.length) {
       case 0: return form;
-      case 1: return sprintf(form,resp.parameters[0]);
-      case 2: return sprintf(form,resp.parameters[0],resp.parameters[1]);
-      case 3: return sprintf(form,resp.parameters[0],resp.parameters[1],resp.parameters[2]);
-      case 4: return sprintf(form,resp.parameters[0],resp.parameters[1],resp.parameters[2],resp.parameters[3]);
-      default: return sprintf(form,resp.parameters[0],resp.parameters[1],resp.parameters[2],resp.parameters[3],resp.parameters[4]);
+      case 1: return sprintf(form, resp.parameters[0]);
+      case 2: return sprintf(form, resp.parameters[0], resp.parameters[1]);
+      case 3: return sprintf(form, resp.parameters[0], resp.parameters[1], resp.parameters[2]);
+      case 4: return sprintf(form, resp.parameters[0], resp.parameters[1], resp.parameters[2], resp.parameters[3]);
+      default: return sprintf(form, resp.parameters[0], resp.parameters[1], resp.parameters[2], resp.parameters[3], resp.parameters[4]);
     }
   }
 }

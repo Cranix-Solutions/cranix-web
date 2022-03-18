@@ -26,7 +26,7 @@
     </ion-buttons>
   </ion-toolbar>
   <ag-grid-angular #agGrid id="institutesSyncObjectsTable" style="width: 100%; height: 600px;"
-    class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}"
+    class="{{authService.settings.agGridThema}}" [rowHeight]="authService.settings.rowHeight"
     [rowData]="memberData[segment]" [columnDefs]="columnDefs" [context]="context" rowSelection="multiple"
     [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" (gridReady)="onMemberReady($event)">
   </ag-grid-angular>

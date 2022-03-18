@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage-angular';
 
 //own modules
 import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';

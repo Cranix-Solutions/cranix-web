@@ -63,7 +63,7 @@ export class CephalixService {
 		this.url = this.hostname + `/institutes/refreshStatus`;
 		console.log(this.url);
 		this.objectService.requestSent()
-		this.http.get<ServerResponse>(this.url, { headers: this.authService.headers }).subscribe(
+		this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers }).subscribe(
 			(val) => { this.objectService.responseMessage(val) },
 			(err) => {
 				this.objectService.errorMessage(err.message)

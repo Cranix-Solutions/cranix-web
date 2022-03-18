@@ -60,7 +60,10 @@ export class AddDeviceComponent implements OnInit, OnDestroy {
         this.roomChanged(this.selectedRoom)
       } else {
         this.roomService.getRoomsToRegister().subscribe(
-          (val) => { this.roomsToSelect = val; }
+          (val) => {
+            this.roomsToSelect = val;
+            console.log("ngOnInit",this.roomsToSelect)
+          }
         )
       }
     }

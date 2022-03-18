@@ -2,7 +2,7 @@ import { BehaviorSubject } from 'rxjs';
 import { HttpClient, HttpHeaders, } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Platform, ToastController } from '@ionic/angular';
-import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
 import { isDevMode } from '@angular/core';
 
@@ -10,6 +10,7 @@ import { isDevMode } from '@angular/core';
 //Own modules
 import { UtilsService } from './utils.service';
 import { UserResponse, LoginForm, Settings } from 'src/app/shared/models/server-models';
+import { LanguageService } from './language.service';
 
 @Injectable({
     providedIn: 'root'
@@ -26,7 +27,7 @@ export class AuthenticationService {
     formHeaders: HttpHeaders;
     textHeaders: HttpHeaders;
     anyHeaders: HttpHeaders;
-    settings: Settings;
+    settings: Settings = new Settings();
     requestedPath: string;
     minLgWidth = 769;
     minLgHeight = 600;
@@ -38,9 +39,9 @@ export class AuthenticationService {
         private plt: Platform,
         private toastController: ToastController,
         private utilsS: UtilsService,
+        private languageService: LanguageService,
         private router: Router
     ) {
-        this.loadSettings();
         this.plt.ready().then(() => {
             this.checkSession();
         });
@@ -58,7 +59,6 @@ export class AuthenticationService {
     }
 
     loadSettings() {
-        this.settings = new Settings();
         console.log(this.settings)
         this.storage.get('myCranixSettings').then((myCranixSettings) => {
             if (myCranixSettings && myCranixSettings != "") {
@@ -77,7 +77,9 @@ export class AuthenticationService {
                 console.log(this.settings);
             }
         });
+        this.languageService.setCustomLanguage();
     }
+
     setUpSession(user: LoginForm, instituteName: string) {
         this.session = null;
         this.authenticationState.next(false);
@@ -105,6 +107,7 @@ export class AuthenticationService {
                     'Accept': "text/plain",
                     'Authorization': "Bearer " + this.session.token
                 });
+                this.loadSettings();
                 this.authenticationState.next(true);
             },
             async (err) => {
@@ -151,6 +154,7 @@ export class AuthenticationService {
                 this.session = <UserResponse>val;
                 this.session['instituteName'] = sessionStorage.getItem('instituteName');
                 console.log(this.session);
+                this.loadSettings();
                 this.authenticationState.next(true);
             },
             (err) => { console.log(err) },

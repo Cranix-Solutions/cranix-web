@@ -42,8 +42,8 @@
     </ion-card-header>
     <ion-card-content>
       <ag-grid-angular style="width: 100%; height:  600px;" rowSelection="multiple"
-        class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}"
-        rowMultiSelectWithClick="{{authService.settings.rowMultiSelectWithClick}}" [context]="context"
+        class="{{authService.settings.agGridThema}}" [rowHeight]="authService.settings.rowHeight"
+        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" [context]="context"
         [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [rowData]="memberData" [animateRows]="true"
         id="memberTable" (gridReady)="onMemberReady($event)">
       </ag-grid-angular>

@@ -40,7 +40,7 @@
     </ion-buttons>
   </ion-toolbar>
   <ag-grid-angular #agGrid style="width: 100%; height: 100%;" class="{{authService.settings.agGridThema}}"
-    rowHeight="{{authService.settings.rowHeight}}" [rowData]="installationSetData" [columnDefs]="columnDefs"
+    [rowHeight]="authService.settings.rowHeight" [rowData]="installationSetData" [columnDefs]="columnDefs"
     [defaultColDef]="defaultColDef" [context]="context" rowSelection="multiple"
     (gridReady)="installationSetReady($event)" id="installationSetTable" [autoGroupColumnDef]="autoGroupColumnDef">
   </ag-grid-angular>

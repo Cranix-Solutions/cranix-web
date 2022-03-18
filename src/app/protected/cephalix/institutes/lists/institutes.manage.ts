@@ -1,4 +1,4 @@
-import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__, AfterContentInit } from '@angular/core';
+import { Component, OnInit, AfterContentInit } from '@angular/core';
 import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { Storage } from '@ionic/storage-angular';
 //own services
 import { AuthenticationService } from './services/auth.service';
 import { GenericObjectService } from './services/generic-object.service';
@@ -17,16 +18,20 @@ export class AppComponent {
     private genericObjectS: GenericObjectService,
     private languageService: LanguageService,
     private platform: Platform,
-    private router: Router
+    private router: Router,
+    private storage: Storage
   ) {
-    this.platform.ready();
+  }
+
+  ngOnInit() {
+    console.log("AppComponenet ngOnInit");
+    this.storage.create();
     this.initializeApp();
   }
 
   initializeApp() {
+    console.log("AppComponenet initializeApp");
     this.platform.ready().then(() => {
-      //this.statusBar.styleDefault();
-      this.languageService.setInitialAppLanguage();
       this.authService.authenticationState.subscribe(state => {
         console.log("pathname :" + window.location.pathname);
         if( window.location.pathname != '/login' ) {

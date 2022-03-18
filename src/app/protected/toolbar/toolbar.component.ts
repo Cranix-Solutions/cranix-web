@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
-import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage-angular';
 //Own module
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { LanguageService } from 'src/app/services/language.service';
@@ -87,7 +87,7 @@ export class ToolbarComponent implements OnInit {
           this.authService.settings[key] = dataReturned.data[key]
         }   
         this.storage.set("myCranixSettings", JSON.stringify(this.authService.settings));
-        this.translateService.setLanguage(this.authService.settings.lang);
+        this.translateService.saveLanguage(this.authService.settings.lang);
         this.utilService.actMdList.ngOnInit();
         this.authService.log("ToolbarComponent", "Settings was modified", this.authService.settings)
       }
