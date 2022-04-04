@@ -53,26 +53,35 @@
   user-select: text;
 }
 
+
 @media only screen and (min-width: 768px) and (min-height: 768px) {
   .modal-wrapper {
-    --height: 85%;
-    --width : 500px;
+    height: 85%;
+    width : 500px;
   }
-  .big-modal .modal-wrapper {
-    --height: 85%;
-    --width : 80%;
+
+  .big-modal {
+    &::part(content) {
+      height: 85%;
+      width : 80%;
+    }
   }
-  .medium-modal .modal-wrapper {
-    --height: 85%;
-    --width : 500px;
+
+  .medium-modal {
+    &::part(content) {
+      height: 85%;
+      width : 500px;
+    }
   }
-  .small-modal .modal-wrapper {
-    --height: 400px;
-    --width : 500px;
+  .small-modal {
+    &::part(content) {
+      height: 400px;
+      width : 500px;
+    }
   }
 
   .fullscreen-modal {
-    .modal-wrapper {
+    &::part(content) {
       position: absolute;
       top: 0;
       left: 0;
@@ -83,7 +92,7 @@
   }
 
   .ios .fullscreen-modal {
-    .modal-wrapper {
+    &::part(content) {
       top: 26px;
     }
   }
@@ -117,11 +126,11 @@ ion-select {
   }
 }*/
 /*.ag-theme-material .ag-icon-checkbox-unchecked{
-  
+
     font-size: 15px;
 }
 .ag-theme-material .ag-icon-checkbox-checked{
-  
+
     font-size: 15px;
 }
 .ag-theme-material .ag-header-row:first-child .ag-header-cell{
@@ -152,7 +161,7 @@ ion-card {
     height: 100%;
     grid-column: 1/1;
     overflow: hidden;
-  
+
  //   align-content: center;
 }
     //flex-direction: column;

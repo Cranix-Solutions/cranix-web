@@ -121,7 +121,8 @@ export class EditInstallationSetComponent implements OnInit {
     this.availableSoftwaresApi = params.api;
     this.availableSoftwaresApi.forEachNode(
       function (node, index) {
-        for (let obj of node.context.contextParams.providedBeanInstances.gridOptions.context.componentParent.softwares) {
+        console.log(node)
+        for (let obj of node.beans.context.contextParams.providedBeanInstances.gridOptions.context.componentParent.softwares) {
           if (node.data.id == obj.id) {
             node.setSelected(true);
           }
@@ -146,7 +147,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.availableHwconfsApi = params.api;
     this.availableHwconfsApi.forEachNode(
       function (node, index) {
-        for (let obj of node.context.contextParams.providedBeanInstances.gridOptions.context.componentParent.hwconfs) {
+        for (let obj of node.beans.context.contextParams.providedBeanInstances.gridOptions.context.componentParent.hwconfs) {
           if (node.data.id == obj.id) {
             node.setSelected(true);
           }
@@ -171,7 +172,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.availableRoomsApi = params.api;
     this.availableRoomsApi.forEachNode(
       function (node, index) {
-        for (let obj of node.context.contextParams.providedBeanInstances.gridOptions.context.componentParent.rooms) {
+        for (let obj of node.beans.context.contextParams.providedBeanInstances.gridOptions.context.componentParent.rooms) {
           if (node.data.id == obj.id) {
             node.setSelected(true);
           }
@@ -196,7 +197,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.availableDevicesApi = params.api;
     this.availableDevicesApi.forEachNode(
       function (node, index) {
-        for (let obj of node.context.contextParams.providedBeanInstances.gridOptions.context.componentParent.devices) {
+        for (let obj of node.beans.context.contextParams.providedBeanInstances.gridOptions.context.componentParent.devices) {
           if (node.data.id == obj.id) {
             node.setSelected(true);
           }
@@ -287,29 +288,30 @@ export class EditInstallationSetComponent implements OnInit {
     this.objectService.deleteObjectDialog(this.softwareService.selectedInstallationSet, "categorie", '');
   }
 
-  onSubmit(installationSet: Category) {
+  onSubmit() {
     this.submitted = true;
-    installationSet.deviceIds = [];
+    this.installationSet.deviceIds = [];
     for (let dev of this.devices) {
-      installationSet.deviceIds.push(dev.id)
+      this.installationSet.deviceIds.push(dev.id)
     }
-    installationSet.roomIds = [];
+    this.installationSet.roomIds = [];
     for (let room of this.rooms) {
-      installationSet.roomIds.push(room.id)
+      this.installationSet.roomIds.push(room.id)
     }
-    installationSet.hwconfIds = [];
+    this.installationSet.hwconfIds = [];
     for (let hwconf of this.hwconfs) {
-      installationSet.hwconfIds.push(hwconf.id)
+      this.installationSet.hwconfIds.push(hwconf.id)
     }
-    installationSet.softwareIds = [];
+    this.installationSet.softwareIds = [];
     for (let software of this.softwares) {
-      installationSet.softwareIds.push(software.id)
+      this.installationSet.softwareIds.push(software.id)
     }
     this.objectService.requestSent();
     if (this.softwareService.selectedInstallationSet) {
-      installationSet.id = this.softwareService.selectedInstallationSet.id;
+      this.installationSet.id = this.softwareService.selectedInstallationSet.id;
     }
-    let subs = this.softwareService.addModifyInstallationsSets(installationSet).subscribe(
+    console.log(this.installationSet)
+    let subs = this.softwareService.addModifyInstallationsSets(this.installationSet).subscribe(
       (val) => {
         this.objectService.responseMessage(val);
         this.modalCtrl.dismiss();
