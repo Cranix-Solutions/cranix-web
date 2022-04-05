@@ -1,16 +1,18 @@
 <cranix-toolbar title="{{ 'System configuration' | translate}}"></cranix-toolbar>
 <ion-content *ngIf="!editingConfig">
-  <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="Basic">
-    <ion-segment-button value="Basic">
-      <ion-label>{{'Base configuration' | translate}}</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="Settings">
-      <ion-label>{{'Settings' | translate}}</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="Backup">
-      <ion-label>{{'Backup' | translate}}</ion-label>
-    </ion-segment-button>
-  </ion-segment>
+  <ion-toolbar class="page-toolbar">
+    <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="Basic">
+      <ion-segment-button value="Basic">
+        <ion-label>{{'Base configuration' | translate}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Settings">
+        <ion-label>{{'Settings' | translate}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Backup">
+        <ion-label>{{'Backup' | translate}}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
   <ion-grid>
     <div *ngFor="let config of configs">
       <ion-row *ngIf="config.path == toShow">
