@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { Storage } from '@ionic/storage-angular';
 //own services
 import { AuthenticationService } from './services/auth.service';
 import { GenericObjectService } from './services/generic-object.service';
 import { LanguageService } from './services/language.service';
-import { SecurityService } from './services/security-service';
 
 @Component({
   selector: 'app-root',
@@ -19,26 +19,41 @@ export class AppComponent {
     private languageService: LanguageService,
     private platform: Platform,
     private router: Router,
-    private securityService: SecurityService,
+    private storage: Storage
   ) {
-    this.platform.ready();
+  }
+
+  ngOnInit() {
+    console.log("AppComponenet ngOnInit");
+    this.storage.create();
     this.initializeApp();
   }
 
   initializeApp() {
+    console.log("AppComponenet initializeApp");
     this.platform.ready().then(() => {
-      //this.statusBar.styleDefault();
-      this.languageService.setInitialAppLanguage();
       this.authService.authenticationState.subscribe(state => {
+        console.log("pathname :" + window.location.pathname);
+        if( window.location.pathname != '/login' ) {
+          this.authService.requestedPath = window.location.pathname.substring(1);
+        }
+        if ( this.authService.session ) {
+          console.log("token :" + this.authService.session.token );
+        }
         console.log("authenticationState",state)
         console.log("cephalix_token",sessionStorage.getItem('cephalix_token'))
         console.log("shortName",sessionStorage.getItem('shortName'))
         if (state) {
-          if (this.authService.isAllowed('room.manage')) {
-            this.securityService.getActualAccessStatus();
-          }
           this.genericObjectS.initialize(true);
-          if( this.authService.isAllowed('cephalix.manage')) {
+          if(this.authService.session.mustChange) {
+            this.genericObjectS.warningMessage(this.languageService.trans('Your password is expired. You have to change it.'));
+            console.log('initializeApp: Password must be changed');
+            this.router.navigate(['pages/cranix/profile/myself']);
+          } else if(this.authService.requestedPath) {
+            console.log('initializeApp: requestedPath is defined');
+            this.router.navigate([this.authService.requestedPath]);
+            this.authService.requestedPath = undefined;
+          } else if( this.authService.isAllowed('cephalix.manage')) {
             console.log('pages/cephalix/institutes/all');
             this.router.navigate(['pages/cephalix/institutes/all']);
           } else if ( this.authService.isAllowed('user.manage') ) {

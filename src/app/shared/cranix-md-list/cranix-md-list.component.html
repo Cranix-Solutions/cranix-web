@@ -1,22 +1,20 @@
 <ion-item>
   <ion-button size="small" fill="clear" (click)="back()" [disabled]="min <= 0">
     <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-    {{ min +1 }}
+    {{ min + 2 }}
   </ion-button>
-
   <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="filterMD"></ion-searchbar>
-
   <ion-button size="small" fill="clear" (click)="forward()" [disabled]="max >= rowData.length">
-    {{ max - 1 }}
+    {{ max }}
     <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
   </ion-button>
 </ion-item>
 <!-- ion-content -->
-<ion-fab vertical="center" horizontal="end" slot="fixed">
+<ion-fab vertical="center" horizontal="end">
   <ion-fab-button size="small">
     <ion-icon name="arrow-forward-circle"></ion-icon>
   </ion-fab-button>
-  <ion-fab-list side="start" [ngSwitch]="objectType">
+  <ion-fab-list side="start">
     <ion-fab-button (click)="context.componentParent.openActions($event,null)">
       <ion-icon name="ellipsis-vertical-sharp"></ion-icon>
     </ion-fab-button>
@@ -45,7 +43,7 @@
         <ion-label *ngIf="objectType == 'device'">
           <h5>{{ object.mac }}</h5>
           <h5>{{ object.hwconfId | idToName:'hwconf' }}</h5>
-          <h5>{{ object.roomId | idToName:'room' }}</h5>
+          <!-- h5>{{ object.roomId | idToName:'room' }}</h5 -->
         </ion-label>
         <ion-label *ngIf="objectType.indexOf('group') != -1">
           <h5>{{ object.groupType | translate }}</h5>

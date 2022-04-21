@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
-import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
 
 
@@ -25,8 +25,7 @@ import { CephalixService } from 'src/app/services/cephalix.service';
 })
 export class TicketsPage implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['id', 'title', 'cephalixInstituteId', 'recDate', 'ticketStatus'];
-  sortableColumns: string[] = ['id', 'title', 'cephalixInstituteId', 'recDate', 'ticketStatus'];
+  displayedColumns: string[] = ['id', 'title', 'cephalixInstituteId', 'recDate', 'ownerId', 'ticketStatus'];
   columnDefs = [];
   defaultColDef = {};
   columnApi: ColumnApi;
@@ -65,10 +64,6 @@ export class TicketsPage implements OnInit {
       minWidth: 110,
       hide: false
     };
-  }
-
-  async ngOnInit() {
-    this.alive = true;
     this.storage.get('TicketsPage.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
       if (myArray) {
@@ -76,9 +71,18 @@ export class TicketsPage implements OnInit {
         this.createColumnDefs();
       }
     });
-    while (this.objectService.allObjects['ticket'].length == 0) {
+    console.log("Ticket Constructor called")
+  }
+
+  async ngOnInit() {
+    this.alive = true;
+    while (!this.objectService.isInitialized()) {
       await new Promise(f => setTimeout(f, 1000));
     }
+    if (this.authService.isMD()) {
+      this.rowData = this.objectService.allObjects['ticket'];
+    }
+    console.log("Ticket ngOnInit called")
   }
 
   ngOnDestroy() {
@@ -86,8 +90,11 @@ export class TicketsPage implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.ticketStatus = interval(20000).pipe(takeWhile(() => this.alive)).subscribe((func => {
+    this.ticketStatus = interval(60000).pipe(takeWhile(() => this.alive)).subscribe((func => {
       this.objectService.getAllObject('ticket');
+      if (this.authService.isMD()) {
+        this.rowData = this.objectService.allObjects['ticket'];
+      }
     }))
   }
 
@@ -98,13 +105,18 @@ export class TicketsPage implements OnInit {
       col['field'] = key;
       col['headerName'] = this.languageS.trans(key);
       col['hide'] = (this.displayedColumns.indexOf(key) == -1);
-      col['sortable'] = (this.sortableColumns.indexOf(key) != -1);
       col['cellStyle'] = params => params.data.ticketStatus == "N" ? { 'background-color': 'red' } :
         params.data.ticketStatus == "R" ? { 'background-color': 'orange' } : { 'background-color': 'green' }
       switch (key) {
         case 'cephalixInstituteId': {
           col['valueGetter'] = function (params) {
             return params.context['componentParent'].objectService.idToName('institute', params.data.cephalixInstituteId);
+          }
+          break;
+        }
+        case 'ownerId': {
+          col['valueGetter'] = function (params) {
+            return params.context['componentParent'].objectService.idToName('user', params.data.ownerId);
           }
           break;
         }
@@ -115,11 +127,13 @@ export class TicketsPage implements OnInit {
           break;
         }
         case 'ticketStatus': {
-          col['width'] = 50
+          col['minWidth'] = 40
+          col['maxWidth'] = 50
           break;
         }
         case 'id': {
-          col['width'] = 70
+          col['minWidth'] = 50
+          col['maxWidth'] = 70
           break;
         }
       }
@@ -134,31 +148,11 @@ export class TicketsPage implements OnInit {
     this.gridApi.addEventListener('rowClicked', this.ticketClickHandle);
   }
 
-  selectionChanged() {
-    this.objectService.selectedIds = []
-    this.objectService.selection = this.gridApi.getSelectedRows();
-    this.cephalixService.selectedList = [];
-    for (let o of this.objectService.selection ) {
-      this.cephalixService.selectedList.push(o.name)
-      this.objectService.selectedIds.push(o.id)
-    }
-    this.objectService.sortByName
-  }
-
-  checkChange(ev, obj: Ticket) {
-    if (ev.detail.checked) {
-      this.objectService.selectedIds.push(obj.id)
-      this.objectService.selection.push(obj)
-    } else {
-      this.objectService.selectedIds = this.objectService.selectedIds.filter(id => id != obj.id)
-      this.objectService.selection = this.objectService.selection.filter(obj => obj.id != obj.id)
-    }
-  }
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
     if (this.authService.isMD()) {
       this.rowData = [];
-      for (let obj of this.objectService.allObjects['ticket'].sort(this.objectService.sortByRecDate) ) {
+      for (let obj of this.objectService.allObjects['ticket'].sort(this.objectService.sortByRecDate)) {
         if (
           obj.title.toLowerCase().indexOf(filter) != -1 ||
           (obj.email && obj.email.toLowerCase().indexOf(filter) != -1) ||

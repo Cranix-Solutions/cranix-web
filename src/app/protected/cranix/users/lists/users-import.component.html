@@ -1,5 +1,5 @@
 <cranix-toolbar title="{{'Manage user imports' | translate}}"></cranix-toolbar>
-<ion-toolbar *ngIf="!authService.isMD()">
+<ion-toolbar *ngIf="!authService.isMD()" class="page-toolbar">
   <ion-buttons slot="end">
     <ion-button *ngIf="!runningImport" size="small" fill="solid" (click)="startImport()"
       matTooltip="{{'Start a new user import' | translate }}">

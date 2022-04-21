@@ -40,11 +40,11 @@ export class MyVPNComponent implements OnInit,OnDestroy {
           var newBlob = new Blob([x.body], { type: x.body.type });
 
           // IE doesn't allow using a blob object directly as link href
-          // instead it is necessary to use msSaveOrOpenBlob
+          /* instead it is necessary to use msSaveOrOpenBlob
           if (window.navigator && window.navigator.msSaveOrOpenBlob) {
               window.navigator.msSaveOrOpenBlob(newBlob);
               return;
-          }
+          }*/
 
           // For other browsers: 
           // Create a link pointing to the ObjectURL containing the blob.
@@ -77,11 +77,11 @@ export class MyVPNComponent implements OnInit,OnDestroy {
       var newBlob = new Blob([x.body], { type: x.body.type });
 
       // IE doesn't allow using a blob object directly as link href
-      // instead it is necessary to use msSaveOrOpenBlob
+      /* instead it is necessary to use msSaveOrOpenBlob
       if (window.navigator && window.navigator.msSaveOrOpenBlob) {
           window.navigator.msSaveOrOpenBlob(newBlob);
           return;
-      }
+      }*/
 
       // For other browsers: 
       // Create a link pointing to the ObjectURL containing the blob.

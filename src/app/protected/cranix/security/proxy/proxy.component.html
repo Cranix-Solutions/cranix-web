@@ -1,5 +1,5 @@
 <cranix-toolbar title="{{ 'Manage proxy configuration' | translate}}"></cranix-toolbar>
-<ion-toolbar>
+<ion-toolbar class="page-toolbar">
   <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="basic">
     <ion-segment-button value="basic">
       <ion-icon name="settings"></ion-icon>
@@ -32,6 +32,7 @@
     </ion-button>
   </ion-buttons>
 </ion-toolbar>
+<ion-item-divider></ion-item-divider>
 <ion-content>
   <form #addNewDomainForm="ngForm" *ngIf="segment == 'good' || segment == 'bad' || segment == 'cephalix'">
     <ion-item>
@@ -42,12 +43,12 @@
       </ion-button>
     </ion-item>
   </form>
-  <ion-item *ngIf="segment == 'basic'">
+  <ion-item *ngIf="segment == 'basic'" lines="none">
     <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="proxyQuickFilter">
     </ion-input>
   </ion-item>
   <ag-grid-angular *ngIf="segment == 'basic'" style="width: 100%; height: 100%;"
-    class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}" [rowData]="rowData"
+    class="{{authService.settings.agGridThema}}" [rowHeight]="authService.settings.rowHeight" [rowData]="rowData"
     [columnDefs]="columnDefs" [context]="context" (gridReady)="proxyGridReady($event)" id="proxyGridTable">
   </ag-grid-angular>
   <ion-list *ngIf="segment == 'good' || segment == 'bad' || segment == 'cephalix'">

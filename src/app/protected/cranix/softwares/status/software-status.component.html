@@ -1,7 +1,7 @@
 <cranix-toolbar title="{{ 'Software installation status:' | translate}}"></cranix-toolbar>
 <ion-content>
   <ion-toolbar>
-    <ion-item>
+    <ion-item lines="none">
       <ion-label *ngIf="softwareApi">
         #{{softwareApi.getDisplayedRowCount()}}
       </ion-label>
@@ -46,8 +46,8 @@
     </ion-col>
   </ion-row>
   <ag-grid-angular #agGrid id="softwareStatusTable" style="width: 100%; height: 600px;"
-    class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}" rowSelection="multiple"
-    animateRows="true" [context]="context" [rowData]="softwareData" [columnDefs]="columnDefs"
+    class="{{authService.settings.agGridThema}}" [rowHeight]="authService.settings.rowHeight" rowSelection="multiple"
+    [animateRows]="true" [context]="context" [rowData]="softwareData" [columnDefs]="columnDefs"
     [defaultColDef]="defaultColDef" [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
     (gridReady)="softwareDataReady($event)">
   </ag-grid-angular>

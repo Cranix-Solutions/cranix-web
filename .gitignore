@@ -29,7 +29,6 @@ npm-debug.log*
 /platforms
 /plugins
 /www
-/src/main.ts
 /src/assets/custom-ion-icons/add-circle-outline.svg
 /src/assets/custom-ion-icons/add-circle-sharp.svg
 /src/assets/custom-ion-icons/add-circle.svg

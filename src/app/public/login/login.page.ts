@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
-
 //Own modules
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { SystemService } from 'src/app/services/system.service';
@@ -28,7 +26,6 @@ export class LoginPage implements OnInit {
         private systemService: SystemService,
     ) {
         this.instName = this.systemService.getInstituteName();
-        //TODO read allowSavePassword from server
     }
 
     ngOnInit() {
@@ -42,8 +39,6 @@ export class LoginPage implements OnInit {
         if (this.authForm.valid) {
             this.authService.setUpSession(user,  this.instituteName);
         }
-        console.log("settings");
-        console.log(this.authService.settings);
     }
 
     ngOnDestroy() {

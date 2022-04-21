@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage-angular';
 
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
@@ -212,8 +212,7 @@ export class DevicesComponent implements OnInit {
   async redirectToEdit(device: Device) {
     let action = "modify";
     if (!device) {
-      device = new Device();
-      action = "add";
+      return this.addDevice(null);
     }
     const modal = await this.modalCtrl.create({
       component: ObjectsEditComponent,

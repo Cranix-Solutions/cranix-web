@@ -26,7 +26,7 @@
         <ion-label position="stacked">{{'roomId'| translate}}</ion-label>
         <ion-select type="text" [(ngModel)]="printer.roomId" name="roomId" (ngModelChange)="roomChanged($event)"
           required [compareWith]="objectService.compareFn" [disabled]="submitted">
-          <ion-select-option *ngFor="let id of objectService.selects['roomId']" value="{{id}}">{{id | idToName:'room'}}
+          <ion-select-option *ngFor="let room of roomsToSelect" value="{{room.id}}">{{ room.name }}
           </ion-select-option>
         </ion-select>
       </ion-item>
@@ -50,6 +50,10 @@
           [disabled]="(!printer.deviceId && !room ) || submitted || action == 'modify'"
           pattern="^([0-9a-z][-0-9a-z]+[0-9a-z])$">
         </ion-input>
+      </ion-item>
+      <ion-item *ngIf="action == 'modify'">
+        <ion-label position="stacked">{{'ip'| translate}}</ion-label>
+        <ion-input type="text" text-right [value]="printer.ip" disabled="true"></ion-input>
       </ion-item>
       <ion-item *ngIf="action != 'queue'">
         <ion-label position="stacked">{{'mac'|translate}}</ion-label>

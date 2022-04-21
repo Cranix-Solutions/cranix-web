@@ -6,6 +6,7 @@ import { isDevMode } from '@angular/core';
 export class UtilsService {
 
         public okBrowser: boolean = true;
+        public actMdList;
         constructor() {
                 let tmp = window.navigator.userAgent
                 if (tmp.indexOf("Mozilla") != -1 && tmp.indexOf("Windows") != -1) {

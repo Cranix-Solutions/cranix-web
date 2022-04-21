@@ -1,26 +1,29 @@
 <cranix-toolbar title="{{'Status of the Services' | translate}}"></cranix-toolbar>
-<ion-content id="carded">
-  <ion-row>
-    <ion-col class="sub-header-row">
-      <ion-label>{{ 'Name' | translate}}</ion-label>
-    </ion-col>
-    <ion-col class="sub-header-row">
-      <ion-label>{{ 'enabled' | translate }}</ion-label>
-    </ion-col>
-    <ion-col class="sub-header-row">
-      <ion-label>{{ 'active' | translate }}</ion-label>
-    </ion-col>
-  </ion-row>
+<ion-content>
   <ion-grid *ngIf="servicesStatus">
+    <ion-row>
+      <ion-col class="sub-header-row" size="6">
+        <ion-label>{{ 'Name' | translate}}</ion-label>
+      </ion-col>
+      <ion-col class="sub-header-row" size="2">
+        <ion-label>{{ 'enabled' | translate }}</ion-label>
+      </ion-col>
+      <ion-col class="sub-header-row" size="2">
+        <ion-label>{{ 'active' | translate }}</ion-label>
+      </ion-col>
+    </ion-row>
     <ion-row *ngFor="let service of servicesStatus">
-      <ion-col [class]="service.enabled != 'true' ? 'neutral-row' : service.active == 'true' ? 'ok-row' : 'bad-row' ">
+      <ion-col [class]="service.enabled != 'true' ? 'neutral-row' : service.active == 'true' ? 'ok-row' : 'bad-row' "
+        size="6">
         <ion-label>{{service.service}}</ion-label>
       </ion-col>
-      <ion-col [class]="service.enabled != 'true' ? 'neutral-row' : service.active == 'true' ? 'ok-row' : 'bad-row' ">
+      <ion-col [class]="service.enabled != 'true' ? 'neutral-row' : service.active == 'true' ? 'ok-row' : 'bad-row' "
+        size="2">
         <ion-checkbox [checked]="service.enabled =='true'" (ionChange)="togleStatus(service.service,'enabled')">
         </ion-checkbox>
       </ion-col>
-      <ion-col [class]="service.enabled != 'true' ? 'neutral-row' : service.active == 'true' ? 'ok-row' : 'bad-row' ">
+      <ion-col [class]="service.enabled != 'true' ? 'neutral-row' : service.active == 'true' ? 'ok-row' : 'bad-row' "
+        size="2">
         <ion-checkbox [checked]="service.active =='true'" (ionChange)="togleStatus(service.service,'active')">
         </ion-checkbox>
       </ion-col>

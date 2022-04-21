@@ -9,7 +9,7 @@
   </ion-segment-button>
 </ion-segment>
 <ion-content *ngIf="objectService.selection.length != 0">
-  <ion-toolbar>
+  <ion-toolbar class="page-toolbar">
     <ion-item>
       <ion-input placeholder="{{'search' | translate }}" (input)="onMemberFilterChanged()" id="memberFilter">
       </ion-input>
@@ -26,7 +26,7 @@
     </ion-buttons>
   </ion-toolbar>
   <ag-grid-angular #agGrid id="institutesSyncObjectsTable" style="width: 100%; height: 600px;"
-    class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}"
+    class="{{authService.settings.agGridThema}}" [rowHeight]="authService.settings.rowHeight"
     [rowData]="memberData[segment]" [columnDefs]="columnDefs" [context]="context" rowSelection="multiple"
     [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" (gridReady)="onMemberReady($event)">
   </ag-grid-angular>

@@ -1,5 +1,5 @@
 <cranix-toolbar title="{{ 'Manage DNS Filter Configuration' | translate}}"></cranix-toolbar>
-<ion-toolbar *ngIf="!authService.isMD()">
+<ion-toolbar *ngIf="!authService.isMD()" class="page-toolbar">
   <ion-buttons slot="end">
     <ion-button size="small" fill="solid" (click)="writeConfig()" [disabled]="saving"
       matTooltip="{{'Save DNS-Confiugration and restart'| translate }}">
@@ -7,35 +7,34 @@
     </ion-button>
   </ion-buttons>
 </ion-toolbar>
+<ion-item-divider *ngIf="!authService.isMD()"></ion-item-divider>
 <ion-content>
-  <ion-row *ngIf="authService.isMD()">
-    <ion-col>
-      <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="basic">
-        <ion-segment-button value="good">
-          <ion-icon name="happy" color="success"></ion-icon>
-        </ion-segment-button>
-        <ion-segment-button value="bad">
-          <ion-icon name="sad" color="danger"></ion-icon>
-        </ion-segment-button>
-        <ion-segment-button *ngIf="authService.session.name == 'cephalix'" value="cephalix">
-          <img src="assets/images/logo/cranix_school.svg" width="30">
-        </ion-segment-button>
-        <ion-segment-button value="categories">
-          <ion-icon name="sad" color="danger"></ion-icon>
-        </ion-segment-button>
-      </ion-segment>
-    </ion-col>
-  </ion-row>
-  <ion-fab *ngIf="authService.isMD()" vertical="top" horizontal="end" slot="fixed">
-    <ion-fab-button size="small">
-      <ion-icon name="arrow-forward-circle"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-list>
-      <ion-fab-button fill="clear" (click)="writeConfig()" [disabled]="saving">
-        <ion-icon name="checkmark" color="success"></ion-icon>
+  <div *ngIf="authService.isMD()">
+    <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="categories">
+      <ion-segment-button value="good">
+        <ion-icon name="happy" color="success"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="bad">
+        <ion-icon name="sad" color="danger"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button *ngIf="authService.session.name == 'cephalix'" value="cephalix">
+        <img src="assets/images/logo/cranix_school.svg" width="30">
+      </ion-segment-button>
+      <ion-segment-button value="categories">
+        <ion-icon name="stop-circle" color="danger"></ion-icon>
+      </ion-segment-button>
+    </ion-segment>
+    <ion-fab vertical="top" horizontal="end" slot="fixed">
+      <ion-fab-button size="small">
+        <ion-icon name="arrow-forward-circle"></ion-icon>
       </ion-fab-button>
-    </ion-fab-list>
-  </ion-fab>
+      <ion-fab-list>
+        <ion-fab-button fill="clear" (click)="writeConfig()" [disabled]="saving">
+          <ion-icon name="checkmark" color="success"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
+  </div>
   <ion-grid>
     <ion-row>
       <ion-col *ngIf="!authService.isMD() || segment=='good'" size="authService.isMD() ? 11 : 4">
@@ -125,7 +124,7 @@
           </div>
         </ion-list>
       </ion-col>
-      
+
     </ion-row>
   </ion-grid>
 </ion-content>

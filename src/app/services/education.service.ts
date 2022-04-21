@@ -48,25 +48,6 @@ export class EductaionService {
 
 	}
 
-	// powerFunction 
-	applyPower(type: string, id: number, action: string) {
-		if (type == "room") {
-			return this.actionOnRoom(id, action)
-		} else {
-			return this.actionOnDevice(id, action)
-		}
-	}
-	actionOnRoom(roomId: number, action: string) {
-		this.url = `${this.hostname}/education/rooms/${roomId}/${action}`;
-		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
-	}
-
-	actionOnDevice(deviceId: number, action: string) {
-		this.url = `${this.hostname}/education/devices/${deviceId}/${action}`;
-		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
-	}
-
-
 	// Calls on positiv list
 	//POST
 	addPositivList(list: PositivList) {
@@ -192,6 +173,7 @@ export class EductaionService {
 		)
 	}
 
+	//Hanling of guest users.
 	getGuestAccounts() {
 		this.url = `${this.hostname}/education/guestUsers`;
 		console.log(this.url)
@@ -203,5 +185,11 @@ export class EductaionService {
 		this.url = `${this.hostname}/education/guestUsers`;
 		console.log(this.url);
 		return this.http.post<ServerResponse>(this.url, guest, { headers: this.authService.headers })
+	}
+
+	deleteGuestUsers(id: number) {
+		this.url = `${this.hostname}/education/guestUsers/${id}`;
+		console.log(this.url);
+		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers })
 	}
 }

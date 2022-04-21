@@ -18,8 +18,8 @@
 <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('softwareFilterMD')"
   id="softwareFilterMD" showCancelButton="never" class="hidden-lg hidden-xl"></ion-searchbar>
 <ion-content id="carded">
-  <ion-toolbar>
-    <ion-item>
+  <ion-toolbar class="page-toolbar">
+    <ion-item lines="none">
       <ion-label *ngIf="gridApi">
         #{{gridApi.getDisplayedRowCount()}}
       </ion-label>

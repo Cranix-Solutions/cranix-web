@@ -1,8 +1,8 @@
 <cranix-toolbar *ngIf="!selectedRoom" title="{{'Manage devices' | translate}}"></cranix-toolbar>
 <cranix-toolbar *ngIf="selectedRoom" title="{{'Manage devices in selected room:' | translate}} {{selectedRoom.name}}">
 </cranix-toolbar>
-<ion-toolbar *ngIf="!authService.isMD()">
-  <ion-item>
+<ion-toolbar *ngIf="!authService.isMD()" class="page-toolbar">
+  <ion-item lines="none">
     <ion-label *ngIf="gridApi">
       #{{gridApi.getDisplayedRowCount()}}
     </ion-label>
@@ -23,8 +23,8 @@
 </ion-toolbar>
 <ion-content *ngIf="!authService.isMD()" id="carded">
   <ag-grid-angular style="width: 100%; height:  100%;" rowSelection="multiple"
-    class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}"
-    rowMultiSelectWithClick="{{authService.settings.rowMultiSelectWithClick}}" [context]="context"
+    class="{{authService.settings.agGridThema}}" [rowHeight]="authService.settings.rowHeight"
+    [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" [context]="context"
     [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [rowData]="rowData" (gridReady)="onGridReady($event)"
     (selectionChanged)="selectionChanged()" id="agGridTable">
   </ag-grid-angular>

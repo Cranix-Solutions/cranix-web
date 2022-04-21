@@ -1,19 +1,27 @@
 <cranix-toolbar *ngIf="!selectedStatus" title="{{'Status of the institutes' | translate}}"></cranix-toolbar>
 <ion-content *ngIf="!authService.isMD() && !selectedStatus" id="carded">
-  <ion-toolbar>
-    <ion-item>
+  <ion-toolbar class="page-toolbar">
+    <ion-item lines="none">
+      <ion-label *ngIf="gridApi">
+        #{{gridApi.getDisplayedRowCount()}}
+      </ion-label>
       <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('quickFilter')" id="quickFilter">
       </ion-input>
     </ion-item>
     <ion-buttons slot="end">
-      <ion-button size="small" (click)="openCollums($event)" matTooltip="{{'Select the columns to show' | translate }}">
+      <ion-button size="small" fill="solid" (click)="cephalixService.reloadStatusOfInstitutes()"
+        matTooltip="{{'Reload status of institutes' | translate }}">
+        <ion-icon slot="icon-only" name="reload"></ion-icon>
+      </ion-button>
+      <ion-button size="small" fill="solid" (click)="openCollums($event)"
+        matTooltip="{{'Select the columns to show' | translate }}">
         <ion-icon slot="icon-only" name="apps"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <ag-grid-angular id="agGridTable" style="width: 100%; height: 100%;" class="{{authService.settings.agGridThema}}"
-    rowSelection="multiple" rowHeight="{{authService.settings.rowHeight}}" [context]="context" [rowData]="rowData"
-    [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" headerHeight="150"
+  <ag-grid-angular id="agGridTable" style="width: 100%; height: 92%;" class="{{authService.settings.agGridThema}}"
+    rowSelection="multiple" [rowHeight]="authService.settings.rowHeight" [context]="context" [rowData]="rowData"
+    [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [headerHeight]="150"
     [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" (firstDataRendered)="headerHeightSetter()"
     (columnResized)="headerHeightSetter()" (gridReady)="onGridReady($event)">
   </ag-grid-angular>
@@ -24,8 +32,8 @@
       <ion-label>
         <h3>{{ object.cephalixInstituteId | idToName:'institute' }}</h3>
       </ion-label>
-      <ion-badge [color]="object.availableUpdates == '' ? 'success' : 'danger'">{{object.availableUpdates.split('
-        ').length -1}}</ion-badge>
+      <ion-badge [color]="object.availableUpdates == '' ? 'success' : 'danger'">
+        {{object.availableUpdates.split(' ').length -1}}</ion-badge>
       <ion-icon size="small" name="stats-chart" [color]="errorStatus(object)"></ion-icon>
       <ion-icon size="small" name="save" [color]="fsStatus(object)"></ion-icon>
       <ion-icon size="small" name="alarm" [color]="connectStatus(object)"></ion-icon>
@@ -59,34 +67,36 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{ 'rootUsage' | translate }}</ion-label>
-        <ion-label [color]="fileSystemError(selectedStatus.rootUsage) ? 'danger' : 'success'">{{
-          selectedStatus.rootUsage }}</ion-label>
+        <ion-label [color]="fileSystemError(selectedStatus.rootUsage) ? 'danger' : 'success'">
+          {{ selectedStatus.rootUsage }}</ion-label>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{ 'homeUsage' | translate }}</ion-label>
-        <ion-label [color]="fileSystemError(selectedStatus.homeUsage) ? 'danger' : 'success'">{{
-          selectedStatus.homeUsage }}</ion-label>
+        <ion-label [color]="fileSystemError(selectedStatus.homeUsage) ? 'danger' : 'success'">
+          {{ selectedStatus.homeUsage }}</ion-label>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{ 'varUsage' | translate }}</ion-label>
-        <ion-label [color]="fileSystemError(selectedStatus.varUsage) ? 'danger' : 'success'">{{ selectedStatus.varUsage
-          }}</ion-label>
+        <ion-label [color]="fileSystemError(selectedStatus.varUsage) ? 'danger' : 'success'">
+          {{ selectedStatus.varUsage }}</ion-label>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{ 'srvUsage' | translate }}</ion-label>
-        <ion-label [color]="fileSystemError(selectedStatus.srvUsage) ? 'danger' : 'success'">{{ selectedStatus.srvUsage
-          }}</ion-label>
+        <ion-label [color]="fileSystemError(selectedStatus.srvUsage) ? 'danger' : 'success'">
+          {{ selectedStatus.srvUsage }}</ion-label>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{ 'created' | translate }}</ion-label>
-        <ion-label [color]="connectStatus(selectedStatus)">{{ selectedStatus.created | date:'yyyy-MM-dd HH:mm:ss' }}
-        </ion-label>
+        <ion-label [color]="connectStatus(selectedStatus)">
+          {{ selectedStatus.created | date:'yyyy-MM-dd HH:mm:ss' }}</ion-label>
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{ 'availableUpdates' | translate }}</ion-label>
         <ion-button *ngIf="selectedStatus.availableUpdates != ''" fill="clear"
           (click)="redirectToUpdate(selectedStatus.cephalixInstituteId)">
-          <ion-badge color="danger">{{selectedStatus.availableUpdates.split(' ').length -1 }}</ion-badge>
+          <ion-badge color="danger">
+            {{selectedStatus.availableUpdates.split(' ').length -1 }}
+          </ion-badge>
         </ion-button>
         <ion-label *ngIf="selectedStatus.availableUpdates == ''">
           {{ 'No updates' | translate }}

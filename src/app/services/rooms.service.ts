@@ -54,6 +54,7 @@ export class RoomsService {
 
 	getRoomsToRegister() {
 		this.url = `${this.hostname}/rooms/toRegister`;
+		console.log(this.url)
 		return this.http.get<Room[]>(this.url, { headers: this.authService.headers });
 	}
 

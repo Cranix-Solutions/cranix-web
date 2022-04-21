@@ -59,6 +59,17 @@ export class CephalixService {
 		console.log(this.url);
 		return this.http.get<InstituteStatus[]>(this.url, { headers: this.authService.headers });
 	};
+	reloadStatusOfInstitutes(){
+		this.url = this.hostname + `/institutes/refreshStatus`;
+		console.log(this.url);
+		this.objectService.requestSent()
+		this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers }).subscribe(
+			(val) => { this.objectService.responseMessage(val) },
+			(err) => {
+				this.objectService.errorMessage(err.message)
+			}
+		);
+	}
 	writeConfig(instituteId: number){
 		const url = `${this.hostname}/institutes/${instituteId}/writeConfig`;
 		return this.http.put<ServerResponse>(url,null ,{ headers: this.authService.headers });
@@ -84,13 +95,19 @@ export class CephalixService {
 		return this.http.get<SynchronizedObject[]>(this.url, { headers: this.authService.headers });
 	}
 	getObjectsFromInstitute(instituteId: number, objectType: string){
-		this.url = this.hostname + `/institutes/${instituteId}/objects/${objectType}`; 
+		this.url = this.hostname + `/institutes/${instituteId}/objects/${objectType}`;
 		return this.http.get<any[]>(this.url, { headers: this.authService.headers });
 	}
 	getTicketById(id: number): Observable<Ticket> {
 		this.url = this.hostname + `/tickets/${id}`;
 		console.log(this.url);
 		return this.http.get<Ticket>(this.url, { headers: this.authService.headers });
+	};
+
+	modifyTicket(ticket: Ticket){
+		this.url = this.hostname + `/tickets`;
+		console.log(this.url);
+		return this.http.patch<ServerResponse>(this.url, ticket, { headers: this.authService.headers });
 	};
 
 	getArticklesOfTicket(ticketId: number): Observable<Article[]> {
@@ -127,7 +144,6 @@ export class CephalixService {
 		console.log(this.url);
 		return this.http.get<Institute>(this.url, { headers: this.authService.headers });
 	}
-
 
 	getAyTemplates(){
 		this.url = this.hostname + `/institutes/ayTemplates`;
@@ -248,6 +264,7 @@ export class CephalixService {
 		this.url = this.hostname + `/institutes/${instituteId}/care`
 		return this.http.post<ServerResponse>(this.url, cephalixCare, { headers: this.authService.headers });
 	}
+
 
 	/**
 	 * AddOn handling

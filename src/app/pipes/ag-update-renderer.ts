@@ -6,7 +6,7 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
     selector: 'update-cell-renderer',
     template: `
         <ng-template [ngIf]="doUpate" [ngIfElse]="elseBlock">
-            <ion-button fill="clear" size="small" (click)="update()" matTooltip="{{ updates }}">
+            <ion-button fill="clear" size="small" (click)="update($event)" matTooltip="{{ updates }}">
                  <ion-icon slot="icon-only" color="danger" name="refresh-circle" style="height:20px;width:20px"></ion-icon>
             </ion-button>
         </ng-template>
@@ -32,7 +32,8 @@ export class UpdateRenderer implements ICellRendererAngularComp {
         this.doUpate = this.updatesCount > 0;
     }
 
-    public update() {
+    public update(event) {
+        event.stopPropagation();
         this.params.context.componentParent.redirectToUpdate(this.params.data.cephalixInstituteId);
     }
 

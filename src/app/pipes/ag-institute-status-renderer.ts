@@ -5,7 +5,7 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
 @Component({
 selector: 'institut-status-cell-renderer',
     template: `
-        <ion-button fill="clear" size="small" (click)="details()" matTooltip="{{'modify' | translate }}">
+        <ion-button fill="clear" size="small" (click)="details($event)" matTooltip="{{'modify' | translate }}">
         {{params.data.cephalixInstituteId | idToName:'institute'}}
         </ion-button>
         `
@@ -17,7 +17,8 @@ export class InstituteStatusRenderer implements ICellRendererAngularComp {
         this.params = params;
     }
 
-    public details() {
+    public details(event) {
+        event.stopPropagation();
         this.params.context.componentParent.redirectToEdit(this.params.data);
     }
 

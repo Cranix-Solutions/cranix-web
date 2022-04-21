@@ -2,15 +2,15 @@
 <ion-content id="carded">
   <ion-toolbar>
     <ion-title>{{'Status of the institute:' | translate}} {{ object.name }}</ion-title>
-    <ion-item>
+    <ion-item lines="none">
       <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('instituteStatusFilter')"
         id="instituteStatusFilter">
       </ion-input>
     </ion-item>
   </ion-toolbar>
   <ag-grid-angular id="instituteStatusGrid" style="width: 100%; height: 100%;"
-    class="{{authService.settings.agGridThema}}" rowSelection="multiple" rowHeight="{{authService.settings.rowHeight}}"
-    [context]="context" [rowData]="rowData" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" headerHeight="150"
+    class="{{authService.settings.agGridThema}}" rowSelection="multiple" [rowHeight]="authService.settings.rowHeight"
+    [context]="context" [rowData]="rowData" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [headerHeight]="150"
     [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" (gridReady)="onGridReady($event)">
   </ag-grid-angular>
 </ion-content>

@@ -1,6 +1,6 @@
 <cranix-toolbar *ngIf="!eduS.selectedRoom" title="{{'Room control' | translate}}"></cranix-toolbar>
 <cranix-toolbar *ngIf="eduS.selectedRoom" title="{{'Room control in' | translate}} {{eduS.selectedRoom.name}}"></cranix-toolbar>
-<ion-toolbar>
+<ion-toolbar class="page-toolbar">
   <ion-buttons *ngIf="room" slot="start">
     <ion-button matTooltip="{{ 'To login' | translate}}" (click)="setAccess('login')" [disabled]="disableChange">
       <ion-icon [ngStyle]="{'color': room.accessInRooms.login  ? '#2dd36f' : '#eb445a'}" name="key-sharp" size="large">
@@ -38,14 +38,14 @@
   </ion-buttons>
   <ion-buttons slot="end">
     <ion-item lines="none" matTooltip="{{'Select the room to control' | translate}}">
+      <ion-label *ngIf="!authS.isMD()">{{'Select a room' | translate}}</ion-label>
       <ion-button (click)="selectRooms()" fill="clear">
         <ion-icon name="room"></ion-icon>
-        <!-- ion-label>{{'Select a room' | translate}}</ion-label -->
       </ion-button>
     </ion-item>
-    <ion-item lines="none" matTooltip="{{'Select picture size' | translate}}">
+    <ion-item  *ngIf="!authS.isMD()" lines="none" matTooltip="{{'Select picture size' | translate}}">
+      <ion-label>{{'Select picture size' | translate }}</ion-label>
       <ion-icon name="resize"></ion-icon>
-      <!-- ion-label position="stacked">{{'Select picture size' | translate }}</ion-label -->
       <ion-select *ngIf="eduS.selectedRoom" [(ngModel)]="gridSize" name="gridSize" #roomSelect (ionChange)="sizeChange($event)"
         okText="{{'apply' | translate }}" cancelText="{{ 'Cancel' | translate}}">
         <ion-select-option value="{{size}}" *ngFor="let size of gridSizes">{{size}}</ion-select-option>

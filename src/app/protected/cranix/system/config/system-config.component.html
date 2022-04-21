@@ -1,16 +1,18 @@
 <cranix-toolbar title="{{ 'System configuration' | translate}}"></cranix-toolbar>
 <ion-content *ngIf="!editingConfig">
-  <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="Basic">
-    <ion-segment-button value="Basic">
-      <ion-label>{{'Base configuration' | translate}}</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="Settings">
-      <ion-label>{{'Settings' | translate}}</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="Backup">
-      <ion-label>{{'Backup' | translate}}</ion-label>
-    </ion-segment-button>
-  </ion-segment>
+  <ion-toolbar class="page-toolbar">
+    <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="Basic">
+      <ion-segment-button value="Basic">
+        <ion-label>{{'Base configuration' | translate}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Settings">
+        <ion-label>{{'Settings' | translate}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Backup">
+        <ion-label>{{'Backup' | translate}}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
   <ion-grid>
     <div *ngFor="let config of configs">
       <ion-row *ngIf="config.path == toShow">
@@ -25,7 +27,7 @@
           </ion-item>
         </ion-col>
         <ion-col *ngIf="!authService.isMD()" size=8>
-          <ion-item *ngIf="config.type == 'yesno'">
+          <ion-item *ngIf="config.type == 'yesno'" lines="none">
             <ion-toggle slot="start" color="secondary" checked="{{config.value == 'yes'}}"
               disabled="{{config.readOnly == 'yes'}}" (ionChange)="togle(config.key,$event)">
             </ion-toggle>
@@ -70,8 +72,8 @@
       {{ config.type | translate }} {{ ( config.readOnly == 'yes' ? 'readonly' : 'writable' ) | translate }}
     </ion-item>
     <ion-item *ngIf="config.type == 'yesno'">
-      <ion-label position="stacked">{{ 'value' | translate }}</ion-label>
-      <ion-toggle slot="start" color="secondary" checked="{{config.value == 'yes'}}"
+      <ion-label>{{ 'value' | translate }}</ion-label>
+      <ion-toggle slot="end" color="secondary" checked="{{config.value == 'yes'}}"
         disabled="{{config.readOnly == 'yes'}}" (ionChange)="togle(config.key,$event)">
       </ion-toggle>
     </ion-item>

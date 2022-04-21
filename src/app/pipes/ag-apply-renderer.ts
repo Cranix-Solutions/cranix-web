@@ -5,7 +5,7 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
 @Component({
     selector: 'apply-cell',
     template: `
-        <ion-button *ngIf="params.data" style="padding-horizontal : 2px" fill="clear" size="small" (click)="apply()" matTooltip="{{'apply' | translate }}">
+        <ion-button *ngIf="params.data" style="padding-horizontal : 2px" fill="clear" size="small" (click)="apply($event)" matTooltip="{{'apply' | translate }}">
             <ion-icon name="checkmark-circle" color="tertiary"></ion-icon>
         </ion-button>
         `
@@ -22,7 +22,8 @@ export class ApplyBTNRenderer implements ICellRendererAngularComp {
         }
     }
 
-    public apply() {
+    public apply(event) {
+        event.stopPropagation();
         if (this.active) {
             this.params.context.componentParent.apply(
                 this.params.data,

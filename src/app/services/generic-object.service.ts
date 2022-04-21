@@ -16,8 +16,8 @@ export class GenericObjectService {
   allObjects: any = {};
   selectedObject: any = null;
   selectedObjectType: string = null;
-  selection:       any[] = [];
-  selectedIds:     number[] = [];
+  selection: any[] = [];
+  selectedIds: number[] = [];
   selectedRoom: any = null;
   selectedGroup: any = null;
   packagesAvailable: Package[] = [];
@@ -25,7 +25,15 @@ export class GenericObjectService {
    * The base objects which need to be loaded by the initialisations
    */
   private objectsTemlate: string[] = [
-    'education/user', 'education/group', 'user', 'group', 'room', 'device', 'hwconf', 'printer', 'adhocroom'
+    'education/user',
+    'education/group',
+    'user',
+    'group',
+    'room',
+    'device',
+    'hwconf',
+    'printer',
+    'adhocroom'
   ]
   objects: string[] = [];
   /**
@@ -42,7 +50,7 @@ export class GenericObjectService {
     'status': ['N', 'A', 'D'],
     'supporttype': ['Error', 'FeatureRequest', 'Feedback', 'ProductOrder']
   }
-  initialized: boolean = false;
+  initialized: number = 0;
   enumerates: string[] = [
     'instituteType', 'groupType', 'deviceType', 'roomType', 'roomControl', 'network', 'accessType', 'role', 'noticeType'
   ];
@@ -58,16 +66,19 @@ export class GenericObjectService {
     'id',
     'accessType',
     'classes',
+    'counter',
     'devCount',
     'fsQuotaUsed',
     'ip',
     'ignoreNetbios',
+    'loggedInName',
     'msQuotaUsed',
     'name',
     'network',
     'ownerName',
     'recDate',
     'role',
+    'roomId',
     'sourceAvailable',
     'startIp',
     'uid',
@@ -81,12 +92,14 @@ export class GenericObjectService {
     'cephalixInstituteId',
     'deleted',
     'devices',
+    'fullName',
+    'loggedInId',
     'network',
     'ownerId',
     'partitions',
     'saveNext',
-    'users',
-    'fullName'
+    'screenShot',
+    'users'
   ]
   /**
    * Required attributes
@@ -130,24 +143,23 @@ export class GenericObjectService {
       this.objects.push(obj)
     }
     let subs: any = {};
-    if (force || !this.initialized) {
-      this.authService.log("initialize all objects")
-      for (let key of this.objects) {
-        this.getAllObject(key);
-      }
-      for (let key of this.enumerates) {
-        let url = this.utilsS.hostName() + "/system/enumerates/" + key;
-        subs[key] = this.http.get<string[]>(url, { headers: this.authService.headers }).subscribe(
-          (val) => { this.selects[key] = val; },
-          (err) => { },
-          () => { subs[key].unsubscribe() });
-      }
-      if (this.authService.isAllowed('software.download')) {
-        this.getSoftwaresToDowload();
-      }
-      this.initialized = true;
+    this.authService.log("initialize all objects")
+    for (let key of this.objects) {
+      this.getAllObject(key);
     }
+    for (let key of this.enumerates) {
+      let url = this.utilsS.hostName() + "/system/enumerates/" + key;
+      subs[key] = this.http.get<string[]>(url, { headers: this.authService.headers }).subscribe(
+        (val) => { this.selects[key] = val; },
+        (err) => { },
+        () => { subs[key].unsubscribe() });
+    }
+    if (this.authService.isAllowed('software.download')) {
+      this.getSoftwaresToDowload();
+    }
+    console.log("initialized");
   }
+
 
   initializeCephalixObjects() {
     this.objects.push('institute');
@@ -198,8 +210,8 @@ export class GenericObjectService {
         for (let obj of <any[]>val) {
           this.selects[objectType + 'Id'].push(obj.id);
         }
-        this.authService.log(objectType + "s were read");
-        this.authService.log(this.allObjects[objectType]);
+        this.authService.log("GenericObjectService: ", objectType + "s were read", this.allObjects[objectType]);
+        this.initialized++;
       },
       (err) => {
         if (!this.allObjects[objectType]) {
@@ -212,6 +224,13 @@ export class GenericObjectService {
         sub.unsubscribe();
       }
     );
+  }
+
+  isInitialized(){
+    if( this.initialized > 0 && this.initialized >= this.objects.length ) {
+      return true;
+    }
+    return false;
   }
 
   applyAction(object, objectType, action) {
@@ -307,6 +326,7 @@ export class GenericObjectService {
   }
   deleteObject(object, objectType) {
     let url = this.utilsS.hostName() + "/" + objectType + "s/" + object.id;
+    console.log(url)
     return this.http.delete<ServerResponse>(url, { headers: this.authService.headers })
   }
 
@@ -404,14 +424,6 @@ export class GenericObjectService {
     (await toast).present();
   }
 
-  responseMessage(resp: ServerResponse) {
-    if (resp.code == 'OK') {
-      return this.okMessage(this.languageS.transResponse(resp));
-    } else {
-      return this.errorMessage(this.languageS.transResponse(resp));
-    }
-  }
-
   async okMessage(message: string) {
     const toast = await this.toastController.create({
       position: "middle",
@@ -432,6 +444,7 @@ export class GenericObjectService {
     });
     (await toast).present();
   }
+
   async warningMessage(message) {
     const toast = await this.toastController.create({
       position: "middle",
@@ -452,6 +465,15 @@ export class GenericObjectService {
     });
     (await toast).present();
   }
+
+  responseMessage(resp: ServerResponse) {
+    if (resp.code == 'OK') {
+      return this.okMessage(this.languageS.transResponse(resp));
+    } else {
+      return this.errorMessage(this.languageS.transResponse(resp));
+    }
+  }
+
   selectObject() {
     return this.warningMessage(this.languageS.trans('Please select at last one object!'));
   }
@@ -512,6 +534,12 @@ export class GenericObjectService {
     if (key == 'name' && object.regCode) {
       return 'string';
     }
+    if (key.substring(key.length - 2) == 'Id' && this.readOnlyAttributes.indexOf(key) != -1) {
+      return 'idPipeRO';
+    }
+    if (typeof obj == 'number' && action == 'modify' && this.readOnlyAttributes.indexOf(key) != -1) {
+      return 'numberRO'
+    }
     if (action == 'modify' && this.readOnlyAttributes.indexOf(key) != -1) {
       return 'stringRO';
     }
@@ -527,10 +555,8 @@ export class GenericObjectService {
     if (this.multivalued.indexOf(key) != -1) {
       return 'multivalued';
     }
-    if( typeof obj == 'number' && this.readOnlyAttributes.indexOf(key) != -1 ) {
-      return 'numberRO'
-    }
-    if( typeof obj == 'number'  ) {
+
+    if (typeof obj == 'number') {
       return 'number'
     }
     return 'string';

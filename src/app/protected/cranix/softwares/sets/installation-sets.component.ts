@@ -153,8 +153,7 @@ export class InstallationSetsComponent implements OnInit {
       component: EditInstallationSetComponent,
       cssClass: 'big-modal',
       componentProps: {
-        objectAction: action,
-        installation: installation
+        objectAction: action
       },
       animated: true,
       swipeToClose: true,

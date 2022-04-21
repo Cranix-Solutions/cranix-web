@@ -35,13 +35,13 @@ export class AddOutgoingRuleComponent implements OnInit {
   ruleTypeChanged() { }
   ngOnInit() { }
 
-  addOutRule(rule) {
+  addOutRule(rule: OutgoingRule) {
     console.log(rule);
     console.log(this.selectedSource);
     rule.id= this.selectedSource.key;
     let name = this.selectedSource.name;
     this.securityService.addOutgoingRule({
-        prot: rule.prot,
+        protocol: rule.protocol,
         port: rule.port,
         name: name,
         id: rule.id,

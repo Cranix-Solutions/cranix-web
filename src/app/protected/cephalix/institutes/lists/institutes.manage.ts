@@ -1,4 +1,4 @@
-import { Component, OnInit, ɵSWITCH_RENDERER2_FACTORY__POST_R3__, AfterContentInit } from '@angular/core';
+import { Component, OnInit, AfterContentInit } from '@angular/core';
 import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
@@ -104,7 +104,7 @@ export class InstitutesManage implements OnInit {
     myContent.instituteView = true;
     (<HTMLInputElement>document.getElementById("instituteManageTable")).style.setProperty('height', '93%');
     myContent.gridApi.addEventListener('rowClicked', myContent.instituteRowClickedHandler);
-    myContent.objectService.okMessage("Loading datas ...");
+    myContent.objectService.okMessage("Loading data ...");
     //select the owned schools
     myContent.cephalixService.getInstitutesFromUser(myContent.selectedManager.id).subscribe(
       (val) => {

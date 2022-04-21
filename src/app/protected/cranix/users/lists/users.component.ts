@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GridApi, ColumnApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
-import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage-angular';
 
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
@@ -13,6 +13,7 @@ import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-col
 import { User } from 'src/app/shared/models/data-model'
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { UserGroupsPage } from '../details/groups/user-groups.page';
+import { SystemService } from 'src/app/services/system.service';
 
 @Component({
   selector: 'cranix-users',
@@ -27,16 +28,14 @@ export class UsersComponent implements OnInit {
   columnApi: ColumnApi;
   context;
   rowData = [];
-  min: number = -1;
-  step: number;
-  max: number;
-
+  defaultMustChange: boolean = true;
   constructor(
     public authService: AuthenticationService,
     public objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     public languageS: LanguageService,
+    private systemService: SystemService,
     private storage: Storage
   ) {
     this.context = { componentParent: this };
@@ -48,9 +47,12 @@ export class UsersComponent implements OnInit {
       hide: false,
       suppressMenu: true
     }
-    this.step = this.authService.settings.lineProPageMD;
-    this.max = this.step + 1;
-    console.log("this.authService.settings", this.authService.settings);
+    this.systemService.getSystemConfigValue("DEFAULT_MUST_CHANGE").subscribe(
+      (val) => {
+        if( val == "no"){
+        this.defaultMustChange = false
+      }}
+    )
   }
   async ngOnInit() {
     this.storage.get('UsersPage.displayedColumns').then((val) => {
@@ -64,9 +66,6 @@ export class UsersComponent implements OnInit {
       await new Promise(f => setTimeout(f, 1000));
     }
     this.rowData = this.objectService.allObjects['user']
-    if (this.max > (this.rowData.length + 1)) {
-      this.max = this.rowData.length + 1
-    }
   }
 
 
@@ -117,6 +116,7 @@ export class UsersComponent implements OnInit {
     }
     this.objectService.selection = this.gridApi.getSelectedRows()
   }
+
   checkChange(ev, obj: User) {
     if (ev.detail.checked) {
       this.objectService.selectedIds.push(obj.id)
@@ -185,6 +185,7 @@ export class UsersComponent implements OnInit {
     let action = "modify";
     if (!user) {
       user = new User();
+      user.mustChange = this.defaultMustChange;
       delete user.msQuotaUsed;
       delete user.fsQuotaUsed;
       delete user.mailAliases;

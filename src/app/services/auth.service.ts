@@ -2,7 +2,7 @@ import { BehaviorSubject } from 'rxjs';
 import { HttpClient, HttpHeaders, } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Platform, ToastController } from '@ionic/angular';
-import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
 import { isDevMode } from '@angular/core';
 
@@ -10,6 +10,7 @@ import { isDevMode } from '@angular/core';
 //Own modules
 import { UtilsService } from './utils.service';
 import { UserResponse, LoginForm, Settings } from 'src/app/shared/models/server-models';
+import { LanguageService } from './language.service';
 
 @Injectable({
     providedIn: 'root'
@@ -27,6 +28,7 @@ export class AuthenticationService {
     textHeaders: HttpHeaders;
     anyHeaders: HttpHeaders;
     settings: Settings = new Settings();
+    requestedPath: string;
     minLgWidth = 769;
     minLgHeight = 600;
     rowColors: string[] = ["#D2E3D5", "#E2F3E5", "#AFC2B2"]
@@ -37,6 +39,7 @@ export class AuthenticationService {
         private plt: Platform,
         private toastController: ToastController,
         private utilsS: UtilsService,
+        private languageService: LanguageService,
         private router: Router
     ) {
         this.plt.ready().then(() => {
@@ -55,30 +58,33 @@ export class AuthenticationService {
         return this.http.post<UserResponse>(this.url, user, { headers: headers });
     }
 
+    loadSettings() {
+        console.log(this.settings)
+        this.storage.get('myCranixSettings').then((myCranixSettings) => {
+            if (myCranixSettings && myCranixSettings != "") {
+                console.log("myCranixSettings");
+                let myCranixSettingsHash = JSON.parse(myCranixSettings);
+                console.log(myCranixSettingsHash);
+                for (let key of Object.getOwnPropertyNames(this.settings)) {
+                    if (myCranixSettingsHash.hasOwnProperty(key)) {
+                        if (typeof this.settings[key] == "number") {
+                            this.settings[key] = Number(myCranixSettingsHash[key]);
+                        } else {
+                            this.settings[key] = myCranixSettingsHash[key];
+                        }
+                    }
+                }
+                console.log(this.settings);
+            }
+        });
+        this.languageService.setCustomLanguage();
+    }
+
     setUpSession(user: LoginForm, instituteName: string) {
         this.session = null;
         this.authenticationState.next(false);
         let subscription = this.login(user).subscribe(
             (val) => {
-                this.storage.get('myCranixSettings').then((myCranixSettings) => {
-                    if (myCranixSettings && myCranixSettings != "") {
-                        console.log("myCranixSettings");
-                        console.log(myCranixSettings);
-                        let myCranixSettingsHash = JSON.parse(myCranixSettings);
-                        console.log(myCranixSettingsHash);
-                        for (let key of Object.getOwnPropertyNames(this.settings)) {
-                            console.log(key, myCranixSettingsHash.hasOwnProperty(key))
-                            if (myCranixSettingsHash.hasOwnProperty(key)) {
-                                if (typeof this.settings[key] == "number") {
-                                    this.settings[key] = Number(myCranixSettingsHash[key]);
-                                } else {
-                                    this.settings[key] = myCranixSettingsHash[key];
-                                }
-                            }
-                        }
-                        console.log(this.settings);
-                    }
-                });
                 console.log('login respons is', val);
                 this.session = val;
                 this.session['instituteName'] = instituteName;
@@ -101,6 +107,7 @@ export class AuthenticationService {
                     'Accept': "text/plain",
                     'Authorization': "Bearer " + this.session.token
                 });
+                this.loadSettings();
                 this.authenticationState.next(true);
             },
             async (err) => {
@@ -140,12 +147,14 @@ export class AuthenticationService {
             'Accept': "text/plain",
             'Authorization': "Bearer " + this.token
         });
-        let sub = this.http.get<UserResponse>(url, { headers: this.headers }).subscribe(
+        let sub = this.http.get(url, { headers: this.headers }).subscribe(
             (val) => {
                 console.log("loadSession");
-                this.session = val;
+                console.log(val);
+                this.session = <UserResponse>val;
                 this.session['instituteName'] = sessionStorage.getItem('instituteName');
                 console.log(this.session);
+                this.loadSettings();
                 this.authenticationState.next(true);
             },
             (err) => { console.log(err) },
@@ -231,6 +240,8 @@ export class AuthenticationService {
     public isAllowed(acl: string) {
         if (acl == 'permitall') {
             return true;
+        } else if( !this.session || !this.session.acls ) {
+            return false
         }
         return (this.session.acls.indexOf(acl) > 0);
     }

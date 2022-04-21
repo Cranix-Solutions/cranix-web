@@ -29,6 +29,7 @@ export class User {
 	birthDay?: string = "";
 	password?: string = "";
 	role?: string = "";
+	mustChange?: boolean = true;
 	classes?: string = "";
 	msQuota?: number = 0;
 	fsQuota?: number = 0;

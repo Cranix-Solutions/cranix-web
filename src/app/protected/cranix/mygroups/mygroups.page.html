@@ -1,5 +1,5 @@
 <cranix-toolbar title="{{ 'My ' + segment +'s' | translate }}"></cranix-toolbar>
-<ion-toolbar>
+<ion-toolbar class="page-toolbar">
   <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="group">
     <ion-segment-button value="group" layout="icon-start">
       <ion-label class="hidden-xs hidden-sm">{{'Groups' | translate}}</ion-label>
@@ -14,14 +14,6 @@
       <ion-icon name="walk"></ion-icon>
     </ion-segment-button>
   </ion-segment>
-  <ion-item *ngIf="!authService.isMD()">
-    <ion-label *ngIf="gridApi">
-      #{{gridApi.getDisplayedRowCount()}}
-    </ion-label>
-    <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('mygroupsFilter')"
-      id="mygroupsFilter">
-    </ion-input>
-  </ion-item>
   <ion-buttons *ngIf="!authService.isMD()" slot="end">
     <ion-button *ngIf="segment == 'group' || (segment == 'student' && authService.isAllowed('user.add.students'))"
       size="small" fill="solid" (click)="redirectToEdit(null)" matTooltip="{{'Create a new ' + segment | translate }}">
@@ -37,10 +29,18 @@
     </ion-button>
   </ion-buttons>
 </ion-toolbar>
+<ion-item *ngIf="!authService.isMD()" lines="none">
+  <ion-label *ngIf="gridApi">
+    #{{gridApi.getDisplayedRowCount()}}
+  </ion-label>
+  <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('mygroupsFilter')"
+    id="mygroupsFilter">
+  </ion-input>
+</ion-item>
 <ion-content *ngIf="!authService.isMD()" id="carded">
   <ag-grid-angular id="myGroupsTable" style="width: 100%; height: 100%;" rowSelection="multiple"
-    class="{{authService.settings.agGridThema}}" rowHeight="{{authService.settings.rowHeight}}"
-    rowMultiSelectWithClick="{{authService.settings.rowMultiSelectWithClick}}" animateRows="true" [modules]="modules"
+    class="{{authService.settings.agGridThema}}" [rowHeight]="authService.settings.rowHeight"
+    [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" [animateRows]="true" [modules]="modules"
     [context]="context" [rowData]="rowData" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
     (selectionChanged)="selectionChanged()" (gridReady)="onGridReady($event)">
   </ag-grid-angular>

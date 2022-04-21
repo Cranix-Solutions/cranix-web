@@ -21,14 +21,15 @@ export class AddPrinterComponent implements OnInit {
   name: string = "";
   printer: Printer = new Printer();
   driverFile;
-  model  = { key: "" , label: "" };
+  model = { key: "", label: "" };
   models = {};
-  manufacturer = { key: "" , label: "" };
+  manufacturer = { key: "", label: "" };
   manufacturers = [];
   submitted = false;
   printerDevices: Device[] = [];
+  roomsToSelect: Room[] = [];
   originalModel = "";
-  originalMac   = "";
+  originalMac = "";
 
   @Input() action;
   @Input() object: Printer;
@@ -44,10 +45,10 @@ export class AddPrinterComponent implements OnInit {
   ngOnInit() {
     let subs = this.printersService.getDrivers().subscribe(
       (val) => {
-        for( let man of Object.keys(val).sort() ) {
-          this.manufacturers.push( { key: man, label: man } )
+        for (let man of Object.keys(val).sort()) {
+          this.manufacturers.push({ key: man, label: man })
           this.models[man] = []
-          for( let mod of val[man] ) {
+          for (let mod of val[man]) {
             this.models[man].push({ key: mod, label: mod })
           }
         }
@@ -68,12 +69,14 @@ export class AddPrinterComponent implements OnInit {
         )
         break;
       case 'add':
-        this.initValues;
+        this.roomService.getRoomsToRegister().subscribe(
+          (val) => { this.roomsToSelect = val; }
+        )
         break;
       case 'modify':
         this.printer = this.object;
         this.originalModel = this.printer.model
-        this.originalMac   = this.printer.mac
+        this.originalMac = this.printer.mac
         this.model = { key: this.originalModel, label: this.originalModel }
     }
   }
@@ -81,6 +84,7 @@ export class AddPrinterComponent implements OnInit {
   public ngAfterViewInit() {
     while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
   }
+
   initValues(id: number) {
     this.printer = new Printer();
     if (id) {
@@ -101,11 +105,12 @@ export class AddPrinterComponent implements OnInit {
       this.room = this.objectService.getObjectById('room', id);
       this.authService.log(this.room);
       this.printer.roomId = this.room.id;
-      this.model = { key: this.printer.model, label: this.printer.model }
+
+      //this.model = { key: this.printer.model, label: this.printer.model }
     }
   }
 
-  setModel(ev){
+  setModel(ev) {
     this.printer.model = ev.item.key
   }
   onSubmit() {
