@@ -124,11 +124,19 @@ export class InstitutesStatusComponent implements OnInit {
           //col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           //col['headerCheckboxSelectionFilteredOnly'] = true;
           //col['checkboxSelection'] = this.authService.settings.checkboxSelection;
-          col['minWidth'] = 220;
-          col['maxWidth'] = 220;
-          col['cellStyle'] = { 'justify-content': "left", 'wrap-text': 0 };
-          col['cellRendererFramework'] = InstituteStatusRenderer;
+          col['minWidth'] = 230;
+          col['cellStyle'] = { 'justify-content': "left", 'wrap-text': 1 };
+          col['valueGetter'] = function (params) {
+            let institute = params.context['componentParent'].objectService.getObjectById('institute', params.data.cephalixInstituteId);
+            return institute.name;
+          }
           this.columnDefs.push(col);
+          this.columnDefs.push({
+            headerName: "",
+            editable: true,
+            width: 30,
+            cellRendererFramework: InstituteStatusRenderer
+          })
           this.columnDefs.push({
             headerName: this.languageS.trans('ipVPN'),
             editable: true,
@@ -189,7 +197,18 @@ export class InstitutesStatusComponent implements OnInit {
           break;
         }
         case 'errorMessages': {
-          col['cellStyle'] = params => params.value ? { 'background-color': 'red' } : { 'background-color': '#2dd36f' }
+          col['cellStyle'] = function (params) {
+            if( params.value.startsWith("#W")) {
+              return { 'background-color': 'yellow' }
+            }
+            if( params.value.startsWith("#E")) {
+              return { 'background-color': 'red' }
+            }
+            if( params.value ) {
+              return { 'background-color': 'red' }
+            }
+            return { 'background-color': '#2dd36f' }
+          }
           break
         }
         default: {
