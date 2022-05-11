@@ -1,4 +1,6 @@
 {
+    "createAdHocRoom":"Extra Raum mit WLAN-Zugriff",
+    "privateGroup":"Privat",
     "%s ( %s %s ) was created with password '%s'": "%s ( %s %s ) wurde mit dem Passwort '%s' angelegt.",
     "%s was created successfully.": "%s wurde erfolgreich erstellt.",
     "%s was deleted successfully.": "%s wurde erfolgreich gelöscht.",
@@ -120,6 +122,7 @@
     "Edit customer": "Kunde bearbeiten",
     "Edit device": "Gerät bearbeiten",
     "Edit education/group": "Projektgruppe bearbeiten",
+    "Edit education/guestUser": "Gastbenutzer bearbeiten",
     "Edit faq": "FAQ bearbeiten",
     "Edit group": "Gruppe bearbeiten",
     "Edit hwconf": "Gerätekonfiguration bearbeiten",

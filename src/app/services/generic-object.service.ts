@@ -27,6 +27,7 @@ export class GenericObjectService {
   private objectsTemlate: string[] = [
     'education/user',
     'education/group',
+    'education/guestUser',
     'user',
     'group',
     'room',
@@ -361,7 +362,6 @@ export class GenericObjectService {
                 this.responseMessage(val);
                 if (val.code == "OK") {
                   this.getAllObject(objectType);
-                  this.modalCtrl.dismiss("success");
                   if (route != '') {
                     this.router.navigate([route]);
                   }

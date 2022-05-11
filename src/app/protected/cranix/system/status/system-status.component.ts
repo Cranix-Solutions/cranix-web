@@ -59,7 +59,11 @@ export class SystemStatusComponent implements OnInit {
             autoSize: false,
             width: 250,
             height: 220,
-            series: this.series
+            series: this.series,
+            padding: {
+              right: 40,
+              left: 40
+          }
           };
           if (key.startsWith("/dev")) {
             //Convert value into GB
