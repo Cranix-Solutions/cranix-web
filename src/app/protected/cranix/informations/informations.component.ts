@@ -18,6 +18,7 @@ export class InformationsComponent implements OnInit {
   owned: boolean = false;
   taskResponses = {};
   title = "announcements";
+  categoryClosed = {}
 
   constructor(
     public authService: AuthenticationService,
@@ -47,6 +48,17 @@ export class InformationsComponent implements OnInit {
     } else {
       this.title = this.segment + 's'
       this.infos = this.allInfos[this.segment]
+    }
+  }
+
+  toggleCategory(id) {
+    console.log(id)
+    if (this.categoryClosed[id]) {
+      (<HTMLInputElement>document.getElementById("category" + id)).style.height = "100%"
+      this.categoryClosed[id] = false
+    } else {
+      (<HTMLInputElement>document.getElementById("category" + id)).style.height = "0px"
+      this.categoryClosed[id] = true
     }
   }
 

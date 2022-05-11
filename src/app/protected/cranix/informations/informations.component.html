@@ -42,39 +42,62 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-list *ngFor="let categorId of informationsService.categoryIds">
+  <ion-card *ngFor="let categorId of informationsService.categoryIds">
     <div *ngIf="infos && infos.hasOwnProperty(categorId)">
-      <ion-list-header>
-        {{informationsService.getCategoryName(categorId) | translate }}
-      </ion-list-header>
-      <ion-item *ngFor="let info of infos[categorId]">
-        <ion-label *ngIf="segment == 'contact'">
-          <h2>{{info.title}} {{info.issue}}</h2>
-          <h3>{{info.name}} {{info.phone}} {{info.email}}</h3>
-        </ion-label>
+      <ion-card-header>
         <ion-toolbar>
-          <span *ngIf='info.validUntil'>{{ info.validUntil | date:'yyyy-MM-dd HH:mm' }} </span>{{info.title}}
+          <ion-card-title>
+            {{informationsService.getCategoryName(categorId) | translate }} #{{ infos[categorId].length }}
+          </ion-card-title>
           <ion-buttons slot="end">
-            <ion-button *ngIf="segment == 'task' && owned" (click)="openResponses(info)">
-              <ion-icon slot="icon-only" name="albums"></ion-icon>
-            </ion-button>
-            <ion-button *ngIf="taskResponses[info.id]" (click)="openResponse(taskResponses[info.id])">
-              <ion-icon slot="icon-only" color="success" name="build"></ion-icon>
-            </ion-button>
-            <ion-button *ngIf="!taskResponses[info.id]" size="small" (click)="addEditInfo(info.id)">
-              <ion-icon *ngIf="!owned && segment == 'announcement' && info.seenByMe; else elseBlock" name="book"
-                color="success"></ion-icon>
-              <ng-template #elseBlock>
-                <ion-icon *ngIf="!owned" slot="icon-only" name="book"></ion-icon>
-                <ion-icon *ngIf="owned" slot="icon-only" name="build"></ion-icon>
-              </ng-template>
-            </ion-button>
-            <ion-button *ngIf="owned" (click)="deleteInfo(info)">
-              <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
+            <ion-button size="small" fill="clear" (click)="toggleCategory(categorId)"
+              matTooltip="{{'Open or close a category.' | translate }}">
+              <ion-icon *ngIf="categoryClosed[categorId]" slot="icon-only" name="lock-closed-outline"></ion-icon>
+              <ion-icon *ngIf="!categoryClosed[categorId]" slot="icon-only" name="lock-open-outline"></ion-icon>
             </ion-button>
           </ion-buttons>
         </ion-toolbar>
-      </ion-item>
+      </ion-card-header>
+      <ion-card-content style="height: 100%" [id]="'category' + categorId">
+        <ion-grid>
+          <ion-row>
+            <ion-col sizeXl="3" size-lg="4" sizeMd="6" sizeSm="12" sizeXs="12" *ngFor="let info of infos[categorId]"
+              style="background-color: #f7f7f7; border: solid 1px #ddd; border-radius: 20px 5px;">
+              <ion-toolbar>
+                <div *ngIf="segment == 'contact'">
+                  <h2>{{info.title}} {{info.issue}}</h2>
+                  <h3>{{info.name}} Tel.:{{info.phone}}</h3>
+                  <a href="mailto:{{info.email}}">{{info.email}}</a>
+                </div>
+                <div *ngIf="segment != 'contact'">
+                  <h2>{{info.title}}</h2>
+                  <h3 *ngIf='info.validUntil'>{{ info.validUntil | date:'yyyy-MM-dd HH:mm' }} </h3>
+                </div>
+                <ion-buttons slot="end">
+                  <ion-button *ngIf="segment == 'task' && owned" (click)="openResponses(info)" size="small">
+                    <ion-icon slot="icon-only" name="albums"></ion-icon>
+                  </ion-button>
+                  <ion-button *ngIf="taskResponses[info.id]" (click)="openResponse(taskResponses[info.id])"
+                    size="small">
+                    <ion-icon slot="icon-only" color="success" name="build"></ion-icon>
+                  </ion-button>
+                  <ion-button *ngIf="!taskResponses[info.id]" size="small" (click)="addEditInfo(info.id)">
+                    <ion-icon *ngIf="!owned && segment == 'announcement' && info.seenByMe; else elseBlock" name="book"
+                      color="success"></ion-icon>
+                    <ng-template #elseBlock>
+                      <ion-icon *ngIf="!owned" slot="icon-only" name="book"></ion-icon>
+                      <ion-icon *ngIf="owned" slot="icon-only" name="build"></ion-icon>
+                    </ng-template>
+                  </ion-button>
+                  <ion-button *ngIf="owned" (click)="deleteInfo(info)" size="small">
+                    <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ion-toolbar>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
     </div>
-  </ion-list>
+  </ion-card>
 </ion-content>
