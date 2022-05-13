@@ -21,7 +21,7 @@ export class LoginPage implements OnInit {
     showPassword: boolean = false;
 
     constructor(
-        private authService: AuthenticationService,
+        public  authService: AuthenticationService,
         private formBuilder: FormBuilder,
         private systemService: SystemService,
     ) {
