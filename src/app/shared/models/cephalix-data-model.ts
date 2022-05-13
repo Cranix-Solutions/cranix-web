@@ -34,8 +34,9 @@ export class Institute {
     anonDhcpNetwork: string = '';
     firstRoom: string = '';
     ipAdmin: string = '';
-    ipMail: string = '';
+    ipFileserver?: string = '';
     ipPrint: string = '';
+    ipMail: string = '';
     ipProxy: string = '';
     ipBackup: string = '';
     ipGateway: string = '';

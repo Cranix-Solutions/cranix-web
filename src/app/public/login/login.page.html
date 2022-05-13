@@ -22,9 +22,11 @@
             </ion-item>
 
             <ion-item>
-              <ion-input *ngIf="allowSavePassword" formControlName="password" [type]="showPassword ? 'text' : 'password'"
-                placeholder="{{ 'password' | translate }}" autocomplete="off"></ion-input>
-              <ion-icon slot="end" [color]="showPassword ? 'primary' : 'medium'" name="eye-off" (click)="showPassword = !showPassword"></ion-icon>
+              <ion-input *ngIf="allowSavePassword" formControlName="password"
+                [type]="showPassword ? 'text' : 'password'" placeholder="{{ 'password' | translate }}"
+                autocomplete="off"></ion-input>
+              <ion-icon slot="end" [color]="showPassword ? 'primary' : 'medium'" name="eye-off"
+                (click)="showPassword = !showPassword"></ion-icon>
               <!-- input *ngIf="!allowSavePassword" style="border:0ch" formControlName="password" type="password"
                 placeholder="{{ 'password' | translate }}" autocomplete="off" readonly
                 onfocus="this.removeAttribute('readonly');" -->
@@ -44,4 +46,9 @@
       </ion-card>
     </ion-col>
   </ion-row>
+  <ion-footer collapse="fade">
+    <ion-button fill="clear" (click)="authService.showInfo()">
+      <ion-icon slot="icon-only" name="information-circle-outline"></ion-icon>
+    </ion-button>
+  </ion-footer>
 </ion-grid>

@@ -8,9 +8,6 @@
       <ion-fab-button>
         <ion-icon name="help" (click)="support($event)"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button (click)="objectService.okMessage('VERSION-PLACE-HOLDER')">
-        <ion-icon color="success" name="information"></ion-icon>
-      </ion-fab-button>
       <ion-fab-button>
         <ion-icon name="trending-up" color="tertiary" (click)="update($event)"></ion-icon>
       </ion-fab-button>
@@ -26,10 +23,6 @@
     <ion-buttons slot="end">
       <ion-button size="small" fill="solid" (click)="support($event)" matTooltip="{{'Add support' | translate }}">
         <ion-icon slot="icon-only" name="help-circle"></ion-icon>
-      </ion-button>
-      <ion-button fill="solid" (click)="objectService.okMessage('VERSION-PLACE-HOLDER')"
-        matTooltip="{{ 'Show version' | translate }}">
-        <ion-icon color="success" name="information-circle"></ion-icon>
       </ion-button>
       <ion-button size="small" fill="solid" (click)="update($event)" matTooltip="{{'Update the server.' | translate }}">
         <ion-icon slot="icon-only" name="trending-up" color="tertiary"></ion-icon>

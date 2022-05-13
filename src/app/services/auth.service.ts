@@ -300,5 +300,16 @@ export class AuthenticationService {
     public getSize() {
         return window.innerWidth + "x" + window.innerHeight
     }
+
+    async showInfo(){
+        const toast = this.toastController.create({
+            position: "middle",
+            message: 'Copyright 2022 Helmuth and Peter Varkoly<br>' +
+                    'VERSION-PLACE-HOLDER',
+            color: "success",
+            duration: 5000
+        });
+        (await toast).present();
+    }
 }
 

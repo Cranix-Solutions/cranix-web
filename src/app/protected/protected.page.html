@@ -16,13 +16,19 @@
         <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
           <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false"
             style="background-color : {{ p.url.startsWith(activePath) ? 'var(--ion-color-secondary)' : 'var(--ion-color-primary-tint)' }};">
-            <ion-icon size="small" style="margin-right: 10px;" color="#ffffff" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'">
+            <ion-icon size="small" style="margin-right: 10px;" color="#ffffff" slot="start" [ios]="p.icon + '-outline'"
+              [md]="p.icon + '-sharp'">
             </ion-icon>
             <ion-label>{{ p.title | translate }}</ion-label>
           </ion-item>
         </ion-menu-toggle>
       </ion-list>
     </ion-content>
+    <ion-footer collapse="fade">
+      <ion-button fill="clear" (click)="authService.showInfo()">
+        <ion-icon slot="icon-only" name="information-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-footer>
   </ion-menu>
   <ion-router-outlet id="main-content"></ion-router-outlet>
 </ion-split-pane>
