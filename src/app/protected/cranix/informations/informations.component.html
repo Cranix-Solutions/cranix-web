@@ -1,6 +1,7 @@
 <cranix-toolbar title="{{ title | translate }}"></cranix-toolbar>
-<ion-toolbar class="page-toolbar">
-  <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="announcement">
+<ion-toolbar [color]="owned ? 'medium' : 'light'">
+  <!-- ion-segment (ionChange)="segmentChanged($event)" style="background-color : {{owned ? 'success' : 'danger'}}" value="announcement" -->
+  <ion-segment (ionChange)="segmentChanged($event)" value="announcement">
     <ion-segment-button value="announcement" layout="icon-start">
       <ion-label class="hidden-xs hidden-sm">{{ 'announcements' | translate}}</ion-label>
       <ion-icon name="newspaper"></ion-icon>
@@ -29,14 +30,14 @@
     </ion-button>
   </ion-buttons>
 </ion-toolbar>
-<ion-content>
-  <ion-toolbar>
+<ion-content [color]="owned ? 'medium' : 'light'">
+  <ion-toolbar [class]="owned ? 'page-toolbar-medium' : 'page-toolbar'">
     <ion-item>
-      <ion-input placeholder="{{'search' | translate}}" id="searchInfo" (input)="searchInfo()">
+      <ion-input placeholder="{{'search' | translate}}"  id="searchInfo" (input)="searchInfo()">
       </ion-input>
     </ion-item>
     <ion-buttons slot="end" *ngIf="authService.isAllowed('information.add')">
-      <ion-button *ngIf="owned" size="small" (click)="addEditInfo(0)"
+      <ion-button *ngIf="owned" (click)="addEditInfo(0)"
         matTooltip="{{'Create a new '+segment | translate }}">
         <ion-icon slot="icon-only" name="add-circle"></ion-icon>
       </ion-button>
@@ -66,16 +67,16 @@
               <ion-toolbar>
                 <ion-item *ngIf="segment == 'contact'" button lines="none" (click)="addEditInfo(info.id)">
                   <ion-label>
-                    <h2>{{info.title}} {{info.issue}}</h2>
-                    <h3>{{info.name}}</h3>
-                    <h3>Tel.:{{info.phone}}</h3>
+                    <b>{{info.title}} {{info.issue}}</b><br>
+                    {{info.name}}<br>
+                    Tel.:{{info.phone}}<br>
                     <a href="mailto:{{info.email}}">{{info.email}}</a>
                   </ion-label>
                 </ion-item>
                 <ion-item *ngIf="segment != 'contact'" button lines="none" (click)="addEditInfo(info.id)">
                   <ion-label>
-                    <h2>{{info.title}}</h2>
-                    <h3 *ngIf='info.validUntil'>{{ info.validUntil | date:'yyyy-MM-dd HH:mm' }} </h3>
+                    <b>{{info.title}}</b><br>
+                    <div *ngIf='info.validUntil'>{{ info.validUntil | date:'yyyy-MM-dd HH:mm' }} </div>
                   </ion-label>
                 </ion-item>
                 <ion-buttons slot="end">

@@ -145,7 +145,7 @@ export class TicketsPage implements OnInit {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
-    this.gridApi.addEventListener('rowClicked', this.ticketClickHandle);
+    //this.gridApi.addEventListener('rowClicked', this.ticketClickHandle);
   }
 
   onQuickFilterChanged(quickFilter) {
@@ -169,8 +169,12 @@ export class TicketsPage implements OnInit {
   }
 
   ticketClickHandle(event) {
-    console.log(event)
-    event.context.componentParent.route.navigate(['/pages/cephalix/tickets/' + event.data.id])
+    //console.log(event)
+    if( event.column.colId == 'id') {
+      event.context.componentParent.redirectToDelete(event.data)
+    } else {
+      event.context.componentParent.route.navigate(['/pages/cephalix/tickets/' + event.data.id])
+    }
   }
   public redirectToDelete = (ticket: Ticket) => {
     this.objectService.deleteObjectDialog(ticket, 'ticket', '/pages/cephalix/tickets')

@@ -25,10 +25,10 @@ export class InformationsComponent implements OnInit {
     public informationsService: InformationsService,
     public modalController: ModalController
   ) {
-
+    this.owned = this.authService.isAllowed('information.add')
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   ngAfterViewInit() {
     this.informationsService.getCategories();
@@ -80,6 +80,7 @@ export class InformationsComponent implements OnInit {
       }
     )
   }
+
   getOwnedInfos(infoType) {
     this.ownedInfos[infoType] = new Map()
     this.informationsService.getOwnedInfos(infoType).subscribe(
