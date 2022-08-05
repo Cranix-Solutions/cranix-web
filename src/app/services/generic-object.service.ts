@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
 // own modules
 import { ServerResponse } from 'src/app/shared/models/server-models';
