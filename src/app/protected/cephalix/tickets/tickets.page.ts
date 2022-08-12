@@ -271,4 +271,8 @@ export class TicketsPage implements OnInit {
       this.authService.log("most lett vegrehajtva.")
     })
   }
+  reloadAllObjects(){
+    this.objectService.okMessage(this.languageS.trans("Reloading all tickets"))
+    this.objectService.getAllObject('ticket')
+  }
 }

@@ -9,7 +9,7 @@
     </ion-input>
   </ion-item>
   <ion-buttons slot="end">
-    <ion-button fill="solid" (click)="objectService.getAllObject('ticket')"
+    <ion-button fill="solid" (click)="reloadAllObjects()"
       matTooltip="{{'Reload tickets' | translate }}">
       <ion-icon color="secondary" slot="icon-only" name="refresh"></ion-icon>
     </ion-button>
