@@ -38,6 +38,7 @@ export class InstitutesStatusComponent implements OnInit {
   objectIds: number[] = [];
   now: number = 0;
   selectedStatus: InstituteStatus = null;
+  disabled: boolean = false;
 
   constructor(
     public authService: AuthenticationService,
@@ -89,8 +90,8 @@ export class InstitutesStatusComponent implements OnInit {
   }
   ionViewWillEnter() {
     this.authService.log('WillEnter EVENT')
-    let subs = this.cephalixService.getStatusOfInstitutes().subscribe(
-      (val) => {
+    let subs = this.cephalixService.getStatusOfInstitutes().subscribe({
+      next: (val) => {
         val.sort((status1: InstituteStatus, status2: InstituteStatus) => {
           let i1 = this.objectService.getObjectById('institute', status1.cephalixInstituteId)
           let i2 = this.objectService.getObjectById('institute', status2.cephalixInstituteId)
@@ -98,9 +99,9 @@ export class InstitutesStatusComponent implements OnInit {
         });
         this.rowData = val;
       },
-      (err) => { this.authService.log(err) },
-      () => { subs.unsubscribe() }
-    )
+      error: (err) => { this.authService.log(err) },
+      complete: () => { subs.unsubscribe() }
+    })
   }
   createColumnDefs() {
     this.columnDefs = [
@@ -198,13 +199,13 @@ export class InstitutesStatusComponent implements OnInit {
         }
         case 'errorMessages': {
           col['cellStyle'] = function (params) {
-            if( params.value.startsWith("#W")) {
+            if (params.value.startsWith("#W")) {
               return { 'background-color': 'yellow' }
             }
-            if( params.value.startsWith("#E")) {
+            if (params.value.startsWith("#E")) {
               return { 'background-color': 'red' }
             }
-            if( params.value ) {
+            if (params.value) {
               return { 'background-color': 'red' }
             }
             return { 'background-color': '#2dd36f' }
@@ -268,7 +269,6 @@ export class InstitutesStatusComponent implements OnInit {
     var padding = 20;
     var height = headerHeightGetter() + padding;
     this.gridApi.setHeaderHeight(height);
-    this.gridApi.resetRowHeights();
   }
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
@@ -277,11 +277,11 @@ export class InstitutesStatusComponent implements OnInit {
 
   //TODO RESPONSE
   public redirectToUpdate = (cephalixInstituteId: number) => {
-    let sub = this.cephalixService.updateById(cephalixInstituteId).subscribe(
-      (val) => { this.authService.log(val) },
-      (error) => { this.authService.log(error) },
-      () => { sub.unsubscribe(); }
-    );
+    let sub = this.cephalixService.updateById(cephalixInstituteId).subscribe({
+      next: (val) => { this.authService.log(val) },
+      error: (error) => { this.authService.log(error) },
+      complete: () => { sub.unsubscribe(); }
+    });
   }
   /**
  * Open the actions menu with the selected object ids.
