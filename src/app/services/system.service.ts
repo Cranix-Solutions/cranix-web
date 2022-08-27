@@ -16,8 +16,8 @@ export class SystemService {
 	url: string;
 	public addons: string[] = [];
 	public addonActions = {};
-	public addonKeys    = {};
-	public selectedAddon= "";
+	public addonKeys = {};
+	public selectedAddon = "";
 
 	constructor(
 		private http: HttpClient,
@@ -98,22 +98,22 @@ export class SystemService {
 	getServiceStatus() {
 		this.url = this.hostname + '/system/services';
 		console.log(this.url);
-		return this.http.get<ServiceStatus[]>(this.url, { headers: this.authService.headers } );
+		return this.http.get<ServiceStatus[]>(this.url, { headers: this.authService.headers });
 	}
 
 	applyServiceState(name, what, value) {
 		this.url = this.hostname + `/system/services/${name}/${what}/${value}`;
 		console.log(this.url);
 		this.objectService.requestSent();
-		let sub = this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers }).subscribe(
-			(val) => {
+		let sub = this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers }).subscribe({
+			next: (val) => {
 				this.objectService.responseMessage(val);
 			},
-			(err) => {
+			error: (err) => {
 				this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
 			},
-			() => { sub.unsubscribe() }
-		);
+			complete: () => { sub.unsubscribe() }
+		});
 	}
 
 	getAclsOfObject(objectType, id) {
@@ -136,23 +136,22 @@ export class SystemService {
 
 	getAddons() {
 		this.url = this.hostname + '/system/addon'
-		this.http.get<string[]>(this.url, {headers: this.authService.headers}).subscribe(
-			(addons) => {
+		this.http.get<string[]>(this.url, { headers: this.authService.headers }).subscribe({
+			next: (addons) => {
 				this.addons = addons;
-				for( let addon of this.addons) {
-					this.http.get<string[]>(this.url + `/${addon}/listActions`, {headers: this.authService.headers}).subscribe(
-						(actions) => { this.addonActions[addon] = actions },
-						(err) => { console.log('get Actions',err) }
+				for (let addon of this.addons) {
+					this.http.get<string[]>(this.url + `/${addon}/listActions`, { headers: this.authService.headers }).subscribe(
+						(actions) => { this.addonActions[addon] = actions }
 					);
-					this.http.get<string[]>(this.url + `/${addon}/listKeys`, {headers: this.authService.headers}).subscribe(
-						(keys) => { this.addonKeys[addon] = keys },
-						(err) => { console.log('get Actions',err) },
-						() => { this.selectedAddon = this.addons[0]}
-					);
+					this.http.get<string[]>(this.url + `/${addon}/listKeys`, { headers: this.authService.headers }).subscribe({
+						next: (keys) => { this.addonKeys[addon] = keys },
+						error: (err) => { console.log('get Actions', err) },
+						complete: () => { this.selectedAddon = this.addons[0] }
+					});
 				}
 			},
-			(err) => { console.log('get addons',err)}
-		)
+			error: (err) => { console.log('get addons', err) }
+		})
 	}
 
 	applyAction(action) {
@@ -167,7 +166,7 @@ export class SystemService {
 		return this.http.get<string[]>(this.url, { headers: this.authService.headers });
 	}
 
-	getFile(path: string){
+	getFile(path: string) {
 		this.url = this.hostname + "/system/file";
 		console.log(this.url);
 		let formData: FormData = new FormData();

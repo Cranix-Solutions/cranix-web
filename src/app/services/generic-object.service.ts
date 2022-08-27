@@ -149,10 +149,11 @@ export class GenericObjectService {
     }
     for (let key of this.enumerates) {
       let url = this.utilsS.hostName() + "/system/enumerates/" + key;
-      subs[key] = this.http.get<string[]>(url, { headers: this.authService.headers }).subscribe(
-        (val) => { this.selects[key] = val; },
-        (err) => { },
-        () => { subs[key].unsubscribe() });
+      subs[key] = this.http.get<string[]>(url, { headers: this.authService.headers }).subscribe({
+        next: (val) => { this.selects[key] = val; },
+        error: (err) => { },
+        complete: () => { subs[key].unsubscribe() }
+      });
     }
     if (this.authService.isAllowed('software.download')) {
       this.getSoftwaresToDowload();
@@ -164,32 +165,34 @@ export class GenericObjectService {
   initializeCephalixObjects() {
     this.objects.push('institute');
     let url = this.utilsS.hostName() + "/institutes/defaults/";
-    let sub1 = this.http.get<string[]>(url, { headers: this.authService.headers }).subscribe(
-      (val) => { this.cephalixDefaults = val; },
-      (err) => { },
-      () => { sub1.unsubscribe() });
+    let sub1 = this.http.get<string[]>(url, { headers: this.authService.headers }).subscribe({
+      next: (val) => { this.cephalixDefaults = val; },
+      error: (err) => { },
+      complete: () => { sub1.unsubscribe() }
+    });
     url = this.utilsS.hostName() + "/institutes/ayTemplates/";
-    let sub2 = this.http.get<string[]>(url, { headers: this.authService.headers }).subscribe(
-      (val) => { this.selects['ayTemplate'] = val; },
-      (err) => { },
-      () => { sub2.unsubscribe() });
+    let sub2 = this.http.get<string[]>(url, { headers: this.authService.headers }).subscribe({
+      next: (val) => { this.selects['ayTemplate'] = val; },
+      error: (err) => { },
+      complete: () => { sub2.unsubscribe() }
+    });
     url = this.utilsS.hostName() + "/institutes/objects/";
-    let sub3 = this.http.get<string[]>(url, { headers: this.authService.headers }).subscribe(
-      (val) => { this.selects['objects'] = val; },
-      (err) => { },
-      () => { sub3.unsubscribe() });
+    let sub3 = this.http.get<string[]>(url, { headers: this.authService.headers }).subscribe({
+      next: (val) => { this.selects['objects'] = val; },
+      error: (err) => { },
+      complete: () => { sub3.unsubscribe() }
+    });
   }
   getSoftwaresToDowload() {
     let url = this.utilsS.hostName() + "/softwares/available";
-    let sub = this.http.get<Package[]>(url, { headers: this.authService.headers }).subscribe(
-      (val) => {
-        this.packagesAvailable = val;
-      },
-      (err) => {
+    let sub = this.http.get<Package[]>(url, { headers: this.authService.headers }).subscribe({
+      next: (val) => { this.packagesAvailable = val; },
+      error: (err) => {
         console.log('getSoftwaresToDowload');
         console.log(err)
       },
-      () => { sub.unsubscribe() });
+      complete: () => { sub.unsubscribe() }
+    });
   }
   /**
    * Loads the object of type 'objectType' from the server
@@ -200,8 +203,8 @@ export class GenericObjectService {
       return;
     }
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";
-    let sub = this.http.get<any[]>(url, { headers: this.authService.headers }).subscribe(
-      (val) => {
+    let sub = this.http.get<any[]>(url, { headers: this.authService.headers }).subscribe({
+      next: (val) => {
         switch (objectType) {
           case 'ticket': val.sort(this.sortByRecDate)
         }
@@ -213,21 +216,19 @@ export class GenericObjectService {
         this.authService.log("GenericObjectService: ", objectType + "s were read", this.allObjects[objectType]);
         this.initialized++;
       },
-      (err) => {
+      error: (err) => {
         if (!this.allObjects[objectType]) {
           this.allObjects[objectType] = [];
           this.selects[objectType + 'Id'] = [];
         }
         console.log('getAllObject', objectType, err);
       },
-      () => {
-        sub.unsubscribe();
-      }
-    );
+      complete: () => sub.unsubscribe()
+    });
   }
 
-  isInitialized(){
-    if( this.initialized > 0 && this.initialized >= this.objects.length ) {
+  isInitialized() {
+    if (this.initialized > 0 && this.initialized >= this.objects.length) {
       return true;
     }
     return false;
@@ -356,8 +357,8 @@ export class GenericObjectService {
           text: 'OK',
           handler: () => {
             this.requestSent();
-            var a = this.deleteObject(object, objectType).subscribe(
-              (val) => {
+            var a = this.deleteObject(object, objectType).subscribe({
+              next: (val) => {
                 this.responseMessage(val);
                 if (val.code == "OK") {
                   this.getAllObject(objectType);
@@ -366,11 +367,11 @@ export class GenericObjectService {
                   }
                 }
               },
-              (err) => {
+              error: (err) => {
                 this.errorMessage(this.languageS.trans("An error was accoured"));
               },
-              () => { a.unsubscribe() }
-            )
+              complete: () => { a.unsubscribe() }
+            })
           }
         }
       ]
@@ -385,21 +386,21 @@ export class GenericObjectService {
     } else {
       name = object.name;
     }
-    var a = this.modifyObject(object, objectType).subscribe(
-      (val) => {
+    var a = this.modifyObject(object, objectType).subscribe({
+      next: (val) => {
         this.responseMessage(val);
         if (val.code == "OK") {
           this.getAllObject(objectType);
         }
       },
-      (err) => {
+      error: (err) => {
         console.log("ERROR: modifyObjectDialog")
         console.log(object)
         console.log(err);
         this.errorMessage(this.languageS.trans("An error was accoured"));
       },
-      () => { a.unsubscribe() }
-    );
+      complete: () => { a.unsubscribe() }
+    });
   }
 
   async errorMessage(message: string) {

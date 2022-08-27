@@ -106,13 +106,11 @@ export class SoftwareService {
 	}
 
 	readInstallableSoftwares() {
-		let sub = this.getInstallableSoftwares().subscribe(
-			(obj) => {
-				this.availableSoftwares = obj
-			},
-			(err) => { console.log(err) },
-			() => { sub.unsubscribe() }
-		);
+		let sub = this.getInstallableSoftwares().subscribe({
+			next: (obj) => { this.availableSoftwares = obj },
+			error: (err) => { console.log(err) },
+			complete: () => { sub.unsubscribe() }
+	});
 	}
 
 	writeStateFiles() {

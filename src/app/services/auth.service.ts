@@ -27,6 +27,7 @@ export class AuthenticationService {
     formHeaders: HttpHeaders;
     textHeaders: HttpHeaders;
     anyHeaders: HttpHeaders;
+    longTimeHeader: HttpHeaders;
     settings: Settings = new Settings();
     requestedPath: string;
     minLgWidth = 769;
@@ -83,8 +84,8 @@ export class AuthenticationService {
     setUpSession(user: LoginForm, instituteName: string) {
         this.session = null;
         this.authenticationState.next(false);
-        let subscription = this.login(user).subscribe(
-            (val) => {
+        let subscription = this.login(user).subscribe({
+            next: (val) => {
                 console.log('login respons is', val);
                 this.session = val;
                 this.session['instituteName'] = instituteName;
@@ -107,10 +108,15 @@ export class AuthenticationService {
                     'Accept': "text/plain",
                     'Authorization': "Bearer " + this.session.token
                 });
+                this.longTimeHeader = new HttpHeaders({
+                    'Accept': "*/*",
+                    'Authorization': "Bearer " + this.session.token,
+                    'timeout': `${600000}`
+                });
                 this.loadSettings();
                 this.authenticationState.next(true);
             },
-            async (err) => {
+            error: async (err) => {
                 console.log('error is', err);
                 if (err.status === 401) {
                     const toast = this.toastController.create({
@@ -122,11 +128,11 @@ export class AuthenticationService {
                     (await toast).present();
                 }
             },
-            () => {
+            complete: () => {
                 subscription.unsubscribe();
                 console.log("login call completed" + this.session.role);
             }
-        );
+        });
     }
 
     public loadSession() {
@@ -147,8 +153,8 @@ export class AuthenticationService {
             'Accept': "text/plain",
             'Authorization': "Bearer " + this.token
         });
-        let sub = this.http.get(url, { headers: this.headers }).subscribe(
-            (val) => {
+        let sub = this.http.get(url, { headers: this.headers }).subscribe({
+            next: (val) => {
                 console.log("loadSession");
                 console.log(val);
                 this.session = <UserResponse>val;
@@ -157,23 +163,23 @@ export class AuthenticationService {
                 this.loadSettings();
                 this.authenticationState.next(true);
             },
-            (err) => { console.log(err) },
-            () => { sub.unsubscribe() }
-        );
+            error: (err) => { console.log(err) },
+            complete: () => { sub.unsubscribe() }
+        });
     }
 
     public logout() {
         if (!sessionStorage.getItem('shortName')) {
             console.log('logout', this.session.token)
-            this.http.delete(this.hostname + `/sessions/${this.session.token}`, { headers: this.headers }).subscribe(
-                (val) => {
+            this.http.delete(this.hostname + `/sessions/${this.session.token}`, { headers: this.headers }).subscribe({
+                next: (val) => {
                     this.authenticationState.next(false);
                     this.session = null;
                     this.router.navigate(['/'])
                 },
-                (err) => { this.router.navigate(['/']) },
-                () => { this.router.navigate(['/']) }
-            );
+                error: (err) => { this.router.navigate(['/']) },
+                complete: () => { this.router.navigate(['/']) }
+            });
         }
         this.authenticationState.next(false);
         this.session = null;
@@ -240,7 +246,7 @@ export class AuthenticationService {
     public isAllowed(acl: string) {
         if (acl == 'permitall') {
             return true;
-        } else if( !this.session || !this.session.acls ) {
+        } else if (!this.session || !this.session.acls) {
             return false
         }
         return (this.session.acls.indexOf(acl) > 0);
@@ -301,11 +307,11 @@ export class AuthenticationService {
         return window.innerWidth + "x" + window.innerHeight
     }
 
-    async showInfo(){
+    async showInfo() {
         const toast = this.toastController.create({
             position: "middle",
             message: 'Copyright 2022 Helmuth and Peter Varkoly, Nuremberg Germany<br>' +
-                    'VERSION-PLACE-HOLDER',
+                'VERSION-PLACE-HOLDER',
             color: "success",
             duration: 5000
         });
