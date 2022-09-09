@@ -167,7 +167,7 @@
     </ion-list>
     <ion-item>
       <ion-label position="stacked">{{'customer'| translate}}</ion-label>
-      <ionic-selectable [(ngModel)]="myCustomer" [items]="objectService.allObjects['customer']"
+      <ionic-selectable #ionicSelectable [(ngModel)]="myCustomer" [items]="objectService.allObjects['customer']"
         [ngModelOptions]="{standalone: true}" itemValueField="id" itemTextField="name" [canSearch]="true">
         <ng-template ionicSelectableHeaderTemplate>
           <ion-toolbar>
@@ -175,7 +175,7 @@
               {{ "Select a customer" | translate }}
             </ion-title>
             <ion-buttons slot="end">
-              <ion-button ion-button (click)="manufacturerSelect.close()">
+              <ion-button ion-button (click)="ionicSelectable.close()">
                 <ion-icon color="danger" name="close"></ion-icon>
               </ion-button>
             </ion-buttons>

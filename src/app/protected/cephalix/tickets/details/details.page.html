@@ -20,7 +20,7 @@
           {{ticket.email}}: {{ticket.lastname}},{{ticket.firstname}}
         </ion-card-subtitle>
         <ion-buttons slot="end">
-          <ion-button *ngIf="institute.ipVPN && institute.ipVN != ''" color="secondary" fill="clear" size="small"
+          <ion-button *ngIf="institute.ipVPN && institute.ipVPN != ''" color="secondary" fill="clear" size="small"
             (click)="routeSchool($event)" matTooltip="{{'Connect the institute in a separate window.' | translate }}">
             <ion-icon name="create-outline"></ion-icon>
           </ion-button>
