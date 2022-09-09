@@ -27,9 +27,7 @@ export class SetContractComponent implements OnInit {
   onSubmit() {
     for( let id of this.objectIds ) {
       this.care.cephalixInstituteId = id;
-      this.cephalixService.setCare(id, this.care).subscribe(
-        (val) => { this.objectService.responseMessage(val) }
-      )
+      this.cephalixService.setCare(id, this.care)
     }
     this.modalController.dismiss()
   }

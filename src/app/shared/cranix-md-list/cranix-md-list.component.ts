@@ -61,6 +61,10 @@ export class CranixMdListComponent implements OnInit {
         this.left2 = "regCode"
         break
       }
+      case 'customer': {
+        this.left2 = "locality"
+        break
+      }
     }
     while (!this.objectService.allObjects[this.objectType]) {
       await new Promise(f => setTimeout(f, 1000));

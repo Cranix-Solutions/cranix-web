@@ -14,6 +14,7 @@ import { AgGridModule } from 'ag-grid-angular';
 import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
 import { ApplyBTNRenderer } from 'src/app/pipes/ag-apply-renderer';
 import { ApplyCheckBoxBTNRenderer } from 'src/app/pipes/ag-apply-checkbox-renderer';
+import { CustomerActionRenderer } from 'src/app/pipes/ag-customer-action-renderer';
 import { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
 import { CheckBoxBTNRenderer } from 'src/app/pipes/ag-checkbox-renderer';
 import { GroupActionBTNRenderer } from 'src/app/pipes/ag-group-renderer';
@@ -64,6 +65,7 @@ import { CranixMdListComponent } from 'src/app/shared/cranix-md-list/cranix-md-l
     ApplyCheckBoxBTNRenderer,
     ActionBTNRenderer,
     CranixMdListComponent,
+    CustomerActionRenderer,
     ObjectsEditComponent,
     DateCellRenderer,
     DateTimeCellRenderer,
@@ -106,6 +108,7 @@ import { CranixMdListComponent } from 'src/app/shared/cranix-md-list/cranix-md-l
     AgGridModule.withComponents([
       ApplyCheckBoxBTNRenderer,
       ActionBTNRenderer,
+      CustomerActionRenderer,
       DateCellRenderer,
       DateTimeCellRenderer,
       DeviceIdCellRenderer,
