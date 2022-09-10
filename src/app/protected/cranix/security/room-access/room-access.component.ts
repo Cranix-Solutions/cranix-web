@@ -114,8 +114,8 @@ export class RoomAccessComponent implements OnInit {
     })
     this.statusColumnDefs.push({
       headerName: this.languageS.trans('Apply Default'),
-        field: 'apply_default',
-          cellRendererFramework: ApplyBTNRenderer
+      field: 'apply_default',
+      cellRendererFramework: ApplyBTNRenderer
     })
   }
   toggle(data, field: string, value: boolean) {
@@ -157,23 +157,16 @@ export class RoomAccessComponent implements OnInit {
     this.columnDefs = [];
     for (let key of Object.getOwnPropertyNames(new AccessInRoom())) {
       let col = {};
-      col['headerName'] = this.languageS.trans(key);
-      col['field'] = key;
       switch (key) {
         case "roomId": {
-          col['valueGetter'] = function (params) {
-            if (params.data) {
-              return params.context['componentParent'].objectService.idToName('room', params.data.roomId);
-            }
-          }
+          col['hide'] = true;
+          break;
+        }
+        case "roomName": {
           col['sortable'] = true;
           break;
         }
-        case "proxy": {
-          if (!this.authService.isAllowed('system.proxy')) {
-            col['hide'] = true;
-          }
-        }
+
         case "pointInTime": {
           col['sortable'] = true;
           break;
@@ -192,6 +185,11 @@ export class RoomAccessComponent implements OnInit {
           col['maxWidth'] = 100;
           col['cellRendererFramework'] = YesNoBTNRenderer;
         }
+      }
+      col['headerName'] = this.languageS.trans(key);
+      col['field'] = key;
+      if (key == 'proxy' && !this.authService.isAllowed('system.proxy')) {
+        col['hide'] = true;
       }
       this.columnDefs.push(col);
     }
@@ -218,7 +216,7 @@ export class RoomAccessComponent implements OnInit {
   }
   segmentChanged(event) {
     console.log(event.detail.value)
-    if( event.detail.value == "status") {
+    if (event.detail.value == "status") {
       this.securityService.getActualAccessStatus();
       this.objectService.okMessage(this.languageS.trans('Loading data ...'));
     }
