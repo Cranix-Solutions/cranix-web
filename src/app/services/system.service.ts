@@ -18,6 +18,7 @@ export class SystemService {
 	public addonActions = {};
 	public addonKeys = {};
 	public selectedAddon = "";
+	public dnsDomains: string[] = [];
 
 	constructor(
 		private http: HttpClient,
@@ -172,5 +173,14 @@ export class SystemService {
 		let formData: FormData = new FormData();
 		formData.append('path', path);
 		return this.http.post(this.url, formData, { headers: this.authService.anyHeaders, responseType: 'text' });
+	}
+
+	getDnsDomains() {
+		this.url = this.hostname + '/system/dns/domains';
+		console.log(this.url);
+		this.http.get<string[]>(this.url,{ headers: this.authService.headers }).subscribe({
+			next: (res) => { this.dnsDomains = res.filter(obj => !obj.endsWith('.in-addr.arpa')).sort() },
+			error: (err) => { console.log('get Actions', err) }
+		});
 	}
 }

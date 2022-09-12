@@ -8,6 +8,7 @@ import { Institute, DynDns, CephalixCare, Repository, Customer } from 'src/app/s
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { User } from 'src/app/shared/models/data-model';
 import { contracts } from 'src/app/shared/models/cephalix-data-model';
+import { SystemService } from 'src/app/services/system.service';
 @Component({
   selector: 'cranix-institute-edit',
   templateUrl: './institute-edit.component.html',
@@ -26,7 +27,6 @@ export class InstituteEditComponent implements OnInit {
   managers = {}
   users: User[] = [];
   myContracts: string[] = contracts;
-  dynDnsDomains: string[] = ['cephalix.eu', 'cephalix.de', 'cranix.eu']
   dynDnsName: string = "";
   dynDnsDomain: string = "cephalix.eu";
   dynDnsPort: string = "22";
@@ -37,8 +37,10 @@ export class InstituteEditComponent implements OnInit {
     public authService: AuthenticationService,
     public cephalixService: CephalixService,
     public translateService: TranslateService,
-    public objectService: GenericObjectService
+    public objectService: GenericObjectService,
+    public systemService: SystemService
   ) {
+    this.systemService.getDnsDomains();
     this.object = this.objectService.selectedObject;
     this.cephalixService.getAllAddons().subscribe((val) => { this.allAddons = val });
     this.cephalixService.getAddonsOfInstitute(this.object.id).subscribe((val) => { this.addons = val; this.origAddons = val })

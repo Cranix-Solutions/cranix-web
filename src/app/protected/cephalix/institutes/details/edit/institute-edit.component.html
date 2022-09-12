@@ -127,7 +127,7 @@
       <ion-item>
         <ion-label position="stacked">{{ 'Domain' | translate}}</ion-label>
         <ion-select [(ngModel)]="dynDnsDomain" [compareWith]="objectService.compareFn" name="dynDnsDomain">
-          <ion-select-option *ngFor="let domain of dynDnsDomains" [value]="domain">
+          <ion-select-option *ngFor="let domain of systemService.dnsDomains" [value]="domain">
             {{domain}}</ion-select-option>
         </ion-select>
       </ion-item>
