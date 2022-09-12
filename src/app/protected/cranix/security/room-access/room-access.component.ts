@@ -157,16 +157,17 @@ export class RoomAccessComponent implements OnInit {
     this.columnDefs = [];
     for (let key of Object.getOwnPropertyNames(new AccessInRoom())) {
       let col = {};
+      col['field'] = key;
       switch (key) {
         case "roomId": {
-          col['hide'] = true;
-          break;
-        }
-        case "roomName": {
+          col['valueGetter'] = function (params) {
+            if (params.data) {
+              return params.context['componentParent'].objectService.idToName('room', params.data.roomId);
+            }
+          }
           col['sortable'] = true;
           break;
         }
-
         case "pointInTime": {
           col['sortable'] = true;
           break;
@@ -187,7 +188,6 @@ export class RoomAccessComponent implements OnInit {
         }
       }
       col['headerName'] = this.languageS.trans(key);
-      col['field'] = key;
       if (key == 'proxy' && !this.authService.isAllowed('system.proxy')) {
         col['hide'] = true;
       }
