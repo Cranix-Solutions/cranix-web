@@ -5,7 +5,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 import { ServerResponse } from 'src/app/shared/models/server-models';
-import { Category, Device, Hwconf, Room, SoftwareStatus, Software, License } from 'src/app/shared/models/data-model';
+import { Category, Device, Hwconf, Room, SoftwareStatus, Software, License, Installation } from 'src/app/shared/models/data-model';
+import { GenericObjectService } from './generic-object.service';
 
 
 @Injectable()
@@ -13,12 +14,14 @@ export class SoftwareService {
 	hostname: string;
 	url: string;
 	selectedInstallationSet: Category;
+	installationSetData: Installation[] = [];
 	availableSoftwares: Software[];
 
 	constructor(
 		private http: HttpClient,
 		private utilsS: UtilsService,
-		private authService: AuthenticationService) {
+		private authService: AuthenticationService,
+		private objectService: GenericObjectService) {
 		this.hostname = this.utilsS.hostName();
 		this.authService.log('Constructor Users completed');
 	};
@@ -41,10 +44,12 @@ export class SoftwareService {
 		return this.http.get<Software[]>(this.url, { headers: this.authService.headers });
 	}
 
-	getInstallationsSets() {
+	readInstallationsSets() {
 		this.url = this.hostname + "/softwares/installations";
 		console.log(this.url);
-		return this.http.get<Category[]>(this.url, { headers: this.authService.headers });
+		this.http.get<Category[]>(this.url, { headers: this.authService.headers }).subscribe(
+			(val) => { this.installationSetData = val }
+		)
 	}
 	getSoftwareLicense(softwareId: number) {
 		this.url = this.hostname + `/softwares/${softwareId}/license`;
@@ -73,8 +78,8 @@ export class SoftwareService {
 	}
 
 	addModifyInstallationsSets(installationSet: Category) {
-		if( installationSet.id ) {
-			this.url = this.hostname + "/softwares/installations/" +installationSet.id  ;
+		if (installationSet.id) {
+			this.url = this.hostname + "/softwares/installations/" + installationSet.id;
 		} else {
 			this.url = this.hostname + "/softwares/installations";
 		}
@@ -82,6 +87,16 @@ export class SoftwareService {
 		return this.http.post<ServerResponse>(this.url, installationSet, { headers: this.authService.headers });
 	}
 
+	deleteInstallationsSet(installationSet: Category) {
+		this.url = this.hostname + "/softwares/installations/" + installationSet.id;
+		this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers }).subscribe({
+			next: (obj) => {
+				this.objectService.responseMessage(obj)
+				this.readInstallationsSets();
+			},
+			error: (err) => { this.objectService.errorMessage("ERR" + err) }
+		})
+	}
 	getDevicesInSet(id: number) {
 		this.url = `${this.hostname}/softwares/installations/${id}/devices`;
 		console.log(this.url);
@@ -110,7 +125,7 @@ export class SoftwareService {
 			next: (obj) => { this.availableSoftwares = obj },
 			error: (err) => { console.log(err) },
 			complete: () => { sub.unsubscribe() }
-	});
+		});
 	}
 
 	writeStateFiles() {

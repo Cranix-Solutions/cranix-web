@@ -24,7 +24,6 @@ export class InstallationSetsComponent implements OnInit {
   installationSetApi;
   installationSetColumnApi;
   installationSetSelection: Installation[] = [];
-  installationSetData: Installation[] = [];
   autoGroupColumnDef;
   institute;
 
@@ -45,7 +44,7 @@ export class InstallationSetsComponent implements OnInit {
   }
   ngOnInit() {
     this.createColumnDefs();
-    this.readMembers();
+    this.softwareService.readInstallationsSets();
     this.softwareService.readInstallableSoftwares();
   }
   public ngAfterViewInit() {
@@ -76,16 +75,6 @@ export class InstallationSetsComponent implements OnInit {
       allColumnIds.push(column.getColId());
     });
     this.installationSetColumnApi.autoSizeColumns(allColumnIds);
-  }
-  readMembers() {
-    let subM = this.softwareService.getInstallationsSets().subscribe(
-      (val) => {
-        this.installationSetData = val;
-        this.authService.log("installationSets")
-        this.authService.log(val);
-      },
-      (err) => { this.authService.log(err) },
-      () => { subM.unsubscribe() });
   }
   createColumnDefs() {
     this.columnDefs = [
@@ -160,7 +149,7 @@ export class InstallationSetsComponent implements OnInit {
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
-      this.readMembers();
+      this.softwareService.readInstallationsSets()
       if (dataReturned.data) {
         this.authService.log("Object was created or modified", dataReturned.data)
       }
@@ -180,5 +169,8 @@ export class InstallationSetsComponent implements OnInit {
       (err) => { this.objectService.errorMessage(err) },
       () => { sub.unsubscribe()}
     )
+  }
+  redirectToDelete(installation: Category) {
+    this.softwareService.deleteInstallationsSet(installation);
   }
 }
