@@ -6,8 +6,8 @@ import { ICellRendererAngularComp } from "ag-grid-angular";
     selector: 'update-cell-renderer',
     template: `
         <ng-template [ngIf]="doUpate" [ngIfElse]="elseBlock">
-            <ion-button fill="clear" size="small" (click)="update($event)" matTooltip="{{ updates }}">
-                 <ion-icon slot="icon-only" color="danger" name="refresh-circle" style="height:20px;width:20px"></ion-icon>
+            <ion-button fill="clear" size="small" (click)="update($event)" matTooltip="{{ updates }}" matTooltipPosition="after">
+                 <ion-icon slot="icon-only" color="danger" name="trending-up" style="height:20px;width:20px"></ion-icon>
             </ion-button>
         </ng-template>
         <ng-template #elseBlock>

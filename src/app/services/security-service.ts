@@ -102,225 +102,219 @@ export class SecurityService {
   getIncomingRules() {
     this.url = this.hostname + `/system/firewall/incomingRules`;
     console.log(this.url);
-    this.http.get<IncomingRules>(this.url, { headers: this.authService.headers }).subscribe(
-      (val) => { 
-        this.incomingRules = val
-       },
-      (err) => { console.log(err)}
-    )
+    this.http.get<IncomingRules>(this.url, { headers: this.authService.headers }).subscribe({
+      next: (val) => { this.incomingRules = val },
+      error: (err) => { console.log(err) }
+    })
   }
 
   getOutgoingRules() {
     this.url = this.hostname + `/system/firewall/outgoingRules`;
     console.log(this.url);
-    this.http.get<OutgoingRule[]>(this.url, { headers: this.authService.headers }).subscribe(
-      (val) => { this.outgoingRules = val },
-      (err) => { console.log(err)}
-    )
+    this.http.get<OutgoingRule[]>(this.url, { headers: this.authService.headers }).subscribe({
+      next: (val) => { this.outgoingRules = val },
+      error: (err) => { console.log(err) }
+    })
   }
 
   getRemoteRules() {
     this.url = this.hostname + `/system/firewall/remoteAccessRules`;
     console.log(this.url);
-    this.http.get<RemoteRule[]>(this.url, { headers: this.authService.headers }).subscribe(
-      (val) => { this.remoteRules = val },
-      (err) => { console.log(err)}
-    )
+    this.http.get<RemoteRule[]>(this.url, { headers: this.authService.headers }).subscribe({
+      next: (val) => { this.remoteRules = val },
+      error: (err) => { console.log(err) }
+    })
   }
 
   getFirewallRooms() {
     this.url = this.hostname + "/rooms/allWithFirewallControl";
     console.log(this.url);
-    this.http.get<Room[]>(this.url, { headers: this.authService.headers }).subscribe(
-      (val) => { this.firewallRooms = val; },
-      (err) => { console.log(err) }
-    )
+    this.http.get<Room[]>(this.url, { headers: this.authService.headers }).subscribe({
+      next: (val) => { this.firewallRooms = val; },
+      error: (err) => { console.log(err) }
+    })
   }
 
   getFirewallServices() {
     this.url = this.hostname + `/system/firewall/services`;
     console.log(this.url);
-    this.http.get<string[]>(this.url, { headers: this.authService.headers }).subscribe(
-      (val) => { this.firewallServices = val },
-      (err) => { console.log(err)}
-    )
+    this.http.get<string[]>(this.url, { headers: this.authService.headers }).subscribe({
+      next: (val) => { this.firewallServices = val },
+      error: (err) => { console.log(err) }
+    })
   }
 
   setFirewallStatus(status) {
     this.url = this.hostname + `/system/firewall/${status}`;
     console.log(this.url);
     this.objectService.requestSent();
-    let sub = this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers }).subscribe(
-      (val) => {
+    let sub = this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers }).subscribe({
+      next: (val) => {
         this.readDatas();
         this.objectService.responseMessage(val);
       },
-      (err) => {
+      error: (err) => {
         this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
       },
-      () => { sub.unsubscribe() }
-    );
+      complete: () => { sub.unsubscribe() }
+    });
   }
   setIncommingRules() {
     this.url = this.hostname + '/system/firewall/incomingRules';
     console.log(this.url);
     this.objectService.requestSent();
-    let sub = this.http.post<ServerResponse>(this.url, this.incomingRules, { headers: this.authService.headers }).subscribe(
-      (val) => {
+    let sub = this.http.post<ServerResponse>(this.url, this.incomingRules, { headers: this.authService.headers }).subscribe({
+      next: (val) => {
         if (val.code = "OK") {
           this.incomingChanged = false;
         }
         this.objectService.responseMessage(val);
       },
-      (err) => {
+      error: (err) => {
         this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
       },
-      () => { sub.unsubscribe() }
-    );
+      complete: () => { sub.unsubscribe() }
+    });
   }
 
   addOutgoingRule(rule) {
     this.url = this.hostname + '/system/firewall/outgoingRules';
     console.log(this.url);
     this.objectService.requestSent();
-    let sub = this.http.post<ServerResponse>(this.url, rule, { headers: this.authService.headers }).subscribe(
-      (val) => {
+    let sub = this.http.post<ServerResponse>(this.url, rule, { headers: this.authService.headers }).subscribe({
+      next: (val) => {
         this.getOutgoingRules();
         this.objectService.responseMessage(val);
       },
-      (err) => {
+      error: (err) => {
         this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
       },
-      () => { sub.unsubscribe() }
-    );
+      complete: () => { sub.unsubscribe() }
+    });
   }
 
   deleteOutgoingRule(rule) {
     this.url = this.hostname + '/system/firewall/outgoingRules/delete';
     console.log(this.url);
     this.objectService.requestSent();
-    let sub = this.http.post<ServerResponse>(this.url, rule, { headers: this.authService.headers }).subscribe(
-      (val) => {
+    let sub = this.http.post<ServerResponse>(this.url, rule, { headers: this.authService.headers }).subscribe({
+      next: (val) => {
         this.getOutgoingRules();
         this.objectService.responseMessage(val);
       },
-      (err) => {
+      error: (err) => {
         this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
       },
-      () => { sub.unsubscribe() }
-    );
+      complete: () => { sub.unsubscribe() }
+    });
   }
 
   addRemoteRule(rule) {
     this.url = this.hostname + '/system/firewall/remoteAccessRules';
     console.log(this.url);
     this.objectService.requestSent();
-    let sub = this.http.post<ServerResponse>(this.url, rule, { headers: this.authService.headers }).subscribe(
-      (val) => {
+    let sub = this.http.post<ServerResponse>(this.url, rule, { headers: this.authService.headers }).subscribe({
+      next: (val) => {
         this.getRemoteRules();
         this.objectService.responseMessage(val);
       },
-      (err) => {
+      error: (err) => {
         this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
       },
-      () => { sub.unsubscribe() }
-    );
+      complete: () => { sub.unsubscribe() }
+    });
   }
 
   deleteRemoteRule(rule) {
     this.url = this.hostname + '/system/firewall/remoteAccessRules/delete';
     console.log(this.url);
     this.objectService.requestSent();
-    let sub = this.http.post<ServerResponse>(this.url, rule, { headers: this.authService.headers }).subscribe(
-      (val) => {
+    let sub = this.http.post<ServerResponse>(this.url, rule, { headers: this.authService.headers }).subscribe({
+      next: (val) => {
         this.getRemoteRules();
         this.objectService.responseMessage(val);
       },
-      (err) => {
+      error: (err) => {
         this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
       },
-      () => { sub.unsubscribe() }
-    );
+      complete: () => { sub.unsubscribe() }
+    });
   }
 
   getActualAccessStatus() {
     this.url = `${this.hostname}/rooms/accessStatus`;
     console.log(this.url);
-    let sub = this.http.get<AccessInRoom[]>(this.url, { headers: this.authService.headers }).subscribe(
-      (val) => {
+    let sub = this.http.get<AccessInRoom[]>(this.url, { headers: this.authService.headers }).subscribe({
+      next: (val) => {
         this.actualStatus = val;
-        console.log(this.actualStatus );
+        console.log(this.actualStatus);
       },
-      (err) => {
-        console.log('getActualAccessStatus', err)
-      },
-      () => { sub.unsubscribe() }
-    )
+      error: (err) => { console.log('getActualAccessStatus', err) },
+      complete: () => { sub.unsubscribe() }
+    })
   }
 
   setAccessStatusInRoom(accessInRoom: AccessInRoom) {
     this.url = this.hostname + "/rooms/" + accessInRoom.roomId + "/accessStatus";
     console.log(this.url);
     this.objectService.requestSent();
-    let sub = this.http.post<ServerResponse>(this.url, accessInRoom, { headers: this.authService.headers }).subscribe(
-      (val) => {
-        this.objectService.responseMessage(val);
-      },
-      (err) => {
+    let sub = this.http.post<ServerResponse>(this.url, accessInRoom, { headers: this.authService.headers }).subscribe({
+      next: (val) => { this.objectService.responseMessage(val); },
+      error: (err) => {
         this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
       },
-      () => { sub.unsubscribe() }
-    );
+      complete: () => { sub.unsubscribe() }
+    });
   }
   addAccessInRoom(accessInRoom: AccessInRoom) {
     this.url = this.hostname + "/rooms/" + accessInRoom.roomId + "/accessList";
     console.log(this.url);
     this.objectService.requestSent();
-    let sub = this.http.post<ServerResponse>(this.url, accessInRoom, { headers: this.authService.headers }).subscribe(
-      (val) => {
+    let sub = this.http.post<ServerResponse>(this.url, accessInRoom, { headers: this.authService.headers }).subscribe({
+      next: (val) => {
         this.objectService.responseMessage(val);
       },
-      (err) => {
+      error: (err) => {
         this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
       },
-      () => { sub.unsubscribe() }
-    );
+      complete: () => { sub.unsubscribe() }
+    });
   }
 
   deleteAccessInRoom(id: number) {
     this.url = this.hostname + "/rooms/accessList/" + id;
     console.log(this.url);
     this.objectService.requestSent();
-    let sub = this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers }).subscribe(
-      (val) => {
+    let sub = this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers }).subscribe({
+      next: (val) => {
         this.objectService.responseMessage(val);
       },
-      (err) => {
+      error: (err) => {
         this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
       },
-      () => { sub.unsubscribe() }
-    );
+      complete: () => { sub.unsubscribe() }
+    });
   }
 
   modifyAccessInRoom(accessInRoom: AccessInRoom) {
     this.url = this.hostname + "/rooms/accessList/"
     console.log(this.url, accessInRoom);
     this.objectService.requestSent();
-    let sub = this.http.post<ServerResponse>(this.url, accessInRoom, { headers: this.authService.headers }).subscribe(
-      (val) => {
+    let sub = this.http.post<ServerResponse>(this.url, accessInRoom, { headers: this.authService.headers }).subscribe({
+      next: (val) => {
         this.objectService.responseMessage(val);
       },
-      (err) => {
+      error: (err) => {
         this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
       },
-      () => { sub.unsubscribe() }
-    );
+      complete: () => { sub.unsubscribe() }
+    });
   }
 
   readDatas() {
     this.incomingRules = null;
     this.outgoingRules = null;
-    this.remoteRules   = null;
+    this.remoteRules = null;
     this.getFirewallServices();
     this.getIncomingRules();
     this.getOutgoingRules();

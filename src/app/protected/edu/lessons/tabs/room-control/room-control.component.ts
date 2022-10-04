@@ -56,13 +56,13 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if(this.authS.session.roomId) {
-      let room: Room = this.objectS.getObjectById('room',this.authS.session.roomId);
-      if( room.roomControl == 'inRoom') {
+    if (this.authS.session.roomId) {
+      let room: Room = this.objectS.getObjectById('room', this.authS.session.roomId);
+      if (room.roomControl == 'inRoom') {
         this.selectedRoomId = parseInt(this.authS.session.roomId);
       }
     }
-    if( this.selectedRoomId ) {
+    if (this.selectedRoomId) {
       this.getRoomStatus();
       this.statusTimer();
     } else {
@@ -75,6 +75,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       this.getRoomStatus();
     }))
   }
+  
   getRoomStatus() {
     if (!this.disableChange) {
       this.eduS.getRoomById(this.selectedRoomId)
@@ -159,13 +160,15 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     this.eduS.setAccessStatus(this.room.accessInRooms)
       .pipe(takeWhile(() => this.alive))
-      .subscribe((res) => {
-        this.disableChange = false;
-        this.objectS.responseMessage(res);
-      }, err => {
-        this.objectS.errorMessage(err);
-      },
-      )
+      .subscribe({
+        next: (res) => {
+          this.disableChange = false;
+          this.objectS.responseMessage(res);
+        },
+        error: (err) => {
+          this.objectS.errorMessage(err);
+        }
+      })
   }
 
   /**
@@ -203,6 +206,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     (await modal).present();
     console.log('collect')
   }
+
   ngOnDestroy() {
     this.alive = false;
   }

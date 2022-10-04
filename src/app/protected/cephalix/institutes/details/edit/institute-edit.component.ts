@@ -4,10 +4,11 @@ import { TranslateService } from '@ngx-translate/core';
 //Own stuff
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
-import { Institute, DynDns, CephalixCare, Repository } from 'src/app/shared/models/cephalix-data-model';
+import { Institute, DynDns, CephalixCare, Repository, Customer } from 'src/app/shared/models/cephalix-data-model';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { User } from 'src/app/shared/models/data-model';
 import { contracts } from 'src/app/shared/models/cephalix-data-model';
+import { SystemService } from 'src/app/services/system.service';
 @Component({
   selector: 'cranix-institute-edit',
   templateUrl: './institute-edit.component.html',
@@ -21,11 +22,11 @@ export class InstituteEditComponent implements OnInit {
   care: CephalixCare;
   object: Institute = null;
   objectKeys: string[] = [];
+  myCustomer: Customer;
   isourl: string = "";
   managers = {}
   users: User[] = [];
   myContracts: string[] = contracts;
-  dynDnsDomains: string[] = ['cephalix.eu', 'cephalix.de', 'cranix.eu']
   dynDnsName: string = "";
   dynDnsDomain: string = "cephalix.eu";
   dynDnsPort: string = "22";
@@ -36,8 +37,10 @@ export class InstituteEditComponent implements OnInit {
     public authService: AuthenticationService,
     public cephalixService: CephalixService,
     public translateService: TranslateService,
-    public objectService: GenericObjectService
+    public objectService: GenericObjectService,
+    public systemService: SystemService
   ) {
+    this.systemService.getDnsDomains();
     this.object = this.objectService.selectedObject;
     this.cephalixService.getAllAddons().subscribe((val) => { this.allAddons = val });
     this.cephalixService.getAddonsOfInstitute(this.object.id).subscribe((val) => { this.addons = val; this.origAddons = val })
@@ -54,9 +57,7 @@ export class InstituteEditComponent implements OnInit {
             this.users.push(user)
           }
         }
-      },
-      (err) => { console.log(err) },
-      () => { }
+      }
     )
     if (this.objectService.cephalixDefaults.createIsoBy && this.objectService.cephalixDefaults.createIsoBy == 'regCode') {
       this.isourl = this.object.regCode;
@@ -91,9 +92,12 @@ export class InstituteEditComponent implements OnInit {
           }
         }
       )
+      this.myCustomer = this.objectService.getObjectById(
+        'customer',this.object.cephalixCustomerId
+      );
     }
     this.objectKeys = Object.getOwnPropertyNames(institute);
-    console.log("InstituteEditComponent:" + this.object.id);
+    console.log("InstituteEditComponent:", this.object);
   }
 
   ngOnInit() { }
@@ -116,14 +120,15 @@ export class InstituteEditComponent implements OnInit {
       this.dynDns.hostname = this.dynDnsName
       this.dynDns.port = this.dynDnsPort
       this.dynDns.ro = this.dynDnsRo
-      this.cephalixService.setDynDns(this.object.id, this.dynDns).subscribe(
-        (val) => { this.objectService.responseMessage(val) }
-      )
+      this.cephalixService.setDynDns(this.object.id, this.dynDns)
     }
     if (this.authService.isAllowed("customer.manage")) {
-      this.cephalixService.setCare(this.object.id, this.care).subscribe(
-        (val) => { this.objectService.responseMessage(val) }
-      )
+      this.cephalixService.setCare(this.object.id, this.care)
+    }
+    if( this.myCustomer && this.myCustomer.id != this.object.cephalixCustomerId ){
+      this.cephalixService.addInstituteToCustomer(
+        this.object.id, this.myCustomer.id
+      );
     }
   }
 
@@ -138,7 +143,7 @@ export class InstituteEditComponent implements OnInit {
   }
 
   setNextDefaults() {
-    let subs = this.cephalixService.getNextDefaults().subscribe(
+    this.cephalixService.getNextDefaults().subscribe(
       (val) => {
         for (let key of this.objectKeys) {
           if (!this.object[key] && val[key]) {
@@ -146,34 +151,22 @@ export class InstituteEditComponent implements OnInit {
           }
         }
         this.ngOnInit();
-      },
-      (err) => { console.log(err) },
-      () => { subs.unsubscribe() }
+      }
     )
   }
 
   writeConfig() {
     this.objectService.requestSent();
-    let subs = this.cephalixService.writeConfig(this.object.id).subscribe(
-      (serverResponse) => {
-        this.objectService.responseMessage(serverResponse);
-      },
-      (err) => { console.log(err) },
-      () => { subs.unsubscribe() }
-    )
+    this.cephalixService.writeConfig(this.object.id)
   }
   delete(ev: Event) {
     this.objectService.deleteObjectDialog(this.object, 'institute', '');
   }
   managerChanged(id) {
     if (this.managers[id]) {
-      this.cephalixService.deleteUserFromInstitute(id, this.object.id).subscribe(
-        val => this.objectService.responseMessage(val)
-      )
+      this.cephalixService.deleteUserFromInstitute(id, this.object.id)
     } else {
-      this.cephalixService.addUserToInstitute(id, this.object.id).subscribe(
-        val => this.objectService.responseMessage(val)
-      )
+      this.cephalixService.addUserToInstitute(id, this.object.id)
     }
     this.managers[id] = !this.managers[id];
   }

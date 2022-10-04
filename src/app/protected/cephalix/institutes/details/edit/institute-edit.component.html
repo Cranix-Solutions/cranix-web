@@ -127,7 +127,7 @@
       <ion-item>
         <ion-label position="stacked">{{ 'Domain' | translate}}</ion-label>
         <ion-select [(ngModel)]="dynDnsDomain" [compareWith]="objectService.compareFn" name="dynDnsDomain">
-          <ion-select-option *ngFor="let domain of dynDnsDomains" [value]="domain">
+          <ion-select-option *ngFor="let domain of systemService.dnsDomains" [value]="domain">
             {{domain}}</ion-select-option>
         </ion-select>
       </ion-item>
@@ -165,5 +165,26 @@
         </ion-select>
       </ion-item>
     </ion-list>
+    <ion-item>
+      <ion-label position="stacked">{{'customer'| translate}}</ion-label>
+      <ionic-selectable #ionicSelectable [(ngModel)]="myCustomer" [items]="objectService.allObjects['customer']"
+        [ngModelOptions]="{standalone: true}" itemValueField="id" itemTextField="name" [canSearch]="true">
+        <ng-template ionicSelectableHeaderTemplate>
+          <ion-toolbar>
+            <ion-title>
+              {{ "Select a customer" | translate }}
+            </ion-title>
+            <ion-buttons slot="end">
+              <ion-button ion-button (click)="ionicSelectable.close()">
+                <ion-icon color="danger" name="close"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ng-template>
+        <ng-template ionicSelectableItemIconTemplate>
+          <div></div>
+        </ng-template>
+      </ionic-selectable>
+    </ion-item>
   </ion-content>
 </form>

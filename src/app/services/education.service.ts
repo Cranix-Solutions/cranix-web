@@ -130,23 +130,23 @@ export class EductaionService {
 		this.uploadState.next(true);
 		this.url = `${this.hostname}/education/${objectType}s/upload`;
 		console.log(this.url);
-		let subs = this.http.post<ServerResponse[]>(this.url, fd, { headers: this.authService.formHeaders }).subscribe(
-			(val) => {
+		let subs = this.http.post<ServerResponse[]>(this.url, fd, { headers: this.authService.formHeaders }).subscribe({
+			next: (val) => {
 				let response = this.languageService.trans("List of the results:");
 				for (let resp of val) {
 					response = response + "<br>" + this.languageService.transResponse(resp);
 				}
 				this.objectService.okMessage(response)
 			},
-			(err) => {
+			error: (err) => {
 				console.log(err)
 				this.objectService.errorMessage("ERROR")
 			},
-			() => {
+			complete: () => {
 				this.uploadState.next(false);
 				subs.unsubscribe()
 			}
-		)
+		})
 	}
 
 
@@ -160,17 +160,17 @@ export class EductaionService {
 		this.url = `${this.hostname}/education/${objectType}s/collect`;
 		console.log(this.url);
 		this.objectService.requestSent();
-		let sub = await this.http.post<ServerResponse[]>(this.url, fd, { headers: this.authService.formHeaders }).subscribe(
-			(val) => {
+		let sub = await this.http.post<ServerResponse[]>(this.url, fd, { headers: this.authService.formHeaders }).subscribe({
+			next: (val) => {
 				let response = this.languageService.trans("List of the results:");
 				for (let resp of val) {
 					response = response + "<br>" + this.languageService.transResponse(resp);
 				}
 				this.objectService.okMessage(response)
 			},
-			(err) => { this.objectService.errorMessage("ERROR") },
-			() => { sub.unsubscribe() }
-		)
+			error: (err) => { this.objectService.errorMessage("ERROR") },
+			complete: () => { sub.unsubscribe() }
+		})
 	}
 
 	//Hanling of guest users.

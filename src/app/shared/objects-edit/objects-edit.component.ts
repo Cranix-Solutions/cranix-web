@@ -25,6 +25,15 @@ export class ObjectsEditComponent implements OnInit {
   objectActionTitle: string = "";
   fixedRole: string;
 
+  patterns = {
+    'room': {
+      'name': '\\S+'
+    },
+    'adhocroom': {
+      'name': '\\S+'
+    }
+  }
+
   @Input() object: any
   @Input() objectType: string
   @Input() objectAction: string
@@ -75,10 +84,6 @@ export class ObjectsEditComponent implements OnInit {
             }
           }
           console.log(this.object)
-        },
-        (err) => { },
-        () => {
-          sub.unsubscribe();
         }
       );
     }
@@ -97,9 +102,7 @@ export class ObjectsEditComponent implements OnInit {
           }
         }
         this.ngOnInit();
-      },
-      (err) => { console.log(err) },
-      () => { subs.unsubscribe() }
+      }
     )
   }
 
@@ -228,6 +231,13 @@ export class ObjectsEditComponent implements OnInit {
         subs.unsubscribe();
       }
     )
+  }
+
+  getPattern(key: string){
+    if ( this.patterns[this.objectType] && this.patterns[this.objectType][key] ) {
+      return this.patterns[this.objectType][key]
+    }
+    return null;
   }
 }
 

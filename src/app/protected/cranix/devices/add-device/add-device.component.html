@@ -7,7 +7,7 @@
           [disabled]="!addDeviceForm.form.valid || disabled || !macOk || !device.roomId">
           <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
         </ion-button>
-        <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss()">
+        <ion-button [disabled]="disabled" fill="clear" size="small" (click)="modalCtrl.dismiss()">
           <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
         </ion-button>
       </ion-buttons>

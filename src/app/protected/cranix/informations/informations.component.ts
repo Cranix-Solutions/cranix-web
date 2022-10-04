@@ -18,16 +18,17 @@ export class InformationsComponent implements OnInit {
   owned: boolean = false;
   taskResponses = {};
   title = "announcements";
+  categoryClosed = {}
 
   constructor(
     public authService: AuthenticationService,
     public informationsService: InformationsService,
     public modalController: ModalController
   ) {
-
+    this.owned = this.authService.isAllowed('information.add')
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   ngAfterViewInit() {
     this.informationsService.getCategories();
@@ -50,6 +51,17 @@ export class InformationsComponent implements OnInit {
     }
   }
 
+  toggleCategory(id) {
+    console.log(id)
+    if (this.categoryClosed[id]) {
+      (<HTMLInputElement>document.getElementById("category" + id)).style.height = "100%"
+      this.categoryClosed[id] = false
+    } else {
+      (<HTMLInputElement>document.getElementById("category" + id)).style.height = "0px"
+      this.categoryClosed[id] = true
+    }
+  }
+
   getInfos(infoType) {
     this.allInfos[infoType] = {}
     this.informationsService.getInfos(infoType).subscribe(
@@ -68,6 +80,7 @@ export class InformationsComponent implements OnInit {
       }
     )
   }
+
   getOwnedInfos(infoType) {
     this.ownedInfos[infoType] = new Map()
     this.informationsService.getOwnedInfos(infoType).subscribe(

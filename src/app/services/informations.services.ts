@@ -52,7 +52,7 @@ export class InformationsService {
         this.url = `${this.hostname}/informations/categories`
         this.http.get<Category[]>(this.url, { headers: this.authService.headers }).subscribe(
             (val) => {
-                this.categories  = val;
+                this.categories = val;
                 this.categoryIds = [];
                 for (let cat of val) {
                     this.categoryIds.push(cat.id);
@@ -76,53 +76,53 @@ export class InformationsService {
         return this.http.post<ServerResponse>(this.url, info, { headers: this.authService.headers })
     }
 
-    
+
     modifyInfo(infoType: any, info: any) {
         this.url = `${this.hostname}/informations/${infoType}s/${info.id}`;
         console.log(this.url)
         return this.http.patch<ServerResponse>(this.url, info, { headers: this.authService.headers })
     }
 
-    setHaveSeen(infoType: any, id: number){
+    setHaveSeen(infoType: any, id: number) {
         this.url = `${this.hostname}/informations/${infoType}s/${id}/seen`;
-        this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers }).subscribe(
-            (val) => {
+        this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers }).subscribe({
+            next: (val) => {
                 this.objectService.responseMessage(val);
             },
-            (error) => {
+            error: (error) => {
                 console.log(error)
             }
-        )
+        })
     }
 
-    getMyResponses(){
+    getMyResponses() {
         this.url = `${this.hostname}/selfmanagement/taskResponses`;
         console.log(this.url)
-        return this.http.get<any[]>(this.url,{ headers: this.authService.headers })
+        return this.http.get<any[]>(this.url, { headers: this.authService.headers })
     }
 
-    getResponses(taskId: number){
+    getResponses(taskId: number) {
         this.url = `${this.hostname}/informations/tasks/${taskId}/responses`;
         console.log(this.url)
-        return this.http.get<TaskResponse[]>(this.url,{ headers: this.authService.headers })
+        return this.http.get<TaskResponse[]>(this.url, { headers: this.authService.headers })
     }
 
-    rateTaskResponse(taskResponse){
+    rateTaskResponse(taskResponse) {
         this.url = `${this.hostname}/informations/taskResponses`;
         console.log(this.url)
-        return this.http.post<ServerResponse>(this.url,taskResponse, { headers: this.authService.headers })
+        return this.http.post<ServerResponse>(this.url, taskResponse, { headers: this.authService.headers })
     }
 
-    addResponse(task){
+    addResponse(task) {
         this.url = `${this.hostname}/selfmanagement/taskResponses`;
         console.log(this.url)
-        return this.http.post<ServerResponse>(this.url,task, { headers: this.authService.headers })
+        return this.http.post<ServerResponse>(this.url, task, { headers: this.authService.headers })
     }
 
-    modifyResponse(task){
+    modifyResponse(task) {
         this.url = `${this.hostname}/selfmanagement/taskResponses`;
         console.log(this.url)
-        return this.http.patch<ServerResponse>(this.url,task, { headers: this.authService.headers })
+        return this.http.patch<ServerResponse>(this.url, task, { headers: this.authService.headers })
     }
 
 }

@@ -1,6 +1,6 @@
 
 export class Customer {
-    id?: number;
+    id?: number = 0;
     name: string = '';
     name2: string = '';
     uuid: string = '';
@@ -34,8 +34,9 @@ export class Institute {
     anonDhcpNetwork: string = '';
     firstRoom: string = '';
     ipAdmin: string = '';
-    ipMail: string = '';
+    ipFileserver?: string = '';
     ipPrint: string = '';
+    ipMail: string = '';
     ipProxy: string = '';
     ipBackup: string = '';
     ipGateway: string = '';

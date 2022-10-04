@@ -1,0 +1,44 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>
+            {{ 'Select institutes of customer' | translate}} "{{ customer.name }}"
+        </ion-title>
+        <ion-buttons slot="end">
+            <ion-button *ngIf="!owned" class="ion-no-margin" (click)="showOwned()" [disabled]="disabled">
+                <ion-icon slot="icon-only" color="warning" name="toggle-outline"></ion-icon>
+            </ion-button>
+            <ion-button *ngIf="owned" class="ion-no-margin" (click)="showAll()" [disabled]="disabled">
+                <ion-icon slot="icon-only" color="success" name="toggle-outline"></ion-icon>
+            </ion-button>
+            <ion-button class="ion-no-margin" (click)="onSubmit()" [disabled]="disabled">
+                <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss()" [disabled]="disabled">
+                <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-item>
+        <ion-label *ngIf="gridApi">
+            #{{gridApi.getDisplayedRowCount()}}
+        </ion-label>
+        <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()"
+            id="instituteFilter">
+        </ion-input>
+    </ion-item>
+    <ag-grid-angular
+        id="instituteManageTable"
+        style="width: 100%; height: 92%;"
+        rowSelection="multiple"
+        class="{{authService.settings.agGridThema}}"
+        [rowHeight]="authService.settings.rowHeight"
+        [context]="context"
+        [rowData]="rowData"
+        [defaultColDef]="defaultColDef"
+        [columnDefs]="columnDefs"
+        [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
+        (gridReady)="onGridReady($event)">
+  </ag-grid-angular>
+</ion-content>

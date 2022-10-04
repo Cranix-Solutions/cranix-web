@@ -212,6 +212,21 @@ button:focus {
       text-align: left;
   }
 }
+.page-toolbar-medium {
+  --ion-text-color: var(--ion-color-medium-contrast);
+  --ion-background-color: var(--ion-color-medium);
+  height: 54px;
+  border-color: var(--ion-color-primary-tint);
+  border-width: 2px;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  ion-title {
+      padding-inline-start: 1px;
+      padding-inline-end: 1px;
+      text-align: left;
+  }
+}
 /*.ag-header-group-cell-label, .ag-header-cell-label{
   justify-content: center;
 }
@@ -334,7 +349,15 @@ ion-item::part(native) {
     }
   }
 
-
+ion-card-header{
+    padding : 6px;
+}
+ion-card-content{
+  padding : 0px;
+}
+ion-card-title{
+  font-size : 14px
+}
 /*
  * error and short messages classes
  *

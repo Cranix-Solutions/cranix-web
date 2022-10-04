@@ -40,6 +40,10 @@
           <h3>{{ object[left1] }}</h3>
           <h5>{{ object[left2] }} {{ object[left3] }}</h5>
         </ion-label>
+        <ion-label *ngIf="objectType == 'customer'">
+          <h4>{{ object.contact }}</h4>
+          <h4>{{ object.telephone }}</h4>
+        </ion-label>
         <ion-label *ngIf="objectType == 'device'">
           <h5>{{ object.mac }}</h5>
           <h5>{{ object.hwconfId | idToName:'hwconf' }}</h5>

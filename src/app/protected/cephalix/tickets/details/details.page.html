@@ -9,7 +9,8 @@
           {{ institute.ipVPN }}<br>
           {{ticket.email}}: {{ticket.lastname}},{{ticket.firstname}}</ion-card-subtitle>
         <ion-card-subtitle *ngIf="institute.id == 0"> {{ticket.recDate | date:'yy-MM-dd HH:mm'}}>
-          <input type="text" placeholder="{{'Select institute:'|translate}}" list="insts" name="institute" id="institute">
+          <input type="text" placeholder="{{'Select institute:'|translate}}" list="insts" name="institute"
+            id="institute">
           <datalist id="insts">
             <option *ngFor="let i of institutes" [value]="i.label">
           </datalist>
@@ -19,13 +20,18 @@
           {{ticket.email}}: {{ticket.lastname}},{{ticket.firstname}}
         </ion-card-subtitle>
         <ion-buttons slot="end">
+          <ion-button *ngIf="institute.ipVPN && institute.ipVPN != ''" color="secondary" fill="clear" size="small"
+            (click)="routeSchool($event)" matTooltip="{{'Connect the institute in a separate window.' | translate }}">
+            <ion-icon name="create-outline"></ion-icon>
+          </ion-button>
           <ion-button fill="solid" (click)="router.navigate(['/pages/cephalix/tickets'])">
             <ion-icon slot="icon-only" name="caret-back"></ion-icon>
           </ion-button>
           <ion-button fill="solid" (click)="assigneTicketToMe()">
             <ion-icon color="warning" slot="icon-only" name="lock-closed"></ion-icon>
           </ion-button>
-          <ion-button fill="solid" (click)="objectService.deleteObjectDialog(this.ticket, 'ticket', '/pages/cephalix/tickets')">
+          <ion-button fill="solid"
+            (click)="objectService.deleteObjectDialog(this.ticket, 'ticket', '/pages/cephalix/tickets')">
             <ion-icon color="danger" slot="icon-only" name="trash"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -33,8 +39,8 @@
     </ion-card-header>
     <ion-card-content>
       <ion-label>{{ 'Ticket Owner' | translate }}</ion-label>
-      <input type="text" placeholder="{{'Select the owner of the ticket'}}" list="ticketOwners" name="ticketOwner" id="ownerId"
-        [value]="ticketOwner">
+      <input type="text" placeholder="{{'Select the owner of the ticket'}}" list="ticketOwners" name="ticketOwner"
+        id="ownerId" [value]="ticketOwner">
       <datalist id="ticketOwners">
         <option *ngFor="let i of ticketWorkers" [value]="i.label">
       </datalist>

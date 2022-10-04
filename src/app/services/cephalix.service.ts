@@ -12,7 +12,7 @@ import { User } from '../shared/models/data-model';
 import { GenericObjectService } from './generic-object.service';
 
 
-export interface InstallSetSync{
+export interface InstallSetSync {
 	instituteId: number,
 	categoryId: number[]
 }
@@ -27,17 +27,17 @@ export class CephalixService {
 	selectedInstitutes: Institute[] = [];
 	selectedList: string[] = [];
 	templateInstitute = new Institute();
+	loadingStatus: boolean = false;
 
 	constructor(
 		private utilsS: UtilsService,
-		private http:   HttpClient,
-		private authService:  AuthenticationService,
-		private objectService: GenericObjectService)
-		{
-			this.hostname = this.utilsS.hostName();
-			if( ! authService.isAllowed('customer.manage') ) {
-				delete this.templateInstitute.cephalixCustomerId;
-			}
+		private http: HttpClient,
+		private authService: AuthenticationService,
+		private objectService: GenericObjectService) {
+		this.hostname = this.utilsS.hostName();
+		if (!authService.isAllowed('customer.manage')) {
+			delete this.templateInstitute.cephalixCustomerId;
+		}
 	}
 
 	//GET calls
@@ -59,42 +59,46 @@ export class CephalixService {
 		console.log(this.url);
 		return this.http.get<InstituteStatus[]>(this.url, { headers: this.authService.headers });
 	};
-	reloadStatusOfInstitutes(){
+	reloadStatusOfInstitutes() {
 		this.url = this.hostname + `/institutes/refreshStatus`;
 		console.log(this.url);
 		this.objectService.requestSent()
-		this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers }).subscribe(
-			(val) => { this.objectService.responseMessage(val) },
-			(err) => {
-				this.objectService.errorMessage(err.message)
+		this.loadingStatus = true;
+		this.http.put<ServerResponse>(this.url, null, { headers: this.authService.longTimeHeader }).subscribe({
+			next: (val) => { this.objectService.responseMessage(val); this.loadingStatus = false; },
+			error: (err) => { this.objectService.errorMessage('Timeout Error'); this.loadingStatus = false; },
+			complete: () => { this.loadingStatus = false; }
+		});
+	}
+	writeConfig(instituteId: number) {
+		const url = `${this.hostname}/institutes/${instituteId}/writeConfig`;
+		return this.http.put<ServerResponse>(url, null, { headers: this.authService.headers }).subscribe(
+			(serverResponse) => {
+				this.objectService.responseMessage(serverResponse);
 			}
 		);
 	}
-	writeConfig(instituteId: number){
-		const url = `${this.hostname}/institutes/${instituteId}/writeConfig`;
-		return this.http.put<ServerResponse>(url,null ,{ headers: this.authService.headers });
-	}
-	getNextDefaults(){
+	getNextDefaults() {
 		this.url = this.hostname + `/institutes/nextDefaults`;
 		console.log(this.url);
 		return this.http.get<Institute>(this.url, { headers: this.authService.headers });
 	}
-	getDefaults(){
+	getDefaults() {
 		this.url = this.hostname + `/institutes/defaults`;
 		console.log(this.url);
 		return this.http.get<Institute>(this.url, { headers: this.authService.headers });
 	}
-	getObjectsToSynchronize(){
+	getObjectsToSynchronize() {
 		this.url = this.hostname + `/institutes/objects`;
 		console.log(this.url);
 		return this.http.get<SynchronizedObject[]>(this.url, { headers: this.authService.headers });
 	}
-	getSynchronizedObjects(instituteId: number){
+	getSynchronizedObjects(instituteId: number) {
 		this.url = this.hostname + `/institutes/${instituteId}/sync`;
 		console.log(this.url);
 		return this.http.get<SynchronizedObject[]>(this.url, { headers: this.authService.headers });
 	}
-	getObjectsFromInstitute(instituteId: number, objectType: string){
+	getObjectsFromInstitute(instituteId: number, objectType: string) {
 		this.url = this.hostname + `/institutes/${instituteId}/objects/${objectType}`;
 		return this.http.get<any[]>(this.url, { headers: this.authService.headers });
 	}
@@ -104,7 +108,7 @@ export class CephalixService {
 		return this.http.get<Ticket>(this.url, { headers: this.authService.headers });
 	};
 
-	modifyTicket(ticket: Ticket){
+	modifyTicket(ticket: Ticket) {
 		this.url = this.hostname + `/tickets`;
 		console.log(this.url);
 		return this.http.patch<ServerResponse>(this.url, ticket, { headers: this.authService.headers });
@@ -116,13 +120,13 @@ export class CephalixService {
 		return this.http.get<Article[]>(this.url, { headers: this.authService.headers });
 	};
 
-	addArticleToTicket(article: Article, ticketId: number){
+	addArticleToTicket(article: Article, ticketId: number) {
 		this.url = this.hostname + '/tickets/' + ticketId + '/articles';
 		console.log(this.url);
 		return this.http.post<ServerResponse>(this.url, article, { headers: this.authService.headers });
 	}
 
-	setInstituteForTicket( ticketId: number, instituteId: number){
+	setInstituteForTicket(ticketId: number, instituteId: number) {
 		this.url = this.hostname + `/tickets/${ticketId}/institutes/${instituteId}`;
 		console.log(this.url);
 		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
@@ -139,130 +143,138 @@ export class CephalixService {
 		return this.http.get<string[]>(this.url, { headers: this.authService.headers });
 	}
 
-	getInstituteById(id: number){
+	getInstituteById(id: number) {
 		this.url = this.hostname + `/institutes/${id}`;
 		console.log(this.url);
 		return this.http.get<Institute>(this.url, { headers: this.authService.headers });
 	}
 
-	getAyTemplates(){
+	getAyTemplates() {
 		this.url = this.hostname + `/institutes/ayTemplates`;
 		console.log(this.url);
 		return this.http.get<string[]>(this.url, { headers: this.authService.headers });
 	}
 
-	addNoticeToInst(id: number, note: Notice){
+	addNoticeToInst(id: number, note: Notice) {
 		this.url = this.hostname + `/institutes/${id}/notices`;
-		return this.http.post<ServerResponse>(this.url,note, { headers: this.authService.headers});
+		return this.http.post<ServerResponse>(this.url, note, { headers: this.authService.headers });
 	}
-	getNoticesOfInst(id: number){
+	getNoticesOfInst(id: number) {
 		this.url = this.hostname + `/institutes/${id}/notices`;
 		console.log(this.url);
 		return this.http.get<Notice[]>(this.url, { headers: this.authService.headers });
 	}
-	deleteNotice(id: number){
+	deleteNotice(id: number) {
 		this.url = this.hostname + `/institutes/notices/${id}`;
 		console.log(this.url);
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
 	}
 
-	applyAction(actionMap: CrxActionMap ){
+	applyAction(actionMap: CrxActionMap) {
 		this.url = this.hostname + `/institutes/applyAction`;
 		console.log(this.url);
-		return this.http.post<ServerResponse>(this.url,actionMap, { headers: this.authService.headers});
+		return this.http.post<ServerResponse>(this.url, actionMap, { headers: this.authService.headers });
 	}
 
-	syncFileToInstitutes(fd: FormData){
+	syncFileToInstitutes(fd: FormData) {
 		this.url = this.hostname + `/institutes/copyFile`;
-		return this.http.post<ServerResponse>(this.url,fd, { headers: this.authService.headers});
+		return this.http.post<ServerResponse>(this.url, fd, { headers: this.authService.headers });
 	}
 
 	getHWconfFromInstitute(instituteId: number, hwconfid: number, hwconf) {
 		this.url = this.hostname + `/institutes/${instituteId}/objects/hwconf/${hwconfid}`;
-		return this.http.post<ServerResponse>(this.url,hwconf, { headers: this.authService.headers});
+		return this.http.post<ServerResponse>(this.url, hwconf, { headers: this.authService.headers });
 	}
 	syncHWconfFromInstitute(instituteId: number, mapping) {
 		this.url = this.hostname + `/institutes/${instituteId}/objects/hwconf`;
-		return this.http.post<ServerResponse>(this.url,mapping, { headers: this.authService.headers});
+		return this.http.post<ServerResponse>(this.url, mapping, { headers: this.authService.headers });
 	}
 	//PUT
-	putInstallSetToSync(instituteId	: number, categoryId: number){
+	putInstallSetToSync(instituteId: number, categoryId: number) {
 		const url = `${this.hostname}/institutes/${instituteId}/categories/${categoryId}`;
-		return this.http.put<ServerResponse>(url,null ,{ headers: this.authService.headers });
+		return this.http.put<ServerResponse>(url, null, { headers: this.authService.headers });
 	}
 
-	putObjectToInstitute(instituteId	: number, objectType: string, objectId: number|string){
+	putObjectToInstitute(instituteId: number, objectType: string, objectId: number | string) {
 		const url = `${this.hostname}/institutes/${instituteId}/sync/${objectType.toLocaleLowerCase()}/${objectId}`;
 		console.log(url);
-		return this.http.put<ServerResponse>(url,null ,{ headers: this.authService.headers });
+		return this.http.put<ServerResponse>(url, null, { headers: this.authService.headers });
 	}
 
-	deleteObjectFromInstitute(instituteId: number, ojectType: string, objectId: number ){
+	deleteObjectFromInstitute(instituteId: number, ojectType: string, objectId: number) {
 		this.url = this.hostname + `/institutes/${instituteId}/sync/${ojectType.toLocaleLowerCase()}/${objectId}`;
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
 	}
 
-	puCatToSync(instituteId	: number, categoryId: number|string){
+	puCatToSync(instituteId: number, categoryId: number | string) {
 		const url = `${this.hostname}/institutes/${instituteId}/categories/${categoryId}`;
 		console.log(url);
-		return this.http.put<ServerResponse>(url,null ,{ headers: this.authService.headers });
+		return this.http.put<ServerResponse>(url, null, { headers: this.authService.headers });
 	}
 
-	updateById(instituteId: number){
+	updateById(instituteId: number) {
 		const url = `${this.hostname}/institutes/${instituteId}/update`;
-		return this.http.put<ServerResponse>(url,null ,{ headers: this.authService.headers });
+		return this.http.put<ServerResponse>(url, null, { headers: this.authService.headers });
 	}
 
-	addUserToInstitute(userId, instituteId: number){
+	addUserToInstitute(userId, instituteId: number) {
 		this.url = this.hostname + `/institutes/${instituteId}/users/${userId}`;
 		console.log(this.url)
-		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
+		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers }).subscribe(
+			val => this.objectService.responseMessage(val)
+		);
 	}
 
-	setSeenOnArticle(articleId: number){
+	setSeenOnArticle(articleId: number) {
 		this.url = this.hostname + `/tickets/articles/${articleId}`;
 		console.log(this.url)
 		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
 	}
 
-	deleteArticle(articleId: number){
+	deleteArticle(articleId: number) {
 		this.url = this.hostname + `/tickets/articles/${articleId}`;
 		console.log(this.url)
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
 	}
 
-	deleteUserFromInstitute(userId, instituteId: number){
+	deleteUserFromInstitute(userId, instituteId: number) {
 		this.url = this.hostname + `/institutes/${instituteId}/users/${userId}`;
 		console.log(this.url)
-		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
+		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers }).subscribe(
+			val => this.objectService.responseMessage(val)
+		);
 	}
-	getUsersFromInstitute(instituteId: number){
+	getUsersFromInstitute(instituteId: number) {
 		this.url = this.hostname + `/institutes/${instituteId}/users`;
 		return this.http.get<User[]>(this.url, { headers: this.authService.headers });
 	}
-	getInstitutesFromUser(userId: number){
+	getInstitutesFromUser(userId: number) {
 		this.url = this.hostname + `/institutes/users/${userId}`;
 		return this.http.get<Institute[]>(this.url, { headers: this.authService.headers });
 	}
 
-	getDynDns(instituteId: number){
+	getDynDns(instituteId: number) {
 		this.url = this.hostname + `/institutes/${instituteId}/dyndns`
 		return this.http.get<DynDns>(this.url, { headers: this.authService.headers });
 	}
 
-	setDynDns(instituteId: number, dyndns: DynDns){
+	setDynDns(instituteId: number, dyndns: DynDns) {
 		this.url = this.hostname + `/institutes/${instituteId}/dyndns`
-		return this.http.post<ServerResponse>(this.url, dyndns, { headers: this.authService.headers });
+		return this.http.post<ServerResponse>(this.url, dyndns, { headers: this.authService.headers }).subscribe(
+			(val) => { this.objectService.responseMessage(val) }
+		);
 	}
 
-	getCare(instituteId: number){
+	getCare(instituteId: number) {
 		this.url = this.hostname + `/institutes/${instituteId}/care`
 		return this.http.get<CephalixCare>(this.url, { headers: this.authService.headers });
 	}
 
-	setCare(instituteId: number, cephalixCare: CephalixCare){
+	setCare(instituteId: number, cephalixCare: CephalixCare) {
 		this.url = this.hostname + `/institutes/${instituteId}/care`
-		return this.http.post<ServerResponse>(this.url, cephalixCare, { headers: this.authService.headers });
+		return this.http.post<ServerResponse>(this.url, cephalixCare, { headers: this.authService.headers }).subscribe(
+			(val) => { this.objectService.responseMessage(val) }
+		);
 	}
 
 
@@ -274,21 +286,37 @@ export class CephalixService {
 		return this.http.get<Repository[]>(this.url, { headers: this.authService.headers });
 	}
 
-	getAddonsOfInstitute(instituteId: number){
+	getAddonsOfInstitute(instituteId: number) {
 		this.url = this.hostname + `/institutes/${instituteId}/addons`
 		return this.http.get<Repository[]>(this.url, { headers: this.authService.headers });
 	}
 
-	addAddonToInstitute(instituteId: number, addonId: number){
+	addAddonToInstitute(instituteId: number, addonId: number) {
 		this.url = this.hostname + `/institutes/${instituteId}/addons/${addonId}`
 		this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers }).subscribe(
-			(val) => { this.objectService.responseMessage(val)}
+			(val) => { this.objectService.responseMessage(val) }
 		)
 	}
-	removeAddonFromInstitute(instituteId: number, addonId: number){
+	removeAddonFromInstitute(instituteId: number, addonId: number) {
 		this.url = this.hostname + `/institutes/${instituteId}/addons/${addonId}`
 		this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers }).subscribe(
-			(val) => { this.objectService.responseMessage(val)}
+			(val) => { this.objectService.responseMessage(val) }
+		)
+	}
+	/*
+	* Customer calls
+	*/
+	addInstituteToCustomer(instituteId: number, customerId: number) {
+		this.url = this.hostname + `/customers/${customerId}/institutes/${instituteId}`
+		this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers }).subscribe(
+			(val) => { this.objectService.responseMessage(val) }
+		)
+	}
+
+	deleteInstituteFromCustomer(instituteId: number, customerId: number) {
+		this.url = this.hostname + `/customers/${customerId}/institutes/${instituteId}`
+		this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers }).subscribe(
+			(val) => { this.objectService.responseMessage(val) }
 		)
 	}
 }

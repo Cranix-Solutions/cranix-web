@@ -94,4 +94,9 @@ export class ToolbarComponent implements OnInit {
     });
     (await modal).present();
   }
+
+  reloadAllObjects(){
+    this.objectService.okMessage(this.translateService.trans("Reloading all objects"))
+    this.objectService.initialize(true)
+  }
 }

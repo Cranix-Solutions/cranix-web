@@ -12,7 +12,7 @@ import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.c
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
-import { Ticket } from 'src/app/shared/models/cephalix-data-model'
+import { Institute, Ticket } from 'src/app/shared/models/cephalix-data-model'
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
@@ -32,7 +32,6 @@ export class TicketsPage implements OnInit {
   gridApi: GridApi;
   context;
   title = 'app';
-  objectIds: number[] = [];
   alive: boolean;
   ticketStatus: Subscription;
   ticketColor = {
@@ -110,7 +109,12 @@ export class TicketsPage implements OnInit {
       switch (key) {
         case 'cephalixInstituteId': {
           col['valueGetter'] = function (params) {
-            return params.context['componentParent'].objectService.idToName('institute', params.data.cephalixInstituteId);
+            var institute = params.context['componentParent'].objectService.getObjectById('institute', params.data.cephalixInstituteId)
+            if (institute) {
+              return institute.name + " " + institute.locality
+            } else {
+              return ""
+            }
           }
           break;
         }
@@ -132,7 +136,10 @@ export class TicketsPage implements OnInit {
           break;
         }
         case 'id': {
-          col['minWidth'] = 50
+          col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
+          col['headerCheckboxSelectionFilteredOnly'] = true;
+          col['checkboxSelection'] = this.authService.settings.checkboxSelection;
+          col['minWidth'] = 100
           col['maxWidth'] = 70
           break;
         }
@@ -145,7 +152,7 @@ export class TicketsPage implements OnInit {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
-    this.gridApi.addEventListener('rowClicked', this.ticketClickHandle);
+    //this.gridApi.addEventListener('rowClicked', this.ticketClickHandle);
   }
 
   onQuickFilterChanged(quickFilter) {
@@ -169,8 +176,12 @@ export class TicketsPage implements OnInit {
   }
 
   ticketClickHandle(event) {
-    console.log(event)
-    event.context.componentParent.route.navigate(['/pages/cephalix/tickets/' + event.data.id])
+    //console.log(event)
+    if (event.column.colId == 'id') {
+      event.context.componentParent.redirectToDelete(event.data)
+    } else {
+      event.context.componentParent.route.navigate(['/pages/cephalix/tickets/' + event.data.id])
+    }
   }
   public redirectToDelete = (ticket: Ticket) => {
     this.objectService.deleteObjectDialog(ticket, 'ticket', '/pages/cephalix/tickets')
@@ -181,16 +192,17 @@ export class TicketsPage implements OnInit {
  */
   async openActions(ev: any, objId: number) {
     let selected = this.gridApi.getSelectedRows();
+    var objectIds: number[] = [];
     if (selected.length == 0 && !objId) {
       this.objectService.selectObject();
       return;
     }
     this.objectKeys = [];
     if (objId) {
-      this.objectIds.push(objId);
+      objectIds.push(objId);
     } else {
       for (let i = 0; i < selected.length; i++) {
-        this.objectIds.push(selected[i].id);
+        objectIds.push(selected[i].id);
       }
     }
     const popover = await this.popoverCtrl.create({
@@ -198,7 +210,7 @@ export class TicketsPage implements OnInit {
       event: ev,
       componentProps: {
         objectType: "ticket",
-        objectIds: this.objectIds,
+        objectIds: objectIds,
         selection: selected,
         gridApi: this.gridApi
       },
@@ -258,5 +270,9 @@ export class TicketsPage implements OnInit {
     (await modal).present().then((val) => {
       this.authService.log("most lett vegrehajtva.")
     })
+  }
+  reloadAllObjects(){
+    this.objectService.okMessage(this.languageS.trans("Reloading all tickets"))
+    this.objectService.getAllObject('ticket')
   }
 }

@@ -12,7 +12,7 @@
       {{authService.session.fullName}} {{authService.session.instituteName}} {{authService.session.roomName}}
     </ion-label>
     <ion-buttons slot="end">
-      <ion-button fill="clear" (click)="objectService.initialize(true)"
+      <ion-button fill="clear" (click)="reloadAllObjects()"
         matTooltip="{{ 'Refresh all objects' | translate }}">
         <ion-icon color="tertiary" name="refresh"></ion-icon>
       </ion-button>

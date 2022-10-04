@@ -7,6 +7,7 @@ import { CephalixService } from 'src/app/services/cephalix.service';
 import { ModalController } from '@ionic/angular';
 import { User } from 'src/app/shared/models/data-model';
 import { AuthenticationService } from 'src/app/services/auth.service';
+import { WindowRef } from 'src/app/shared/models/ohters';
 class ObjectList {
   id: number;
   label: string;
@@ -27,15 +28,18 @@ export class DetailsPage implements OnInit {
   ticketOwner: string = "";
   ticketOwnerId: number;
   ticketWorkers: ObjectList[] = [];
+  nativeWindow: any
   constructor(
     private route: ActivatedRoute,
     public  router: Router,
     public  objectService: GenericObjectService,
     private authService: AuthenticationService,
     private cephlixS: CephalixService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private win: WindowRef
   ) {
     this.ticketId = this.route.snapshot.params.id;
+    this.nativeWindow = win.getNativeWindow();
   }
 
   async ngOnInit() {
@@ -201,6 +205,34 @@ export class DetailsPage implements OnInit {
       this.articleOpen[id] = true
     }
   }
+
+  public routeSchool(event) {
+    event.stopPropagation();
+    var hostname = window.location.hostname;
+    var protocol = window.location.protocol;
+    var port = window.location.port;
+    let sub = this.cephlixS.getInstituteToken(this.institute.id)
+        .subscribe({
+            next: (res) => {
+                console.log("Get token from:" + this.institute.uuid)
+                console.log(res);
+                if (res) {
+                    sessionStorage.setItem('shortName', this.institute.uuid);
+                    sessionStorage.setItem('instituteName', this.institute.name);
+                    sessionStorage.setItem('cephalix_token', res);
+                    if (port) {
+                        this.nativeWindow.open(`${protocol}//${hostname}:${port}`);
+                        sessionStorage.removeItem('shortName');
+                    } else {
+                        this.nativeWindow.open(`${protocol}//${hostname}`);
+                        sessionStorage.removeItem('shortName');
+                    }
+                }
+            },
+            error: (err) => { console.log(err) },
+            complete: () => { sub.unsubscribe() }
+          })
+}
 }
 
 @Component({

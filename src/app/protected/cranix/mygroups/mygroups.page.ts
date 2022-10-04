@@ -33,13 +33,7 @@ export class MyGroupsPage implements OnInit {
   columnApi: ColumnApi;
   rowSelection;
   context;
-  title = 'app';
   rowData = [];
-  modules = [];
-  guestAccounts: GuestUsers[] = [];
-  userData: User[] = [];
-  selection = [];
-  selectedIds: number[] = [];
 
   constructor(
     public authService: AuthenticationService,
@@ -60,11 +54,13 @@ export class MyGroupsPage implements OnInit {
     }
   }
   async ngOnInit() {
-    this.readGuestAccounts();
     while ( !this.objectService.allObjects['education/user'] ) {
       await new Promise(f => setTimeout(f, 1000));
     }
-    this.userData = this.objectService.allObjects['education/user'].sort(
+    if (this.authService.isMD()) {
+      this.rowData = this.objectService.allObjects['education/group']
+    }
+    this.objectService.allObjects['education/user'].sort(
       (a, b) => (a.groupName > b.groupName) ? 1 : (b.groupName > a.groupName) ? -1 : 0
     );
     this.groupColumnDefs();
@@ -73,14 +69,16 @@ export class MyGroupsPage implements OnInit {
   segmentChanged(event) {
     this.segment = event.detail.value;
     switch (this.segment) {
-      case 'group':   { this.groupColumnDefs(); break; }
-      case 'student': { this.userColumnDefs();  break; }
-      case 'guest':   { this.guestColumnDefs(); break; }
+      case 'education/group':   { this.groupColumnDefs(); break; }
+      case 'education/user': { this.userColumnDefs();  break; }
+      case 'education/guestUser':   { this.guestColumnDefs(); break; }
     }
   }
 
   groupColumnDefs() {
-    this.rowData = this.objectService.allObjects['education/group'];
+    if (this.authService.isMD()) {
+      this.rowData = this.objectService.allObjects['education/group'];
+    }
     this.columnDefs = [
       {
         field: 'id',
@@ -120,7 +118,9 @@ export class MyGroupsPage implements OnInit {
   }
 
   userColumnDefs() {
-    this.rowData = this.userData;
+    if (this.authService.isMD()) {
+      this.rowData = this.objectService.allObjects['education/user'];
+    }
     this.columnDefs = [
       {
         field: 'groupName',
@@ -149,7 +149,9 @@ export class MyGroupsPage implements OnInit {
   }
 
   guestColumnDefs() {
-    this.rowData = this.guestAccounts;
+    if (this.authService.isMD()) {
+      this.rowData = this.objectService.allObjects['education/guestUser'];
+    }
     this.columnDefs = [
       {
         field: 'id',
@@ -223,7 +225,7 @@ export class MyGroupsPage implements OnInit {
     if (this.authService.isMD()) {
       this.rowData = [];
       switch (this.segment) {
-        case 'group': {
+        case 'education/group': {
           for (let obj of this.objectService.allObjects['education/group']) {
             if (
               obj.name.toLowerCase().indexOf(filter) != -1 ||
@@ -235,8 +237,8 @@ export class MyGroupsPage implements OnInit {
           }
           break;
         }
-        case 'student': {
-          for (let obj of this.userData) {
+        case 'education/user': {
+          for (let obj of this.objectService.allObjects['education/user']) {
             if (
               obj.uid.toLowerCase().indexOf(filter) != -1 ||
               obj.givenName.toLowerCase().indexOf(filter) != -1 ||
@@ -248,8 +250,8 @@ export class MyGroupsPage implements OnInit {
           }
           break;
         }
-        case 'guest': {
-          for (let obj of this.guestAccounts) {
+        case 'education/guestUser': {
+          for (let obj of this.objectService.allObjects['education/guestUser']) {
             if (
               obj.name.toLowerCase().indexOf(filter) != -1 ||
               obj.description.toLowerCase().indexOf(filter) != -1
@@ -266,8 +268,8 @@ export class MyGroupsPage implements OnInit {
       this.gridApi.doLayout();
     }
   }
-  public redirectToDelete = (group: Group) => {
-    this.objectService.deleteObjectDialog(group, 'education/group', '')
+  public redirectToDelete = (tmp) => {
+    this.objectService.deleteObjectDialog(tmp, this.segment, '')
   }
   /**
   * Open the actions menu with the selected object ids.
@@ -287,7 +289,7 @@ export class MyGroupsPage implements OnInit {
       component: ActionsComponent,
       event: ev,
       componentProps: {
-        objectType: this.getObjectType(),
+        objectType: this.segment,
         objectIds: this.objectService.selectedIds,
         selection: this.objectService.selection,
         gridApi: this.gridApi
@@ -322,21 +324,9 @@ export class MyGroupsPage implements OnInit {
     (await modal).present();
   }
 
-  getObjectType(){
-    switch (this.segment) {
-      case 'student': {
-        return 'education/user'
-      }
-      case 'group': {
-        return 'education/group';
-      }
-    }
-    return this.segment;
-  }
-
   async redirectToEdit(anyObject: any) {
     let action = anyObject ? 'modify' : 'add';
-    let objectType = this.getObjectType()
+    let objectType = this.segment
 
     switch (this.segment) {
       case 'student': {
@@ -394,16 +384,11 @@ export class MyGroupsPage implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
+        this.objectService.getAllObject('education/guestUser');
         this.authService.log("Object was created or modified", dataReturned.data)
-        this.readGuestAccounts()
       }
     });
     (await modal).present();
-  }
-  readGuestAccounts() {
-    this.educationService.getGuestAccounts().subscribe(
-      (val) => { this.guestAccounts = val }
-    )
   }
 }
 
@@ -439,6 +424,7 @@ export class AddEditGuestPage implements OnInit {
     }
     let sub = this.educationService.addGuestUsers(this.guest).subscribe(
       (val) => {
+        console.log(val)
         this.objectService.responseMessage(val);
         if (val.code == "OK") {
           this.modalCtrl.dismiss("OK")
