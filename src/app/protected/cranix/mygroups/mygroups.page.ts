@@ -422,7 +422,7 @@ export class AddEditGuestPage implements OnInit {
     for (let r of this.selectedRooms) {
       this.guest.roomIds.push(r.id)
     }
-    let sub = this.educationService.addGuestUsers(this.guest).subscribe(
+    this.educationService.addGuestUsers(this.guest).subscribe(
       (val) => {
         console.log(val)
         this.objectService.responseMessage(val);
@@ -430,12 +430,7 @@ export class AddEditGuestPage implements OnInit {
           this.modalCtrl.dismiss("OK")
         }
         this.disabled = false;
-      },
-      (err) => {
-        this.disabled = false;
-        this.objectService.errorMessage("ERROR")
-      },
-      () => { sub.unsubscribe() }
+      }
     );
   }
 }
