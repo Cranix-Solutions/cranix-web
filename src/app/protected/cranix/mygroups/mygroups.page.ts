@@ -25,7 +25,7 @@ import { EditBTNRenderer } from 'src/app/pipes/ag-edit-renderer';
   styleUrls: ['./mygroups.page.scss'],
 })
 export class MyGroupsPage implements OnInit {
-  segment: string = 'group';
+  segment: string = 'education/group';
   objectKeys: string[] = [];
   columnDefs = [];
   defaultColDef = {};
@@ -329,11 +329,11 @@ export class MyGroupsPage implements OnInit {
     let objectType = this.segment
 
     switch (this.segment) {
-      case 'student': {
-        if (!anyObject) { anyObject = new User }
+      case 'education/user': {
+        if (!anyObject) { anyObject = new User() }
       }
-      case 'group': {
-        if (!anyObject) { anyObject = new Group }
+      case 'education/group': {
+        if (!anyObject) { anyObject = new Group() }
         delete anyObject.groupType
       }
     }
@@ -354,9 +354,9 @@ export class MyGroupsPage implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       switch (this.segment) {
-        case 'group':   { this.groupColumnDefs(); break; }
-        case 'student': { this.userColumnDefs();  break; }
-        case 'guest':   { this.guestColumnDefs(); break; }
+        case 'education/group':   { this.groupColumnDefs(); break; }
+        case 'education/user': { this.userColumnDefs();  break; }
+        case 'education/guestUser':   { this.guestColumnDefs(); break; }
       }
       if (dataReturned.data) {
         this.authService.log("Object was created or modified", dataReturned.data)
