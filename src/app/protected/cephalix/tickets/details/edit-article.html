@@ -4,6 +4,29 @@
         <ion-subtitle>{{article.recDate | date:'yy-MM-dd HH:mm'}} {{article.title}} {{article.sender}}
         </ion-subtitle>
         <ion-buttons slot="end">
+            <ion-button id="add-attachment">
+                <ion-icon slot="icon-only" name="attach"></ion-icon>
+              </ion-button>
+            <ion-modal #modal trigger="add-attachment" (willDismiss)="addAttachment()">
+                <ng-template>
+                  <ion-header>
+                    <ion-toolbar>
+                      <ion-title>{{'Add one Attachment'|translate}}</ion-title>
+                      <ion-buttons slot="end">
+                        <ion-button (click)="modalController.dismiss()">
+                          <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
+                        </ion-button>
+                      </ion-buttons>
+                    </ion-toolbar>
+                  </ion-header>
+                  <ion-content class="ion-padding">
+                    <ion-item>
+                      <ion-input type="file" (change)="onFilesAdded($event)">
+                      </ion-input>
+                    </ion-item>
+                  </ion-content>
+                </ng-template>
+              </ion-modal>
             <ion-button class="ion-no-margin" fill="clear" size="small" (click)="sendArticle()" [disabled]="disabled">
                 <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
             </ion-button>

@@ -80,6 +80,8 @@ export class Article{
     reminder: any = new Date();
     workTime: number = 0;
     pictures: any[] = [];
+    attachment?: any = "";
+    attachmentName?: string = "";
     constructor() {}
 }
 export class InstituteStatus {
