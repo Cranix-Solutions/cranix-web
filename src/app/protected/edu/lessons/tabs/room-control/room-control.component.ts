@@ -117,10 +117,12 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       showBackdrop: true
     });
     modal.onDidDismiss().then((val) => {
-      this.selectedRoomId = this.eduS.selectedRoom.id;
-      console.log("selectRooms returned")
-      this.getRoomStatus();
-      this.statusTimer();
+      if(this.eduS.selectedRoom){
+        this.selectedRoomId = this.eduS.selectedRoom.id;
+        console.log("selectRooms returned")
+        this.getRoomStatus();
+        this.statusTimer();
+      }
     });
     (await modal).present();
   }

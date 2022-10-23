@@ -52,8 +52,8 @@ export class DetailsPage implements OnInit {
       }
     }
     this.ticketWorkers.sort((a, b) => a.label < b.label ? 0 : 1)
-    let sub = this.cephlixS.getTicketById(this.ticketId).subscribe(
-      (val) => {
+    let sub = this.cephlixS.getTicketById(this.ticketId).subscribe({
+      next: (val) => {
         this.ticket = val;
         let ticketOwnerObject: User = this.objectService.getObjectById('user', this.ticket.ownerId);
         this.institute = this.objectService.getObjectById('institute', val.cephalixInstituteId);
@@ -70,9 +70,9 @@ export class DetailsPage implements OnInit {
           this.ticketOwner = ticketOwnerObject.fullName;
         }
       },
-      (err) => { console.log(err) },
-      () => { sub.unsubscribe() }
-    )
+      error: (err) => { console.log(err) },
+      complete: () => { sub.unsubscribe() }
+    })
   }
 
   public ngAfterViewInit() {
@@ -80,12 +80,11 @@ export class DetailsPage implements OnInit {
   }
 
   public readArcticles() {
+    this.articles = [];
     let sub = this.cephlixS.getArticklesOfTicket(this.ticketId).subscribe(
       (val) => {
         this.articles = val
-      },
-      (error) => { this.articles.push(new Article()); },
-      () => { sub.unsubscribe() }
+      }
     );
   }
 
