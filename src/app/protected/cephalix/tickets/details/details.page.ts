@@ -31,8 +31,8 @@ export class DetailsPage implements OnInit {
   nativeWindow: any
   constructor(
     private route: ActivatedRoute,
-    public  router: Router,
-    public  objectService: GenericObjectService,
+    public router: Router,
+    public objectService: GenericObjectService,
     private authService: AuthenticationService,
     private cephlixS: CephalixService,
     private modalController: ModalController,
@@ -43,7 +43,7 @@ export class DetailsPage implements OnInit {
   }
 
   async ngOnInit() {
-    while(!this.objectService.isInitialized() ) {
+    while (!this.objectService.isInitialized()) {
       await new Promise(f => setTimeout(f, 1000));
     }
     for (let i of this.objectService.allObjects['user']) {
@@ -51,11 +51,9 @@ export class DetailsPage implements OnInit {
         this.ticketWorkers.push({ id: i.id, label: i.fullName })
       }
     }
-    console.log("Ticket workers" + this.ticketWorkers)
-    this.ticketWorkers.sort((a,b) => a.label < b.label ? 0:1  )
+    this.ticketWorkers.sort((a, b) => a.label < b.label ? 0 : 1)
     let sub = this.cephlixS.getTicketById(this.ticketId).subscribe(
       (val) => {
-        console.log(val)
         this.ticket = val;
         let ticketOwnerObject: User = this.objectService.getObjectById('user', this.ticket.ownerId);
         this.institute = this.objectService.getObjectById('institute', val.cephalixInstituteId);
@@ -84,7 +82,6 @@ export class DetailsPage implements OnInit {
   public readArcticles() {
     let sub = this.cephlixS.getArticklesOfTicket(this.ticketId).subscribe(
       (val) => {
-        console.log(val);
         this.articles = val
       },
       (error) => { this.articles.push(new Article()); },
@@ -116,7 +113,6 @@ export class DetailsPage implements OnInit {
       }
     }
     this.ticket.ownerId = id
-    console.log(this.ticket)
     this.cephlixS.modifyTicket(this.ticket).subscribe(
       (val) => {
         this.objectService.responseMessage(val);
@@ -212,27 +208,27 @@ export class DetailsPage implements OnInit {
     var protocol = window.location.protocol;
     var port = window.location.port;
     let sub = this.cephlixS.getInstituteToken(this.institute.id)
-        .subscribe({
-            next: (res) => {
-                console.log("Get token from:" + this.institute.uuid)
-                console.log(res);
-                if (res) {
-                    sessionStorage.setItem('shortName', this.institute.uuid);
-                    sessionStorage.setItem('instituteName', this.institute.name);
-                    sessionStorage.setItem('cephalix_token', res);
-                    if (port) {
-                        this.nativeWindow.open(`${protocol}//${hostname}:${port}`);
-                        sessionStorage.removeItem('shortName');
-                    } else {
-                        this.nativeWindow.open(`${protocol}//${hostname}`);
-                        sessionStorage.removeItem('shortName');
-                    }
-                }
-            },
-            error: (err) => { console.log(err) },
-            complete: () => { sub.unsubscribe() }
-          })
-}
+      .subscribe({
+        next: (res) => {
+          console.log("Get token from:" + this.institute.uuid)
+          console.log(res);
+          if (res) {
+            sessionStorage.setItem('shortName', this.institute.uuid);
+            sessionStorage.setItem('instituteName', this.institute.name);
+            sessionStorage.setItem('cephalix_token', res);
+            if (port) {
+              this.nativeWindow.open(`${protocol}//${hostname}:${port}`);
+              sessionStorage.removeItem('shortName');
+            } else {
+              this.nativeWindow.open(`${protocol}//${hostname}`);
+              sessionStorage.removeItem('shortName');
+            }
+          }
+        },
+        error: (err) => { console.log(err) },
+        complete: () => { sub.unsubscribe() }
+      })
+  }
 }
 
 @Component({
@@ -246,6 +242,7 @@ export class EditArticle implements OnInit {
   @Input() ticket: Ticket;
   newText: string = "";
   disabled: boolean = false;
+  files = [];
 
   constructor(
     private cephalixService: CephalixService,
@@ -264,12 +261,30 @@ export class EditArticle implements OnInit {
     console.log(this.newText)
   }
 
+  onFilesAdded(event) {
+    this.files = event.target.files;
+  }
+
+  addAttachment() {
+    console.log("addP")
+    for (let file of this.files) {
+      this.article.attachmentName = file.name;
+      let fileReader = new FileReader();
+      fileReader.onload = (e) => {
+        let index = e.target.result.toString().indexOf("base64,") + 7;
+        this.article.attachment = e.target.result.toString().substring(index);
+      }
+      fileReader.readAsDataURL(file);
+    }
+  }
+
   sendArticle() {
     this.article.recipient = this.article.sender;
     this.article.articleType = 'O';
     this.article.text = this.newText;
     this.disabled = true;
     this.objectService.requestSent();
+
     let sub = this.cephalixService.addArticleToTicket(this.article, this.ticket.id).subscribe(
       (val) => {
         this.objectService.responseMessage(val)
