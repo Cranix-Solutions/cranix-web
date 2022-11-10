@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
-import { DateCellRenderer } from 'src/app/pipes/ag-date-renderer';
+import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
@@ -60,7 +60,7 @@ export class TicketsPage implements OnInit {
     this.defaultColDef = {
       resizable: true,
       sortable: true,
-      minWidth: 110,
+      minWidth: 150,
       hide: false
     };
     this.storage.get('TicketsPage.displayedColumns').then((val) => {
@@ -122,12 +122,14 @@ export class TicketsPage implements OnInit {
           col['valueGetter'] = function (params) {
             return params.context['componentParent'].objectService.idToName('user', params.data.ownerId);
           }
+          col['maxWidth'] = 200
           break;
         }
         case 'recDate': {
           col['sort'] = 'desc',
-            col['cellRendererFramework'] = DateCellRenderer;
-          col['width'] = 80
+          col['cellRendererFramework'] = DateTimeCellRenderer;
+          col['minWidth'] = 180
+          col['maxWidth'] = 180
           break;
         }
         case 'ticketStatus': {
@@ -139,8 +141,7 @@ export class TicketsPage implements OnInit {
           col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
-          col['minWidth'] = 100
-          col['maxWidth'] = 70
+          col['maxWidth'] = 150
           break;
         }
       }
@@ -271,7 +272,7 @@ export class TicketsPage implements OnInit {
       this.authService.log("most lett vegrehajtva.")
     })
   }
-  reloadAllObjects(){
+  reloadAllObjects() {
     this.objectService.okMessage(this.languageS.trans("Reloading all tickets"))
     this.objectService.getAllObject('ticket')
   }
