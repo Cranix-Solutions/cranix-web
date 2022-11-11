@@ -12,10 +12,9 @@ import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.c
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
-import { Institute, Ticket } from 'src/app/shared/models/cephalix-data-model'
+import { Ticket } from 'src/app/shared/models/cephalix-data-model'
 import { AuthenticationService } from 'src/app/services/auth.service';
-import { interval, Subscription } from 'rxjs';
-import { takeWhile } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { CephalixService } from 'src/app/services/cephalix.service';
 
 @Component({
@@ -89,12 +88,14 @@ export class TicketsPage implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.ticketStatus = interval(60000).pipe(takeWhile(() => this.alive)).subscribe((func => {
+    /* Do not refresh tickets
+      this.ticketStatus = interval(60000).pipe(takeWhile(() => this.alive)).subscribe((func => {
       this.objectService.getAllObject('ticket');
       if (this.authService.isMD()) {
         this.rowData = this.objectService.allObjects['ticket'];
       }
     }))
+    */
   }
 
   createColumnDefs() {
@@ -127,7 +128,7 @@ export class TicketsPage implements OnInit {
         }
         case 'recDate': {
           col['sort'] = 'desc',
-          col['cellRendererFramework'] = DateTimeCellRenderer;
+            col['cellRendererFramework'] = DateTimeCellRenderer;
           col['minWidth'] = 180
           col['maxWidth'] = 180
           break;
@@ -275,5 +276,9 @@ export class TicketsPage implements OnInit {
   reloadAllObjects() {
     this.objectService.okMessage(this.languageS.trans("Reloading all tickets"))
     this.objectService.getAllObject('ticket')
+    if (this.authService.isMD()) {
+      this.rowData = this.objectService.allObjects['ticket'];
+      (<HTMLInputElement>document.getElementById('ticketsFilterMD')).value = ""
+    }
   }
 }

@@ -23,10 +23,9 @@ export class DetailsPage implements OnInit {
   articles: Article[] = [new Article()];
   institute: Institute;
   institutes: ObjectList[] = [];
-  allInstitutes: ObjectList[] = [];
+  instObject: ObjectList = new ObjectList;
   articleOpen = {};
-  ticketOwner: string = "";
-  ticketOwnerId: number;
+  ticketOwner: ObjectList = new ObjectList
   ticketWorkers: ObjectList[] = [];
   nativeWindow: any
   constructor(
@@ -58,16 +57,22 @@ export class DetailsPage implements OnInit {
         let ticketOwnerObject: User = this.objectService.getObjectById('user', this.ticket.ownerId);
         this.institute = this.objectService.getObjectById('institute', val.cephalixInstituteId);
         this.readArcticles();
-        if (!this.institute) {
-          for (let i of this.objectService.allObjects['institute']) {
-            this.institutes.push({ id: i.id, label: i.name + " " + i.locality })
-          }
-          this.institute = new Institute();
-          console.log(this.institutes, this.institute)
+        for (let i of this.objectService.allObjects['institute']) {
+          this.institutes.push({ id: i.id, label: i.name + " " + i.locality })
+        }
+        console.log(this.institutes, this.institute)
+        if(this.institute){
+          this.instObject.id = this.institute.id
+          this.instObject.label = this.institute.name + " " + this.institute.locality
+        } else {
+          this.institute  = new Institute()
+          this.instObject = new ObjectList()
         }
         if (ticketOwnerObject) {
-          this.ticketOwnerId = ticketOwnerObject.id;
-          this.ticketOwner = ticketOwnerObject.fullName;
+          this.ticketOwner.id = ticketOwnerObject.id;
+          this.ticketOwner.label = ticketOwnerObject.fullName;
+        } else {
+          this.ticketOwner = new ObjectList()
         }
       },
       error: (err) => { console.log(err) },
@@ -90,37 +95,30 @@ export class DetailsPage implements OnInit {
 
   public assigneTicketToMe() {
     this.ticket.ownerId = this.authService.session.userId;
-    this.ticketOwner = this.authService.session.fullName;
-    this.cephlixS.modifyTicket(this.ticket).subscribe(
-      (val) => {
+    this.ticketOwner.label = this.authService.session.fullName;
+    this.ticketOwner.id = this.authService.session.userId;
+    this.cephlixS.modifyTicket(this.ticket).subscribe({
+      next: (val) => {
         this.objectService.responseMessage(val);
         this.objectService.getAllObject('ticket');
       },
-      (err) => {
+      error: (err) => {
         this.objectService.errorMessage(err)
       }
-    )
+    })
   }
 
   public setOwner() {
-    let tmp = (<HTMLInputElement>document.getElementById("ownerId")).value;
-    let id = 0;
-    for (let i of this.ticketWorkers) {
-      if (i.label == tmp) {
-        id = i.id
-        break
-      }
-    }
-    this.ticket.ownerId = id
-    this.cephlixS.modifyTicket(this.ticket).subscribe(
-      (val) => {
+    this.ticket.ownerId = this.ticketOwner.id
+    this.cephlixS.modifyTicket(this.ticket).subscribe({
+      next: (val) => {
         this.objectService.responseMessage(val);
         this.objectService.getAllObject('ticket');
       },
-      (err) => {
+      error: (err) => {
         this.objectService.errorMessage(err)
       }
-    )
+    })
   }
 
   async answerArticle(article: Article) {
@@ -173,19 +171,11 @@ export class DetailsPage implements OnInit {
   }
 
   public setInstitute() {
-    let tmp = (<HTMLInputElement>document.getElementById("institute")).value;
-    let id = 0;
-    for (let i of this.institutes) {
-      if (i.label == tmp) {
-        id = i.id
-      }
-    }
-    console.log(id)
     this.objectService.requestSent();
-    this.cephlixS.setInstituteForTicket(this.ticketId, id).subscribe(
+    this.cephlixS.setInstituteForTicket(this.ticketId, this.instObject.id).subscribe(
       (val) => {
         this.objectService.responseMessage(val)
-        this.institute = this.objectService.getObjectById('institute', id);
+        this.institute = this.objectService.getObjectById('institute', this.instObject.id);
         this.objectService.getAllObject('ticket');
       }
     )

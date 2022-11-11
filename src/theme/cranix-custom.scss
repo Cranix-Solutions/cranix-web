@@ -51,6 +51,7 @@
   opacity  : 0;
 }
 
+
 /*
  * edited styling for ag-grid 
  *
@@ -277,10 +278,7 @@ ion-card {
   }
 }
 
-.card-content-ios {
-  padding-inline-start: 0%;
-  padding-inline-end: 0%;
-}
+
 /*
 * ion-item should inherit background from its container for example ion-row
 */
@@ -358,6 +356,18 @@ ion-card-content{
 ion-card-title{
   font-size : 14px
 }
+.ion-card-content-md {
+  padding-left: 2px;
+  padding-inline-start: 2px;
+  padding-top: 2px;
+  padding-right: 2px;
+  padding-inline-end: 2px;
+  padding-bottom: 2px;
+}
+.card-content-ios {
+  padding-inline-start: 0%;
+  padding-inline-end: 0%;
+}
 /*
  * error and short messages classes
  *
@@ -375,5 +385,9 @@ ion-card-title{
 ion-item-divider{
   margin-top: 0px;
   min-height: 1px!important;
+}
+
+.ql-editor {
+  padding: 0px
 }
 
