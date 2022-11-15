@@ -25,7 +25,7 @@ export class EductaionService {
 	selectedRoomId: number;
 	//TODO make it configurable
 	screenShotTimeDealy: number = 5000;
-	uploadState = new BehaviorSubject(false);
+	uploadState = new BehaviorSubject<boolean>(false);
 	myRooms: Room[];
 	selectedRoom: Room;
 	screenShots = {};
@@ -127,7 +127,6 @@ export class EductaionService {
 	//GET 
 
 	uploadDataToObjects(fd: FormData, objectType: string) {
-		this.uploadState.next(true);
 		this.url = `${this.hostname}/education/${objectType}s/upload`;
 		console.log(this.url);
 		let subs = this.http.post<ServerResponse[]>(this.url, fd, { headers: this.authService.formHeaders }).subscribe({
