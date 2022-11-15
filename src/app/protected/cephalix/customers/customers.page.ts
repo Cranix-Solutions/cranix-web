@@ -322,7 +322,7 @@ export class EditInstitutes implements OnInit {
       }
     }
     await new Promise(f => setTimeout(f, 3000));
-    this.objectService.getAllObject('insitute')
+    this.objectService.getAllObject('institute')
     this.modalCtrl.dismiss()
   }
 }
