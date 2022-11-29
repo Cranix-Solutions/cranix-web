@@ -61,11 +61,11 @@ export class DetailsPage implements OnInit {
           this.institutes.push({ id: i.id, label: i.name + " " + i.locality })
         }
         console.log(this.institutes, this.institute)
-        if(this.institute){
+        if (this.institute) {
           this.instObject.id = this.institute.id
           this.instObject.label = this.institute.name + " " + this.institute.locality
         } else {
-          this.institute  = new Institute()
+          this.institute = new Institute()
           this.instObject = new ObjectList()
         }
         if (ticketOwnerObject) {
@@ -217,6 +217,12 @@ export class DetailsPage implements OnInit {
         error: (err) => { console.log(err) },
         complete: () => { sub.unsubscribe() }
       })
+  }
+
+  isHTML(s: string) {
+    //var htmlRegex = new RegExp("<([A-Za-z][A-Za-z0-9]*)\b[^>]*>(.*?)</\1>");
+    var htmlRegex = new RegExp("<\/?[a-z][\s\S]*>");
+    return htmlRegex.test(s);
   }
 }
 

@@ -121,7 +121,12 @@
       </ion-toolbar>
     </ion-card-header>
     <ion-card-content style="height: 50px; padding: 5px; padding-top: 0px;" [id]="'article' + article.id">
-      <div [innerText]="article.text"></div>
+      <ng-template [ngIf]="isHTML(article.text)" [ngIfElse]="textArea">
+        <div [innerHTML]="article.text"></div>
+      </ng-template>
+      <ng-template #textArea>
+        <div [innerText]="article.text"></div>
+      </ng-template>
       <!-- quill-view-html style="padding: 0px;" [content]="article.text" format="text" theme="snow"></quill-view-html -->
     </ion-card-content>
   </ion-card>
