@@ -46,6 +46,9 @@ export class RoomDevComponent implements OnInit, OnDestroy {
     this.screenShot = "data:image/jpg;base64," + this.device.screenShot;
   }
 
+  dropped(event){
+    console.log(event)
+  }
   showScreen() {
     var hostname = window.location.hostname;
     var protocol = window.location.protocol;

@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateLoader, TranslateModule, TranslateService, TranslateStore } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { DragAndDropModule } from 'angular-draggable-droppable';
 
 //own modules
 import { CranixSharedModule } from './shared/cranix-shared.module';
@@ -32,6 +33,7 @@ import { UsersService } from './services/users.service';
 import { UtilsService } from './services/utils.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
 }
@@ -42,6 +44,7 @@ export function createTranslateLoader(http: HttpClient) {
   imports: [
     BrowserAnimationsModule,
     CranixSharedModule,
+    DragAndDropModule,
     HttpClientModule,
     IonicModule.forRoot(),
     IonicStorageModule.forRoot(),

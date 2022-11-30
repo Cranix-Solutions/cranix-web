@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateService  } from '@ngx-translate/core';
@@ -40,6 +41,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    DragDropModule,
     FormsModule,
     RouterModule.forChild(routes),
     IonicModule,

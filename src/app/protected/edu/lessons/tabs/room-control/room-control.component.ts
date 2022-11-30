@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { CdkDragDrop, CdkDragEnter, CdkDragExit }  from '@angular/cdk/drag-drop';
 import { AuthenticationService } from 'src/app/services/auth.service';
-import { Room, AccessInRooms, EduRoom } from 'src/app/shared/models/data-model';
+import { Room, EduRoom } from 'src/app/shared/models/data-model';
 import { EductaionService } from 'src/app/services/education.service';
 import { takeWhile } from 'rxjs/operators';
 import { PopoverController, IonSelect, ModalController } from '@ionic/angular';
@@ -75,7 +76,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       this.getRoomStatus();
     }))
   }
-  
+
   getRoomStatus() {
     if (!this.disableChange) {
       this.eduS.getRoomById(this.selectedRoomId)
@@ -109,7 +110,9 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   openSelect() {
     this.selectRef.open();
   }
-
+  drop(event) {
+    console.log(event)
+  }
   async selectRooms() {
     const modal = await this.modalController.create({
       component: SelectRoomComponent,
@@ -117,7 +120,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       showBackdrop: true
     });
     modal.onDidDismiss().then((val) => {
-      if(this.eduS.selectedRoom){
+      if (this.eduS.selectedRoom) {
         this.selectedRoomId = this.eduS.selectedRoom.id;
         console.log("selectRooms returned")
         this.getRoomStatus();

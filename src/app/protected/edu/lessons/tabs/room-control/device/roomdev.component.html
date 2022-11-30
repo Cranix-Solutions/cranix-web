@@ -1,22 +1,29 @@
 <ion-card no-margin>
-  <ion-card-header *ngIf="device" style="padding: 1px;">
-    <ion-toolbar style="padding: 1px;">
-      <ion-label>
-        {{device.name}} : {{ device.loggedInName }}
-      </ion-label>
-      <ion-buttons slot="end">
-        <ion-button fill="clear" (click)="openAction($event)">
-          <ion-icon name="desktop"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-card-header>
-  <ion-card-content class="ion-justify-content-center">
-    <form>
-      <button *ngIf="device" (click)="showScreen()">
-        <img src="{{screenShot}}" />
-      </button>
-    </form>
-    <h3 *ngIf="!device">{{ 'NODEVICE' | translate}}</h3>
-  </ion-card-content>
+  <div *ngIf="device" mwlDraggable [dragData]="device">
+    <ion-card-header style="padding: 1px;">
+      <ion-toolbar style="padding: 1px;">
+        <ion-label>
+          {{device.name}} : {{ device.loggedInName }}
+        </ion-label>
+        <ion-buttons slot="end">
+          <ion-button fill="clear" (click)="openAction($event)">
+            <ion-icon name="desktop"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-card-header>
+    <ion-card-content class="ion-justify-content-center">
+      <form>
+        <button (click)="showScreen()">
+          <img src="{{screenShot}}" />
+        </button>
+      </form>
+      <h3>{{ 'NODEVICE' | translate}}</h3>
+    </ion-card-content>
+  </div>
+  <div *ngIf="!device" mwlDroppable (drop)="drop($event)">
+    <ion-card-content class="ion-justify-content-center">
+      <h3>{{ 'NODEVICE' | translate}}</h3>
+    </ion-card-content>
+  </div>
 </ion-card>
