@@ -29,6 +29,8 @@ export class EductaionService {
 	myRooms: Room[];
 	selectedRoom: Room;
 	screenShots = {};
+	alive: boolean = true;
+	dropLists: string[] = [];
 
 	constructor(
 		public objectService: GenericObjectService,

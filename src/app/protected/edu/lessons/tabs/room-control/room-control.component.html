@@ -56,11 +56,19 @@
 </ion-toolbar>
 <ion-item-divider></ion-item-divider>
 <ion-content>
-  <ion-grid *ngIf="room" fiexd="true">
+  <ion-grid *ngIf="room" cdkDropListGroup>
+    <ion-row id="row-{{i}}" cdkDropList cdkDropListOrientation="horizontal" class="example-list"
+      *ngFor="let row of rows; index as i" (cdkDropListDropped)="drop($event)">
+      <ion-col *ngFor="let device of row; index as j">
+        <cranix-roomdev [row]="i" [place]="j" [device]="device"></cranix-roomdev>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <!-- ion-grid *ngIf="room" fiexd="true">
     <ion-row class="grid-row" *ngFor="let row of array(room.rows); index as r">
       <ion-col *ngFor="let dev of array(room.places); index as p" size="{{gridSize}}">
         <cranix-roomdev [row]="r+1" [place]="p+1" [device]="getDevice(r+1,p+1)" [index]="dev"></cranix-roomdev>
       </ion-col>
     </ion-row>
-  </ion-grid>
+  </ion-grid-->
 </ion-content>

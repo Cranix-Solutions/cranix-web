@@ -14,15 +14,14 @@ import { WindowRef } from 'src/app/shared/models/ohters'
 })
 export class RoomDevComponent implements OnInit, OnDestroy {
 
-  @Input() index: number;
   @Input() device: Device;
   @Input() row: number;
   @Input() place: number;
-
   screenShot;
   devStatusSub: Subscription;
   alive: boolean = true;
   nativeWindow: any;
+  id;
 
   constructor(
     public win: WindowRef,
@@ -34,6 +33,7 @@ export class RoomDevComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.id = this.row.toString() + '-' + this.place.toString()
     if (this.device) {
       this.getScreen();
       this.devStatusSub = interval(5000).pipe(takeWhile(() => this.alive)).subscribe((func => {
@@ -46,8 +46,37 @@ export class RoomDevComponent implements OnInit, OnDestroy {
     this.screenShot = "data:image/jpg;base64," + this.device.screenShot;
   }
 
-  dropped(event){
-    console.log(event)
+  drop(event){
+    console.log(this.row,this.place,event.item.data)
+    if(event.item.data){
+      if(this.device) {
+        this.device.row   = event.item.data.row
+        this.device.place = event.item.data.place
+      }
+      event.item.data.row   = this.row + 1;
+      event.item.data.place = this.place + 1;
+      this.eduService.placeDeviceById(event.item.data.id,event.item.data).subscribe(
+        (val1) => {
+          console.log(val1)
+          if(this.device){
+            this.eduService.placeDeviceById(this.device.id,this.device).subscribe(
+              (val2) => { 
+                this.eduService.alive = true
+                console.log(val2)
+              }
+            )
+          } else {
+            this.eduService.alive = true
+          }
+        }
+      ) 
+    } else {
+      this.eduService.alive = true
+    }
+  }
+
+  stopRefresh(){
+    this.eduService.alive = false
   }
   showScreen() {
     var hostname = window.location.hostname;

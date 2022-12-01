@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { CdkDragDrop, CdkDragEnter, CdkDragExit }  from '@angular/cdk/drag-drop';
 import { AuthenticationService } from 'src/app/services/auth.service';
-import { Room, EduRoom } from 'src/app/shared/models/data-model';
+import { Room, EduRoom, Device } from 'src/app/shared/models/data-model';
 import { EductaionService } from 'src/app/services/education.service';
 import { takeWhile } from 'rxjs/operators';
 import { PopoverController, IonSelect, ModalController } from '@ionic/angular';
@@ -18,9 +18,6 @@ import { interval, Subscription } from 'rxjs';
   styleUrls: ['./room-control.component.scss'],
 })
 export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
-
-  alive = true;
-
   direct: boolean;
   login: boolean;
   portal: boolean;
@@ -32,6 +29,8 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   selectedRoomId: number;
 
   rooms: Room[];
+
+  rows: Device[][];
 
   gridSize: number = 2;
   @ViewChild('roomSelect') selectRef: IonSelect;
@@ -56,6 +55,22 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  getDevice(r, p) {
+    return this.room.devices.find(e => e.row === r && e.place === p);
+  }
+
+  orderRoom(){
+    this.rows = [...Array(this.room.rows)].map(e => Array(this.room.places));
+    console.log(this.room.rows,this.room.places,this.eduS.selectedRoom.rows, this.eduS.selectedRoom.places);
+    this.eduS.dropLists = [];
+    for( let i = 0; i < this.room.rows; i++ ){
+      for( let j = 0; j < this.room.places; j++) {
+        this.rows[i][j] = this.getDevice(i+1,j+1)
+        this.eduS.dropLists.push( i.toString() + '-' + j.toString() )
+      }
+    }
+  }
+
   ngAfterViewInit() {
     if (this.authS.session.roomId) {
       let room: Room = this.objectS.getObjectById('room', this.authS.session.roomId);
@@ -72,7 +87,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   statusTimer() {
-    this.roomStatusSub = interval(5000).pipe(takeWhile(() => this.alive)).subscribe((func => {
+    this.roomStatusSub = interval(5000).pipe(takeWhile(() => this.eduS.alive)).subscribe((func => {
       this.getRoomStatus();
     }))
   }
@@ -80,16 +95,14 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   getRoomStatus() {
     if (!this.disableChange) {
       this.eduS.getRoomById(this.selectedRoomId)
-        .pipe(takeWhile(() => this.alive))
+        .pipe(takeWhile(() => this.eduS.alive))
         .subscribe(res => {
           if (!this.disableChange) {
             this.room = res
+            this.orderRoom()
           }
         });
     }
-  }
-  array(n: number): any[] {
-    return Array(n);
   }
 
   sizeChange(ev) {
@@ -99,9 +112,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log("Cliked");
   }
 
-  getDevice(r, p) {
-    return this.room.devices.find(e => e.row === r && e.place === p);
-  }
+  
 
   selectChanged(ev) {
     console.log(`Select roomId is: ${this.selectedRoomId}`)
@@ -112,6 +123,9 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   drop(event) {
     console.log(event)
+  }
+  stopRefresh(){
+    this.eduS.alive = false
   }
   async selectRooms() {
     const modal = await this.modalController.create({
@@ -164,7 +178,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
     }
     this.eduS.setAccessStatus(this.room.accessInRooms)
-      .pipe(takeWhile(() => this.alive))
+      .pipe(takeWhile(() => this.eduS.alive))
       .subscribe({
         next: (res) => {
           this.disableChange = false;
@@ -213,6 +227,6 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    this.alive = false;
+    this.eduS.alive = false;
   }
 }

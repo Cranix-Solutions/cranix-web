@@ -33,10 +33,8 @@
     "ag-grid-angular": "",
     "ag-grid-community": "",
     "angular-csv-ext": "",
-    "angular-draggable-droppable": "^7.0.0",
     "ionic-selectable": "",
     "ngx-quill": "^16.2.1",
-    "quill": "^1.3.7",
     "rxjs": "",
     "tslib": "",
     "zone.js": ""
