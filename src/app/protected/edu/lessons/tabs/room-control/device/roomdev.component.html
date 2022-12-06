@@ -1,12 +1,10 @@
-<div cdkDropList [id]="id" cdkDropListOrientation="horizontal" [cdkDropListConnectedTo]="this.eduService.dropLists" (cdkDropListDropped)="drop($event)">
-  <ion-card class="example-box" no-margin [cdkDragData]="device" cdkDrag (cdkDragStarted)="stopRefresh()">
-    <img *cdkDragPreview src="/tickets/1505/2584/img1.jpeg" alt="movie.title">
-    <div class="example-handle" cdkDragHandle>
-      <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
-        <path d="M0 0h24v24H0z" fill="none"></path>
-      </svg>
-    </div>
+<div cdkDropList [id]="id" cdkDropListOrientation="horizontal" [cdkDropListConnectedTo]="this.eduS.dropLists"
+  (cdkDropListDropped)="drop($event)">
+  <!-- ion-card class="example-box" no-margin [cdkDragData]="device" cdkDrag (cdkDragStarted)="stopRefresh()" -->
+  <ion-card no-margin [cdkDragData]="device" cdkDrag (cdkDragStarted)="stopRefresh()">
+    <img *cdkDragPreview
+      src="data:image/jpg;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAACRklEQVRoge2YXVPTQBSGHwSu9D/pBUVbNIJQFQEdvPIX+wXy0TKMOnitaYN4sbtjkk2TPcmWTYc8M2cmaXL2nNNNzr4b6OhYWAbaFpo+8BuIgeeBc6nNAPgD3GiLgc2gGdVgg2wRxibAi4B5idhGJZwvwlgCvAmWnSM7lBeRLmYvUI6VRMCU6iKMTbVP6xhh/+tFM5E+P/cV/J6vgYDl1PE1cFBwz4G+ZljxGN8bEWpWTvi/ZuRnBH3tBDUbz3wFX/I10Axucudzi+fz0QpKV0jbuHOFbKI60gilaF05Sx2fCvw2gAtUZ/Omml+SXbFHAt8+MNb2ROA3JqsAhgLfQraxZYekkLpc5GJOdC612MIWgIn+fd5sYcuZSZ3Yfez9RALs+8rUgSH20zBB8M48Re3mXFWssY/AQ0Gij7SPNE6scyzlMWqPLR3c2FdBIccN4sTkdFq+/d6nmSJdFdzbZA1bBh5U3fQK2QbJ2BjZGtPH7k4ulugcnWj8onnAW8PZx26BMbDuK9MSetgNp1HXfIfa0aUH/Nw4zWq+5GJeA2+bDvqebDHHAt8ecKRtTeB3TraIQ4FvKXvAT+ASmWZKJ3RWcW+aCLjStuvi0G1120ZXSNvoCilgAHwDPqHa7ix6qHXiFAcVe9ssAd/JKoAIWydFZFfsH8y/c4r5hS1niuR3+vwqSKYVmA/Urip21ofuVnCIWzF/gQ+BcnRml/L9TIISowvBa4qLSfCgYm+b/Ie9hBa/E1WYmZki2J62lSEePnl2dATiH9QGVle4d2GeAAAAAElFTkSuQmCC"
+      alt="moving">
     <div *ngIf="device">
       <ion-card-header style="padding: 1px;">
         <ion-toolbar style="padding: 1px;">
@@ -16,6 +14,9 @@
           <ion-buttons slot="end">
             <ion-button fill="clear" (click)="openAction($event)">
               <ion-icon name="desktop"></ion-icon>
+            </ion-button>
+            <ion-button cdkDragHandle fill="clear">
+              <ion-icon name="expand-outline"></ion-icon>
             </ion-button>
           </ion-buttons>
         </ion-toolbar>
@@ -29,6 +30,15 @@
       </ion-card-content>
     </div>
     <div *ngIf="!device">
+      <ion-card-header style="padding: 1px;">
+        <ion-toolbar style="padding: 1px;">
+          <ion-buttons slot="end">
+            <ion-button cdkDragHandle fill="clear">
+              <ion-icon name="expand-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-card-header>
       <ion-card-content class="ion-justify-content-center">
         <h3>{{ 'NODEVICE' | translate}}</h3>
       </ion-card-content>

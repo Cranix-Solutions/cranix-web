@@ -14,6 +14,8 @@ import { ServerResponse } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from './auth.service';
 import { GenericObjectService } from './generic-object.service';
 import { LanguageService } from './language.service';
+import { interval } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 
 @Injectable()
 export class EductaionService {
@@ -22,15 +24,18 @@ export class EductaionService {
 	hostname: string;
 	url: string;
 	res: any;
-	selectedRoomId: number;
 	//TODO make it configurable
 	screenShotTimeDealy: number = 5000;
 	uploadState = new BehaviorSubject<boolean>(false);
 	myRooms: Room[];
 	selectedRoom: Room;
 	screenShots = {};
+	disableChange: boolean = false;
 	alive: boolean = true;
 	dropLists: string[] = [];
+	room: EduRoom;
+	rooms: Room[];
+	rows: Device[][];
 
 	constructor(
 		public objectService: GenericObjectService,
@@ -192,5 +197,51 @@ export class EductaionService {
 		this.url = `${this.hostname}/education/guestUsers/${id}`;
 		console.log(this.url);
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers })
+	}
+
+	//Functions to room control
+	getDevice(r, p) {
+		return this.room.devices.find(e => e.row === r && e.place === p);
+	}
+
+	orderRoom() {
+		this.rows = [...Array(this.room.rows)].map(e => Array(this.room.places));
+		console.log(this.room.rows, this.room.places, this.selectedRoom.rows, this.selectedRoom.places);
+		this.dropLists = [];
+		for (let i = 0; i < this.room.rows; i++) {
+			for (let j = 0; j < this.room.places; j++) {
+				this.rows[i][j] = this.getDevice(i + 1, j + 1)
+				this.dropLists.push(i.toString() + '-' + j.toString())
+			}
+		}
+	}
+
+	statusTimer() {
+		interval(5000).pipe(takeWhile(() => this.alive)).subscribe((func => {
+			console.log("EducationService getEduRoomStatus timed")
+			this.getEduRoomStatus(false);
+		}))
+	}
+
+	getEduRoomStatus(order: boolean) {
+		if (this.disableChange) {
+			return
+		}
+		this.getRoomById(this.selectedRoom.id)
+			.pipe(takeWhile(() => this.alive))
+			.subscribe(res => {
+				this.room = res
+				if(order) {
+					this.orderRoom()
+				}
+			});
+
+	}
+
+	destroyEduRoom(){
+		this.alive = null;
+		this.dropLists = null;
+		this.rows = null;
+		this.selectedRoom = null;
 	}
 }

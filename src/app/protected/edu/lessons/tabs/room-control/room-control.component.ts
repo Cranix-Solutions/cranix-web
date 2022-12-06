@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
-import { CdkDragDrop, CdkDragEnter, CdkDragExit }  from '@angular/cdk/drag-drop';
 import { AuthenticationService } from 'src/app/services/auth.service';
-import { Room, EduRoom, Device } from 'src/app/shared/models/data-model';
+import { Room } from 'src/app/shared/models/data-model';
 import { EductaionService } from 'src/app/services/education.service';
 import { takeWhile } from 'rxjs/operators';
 import { PopoverController, IonSelect, ModalController } from '@ionic/angular';
@@ -10,8 +9,6 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { FilesCollectComponent } from 'src/app/shared/actions/files-collect/files-collect.component';
 import { FilesUploadComponent } from 'src/app/shared/actions/files-upload/files-upload.component';
 import { SelectRoomComponent } from 'src/app/shared/actions/select-room/select-room.component'
-import { interval, Subscription } from 'rxjs';
-
 @Component({
   selector: 'cranix-room-control',
   templateUrl: './room-control.component.html',
@@ -23,21 +20,11 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   portal: boolean;
   printing: boolean;
   proxy: boolean;
-  disableChange = false;
-  room: EduRoom;
-
-  selectedRoomId: number;
-
-  rooms: Room[];
-
-  rows: Device[][];
 
   gridSize: number = 2;
-  @ViewChild('roomSelect') selectRef: IonSelect;
+  @ViewChild('selectRoom') selectRef: IonSelect;
 
   gridSizes = [1, 2, 3, 4, 6, 12]
-
-  roomStatusSub: Subscription;
 
   constructor(
     public authS: AuthenticationService,
@@ -49,83 +36,51 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     this.eduS.getMyRooms();
   }
   ngOnInit() {
-    this.selectedRoomId = null;
+    this.eduS.selectedRoom = null;
     if (this.authS.isMD()) {
       this.gridSize = 12
     }
   }
 
-  getDevice(r, p) {
-    return this.room.devices.find(e => e.row === r && e.place === p);
-  }
-
-  orderRoom(){
-    this.rows = [...Array(this.room.rows)].map(e => Array(this.room.places));
-    console.log(this.room.rows,this.room.places,this.eduS.selectedRoom.rows, this.eduS.selectedRoom.places);
-    this.eduS.dropLists = [];
-    for( let i = 0; i < this.room.rows; i++ ){
-      for( let j = 0; j < this.room.places; j++) {
-        this.rows[i][j] = this.getDevice(i+1,j+1)
-        this.eduS.dropLists.push( i.toString() + '-' + j.toString() )
-      }
-    }
-  }
-
+  
   ngAfterViewInit() {
     if (this.authS.session.roomId) {
       let room: Room = this.objectS.getObjectById('room', this.authS.session.roomId);
       if (room.roomControl == 'inRoom') {
-        this.selectedRoomId = parseInt(this.authS.session.roomId);
+        this.eduS.selectedRoom = room;
       }
     }
-    if (this.selectedRoomId) {
-      this.getRoomStatus();
-      this.statusTimer();
+    if (this.eduS.selectedRoom) {
+      this.eduS.getEduRoomStatus(true);
+      this.eduS.statusTimer();
     } else {
-      this.selectRooms();
+      this.selectRef.open();
     }
   }
 
-  statusTimer() {
-    this.roomStatusSub = interval(5000).pipe(takeWhile(() => this.eduS.alive)).subscribe((func => {
-      this.getRoomStatus();
-    }))
-  }
-
-  getRoomStatus() {
-    if (!this.disableChange) {
-      this.eduS.getRoomById(this.selectedRoomId)
-        .pipe(takeWhile(() => this.eduS.alive))
-        .subscribe(res => {
-          if (!this.disableChange) {
-            this.room = res
-            this.orderRoom()
-          }
-        });
-    }
-  }
-
+  
   sizeChange(ev) {
     console.log('event is: ', ev);
   }
   click() {
     console.log("Cliked");
   }
-
-  
-
   selectChanged(ev) {
-    console.log(`Select roomId is: ${this.selectedRoomId}`)
-    this.statusTimer();
+    console.log(`Select roomId is: ${this.eduS.selectedRoom.id}`)
+    this.eduS.statusTimer();
   }
   openSelect() {
     this.selectRef.open();
   }
-  drop(event) {
-    console.log(event)
-  }
-  stopRefresh(){
-    this.eduS.alive = false
+
+  roomSelected(){
+    if (this.eduS.selectedRoom) {
+      console.log("selectRooms returned")
+      this.eduS.disableChange = false;
+      this.eduS.alive = true;
+      this.eduS.getEduRoomStatus(true);
+      this.eduS.statusTimer();
+    }
   }
   async selectRooms() {
     const modal = await this.modalController.create({
@@ -135,10 +90,11 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     modal.onDidDismiss().then((val) => {
       if (this.eduS.selectedRoom) {
-        this.selectedRoomId = this.eduS.selectedRoom.id;
         console.log("selectRooms returned")
-        this.getRoomStatus();
-        this.statusTimer();
+        this.eduS.disableChange = false;
+        this.eduS.alive = true;
+        this.eduS.getEduRoomStatus(true);
+        this.eduS.statusTimer();
       }
     });
     (await modal).present();
@@ -153,7 +109,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       event: ev,
       componentProps: {
         objectType: "education/room",
-        objectIds: [this.room.id]
+        objectIds: [this.eduS.room.id]
       },
       animated: true,
       showBackdrop: true
@@ -162,26 +118,26 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   setAccess(type: string) {
     this.objectS.requestSent();
-    this.disableChange = true;
+    this.eduS.disableChange = true;
     switch (type) {
       case 'login':
-        this.room.accessInRooms.login = !this.room.accessInRooms.login;
+        this.eduS.room.accessInRooms.login = !this.eduS.room.accessInRooms.login;
         break;
       case 'proxy':
-        this.room.accessInRooms.proxy = !this.room.accessInRooms.proxy;
+        this.eduS.room.accessInRooms.proxy = !this.eduS.room.accessInRooms.proxy;
         break;
       case 'direct':
-        this.room.accessInRooms.direct = !this.room.accessInRooms.direct;
+        this.eduS.room.accessInRooms.direct = !this.eduS.room.accessInRooms.direct;
         break;
       case 'printing':
-        this.room.accessInRooms.printing = !this.room.accessInRooms.printing;
+        this.eduS.room.accessInRooms.printing = !this.eduS.room.accessInRooms.printing;
         break;
     }
-    this.eduS.setAccessStatus(this.room.accessInRooms)
+    this.eduS.setAccessStatus(this.eduS.room.accessInRooms)
       .pipe(takeWhile(() => this.eduS.alive))
       .subscribe({
         next: (res) => {
-          this.disableChange = false;
+          this.eduS.disableChange = false;
           this.objectS.responseMessage(res);
         },
         error: (err) => {
@@ -202,7 +158,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       showBackdrop: true,
       componentProps: {
         objectType: "room",
-        actionMap: { objectIds: [this.selectedRoomId] }
+        actionMap: { objectIds: [this.eduS.selectedRoom.id] }
       }
     });
     (await modal).present();
@@ -219,7 +175,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       showBackdrop: true,
       componentProps: {
         objectType: "room",
-        actionMap: { objectIds: [this.selectedRoomId] }
+        actionMap: { objectIds: [this.eduS.selectedRoom.id] }
       }
     });
     (await modal).present();
@@ -227,6 +183,6 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    this.eduS.alive = false;
+    this.eduS.destroyEduRoom();
   }
 }

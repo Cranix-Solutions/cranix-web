@@ -122,7 +122,7 @@ export class MypositiveComponent implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
-        this.authService.log("Object was created or modified", dataReturned.data )
+        this.authService.log("Object was created or modified", dataReturned.data)
       }
     });
     (await modal).present();
@@ -132,29 +132,29 @@ export class MypositiveComponent implements OnInit {
    * Activate the selected positive lists in the selected room
    * @param ev 
    */
-  activate(ev: Event){
+  activate(ev: Event) {
     let ids: number[] = [];
-    for( let obj of this.gridApi.getSelectedRows() ) {
+    for (let obj of this.gridApi.getSelectedRows()) {
       ids.push(obj.id);
     }
     this.objectService.requestSent();
-    let subs = this.educationService.activatePositivListInRoom(this.educationService.selectedRoomId,ids).subscribe(
-      (val) => { this.objectService.responseMessage(val) },
-      (err) => { this.objectService.errorMessage(err) },
-      () => { subs.unsubscribe() }
-    )
+    let subs = this.educationService.activatePositivListInRoom(this.educationService.selectedRoom.id, ids).subscribe({
+      next: (val) => { this.objectService.responseMessage(val) },
+      error: (err) => { this.objectService.errorMessage(err) },
+      complete: () => { subs.unsubscribe() }
+    })
   }
 
   /**
    * Deactivate the selected positive lists in the selected room
    * @param ev 
    */
-  deactivate(ev: Event){
+  deactivate(ev: Event) {
     this.objectService.requestSent();
-    let subs = this.educationService.deactivatePositivListInRoom(this.educationService.selectedRoomId).subscribe(
-      (val) => { this.objectService.responseMessage(val) },
-      (err) => { this.objectService.errorMessage(err) },
-      () => { subs.unsubscribe() }
-    )
+    let subs = this.educationService.deactivatePositivListInRoom(this.educationService.selectedRoom.id).subscribe({
+      next: (val) => { this.objectService.responseMessage(val) },
+      error: (err) => { this.objectService.errorMessage(err) },
+      complete: () => { subs.unsubscribe() }
+    })
   }
 }
