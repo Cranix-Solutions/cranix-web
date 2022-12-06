@@ -218,7 +218,6 @@ export class EductaionService {
 
 	statusTimer() {
 		interval(5000).pipe(takeWhile(() => this.alive)).subscribe((func => {
-			console.log("EducationService getEduRoomStatus timed")
 			this.getEduRoomStatus(false);
 		}))
 	}

@@ -8,7 +8,6 @@ import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { FilesCollectComponent } from 'src/app/shared/actions/files-collect/files-collect.component';
 import { FilesUploadComponent } from 'src/app/shared/actions/files-upload/files-upload.component';
-import { SelectRoomComponent } from 'src/app/shared/actions/select-room/select-room.component'
 @Component({
   selector: 'cranix-room-control',
   templateUrl: './room-control.component.html',
@@ -42,7 +41,7 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  
+
   ngAfterViewInit() {
     if (this.authS.session.roomId) {
       let room: Room = this.objectS.getObjectById('room', this.authS.session.roomId);
@@ -51,6 +50,8 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
     if (this.eduS.selectedRoom) {
+      this.eduS.disableChange = false;
+      this.eduS.alive = true;
       this.eduS.getEduRoomStatus(true);
       this.eduS.statusTimer();
     } else {
@@ -58,21 +59,10 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  
+
   sizeChange(ev) {
     console.log('event is: ', ev);
   }
-  click() {
-    console.log("Cliked");
-  }
-  selectChanged(ev) {
-    console.log(`Select roomId is: ${this.eduS.selectedRoom.id}`)
-    this.eduS.statusTimer();
-  }
-  openSelect() {
-    this.selectRef.open();
-  }
-
   roomSelected(){
     if (this.eduS.selectedRoom) {
       console.log("selectRooms returned")
@@ -82,26 +72,10 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       this.eduS.statusTimer();
     }
   }
-  async selectRooms() {
-    const modal = await this.modalController.create({
-      component: SelectRoomComponent,
-      animated: true,
-      showBackdrop: true
-    });
-    modal.onDidDismiss().then((val) => {
-      if (this.eduS.selectedRoom) {
-        console.log("selectRooms returned")
-        this.eduS.disableChange = false;
-        this.eduS.alive = true;
-        this.eduS.getEduRoomStatus(true);
-        this.eduS.statusTimer();
-      }
-    });
-    (await modal).present();
-  }
+
   /**
    * Opens an action menue for the content
-   * @param ev 
+   * @param ev
    */
   async openAction(ev) {
     const popover = await this.popoverCtrl.create({

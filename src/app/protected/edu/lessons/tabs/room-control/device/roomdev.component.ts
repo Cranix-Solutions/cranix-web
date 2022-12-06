@@ -49,7 +49,6 @@ export class RoomDevComponent implements OnInit, OnDestroy {
   getScreen() {
     let myDev: Device = this.eduS.getDevice(this.row + 1, this.place + 1);
     if( myDev ) {
-      console.log("NEW Screen:", this.device.id, this.row + 1, this.place + 1)
       this.screenShot = "data:image/jpg;base64," + myDev.screenShot;
     } else {
       console.log("Old Screen:", this.device.id + 1, this.row,this.place + 1)
