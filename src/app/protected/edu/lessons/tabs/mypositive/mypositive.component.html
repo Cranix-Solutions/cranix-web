@@ -33,10 +33,10 @@
           <!-- ion-button size="small" (click)="delete($event)" matTooltip="{{'Delete selected positive lists.' | translate }}">
             <ion-icon slot="icon-only" name="trash"></ion-icon>
           </ion-button-->
-          <ion-button size="small" (click)="activate($event)" matTooltip="{{'Activate selected positive lists in the selected room.' | translate }}" [disabled]="! educationService.selectedRoomId">
+          <ion-button size="small" (click)="activate($event)" matTooltip="{{'Activate selected positive lists in the selected room.' | translate }}" [disabled]="! educationService.selectedRoom.id">
             <ion-icon slot="icon-only" color="success" name="power"></ion-icon>
           </ion-button>
-          <ion-button size="small" (click)="deactivate($event)" matTooltip="{{'Deactivate all positive lists in the selected room.' | translate }}" [disabled]="! educationService.selectedRoomId">
+          <ion-button size="small" (click)="deactivate($event)" matTooltip="{{'Deactivate all positive lists in the selected room.' | translate }}" [disabled]="! educationService.selectedRoom.id">
             <ion-icon slot="icon-only" color="dange" name="power"></ion-icon>
           </ion-button>
         </ion-col>

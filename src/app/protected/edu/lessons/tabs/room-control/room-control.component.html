@@ -2,25 +2,25 @@
 <cranix-toolbar *ngIf="eduS.selectedRoom" title="{{'Room control in' | translate}} {{eduS.selectedRoom.name}}">
 </cranix-toolbar>
 <ion-toolbar class="page-toolbar">
-  <ion-buttons *ngIf="room" slot="start">
-    <ion-button matTooltip="{{ 'To login' | translate}}" (click)="setAccess('login')" [disabled]="disableChange">
-      <ion-icon [ngStyle]="{'color': room.accessInRooms.login  ? '#2dd36f' : '#eb445a'}" name="key-sharp" size="large">
+  <ion-buttons *ngIf="eduS.room" slot="start">
+    <ion-button matTooltip="{{ 'To login' | translate}}" (click)="setAccess('login')" [disabled]="eduS.disableChange">
+      <ion-icon [ngStyle]="{'color': eduS.room.accessInRooms.login  ? '#2dd36f' : '#eb445a'}" name="key-sharp" size="large">
       </ion-icon>
     </ion-button>
-    <ion-button *ngIf="room && authS.isAllowed('education.proxy')" [disabled]="disableChange"
+    <ion-button *ngIf="authS.isAllowed('education.proxy')" [disabled]="eduS.disableChange"
       matTooltip="{{ 'Filtered internet access' | translate}}" (click)="setAccess('proxy')">
-      <ion-icon [ngStyle]="{'color': room.accessInRooms.proxy  ? '#2dd36f' : '#eb445a'}" name="globe-sharp"
+      <ion-icon [ngStyle]="{'color': eduS.room.accessInRooms.proxy  ? '#2dd36f' : '#eb445a'}" name="globe-sharp"
         size="large">
       </ion-icon>
     </ion-button>
-    <ion-button *ngIf="room && authS.isAllowed('room.direct')" matTooltip="{{ 'Direct internet access' | translate}}"
-      (click)="setAccess('direct')" [disabled]="disableChange">
-      <ion-icon [ngStyle]="{'color': room.accessInRooms.direct  ? '#2dd36f' : '#eb445a'}" name="nuclear-sharp"
+    <ion-button *ngIf="authS.isAllowed('room.direct')" matTooltip="{{ 'Direct internet access' | translate}}"
+      (click)="setAccess('direct')" [disabled]="eduS.disableChange">
+      <ion-icon [ngStyle]="{'color': eduS.room.accessInRooms.direct  ? '#2dd36f' : '#eb445a'}" name="nuclear-sharp"
         size="large">
       </ion-icon>
     </ion-button>
-    <ion-button matTooltip="{{ 'Printing' | translate}}" (click)="setAccess('printing')" [disabled]="disableChange">
-      <ion-icon [ngStyle]="{'color': room.accessInRooms.printing  ? '#2dd36f' : '#eb445a'}" name="print-sharp"
+    <ion-button matTooltip="{{ 'Printing' | translate}}" (click)="setAccess('printing')" [disabled]="eduS.disableChange">
+      <ion-icon [ngStyle]="{'color': eduS.room.accessInRooms.printing  ? '#2dd36f' : '#eb445a'}" name="print-sharp"
         size="large">
       </ion-icon>
     </ion-button>
