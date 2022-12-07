@@ -2,11 +2,41 @@
     <ion-header translucent>
         <ion-toolbar>
             <ion-title>{{'Add support' | translate}}</ion-title>
+            <ion-item lines="none">
+                <ion-label>
+                    <h3>
+                        {{'Attachment'|translate}}: {{support.attachmentName}}
+                    </h3>
+                </ion-label>
+            </ion-item>
             <ion-buttons slot="end">
+                <ion-button id="add-attachment">
+                    <ion-icon slot="icon-only" name="attach"></ion-icon>
+                </ion-button>
+                <ion-modal #modal trigger="add-attachment" (willDismiss)="addAttachment()">
+                    <ng-template>
+                        <ion-header>
+                            <ion-toolbar>
+                                <ion-title>{{'Add one Attachment'|translate}}</ion-title>
+                                <ion-buttons slot="end">
+                                    <ion-button (click)="modalController.dismiss()">
+                                        <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
+                                    </ion-button>
+                                </ion-buttons>
+                            </ion-toolbar>
+                        </ion-header>
+                        <ion-content class="ion-padding">
+                            <ion-item>
+                                <ion-input type="file" (change)="onFilesAdded($event)">
+                                </ion-input>
+                            </ion-item>
+                        </ion-content>
+                    </ng-template>
+                </ion-modal>
                 <ion-button class="ion-no-margin" (click)="onSubmit()" [disabled]="!supportTicket.valid">
                     <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
                 </ion-button>
-                <ion-button fill="clear" size="small" (click)="modalCtrl.dismiss('closed')" [disabled]="disabled">
+                <ion-button fill="clear" size="small" (click)="modalController.dismiss('closed')" [disabled]="disabled">
                     <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
                 </ion-button>
             </ion-buttons>
@@ -28,19 +58,15 @@
                 <ion-input [(ngModel)]="support.email" name="email" required></ion-input>
             </ion-item>
             <ion-item>
-                <ion-label position="stacked">{{'firstname' | translate}}</ion-label>
-                <ion-input [(ngModel)]="support.firstname" name="firstname" required></ion-input>
-            </ion-item>
-            <ion-item>
-                <ion-label position="stacked">{{'lastname' | translate}}</ion-label>
+                <ion-label position="stacked">{{'name' | translate}}</ion-label>
                 <ion-input [(ngModel)]="support.lastname" name="lastname" required></ion-input>
             </ion-item>
             <ion-item>
                 <ion-label position="stacked">{{'subject' | translate}}</ion-label>
                 <ion-input [(ngModel)]="support.subject" name="subject" required></ion-input>
             </ion-item>
-            <quill-editor [styles]="{height: '250px'}" [(ngModel)]="support.description" 
-            name="description" placeholder="{{'Insert your issue ...' | translate}}"></quill-editor>
+            <quill-editor [styles]="{height: '250px'}" [(ngModel)]="support.description" name="description"
+                placeholder="{{'Insert your issue ...' | translate}}"></quill-editor>
         </ion-list>
     </ion-content>
 </form>

@@ -14,36 +14,89 @@ import { WindowRef } from 'src/app/shared/models/ohters'
 })
 export class RoomDevComponent implements OnInit, OnDestroy {
 
-  @Input() index: number;
   @Input() device: Device;
   @Input() row: number;
   @Input() place: number;
-
   screenShot;
   devStatusSub: Subscription;
   alive: boolean = true;
   nativeWindow: any;
+  id;
 
   constructor(
     public win: WindowRef,
     public popoverCtrl: PopoverController,
     public modalCtrl: ModalController,
-    public eduService: EductaionService
+    public eduS: EductaionService
   ) {
     this.nativeWindow = win.getNativeWindow();
   }
 
   ngOnInit() {
+    this.id = this.row.toString() + '-' + this.place.toString()
     if (this.device) {
       this.getScreen();
-      this.devStatusSub = interval(5000).pipe(takeWhile(() => this.alive)).subscribe((func => {
+      this.devStatusSub = interval(3000).pipe(takeWhile(() => this.alive)).subscribe((func => {
         this.getScreen();
       }))
     }
   }
 
+  stopRefresh(){
+    this.eduS.alive = false;
+  }
+
   getScreen() {
-    this.screenShot = "data:image/jpg;base64," + this.device.screenShot;
+    let myDev: Device = this.eduS.getDevice(this.row + 1, this.place + 1);
+    if( myDev ) {
+      this.screenShot = "data:image/jpg;base64," + myDev.screenShot;
+    } else {
+      console.log("Old Screen:", this.device.id + 1, this.row,this.place + 1)
+      this.screenShot = "data:image/jpg;base64," + this.device.screenShot;
+    }
+  }
+
+  drop(event) {
+    console.log(this.row, this.place, event.item.data)
+    if (event.item.data && this.device) {
+      this.device.row = -1
+      this.device.place = -1
+      this.eduS.placeDeviceById(this.device.id, this.device).subscribe(
+        (val1) => {
+          console.log(val1)
+          this.device.row = event.item.data.row
+          this.device.place = event.item.data.place
+          event.item.data.row = this.row + 1;
+          event.item.data.place = this.place + 1;
+          this.eduS.placeDeviceById(event.item.data.id, event.item.data).subscribe(
+            (val2) => {
+              console.log(val2)
+              this.eduS.placeDeviceById(this.device.id, this.device).subscribe(
+                (val3) => {
+                  this.eduS.alive = true
+                  console.log(val3)
+                  this.eduS.orderRoom();
+                  this.eduS.getEduRoomStatus(true);
+                  this.eduS.statusTimer();
+                }
+              )
+            }
+          )
+        }
+      )
+    } else if (event.item.data) {
+      event.item.data.row = this.row + 1;
+      event.item.data.place = this.place + 1;
+      this.eduS.placeDeviceById(event.item.data.id, event.item.data).subscribe(
+        (val2) => {
+          this.eduS.alive = true
+          console.log(val2)
+          this.eduS.orderRoom();
+          this.eduS.getEduRoomStatus(true);
+          this.eduS.statusTimer();
+        }
+      )
+    }
   }
 
   showScreen() {
@@ -77,6 +130,7 @@ export class RoomDevComponent implements OnInit, OnDestroy {
     });
     (await popover).present();
   }
+
   ngOnDestroy() {
     this.alive = false;
   }

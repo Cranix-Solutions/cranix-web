@@ -8,7 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { InformationsComponent, AddEditInfoPage, ShowResponses } from 'src/app/protected/cranix/informations/informations.component'
 import { QuillModule } from 'ngx-quill';
 import { mathToolbarOptions } from 'src/app/shared/models/constants';
- 
+
 const routes: Routes = [
   {
     path: 'informations',
@@ -23,7 +23,9 @@ const routes: Routes = [
     CranixSharedModule,
     IonicModule,
     QuillModule.forRoot({
-      modules: { toolbar: mathToolbarOptions},
+      modules: {
+        table: true},
+      theme: 'bubble'
     }),
     RouterModule.forChild(routes)
   ],

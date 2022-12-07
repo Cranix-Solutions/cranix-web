@@ -51,7 +51,6 @@ import { ManageDhcpComponent } from 'src/app/shared/actions/manage-dhcp/manage-d
 import { FilesUploadComponent } from 'src/app/shared/actions/files-upload/files-upload.component'
 import { FilesCollectComponent } from 'src/app/shared/actions/files-collect/files-collect.component'
 import { DownloadSoftwaresComponent } from 'src/app/shared/actions/download-softwares/download-softwares.component'
-import { SelectRoomComponent } from 'src/app/shared/actions/select-room/select-room.component'
 import { SetContractComponent } from 'src/app/shared/actions/set-contract/set-contract.component'
 import { SetValidityComponent } from 'src/app/shared/actions/set-validity/set-validity.component'
 import { WindowRef } from 'src/app/shared/models/ohters'
@@ -91,7 +90,6 @@ import { CranixMdListComponent } from 'src/app/shared/cranix-md-list/cranix-md-l
     SoftwareEditBTNRenderer,
     SelectColumnsComponent,
     SyncObjectRenderer,
-    SelectRoomComponent,
     SetContractComponent,
     SetValidityComponent,
     UpdateRenderer,

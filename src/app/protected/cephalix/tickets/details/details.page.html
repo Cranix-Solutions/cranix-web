@@ -2,21 +2,12 @@
 <ion-content *ngIf="ticket">
   <ion-card>
     <ion-card-header>
+      <ion-card-title>#{{ticket.id}} {{ticket.title}} {{ticket.recDate | date:'yy-MM-dd HH:mm'}}</ion-card-title>
       <ion-toolbar>
-        <ion-card-title>#{{ticket.id}} {{ticket.title}}</ion-card-title>
-        <ion-card-subtitle *ngIf="institute.id != 0"> {{ticket.recDate | date:'yy-MM-dd HH:mm'}} {{ institute.name }}
+        <ion-card-subtitle>
+          {{ institute.name }}
           {{ institute.regCode }}
           {{ institute.ipVPN }}<br>
-          {{ticket.email}}: {{ticket.lastname}},{{ticket.firstname}}</ion-card-subtitle>
-        <ion-card-subtitle *ngIf="institute.id == 0"> {{ticket.recDate | date:'yy-MM-dd HH:mm'}}>
-          <input type="text" placeholder="{{'Select institute:'|translate}}" list="insts" name="institute"
-            id="institute">
-          <datalist id="insts">
-            <option *ngFor="let i of institutes" [value]="i.label">
-          </datalist>
-          <ion-button fill="clear" (click)="setInstitute()">
-            <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
-          </ion-button><br>
           {{ticket.email}}: {{ticket.lastname}},{{ticket.firstname}}
         </ion-card-subtitle>
         <ion-buttons slot="end">
@@ -24,35 +15,86 @@
             (click)="routeSchool($event)" matTooltip="{{'Connect the institute in a separate window.' | translate }}">
             <ion-icon name="create-outline"></ion-icon>
           </ion-button>
-          <ion-button fill="solid" (click)="router.navigate(['/pages/cephalix/tickets'])">
+          <ion-button fill="clear" (click)="router.navigate(['/pages/cephalix/tickets'])">
             <ion-icon slot="icon-only" name="caret-back"></ion-icon>
           </ion-button>
-          <ion-button fill="solid" (click)="assigneTicketToMe()">
+          <ion-button fill="clear" (click)="assigneTicketToMe()">
             <ion-icon color="warning" slot="icon-only" name="lock-closed"></ion-icon>
           </ion-button>
-          <ion-button fill="solid"
+          <ion-button fill="clear" matTooltip="{{'Close the ticket.' | translate }}"
             (click)="objectService.deleteObjectDialog(this.ticket, 'ticket', '/pages/cephalix/tickets')">
-            <ion-icon color="danger" slot="icon-only" name="trash"></ion-icon>
+            <ion-icon color="danger" slot="icon-only" name="checkmark-done-circle"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-card-header>
-    <ion-card-content>
-      <ion-label>{{ 'Ticket Owner' | translate }}</ion-label>
-      <input type="text" placeholder="{{'Select the owner of the ticket'}}" list="ticketOwners" name="ticketOwner"
-        id="ownerId" [value]="ticketOwner">
-      <datalist id="ticketOwners">
-        <option *ngFor="let i of ticketWorkers" [value]="i.label">
-      </datalist>
-      <ion-button fill="clear" (click)="setOwner()">
-        <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
-      </ion-button>
+    <ion-card-content  style="padding: 5px; padding-top: 0px;">
+      <ion-grid style="padding: 0px;">
+        <ion-row>
+          <ion-col style="padding: 0px;">
+            <ion-item lines="none">
+              <ion-label position="stacked">{{'Ticket Owner'| translate}}</ion-label>
+              <ionic-selectable
+                #selectTicketOwner
+                item-content
+                [(ngModel)]="ticketOwner"
+                [ngModelOptions]="{standalone: true}"
+                [items]="ticketWorkers"
+                itemValueField="id"
+                itemTextField="label"
+                [canSearch]="true"
+                (onChange)="setOwner()">
+                <ng-template ionicSelectableHeaderTemplate>
+                  <ion-toolbar>
+                    <ion-title>
+                      {{ "Select the owner of the ticket" | translate }}
+                    </ion-title>
+                    <ion-buttons slot="end">
+                      <ion-button ion-button (click)="selectTicketOwner.close()">
+                        <ion-icon color="danger" name="close"></ion-icon>
+                      </ion-button>
+                    </ion-buttons>
+                  </ion-toolbar>
+                </ng-template>
+                <ng-template ionicSelectableItemIconTemplate>
+                  <div></div>
+                </ng-template>
+              </ionic-selectable>
+            </ion-item>
+          </ion-col>
+          <ion-col style="padding: 0px;">
+            <ion-item lines="none">
+              <ion-label position="stacked">{{'Institute'| translate}}</ion-label>
+              <ionic-selectable #selectInstitute item-content [(ngModel)]="instObject"
+                [ngModelOptions]="{standalone: true}" [items]="institutes" itemValueField="id" itemTextField="label"
+                [canSearch]="true" (onChange)="setInstitute()">
+                <ng-template ionicSelectableHeaderTemplate>
+                  <ion-toolbar>
+                    <ion-title>
+                      {{ "Select the institute of the ticket" | translate }}
+                    </ion-title>
+                    <ion-buttons slot="end">
+                      <ion-button ion-button (click)="selectInstitute.close()">
+                        <ion-icon color="danger" name="close"></ion-icon>
+                      </ion-button>
+                    </ion-buttons>
+                  </ion-toolbar>
+                </ng-template>
+                <ng-template ionicSelectableItemIconTemplate>
+                  <div></div>
+                </ng-template>
+              </ionic-selectable>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-card-content>
   </ion-card>
   <ion-card *ngFor="let article of articles">
     <ion-card-header>
       <ion-toolbar>
-        <ion-card-subtitle [color]="article.seen ? 'success' : 'danger'">{{article.recDate | date:'yy-MM-dd HH:mm'}}
+        <ion-card-subtitle [color]="article.articleType == 'O' ? 'warning' : article.seen ? 'success' : 'danger'">
+          {{article.recDate | date:'yyyy-MM-dd HH:mm'}}
           <ion-icon *ngIf="article.articleType == 'O'" name="play-back"></ion-icon>
           <ion-icon *ngIf="article.articleType == 'I'" name="play-forward"></ion-icon>
         </ion-card-subtitle>
@@ -62,31 +104,37 @@
               <ion-icon slot="icon-only" name="download"></ion-icon>
             </ion-button>
           </div>
-          <ion-button [color]="article.seen ? 'success' : 'danger'" fill="solid" (click)="setSeenOnArticle(article)"
-            matTooltip="{{'Set article as seen.' | translate }}">
+          <ion-button *ngIf="article.articleType == 'I'" [color]="article.seen ? 'success' : 'danger'" fill="clear"
+            (click)="setSeenOnArticle(article)" matTooltip="{{'Set article as seen.' | translate }}">
             <ion-icon slot="icon-only" name="checkmark"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="article.articleType == 'I'" fill="solid" (click)="answerArticle(article)"
+          <ion-button *ngIf="article.articleType == 'I'" fill="clear" (click)="answerArticle(article)"
             matTooltip="{{'Answer the article.' | translate }}">
             <ion-icon slot="icon-only" name="arrow-undo"></ion-icon>
           </ion-button>
-          <ion-button *ngIf="article.articleType == 'O'" fill="solid" (click)="answerArticle(article)"
+          <ion-button *ngIf="article.articleType == 'O'" fill="clear" (click)="answerArticle(article)"
             matTooltip="{{'Edit the answer and resend it.' | translate }}">
             <ion-icon slot="icon-only" name="build-outline"></ion-icon>
           </ion-button>
-          <ion-button fill="solid" (click)="toggleArticle(article.id)"
+          <ion-button fill="clear" (click)="toggleArticle(article.id)"
             matTooltip="{{'Open or close the article.' | translate }}">
             <ion-icon *ngIf="!articleOpen[article.id]" slot="icon-only" name="mail-open"></ion-icon>
             <ion-icon *ngIf="articleOpen[article.id]" slot="icon-only" name="mail"></ion-icon>
           </ion-button>
-          <ion-button fill="solid" (click)="deleteArticle(article)">
+          <ion-button fill="clear" (click)="deleteArticle(article)">
             <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-card-header>
-    <ion-card-content style="height: 50px" [id]="'article' + article.id">
-      <quill-view-html [content]="article.text" format="text" theme="snow"></quill-view-html>
+    <ion-card-content style="height: 50px; padding: 5px; padding-top: 0px;" [id]="'article' + article.id">
+      <ng-template [ngIf]="isHTML(article.text)" [ngIfElse]="textArea">
+        <div [innerHTML]="article.text"></div>
+      </ng-template>
+      <ng-template #textArea>
+        <div [innerText]="article.text"></div>
+      </ng-template>
+      <!-- quill-view-html style="padding: 0px;" [content]="article.text" format="text" theme="snow"></quill-view-html -->
     </ion-card-content>
   </ion-card>
 </ion-content>

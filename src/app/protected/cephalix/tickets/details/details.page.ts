@@ -23,10 +23,9 @@ export class DetailsPage implements OnInit {
   articles: Article[] = [new Article()];
   institute: Institute;
   institutes: ObjectList[] = [];
-  allInstitutes: ObjectList[] = [];
+  instObject: ObjectList = new ObjectList;
   articleOpen = {};
-  ticketOwner: string = "";
-  ticketOwnerId: number;
+  ticketOwner: ObjectList = new ObjectList
   ticketWorkers: ObjectList[] = [];
   nativeWindow: any
   constructor(
@@ -52,27 +51,33 @@ export class DetailsPage implements OnInit {
       }
     }
     this.ticketWorkers.sort((a, b) => a.label < b.label ? 0 : 1)
-    let sub = this.cephlixS.getTicketById(this.ticketId).subscribe(
-      (val) => {
+    let sub = this.cephlixS.getTicketById(this.ticketId).subscribe({
+      next: (val) => {
         this.ticket = val;
         let ticketOwnerObject: User = this.objectService.getObjectById('user', this.ticket.ownerId);
         this.institute = this.objectService.getObjectById('institute', val.cephalixInstituteId);
         this.readArcticles();
-        if (!this.institute) {
-          for (let i of this.objectService.allObjects['institute']) {
-            this.institutes.push({ id: i.id, label: i.name + " " + i.locality })
-          }
-          this.institute = new Institute();
-          console.log(this.institutes, this.institute)
+        for (let i of this.objectService.allObjects['institute']) {
+          this.institutes.push({ id: i.id, label: i.name + " " + i.locality })
+        }
+        console.log(this.institutes, this.institute)
+        if (this.institute) {
+          this.instObject.id = this.institute.id
+          this.instObject.label = this.institute.name + " " + this.institute.locality
+        } else {
+          this.institute = new Institute()
+          this.instObject = new ObjectList()
         }
         if (ticketOwnerObject) {
-          this.ticketOwnerId = ticketOwnerObject.id;
-          this.ticketOwner = ticketOwnerObject.fullName;
+          this.ticketOwner.id = ticketOwnerObject.id;
+          this.ticketOwner.label = ticketOwnerObject.fullName;
+        } else {
+          this.ticketOwner = new ObjectList()
         }
       },
-      (err) => { console.log(err) },
-      () => { sub.unsubscribe() }
-    )
+      error: (err) => { console.log(err) },
+      complete: () => { sub.unsubscribe() }
+    })
   }
 
   public ngAfterViewInit() {
@@ -80,48 +85,40 @@ export class DetailsPage implements OnInit {
   }
 
   public readArcticles() {
+    this.articles = [];
     let sub = this.cephlixS.getArticklesOfTicket(this.ticketId).subscribe(
       (val) => {
         this.articles = val
-      },
-      (error) => { this.articles.push(new Article()); },
-      () => { sub.unsubscribe() }
+      }
     );
   }
 
   public assigneTicketToMe() {
     this.ticket.ownerId = this.authService.session.userId;
-    this.ticketOwner = this.authService.session.fullName;
-    this.cephlixS.modifyTicket(this.ticket).subscribe(
-      (val) => {
+    this.ticketOwner.label = this.authService.session.fullName;
+    this.ticketOwner.id = this.authService.session.userId;
+    this.cephlixS.modifyTicket(this.ticket).subscribe({
+      next: (val) => {
         this.objectService.responseMessage(val);
         this.objectService.getAllObject('ticket');
       },
-      (err) => {
+      error: (err) => {
         this.objectService.errorMessage(err)
       }
-    )
+    })
   }
 
   public setOwner() {
-    let tmp = (<HTMLInputElement>document.getElementById("ownerId")).value;
-    let id = 0;
-    for (let i of this.ticketWorkers) {
-      if (i.label == tmp) {
-        id = i.id
-        break
-      }
-    }
-    this.ticket.ownerId = id
-    this.cephlixS.modifyTicket(this.ticket).subscribe(
-      (val) => {
+    this.ticket.ownerId = this.ticketOwner.id
+    this.cephlixS.modifyTicket(this.ticket).subscribe({
+      next: (val) => {
         this.objectService.responseMessage(val);
         this.objectService.getAllObject('ticket');
       },
-      (err) => {
+      error: (err) => {
         this.objectService.errorMessage(err)
       }
-    )
+    })
   }
 
   async answerArticle(article: Article) {
@@ -174,19 +171,11 @@ export class DetailsPage implements OnInit {
   }
 
   public setInstitute() {
-    let tmp = (<HTMLInputElement>document.getElementById("institute")).value;
-    let id = 0;
-    for (let i of this.institutes) {
-      if (i.label == tmp) {
-        id = i.id
-      }
-    }
-    console.log(id)
     this.objectService.requestSent();
-    this.cephlixS.setInstituteForTicket(this.ticketId, id).subscribe(
+    this.cephlixS.setInstituteForTicket(this.ticketId, this.instObject.id).subscribe(
       (val) => {
         this.objectService.responseMessage(val)
-        this.institute = this.objectService.getObjectById('institute', id);
+        this.institute = this.objectService.getObjectById('institute', this.instObject.id);
         this.objectService.getAllObject('ticket');
       }
     )
@@ -228,6 +217,12 @@ export class DetailsPage implements OnInit {
         error: (err) => { console.log(err) },
         complete: () => { sub.unsubscribe() }
       })
+  }
+
+  isHTML(s: string) {
+    //var htmlRegex = new RegExp("<([A-Za-z][A-Za-z0-9]*)\b[^>]*>(.*?)</\1>");
+    var htmlRegex = new RegExp("<\/?[a-z][\s\S]*>");
+    return htmlRegex.test(s);
   }
 }
 

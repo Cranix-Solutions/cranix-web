@@ -88,7 +88,7 @@ export const printerMenu = [
 export const ticketMenu = [
   {
     "enabled": true,
-    "icon": "logo-buffer",
+    "icon": "checkmark-done-circle",
     "color": "danger",
     "action": "close"
   }

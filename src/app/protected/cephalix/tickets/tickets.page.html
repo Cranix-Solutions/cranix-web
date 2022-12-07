@@ -9,8 +9,7 @@
     </ion-input>
   </ion-item>
   <ion-buttons slot="end">
-    <ion-button fill="solid" (click)="reloadAllObjects()"
-      matTooltip="{{'Reload tickets' | translate }}">
+    <ion-button fill="solid" (click)="reloadAllObjects()" matTooltip="{{'Reload tickets' | translate }}">
       <ion-icon color="secondary" slot="icon-only" name="refresh"></ion-icon>
     </ion-button>
     <ion-button size="small" fill="solid" (click)="redirectToEdit(null)"
@@ -31,21 +30,25 @@
   <ag-grid-angular style="width: 100%; height: 100%;" rowSelection="multiple"
     class="{{authService.settings.agGridThema}}" [rowHeight]="authService.settings.rowHeight" [context]="context"
     [rowData]="objectService.allObjects['ticket']" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
-    (gridReady)="onGridReady($event)" (cellClicked)="ticketClickHandle($event)"
-    id="ticketsPageTable">
+    (gridReady)="onGridReady($event)" (cellClicked)="ticketClickHandle($event)" id="ticketsPageTable">
   </ag-grid-angular>
 </ion-content>
 <ion-content *ngIf="authService.isMD()">
-  <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('ticketsFilterMD')"
-    id="ticketsFilterMD" showCancelButton="never">
-  </ion-searchbar>
+  <ion-item>
+    <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('ticketsFilterMD')"
+      id="ticketsFilterMD" showCancelButton="never">
+    </ion-searchbar>
+    <ion-button fill="solid" (click)="reloadAllObjects()" matTooltip="{{'Reload tickets' | translate }}">
+      <ion-icon color="secondary" slot="icon-only" name="refresh"></ion-icon>
+    </ion-button>
+  </ion-item>
   <ion-item *ngIf="rowData.length == 0">
     <ion-label class="ion-text-center">
       {{ 'Loading data ...' | translate }}
     </ion-label>
   </ion-item>
   <ion-list>
-    <ion-item-sliding *ngFor="let object of objectService.allObjects['ticket']">
+    <ion-item-sliding *ngFor="let object of rowData">
       <ion-item style="color: {{ticketColor[object.ticketStatus]}}">
         <ion-label (click)="redirectToEdit(object)">
           <h2>{{ object.title }}</h2>
@@ -59,7 +62,7 @@
       </ion-item>
       <ion-item-options side="end">
         <ion-item-option color="danger" (click)="redirectToDelete(object)">
-          <ion-icon  name="trash-outline"></ion-icon>
+          <ion-icon name="checkmark-done-circle"></ion-icon>
         </ion-item-option>
         <ion-item-option (click)="redirectToEdit(object)">
           <ion-icon name="build-sharp"></ion-icon>

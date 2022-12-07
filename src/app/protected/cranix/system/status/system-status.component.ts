@@ -31,7 +31,7 @@ export class SystemStatusComponent implements OnInit {
   constructor(
     public objectService: GenericObjectService,
     public languageService: LanguageService,
-    public modalCtrl: ModalController,
+    public modalController: ModalController,
     public storage: Storage,
     public systemService: SystemService,
     public authService: AuthenticationService
@@ -110,7 +110,7 @@ export class SystemStatusComponent implements OnInit {
     delete this.mySupport.requestDate;
     delete this.mySupport.ticketno;
     delete this.mySupport.ticketResponseInfo;
-    const modal = await this.modalCtrl.create({
+    const modal = await this.modalController.create({
       component: CreateSupport,
       cssClass: 'big-modal',
       componentProps: {
@@ -140,20 +140,37 @@ export class SystemStatusComponent implements OnInit {
 export class CreateSupport implements OnInit {
 
   disabled: boolean = false;
+  files = [];
   @Input() support
   constructor(
-    public modalCtrl: ModalController,
+    public modalController: ModalController,
     public systemService: SystemService,
     public objectService: GenericObjectService
   ) { }
 
   ngOnInit() { }
+  onFilesAdded(event) {
+    this.files = event.target.files;
+  }
+
+  addAttachment() {
+    console.log("addP")
+    for (let file of this.files) {
+      this.support.attachmentName = file.name;
+      let fileReader = new FileReader();
+      fileReader.onload = (e) => {
+        let index = e.target.result.toString().indexOf("base64,") + 7;
+        this.support.attachment = e.target.result.toString().substring(index);
+      }
+      fileReader.readAsDataURL(file);
+    }
+  }
   onSubmit() {
     console.log(this.support)
     this.systemService.createSupportRequest(this.support).subscribe(
       (val) => {
         this.objectService.responseMessage(val);
-        this.modalCtrl.dismiss("OK")
+        this.modalController.dismiss("OK")
       }
     )
   };

@@ -1,0 +1,10 @@
+quill-view,
+quill-editor{
+  ::ng-deep {
+    table {
+      width: 100%; // if table has no width - then give it by default 100%
+      max-width: 100% !important;
+      box-sizing: border-box;
+    }
+  }
+}

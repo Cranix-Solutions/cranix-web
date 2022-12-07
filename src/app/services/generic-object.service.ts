@@ -200,6 +200,7 @@ export class GenericObjectService {
    */
   getAllObject(objectType) {
     if (this.objects.indexOf(objectType) == -1) {
+      console.log("Unknown object type:",objectType)
       return;
     }
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";

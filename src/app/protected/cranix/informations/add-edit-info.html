@@ -59,7 +59,7 @@
                 </ion-item>
                 <quill-editor *ngIf="owned || infoType == 'taskResponse'; else elseBlock" [styles]="{height: '450px'}"
                     [(ngModel)]="info.text" [ngModelOptions]="{standalone: true}">
-                    <div quill-editor-toolbar>
+                    <!-- div quill-editor-toolbar>
                         <span class="ql-formats">
                             <select class="ql-font">
                                 <option selected></option>
@@ -97,7 +97,7 @@
                             <button class="ql-link"></button>
                             <button class="ql-image"></button>
                         </span>
-                    </div>
+                    </div -->
                 </quill-editor>
                 <ng-template #elseBlock>
                     <quill-view-html #elseBlock [content]="info.text" format="text" theme="snow"></quill-view-html>
