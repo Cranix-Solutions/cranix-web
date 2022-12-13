@@ -270,10 +270,10 @@ export class RoomAccessComponent implements OnInit {
     (await modal).present();
   }
   restartFirewall() {
-    this.systemService.applyServiceState('SuSEfirewall2', 'activ', 'restart')
+    this.systemService.applyServiceState('firewalld', 'activ', 'restart')
   }
   stopFirewall() {
-    this.systemService.applyServiceState('SuSEfirewall2', 'activ', 'false')
+    this.systemService.applyServiceState('firewalld', 'activ', 'false')
   }
   delete() {
     let accessSelected = this.accessApi.getSelectedRows();
