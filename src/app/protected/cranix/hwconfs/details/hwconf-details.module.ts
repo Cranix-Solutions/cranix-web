@@ -17,7 +17,7 @@ const routes: Routes = [
     children: [
       {
         path: 'all',
-        redirectTo: '/pages/cranix/hwconfs'
+        redirectTo: '/pages/cranix/hwconfs', pathMatch: 'full'
       },
       {
         path: 'edit',
@@ -29,13 +29,13 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'edit'
+        redirectTo: 'edit', pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: 'edit'
+    redirectTo: 'edit', pathMatch: 'full'
   }
 ];
 

@@ -210,7 +210,7 @@ export class Printer {
 	acceptingJobs: boolean = false;
 	activeJobs: number = 0;
 	inventary: string = "";
-	serial: string ="";
+	serial: string = "";
 	driverFile: any = "";
 	constructor() { }
 }
@@ -311,7 +311,7 @@ export class AdHocRoom extends Room {
 	devicesProUser?: number = 1;
 	devCount: number = 0;
 	studentsOnly: boolean = false;
-	groupIds: number[]=[];
+	groupIds: number[] = [];
 	userIds?: number[] = [];
 	users?: User[] = [];
 	groups?: Group[] = [];
@@ -400,7 +400,7 @@ export class CrxMConfig {
 	constructor() { }
 }
 
-export class EduRoom{
+export class EduRoom {
 	id?: number;
 	name: string = "";
 	description: string = "";
@@ -419,33 +419,34 @@ export class EduRoom{
 	constructor() { }
 }
 
-export interface SmartRoom{
-    id?: number, 
-    name: string, 
-    description: string, 
-    validFrom?: number, 
-    validUntil?: number,
-    ownerId?: number, 
-    deviceIds?: number[],
-    hwConfIds?: number [],
-    roomIds?: number [],
-    userIds?: number [],
-    groupIds?: number [],
-    announcementIds?: number [],
-  }
+export interface SmartRoom {
+	id?: number,
+	name: string,
+	description: string,
+	validFrom?: number,
+	validUntil?: number,
+	ownerId?: number,
+	deviceIds?: number[],
+	hwConfIds?: number[],
+	roomIds?: number[],
+	userIds?: number[],
+	groupIds?: number[],
+	announcementIds?: number[],
+}
 
-export interface SmartRoomStatus{
-    userId: number, 
-    deviceId: number
+export interface SmartRoomStatus {
+	userId: number,
+	deviceId: number
 }
 
 
 export class PositivList {
 	id?: number = 0;
-    name: string = "";
-    description: string = "";
-    subject: string  = "";
-    domains: string = "";
+	name: string = "";
+	description: string = "";
+	subject: string = "";
+	domains: string = "";
+	constructor() { }
 }
 
 export interface AccessStatus {
@@ -467,4 +468,44 @@ export interface AccessStatus {
 	printing: boolean,
 	proxy: boolean,
 	pointInTime?: string
+}
+
+export class CrxQuestionAnswer {
+	id?: number
+	created: string = ""
+	modified: string = ""
+	answer: string = ""
+	correct: boolean = false
+	constructor() { }
+}
+
+export class CrxQuestion {
+	id?: number
+	created: string = ""
+	modified: string = ""
+	question: string = ""
+	answerType: string = ""
+	value: number = 1
+	crxQuestionAnswers: CrxQuestionAnswer[] = []
+	constructor() { }
+}
+
+export class CrxChallenge {
+	id?: number
+	created: string = ""
+	modified: string = ""
+	description: string = ""
+	questions: CrxQuestion[] = []
+	groups: Group[] = []
+	users: User[] = []
+	studentsOnly?: boolean = false;
+	validFrom: any = new Date()
+	validUntil: any = new Date()
+}
+
+export class CrxChallengeAnswer {
+	id: number
+	creator_id: number = 0
+	correct: boolean = false
+	constructor() { }
 }

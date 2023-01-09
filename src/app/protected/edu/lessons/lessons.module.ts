@@ -14,6 +14,8 @@ import { EductaionService } from 'src/app/services/education.service';
 import { RoomControlComponent } from './tabs/room-control/room-control.component';
 import { RoomDevComponent } from './tabs/room-control/device/roomdev.component';
 import { MypositiveComponent } from './tabs/mypositive/mypositive.component';
+import { ChallengesComponent } from './tabs/challenges/challenges.component'
+import { QuillModule } from 'ngx-quill';
 
 const routes: Routes = [
   {
@@ -22,19 +24,23 @@ const routes: Routes = [
     component: LessonsPage,
     children: [
       {
+        path: 'challenges',
+        component:ChallengesComponent
+      },
+      {
         path: 'roomcontrol',
         component:RoomControlComponent
       },
+      
       {
         path: 'mypositive',
         component:MypositiveComponent
       }
     ]
-    //loadChildren: () => import('./lessons.module').then( m => m.LessonsModule)
   },
   {
     path: '',
-    redirectTo: 'lessons/roomcontrol'
+    redirectTo: 'lessons/challenges', pathMatch: 'full'
   }
 ];
 
@@ -45,9 +51,10 @@ const routes: Routes = [
     FormsModule,
     RouterModule.forChild(routes),
     IonicModule,
-    CranixSharedModule
+    CranixSharedModule,
+    QuillModule.forRoot()
   ],
-  declarations: [LessonsPage,RoomControlComponent,RoomDevComponent,MypositiveComponent],
+  declarations: [LessonsPage,RoomControlComponent,ChallengesComponent,RoomDevComponent,MypositiveComponent],
   providers: [TranslateService, PipesModule,EductaionService]
 })
 export class LessonsModule {}

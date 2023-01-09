@@ -227,10 +227,10 @@ export class AddEditInfoPage implements OnInit {
         (val) => {
           this.info = val
           if (val.validFrom) {
-            this.info.validFrom = new Date(val.validFrom).toISOString().substr(0, 16);
+            this.info.validFrom = new Date(val.validFrom).toISOString().substring(0, 16);
           }
           if (val.validUntil) {
-            this.info.validUntil = new Date(val.validUntil).toISOString().substr(0, 16);
+            this.info.validUntil = new Date(val.validUntil).toISOString().substring(0, 16);
           }
           this.categories = val.categories
         }

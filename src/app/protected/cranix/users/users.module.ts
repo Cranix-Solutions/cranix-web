@@ -15,10 +15,6 @@ const routes: Routes = [
     path: 'users',
     canActivate: [CanActivateViaAcls],
     loadChildren: () => import('./lists/users-lists.module').then( m => m.UsersListsPageModule)
-  },
-  {
-    path: '',
-    redirectTo: 'all'
   }
 ];
 

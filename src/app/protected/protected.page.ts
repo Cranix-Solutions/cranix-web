@@ -69,7 +69,7 @@ export class ProtectedPage implements OnInit {
     },
     {
       title: 'Lessons',
-      url: '/pages/edu/lessons/roomcontrol',
+      url: '/pages/edu/lessons/challenges',
       icon: 'school'
     },
     {

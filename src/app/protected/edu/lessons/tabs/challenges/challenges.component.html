@@ -1,0 +1,97 @@
+<cranix-toolbar title="{{ tittle | translate}}"></cranix-toolbar>
+<ion-toolbar class="page-toolbar" style="height: 200px;" *ngIf="selectedChallenge">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="11">
+        <ion-item>
+          <ion-input [(ngModel)]="selectedChallenge.description"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>{{'Groups' | translate}}:</ion-label>
+          <ionic-selectable item-content [(ngModel)]="selectedChallenge.groups"
+            [items]="objectService.allObjects['group']" itemValueField="id" itemTextField="description"
+            [canSearch]="true" [isMultiple]="true">
+          </ionic-selectable>
+          <ion-label>{{'studentsOnly' | translate}}</ion-label>
+          <ion-toggle [(ngModel)]="selectedChallenge.studentsOnly"></ion-toggle>
+        </ion-item>
+        <ion-item>
+          <ion-label>{{'Users' | translate}}:</ion-label>
+          <ionic-selectable item-content [(ngModel)]="selectedChallenge.users"
+            [items]="objectService.allObjects['user']" itemValueField="id" itemTextField="fullName" [canSearch]="true"
+            [isMultiple]="true">
+          </ionic-selectable>
+        </ion-item>
+        <ion-item>
+          <ion-label>{{ 'Valid' | translate}}</ion-label>
+          <ion-label>{{ 'from' | translate}}:</ion-label>
+          <input [(ngModel)]="selectedChallenge.validFrom" name="validFrom" type="datetime-local">
+          <ion-label>{{ 'until' | translate}}:</ion-label>
+          <input [(ngModel)]="selectedChallenge.validUntil" name="validUntil" type="datetime-local">
+        </ion-item>
+      </ion-col>
+      <ion-col size="1">
+        <ion-button size="small" fill="solid" (click)="selectedChallenge=null">
+          <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
+        </ion-button>
+        <ion-button size="small" fill="solid" (click)="save()">
+          <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
+        </ion-button>
+        <ion-button size="small" fill="solid" (click)="evaluate()">
+          <ion-icon slot="icon-only" name="settings"></ion-icon>
+        </ion-button>
+        <ion-button size="small" fill="solid" (click)="delete()">
+          <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-toolbar>
+<ion-content *ngIf="selectedChallenge">
+  <div class="question" *ngFor="let question of selectedChallenge.questions; index as i">
+    <ion-item style="background-color: lightgray;">
+      <div class="counter"><b>{{i+1}}</b></div>
+      <div *ngIf="questionToEdit != i" [innerHTML]="question.question"></div>
+      <quill-editor *ngIf="questionToEdit == i" [styles]="{ height: '20px'}"
+        [(ngModel)]="selectedChallenge.questions[i].question" name="description"></quill-editor>
+      <ion-button slot="end" size="small" fill="clear" (click)="toggleEditQuestion(i)">
+        <ion-icon slot="icon-only" color="success" name="pencil"></ion-icon>
+      </ion-button>
+      <ion-button slot="end" size="small" fill="clear" (click)="deleteQuestion(i)">
+        <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-item class="answer" *ngFor="let answer of question.crxQuestionAnswers; index as j">
+      <input style="margin-right: 10px;" [type]="question.answerType == 'One' ? 'radio' : 'checkbox'" name="answer-{{i}}" [value]="answer.answer"
+        [checked]="answer.correct" (click)="toggle(i, j)">
+      <div *ngIf="answerToEdit != i + '-' + j" [innerHTML]="answer.answer"></div>
+      <quill-editor *ngIf="answerToEdit == i + '-' + j" [styles]="{ height: '20px'}"
+        [(ngModel)]="selectedChallenge.questions[i].crxQuestionAnswers[j].answer" name="description"></quill-editor>
+      <ion-button slot="end" size="small" fill="clear" (click)="toggleEditAnswer(i,j)">
+        <ion-icon slot="icon-only" color="success" name="pencil"></ion-icon>
+      </ion-button>
+      <ion-button slot="end" size="small" fill="clear" (click)="deleteAnswer(i,j)">
+        <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-item class="answer" style="color:green;">
+      <ion-label>{{ 'Add new answer' | translate }}</ion-label>
+      <ion-button slot="end" size="small" fill="clear" (click)="addNewAnswer(i)">
+        <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </div>
+  <ion-item style="color: green; background-color: lightgray;">
+    <ion-label>{{ 'Add new question' | translate }}</ion-label>
+    <ion-select [(ngModel)]="answerType">
+      <ion-select-option value="One">One</ion-select-option>
+      <ion-select-option value="Multi">Multi</ion-select-option>
+    </ion-select>
+    <ion-button slot="end" size="small" fill="clear" (click)="addNewQuestion()">
+      <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
+    </ion-button>
+  </ion-item>
+</ion-content>
+<ion-content *ngIf="!selectedChallenge">
+  <cranix-md-list objectType="challenge" [context]="context"></cranix-md-list>
+</ion-content>

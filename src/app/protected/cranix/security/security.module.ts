@@ -44,13 +44,13 @@ const routes: Routes = [
         component: AccessLogComponent
       }, {
         path: '',
-        redirectTo: 'access'
+        redirectTo: 'access', pathMatch: 'full'
       }
     ]
   },
   {
     path: 'security',
-    redirectTo: 'access'
+    redirectTo: 'access', pathMatch: 'full'
   }
 ];
 

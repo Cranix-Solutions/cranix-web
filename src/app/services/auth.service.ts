@@ -276,6 +276,8 @@ export class AuthenticationService {
             case "/pages/cranix/system": { return this.isAllowed('system.status') }
             case "/pages/cranix/softwares": { return this.isAllowed('software.manage') }
             case "/pages/cranix/security": { return this.isOneOfAllowed(['system.firewall', 'system.proxy']) }
+            //TODO education.challenges
+            case "/pages/edu/lessons/challenges": { return this.isAllowed('education.rooms') }
             case "/pages/edu/lessons/roomcontrol": { return this.isAllowed('education.rooms') }
             case "/pages/cranix/profile": { return this.isAllowed('permitall') }
             case "/pages/cranix/profile/myself": { return this.isAllowed('permitall') }

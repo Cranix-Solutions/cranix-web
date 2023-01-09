@@ -33,14 +33,14 @@ const routes: Routes = [
         component: MyVPNComponent
       },{
         path: '',
-        redirectTo: 'myself'
+        redirectTo: 'myself', pathMatch: 'full'
       }
     ]
     //loadChildren: () => import('./lessons.module').then( m => m.LessonsModule)
   },
   {
     path: 'profile',
-    redirectTo: 'myself'
+    redirectTo: 'myself', pathMatch: 'full'
   }
 ];
 

@@ -9,13 +9,13 @@ const routes: Routes = [
     path: '',
     component: ProtectedPage,
     children: [
-        { path: 'cephalix',
+        { path: 'cephalix', pathMatch: 'prefix',
           loadChildren: () => import('./cephalix/cephalix.module').then( m => m.CephalixModule)
         },
-        { path: 'cranix',
+        { path: 'cranix', pathMatch: 'prefix',
           loadChildren: () => import('./cranix/cranix.module').then(m => m.CranixModule)
         },{
-          path: 'edu',
+          path: 'edu', pathMatch: 'prefix',
           loadChildren: () => import('./edu/edu.module').then(m => m.EduModule)
         }
     ]

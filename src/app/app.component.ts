@@ -31,6 +31,7 @@ export class AppComponent {
 
   initializeApp() {
     console.log("AppComponenet initializeApp");
+    console.log(this.router.config)
     this.platform.ready().then(() => {
       this.authService.authenticationState.subscribe(state => {
         console.log("pathname :" + window.location.pathname);

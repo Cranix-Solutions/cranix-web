@@ -9,11 +9,13 @@ import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { UsersListsPage } from './users-lists.page';
 import { UsersComponent } from './users.component';
 import { UsersImportComponent } from './users-import.component';
-import { UserGroupsPage } from '../details/groups/user-groups.page'
+import { UserGroupsPage } from '../details/groups/user-groups.page';
+import { CanActivateViaAcls } from 'src/app/services/auth-guard.service';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'users', pathMatch: 'prefix',
+    canActivate: [CanActivateViaAcls],
     component: UsersListsPage,
     children: [
       {
@@ -25,14 +27,10 @@ const routes: Routes = [
         component: UsersImportComponent
       },
       {
-        path: '',
+        path: '', pathMatch: 'full',
         redirectTo: 'all'
       }
     ]
-  },
-  {
-    path: '',
-    redirectTo: 'all'
   }
 ];
 

@@ -1,4 +1,24 @@
-<ion-item>
+<ion-toolbar *ngIf="!authService.isMD()" class="page-toolbar">
+  <ion-item lines="none">
+    <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="filterMD">
+    </ion-input>
+  </ion-item>
+  <ion-buttons slot="end">
+    <ion-button size="small" fill="solid" (click)="context.componentParent.redirectToEdit(null)"
+      matTooltip="{{'Create a new user' | translate }}">
+      <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+    </ion-button>
+    <ion-button size="small" fill="solid" (click)="context.componentParent.openActions($event,null)"
+      matTooltip="{{'Apply actions on the selected objects' | translate }}">
+      <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
+    </ion-button>
+    <ion-button size="small" fill="solid" (click)="context.componentParent.openCollums($event)"
+      matTooltip="{{'Select the columns to show' | translate }}">
+      <ion-icon slot="icon-only" name="apps"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+<ion-item *ngIf="authService.isMD()">
   <ion-button size="small" fill="clear" (click)="back()" [disabled]="min <= 0">
     <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
     {{ min + 2 }}
@@ -10,7 +30,7 @@
   </ion-button>
 </ion-item>
 <!-- ion-content -->
-<ion-fab vertical="center" horizontal="end">
+<ion-fab *ngIf="authService.isMD()" vertical="center" horizontal="end">
   <ion-fab-button size="small">
     <ion-icon name="arrow-forward-circle"></ion-icon>
   </ion-fab-button>

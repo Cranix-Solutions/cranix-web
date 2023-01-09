@@ -25,7 +25,7 @@
     "@angular/router": "",
     "@capacitor/core": "",
     "@ionic/angular": "",
-    "@ionic/storage-angular": "^3.0.6",
+    "@ionic/storage-angular": "",
     "@ngx-translate/core": "",
     "@ngx-translate/http-loader": "",
     "ag-charts-angular": "",
