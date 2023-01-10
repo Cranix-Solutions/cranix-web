@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
 // own modules
 import { ServerResponse } from 'src/app/shared/models/server-models';
-import { Package } from 'src/app/shared/models/data-model';
+import { Group, Package, User } from 'src/app/shared/models/data-model';
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 import { LanguageService } from './language.service';
@@ -576,5 +576,14 @@ export class GenericObjectService {
       }
     }
     return output;
+  }
+
+  /*Helper functions for inoic-selectable*/
+  formatUsers(ports: User[]) {
+    return ports.map((port) => port.fullName).join(', ');
+  }
+
+  formatGroups(ports: Group[]) {
+    return ports.map((port) => port.name).join(', ');
   }
 }
