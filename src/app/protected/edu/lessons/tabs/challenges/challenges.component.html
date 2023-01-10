@@ -4,13 +4,19 @@
     <ion-row>
       <ion-col size="11">
         <ion-item>
-          <ion-input [(ngModel)]="selectedChallenge.description"></ion-input>
+          <ion-input [(ngModel)]="selectedChallenge.description" placeholder="{{'Title' | translate}}"></ion-input>
         </ion-item>
         <ion-item>
           <ion-label>{{'Groups' | translate}}:</ion-label>
           <ionic-selectable item-content [(ngModel)]="selectedChallenge.groups"
             [items]="objectService.allObjects['group']" itemValueField="id" itemTextField="description"
             [canSearch]="true" [isMultiple]="true">
+            <ng-template ionicSelectableCloseButtonTemplate>
+              <ion-icon name="close" color="danger"></ion-icon>
+            </ng-template>
+            <ng-template ionicSelectableValueTemplate let-ports="value">
+              <div class="ionic-selectable-value-item">{{objectService.formatGroups(ports)}}</div>
+            </ng-template>
           </ionic-selectable>
           <ion-label>{{'studentsOnly' | translate}}</ion-label>
           <ion-toggle [(ngModel)]="selectedChallenge.studentsOnly"></ion-toggle>
@@ -20,14 +26,22 @@
           <ionic-selectable item-content [(ngModel)]="selectedChallenge.users"
             [items]="objectService.allObjects['user']" itemValueField="id" itemTextField="fullName" [canSearch]="true"
             [isMultiple]="true">
+            <ng-template ionicSelectableCloseButtonTemplate>
+              <ion-icon name="close" color="danger"></ion-icon>
+            </ng-template>
+            <ng-template ionicSelectableValueTemplate let-ports="value">
+              <div class="ionic-selectable-value-item">{{objectService.formatUsers(ports)}}</div>
+            </ng-template>
           </ionic-selectable>
         </ion-item>
         <ion-item>
           <ion-label>{{ 'Valid' | translate}}</ion-label>
           <ion-label>{{ 'from' | translate}}:</ion-label>
-          <input [(ngModel)]="selectedChallenge.validFrom" name="validFrom" type="datetime-local">
+          <ion-datetime-button datetime="validFrom"></ion-datetime-button>
+          <!-- input [(ngModel)]="selectedChallenge.validFrom" name="validFrom" type="datetime-local" -->
           <ion-label>{{ 'until' | translate}}:</ion-label>
-          <input [(ngModel)]="selectedChallenge.validUntil" name="validUntil" type="datetime-local">
+          <ion-datetime-button datetime="validUntil"></ion-datetime-button>
+          <!-- input [(ngModel)]="selectedChallenge.validUntil" name="validUntil" type="datetime-local" -->
         </ion-item>
       </ion-col>
       <ion-col size="1">
@@ -48,6 +62,34 @@
   </ion-grid>
 </ion-toolbar>
 <ion-content *ngIf="selectedChallenge">
+  <ion-modal #modalValidFrom [keepContentsMounted]="true">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="end">
+            <ion-button size="small" (click)="modalValidFrom.dismiss()">
+              <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-datetime [(ngModel)]="selectedChallenge.validFrom" name="validFrom" id="validFrom"></ion-datetime>
+    </ng-template>
+  </ion-modal>
+  <ion-modal #modalValidUntil [keepContentsMounted]="true">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="end">
+            <ion-button size="small" (click)="modalValidUntil.dismiss()">
+              <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-datetime [(ngModel)]="selectedChallenge.validUntil" name="validUntil" id="validUntil"></ion-datetime>
+    </ng-template>
+  </ion-modal>
   <div class="question" *ngFor="let question of selectedChallenge.questions; index as i">
     <ion-item style="background-color: lightgray;">
       <div class="counter"><b>{{i+1}}</b></div>
@@ -62,8 +104,8 @@
       </ion-button>
     </ion-item>
     <ion-item class="answer" *ngFor="let answer of question.crxQuestionAnswers; index as j">
-      <input style="margin-right: 10px;" [type]="question.answerType == 'One' ? 'radio' : 'checkbox'" name="answer-{{i}}" [value]="answer.answer"
-        [checked]="answer.correct" (click)="toggle(i, j)">
+      <input style="margin-right: 10px;" [type]="question.answerType == 'One' ? 'radio' : 'checkbox'"
+        name="answer-{{i}}" [value]="answer.answer" [checked]="answer.correct" (click)="toggle(i, j)">
       <div *ngIf="answerToEdit != i + '-' + j" [innerHTML]="answer.answer"></div>
       <quill-editor *ngIf="answerToEdit == i + '-' + j" [styles]="{ height: '20px'}"
         [(ngModel)]="selectedChallenge.questions[i].crxQuestionAnswers[j].answer" name="description"></quill-editor>
