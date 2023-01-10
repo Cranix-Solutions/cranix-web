@@ -1,7 +1,9 @@
 import { ChallengesService } from 'src/app/services/challenges.service';
 import { Component, OnInit } from '@angular/core';
+import { PopoverController } from '@ionic/angular';
 import { CrxChallenge, CrxQuestion, CrxQuestionAnswer } from 'src/app/shared/models/data-model';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 
 @Component({
   selector: 'app-challenges',
@@ -19,7 +21,8 @@ export class ChallengesComponent implements OnInit {
   modified: boolean = false;
   constructor(
     public challengesService: ChallengesService,
-    public objectService: GenericObjectService
+    public objectService: GenericObjectService,
+    public popoverCtrl: PopoverController
   ) {
     this.context = { componentParent: this };
   }
@@ -91,13 +94,30 @@ export class ChallengesComponent implements OnInit {
   }
 
   deleteQuestion(i) {
-    this.selectedChallenge.questions.splice(i,1)
-    this.modified = true;
+    this.challengesService.deleteQuestion(
+      this.selectedChallenge.id,
+      this.selectedChallenge.questions[i].id
+      ).subscribe(
+      (val) => {
+        this.objectService.responseMessage(val)
+        this.objectService.getAllObject('challenge')
+        this.selectedChallenge.questions.splice(i,1)
+      }
+    )
   }
 
   deleteAnswer(i,j) {
-    this.selectedChallenge.questions[i].crxQuestionAnswers.splice(j,1);
-    this.modified = true;
+    this.challengesService.deleteAnswer(
+      this.selectedChallenge.id,
+      this.selectedChallenge.questions[i].id,
+      this.selectedChallenge.questions[i].crxQuestionAnswers[j].id
+      ).subscribe(
+      (val) => {
+        this.objectService.responseMessage(val)
+        this.objectService.getAllObject('challenge')
+        this.selectedChallenge.questions[i].crxQuestionAnswers.splice(j,1);
+      }
+    )
   }
 
   save() {
@@ -108,4 +128,30 @@ export class ChallengesComponent implements OnInit {
       this.challengesService.add(this.selectedChallenge)
     }
   }
+
+  async openActions(ev: any, object: CrxChallenge) {
+    if (object) {
+      this.objectService.selectedIds.push(object.id)
+      this.objectService.selection.push(object)
+    } else {
+      if (this.objectService.selection.length == 0) {
+        this.objectService.selectObject();
+        return;
+      }
+    }
+    const popover = await this.popoverCtrl.create({
+      component: ActionsComponent,
+      event: ev,
+      componentProps: {
+        objectType: "printer",
+        objectIds: this.objectService.selectedIds,
+        selection: this.objectService.selection,
+        gridApi: null
+      },
+      animated: true,
+      showBackdrop: true
+    });
+    (await popover).present();
+  }
+
 }
