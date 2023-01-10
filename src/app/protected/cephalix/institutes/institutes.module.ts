@@ -27,9 +27,6 @@ const routes: Routes = [
     path: 'institutes/:id',
     canLoad: [CanActivateViaAcls],
     loadChildren: () => import('./details/institute-details.module').then( m => m.InstituteDetailsPageModule)
-  },
-  {
-    path: '', redirectTo: 'all', pathMatch: 'full'
   }
 ];
 
