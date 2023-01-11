@@ -226,6 +226,17 @@ export class CranixMdListComponent implements OnInit {
         }
         break
       }
+      case "challenges/challenge": 
+      case "challenges/todo": {
+        for (let obj of this.objectService.allObjects[this.objectType]) {
+          if (
+            obj.description.toLowerCase().indexOf(filter) != -1
+          ) {
+            this.rowData.push(obj)
+          }
+        }
+        break
+      }
     }
 
     if (this.rowData.length < this.step) {

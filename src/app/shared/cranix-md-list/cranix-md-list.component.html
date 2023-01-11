@@ -3,7 +3,7 @@
     <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="filterMD">
     </ion-input>
   </ion-item>
-  <ion-buttons slot="end">
+  <ion-buttons *ngIf="objectType != 'challenges/todo'" slot="end">
     <ion-button size="small" fill="solid" (click)="context.componentParent.redirectToEdit(null)"
       matTooltip="{{'Create a new user' | translate }}">
       <ion-icon slot="icon-only" name="add-circle"></ion-icon>

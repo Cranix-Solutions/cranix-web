@@ -28,7 +28,7 @@ export class ChallengesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.objectService.getAllObject('challenge');
+    this.objectService.getAllObject('challenges/challenge');
   }
 
   redirectToEdit(data) {
@@ -100,7 +100,7 @@ export class ChallengesComponent implements OnInit {
       ).subscribe(
       (val) => {
         this.objectService.responseMessage(val)
-        this.objectService.getAllObject('challenge')
+        this.objectService.getAllObject('challenges/challenge')
         this.selectedChallenge.questions.splice(i,1)
       }
     )
@@ -114,7 +114,7 @@ export class ChallengesComponent implements OnInit {
       ).subscribe(
       (val) => {
         this.objectService.responseMessage(val)
-        this.objectService.getAllObject('challenge')
+        this.objectService.getAllObject('challenges/challenge')
         this.selectedChallenge.questions[i].crxQuestionAnswers.splice(j,1);
       }
     )
@@ -143,7 +143,7 @@ export class ChallengesComponent implements OnInit {
       component: ActionsComponent,
       event: ev,
       componentProps: {
-        objectType: "printer",
+        objectType: "challenges/challenge",
         objectIds: this.objectService.selectedIds,
         selection: this.objectService.selection,
         gridApi: null

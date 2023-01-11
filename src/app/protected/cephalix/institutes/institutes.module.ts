@@ -7,15 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { CanActivateViaAcls } from 'src/app/services/auth-guard.service';
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
-import { InstituteDetailsPageModule } from './details/institute-details.module';
-import { InstitutesListsPageModule } from './lists/institutes-lists.module';
 import { PipesModule } from 'src/app/pipes/pipe-modules';
-
-import { InstitutesListsPage } from './lists/institutes-lists.page';
-import { InstitutesComponent } from './lists/institutes.component';
-import { InstitutesStatusComponent } from './lists/institutes-status.component';
-import { InstitutesSyncObjectsComponent } from './lists/institutes-sync-objects.component';
-import { InstitutesManage } from './lists/institutes.manage';
 
 const routes: Routes = [
   {

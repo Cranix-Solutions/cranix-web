@@ -1,0 +1,39 @@
+<cranix-toolbar title="{{ 'Todos' | translate}}"></cranix-toolbar>
+<ion-content *ngIf="!selectedChallenge">
+  <cranix-md-list objectType="challenges/todo" [context]="context"></cranix-md-list>
+</ion-content>
+<ion-toolbar class="page-toolbar" *ngIf="selectedChallenge" style="height: 80px;">
+  <ion-title>
+    {{selectedChallenge.description}}
+  </ion-title>
+  <ion-item>
+    <ion-label>
+      {{ 'Valid' | translate}}
+      {{ 'from' | translate}}:
+      {{selectedChallenge.validFrom | date:'yyyy-MM-dd HH:mm'}}
+      {{ 'until' | translate}}:
+      {{selectedChallenge.validUntil | date:'yyyy-MM-dd HH:mm'}}
+    </ion-label>
+  </ion-item>
+  <ion-buttons slot="end">
+    <ion-button size="small" fill="solid" (click)="selectedChallenge=null">
+      <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
+    </ion-button>
+    <ion-button size="small" fill="solid" (click)="save()">
+      <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+<ion-content *ngIf="selectedChallenge">
+  <div class="question" *ngFor="let question of selectedChallenge.questions; index as i">
+    <ion-item style="background-color: lightgray;">
+      <div class="counter"><b>{{i+1}}</b></div>
+      <div [innerHTML]="question.question"></div>
+    </ion-item>
+    <ion-item class="answer" *ngFor="let answer of question.crxQuestionAnswers; index as j">
+      <input style="margin-right: 10px;" [type]="question.answerType == 'One' ? 'radio' : 'checkbox'"
+        name="answer-{{i}}" [value]="answer.answer" [checked]="answer.correct" (click)="toggle(i, j)">
+      <div [innerHTML]="answer.answer"></div>
+    </ion-item>
+  </div>
+</ion-content>

@@ -1,5 +1,5 @@
-<cranix-toolbar title="{{ tittle | translate}}"></cranix-toolbar>
-<ion-toolbar class="page-toolbar" style="height: 200px;" *ngIf="selectedChallenge">
+<cranix-toolbar title="{{ 'Challenges' | translate}}"></cranix-toolbar>
+<ion-toolbar *ngIf="selectedChallenge" class="page-toolbar"  style="height: 200px;">
   <ion-grid>
     <ion-row>
       <ion-col size="11">
@@ -135,5 +135,5 @@
   </ion-item>
 </ion-content>
 <ion-content *ngIf="!selectedChallenge">
-  <cranix-md-list objectType="challenge" [context]="context"></cranix-md-list>
+  <cranix-md-list objectType="challenges/challenge" [context]="context"></cranix-md-list>
 </ion-content>

@@ -11,10 +11,11 @@ import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { PipesModule } from 'src/app/pipes/pipe-modules';
 import { LessonsPage } from './lessons.page';
 import { EductaionService } from 'src/app/services/education.service';
-import { RoomControlComponent } from './tabs/room-control/room-control.component';
-import { RoomDevComponent } from './tabs/room-control/device/roomdev.component';
-import { MypositiveComponent } from './tabs/mypositive/mypositive.component';
-import { ChallengesComponent } from './tabs/challenges/challenges.component'
+import { RoomControlComponent } from './room-control/room-control.component';
+import { RoomDevComponent } from './room-control/device/roomdev.component';
+import { MypositiveComponent } from './mypositive/mypositive.component';
+import { ChallengesComponent } from './challenges/challenges.component'
+import { TestsComponent } from './tests/tests.component'
 import { QuillModule } from 'ngx-quill';
 
 const routes: Routes = [
@@ -23,6 +24,10 @@ const routes: Routes = [
     canActivate: [CanActivateViaAcls],
     component: LessonsPage,
     children: [
+      {
+        path: 'tests',
+        component:TestsComponent
+      },
       {
         path: 'challenges',
         component:ChallengesComponent
@@ -54,7 +59,7 @@ const routes: Routes = [
     CranixSharedModule,
     QuillModule.forRoot()
   ],
-  declarations: [LessonsPage,RoomControlComponent,ChallengesComponent,RoomDevComponent,MypositiveComponent],
+  declarations: [LessonsPage,RoomControlComponent,ChallengesComponent,RoomDevComponent,MypositiveComponent,TestsComponent],
   providers: [TranslateService, PipesModule,EductaionService]
 })
 export class LessonsModule {}
