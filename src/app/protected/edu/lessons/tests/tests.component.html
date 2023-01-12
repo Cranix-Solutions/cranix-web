@@ -16,9 +16,18 @@
     </ion-label>
   </ion-item>
   <ion-buttons slot="end">
-    <ion-button size="small" fill="solid" (click)="selectedChallenge=null">
+    <ion-button size="small" fill="solid" (click)="close(false)">
       <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
     </ion-button>
+    <ion-popover #popover [isOpen]="isOpen" (didDismiss)="isOpen = false">
+      <ng-template>
+        <ion-content class="ion-padding">
+          {{'Your changes will be lost if you close this window.' | translate}}<br>
+          <ion-button size="small" fill="solid" (click)="close(true)">{{'Close'|translate}}</ion-button>
+          <ion-button size="small" fill="solid" (click)="isOpen=false">{{'Abort'|translate}}</ion-button>
+        </ion-content>
+      </ng-template>
+    </ion-popover>
     <ion-button size="small" fill="solid" (click)="save()">
       <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
     </ion-button>
@@ -30,7 +39,7 @@
       <div class="counter"><b>{{i+1}}</b></div>
       <div [innerHTML]="question.question"></div>
     </ion-item>
-    <ion-item class="answer" *ngFor="let answer of question.crxQuestionAnswers; index as j">
+    <ion-item class="answer" *ngFor="let answer of question.crxQuestionAnswers; index as j" (click)="toggle(i, j)">
       <input style="margin-right: 10px;" [type]="question.answerType == 'One' ? 'radio' : 'checkbox'"
         name="answer-{{i}}" [value]="answer.answer" [checked]="answer.correct" (click)="toggle(i, j)">
       <div [innerHTML]="answer.answer"></div>

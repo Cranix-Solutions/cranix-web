@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChallengesService } from 'src/app/services/challenges.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { CrxChallenge } from 'src/app/shared/models/data-model';
@@ -12,7 +12,9 @@ export class TestsComponent implements OnInit {
 
   context
   selectedChallenge: CrxChallenge;
-
+  modified: boolean = false;
+  isOpen: boolean = false;
+  @ViewChild('popover') popover;
   constructor(
     public challengesService: ChallengesService,
     public objectService: GenericObjectService) {
@@ -24,10 +26,24 @@ export class TestsComponent implements OnInit {
     this.selectedChallenge = null
   }
 
-  redirectToEdit(data) {
+  redirectToEdit(data: CrxChallenge) {
     if (data) {
       console.log(data)
       this.selectedChallenge = data;
+    }
+  }
+
+  close(force: boolean){
+    if(force){
+      this.isOpen = false
+      this.popover.dismiss();
+      this.selectedChallenge = null;
+      return
+    }
+    if(this.modified){
+      this.isOpen = true
+    } else {
+      this.selectedChallenge = null;
     }
   }
 
@@ -44,6 +60,27 @@ export class TestsComponent implements OnInit {
     } else {
       this.selectedChallenge.questions[i].crxQuestionAnswers[j].correct = !correct
     }
+    this.modified = true;
   }
 
+  save(){
+    let answers = {}
+    for( let question of this.selectedChallenge.questions ) {
+      for( let answer of question.crxQuestionAnswers ) {
+        answers[answer.id] = answer.correct
+      }
+    }
+    this.challengesService.saveChallengeAnswers(this.selectedChallenge.id,answers).subscribe({
+      next: (val) => {
+        this.objectService.responseMessage(val)
+        if( val.code = "OK" ){
+          this.selectedChallenge = null
+        }
+      },
+      error: (error) => {
+        this.objectService.errorMessage(error)
+      }
+    })
+  }
 }
+

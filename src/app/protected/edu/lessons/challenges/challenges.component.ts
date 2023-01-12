@@ -1,5 +1,5 @@
 import { ChallengesService } from 'src/app/services/challenges.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 import { CrxChallenge, CrxQuestion, CrxQuestionAnswer } from 'src/app/shared/models/data-model';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
@@ -18,7 +18,11 @@ export class ChallengesComponent implements OnInit {
   questionToEdit: number = -1;
   answerToEdit = ""
   answerType = "One"
+  questionValue: number = 1;
   modified: boolean = false;
+  isOpen: boolean = false;
+  @ViewChild('popover') popover;
+
   constructor(
     public challengesService: ChallengesService,
     public objectService: GenericObjectService,
@@ -29,6 +33,20 @@ export class ChallengesComponent implements OnInit {
 
   ngOnInit() {
     this.objectService.getAllObject('challenges/challenge');
+  }
+
+  close(force: boolean){
+    if(force){
+      this.isOpen = false
+      this.popover.dismiss();
+      this.selectedChallenge = null;
+      return
+    }
+    if(this.modified){
+      this.isOpen = true
+    } else {
+      this.selectedChallenge = null;
+    }
   }
 
   redirectToEdit(data) {
@@ -87,6 +105,7 @@ export class ChallengesComponent implements OnInit {
   addNewQuestion() {
     let newQuestion: CrxQuestion = new CrxQuestion();
     newQuestion.answerType = this.answerType;
+    newQuestion.value = this.questionValue;
     newQuestion.crxQuestionAnswers.push(new CrxQuestionAnswer())
     newQuestion.crxQuestionAnswers.push(new CrxQuestionAnswer())
     this.selectedChallenge.questions.push(newQuestion)
@@ -127,6 +146,7 @@ export class ChallengesComponent implements OnInit {
     } else {
       this.challengesService.add(this.selectedChallenge)
     }
+    this.modified = false;
   }
 
   async openActions(ev: any, object: CrxChallenge) {

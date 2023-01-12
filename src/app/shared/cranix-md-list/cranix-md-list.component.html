@@ -52,8 +52,8 @@
 <ion-list>
   <div *ngFor="let object of rowData; let i = index">
     <ion-item-sliding *ngIf="i > min && i < max">
-      <ion-item>
-        <ion-note slot="start">
+      <ion-item style="background-color : {{authService.rowColors[i%2]}}">
+        <ion-note *ngIf="objectType != 'challenges/todo'" slot="start">
           <ion-checkbox (click)="$event.stopPropagation()" (ionChange)="checkChange($event,object)"></ion-checkbox>
         </ion-note>
         <ion-label (click)="context.componentParent.redirectToEdit(object)">
