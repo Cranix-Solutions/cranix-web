@@ -32,7 +32,7 @@ export class ChallengesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.objectService.getAllObject('challenges/challenge');
+    this.objectService.getAllObject('challenge');
   }
 
   close(force: boolean){
@@ -51,7 +51,6 @@ export class ChallengesComponent implements OnInit {
 
   redirectToEdit(data) {
     if (data) {
-      console.log(data)
       this.selectedChallenge = data;
       let isoString = new Date(this.selectedChallenge.validFrom).toISOString();
       this.selectedChallenge.validFrom = isoString.substring(0, isoString.indexOf("T") + 6);
@@ -60,6 +59,7 @@ export class ChallengesComponent implements OnInit {
     } else {
       this.selectedChallenge = new CrxChallenge();
     }
+    console.log(this.selectedChallenge)
   }
 
   toggle(i, j) {

@@ -24,42 +24,47 @@ export class ChallengesService {
   }
 
   add(challenge: CrxChallenge) {
-    let url = this.hostname + "/challenges/challenges"
+    let url = this.hostname + "/challenges"
     this.http.post<ServerResponse>(url, challenge, { headers: this.authService.headers }).subscribe(
       (val) => {
         this.objectService.responseMessage(val)
-        this.objectService.getAllObject('challenges/challenge')
+        this.objectService.getAllObject('challenge')
        }
     )
   }
 
   modify(challenge: CrxChallenge) {
-    let url = this.hostname + "/challenges/challenges"
+    let url = this.hostname + "/challenges"
     this.http.patch<ServerResponse>(url, challenge, { headers: this.authService.headers }).subscribe(
       (val) => {
         this.objectService.responseMessage(val)
-        this.objectService.getAllObject('challenges/challenge')
+        this.objectService.getAllObject('challenge')
        }
     )
   }
 
   delete(challengeId: number) {
-    let url = this.hostname + `/challenges/challenges/${challengeId}`
+    let url = this.hostname + `/challenges/${challengeId}`
     return this.http.delete<ServerResponse>(url, { headers: this.authService.headers })
   }
 
   deleteQuestion(challengeId: number, questionId: number) {
-    let url = this.hostname + `/challenges/challenges/${challengeId}/${questionId}`
+    let url = this.hostname + `/challenges/${challengeId}/${questionId}`
     return this.http.delete<ServerResponse>(url, { headers: this.authService.headers })
   }
 
   deleteAnswer(challengeId: number, questionId: number, answerId: number) {
-    let url = this.hostname + `/challenges/challenges/${challengeId}/${questionId}/${answerId}`
+    let url = this.hostname + `/challenges/${challengeId}/${questionId}/${answerId}`
     return this.http.delete<ServerResponse>(url, { headers: this.authService.headers })
   }
 
   saveChallengeAnswers(challengeId: number, answers: {}) {
     let url = this.hostname + `/challenges/todos/${challengeId}`
     return this.http.post<ServerResponse>(url, answers, { headers: this.authService.headers })
+  }
+
+  getMyAnswers(challengeId: number){
+    let url = this.hostname + `/challenges/todos/${challengeId}`
+    return this.http.get<any>(url, { headers: this.authService.headers })
   }
 }

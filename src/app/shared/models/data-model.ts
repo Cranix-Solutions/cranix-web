@@ -499,8 +499,8 @@ export class CrxChallenge {
 	groups: Group[] = []
 	users: User[] = []
 	studentsOnly?: boolean = false;
-	validFrom: any = new Date()
-	validUntil: any = new Date()
+	validFrom: any = new Date().toISOString()
+	validUntil: any = new Date().toISOString()
 }
 
 export class CrxChallengeAnswer {

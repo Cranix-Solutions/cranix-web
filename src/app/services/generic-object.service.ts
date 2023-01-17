@@ -34,7 +34,7 @@ export class GenericObjectService {
     'hwconf',
     'printer',
     'adhocroom',
-    'challenges/challenge',
+    'challenge',
     'challenges/todo'
   ]
   objects: string[] = [];

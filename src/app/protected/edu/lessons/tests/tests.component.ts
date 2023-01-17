@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChallengesService } from 'src/app/services/challenges.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
-import { CrxChallenge } from 'src/app/shared/models/data-model';
+import { CrxChallenge, CrxQuestion } from 'src/app/shared/models/data-model';
 
 @Component({
   selector: 'app-tests',
@@ -30,6 +30,32 @@ export class TestsComponent implements OnInit {
     if (data) {
       console.log(data)
       this.selectedChallenge = data;
+      this.challengesService.getMyAnswers(data.id).subscribe(
+        (val) => {
+          console.log(val)
+          if( val.code ){
+            this.objectService.responseMessage(val)
+          } else {
+            let i = 0;
+            let j = 0;
+            for(let question of this.selectedChallenge.questions ){
+              j=0;
+              for( let answer of question.crxQuestionAnswers ){
+                this.selectedChallenge.questions[i].crxQuestionAnswers[j].correct = val[answer.id]
+                /*
+                if( val[answer.id] ) {
+                  this.selectedChallenge.questions[i].crxQuestionAnswers[j].correct = true;
+                } else {
+                  this.selectedChallenge.questions[i].crxQuestionAnswers[j].correct = false;
+                }
+                */
+               j++;
+              }
+              i++;
+            }
+          }
+        }
+      )
     }
   }
 

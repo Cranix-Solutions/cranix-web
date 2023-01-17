@@ -226,7 +226,7 @@ export class CranixMdListComponent implements OnInit {
         }
         break
       }
-      case "challenges/challenge": 
+      case "challenge": 
       case "challenges/todo": {
         for (let obj of this.objectService.allObjects[this.objectType]) {
           if (
