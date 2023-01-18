@@ -18,11 +18,11 @@ export class ChallengesComponent implements OnInit {
   questionToEdit: number = -1;
   answerToEdit = ""
   answerType = "One"
+  available: boolean = false;
   questionValue: number = 1;
   modified: boolean = false;
   isOpen: boolean = false;
   @ViewChild('popover') popover;
-
   constructor(
     public challengesService: ChallengesService,
     public objectService: GenericObjectService,
@@ -36,6 +36,10 @@ export class ChallengesComponent implements OnInit {
   }
 
   close(force: boolean){
+    if(this.available){
+      this.selectedChallenge = null;
+      return
+    }
     if(force){
       this.isOpen = false
       this.popover.dismiss();
@@ -52,9 +56,14 @@ export class ChallengesComponent implements OnInit {
   redirectToEdit(data) {
     if (data) {
       this.selectedChallenge = data;
-      let isoString = new Date(this.selectedChallenge.validFrom).toISOString();
+      let now = new Date().getTime();
+      let validFrom = new Date(data.validFrom).getTime()
+      let validUntil = new Date(data.validUntil).getTime()
+      console.log(validFrom, validUntil, now)
+      this.available = validFrom < now && validUntil > now;
+      let isoString = new Date(data.validFrom).toISOString();
       this.selectedChallenge.validFrom = isoString.substring(0, isoString.indexOf("T") + 6);
-      isoString = new Date(this.selectedChallenge.validUntil).toISOString();
+      isoString = new Date(data.validUntil).toISOString();
       this.selectedChallenge.validUntil = isoString.substring(0, isoString.indexOf("T") + 6);
     } else {
       this.selectedChallenge = new CrxChallenge();
@@ -79,6 +88,9 @@ export class ChallengesComponent implements OnInit {
   }
 
   toggleEditQuestion(i) {
+    if( this.available ) {
+      return;
+    }
     if (this.questionToEdit == i) {
       this.questionToEdit = -1;
     } else {
@@ -88,6 +100,9 @@ export class ChallengesComponent implements OnInit {
   }
 
   toggleEditAnswer(i, j) {
+    if( this.available ) {
+      return;
+    }
     if (this.answerToEdit == i + "-" + j) {
       this.answerToEdit = ""
     } else {
@@ -172,6 +187,43 @@ export class ChallengesComponent implements OnInit {
       showBackdrop: true
     });
     (await popover).present();
+  }
+
+  evaluate(){
+    this.challengesService.evaluate(this.selectedChallenge.id).subscribe(
+      (val) => {
+        if(val.code) {
+          this.objectService.responseMessage(val)
+        } else {
+          let results = []
+          let line = { "question" : "" }
+          for( let id in val ) {
+            line[id] = this.objectService.idToFulName(id);
+          }
+          results.push(line)
+          for( let question of this.selectedChallenge.questions ) {
+            line = { "question" : question.question }
+            for( let id in val ) {
+              line[id] = val[id][question.id]
+            }
+            results.push(line)
+          }
+          console.log(results)
+        }
+      }
+    )
+  }
+
+  archive(){
+    this.challengesService.archive(this.selectedChallenge.id,0).subscribe(
+      (val) => {
+        if(val.code) {
+          this.objectService.responseMessage(val)
+        } else {
+          console.log(val)
+        }
+      }
+    )
   }
 
 }

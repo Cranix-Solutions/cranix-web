@@ -67,4 +67,14 @@ export class ChallengesService {
     let url = this.hostname + `/challenges/todos/${challengeId}`
     return this.http.get<any>(url, { headers: this.authService.headers })
   }
+
+  evaluate(challengeId: number){
+    let url = this.hostname + `/challenges/${challengeId}/results`
+    return this.http.get<any>(url, { headers: this.authService.headers })
+  }
+
+  archive(challengeId: number, cleanUp: number){
+    let url = this.hostname + `/challenges/${challengeId}/archive/${cleanUp}`
+    return this.http.get<any>(url, { headers: this.authService.headers })
+  }
 }

@@ -474,7 +474,7 @@ export class CrxQuestionAnswer {
 	id?: number
 	created: string = ""
 	modified: string = ""
-	answer: string = ""
+	answer: string = "XXXXXXXXXXXXXXXXXXXX"
 	correct: boolean = false
 	constructor() { }
 }
@@ -483,7 +483,7 @@ export class CrxQuestion {
 	id?: number
 	created: string = ""
 	modified: string = ""
-	question: string = ""
+	question: string = "XXXXXXXXXXXXXXXXXXXX"
 	answerType: string = ""
 	value: number = 1
 	crxQuestionAnswers: CrxQuestionAnswer[] = []

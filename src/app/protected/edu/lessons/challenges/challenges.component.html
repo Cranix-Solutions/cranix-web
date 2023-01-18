@@ -1,16 +1,17 @@
 <cranix-toolbar title="{{ 'Challenges' | translate}}"></cranix-toolbar>
-<ion-toolbar *ngIf="selectedChallenge" class="page-toolbar"  style="height: 200px;">
+<ion-toolbar *ngIf="selectedChallenge" class="page-toolbar"  style="height: 220px;">
   <ion-grid>
     <ion-row>
       <ion-col size="11">
         <ion-item>
-          <ion-input [(ngModel)]="selectedChallenge.description" placeholder="{{'Title' | translate}}"></ion-input>
+          <h3 *ngIf="available">{{'Is now available'|translate}}</h3>
+          <ion-input [(ngModel)]="selectedChallenge.description" placeholder="{{'Title' | translate}}" [disabled]="available"></ion-input>
         </ion-item>
-        <ion-item>
+        <ion-item  [disabled]="available">
           <ion-label>{{'Groups' | translate}}:</ion-label>
           <ionic-selectable item-content [(ngModel)]="selectedChallenge.groups"
             [items]="objectService.allObjects['group']" itemValueField="id" itemTextField="description"
-            [canSearch]="true" [isMultiple]="true">
+            [canSearch]="true" [isMultiple]="true" [disabled]="available">
             <ng-template ionicSelectableCloseButtonTemplate>
               <ion-icon name="close" color="danger"></ion-icon>
             </ng-template>
@@ -19,13 +20,13 @@
             </ng-template>
           </ionic-selectable>
           <ion-label>{{'studentsOnly' | translate}}</ion-label>
-          <ion-toggle [(ngModel)]="selectedChallenge.studentsOnly"></ion-toggle>
+          <ion-toggle [(ngModel)]="selectedChallenge.studentsOnly" [disabled]="available"></ion-toggle>
         </ion-item>
-        <ion-item>
+        <ion-item  [disabled]="available">
           <ion-label>{{'Users' | translate}}:</ion-label>
           <ionic-selectable item-content [(ngModel)]="selectedChallenge.users"
             [items]="objectService.allObjects['user']" itemValueField="id" itemTextField="fullName" [canSearch]="true"
-            [isMultiple]="true">
+            [isMultiple]="true" [disabled]="available">
             <ng-template ionicSelectableCloseButtonTemplate>
               <ion-icon name="close" color="danger"></ion-icon>
             </ng-template>
@@ -34,12 +35,14 @@
             </ng-template>
           </ionic-selectable>
         </ion-item>
-        <ion-item>
-          <ion-label>{{ 'Valid' | translate}}</ion-label>
-          <ion-label>{{ 'from' | translate}}:</ion-label>
+        <ion-item  [disabled]="available">
+          <!-- ion-label>{{ 'available' | translate}}</ion-label>
+          <ion-label>{{ 'from' | translate}}:</ion-label -->
+            {{ 'available' | translate}} {{ 'from' | translate}}:
           <ion-datetime-button datetime="validFrom"></ion-datetime-button>
           <!-- input [(ngModel)]="selectedChallenge.validFrom" name="validFrom" type="datetime-local" -->
-          <ion-label>{{ 'until' | translate}}:</ion-label>
+          <!-- ion-label>{{ 'until' | translate}}:</ion-label -->
+          {{ 'until' | translate}}:
           <ion-datetime-button datetime="validUntil"></ion-datetime-button>
           <!-- input [(ngModel)]="selectedChallenge.validUntil" name="validUntil" type="datetime-local" -->
         </ion-item>
@@ -57,13 +60,16 @@
             </ion-content>
           </ng-template>
         </ion-popover>
-        <ion-button size="small" fill="solid" (click)="save()">
+        <ion-button size="small" fill="solid" (click)="save()" [disabled]="available">
           <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
         </ion-button>
-        <ion-button size="small" fill="solid" (click)="evaluate()">
-          <ion-icon slot="icon-only" name="settings"></ion-icon>
+        <ion-button size="small" fill="solid" (click)="evaluate()" [disabled]="available">
+          <ion-icon slot="icon-only" name="settings" color="success"></ion-icon>
         </ion-button>
-        <ion-button size="small" fill="solid" (click)="delete()">
+        <ion-button size="small" fill="solid" (click)="archive()" [disabled]="available">
+          <ion-icon slot="icon-only" name="archive" ></ion-icon>
+        </ion-button>
+        <ion-button size="small" fill="solid" (click)="delete()" [disabled]="available">
           <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
         </ion-button>
       </ion-col>
@@ -100,7 +106,7 @@
     </ng-template>
   </ion-modal>
   <div class="question" *ngFor="let question of selectedChallenge.questions; index as i">
-    <ion-item style="background-color: lightgray;">
+    <ion-item style="background-color: lightgray;"  [disabled]="available">
       <div class="counter"><b>{{i+1}}</b></div>
       <ion-label>{{ 'value' | translate }}:</ion-label>
       <ion-input style="max-width: 40px; margin-right: 10px;" [(ngModel)]="question.value" type="number" (ionChange)="modified = true" min="1"></ion-input>
@@ -114,7 +120,7 @@
         <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
       </ion-button>
     </ion-item>
-    <ion-item class="answer" *ngFor="let answer of question.crxQuestionAnswers; index as j">
+    <ion-item class="answer" *ngFor="let answer of question.crxQuestionAnswers; index as j" [disabled]="available">
       <input style="margin-right: 10px;" [type]="question.answerType == 'One' ? 'radio' : 'checkbox'"
         name="answer-{{i}}" [value]="answer.answer" [checked]="answer.correct" (click)="toggle(i, j)">
       <div *ngIf="answerToEdit != i + '-' + j" [innerHTML]="answer.answer" (click)="toggleEditAnswer(i,j)"></div>
@@ -127,18 +133,18 @@
         <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
       </ion-button>
     </ion-item>
-    <ion-item class="answer" style="color:green;">
+    <ion-item class="answer" style="color:green;" [disabled]="available">
       <ion-label>{{ 'Add new answer' | translate }}</ion-label>
       <ion-button slot="end" size="small" fill="clear" (click)="addNewAnswer(i)">
         <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
       </ion-button>
     </ion-item>
   </div>
-  <ion-item style="color: green; background-color: lightgray;">
+  <ion-item style="color: green; background-color: lightgray;"  [disabled]="available">
     <ion-label>{{ 'Add new question' | translate }}: </ion-label>
     <ion-select [(ngModel)]="answerType">
-      <ion-select-option value="One">One</ion-select-option>
-      <ion-select-option value="Multi">Multi</ion-select-option>
+      <ion-select-option value="One">{{'One'|translate}}</ion-select-option>
+      <ion-select-option value="Multi">{{'Multi'|translate}}</ion-select-option>
     </ion-select>
     <ion-label>{{ 'value' | translate }}</ion-label>
     <ion-input style="max-width: 40px; margin-right: 10px;" [(ngModel)]="questionValue" type="number" min="1"></ion-input>

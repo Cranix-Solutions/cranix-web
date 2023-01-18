@@ -1,4 +1,12 @@
 {
+    "One":"Eine richtige Antwort",
+    "Multi":"Mehrere richtigen Antworten",
+    "available": "verfügbar",
+    "from": "ab",
+    "until": "bis",
+    "Is now available": "Aktuell veröffentlicht",
+    "Add new answer": "Eine neue Antwort einfügen",
+    "Add new question": "Eine neue Frage einfügen",
     "Add one Attachment":"Einen Anhang einfügen",
     "%s ( %s %s ) was created with password '%s'": "%s ( %s %s ) wurde mit dem Passwort '%s' angelegt.",
     "%s was created successfully.": "%s wurde erfolgreich erstellt.",
