@@ -279,7 +279,7 @@ export class GenericObjectService {
   }
   idToUid(objectType, objectId) {
     for (let obj of this.allObjects[objectType]) {
-      if (obj.id === objectId) {
+      if (obj.id == objectId) {
         return obj.uid;
       }
     }
@@ -287,7 +287,7 @@ export class GenericObjectService {
   }
   idToFulName(objectId) {
     for (let obj of this.allObjects['user']) {
-      if (obj.id === objectId) {
+      if (obj.id == objectId) {
         return obj.surName + ", " + obj.givenName;
       }
     }
@@ -580,11 +580,11 @@ export class GenericObjectService {
   }
 
   /*Helper functions for inoic-selectable*/
-  formatUsers(ports: User[]) {
-    return ports.map((port) => port.fullName).join(', ');
+  formatUsers(users: User[]) {
+    return users.map((user) => user.fullName).join(', ');
   }
 
-  formatGroups(ports: Group[]) {
-    return ports.map((port) => port.name).join(', ');
+  formatGroups(groups: Group[]) {
+    return groups.map((group) => group.description).join(', ');
   }
 }
