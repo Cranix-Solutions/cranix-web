@@ -1,6 +1,7 @@
 import { ChallengesService } from 'src/app/services/challenges.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
+import { DomSanitizer } from '@angular/platform-browser';
 import { CrxChallenge, CrxQuestion, CrxQuestionAnswer } from 'src/app/shared/models/data-model';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
@@ -15,6 +16,7 @@ export class ChallengesComponent implements OnInit {
   title: String = "Tests"
   context;
   selectedChallenge: CrxChallenge;
+  htmlResult;
   questionToEdit: number = -1;
   answerToEdit = ""
   answerType = "One"
@@ -26,7 +28,8 @@ export class ChallengesComponent implements OnInit {
   constructor(
     public challengesService: ChallengesService,
     public objectService: GenericObjectService,
-    public popoverCtrl: PopoverController
+    public popoverCtrl: PopoverController,
+    private sanitizer: DomSanitizer
   ) {
     this.context = { componentParent: this };
   }
@@ -35,18 +38,18 @@ export class ChallengesComponent implements OnInit {
     this.objectService.getAllObject('challenge');
   }
 
-  close(force: boolean){
-    if(this.available){
+  close(force: boolean) {
+    if (this.available) {
       this.selectedChallenge = null;
       return
     }
-    if(force){
+    if (force) {
       this.isOpen = false
       this.popover.dismiss();
       this.selectedChallenge = null;
       return
     }
-    if(this.modified){
+    if (this.modified) {
       this.isOpen = true
     } else {
       this.selectedChallenge = null;
@@ -88,7 +91,7 @@ export class ChallengesComponent implements OnInit {
   }
 
   toggleEditQuestion(i) {
-    if( this.available ) {
+    if (this.available) {
       return;
     }
     if (this.questionToEdit == i) {
@@ -100,7 +103,7 @@ export class ChallengesComponent implements OnInit {
   }
 
   toggleEditAnswer(i, j) {
-    if( this.available ) {
+    if (this.available) {
       return;
     }
     if (this.answerToEdit == i + "-" + j) {
@@ -131,25 +134,25 @@ export class ChallengesComponent implements OnInit {
     this.challengesService.deleteQuestion(
       this.selectedChallenge.id,
       this.selectedChallenge.questions[i].id
-      ).subscribe(
+    ).subscribe(
       (val) => {
         this.objectService.responseMessage(val)
         this.objectService.getAllObject('challenges/challenge')
-        this.selectedChallenge.questions.splice(i,1)
+        this.selectedChallenge.questions.splice(i, 1)
       }
     )
   }
 
-  deleteAnswer(i,j) {
+  deleteAnswer(i, j) {
     this.challengesService.deleteAnswer(
       this.selectedChallenge.id,
       this.selectedChallenge.questions[i].id,
       this.selectedChallenge.questions[i].crxQuestionAnswers[j].id
-      ).subscribe(
+    ).subscribe(
       (val) => {
         this.objectService.responseMessage(val)
         this.objectService.getAllObject('challenges/challenge')
-        this.selectedChallenge.questions[i].crxQuestionAnswers.splice(j,1);
+        this.selectedChallenge.questions[i].crxQuestionAnswers.splice(j, 1);
       }
     )
   }
@@ -189,39 +192,20 @@ export class ChallengesComponent implements OnInit {
     (await popover).present();
   }
 
-  evaluate(){
+  evaluate() {
     this.challengesService.evaluate(this.selectedChallenge.id).subscribe(
       (val) => {
-        if(val.code) {
-          this.objectService.responseMessage(val)
-        } else {
-          let results = []
-          let line = { "question" : "" }
-          for( let id in val ) {
-            line[id] = this.objectService.idToFulName(id);
-          }
-          results.push(line)
-          for( let question of this.selectedChallenge.questions ) {
-            line = { "question" : question.question }
-            for( let id in val ) {
-              line[id] = val[id][question.id]
-            }
-            results.push(line)
-          }
-          console.log(results)
-        }
+        this.htmlResult = this.sanitizer.bypassSecurityTrustHtml(val);
+        console.log(this.htmlResult)
       }
     )
   }
 
-  archive(){
-    this.challengesService.archive(this.selectedChallenge.id,0).subscribe(
+  archive() {
+    this.challengesService.archive(this.selectedChallenge.id, 0).subscribe(
       (val) => {
-        if(val.code) {
-          this.objectService.responseMessage(val)
-        } else {
-          console.log(val)
-        }
+        this.htmlResult = this.sanitizer.bypassSecurityTrustHtml(val);
+        console.log(this.htmlResult)
       }
     )
   }

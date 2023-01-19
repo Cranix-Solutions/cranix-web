@@ -1,13 +1,27 @@
 <cranix-toolbar title="{{ 'Challenges' | translate}}"></cranix-toolbar>
-<ion-toolbar *ngIf="selectedChallenge" class="page-toolbar"  style="height: 220px;">
+<ion-toolbar *ngIf="htmlResult" class="page-toolbar">
+  <ion-title>
+    {{selectedChallenge.description}}
+  </ion-title>
+  <ion-buttons slot="end">
+    <ion-button size="small" fill="solid" (click)="htmlResult=null">
+      <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+<ion-content *ngIf="htmlResult">
+  <div [innerHTML]="htmlResult"></div>
+</ion-content>
+<ion-toolbar *ngIf="!htmlResult && selectedChallenge" class="page-toolbar" style="height: 220px;">
   <ion-grid>
     <ion-row>
       <ion-col size="11">
         <ion-item>
           <h3 *ngIf="available">{{'Is now available'|translate}}</h3>
-          <ion-input [(ngModel)]="selectedChallenge.description" placeholder="{{'Title' | translate}}" [disabled]="available"></ion-input>
+          <ion-input [(ngModel)]="selectedChallenge.description" placeholder="{{'Title' | translate}}"
+            [disabled]="available"></ion-input>
         </ion-item>
-        <ion-item  [disabled]="available">
+        <ion-item [disabled]="available">
           <ion-label>{{'Groups' | translate}}:</ion-label>
           <ionic-selectable item-content [(ngModel)]="selectedChallenge.groups"
             [items]="objectService.allObjects['group']" itemValueField="id" itemTextField="description"
@@ -22,7 +36,7 @@
           <ion-label>{{'studentsOnly' | translate}}</ion-label>
           <ion-toggle [(ngModel)]="selectedChallenge.studentsOnly" [disabled]="available"></ion-toggle>
         </ion-item>
-        <ion-item  [disabled]="available">
+        <ion-item [disabled]="available">
           <ion-label>{{'Users' | translate}}:</ion-label>
           <ionic-selectable item-content [(ngModel)]="selectedChallenge.users"
             [items]="objectService.allObjects['user']" itemValueField="id" itemTextField="fullName" [canSearch]="true"
@@ -35,10 +49,10 @@
             </ng-template>
           </ionic-selectable>
         </ion-item>
-        <ion-item  [disabled]="available">
+        <ion-item [disabled]="available">
           <!-- ion-label>{{ 'available' | translate}}</ion-label>
           <ion-label>{{ 'from' | translate}}:</ion-label -->
-            {{ 'available' | translate}} {{ 'from' | translate}}:
+          {{ 'available' | translate}} {{ 'from' | translate}}:
           <ion-datetime-button datetime="validFrom"></ion-datetime-button>
           <!-- input [(ngModel)]="selectedChallenge.validFrom" name="validFrom" type="datetime-local" -->
           <!-- ion-label>{{ 'until' | translate}}:</ion-label -->
@@ -67,7 +81,7 @@
           <ion-icon slot="icon-only" name="settings" color="success"></ion-icon>
         </ion-button>
         <ion-button size="small" fill="solid" (click)="archive()" [disabled]="available">
-          <ion-icon slot="icon-only" name="archive" ></ion-icon>
+          <ion-icon slot="icon-only" name="archive"></ion-icon>
         </ion-button>
         <ion-button size="small" fill="solid" (click)="delete()" [disabled]="available">
           <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
@@ -76,7 +90,7 @@
     </ion-row>
   </ion-grid>
 </ion-toolbar>
-<ion-content *ngIf="selectedChallenge">
+<ion-content *ngIf="!htmlResult && selectedChallenge">
   <ion-modal #modalValidFrom [keepContentsMounted]="true">
     <ng-template>
       <ion-header>
@@ -106,10 +120,11 @@
     </ng-template>
   </ion-modal>
   <div class="question" *ngFor="let question of selectedChallenge.questions; index as i">
-    <ion-item style="background-color: lightgray;"  [disabled]="available">
+    <ion-item style="background-color: lightgray;" [disabled]="available">
       <div class="counter"><b>{{i+1}}</b></div>
       <ion-label>{{ 'value' | translate }}:</ion-label>
-      <ion-input style="max-width: 40px; margin-right: 10px;" [(ngModel)]="question.value" type="number" (ionChange)="modified = true" min="1"></ion-input>
+      <ion-input style="max-width: 40px; margin-right: 10px;" [(ngModel)]="question.value" type="number"
+        (ionChange)="modified = true" min="1"></ion-input>
       <div *ngIf="questionToEdit != i" [innerHTML]="question.question" (click)="toggleEditQuestion(i)"></div>
       <quill-editor *ngIf="questionToEdit == i" [styles]="{ height: '20px'}"
         [(ngModel)]="selectedChallenge.questions[i].question" name="description"></quill-editor>
@@ -140,19 +155,20 @@
       </ion-button>
     </ion-item>
   </div>
-  <ion-item style="color: green; background-color: lightgray;"  [disabled]="available">
+  <ion-item style="color: green; background-color: lightgray;" [disabled]="available">
     <ion-label>{{ 'Add new question' | translate }}: </ion-label>
     <ion-select [(ngModel)]="answerType">
       <ion-select-option value="One">{{'One'|translate}}</ion-select-option>
       <ion-select-option value="Multi">{{'Multi'|translate}}</ion-select-option>
     </ion-select>
     <ion-label>{{ 'value' | translate }}</ion-label>
-    <ion-input style="max-width: 40px; margin-right: 10px;" [(ngModel)]="questionValue" type="number" min="1"></ion-input>
+    <ion-input style="max-width: 40px; margin-right: 10px;" [(ngModel)]="questionValue" type="number"
+      min="1"></ion-input>
     <ion-button slot="end" size="small" fill="clear" (click)="addNewQuestion()">
       <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
     </ion-button>
   </ion-item>
 </ion-content>
-<ion-content *ngIf="!selectedChallenge">
+<ion-content *ngIf="!htmlResult && !selectedChallenge">
   <cranix-md-list objectType="challenge" [context]="context"></cranix-md-list>
 </ion-content>
