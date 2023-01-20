@@ -294,20 +294,6 @@ export class ActionsComponent implements OnInit {
       this.objectService.getAllObject(this.objectType);
     }
     this.objectService.okMessage(response)
-    /* let sub = this.http.post<ServerResponse[]>(url, actionMap, { headers: this.headers }).subscribe(
-      (val) => {
-        let response = this.languageService.trans("List of the results:");
-        for (let resp of val) {
-          response = response + "<br>" + this.languageService.transResponse(resp);
-        }
-        if (actionMap.name == 'delete') {
-          this.objectService.getAllObject(this.objectType);
-        }
-        this.objectService.okMessage(response)
-      },
-      (err) => { this.objectService.errorMessage(err) },
-      () => { sub.unsubscribe(); }
-    )*/
   }
 
 }

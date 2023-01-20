@@ -33,23 +33,16 @@ export class TestsComponent implements OnInit {
       this.challengesService.getMyAnswers(data.id).subscribe(
         (val) => {
           console.log(val)
-          if( val.code ){
+          if (val.code) {
             this.objectService.responseMessage(val)
           } else {
             let i = 0;
             let j = 0;
-            for(let question of this.selectedChallenge.questions ){
-              j=0;
-              for( let answer of question.crxQuestionAnswers ){
+            for (let question of this.selectedChallenge.questions) {
+              j = 0;
+              for (let answer of question.crxQuestionAnswers) {
                 this.selectedChallenge.questions[i].crxQuestionAnswers[j].correct = val[answer.id]
-                /*
-                if( val[answer.id] ) {
-                  this.selectedChallenge.questions[i].crxQuestionAnswers[j].correct = true;
-                } else {
-                  this.selectedChallenge.questions[i].crxQuestionAnswers[j].correct = false;
-                }
-                */
-               j++;
+                j++;
               }
               i++;
             }
@@ -59,14 +52,14 @@ export class TestsComponent implements OnInit {
     }
   }
 
-  close(force: boolean){
-    if(force){
+  close(force: boolean) {
+    if (force) {
       this.isOpen = false
       this.popover.dismiss();
       this.selectedChallenge = null;
       return
     }
-    if(this.modified){
+    if (this.modified) {
       this.isOpen = true
     } else {
       this.selectedChallenge = null;
@@ -89,17 +82,17 @@ export class TestsComponent implements OnInit {
     this.modified = true;
   }
 
-  save(){
+  save() {
     let answers = {}
-    for( let question of this.selectedChallenge.questions ) {
-      for( let answer of question.crxQuestionAnswers ) {
+    for (let question of this.selectedChallenge.questions) {
+      for (let answer of question.crxQuestionAnswers) {
         answers[answer.id] = answer.correct
       }
     }
-    this.challengesService.saveChallengeAnswers(this.selectedChallenge.id,answers).subscribe({
+    this.challengesService.saveChallengeAnswers(this.selectedChallenge.id, answers).subscribe({
       next: (val) => {
         this.objectService.responseMessage(val)
-        if( val.code = "OK" ){
+        if (val.code = "OK") {
           this.selectedChallenge = null
         }
       },

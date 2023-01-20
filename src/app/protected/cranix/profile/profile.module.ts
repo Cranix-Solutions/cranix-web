@@ -33,6 +33,10 @@ const routes: Routes = [
         component: MyVPNComponent
       }
     ]
+  },
+  {
+    path: '',
+    redirectTo: 'profile/myself', pathMatch: 'full'
   }
 ];
 
