@@ -40,12 +40,12 @@ const routes: Routes = [
       {
         path: 'mypositive',
         component:MypositiveComponent
+      },
+      {
+        path: '',
+        redirectTo: 'tests', pathMatch: 'full'
       }
     ]
-  },
-  {
-    path: '',
-    redirectTo: 'lessons/challenges', pathMatch: 'full'
   }
 ];
 
