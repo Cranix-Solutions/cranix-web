@@ -131,7 +131,7 @@ export class ChallengesComponent implements OnInit {
   }
 
   deleteQuestion(i) {
-    if( !this.selectedChallenge.questions[i].id) {
+    if (!this.selectedChallenge.questions[i].id) {
       this.selectedChallenge.questions.splice(i, 1)
       return
     }
@@ -148,7 +148,7 @@ export class ChallengesComponent implements OnInit {
   }
 
   deleteAnswer(i, j) {
-    if(!this.selectedChallenge.questions[i].crxQuestionAnswers[j].id){
+    if (!this.selectedChallenge.questions[i].crxQuestionAnswers[j].id) {
       this.selectedChallenge.questions[i].crxQuestionAnswers.splice(j, 1);
       return
     }
@@ -198,6 +198,17 @@ export class ChallengesComponent implements OnInit {
       showBackdrop: true
     });
     (await popover).present();
+  }
+
+  downloadEval() {
+
+    //var toDownload = "data:text/html;charset=utf-8," + encodeURIComponent(this.htmlResult);
+    var blob = new Blob([this.htmlResult.changingThisBreaksApplicationSecurity], { type: "text/html;charset=utf-8" })
+    var downloader = document.createElement('a');
+    downloader.href = URL.createObjectURL(blob);
+    downloader.setAttribute('download', this.selectedChallenge.description + ".html");
+    downloader.click();
+
   }
 
   evaluate() {
