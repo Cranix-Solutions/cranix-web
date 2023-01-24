@@ -31,12 +31,12 @@ const routes: Routes = [
       {
         path: 'myVPN',
         component: MyVPNComponent
+      },
+      {
+        path: '',
+        redirectTo: 'myself', pathMatch: 'full'
       }
     ]
-  },
-  {
-    path: '',
-    redirectTo: 'profile/myself', pathMatch: 'full'
   }
 ];
 
