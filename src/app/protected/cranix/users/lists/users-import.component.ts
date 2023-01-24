@@ -16,7 +16,7 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 @Component({
   selector: 'cranix-users-import',
   templateUrl: './users-import.component.html',
- // styleUrls: ['./user-import.component.scss'],
+  // styleUrls: ['./user-import.component.scss'],
 
 })
 export class UsersImportComponent implements OnInit {
@@ -40,11 +40,12 @@ export class UsersImportComponent implements OnInit {
   async stopImport() {
     this.objectService.requestSent();
     let subs = this.usersService.stopRunningImport().subscribe(
-      (val) => { this.objectService.responseMessage(val)},
-      (err) => { this.objectService.errorMessage(err)},
-      () => { 
+      (val) => { this.objectService.responseMessage(val) },
+      (err) => { this.objectService.errorMessage(err) },
+      () => {
         this.refreshImports()
-        subs.unsubscribe()}
+        subs.unsubscribe()
+      }
     )
   }
 
@@ -91,72 +92,79 @@ export class UsersImportComponent implements OnInit {
   restartImport(startTime: string) {
     this.objectService.requestSent();
     let subs = this.usersService.restartUserImport(startTime).subscribe(
-      (val) => { this.objectService.responseMessage(val)},
-      (err) => { this.objectService.errorMessage(err)},
-      () => { 
+      (val) => { this.objectService.responseMessage(val) },
+      (err) => { this.objectService.errorMessage(err) },
+      () => {
         this.refreshImports()
-        subs.unsubscribe()}
+        subs.unsubscribe()
+      }
     )
   }
   downloadImport(startTime: string, type: string) {
     this.objectService.requestSent();
-    this.usersService.getImportAs(startTime,type)
-    .pipe(takeWhile(() => this.alive ))
-    .subscribe((x) => {
-      this.authService.log('full answer', x);
-      this.authService.log('answer is', x.headers.get('content-disposition'));
+    this.usersService.getImportAs(startTime, type)
+      .pipe(takeWhile(() => this.alive))
+      .subscribe({
+        next: (x) => {
+          this.authService.log('full answer', x);
+          this.authService.log('answer is', x.headers.get('content-disposition'));
 
-      var newBlob = new Blob([x.body], { type: x.body.type });
+          var newBlob = new Blob([x.body], { type: x.body.type });
 
-      // IE doesn't allow using a blob object directly as link href
-      /* instead it is necessary to use msSaveOrOpenBlob
-      if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-          window.navigator.msSaveOrOpenBlob(newBlob);
-          return;
-      }*/
+          // IE doesn't allow using a blob object directly as link href
+          /* instead it is necessary to use msSaveOrOpenBlob
+          if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+              window.navigator.msSaveOrOpenBlob(newBlob);
+              return;
+          }*/
 
-      // For other browsers: 
-      // Create a link pointing to the ObjectURL containing the blob.
-      const data = window.URL.createObjectURL(newBlob);
+          // For other browsers:
+          // Create a link pointing to the ObjectURL containing the blob.
+          const data = window.URL.createObjectURL(newBlob);
 
-      var link = document.createElement('a');
-      link.href = data;
-      link.download = x.headers.get('content-disposition').replace('attachment; filename=','');
-      // this is necessary as link.click() does not work on the latest firefox
-      link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+          var link = document.createElement('a');
+          link.href = data;
+          link.download = x.headers.get('content-disposition').replace('attachment; filename=', '');
+          // this is necessary as link.click() does not work on the latest firefox
+          link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
 
-      setTimeout(function () {
-          // For Firefox it is necessary to delay revoking the ObjectURL
-          window.URL.revokeObjectURL(data);
-          link.remove();
-      }, 100);
-    }, (err) => {
-      this.objectService.errorMessage(err);
-    })
+          setTimeout(function () {
+            // For Firefox it is necessary to delay revoking the ObjectURL
+            window.URL.revokeObjectURL(data);
+            link.remove();
+          }, 100);
+        },
+        error: (err) => {
+          this.objectService.errorMessage(err);
+        }
+      })
     //TODO
   }
   deleteImport(startTime: string) {
     this.objectService.requestSent();
     let subs = this.usersService.deleteUserImport(startTime).subscribe(
-      (val) => { this.objectService.responseMessage(val)},
-      (err) => { this.objectService.errorMessage(err)},
-      () => { 
+      (val) => { this.objectService.responseMessage(val) },
+      (err) => { this.objectService.errorMessage(err) },
+      () => {
         this.refreshImports()
-        subs.unsubscribe() }
+        subs.unsubscribe()
+      }
     )
   }
 
-  refreshImports(){
+  refreshImports() {
     let subs = this.usersService.getAllImports().subscribe(
-      (val) => { this.imports = val.sort(function (a, b) {
-        if (a.startTime < b.startTime) {
-          return 1;
-        }
-        if (a.startTime > b.startTime) {
-          return -1;
-        }
-        return 0;
-      }) },
+      (val) => {
+        this.imports = val.sort(function (a, b) {
+          if (a.startTime < b.startTime) {
+            return 1;
+          }
+          if (a.startTime > b.startTime) {
+            return -1;
+          }
+          return 0;
+        })
+      },
       (err) => { console.log(err) },
       () => { subs.unsubscribe() }
     )
@@ -167,7 +175,7 @@ export class UsersImportComponent implements OnInit {
     )
   }
 
-  ngOnDestroy(){
-    this.alive = false; 
+  ngOnDestroy() {
+    this.alive = false;
   }
 }
