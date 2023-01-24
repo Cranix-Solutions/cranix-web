@@ -153,8 +153,8 @@
   <ion-item style="color: green; background-color: lightgray;" [disabled]="available">
     <ion-label>{{ 'Add new question' | translate }}: </ion-label>
     <ion-select [(ngModel)]="answerType">
-      <ion-select-option value="One">{{'One'|translate}}</ion-select-option>
-      <ion-select-option value="Multi">{{'Multi'|translate}}</ion-select-option>
+      <ion-select-option value="One">{{'One right answer'|translate}}</ion-select-option>
+      <ion-select-option value="Multiple">{{'More right answers'|translate}}</ion-select-option>
     </ion-select>
     <ion-label>{{ 'value' | translate }}</ion-label>
     <ion-input style="max-width: 40px; margin-right: 10px;" [(ngModel)]="questionValue" type="number"
