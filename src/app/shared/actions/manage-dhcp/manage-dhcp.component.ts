@@ -36,7 +36,7 @@ export class ManageDhcpComponent implements OnInit {
         id++;
     }
     for( let value of DHCPStatements ) {
-      this.dhcpOptions.push({"id":id, "type":"dhcpStatement","name":value})
+      this.dhcpOptions.push({"id":id, "type":"dhcpStatements","name":value})
       id++;
   }
    }
