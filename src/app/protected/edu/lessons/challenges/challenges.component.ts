@@ -131,6 +131,10 @@ export class ChallengesComponent implements OnInit {
   }
 
   deleteQuestion(i) {
+    if( !this.selectedChallenge.questions[i].id) {
+      this.selectedChallenge.questions.splice(i, 1)
+      return
+    }
     this.challengesService.deleteQuestion(
       this.selectedChallenge.id,
       this.selectedChallenge.questions[i].id
@@ -144,6 +148,10 @@ export class ChallengesComponent implements OnInit {
   }
 
   deleteAnswer(i, j) {
+    if(!this.selectedChallenge.questions[i].crxQuestionAnswers[j].id){
+      this.selectedChallenge.questions[i].crxQuestionAnswers.splice(j, 1);
+      return
+    }
     this.challengesService.deleteAnswer(
       this.selectedChallenge.id,
       this.selectedChallenge.questions[i].id,
