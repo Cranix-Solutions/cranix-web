@@ -39,7 +39,7 @@
       <div class="counter"><b>{{i+1}}</b></div>
       <div [innerHTML]="question.question"></div>
     </ion-item>
-    <ion-item class="answer" *ngFor="let answer of question.crxQuestionAnswers; index as j" (click)="toggle(i, j)">
+    <ion-item class="answer" *ngFor="let answer of question.crxQuestionAnswers; index as j">
       <input style="margin-right: 10px;" [type]="question.answerType == 'One' ? 'radio' : 'checkbox'"
         name="answer-{{i}}" [value]="answer.answer" [checked]="answer.correct" (click)="toggle(i, j)">
       <div [innerHTML]="answer.answer"></div>
