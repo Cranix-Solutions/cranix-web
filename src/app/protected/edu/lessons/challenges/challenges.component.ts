@@ -218,6 +218,10 @@ export class ChallengesComponent implements OnInit {
     )
   }
 
+  delete() {
+	  //TODO implement it
+  }
+
   archive(cleanUp: number) {
     this.challengesService.archive(this.selectedChallenge.id, cleanUp).subscribe(
       (val) => {
