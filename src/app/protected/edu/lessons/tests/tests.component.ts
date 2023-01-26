@@ -12,7 +12,6 @@ export class TestsComponent implements OnInit {
 
   context
   selectedChallenge: CrxChallenge;
-  modified: boolean = false;
   isOpen: boolean = false;
   @ViewChild('popover') popover;
   constructor(
@@ -41,7 +40,11 @@ export class TestsComponent implements OnInit {
             for (let question of this.selectedChallenge.questions) {
               j = 0;
               for (let answer of question.crxQuestionAnswers) {
-                this.selectedChallenge.questions[i].crxQuestionAnswers[j].correct = val[answer.id]
+                if( val[answer.id] ) {
+                  this.selectedChallenge.questions[i].crxQuestionAnswers[j].correct = true
+                } else {
+                  this.selectedChallenge.questions[i].crxQuestionAnswers[j].correct = false
+                }
                 j++;
               }
               i++;
@@ -59,7 +62,7 @@ export class TestsComponent implements OnInit {
       this.selectedChallenge = null;
       return
     }
-    if (this.modified) {
+    if (this.challengesService.modified) {
       this.isOpen = true
     } else {
       this.selectedChallenge = null;
@@ -79,7 +82,7 @@ export class TestsComponent implements OnInit {
     } else {
       this.selectedChallenge.questions[i].crxQuestionAnswers[j].correct = !correct
     }
-    this.modified = true;
+    this.challengesService.modified = true;
   }
 
   save() {

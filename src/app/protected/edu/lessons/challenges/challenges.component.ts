@@ -21,8 +21,8 @@ export class ChallengesComponent implements OnInit {
   answerToEdit = ""
   answerType = "One"
   available: boolean = false;
+  archiveLoaded: boolean = false;
   questionValue: number = 1;
-  modified: boolean = false;
   isOpen: boolean = false;
   @ViewChild('popover') popover;
   constructor(
@@ -49,7 +49,7 @@ export class ChallengesComponent implements OnInit {
       this.selectedChallenge = null;
       return
     }
-    if (this.modified) {
+    if (this.challengesService.modified) {
       this.isOpen = true
     } else {
       this.selectedChallenge = null;
@@ -87,7 +87,7 @@ export class ChallengesComponent implements OnInit {
     } else {
       this.selectedChallenge.questions[i].crxQuestionAnswers[j].correct = !correct
     }
-    this.modified = true;
+    this.challengesService.modified = true;
   }
 
   toggleEditQuestion(i) {
@@ -98,7 +98,7 @@ export class ChallengesComponent implements OnInit {
       this.questionToEdit = -1;
     } else {
       this.questionToEdit = i;
-      this.modified = true;
+      this.challengesService.modified = true;
     }
   }
 
@@ -110,14 +110,14 @@ export class ChallengesComponent implements OnInit {
       this.answerToEdit = ""
     } else {
       this.answerToEdit = i + "-" + j
-      this.modified = true;
+      this.challengesService.modified = true;
     }
   }
 
   addNewAnswer(i) {
     let newAnswer: CrxQuestionAnswer = new CrxQuestionAnswer();
     this.selectedChallenge.questions[i].crxQuestionAnswers.push(newAnswer)
-    this.modified = true;
+    this.challengesService.modified = true;
   }
 
   addNewQuestion() {
@@ -127,7 +127,7 @@ export class ChallengesComponent implements OnInit {
     newQuestion.crxQuestionAnswers.push(new CrxQuestionAnswer())
     newQuestion.crxQuestionAnswers.push(new CrxQuestionAnswer())
     this.selectedChallenge.questions.push(newQuestion)
-    this.modified = true;
+    this.challengesService.modified = true;
   }
 
   deleteQuestion(i) {
@@ -172,7 +172,7 @@ export class ChallengesComponent implements OnInit {
     } else {
       this.challengesService.add(this.selectedChallenge)
     }
-    this.modified = false;
+    this.challengesService.modified = false;
   }
 
   async openActions(ev: any, object: CrxChallenge) {
@@ -205,7 +205,7 @@ export class ChallengesComponent implements OnInit {
     var blob = new Blob([this.htmlResult.changingThisBreaksApplicationSecurity], { type: "text/html;charset=utf-8" })
     var downloader = document.createElement('a');
     downloader.href = URL.createObjectURL(blob);
-    downloader.setAttribute('download', this.selectedChallenge.description + date.toLocaleString() + ".html");
+    downloader.setAttribute('download', this.selectedChallenge.description + " " + date.toLocaleString() + ".html");
     downloader.click();
   }
 
@@ -218,10 +218,11 @@ export class ChallengesComponent implements OnInit {
     )
   }
 
-  archive() {
-    this.challengesService.archive(this.selectedChallenge.id, 0).subscribe(
+  archive(cleanUp: number) {
+    this.challengesService.archive(this.selectedChallenge.id, cleanUp).subscribe(
       (val) => {
         this.htmlResult = this.sanitizer.bypassSecurityTrustHtml(val);
+        this.archiveLoaded = true;
         console.log(this.htmlResult)
       }
     )

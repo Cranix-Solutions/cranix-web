@@ -17,6 +17,7 @@ import { MypositiveComponent } from './mypositive/mypositive.component';
 import { ChallengesComponent } from './challenges/challenges.component'
 import { TestsComponent } from './tests/tests.component'
 import { QuillModule } from 'ngx-quill';
+import { ChallengeCanDeactivate } from 'src/app/services/challenges.service';
 
 const routes: Routes = [
   {
@@ -26,10 +27,12 @@ const routes: Routes = [
     children: [
       {
         path: 'tests',
+        canDeactivate: [ChallengeCanDeactivate],
         component:TestsComponent
       },
       {
         path: 'challenges',
+        canDeactivate: [ChallengeCanDeactivate],
         component:ChallengesComponent
       },
       {
@@ -60,6 +63,6 @@ const routes: Routes = [
     QuillModule.forRoot()
   ],
   declarations: [LessonsPage,RoomControlComponent,ChallengesComponent,RoomDevComponent,MypositiveComponent,TestsComponent],
-  providers: [TranslateService, PipesModule,EductaionService]
+  providers: [TranslateService, PipesModule, EductaionService, ChallengeCanDeactivate]
 })
 export class LessonsModule {}

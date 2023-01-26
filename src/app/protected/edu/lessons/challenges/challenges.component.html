@@ -4,15 +4,37 @@
     {{selectedChallenge.description}}
   </ion-title>
   <ion-buttons slot="end">
-    <ion-button size="small" fill="solid" (click)="downloadResults()">
+    <ion-button size="small" fill="solid" (click)="htmlResult=null; archiveLoaded=false;" matTooltip="{{'Close' | translate }}">
+      <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
+    </ion-button>
+    <ion-button size="small" fill="solid" (click)="downloadResults()" matTooltip="{{'Download results' | translate }}">
       <ion-icon slot="icon-only" name="download" color="success"></ion-icon>
     </ion-button>
-    <ion-button size="small" fill="solid" (click)="htmlResult=null">
-      <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
+    <ion-button *ngIf="archiveLoaded" id="openCleanUp" size="small" fill="solid" matTooltip="{{'Clean up and archive results' | translate }}">
+      <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
     </ion-button>
   </ion-buttons>
 </ion-toolbar>
 <ion-content *ngIf="htmlResult">
+  <ion-modal #modalCleanUp trigger="openCleanUp">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{'Clean up and archive results' | translate }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="archive(1)">
+              <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
+            </ion-button>
+            <ion-button (click)="modalCleanUp.dismiss()"><ion-icon slot="icon-only" name="close" color="danger"></ion-icon></ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        {{'The results of this challenge will be archived and removed from the database.'| translate}}
+        {{'The challenge itself will stand and can be reused.'|translate}}
+      </ion-content>
+    </ng-template>
+  </ion-modal>
   <div [innerHTML]="htmlResult"></div>
 </ion-content>
 <ion-toolbar *ngIf="!htmlResult && selectedChallenge" class="page-toolbar" style="height: 220px;">
@@ -72,16 +94,16 @@
             </ion-content>
           </ng-template>
         </ion-popover>
-        <ion-button size="small" fill="solid" (click)="save()" [disabled]="available">
+        <ion-button size="small" fill="solid" (click)="save()" [disabled]="available" matTooltip="{{'Save challenge' | translate }}">
           <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
         </ion-button>
-        <ion-button size="small" fill="solid" (click)="evaluate()" [disabled]="available">
+        <ion-button size="small" fill="solid" (click)="evaluate()" [disabled]="available" matTooltip="{{'Show results' | translate }}">
           <ion-icon slot="icon-only" name="settings" color="success"></ion-icon>
         </ion-button>
-        <ion-button size="small" fill="solid" (click)="archive()" [disabled]="available">
+        <ion-button size="small" fill="solid" (click)="archive(0)" [disabled]="available" matTooltip="{{'Show detailed results' | translate }}">
           <ion-icon slot="icon-only" name="archive"></ion-icon>
         </ion-button>
-        <ion-button size="small" fill="solid" (click)="delete()" [disabled]="available">
+        <ion-button size="small" fill="solid" (click)="delete()" [disabled]="available" matTooltip="{{'Delete challenge' | translate }}">
           <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
         </ion-button>
       </ion-col>
@@ -128,7 +150,7 @@
       </ion-button>
       <ion-label slot="end">{{ 'value' | translate }}:</ion-label>
       <ion-input slot="end" style="max-width: 40px; margin-right: 10px;" [(ngModel)]="question.value" type="number"
-        (ionChange)="modified = true" min="1"></ion-input>
+        (ionChange)="challengesService.modified = true" min="1"></ion-input>
       <ion-button slot="end" size="small" fill="clear" (click)="deleteQuestion(i)">
         <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
       </ion-button>

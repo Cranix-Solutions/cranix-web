@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { CanDeactivate } from '@angular/router';
 
 //own modules
 import { UtilsService } from './utils.service';
@@ -7,6 +8,7 @@ import { AuthenticationService } from './auth.service';
 import { GenericObjectService } from './generic-object.service';
 import { ServerResponse } from 'src/app/shared/models/server-models';
 import { CrxChallenge } from '../shared/models/data-model';
+import { LanguageService } from './language.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +16,7 @@ import { CrxChallenge } from '../shared/models/data-model';
 export class ChallengesService {
 
   hostname: string;
+  modified: boolean = false;
 
   constructor(
     private http: HttpClient,
@@ -76,5 +79,21 @@ export class ChallengesService {
   archive(challengeId: number, cleanUp: number){
     let url = this.hostname + `/challenges/${challengeId}/archive/${cleanUp}`
     return this.http.get(url, { headers: this.authService.anyHeaders, responseType: 'text'})
+  }
+}
+
+@Injectable()
+export class ChallengeCanDeactivate implements CanDeactivate<ChallengesService> {
+  constructor(
+    public languageS: LanguageService,
+    public challengesService: ChallengesService
+  ) { }
+  canDeactivate(challengesService: ChallengesService) {
+    if (this.challengesService.modified) {
+      return window.confirm(
+        this.languageS.trans('The changes will be lost if you leave the module.')
+      );
+    }
+    return true;
   }
 }
