@@ -4,6 +4,7 @@ import { PopoverController } from '@ionic/angular';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CrxChallenge, CrxQuestion, CrxQuestionAnswer } from 'src/app/shared/models/data-model';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { LanguageService } from 'src/app/services/language.service';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 
 @Component({
@@ -16,17 +17,23 @@ export class ChallengesComponent implements OnInit {
   title: String = "Tests"
   context;
   selectedChallenge: CrxChallenge;
+  challengeToAssign: CrxChallenge;
   htmlResult;
   questionToEdit: number = -1;
   answerToEdit = ""
   answerType = "One"
-  available: boolean = false;
   archiveLoaded: boolean = false;
   questionValue: number = 1;
   isOpen: boolean = false;
+  editorStyles = {
+    height: '40px',
+    backgroundColor: 'whitesmoke'
+  }
+
   @ViewChild('popover') popover;
   constructor(
     public challengesService: ChallengesService,
+    private languageService: LanguageService,
     public objectService: GenericObjectService,
     public popoverCtrl: PopoverController,
     private sanitizer: DomSanitizer
@@ -37,9 +44,18 @@ export class ChallengesComponent implements OnInit {
   ngOnInit() {
     this.objectService.getAllObject('challenge');
   }
+  ngAfterViewInit() {
+    this.challengesService.modified = false;
+    console.log("ngAfterViewInit")
+  }
+  ngAfterContentInit() {
+    this.challengesService.modified = false;
+    console.log("ngAfterContentInit")
+  }
 
   close(force: boolean) {
-    if (this.available) {
+    console.log(this.challengesService.modified)
+    if (this.selectedChallenge.released) {
       this.selectedChallenge = null;
       return
     }
@@ -59,15 +75,6 @@ export class ChallengesComponent implements OnInit {
   redirectToEdit(data) {
     if (data) {
       this.selectedChallenge = data;
-      let now = new Date().getTime();
-      let validFrom = new Date(data.validFrom).getTime()
-      let validUntil = new Date(data.validUntil).getTime()
-      console.log(validFrom, validUntil, now)
-      this.available = validFrom < now && validUntil > now;
-      let isoString = new Date(data.validFrom).toISOString();
-      this.selectedChallenge.validFrom = isoString.substring(0, isoString.indexOf("T") + 6);
-      isoString = new Date(data.validUntil).toISOString();
-      this.selectedChallenge.validUntil = isoString.substring(0, isoString.indexOf("T") + 6);
     } else {
       this.selectedChallenge = new CrxChallenge();
     }
@@ -91,9 +98,10 @@ export class ChallengesComponent implements OnInit {
   }
 
   toggleEditQuestion(i) {
-    if (this.available) {
+    if (this.selectedChallenge.released) {
       return;
     }
+    this.answerToEdit = ""
     if (this.questionToEdit == i) {
       this.questionToEdit = -1;
     } else {
@@ -103,9 +111,10 @@ export class ChallengesComponent implements OnInit {
   }
 
   toggleEditAnswer(i, j) {
-    if (this.available) {
+    if (this.selectedChallenge.released) {
       return;
     }
+    this.questionToEdit = -1;
     if (this.answerToEdit == i + "-" + j) {
       this.answerToEdit = ""
     } else {
@@ -115,17 +124,17 @@ export class ChallengesComponent implements OnInit {
   }
 
   addNewAnswer(i) {
-    let newAnswer: CrxQuestionAnswer = new CrxQuestionAnswer();
+    let newAnswer: CrxQuestionAnswer = new CrxQuestionAnswer(this.languageService.trans('Answer text.'));
     this.selectedChallenge.questions[i].crxQuestionAnswers.push(newAnswer)
     this.challengesService.modified = true;
   }
 
   addNewQuestion() {
-    let newQuestion: CrxQuestion = new CrxQuestion();
+    let newQuestion: CrxQuestion = new CrxQuestion(this.languageService.trans('Question text.'));
     newQuestion.answerType = this.answerType;
     newQuestion.value = this.questionValue;
-    newQuestion.crxQuestionAnswers.push(new CrxQuestionAnswer())
-    newQuestion.crxQuestionAnswers.push(new CrxQuestionAnswer())
+    newQuestion.crxQuestionAnswers.push(new CrxQuestionAnswer(this.languageService.trans('Answer text.')))
+    newQuestion.crxQuestionAnswers.push(new CrxQuestionAnswer(this.languageService.trans('Answer text.')))
     this.selectedChallenge.questions.push(newQuestion)
     this.challengesService.modified = true;
   }
@@ -168,11 +177,37 @@ export class ChallengesComponent implements OnInit {
   save() {
     console.log(this.selectedChallenge)
     if (this.selectedChallenge.id) {
-      this.challengesService.modify(this.selectedChallenge)
+      this.challengesService.modify(this.selectedChallenge).subscribe(
+        (val) => {
+          this.objectService.responseMessage(val)
+          this.objectService.getAllObject('challenge')
+        }
+      )
     } else {
-      this.challengesService.add(this.selectedChallenge)
+      this.challengesService.add(this.selectedChallenge).subscribe(
+        (val) => {
+          this.objectService.responseMessage(val)
+          if (val.code == "OK") {
+            this.selectedChallenge.id = val.objectId;
+            this.objectService.getAllObject('challenge')
+          }
+        }
+      )
     }
     this.challengesService.modified = false;
+  }
+
+  assignChallenge() {
+    console.log(this.challengeToAssign)
+    this.challengeToAssign.released = true;
+    console.log(this.challengeToAssign)
+    this.challengesService.modify(this.challengeToAssign).subscribe(
+      (val) => {
+        this.objectService.responseMessage(val)
+        this.objectService.getAllObject('challenge')
+        this.challengeToAssign = null
+      }
+    )
   }
 
   async openActions(ev: any, object: CrxChallenge) {
@@ -219,7 +254,7 @@ export class ChallengesComponent implements OnInit {
   }
 
   delete() {
-	  //TODO implement it
+    //TODO implement it
   }
 
   archive(cleanUp: number) {
@@ -230,6 +265,10 @@ export class ChallengesComponent implements OnInit {
         console.log(this.htmlResult)
       }
     )
+  }
+
+  assign(challenge: CrxChallenge) {
+    this.challengeToAssign = challenge;
   }
 
 }

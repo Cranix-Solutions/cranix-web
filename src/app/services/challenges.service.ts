@@ -28,22 +28,12 @@ export class ChallengesService {
 
   add(challenge: CrxChallenge) {
     let url = this.hostname + "/challenges"
-    this.http.post<ServerResponse>(url, challenge, { headers: this.authService.headers }).subscribe(
-      (val) => {
-        this.objectService.responseMessage(val)
-        this.objectService.getAllObject('challenge')
-       }
-    )
+    return this.http.post<ServerResponse>(url, challenge, { headers: this.authService.headers })
   }
 
   modify(challenge: CrxChallenge) {
     let url = this.hostname + "/challenges"
-    this.http.patch<ServerResponse>(url, challenge, { headers: this.authService.headers }).subscribe(
-      (val) => {
-        this.objectService.responseMessage(val)
-        this.objectService.getAllObject('challenge')
-       }
-    )
+    return this.http.patch<ServerResponse>(url, challenge, { headers: this.authService.headers })
   }
 
   delete(challengeId: number) {

@@ -472,40 +472,45 @@ export interface AccessStatus {
 
 export class CrxQuestionAnswer {
 	id?: number
-	created: string = ""
-	modified: string = ""
-	answer: string = "XXXXXXXXXXXXXXXXXXXX"
+	created: any = new Date();
+	modified: any = new Date();
+	answer: string = ""
 	correct: boolean = false
-	constructor() { }
+	constructor(answer?: string) {
+		this.answer = answer
+	}
 }
 
 export class CrxQuestion {
 	id?: number
-	created: string = ""
-	modified: string = ""
-	question: string = "XXXXXXXXXXXXXXXXXXXX"
+	created: any = new Date();
+	modified: any = new Date();
+	question: string = ""
 	answerType: string = ""
 	value: number = 1
 	crxQuestionAnswers: CrxQuestionAnswer[] = []
-	constructor() { }
+	constructor(question?: string) {
+		this.question = question;
+	}
 }
 
 export class CrxChallenge {
 	id?: number
-	created: string = ""
-	modified: string = ""
+	created: any = new Date();
+	modified: any = new Date();
 	description: string = ""
 	questions: CrxQuestion[] = []
 	groups: Group[] = []
 	users: User[] = []
 	studentsOnly?: boolean = false;
-	validFrom: any = new Date().toISOString()
-	validUntil: any = new Date().toISOString()
+	released: boolean = false;
 }
 
 export class CrxChallengeAnswer {
 	id: number
 	creator_id: number = 0
 	correct: boolean = false
+	created: any = new Date();
+	modified: any = new Date();
 	constructor() { }
 }

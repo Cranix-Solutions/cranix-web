@@ -92,10 +92,14 @@
           <h5>{{ object.role | translate }}</h5>
           <h5>{{ object.classes }}</h5>
         </ion-label>
-        <ion-label  *ngIf="objectType == 'challenge'">
-          <h5>{{'available' | translate}} {{'from' | translate }}: {{ object.validFrom |  date:'yyyy-MM-dd HH:mm' }}</h5>
-          <h5>{{'until' | translate }}: {{ object.validUntil |  date:'yyyy-MM-dd HH:mm' }}</h5>
-        </ion-label>
+        <ion-item  *ngIf="objectType == 'challenge'">
+          <div *ngIf="object.released && object.groups.length">{{objectService.formatGroups(object.groups)}}</div>
+          <div *ngIf="object.released && object.users.length">{{objectService.formatUsers(object.users)}}</div>
+          <ion-buttons slot="end" >
+            <ion-button *ngIf="object.released" (click)="context.componentParent.evaluate(object.id)">{{'evaluate challenge'|translate}}</ion-button>
+            <ion-button *ngIf="!object.released" (click)="context.componentParent.assign(object)">{{'assign challenge'|translate}}</ion-button>  
+          </ion-buttons>
+        </ion-item>
       </ion-item>
       <ion-item-options side="end">
         <ion-item-option *ngIf="objectType == 'institute' && object.ipVPN && object.ipVPN != ''" color="secondary"

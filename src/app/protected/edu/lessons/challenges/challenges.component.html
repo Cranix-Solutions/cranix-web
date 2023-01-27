@@ -1,16 +1,23 @@
 <cranix-toolbar title="{{ 'Challenges' | translate}}"></cranix-toolbar>
+<!-- List of the challenges -->
+<ion-content *ngIf="!htmlResult && !selectedChallenge && !challengeToAssign">
+  <cranix-md-list objectType="challenge" [context]="context"></cranix-md-list>
+</ion-content>
+<!---- Show results -->
 <ion-toolbar *ngIf="htmlResult" class="page-toolbar">
   <ion-title>
     {{selectedChallenge.description}}
   </ion-title>
   <ion-buttons slot="end">
-    <ion-button size="small" fill="solid" (click)="htmlResult=null; archiveLoaded=false;" matTooltip="{{'Close' | translate }}">
+    <ion-button size="small" fill="solid" (click)="htmlResult=null; archiveLoaded=false;"
+      matTooltip="{{'Close' | translate }}">
       <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
     </ion-button>
     <ion-button size="small" fill="solid" (click)="downloadResults()" matTooltip="{{'Download results' | translate }}">
       <ion-icon slot="icon-only" name="download" color="success"></ion-icon>
     </ion-button>
-    <ion-button *ngIf="archiveLoaded" id="openCleanUp" size="small" fill="solid" matTooltip="{{'Clean up and archive results' | translate }}">
+    <ion-button *ngIf="archiveLoaded" id="openCleanUp" size="small" fill="solid"
+      matTooltip="{{'Clean up and archive results' | translate }}">
       <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
     </ion-button>
   </ion-buttons>
@@ -25,7 +32,8 @@
             <ion-button (click)="archive(1)">
               <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
             </ion-button>
-            <ion-button (click)="modalCleanUp.dismiss()"><ion-icon slot="icon-only" name="close" color="danger"></ion-icon></ion-button>
+            <ion-button (click)="modalCleanUp.dismiss()"><ion-icon slot="icon-only" name="close"
+                color="danger"></ion-icon></ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
@@ -37,129 +45,113 @@
   </ion-modal>
   <div [innerHTML]="htmlResult"></div>
 </ion-content>
-<ion-toolbar *ngIf="!htmlResult && selectedChallenge" class="page-toolbar" style="height: 220px;">
-  <ion-grid>
-    <ion-row>
-      <ion-col size="11">
-        <ion-item>
-          <h3 *ngIf="available">{{'Is now available'|translate}}</h3>
-          <ion-input [(ngModel)]="selectedChallenge.description" placeholder="{{'Title' | translate}}"
-            [disabled]="available"></ion-input>
-        </ion-item>
-        <ion-item [disabled]="available">
-          <ion-label>{{'Groups' | translate}}:</ion-label>
-          <ionic-selectable item-content [(ngModel)]="selectedChallenge.groups"
-            [items]="objectService.allObjects['group']" itemValueField="id" itemTextField="description"
-            [canSearch]="true" [isMultiple]="true" [disabled]="available">
-            <ng-template ionicSelectableCloseButtonTemplate>
-              <ion-icon name="close" color="danger"></ion-icon>
-            </ng-template>
-            <ng-template ionicSelectableValueTemplate let-ports="value">
-              <div class="ionic-selectable-value-item">{{objectService.formatGroups(ports)}}</div>
-            </ng-template>
-          </ionic-selectable>
-          <ion-label>{{'studentsOnly' | translate}}</ion-label>
-          <ion-toggle [(ngModel)]="selectedChallenge.studentsOnly" [disabled]="available"></ion-toggle>
-        </ion-item>
-        <ion-item [disabled]="available">
-          <ion-label>{{'Users' | translate}}:</ion-label>
-          <ionic-selectable item-content [(ngModel)]="selectedChallenge.users"
-            [items]="objectService.allObjects['user']" itemValueField="id" itemTextField="fullName" [canSearch]="true"
-            [isMultiple]="true" [disabled]="available">
-            <ng-template ionicSelectableCloseButtonTemplate>
-              <ion-icon name="close" color="danger"></ion-icon>
-            </ng-template>
-            <ng-template ionicSelectableValueTemplate let-ports="value">
-              <div class="ionic-selectable-value-item">{{objectService.formatUsers(ports)}}</div>
-            </ng-template>
-          </ionic-selectable>
-        </ion-item>
-        <ion-item [disabled]="available">
-          {{ 'available' | translate}} {{ 'from' | translate}}:
-          <ion-datetime-button datetime="validFrom"></ion-datetime-button>
-          {{ 'until' | translate}}:
-          <ion-datetime-button datetime="validUntil"></ion-datetime-button>
-        </ion-item>
-      </ion-col>
-      <ion-col size="1">
-        <ion-button size="small" fill="solid" (click)="close(false)">
-          <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
-        </ion-button>
-        <ion-popover #popover [isOpen]="isOpen" (didDismiss)="isOpen = false">
-          <ng-template>
-            <ion-content class="ion-padding">
-              {{'Your changes will be lost if you close this window.' | translate}}<br>
-              <ion-button size="small" fill="solid" (click)="close(true)">{{'Close'|translate}}</ion-button>
-              <ion-button size="small" fill="solid" (click)="isOpen=false">{{'Abort'|translate}}</ion-button>
-            </ion-content>
-          </ng-template>
-        </ion-popover>
-        <ion-button size="small" fill="solid" (click)="save()" [disabled]="available" matTooltip="{{'Save challenge' | translate }}">
-          <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
-        </ion-button>
-        <ion-button size="small" fill="solid" (click)="evaluate()" [disabled]="available" matTooltip="{{'Show results' | translate }}">
-          <ion-icon slot="icon-only" name="settings" color="success"></ion-icon>
-        </ion-button>
-        <ion-button size="small" fill="solid" (click)="archive(0)" [disabled]="available" matTooltip="{{'Show detailed results' | translate }}">
-          <ion-icon slot="icon-only" name="archive"></ion-icon>
-        </ion-button>
-        <ion-button size="small" fill="solid" (click)="delete()" [disabled]="available" matTooltip="{{'Delete challenge' | translate }}">
-          <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+<!--- Assigne a challange to group or users -->
+<ion-toolbar *ngIf="challengeToAssign" class="page-toolbar">
+  <ion-title>{{challengeToAssign.description}}</ion-title>
+  <ion-buttons slot="end">
+    <ion-button size="small" fill="solid" (click)="challengeToAssign=null">
+      <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
+    </ion-button>
+    <ion-button size="small" fill="solid" (click)="assignChallenge()" matTooltip="{{'Assigne challenge' | translate }}">
+      <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+<ion-content *ngIf="challengeToAssign">
+  <ion-list>
+    <ion-item [disabled]="challengeToAssign.released">
+      <ion-label>{{'Groups' | translate}}:</ion-label>
+      <ionic-selectable item-content [(ngModel)]="challengeToAssign.groups" [items]="objectService.allObjects['group']"
+        itemValueField="id" itemTextField="description" [canSearch]="true" [isMultiple]="true"
+        [disabled]="challengeToAssign.released">
+        <ng-template ionicSelectableCloseButtonTemplate>
+          <ion-icon name="close" color="danger"></ion-icon>
+        </ng-template>
+        <ng-template ionicSelectableValueTemplate let-ports="value">
+          <div class="ionic-selectable-value-item">{{objectService.formatGroups(ports)}}</div>
+        </ng-template>
+      </ionic-selectable>
+      {{'studentsOnly' | translate}}:
+      <ion-toggle [(ngModel)]="challengeToAssign.studentsOnly" [disabled]="challengeToAssign.released"></ion-toggle>
+    </ion-item>
+    <ion-item [disabled]="challengeToAssign.released">
+      <ion-label>{{'Users' | translate}}:</ion-label>
+      <ionic-selectable item-content [(ngModel)]="challengeToAssign.users" [items]="objectService.allObjects['user']"
+        itemValueField="id" itemTextField="fullName" [canSearch]="true" [isMultiple]="true"
+        [disabled]="challengeToAssign.released">
+        <ng-template ionicSelectableCloseButtonTemplate>
+          <ion-icon name="close" color="danger"></ion-icon>
+        </ng-template>
+        <ng-template ionicSelectableValueTemplate let-ports="value">
+          <div class="ionic-selectable-value-item">{{objectService.formatUsers(ports)}}</div>
+        </ng-template>
+      </ionic-selectable>
+    </ion-item>
+  </ion-list>
+</ion-content>
+<!--- Edit or create a challenge -->
+<ion-toolbar *ngIf="!htmlResult && selectedChallenge" class="page-toolbar">
+  <ion-item [disabled]="selectedChallenge.released">
+    <ion-label>{{'Title'|translate}}:</ion-label>
+    <ion-input [(ngModel)]="selectedChallenge.description" placeholder="{{'Title' | translate}}"></ion-input>
+  </ion-item>
+  <ion-buttons slot="end">
+    <ion-button size="small" fill="solid" (click)="close(false)">
+      <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
+    </ion-button>
+    <ion-popover #popover [isOpen]="isOpen" (didDismiss)="isOpen = false">
+      <ng-template>
+        <ion-toolbar>
+            {{'The changes will be lost if you leave the module.' | translate}}
+        </ion-toolbar>
+        <ion-toolbar>
+          <ion-buttons slot="end">
+            <ion-button size="small" fill="clear" (click)="isOpen=false">{{'Abort'|translate}}</ion-button>
+            <ion-button size="small" fill="clear" (click)="close(true)">{{'Close'|translate}}</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ng-template>
+    </ion-popover>
+    <ion-button size="small" fill="solid" (click)="save()" [disabled]="selectedChallenge.released"
+      matTooltip="{{'Save challenge' | translate }}">
+      <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
+    </ion-button>
+    <ion-button size="small" fill="solid" (click)="evaluate()" matTooltip="{{'Show results' | translate }}">
+      <ion-icon slot="icon-only" name="settings" color="success"></ion-icon>
+    </ion-button>
+    <ion-button size="small" fill="solid" (click)="archive(0)" [disabled]="selectedChallenge.released"
+      matTooltip="{{'Show detailed results' | translate }}">
+      <ion-icon slot="icon-only" name="archive"></ion-icon>
+    </ion-button>
+    <ion-button size="small" fill="solid" (click)="delete()" [disabled]="selectedChallenge.released"
+      matTooltip="{{'Delete challenge' | translate }}">
+      <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
+    </ion-button>
+  </ion-buttons>
 </ion-toolbar>
 <ion-content *ngIf="!htmlResult && selectedChallenge">
-  <ion-modal #modalValidFrom [keepContentsMounted]="true">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-buttons slot="end">
-            <ion-button size="small" (click)="modalValidFrom.dismiss()">
-              <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-datetime [(ngModel)]="selectedChallenge.validFrom" name="validFrom" id="validFrom"></ion-datetime>
-    </ng-template>
-  </ion-modal>
-  <ion-modal #modalValidUntil [keepContentsMounted]="true">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-buttons slot="end">
-            <ion-button size="small" (click)="modalValidUntil.dismiss()">
-              <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-datetime [(ngModel)]="selectedChallenge.validUntil" name="validUntil" id="validUntil"></ion-datetime>
-    </ng-template>
-  </ion-modal>
   <div class="question" *ngFor="let question of selectedChallenge.questions; index as i">
-    <ion-item style="background-color: lightgray;" [disabled]="available">
+    <ion-item style="background-color: lightgray;" [disabled]="selectedChallenge.released">
       <div class="counter"><b>{{i+1}}.</b></div>
       <div *ngIf="questionToEdit != i" [innerHTML]="question.question" (click)="toggleEditQuestion(i)"></div>
-      <quill-editor *ngIf="questionToEdit == i" [styles]="{ height: '20px'}"
+      <quill-editor *ngIf="questionToEdit == i" [styles]="editorStyles"
         [(ngModel)]="selectedChallenge.questions[i].question" name="description"></quill-editor>
       <ion-button *ngIf="questionToEdit == i" size="small" fill="clear" (click)="toggleEditQuestion(i)">
         <ion-icon slot="icon-only" color="success" name="checkmark"></ion-icon>
       </ion-button>
       <ion-label slot="end">{{ 'value' | translate }}:</ion-label>
       <ion-input slot="end" style="max-width: 40px; margin-right: 10px;" [(ngModel)]="question.value" type="number"
-        (ionChange)="challengesService.modified = true" min="1"></ion-input>
+        (ionInput)="challengesService.modified = true" min="1"></ion-input>
       <ion-button slot="end" size="small" fill="clear" (click)="deleteQuestion(i)">
         <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
       </ion-button>
     </ion-item>
-    <ion-item class="answer" *ngFor="let answer of question.crxQuestionAnswers; index as j" [disabled]="available">
+    <ion-item class="answer" *ngFor="let answer of question.crxQuestionAnswers; index as j"
+      [disabled]="selectedChallenge.released">
       <input style="margin-right: 10px;" [type]="question.answerType == 'One' ? 'radio' : 'checkbox'"
         name="answer-{{i}}" [value]="answer.answer" [checked]="answer.correct" (click)="toggle(i, j)">
       <div *ngIf="answerToEdit != i + '-' + j" [innerHTML]="answer.answer" (click)="toggleEditAnswer(i,j)"></div>
-      <quill-editor *ngIf="answerToEdit == i + '-' + j" [styles]="{ height: '20px'}"
+      <quill-editor *ngIf="answerToEdit == i + '-' + j" [styles]="editorStyles"
         [(ngModel)]="selectedChallenge.questions[i].crxQuestionAnswers[j].answer" name="description"></quill-editor>
       <ion-button *ngIf="answerToEdit == i + '-' + j" size="small" fill="clear" (click)="toggleEditAnswer(i,j)">
         <ion-icon slot="icon-only" color="success" name="checkmark"></ion-icon>
@@ -168,27 +160,24 @@
         <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
       </ion-button>
     </ion-item>
-    <ion-item class="answer" style="color:green;" [disabled]="available">
+    <ion-item *ngIf="!selectedChallenge.released" class="answer" style="color:green;">
       <ion-label>{{ 'Add new answer' | translate }}</ion-label>
       <ion-button slot="end" size="small" fill="clear" (click)="addNewAnswer(i)">
         <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
       </ion-button>
     </ion-item>
   </div>
-  <ion-item style="color: green; background-color: lightgray;" [disabled]="available">
-    <ion-label>{{ 'Add new question' | translate }}: </ion-label>
-    <ion-select [(ngModel)]="answerType">
+  <ion-item *ngIf="!selectedChallenge.released" style="color: green; background-color: lightgray;">
+    <b style="margin-right: 10px;">{{ 'Add new question' | translate }}:</b>
+    <i>{{'Type' | translate}}:</i>
+    <ion-select [(ngModel)]="answerType" style="max-width: 200px; margin: 10px;">
       <ion-select-option value="One">{{'One right answer'|translate}}</ion-select-option>
       <ion-select-option value="Multiple">{{'More right answers'|translate}}</ion-select-option>
     </ion-select>
-    <ion-label>{{ 'value' | translate }}</ion-label>
-    <ion-input style="max-width: 40px; margin-right: 10px;" [(ngModel)]="questionValue" type="number"
-      min="1"></ion-input>
+    <i>{{ 'value' | translate }}:</i>
+    <ion-input style="max-width: 50px; margin: 10px;" [(ngModel)]="questionValue" type="number" min="1"></ion-input>
     <ion-button slot="end" size="small" fill="clear" (click)="addNewQuestion()">
       <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
     </ion-button>
   </ion-item>
-</ion-content>
-<ion-content *ngIf="!htmlResult && !selectedChallenge">
-  <cranix-md-list objectType="challenge" [context]="context"></cranix-md-list>
 </ion-content>
