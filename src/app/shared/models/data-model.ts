@@ -498,6 +498,7 @@ export class CrxChallenge {
 	id?: number
 	created: any = new Date();
 	modified: any = new Date();
+	creatorId: number;
 	description: string = ""
 	questions: CrxQuestion[] = []
 	groups: Group[] = []

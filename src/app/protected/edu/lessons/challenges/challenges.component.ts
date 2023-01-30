@@ -6,6 +6,7 @@ import { CrxChallenge, CrxQuestion, CrxQuestionAnswer } from 'src/app/shared/mod
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-challenges',
@@ -15,16 +16,18 @@ import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 export class ChallengesComponent implements OnInit {
 
   title: String = "Tests"
-  context;
-  selectedChallenge: CrxChallenge;
-  challengeToAssign: CrxChallenge;
-  htmlResult;
-  questionToEdit: number = -1;
   answerToEdit = ""
   answerType = "One"
   archiveLoaded: boolean = false;
+  challengeToAssign: CrxChallenge;
+  context;
+  htmlResult;
+  selectedArchive: string;
+  selectedChallenge: CrxChallenge;
+  questionToEdit: number = -1;
   questionValue: number = 1;
   isOpen: boolean = false;
+  listOfArchives: string[];
   editorStyles = {
     height: '40px',
     backgroundColor: 'whitesmoke'
@@ -32,6 +35,7 @@ export class ChallengesComponent implements OnInit {
 
   @ViewChild('popover') popover;
   constructor(
+    public authService: AuthenticationService,
     public challengesService: ChallengesService,
     private languageService: LanguageService,
     public objectService: GenericObjectService,
@@ -176,6 +180,10 @@ export class ChallengesComponent implements OnInit {
 
   save() {
     console.log(this.selectedChallenge)
+    if(this.selectedChallenge.creatorId != this.authService.session.userId) {
+      //We overtake an challenge from an other user.
+      this.selectedChallenge.id = null
+    }
     if (this.selectedChallenge.id) {
       this.challengesService.modify(this.selectedChallenge).subscribe(
         (val) => {
@@ -197,11 +205,10 @@ export class ChallengesComponent implements OnInit {
     this.challengesService.modified = false;
   }
 
-  assignChallenge() {
-    console.log(this.challengeToAssign)
+  startAndAssign() {
     this.challengeToAssign.released = true;
-    console.log(this.challengeToAssign)
-    this.challengesService.modify(this.challengeToAssign).subscribe(
+    console.log('startAndAssign', this.challengeToAssign)
+    this.challengesService.startAndAssign(this.challengeToAssign).subscribe(
       (val) => {
         this.objectService.responseMessage(val)
         this.objectService.getAllObject('challenge')
@@ -257,14 +264,39 @@ export class ChallengesComponent implements OnInit {
     //TODO implement it
   }
 
-  archive(cleanUp: number) {
-    this.challengesService.archive(this.selectedChallenge.id, cleanUp).subscribe(
+  getArchives(id: number){
+    this.challengesService.getArchives(id).subscribe(
+      (val) => { this.listOfArchives=val}
+    )
+  }
+  stopAndArchive(challenge: CrxChallenge) {
+    this.challengesService.stopAndArchive(challenge.id).subscribe(
       (val) => {
         this.htmlResult = this.sanitizer.bypassSecurityTrustHtml(val);
         this.archiveLoaded = true;
+        this.objectService.getAllObject('challenge')
+        this.selectedChallenge = challenge;
+        this.selectedChallenge.released = false;
         console.log(this.htmlResult)
       }
     )
+  }
+
+  downloadArchive(challengeId: number){
+    if( !this.selectedArchive ) {
+      this.selectedArchive = (<HTMLInputElement>document.getElementById('dateOfArchive')).value.toLowerCase();
+      console.log(this.selectedArchive)
+    }
+    this.challengesService.downloadArchive(challengeId, this.selectedArchive ).subscribe(
+      (val) => {
+        var blob = new Blob([val], { type: "text/html;charset=utf-8" })
+        var downloader = document.createElement('a');
+        downloader.href = URL.createObjectURL(blob);
+        downloader.setAttribute('download', this.selectedArchive + ".html");
+        downloader.click();
+      }
+    )
+    
   }
 
   assign(challenge: CrxChallenge) {

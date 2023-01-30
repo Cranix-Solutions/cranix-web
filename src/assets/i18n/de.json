@@ -1,4 +1,8 @@
 {
+    "Challenge was successfully assigned and stated.":"Test wurde erfolgreich zugewiesenen und veröffentlicht.",
+    "Type":"Typ",
+    "Stop and evaluate challenge and archive the results.":"Test anhalten auswerten und die Ergebnisse archivieren.",
+    "Assign and start challenge.":"Test zuweisen und sarten.",
     "%s ( %s %s ) was created with password '%s'": "%s ( %s %s ) wurde mit dem Passwort '%s' angelegt.",
     "%s was created successfully.": "%s wurde erfolgreich erstellt.",
     "%s was deleted successfully.": "%s wurde erfolgreich gelöscht.",

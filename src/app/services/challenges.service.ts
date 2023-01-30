@@ -22,7 +22,7 @@ export class ChallengesService {
     private http: HttpClient,
     private utilsS: UtilsService,
     private authService: AuthenticationService,
-    private objectService: GenericObjectService ) {
+    private objectService: GenericObjectService) {
     this.hostname = this.utilsS.hostName();
   }
 
@@ -34,6 +34,11 @@ export class ChallengesService {
   modify(challenge: CrxChallenge) {
     let url = this.hostname + "/challenges"
     return this.http.patch<ServerResponse>(url, challenge, { headers: this.authService.headers })
+  }
+
+  startAndAssign(challenge: CrxChallenge) {
+    let url = this.hostname + "/challenges/start"
+    return this.http.post<ServerResponse>(url, challenge, { headers: this.authService.headers })
   }
 
   delete(challengeId: number) {
@@ -56,19 +61,29 @@ export class ChallengesService {
     return this.http.post<ServerResponse>(url, answers, { headers: this.authService.headers })
   }
 
-  getMyAnswers(challengeId: number){
+  getMyAnswers(challengeId: number) {
     let url = this.hostname + `/challenges/todos/${challengeId}`
     return this.http.get<any>(url, { headers: this.authService.headers })
   }
 
-  evaluate(challengeId: number){
+  evaluate(challengeId: number) {
     let url = this.hostname + `/challenges/${challengeId}/results`
-    return this.http.get(url, { headers: this.authService.anyHeaders, responseType: 'text'})
+    return this.http.get(url, { headers: this.authService.anyHeaders, responseType: 'text' })
   }
 
-  archive(challengeId: number, cleanUp: number){
-    let url = this.hostname + `/challenges/${challengeId}/archive/${cleanUp}`
-    return this.http.get(url, { headers: this.authService.anyHeaders, responseType: 'text'})
+  stopAndArchive(challengeId: number) {
+    let url = this.hostname + `/challenges/${challengeId}/archives`
+    return this.http.put(url, null, { headers: this.authService.anyHeaders, responseType: 'text' })
+  }
+
+  getArchives(challengeId: number) {
+    let url = this.hostname + `/challenges/${challengeId}/archives`
+    return this.http.get<string[]>(url, { headers: this.authService.anyHeaders })
+  }
+
+  downloadArchive(challengeId: number, dateString: string) {
+    let url = this.hostname + `/challenges/${challengeId}/archives/${dateString}`
+    return this.http.get<string>(url, { headers: this.authService.anyHeaders })
   }
 }
 
