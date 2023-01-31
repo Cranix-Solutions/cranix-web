@@ -83,7 +83,7 @@ export class ChallengesService {
 
   downloadArchive(challengeId: number, dateString: string) {
     let url = this.hostname + `/challenges/${challengeId}/archives/${dateString}`
-    return this.http.get<string>(url, { headers: this.authService.anyHeaders })
+    return this.http.get(url, { headers: this.authService.anyHeaders, observe : 'response', responseType: 'blob' })
   }
 }
 

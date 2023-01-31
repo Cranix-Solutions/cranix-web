@@ -9,40 +9,16 @@
     {{selectedChallenge.description}}
   </ion-title>
   <ion-buttons slot="end">
-    <ion-button size="small" fill="solid" (click)="htmlResult=null; archiveLoaded=false;"
-      matTooltip="{{'Close' | translate }}">
+    <ion-button size="small" fill="solid" (click)="htmlResult=null;" matTooltip="{{'Close' | translate }}">
       <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
     </ion-button>
-    <ion-button size="small" fill="solid" (click)="downloadArchive(selectedChallenge.id)" matTooltip="{{'Download results' | translate }}">
+    <ion-button *ngIf="!selectedChallenge.released" size="small" fill="solid" (click)="downloadArchive()"
+      matTooltip="{{'Download results' | translate }}">
       <ion-icon slot="icon-only" name="download" color="success"></ion-icon>
-    </ion-button>
-    <ion-button *ngIf="archiveLoaded" id="openCleanUp" size="small" fill="solid"
-      matTooltip="{{'Clean up and archive results' | translate }}">
-      <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
     </ion-button>
   </ion-buttons>
 </ion-toolbar>
 <ion-content *ngIf="htmlResult">
-  <ion-modal #modalCleanUp trigger="openCleanUp">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>{{'Clean up and archive results' | translate }}</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="archive(1)">
-              <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
-            </ion-button>
-            <ion-button (click)="modalCleanUp.dismiss()"><ion-icon slot="icon-only" name="close"
-                color="danger"></ion-icon></ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding">
-        {{'The results of this challenge will be archived and removed from the database.'| translate}}
-        {{'The challenge itself will stand and can be reused.'|translate}}
-      </ion-content>
-    </ng-template>
-  </ion-modal>
   <div [innerHTML]="htmlResult"></div>
 </ion-content>
 <!--- Assigne a challange to group or users and start it.-->
@@ -52,7 +28,8 @@
     <ion-button size="small" fill="solid" (click)="challengeToAssign=null">
       <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
     </ion-button>
-    <ion-button size="small" fill="solid" (click)="startAndAssign()" matTooltip="{{'Assign and start challenge' | translate }}"
+    <ion-button size="small" fill="solid" (click)="startAndAssign()"
+      matTooltip="{{'Assign and start challenge' | translate }}"
       [disabled]="challengeToAssign.groups.length == 0 && challengeToAssign.users.length ==0">
       <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
     </ion-button>
@@ -93,6 +70,10 @@
   <ion-item [disabled]="selectedChallenge.released">
     <ion-label>{{'Title'|translate}}:</ion-label>
     <ion-input [(ngModel)]="selectedChallenge.description" placeholder="{{'Title' | translate}}"></ion-input>
+    <div *ngIf="selectedChallenge.released && selectedChallenge.groups.length">
+      {{objectService.formatGroups(selectedChallenge.groups)}}</div>
+    <div *ngIf="selectedChallenge.released && selectedChallenge.users.length">
+      {{objectService.formatUsers(selectedChallenge.users)}}</div>
   </ion-item>
   <ion-buttons slot="end">
     <ion-button size="small" fill="solid" (click)="close(false)"
@@ -112,20 +93,28 @@
         </ion-toolbar>
       </ng-template>
     </ion-popover>
-    <ion-button size="small" fill="solid" (click)="save()" [disabled]="selectedChallenge.released"
+    <ion-button *ngIf="!selectedChallenge.released" size="small" fill="solid" (click)="save()"
       matTooltip="{{'Save challenge' | translate }}">
       <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
     </ion-button>
-    <ion-button size="small" fill="solid" (click)="evaluate()" matTooltip="{{'Show results' | translate }}">
+    <ion-button *ngIf="!selectedChallenge.released" fill="solid" (click)="assign(selectedChallenge)"
+      matTooltip="{{'Assign and start challenge.'|translate}}">
+      <ion-icon slot="icon-only" name="chevron-forward-circle-outline"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="selectedChallenge.released" fill="solid" (click)="stopAndArchive(selectedChallenge)"
+      matTooltip="{{'Stop and evaluate challenge and archive the results.'|translate}}">
+      <ion-icon slot="icon-only" name="stop-circle-outline" color="danger"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="selectedChallenge.released" size="small" fill="solid" (click)="evaluate()"
+      matTooltip="{{'Show results' | translate }}">
       <ion-icon slot="icon-only" name="settings" color="success"></ion-icon>
     </ion-button>
     <ion-button id="getArchive" size="small" fill="solid" (click)="getArchives(selectedChallenge.id)"
-      [disabled]="selectedChallenge.released"
       matTooltip="{{'Manage the archived results of this challange.' | translate }}">
       <ion-icon slot="icon-only" name="archive"></ion-icon>
     </ion-button>
-    <ion-button size="small" fill="solid" (click)="delete()" [disabled]="selectedChallenge.released"
-      matTooltip="{{'Delete challenge' | translate }}">
+    <ion-button *ngIf="!selectedChallenge.released" size="small" fill="solid"
+      (click)="deleteChallenge(selectedChallenge.id)" matTooltip="{{'Delete challenge' | translate }}">
       <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
     </ion-button>
   </ion-buttons>
@@ -184,26 +173,63 @@
   </ion-item>
 </ion-content>
 <!-- modal available on more pages -->
-<ion-modal #modalGetArchive trigger="getArchive">
+<ion-modal #modalGetArchive [isOpen]="modalGetArchiveIsOpen">
   <ng-template>
     <ion-header>
       <ion-toolbar>
         <ion-title>{{'Select the archive to download.' | translate }}</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="downloadArchive(selectedChallenge.id)">
+          <ion-button (click)="downloadArchive()">
             <ion-icon slot="icon-only" name="download" color="success"></ion-icon>
           </ion-button>
-          <ion-button (click)="modalGetArchive.dismiss()"><ion-icon slot="icon-only" name="close"
+          <ion-button (click)="modalGetArchiveIsOpen = false"><ion-icon slot="icon-only" name="close"
               color="danger"></ion-icon></ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <ion-item>
-        <ion-select [(ngModel)]="selectedArchive">
-          <ion-select-option *ngFor="let archive of listOfArchives" value="archive">{{archive}}</ion-select-option>
-        </ion-select>
-      </ion-item>
+      <ion-list>
+        <ion-item *ngFor="let archive of listOfArchives">
+          <input type="radio" name="selectedArchive" [value]="archive" [(ngModel)]="selectedArchive"
+            style="max-width: 40px; margin-right: 10px;">{{archive}}<br>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+<ion-popover #popoverDeleteChallenge [isOpen]="popoverDeleteChallengeIsOpen" size="cover">
+  <ng-template>
+    <ion-toolbar>
+      {{'Remove challange and all archived results.' | translate}}
+    </ion-toolbar>
+    <ion-toolbar>
+      <ion-buttons slot="end">
+        <ion-button size="small" fill="clear"
+          (click)="popoverDeleteChallengeIsOpen=false; challengeToDelete=null;">{{'Abort'|translate}}</ion-button>
+        <ion-button size="small" fill="clear" (click)="deleteChallenge(null)">{{'Remove'|translate}}</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ng-template>
+</ion-popover>
+<ion-modal #popoverStopAndArchive [isOpen]="popoverStopAndArchiveIsOpen" size="auto">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>{{'Stop challange'|translate}}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="popoverStopAndArchiveIsOpen=false; selectedChallengeId=null">
+            <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
+          </ion-button>
+          <ion-button (click)="stopAndArchive(null)">
+            <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      {{'Stop and evaluate challenge and archive the results.' | translate }}<br>
+      {{'The results of this challenge will be archived and removed from the database.'| translate}}<br>
+      {{'The challenge itself will stand and can be reused.'|translate}}
     </ion-content>
   </ng-template>
 </ion-modal>

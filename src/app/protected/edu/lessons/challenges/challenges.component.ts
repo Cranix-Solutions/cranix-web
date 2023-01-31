@@ -18,15 +18,19 @@ export class ChallengesComponent implements OnInit {
   title: String = "Tests"
   answerToEdit = ""
   answerType = "One"
-  archiveLoaded: boolean = false;
   challengeToAssign: CrxChallenge;
   context;
   htmlResult;
   selectedArchive: string;
   selectedChallenge: CrxChallenge;
+  selectedChallengeId: number;
   questionToEdit: number = -1;
   questionValue: number = 1;
   isOpen: boolean = false;
+  modalGetArchiveIsOpen: boolean = false;
+  popoverDeleteChallengeIsOpen: boolean = false;
+  popoverStopAndArchiveIsOpen: boolean = false;
+  challengeToDelete: number;
   listOfArchives: string[];
   editorStyles = {
     height: '40px',
@@ -180,7 +184,7 @@ export class ChallengesComponent implements OnInit {
 
   save() {
     console.log(this.selectedChallenge)
-    if(this.selectedChallenge.creatorId != this.authService.session.userId) {
+    if (this.selectedChallenge.creatorId != this.authService.session.userId) {
       //We overtake an challenge from an other user.
       this.selectedChallenge.id = null
     }
@@ -260,43 +264,82 @@ export class ChallengesComponent implements OnInit {
     )
   }
 
-  delete() {
-    //TODO implement it
-  }
-
-  getArchives(id: number){
-    this.challengesService.getArchives(id).subscribe(
-      (val) => { this.listOfArchives=val}
-    )
+  deleteChallenge(challengeId: number) {
+    if (challengeId) {
+      this.challengeToDelete = challengeId;
+      this.popoverDeleteChallengeIsOpen = true;
+    } else if (this.challengeToDelete) {
+      this.challengesService.delete(this.challengeToDelete).subscribe(
+        (val) => {
+          this.objectService.responseMessage(val)
+          this.objectService.getAllObject('challenge')
+        }
+      )
+      this.challengeToDelete = null;
+      this.popoverDeleteChallengeIsOpen = false;
+    }
   }
   stopAndArchive(challenge: CrxChallenge) {
-    this.challengesService.stopAndArchive(challenge.id).subscribe(
+    if (!this.popoverStopAndArchiveIsOpen) {
+      this.popoverStopAndArchiveIsOpen = true
+      this.selectedChallengeId = challenge.id
+    } else {
+      this.objectService.requestSent()
+      this.challengesService.stopAndArchive(this.selectedChallengeId).subscribe(
+        (val) => {
+          this.popoverStopAndArchiveIsOpen = false;
+          this.htmlResult = this.sanitizer.bypassSecurityTrustHtml(val);
+          this.objectService.getAllObject('challenge')
+          this.selectedChallenge = this.objectService.getObjectById("challenge",this.selectedChallengeId);
+          this.selectedChallenge.released = false;
+          this.selectedChallengeId = null
+          console.log(this.htmlResult)
+        }
+      )
+    }
+  }
+
+
+  getArchives(id: number) {
+    this.selectedChallengeId = id
+    this.challengesService.getArchives(id).subscribe(
       (val) => {
-        this.htmlResult = this.sanitizer.bypassSecurityTrustHtml(val);
-        this.archiveLoaded = true;
-        this.objectService.getAllObject('challenge')
-        this.selectedChallenge = challenge;
-        this.selectedChallenge.released = false;
-        console.log(this.htmlResult)
+        this.listOfArchives = val
+        this.modalGetArchiveIsOpen = true
       }
     )
   }
-
-  downloadArchive(challengeId: number){
-    if( !this.selectedArchive ) {
+  downloadArchive() {
+    this.modalGetArchiveIsOpen = false;
+    this.objectService.requestSent();
+    if (!this.selectedArchive) {
       this.selectedArchive = (<HTMLInputElement>document.getElementById('dateOfArchive')).value.toLowerCase();
+      this.selectedChallengeId = this.selectedChallenge.id;
       console.log(this.selectedArchive)
     }
-    this.challengesService.downloadArchive(challengeId, this.selectedArchive ).subscribe(
-      (val) => {
-        var blob = new Blob([val], { type: "text/html;charset=utf-8" })
+    this.challengesService.downloadArchive(this.selectedChallengeId, this.selectedArchive).subscribe({
+      next: (x) => {
+        console.log(x)
+        var newBlob = new Blob([x.body], { type: x.body.type });
+
+        const data = window.URL.createObjectURL(newBlob);
+
+        var link = document.createElement('a');
+        link.href = data;
+        link.download = x.headers.get('content-disposition').replace('attachment; filename=', '');
+        link.click();
+        // this is necessary as link.click() does not work on the latest firefox
+        //link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+
+        /* var blob = new Blob([val], { type: "text/html;charset=utf-8" })
         var downloader = document.createElement('a');
         downloader.href = URL.createObjectURL(blob);
         downloader.setAttribute('download', this.selectedArchive + ".html");
-        downloader.click();
-      }
-    )
-    
+        downloader.click(); */
+      },
+      error: (err) => { },
+      complete: () => { this.selectedArchive = this.selectedChallengeId = null }
+    })
   }
 
   assign(challenge: CrxChallenge) {

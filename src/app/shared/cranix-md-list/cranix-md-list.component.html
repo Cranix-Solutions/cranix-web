@@ -97,11 +97,17 @@
           <div *ngIf="object.released && object.users.length">{{objectService.formatUsers(object.users)}}</div>
           <ion-buttons slot="end">
             <ion-button *ngIf="object.released" (click)="context.componentParent.stopAndArchive(object)" matTooltip="{{'Stop and evaluate challenge and archive the results.'|translate}}">
-              <ion-icon slot="icon-only" name="stop-circle-outline"></ion-icon>
+              <ion-icon slot="icon-only" name="stop-circle-outline" color="danger"></ion-icon>
             </ion-button>
             <ion-button *ngIf="!object.released" (click)="context.componentParent.assign(object)" matTooltip="{{'Assign and start challenge.'|translate}}">
               <ion-icon slot="icon-only" name="chevron-forward-circle-outline"></ion-icon>
-            </ion-button>  
+            </ion-button>
+            <ion-button (click)="context.componentParent.getArchives(object.id)" matTooltip="{{'Manage the archived results of this challange.'|translate}}">
+              <ion-icon slot="icon-only" name="archive"></ion-icon>
+            </ion-button>
+            <ion-button *ngIf="!object.released" (click)="context.componentParent.deleteChallenge(object.id)" matTooltip="{{'Delete challenge.'|translate}}">
+              <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
+            </ion-button>
           </ion-buttons>
         </ion-item>
       </ion-item>
