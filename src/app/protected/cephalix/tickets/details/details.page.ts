@@ -42,14 +42,18 @@ export class DetailsPage implements OnInit {
   }
 
   async ngOnInit() {
+    console.log("Ticket details called")
     while (!this.objectService.isInitialized()) {
       await new Promise(f => setTimeout(f, 1000));
     }
+
+    console.log("Ticket details called 2")
     for (let i of this.objectService.allObjects['user']) {
       if (i.role == 'sysadmins') {
         this.ticketWorkers.push({ id: i.id, label: i.fullName })
       }
     }
+    console.log("Ticket details called 3")
     this.ticketWorkers.sort((a, b) => a.label < b.label ? 0 : 1)
     let sub = this.cephlixS.getTicketById(this.ticketId).subscribe({
       next: (val) => {
