@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChallengesService } from 'src/app/services/challenges.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
-import { CrxChallenge, CrxQuestion } from 'src/app/shared/models/data-model';
+import { CrxChallenge } from 'src/app/shared/models/data-model';
+
 
 @Component({
   selector: 'app-tests',
@@ -13,6 +14,7 @@ export class TestsComponent implements OnInit {
   context
   selectedChallenge: CrxChallenge;
   isOpen: boolean = false;
+  autoSave: boolean = true;
   @ViewChild('popover') popover;
   constructor(
     public challengesService: ChallengesService,
@@ -40,7 +42,7 @@ export class TestsComponent implements OnInit {
             for (let question of this.selectedChallenge.questions) {
               j = 0;
               for (let answer of question.crxQuestionAnswers) {
-                if( val[answer.id] ) {
+                if (val[answer.id]) {
                   this.selectedChallenge.questions[i].crxQuestionAnswers[j].correct = true
                 } else {
                   this.selectedChallenge.questions[i].crxQuestionAnswers[j].correct = false
@@ -83,9 +85,12 @@ export class TestsComponent implements OnInit {
       this.selectedChallenge.questions[i].crxQuestionAnswers[j].correct = !correct
     }
     this.challengesService.modified = true;
+    if (this.autoSave) {
+      this.save(true);
+    }
   }
 
-  save() {
+  save(silent: boolean) {
     let answers = {}
     for (let question of this.selectedChallenge.questions) {
       for (let answer of question.crxQuestionAnswers) {
@@ -94,9 +99,11 @@ export class TestsComponent implements OnInit {
     }
     this.challengesService.saveChallengeAnswers(this.selectedChallenge.id, answers).subscribe({
       next: (val) => {
-        this.objectService.responseMessage(val)
-        if (val.code = "OK") {
-          this.selectedChallenge = null
+        if (!silent || val.code != "OK") {
+          this.objectService.responseMessage(val)
+        }
+        if (val.code == "OK") {
+          this.challengesService.modified = false;
         }
       },
       error: (error) => {

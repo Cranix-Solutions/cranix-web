@@ -62,7 +62,6 @@ export class ChallengesComponent implements OnInit {
   }
 
   close(force: boolean) {
-    console.log(this.challengesService.modified)
     if (this.selectedChallenge.released) {
       this.selectedChallenge = null;
       return
@@ -86,7 +85,6 @@ export class ChallengesComponent implements OnInit {
     } else {
       this.selectedChallenge = new CrxChallenge();
     }
-    console.log(this.selectedChallenge)
   }
 
   toggle(i, j) {
@@ -183,7 +181,7 @@ export class ChallengesComponent implements OnInit {
   }
 
   save() {
-    console.log(this.selectedChallenge)
+    //console.log(this.selectedChallenge)
     if (this.selectedChallenge.creatorId != this.authService.session.userId) {
       //We overtake an challenge from an other user.
       this.selectedChallenge.id = null
@@ -200,6 +198,7 @@ export class ChallengesComponent implements OnInit {
         (val) => {
           this.objectService.responseMessage(val)
           if (val.code == "OK") {
+            this.selectedChallenge.creatorId = this.authService.session.userId
             this.selectedChallenge.id = val.objectId;
             this.objectService.getAllObject('challenge')
           }
@@ -211,7 +210,6 @@ export class ChallengesComponent implements OnInit {
 
   startAndAssign() {
     this.challengeToAssign.released = true;
-    console.log('startAndAssign', this.challengeToAssign)
     this.challengesService.startAndAssign(this.challengeToAssign).subscribe(
       (val) => {
         this.objectService.responseMessage(val)
@@ -259,7 +257,6 @@ export class ChallengesComponent implements OnInit {
     this.challengesService.evaluate(this.selectedChallenge.id).subscribe(
       (val) => {
         this.htmlResult = this.sanitizer.bypassSecurityTrustHtml(val);
-        console.log(this.htmlResult)
       }
     )
   }
@@ -279,6 +276,7 @@ export class ChallengesComponent implements OnInit {
       this.popoverDeleteChallengeIsOpen = false;
     }
   }
+
   stopAndArchive(challenge: CrxChallenge) {
     if (!this.popoverStopAndArchiveIsOpen) {
       this.popoverStopAndArchiveIsOpen = true
@@ -293,12 +291,10 @@ export class ChallengesComponent implements OnInit {
           this.selectedChallenge = this.objectService.getObjectById("challenge",this.selectedChallengeId);
           this.selectedChallenge.released = false;
           this.selectedChallengeId = null
-          console.log(this.htmlResult)
         }
       )
     }
   }
-
 
   getArchives(id: number) {
     this.selectedChallengeId = id
@@ -309,17 +305,16 @@ export class ChallengesComponent implements OnInit {
       }
     )
   }
+
   downloadArchive() {
     this.modalGetArchiveIsOpen = false;
     this.objectService.requestSent();
     if (!this.selectedArchive) {
       this.selectedArchive = (<HTMLInputElement>document.getElementById('dateOfArchive')).value.toLowerCase();
       this.selectedChallengeId = this.selectedChallenge.id;
-      console.log(this.selectedArchive)
     }
     this.challengesService.downloadArchive(this.selectedChallengeId, this.selectedArchive).subscribe({
       next: (x) => {
-        console.log(x)
         var newBlob = new Blob([x.body], { type: x.body.type });
 
         const data = window.URL.createObjectURL(newBlob);

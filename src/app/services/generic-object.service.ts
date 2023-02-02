@@ -255,6 +255,10 @@ export class GenericObjectService {
     if (!objectId) {
       return null;
     }
+    if(!objectType){
+      console.log("getObjectById",this);
+      return null
+    }
     for (let obj of this.allObjects[objectType]) {
       if (obj.id === objectId) {
         return obj;

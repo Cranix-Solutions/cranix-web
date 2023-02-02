@@ -2,19 +2,10 @@
 <ion-content *ngIf="!selectedChallenge">
   <cranix-md-list objectType="challenges/todo" [context]="context"></cranix-md-list>
 </ion-content>
-<ion-toolbar class="page-toolbar" *ngIf="selectedChallenge" style="height: 80px;">
+<ion-toolbar *ngIf="selectedChallenge" class="page-toolbar">
   <ion-title>
     {{selectedChallenge.description}}
   </ion-title>
-  <ion-item>
-    <ion-label>
-      {{ 'Valid' | translate}}
-      {{ 'from' | translate}}:
-      {{selectedChallenge.validFrom | date:'yyyy-MM-dd HH:mm'}}
-      {{ 'until' | translate}}:
-      {{selectedChallenge.validUntil | date:'yyyy-MM-dd HH:mm'}}
-    </ion-label>
-  </ion-item>
   <ion-buttons slot="end">
     <ion-button size="small" fill="solid" (click)="close(false)">
       <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
@@ -28,7 +19,13 @@
         </ion-content>
       </ng-template>
     </ion-popover>
-    <ion-button size="small" fill="solid" (click)="save()" matTooltip="{{'Save challenge' | translate }}">
+    <ion-button *ngIf="!autoSave" size="small" fill="solid" (click)="autoSave = !autoSave" matTooltip="{{'Turn on auto save. All changes will be saved inmediately.' | translate }}">
+      <ion-icon slot="icon-only" name="play" color="success"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="autoSave" size="small" fill="solid" (click)="autoSave = !autoSave" matTooltip="{{'Turn off auto save. Changes will be saved only by push the checkmark.' | translate }}">
+      <ion-icon slot="icon-only" name="stop" color="danger"></ion-icon>
+    </ion-button>
+    <ion-button size="small" fill="solid" (click)="save(false)" matTooltip="{{'Save challenge' | translate }}" [disabled]="!challengesService.modified">
       <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
     </ion-button>
   </ion-buttons>
