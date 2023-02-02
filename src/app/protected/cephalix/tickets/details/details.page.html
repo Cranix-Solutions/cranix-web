@@ -39,9 +39,9 @@
                 item-content
                 [(ngModel)]="ticketOwner"
                 [ngModelOptions]="{standalone: true}"
-                [items]="ticketWorkers"
+                [items]="workers"
                 itemValueField="id"
-                itemTextField="label"
+                itemTextField="fullName"
                 [canSearch]="true"
                 (onChange)="setOwner()">
                 <ng-template ionicSelectableHeaderTemplate>
