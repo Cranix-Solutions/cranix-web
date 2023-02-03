@@ -472,8 +472,6 @@ export interface AccessStatus {
 
 export class CrxQuestionAnswer {
 	id?: number
-	created: any = new Date();
-	modified: any = new Date();
 	answer: string = ""
 	correct: boolean = false
 	constructor(answer?: string) {
@@ -482,9 +480,7 @@ export class CrxQuestionAnswer {
 }
 
 export class CrxQuestion {
-	id?: number
-	created: any = new Date();
-	modified: any = new Date();
+	id?: number = 0;
 	question: string = ""
 	answerType: string = ""
 	value: number = 1
@@ -496,8 +492,6 @@ export class CrxQuestion {
 
 export class CrxChallenge {
 	id?: number
-	created: any = new Date();
-	modified: any = new Date();
 	creatorId: number;
 	description: string = ""
 	questions: CrxQuestion[] = []
@@ -511,7 +505,5 @@ export class CrxChallengeAnswer {
 	id: number
 	creator_id: number = 0
 	correct: boolean = false
-	created: any = new Date();
-	modified: any = new Date();
 	constructor() { }
 }

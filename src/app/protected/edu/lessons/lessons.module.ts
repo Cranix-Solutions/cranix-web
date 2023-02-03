@@ -16,8 +16,25 @@ import { RoomDevComponent } from './room-control/device/roomdev.component';
 import { MypositiveComponent } from './mypositive/mypositive.component';
 import { ChallengesComponent } from './challenges/challenges.component'
 import { TestsComponent } from './tests/tests.component'
-import { QuillModule } from 'ngx-quill';
+import { QuillModule, QuillConfig } from 'ngx-quill';
 import { ChallengeCanDeactivate } from 'src/app/services/challenges.service';
+
+const toolbarOptions = [
+  ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+  ['blockquote', 'code-block'],
+
+  [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+  [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+
+  [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+  [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+  [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+  [{ 'font': [] }],
+  [{ 'align': [] }],
+
+  ['clean']                                         // remove formatting button
+];
 
 const routes: Routes = [
   {

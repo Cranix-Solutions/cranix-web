@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { AuthenticationService } from 'src/app/services/auth.service';
 import { ChallengesService } from 'src/app/services/challenges.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { CrxChallenge } from 'src/app/shared/models/data-model';
@@ -17,6 +18,7 @@ export class TestsComponent implements OnInit {
   autoSave: boolean = true;
   @ViewChild('popover') popover;
   constructor(
+    public authService: AuthenticationService,
     public challengesService: ChallengesService,
     public objectService: GenericObjectService) {
     this.context = { componentParent: this };

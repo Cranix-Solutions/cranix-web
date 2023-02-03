@@ -7,7 +7,7 @@ import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 import { GenericObjectService } from './generic-object.service';
 import { ServerResponse } from 'src/app/shared/models/server-models';
-import { CrxChallenge } from '../shared/models/data-model';
+import { CrxChallenge, CrxQuestion } from '../shared/models/data-model';
 import { LanguageService } from './language.service';
 
 @Injectable({
@@ -54,6 +54,11 @@ export class ChallengesService {
   deleteAnswer(challengeId: number, questionId: number, answerId: number) {
     let url = this.hostname + `/challenges/${challengeId}/${questionId}/${answerId}`
     return this.http.delete<ServerResponse>(url, { headers: this.authService.headers })
+  }
+
+  getQuestions() {
+    let url = this.hostname + "/challenges/questions"
+    return this.http.get<CrxQuestion[]>(url, { headers: this.authService.anyHeaders })
   }
 
   saveChallengeAnswers(challengeId: number, answers: {}) {

@@ -3,7 +3,7 @@
     <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="filterMD">
     </ion-input>
   </ion-item>
-  <ion-buttons *ngIf="objectType != 'challenges/todo'" slot="end">
+  <ion-buttons slot="end">
     <ion-button size="small" fill="solid" (click)="context.componentParent.redirectToEdit(null)"
       matTooltip="{{'Create a new object' | translate }}">
       <ion-icon slot="icon-only" name="add-circle"></ion-icon>
@@ -53,7 +53,7 @@
   <div *ngFor="let object of rowData; let i = index">
     <ion-item-sliding *ngIf="i > min && i < max">
       <ion-item style="background-color : {{authService.rowColors[i%2]}}">
-        <ion-note *ngIf="objectType != 'challenges/todo'" slot="start">
+        <ion-note slot="start">
           <ion-checkbox (click)="$event.stopPropagation()" (ionChange)="checkChange($event,object)"></ion-checkbox>
         </ion-note>
         <ion-label (click)="context.componentParent.redirectToEdit(object)">

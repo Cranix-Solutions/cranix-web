@@ -38,13 +38,21 @@ export class DetailsPage implements OnInit {
     private win: WindowRef
   ) {
     this.nativeWindow = win.getNativeWindow();
+    this.ticketId = this.route.snapshot.params.id;
   }
 
-  ngOnInit() {
-    this.ticketId = this.route.snapshot.params.id;
+  async ngOnInit() {
+    while( !this.objectService.allObjects.has('institute') || !this.objectService.allObjects.has('user')) {
+      await new Promise(f => setTimeout(f, 1000));
+    }
+  }
+
+  public ngAfterViewInit() {
+    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
     console.log("Ticket details called", this.ticketId)
     let sub = this.cephlixS.getTicketById(this.ticketId).subscribe({
       next: (val) => {
+        console.log("getTicketById was called", this.ticketId)
         this.workers = this.objectService.allObjects['user'].filter(o => o.role == 'sysadmins').sort((a, b) => a.fullName > b.label ? 0 : 1);
         this.ticket = val;
         this.ticketOwner = this.objectService.getObjectById('user', this.ticket.ownerId);
@@ -65,10 +73,6 @@ export class DetailsPage implements OnInit {
       error: (err) => { console.log(err) },
       complete: () => { sub.unsubscribe() }
     })
-  }
-
-  public ngAfterViewInit() {
-    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
   }
 
   public readArcticles() {

@@ -34,7 +34,7 @@
     "ag-grid-community": "",
     "angular-csv-ext": "",
     "ionic-selectable": "",
-    "ngx-quill": "^16.2.1",
+    "ngx-quill": "^20.0.1",
     "rxjs": "",
     "tslib": "",
     "zone.js": ""

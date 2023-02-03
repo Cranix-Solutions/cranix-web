@@ -121,14 +121,32 @@
 </ion-toolbar>
 <ion-content *ngIf="!htmlResult && selectedChallenge">
   <div class="question" *ngFor="let question of selectedChallenge.questions; index as i">
-    <ion-item style="background-color: lightgray;" [disabled]="selectedChallenge.released">
-      <div class="counter"><b>{{i+1}}.</b></div>
-      <div *ngIf="questionToEdit != i" [innerHTML]="question.question" (click)="toggleEditQuestion(i)"></div>
-      <quill-editor *ngIf="questionToEdit == i" [styles]="editorStyles"
-        [(ngModel)]="selectedChallenge.questions[i].question" name="description"></quill-editor>
-      <ion-button *ngIf="questionToEdit == i" size="small" fill="clear" (click)="toggleEditQuestion(i)">
+    <ion-item *ngIf="questionToEdit == i" style="background-color: lightgray;" [disabled]="selectedChallenge.released">
+      <quill-editor [styles]="editorStyles" [(ngModel)]="selectedChallenge.questions[i].question" name="description">
+        <div quill-editor-toolbar>
+          <span class="ql-formats">
+            <button class="ql-bold"></button>
+            <button class="ql-italic"></button>
+            <button class="ql-underline"></button>
+            <button class="ql-code-block"></button>
+          </span>
+          <span class="ql-formats">
+            <button class="ql-script" value="sub"></button>
+            <button class="ql-script" value="super"></button>
+          </span>
+          <span class="ql-formats">
+            <button class="ql-link"></button>
+            <button class="ql-image"></button>
+          </span>
+        </div>
+      </quill-editor>
+      <ion-button size="small" fill="clear" (click)="toggleEditQuestion(i)">
         <ion-icon slot="icon-only" color="success" name="checkmark"></ion-icon>
       </ion-button>
+    </ion-item>
+    <ion-item *ngIf="questionToEdit != i" style="background-color: lightgray;" [disabled]="selectedChallenge.released">
+      <div class="counter"><b>{{i+1}}.</b></div>
+      <div [innerHTML]="question.question" (click)="toggleEditQuestion(i)"></div>
       <ion-label slot="end">{{ 'value' | translate }}:</ion-label>
       <ion-input slot="end" style="max-width: 40px; margin-right: 10px;" [(ngModel)]="question.value" type="number"
         (ionInput)="challengesService.modified = true" min="1"></ion-input>
@@ -138,15 +156,33 @@
     </ion-item>
     <ion-item class="answer" *ngFor="let answer of question.crxQuestionAnswers; index as j"
       [disabled]="selectedChallenge.released">
-      <input style="margin-right: 10px;" [type]="question.answerType == 'One' ? 'radio' : 'checkbox'"
-        name="answer-{{i}}" [value]="answer.answer" [checked]="answer.correct" (click)="toggle(i, j)">
-      <div *ngIf="answerToEdit != i + '-' + j" [innerHTML]="answer.answer" (click)="toggleEditAnswer(i,j)"></div>
       <quill-editor *ngIf="answerToEdit == i + '-' + j" [styles]="editorStyles"
-        [(ngModel)]="selectedChallenge.questions[i].crxQuestionAnswers[j].answer" name="description"></quill-editor>
+        [(ngModel)]="selectedChallenge.questions[i].crxQuestionAnswers[j].answer" name="description">
+        <div quill-editor-toolbar>
+          <span class="ql-formats">
+            <button class="ql-bold"></button>
+            <button class="ql-italic"></button>
+            <button class="ql-underline"></button>
+            <button class="ql-code-block"></button>
+          </span>
+          <span class="ql-formats">
+            <button class="ql-script" value="sub"></button>
+            <button class="ql-script" value="super"></button>
+          </span>
+          <span class="ql-formats">
+            <button class="ql-link"></button>
+            <button class="ql-image"></button>
+          </span>
+        </div>
+      </quill-editor>
       <ion-button *ngIf="answerToEdit == i + '-' + j" size="small" fill="clear" (click)="toggleEditAnswer(i,j)">
         <ion-icon slot="icon-only" color="success" name="checkmark"></ion-icon>
       </ion-button>
-      <ion-button slot="end" size="small" fill="clear" (click)="deleteAnswer(i,j)">
+      <input *ngIf="answerToEdit != i + '-' + j" style="margin-right: 10px;"
+        [type]="question.answerType == 'One' ? 'radio' : 'checkbox'" name="answer-{{i}}" [value]="answer.answer"
+        [checked]="answer.correct" (click)="toggle(i, j)">
+      <div *ngIf="answerToEdit != i + '-' + j" [innerHTML]="answer.answer" (click)="toggleEditAnswer(i,j)"></div>
+      <ion-button *ngIf="answerToEdit != i + '-' + j" slot="end" size="small" fill="clear" (click)="deleteAnswer(i,j)">
         <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
       </ion-button>
     </ion-item>
@@ -158,16 +194,29 @@
     </ion-item>
   </div>
   <ion-item *ngIf="!selectedChallenge.released" style="color: green; background-color: lightgray;">
-    <b style="margin-right: 10px;">{{ 'Add new question' | translate }}:</b>
+    <b style="margin-right: 10px;">{{ 'Add question' | translate }}:</b>
     <i>{{'Type' | translate}}:</i>
     <ion-select [(ngModel)]="answerType" style="max-width: 200px; margin: 10px; color: black;">
       <ion-select-option value="One">{{'One right answer'|translate}}</ion-select-option>
       <ion-select-option value="Multiple">{{'More right answers'|translate}}</ion-select-option>
     </ion-select>
     <i>{{ 'value' | translate }}:</i>
-    <ion-input style="max-width: 50px; margin: 10px; color: black;" [(ngModel)]="questionValue" type="number"
-      min="1"></ion-input>
-    <ion-button slot="end" size="small" fill="clear" (click)="addNewQuestion()">
+    <ion-input style="min-width:50px; max-width: 50px; margin: 10px; color: black;" [(ngModel)]="questionValue"
+      type="number" min="1"></ion-input>
+    <ionic-selectable [(ngModel)]="questionToAdd" [items]="questions" itemValueField="id" itemTextField="question"
+      [canSearch]="true" (onChange)="addOldQuestion($event)">
+      <ng-template ionicSelectableCloseButtonTemplate>
+        <ion-icon name="close" color="danger"></ion-icon>
+      </ng-template>
+      <ng-template ionicSelectableItemIconTemplate><div></div></ng-template>
+      <ng-template ionicSelectableItemTemplate let-port="item" let-isPortSelected="isItemSelected">
+        <div *ngIf="port.id != 0" [innerHTML]="port.question"></div>
+      </ng-template>
+      <ng-template ionicSelectableValueTemplate let-ports="value">
+        <div class="ionic-selectable-value-item" [innerHTML]="ports.question"></div>
+      </ng-template>
+    </ionic-selectable>
+    <ion-button size="small" fill="clear" (click)="addNewQuestion()">
       <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
     </ion-button>
   </ion-item>
@@ -179,11 +228,12 @@
       <ion-toolbar>
         <ion-title>{{'Select the archive to download.' | translate }}</ion-title>
         <ion-buttons slot="end">
+          <ion-button (click)="modalGetArchiveIsOpen = false"><ion-icon slot="icon-only" name="close"
+              color="danger"></ion-icon>
+          </ion-button>
           <ion-button (click)="downloadArchive()">
             <ion-icon slot="icon-only" name="download" color="success"></ion-icon>
           </ion-button>
-          <ion-button (click)="modalGetArchiveIsOpen = false"><ion-icon slot="icon-only" name="close"
-              color="danger"></ion-icon></ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -227,9 +277,9 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      {{'Stop and evaluate challenge and archive the results.' | translate }}<br>
-      {{'The results of this challenge will be archived and removed from the database.'| translate}}<br>
-      {{'The challenge itself will stand and can be reused.'|translate}}
+      <p>{{'Stop and evaluate challenge and archive the results.' | translate }}</p>
+      <p>{{'The results of this challenge will be archived and removed from the database.'| translate}}</p>
+      <p>{{'The challenge itself will stand and can be reused.'|translate}}</p>
     </ion-content>
   </ng-template>
 </ion-modal>

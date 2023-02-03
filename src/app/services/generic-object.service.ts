@@ -12,7 +12,8 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class GenericObjectService {
-  allObjects: any = {};
+  //allObjects: {} = {};
+  allObjects: Map<string,Object[]> = new Map<string,Object[]>();
   selectedObject: any = null;
   selectedObjectType: string = null;
   selection: any[] = [];
@@ -591,4 +592,5 @@ export class GenericObjectService {
   formatGroups(groups: Group[]) {
     return groups.map((group) => group.description).join(', ');
   }
+
 }

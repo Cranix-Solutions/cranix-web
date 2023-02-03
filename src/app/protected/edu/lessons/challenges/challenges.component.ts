@@ -32,8 +32,10 @@ export class ChallengesComponent implements OnInit {
   popoverStopAndArchiveIsOpen: boolean = false;
   challengeToDelete: number;
   listOfArchives: string[];
+  questions: CrxQuestion[];
+  questionToAdd: CrxQuestion;
   editorStyles = {
-    height: '40px',
+    height: '80px',
     backgroundColor: 'whitesmoke'
   }
 
@@ -50,7 +52,13 @@ export class ChallengesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.objectService.getAllObject('challenge');
+    this.questionToAdd = new CrxQuestion(this.languageService.trans('Or select an existing question.'));
+    this.challengesService.getQuestions().subscribe(
+      (val) => {
+        this.questions = val
+        this.questions.push(this.questionToAdd)
+      }
+    )
   }
   ngAfterViewInit() {
     this.challengesService.modified = false;
@@ -136,15 +144,23 @@ export class ChallengesComponent implements OnInit {
   }
 
   addNewQuestion() {
-    let newQuestion: CrxQuestion = new CrxQuestion(this.languageService.trans('Question text.'));
-    newQuestion.answerType = this.answerType;
-    newQuestion.value = this.questionValue;
-    newQuestion.crxQuestionAnswers.push(new CrxQuestionAnswer(this.languageService.trans('Answer text.')))
-    newQuestion.crxQuestionAnswers.push(new CrxQuestionAnswer(this.languageService.trans('Answer text.')))
-    this.selectedChallenge.questions.push(newQuestion)
+    if( this.questionToAdd.id == 0) {
+      this.questionToAdd= new CrxQuestion(this.languageService.trans('Question text.'));
+      this.questionToAdd.answerType = this.answerType;
+      this.questionToAdd.value = this.questionValue;
+      this.questionToAdd.crxQuestionAnswers.push(new CrxQuestionAnswer(this.languageService.trans('Answer text.')))
+      this.questionToAdd.crxQuestionAnswers.push(new CrxQuestionAnswer(this.languageService.trans('Answer text.')))
+      this.questionToAdd.crxQuestionAnswers.push(new CrxQuestionAnswer(this.languageService.trans('Answer text.')))
+      
+    }
+    this.selectedChallenge.questions.push(this.questionToAdd)
     this.challengesService.modified = true;
+    this.questionToAdd = new CrxQuestion(this.languageService.trans('Or select an existing question.'));
   }
 
+  addOldQuestion(event) {
+    console.log(event)
+  }
   deleteQuestion(i) {
     if (!this.selectedChallenge.questions[i].id) {
       this.selectedChallenge.questions.splice(i, 1)
@@ -288,7 +304,7 @@ export class ChallengesComponent implements OnInit {
           this.popoverStopAndArchiveIsOpen = false;
           this.htmlResult = this.sanitizer.bypassSecurityTrustHtml(val);
           this.objectService.getAllObject('challenge')
-          this.selectedChallenge = this.objectService.getObjectById("challenge",this.selectedChallengeId);
+          this.selectedChallenge = this.objectService.getObjectById("challenge", this.selectedChallengeId);
           this.selectedChallenge.released = false;
           this.selectedChallengeId = null
         }
