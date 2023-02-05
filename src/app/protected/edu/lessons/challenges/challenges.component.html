@@ -76,8 +76,7 @@
       {{objectService.formatUsers(selectedChallenge.users)}}</div>
   </ion-item>
   <ion-buttons slot="end">
-    <ion-button size="small" fill="solid" (click)="close(false)"
-      matTooltip="{{'Back to the list of challenges.'|translate}}">
+    <ion-button size="small" fill="solid" (click)="close(false)" matTooltip="{{'Close'|translate}}">
       <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
     </ion-button>
     <ion-popover #popover [isOpen]="isOpen" (didDismiss)="isOpen = false">
@@ -194,7 +193,7 @@
     </ion-item>
   </div>
   <ion-item *ngIf="!selectedChallenge.released" style="color: green; background-color: lightgray;">
-    <b style="margin-right: 10px;">{{ 'Add question' | translate }}:</b>
+    <b style="margin-right: 10px;">{{ 'New question' | translate }}:</b>
     <i>{{'Type' | translate}}:</i>
     <ion-select [(ngModel)]="answerType" style="max-width: 200px; margin: 10px; color: black;">
       <ion-select-option value="One">{{'One right answer'|translate}}</ion-select-option>
@@ -203,22 +202,24 @@
     <i>{{ 'value' | translate }}:</i>
     <ion-input style="min-width:50px; max-width: 50px; margin: 10px; color: black;" [(ngModel)]="questionValue"
       type="number" min="1"></ion-input>
-    <ionic-selectable [(ngModel)]="questionToAdd" [items]="questions" itemValueField="id" itemTextField="question"
-      [canSearch]="true" (onChange)="addOldQuestion($event)">
+    <ion-button size="small" fill="clear" (click)="addNewQuestion()">
+      <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
+    </ion-button>
+    <ionic-selectable style="background-color: aqua; color: black;" [(ngModel)]="questionToAdd" [items]="questions" itemValueField="id" itemTextField="question"
+      [canSearch]="true" (onChange)="addNewQuestion()">
       <ng-template ionicSelectableCloseButtonTemplate>
         <ion-icon name="close" color="danger"></ion-icon>
       </ng-template>
-      <ng-template ionicSelectableItemIconTemplate><div></div></ng-template>
+      <ng-template ionicSelectableItemIconTemplate let-port="item">
+      </ng-template>
       <ng-template ionicSelectableItemTemplate let-port="item" let-isPortSelected="isItemSelected">
+        <ion-icon  *ngIf="port.id != 0" [name]="port.answerType == 'One' ? 'radio-button-off' : 'stop-outline'"></ion-icon>
         <div *ngIf="port.id != 0" [innerHTML]="port.question"></div>
       </ng-template>
       <ng-template ionicSelectableValueTemplate let-ports="value">
         <div class="ionic-selectable-value-item" [innerHTML]="ports.question"></div>
       </ng-template>
     </ionic-selectable>
-    <ion-button size="small" fill="clear" (click)="addNewQuestion()">
-      <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
-    </ion-button>
   </ion-item>
 </ion-content>
 <!-- modal available on more pages -->

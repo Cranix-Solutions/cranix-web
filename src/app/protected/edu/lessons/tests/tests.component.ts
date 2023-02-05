@@ -99,6 +99,7 @@ export class TestsComponent implements OnInit {
         answers[answer.id] = answer.correct
       }
     }
+    console.log(this.selectedChallenge.id,answers)
     this.challengesService.saveChallengeAnswers(this.selectedChallenge.id, answers).subscribe({
       next: (val) => {
         if (!silent || val.code != "OK") {

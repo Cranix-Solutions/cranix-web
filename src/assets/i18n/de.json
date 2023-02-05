@@ -1,4 +1,11 @@
 {
+    "Challenges":"Multiple-Choice Tests erstellen",
+    "Todos":"Multiple-Choice Tests",
+    "Manage the archived results of this challange.":"Archivierte Ergebnisse dieses Tests verwalten.",
+    "New question":"Neue Frage",
+    "List of questions":"Fragenkatalog",
+    "Close":"Schließen",
+    "Reload tests to work on":"Zugewiesene Tests abrufen",
     "%s ( %s %s ) was created with password '%s'": "%s ( %s %s ) wurde mit dem Passwort '%s' angelegt.",
     "%s was created successfully.": "%s wurde erfolgreich erstellt.",
     "%s was deleted successfully.": "%s wurde erfolgreich gelöscht.",

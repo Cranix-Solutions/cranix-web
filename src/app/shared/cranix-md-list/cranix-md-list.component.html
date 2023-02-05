@@ -12,10 +12,6 @@
       matTooltip="{{'Apply actions on the selected objects' | translate }}">
       <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
     </ion-button>
-    <ion-button *ngIf="objectType == 'challenge'" size="small" fill="solid" (click)="context.componentParent.showAllChallenges()"
-      matTooltip="{{ 'Show all challenges' | translate }}">
-      <ion-icon slot="icon-only" name="apps"></ion-icon>
-    </ion-button>
   </ion-buttons>
 </ion-toolbar>
 <ion-item *ngIf="authService.isMD()">
