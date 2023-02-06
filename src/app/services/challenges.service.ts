@@ -5,7 +5,7 @@ import { CanDeactivate } from '@angular/router';
 //own modules
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
-import { GenericObjectService } from './generic-object.service';
+import { CrxObjectService } from './crx-object-service';
 import { ServerResponse } from 'src/app/shared/models/server-models';
 import { CrxChallenge, CrxQuestion } from '../shared/models/data-model';
 import { LanguageService } from './language.service';
@@ -22,7 +22,7 @@ export class ChallengesService {
     private http: HttpClient,
     private utilsS: UtilsService,
     private authService: AuthenticationService,
-    private objectService: GenericObjectService) {
+    private crxObjectService: CrxObjectService) {
     this.hostname = this.utilsS.hostName();
   }
 

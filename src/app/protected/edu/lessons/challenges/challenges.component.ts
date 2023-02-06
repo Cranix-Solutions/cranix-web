@@ -5,6 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { CrxChallenge, CrxQuestion, CrxQuestionAnswer } from 'src/app/shared/models/data-model';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
+import { CrxObjectService } from 'src/app/services/crx-object-service';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { AuthenticationService } from 'src/app/services/auth.service';
 
@@ -45,6 +46,7 @@ export class ChallengesComponent implements OnInit {
     public challengesService: ChallengesService,
     private languageService: LanguageService,
     public objectService: GenericObjectService,
+    public crxObjectService: CrxObjectService,
     public popoverCtrl: PopoverController,
     private sanitizer: DomSanitizer
   ) {
@@ -92,6 +94,7 @@ export class ChallengesComponent implements OnInit {
       this.selectedChallenge = data;
     } else {
       this.selectedChallenge = new CrxChallenge();
+      this.selectedChallenge.teachingSubject = this.crxObjectService.selectedTeachingSubject;
     }
   }
 

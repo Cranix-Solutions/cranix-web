@@ -21,7 +21,7 @@
 <ion-content *ngIf="htmlResult">
   <div [innerHTML]="htmlResult"></div>
 </ion-content>
-<!--- Assigne a challange to group or users and start it.-->
+<!--- Assigne a challenge to group or users and start it.-->
 <ion-toolbar *ngIf="challengeToAssign && !challengeToAssign.released" class="page-toolbar">
   <ion-title>{{challengeToAssign.description}}</ion-title>
   <ion-buttons slot="end">
@@ -53,7 +53,7 @@
     </ion-item>
     <ion-item>
       <ion-label>{{'Users' | translate}}:</ion-label>
-      <ionic-selectable item-content [(ngModel)]="challengeToAssign.users" [items]="objectService.allObjects['user']"
+      <ionic-selectable [(ngModel)]="challengeToAssign.users" [items]="objectService.allObjects['user']"
         itemValueField="id" itemTextField="fullName" [canSearch]="true" [isMultiple]="true">
         <ng-template ionicSelectableCloseButtonTemplate>
           <ion-icon name="close" color="danger"></ion-icon>
@@ -74,6 +74,12 @@
       {{objectService.formatGroups(selectedChallenge.groups)}}</div>
     <div *ngIf="selectedChallenge.released && selectedChallenge.users.length">
       {{objectService.formatUsers(selectedChallenge.users)}}</div>
+    <ionic-selectable [(ngModel)]="selectedChallenge.teachingSubject" [items]="crxObjectService.subjects"
+      itemValueField="id" itemTextField="name" [canSearch]="true">
+      <ng-template ionicSelectableCloseButtonTemplate>
+        <ion-icon name="close" color="danger"></ion-icon>
+      </ng-template>
+    </ionic-selectable>
   </ion-item>
   <ion-buttons slot="end">
     <ion-button size="small" fill="solid" (click)="close(false)" matTooltip="{{'Close'|translate}}">
@@ -109,7 +115,7 @@
       <ion-icon slot="icon-only" name="settings" color="success"></ion-icon>
     </ion-button>
     <ion-button id="getArchive" size="small" fill="solid" (click)="getArchives(selectedChallenge.id)"
-      matTooltip="{{'Manage the archived results of this challange.' | translate }}">
+      matTooltip="{{'Manage the archived results of this challenge.' | translate }}">
       <ion-icon slot="icon-only" name="archive"></ion-icon>
     </ion-button>
     <ion-button *ngIf="!selectedChallenge.released" size="small" fill="solid"
@@ -205,15 +211,16 @@
     <ion-button size="small" fill="clear" (click)="addNewQuestion()">
       <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
     </ion-button>
-    <ionic-selectable style="background-color: aqua; color: black;" [(ngModel)]="questionToAdd" [items]="questions" itemValueField="id" itemTextField="question"
-      [canSearch]="true" (onChange)="addNewQuestion()">
+    <ionic-selectable style="background-color: aqua; color: black;" [(ngModel)]="questionToAdd" [items]="questions"
+      itemValueField="id" itemTextField="question" [canSearch]="true" (onChange)="addNewQuestion()">
       <ng-template ionicSelectableCloseButtonTemplate>
         <ion-icon name="close" color="danger"></ion-icon>
       </ng-template>
       <ng-template ionicSelectableItemIconTemplate let-port="item">
       </ng-template>
       <ng-template ionicSelectableItemTemplate let-port="item" let-isPortSelected="isItemSelected">
-        <ion-icon  *ngIf="port.id != 0" [name]="port.answerType == 'One' ? 'radio-button-off' : 'stop-outline'"></ion-icon>
+        <ion-icon *ngIf="port.id != 0"
+          [name]="port.answerType == 'One' ? 'radio-button-off' : 'stop-outline'"></ion-icon>
         <div *ngIf="port.id != 0" [innerHTML]="port.question"></div>
       </ng-template>
       <ng-template ionicSelectableValueTemplate let-ports="value">
@@ -251,7 +258,7 @@
 <ion-popover #popoverDeleteChallenge [isOpen]="popoverDeleteChallengeIsOpen" size="cover">
   <ng-template>
     <ion-toolbar>
-      {{'Remove challange and all archived results.' | translate}}
+      {{'Remove challenge and all archived results.' | translate}}
     </ion-toolbar>
     <ion-toolbar>
       <ion-buttons slot="end">
@@ -266,7 +273,7 @@
   <ng-template>
     <ion-header>
       <ion-toolbar>
-        <ion-title>{{'Stop challange'|translate}}</ion-title>
+        <ion-title>{{'Stop challenge'|translate}}</ion-title>
         <ion-buttons slot="end">
           <ion-button (click)="popoverStopAndArchiveIsOpen=false; selectedChallengeId=null">
             <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>

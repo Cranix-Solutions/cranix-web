@@ -21,6 +21,7 @@ import { CephalixService } from './services/cephalix.service';
 import { DevicesService } from './services/devices.service';
 import { EductaionService } from './services/education.service';
 import { GenericObjectService } from './services/generic-object.service';
+import { CrxObjectService } from './services/crx-object-service';
 import { GroupsService } from './services/groups.service';
 import { HwconfsService } from './services/hwconfs.service';
 import { InformationsService } from './services/informations.services';
@@ -62,6 +63,7 @@ export function createTranslateLoader(http: HttpClient) {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     CephalixService,
+    CrxObjectService,
     DevicesService,
     EductaionService,
     GenericObjectService,

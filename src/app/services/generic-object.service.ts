@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AlertController, ModalController, ToastController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 // own modules
 import { ServerResponse } from 'src/app/shared/models/server-models';
 import { Group, Package, User } from 'src/app/shared/models/data-model';
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 import { LanguageService } from './language.service';
+import { CrxObjectService } from './crx-object-service';
 import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
@@ -125,7 +126,7 @@ export class GenericObjectService {
     private http: HttpClient,
     private languageS: LanguageService,
     private utilsS: UtilsService,
-    private modalCtrl: ModalController,
+    private crxObjectService: CrxObjectService,
     public toastController: ToastController,
     private router: Router) {
   }
@@ -133,6 +134,7 @@ export class GenericObjectService {
   initialize(force: boolean) {
     this.objects = []
 
+    this.crxObjectService.getSubjects();
     if (this.authService.isAllowed('cephalix.manage')) {
       this.initializeCephalixObjects();
     }
@@ -206,7 +208,12 @@ export class GenericObjectService {
       console.log("Unknown object type:",objectType)
       return;
     }
+
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";
+    //We do not read all challenges only the challenges from the selected
+    if(objectType == 'challenge'){
+      url = this.utilsS.hostName() + "/challenges/subjects/" + this.crxObjectService.selectedTeachingSubject.id
+    }
     let sub = this.http.get<any[]>(url, { headers: this.authService.headers }).subscribe({
       next: (val) => {
         switch (objectType) {
@@ -229,6 +236,11 @@ export class GenericObjectService {
       },
       complete: () => sub.unsubscribe()
     });
+  }
+
+  getSubscribe(path){
+    let url = this.utilsS.hostName() + path
+    return this.http.get<any[]>(url, { headers: this.authService.headers })
   }
 
   isInitialized() {

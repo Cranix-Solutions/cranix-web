@@ -1,6 +1,12 @@
 <ion-toolbar *ngIf="!authService.isMD()" class="page-toolbar">
   <ion-item lines="none">
-    <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="filterMD">
+    <ionic-selectable *ngIf="objectType == 'challenge'" [(ngModel)]="crxObjectService.selectedTeachingSubject"
+      [items]="crxObjectService.subjects" itemValueField="id" itemTextField="name" [canSearch]="true" (onChange)="subjectChanged($event)">
+      <ng-template ionicSelectableCloseButtonTemplate>
+        <ion-icon name="close" color="danger"></ion-icon>
+      </ng-template>
+    </ionic-selectable>
+    <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="filterMD" style="min-width: 400px;">
     </ion-input>
   </ion-item>
   <ion-buttons slot="end">
@@ -15,6 +21,12 @@
   </ion-buttons>
 </ion-toolbar>
 <ion-item *ngIf="authService.isMD()">
+  <ionic-selectable *ngIf="objectType == 'challenge'" [(ngModel)]="crxObjectService.selectedTeachingSubject"
+    [items]="crxObjectService.subjects" itemValueField="id" itemTextField="name" [canSearch]="true">
+    <ng-template ionicSelectableCloseButtonTemplate>
+      <ion-icon name="close" color="danger"></ion-icon>
+    </ng-template>
+  </ionic-selectable>
   <ion-button size="small" fill="clear" (click)="back()" [disabled]="min <= 0">
     <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
     {{ min + 2 }}
@@ -88,20 +100,24 @@
           <h5>{{ object.role | translate }}</h5>
           <h5>{{ object.classes }}</h5>
         </ion-label>
-        <ion-item  *ngIf="objectType == 'challenge' && object.creatorId == authService.session.userId">
+        <ion-item *ngIf="objectType == 'challenge' && object.creatorId == authService.session.userId">
           <div *ngIf="object.released && object.groups.length">{{objectService.formatGroups(object.groups)}}</div>
           <div *ngIf="object.released && object.users.length">{{objectService.formatUsers(object.users)}}</div>
           <ion-buttons slot="end">
-            <ion-button *ngIf="object.released" (click)="context.componentParent.stopAndArchive(object)" matTooltip="{{'Stop and evaluate challenge and archive the results.'|translate}}">
+            <ion-button *ngIf="object.released" (click)="context.componentParent.stopAndArchive(object)"
+              matTooltip="{{'Stop and evaluate challenge and archive the results.'|translate}}">
               <ion-icon slot="icon-only" name="stop-circle-outline" color="danger"></ion-icon>
             </ion-button>
-            <ion-button *ngIf="!object.released" (click)="context.componentParent.assign(object)" matTooltip="{{'Assign and start challenge.'|translate}}">
+            <ion-button *ngIf="!object.released" (click)="context.componentParent.assign(object)"
+              matTooltip="{{'Assign and start challenge.'|translate}}">
               <ion-icon slot="icon-only" name="chevron-forward-circle-outline"></ion-icon>
             </ion-button>
-            <ion-button (click)="context.componentParent.getArchives(object.id)" matTooltip="{{'Manage the archived results of this challange.'|translate}}">
+            <ion-button (click)="context.componentParent.getArchives(object.id)"
+              matTooltip="{{'Manage the archived results of this challenge.'|translate}}">
               <ion-icon slot="icon-only" name="archive"></ion-icon>
             </ion-button>
-            <ion-button *ngIf="!object.released" (click)="context.componentParent.deleteChallenge(object.id)" matTooltip="{{'Delete challenge.'|translate}}">
+            <ion-button *ngIf="!object.released" (click)="context.componentParent.deleteChallenge(object.id)"
+              matTooltip="{{'Delete challenge.'|translate}}">
               <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
             </ion-button>
           </ion-buttons>
@@ -134,7 +150,9 @@
         <ion-item-option color="tertiary" (click)="context.componentParent.openActions($event,object)">
           <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
         </ion-item-option>
-        <ion-item-option *ngIf="authService.session.userId == object.ownerId || authService.isAllowed(objectType + '.delete')" color="danger" (click)="context.componentParent.redirectToDelete(object)">
+        <ion-item-option
+          *ngIf="authService.session.userId == object.ownerId || authService.isAllowed(objectType + '.delete')"
+          color="danger" (click)="context.componentParent.redirectToDelete(object)">
           <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
         </ion-item-option>
       </ion-item-options>

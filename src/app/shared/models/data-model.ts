@@ -470,6 +470,21 @@ export interface AccessStatus {
 	pointInTime?: string
 }
 
+export class SubjectArea {
+	id: number
+	creator_id: number = 0
+	name: string = ""
+	constructor() {}
+}
+
+export class TeachingSubject {
+	id: number = 0
+	creator_id: number = 0
+	name: string = ""
+	subjectAreas: SubjectArea[] = []
+	constructor() { }
+}
+
 export class CrxQuestionAnswer {
 	id?: number
 	answer: string = ""
@@ -499,6 +514,7 @@ export class CrxChallenge {
 	users: User[] = []
 	studentsOnly?: boolean = false;
 	released: boolean = false;
+	teachingSubject: TeachingSubject
 }
 
 export class CrxChallengeAnswer {
