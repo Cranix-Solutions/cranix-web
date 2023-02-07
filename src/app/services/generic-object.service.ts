@@ -133,7 +133,6 @@ export class GenericObjectService {
 
   initialize(force: boolean) {
     this.objects = []
-
     this.crxObjectService.getSubjects();
     if (this.authService.isAllowed('cephalix.manage')) {
       this.initializeCephalixObjects();
@@ -211,9 +210,10 @@ export class GenericObjectService {
 
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";
     //We do not read all challenges only the challenges from the selected
-    if(objectType == 'challenge'){
+    if(objectType == 'challenge' && this.crxObjectService.selectedTeachingSubject){
       url = this.utilsS.hostName() + "/challenges/subjects/" + this.crxObjectService.selectedTeachingSubject.id
     }
+    console.log("getAllObject" +url)
     let sub = this.http.get<any[]>(url, { headers: this.authService.headers }).subscribe({
       next: (val) => {
         switch (objectType) {

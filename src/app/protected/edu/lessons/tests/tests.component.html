@@ -11,7 +11,7 @@
   <ion-item *ngFor="let object of objectService.allObjects['challenges/todo']; let i = index"
     style="background-color : {{authService.rowColors[i%2]}}">
     <ion-label (click)="redirectToEdit(object)">
-      {{object.description}}
+      <b *ngIf="object.teachingSubject">{{object.teachingSubject.name}}:</b> {{object.description}}
     </ion-label>
   </ion-item>
 </ion-content>

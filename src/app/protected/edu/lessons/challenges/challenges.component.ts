@@ -54,8 +54,12 @@ export class ChallengesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.subjectChanged(this.authService.selectedTeachingSubject ? this.authService.selectedTeachingSubject.id : null);
+  }
+
+  subjectChanged(subjectId: number){
     this.questionToAdd = new CrxQuestion(this.languageService.trans('List of questions'));
-    this.challengesService.getQuestions().subscribe(
+    this.challengesService.getQuestions(subjectId).subscribe(
       (val) => {
         this.questions = val
         this.questions.push(this.questionToAdd)

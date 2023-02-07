@@ -1,6 +1,6 @@
 <ion-toolbar *ngIf="!authService.isMD()" class="page-toolbar">
   <ion-item lines="none">
-    <ionic-selectable *ngIf="objectType == 'challenge'" [(ngModel)]="crxObjectService.selectedTeachingSubject"
+    <ionic-selectable *ngIf="objectType == 'challenge'" [(ngModel)]="authService.selectedTeachingSubject"
       [items]="crxObjectService.subjects" itemValueField="id" itemTextField="name" [canSearch]="true" (onChange)="subjectChanged($event)">
       <ng-template ionicSelectableCloseButtonTemplate>
         <ion-icon name="close" color="danger"></ion-icon>
@@ -21,7 +21,7 @@
   </ion-buttons>
 </ion-toolbar>
 <ion-item *ngIf="authService.isMD()">
-  <ionic-selectable *ngIf="objectType == 'challenge'" [(ngModel)]="crxObjectService.selectedTeachingSubject"
+  <ionic-selectable *ngIf="objectType == 'challenge'" [(ngModel)]="authService.selectedTeachingSubject"
     [items]="crxObjectService.subjects" itemValueField="id" itemTextField="name" [canSearch]="true">
     <ng-template ionicSelectableCloseButtonTemplate>
       <ion-icon name="close" color="danger"></ion-icon>

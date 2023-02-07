@@ -253,19 +253,21 @@ export class CranixMdListComponent implements OnInit {
     let path = "/" + this.objectType + "s/all";
     //We do not read all challenges only the challenges from the selected
     if (this.objectType == 'challenge') {
-      path = "/challenges/subjects/" + this.crxObjectService.selectedTeachingSubject.id
+      path = "/challenges/subjects/" + this.authService.selectedTeachingSubject.id
     }
+    this.authService.saveSelectedSubject()
     this.objectService.allObjects[this.objectType] = null
     this.objectService.getSubscribe(path).subscribe(
       (val) => {
         this.rowData = val
-        this.objectService.allObjects[this.objectType] = this.rowData
+        this.objectService.allObjects[this.objectType] = val
         this.objectService.selection = []
         this.objectService.selectedIds = [];
-
-        (<HTMLInputElement>document.getElementById('filterMD')).value = ''
         console.log(this.rowData)
       }
     )
+    if(this.context.componentParent.subjectChanged) {
+      this.context.componentParent.subjectChanged(this.authService.selectedTeachingSubject.id)
+    }
   }
 }

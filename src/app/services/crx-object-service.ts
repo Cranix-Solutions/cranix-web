@@ -8,7 +8,7 @@ import { Storage } from '@ionic/storage-angular';
 
 @Injectable()
 export class CrxObjectService {
-    selectedTeachingSubject: TeachingSubject = new TeachingSubject();
+    selectedTeachingSubject: TeachingSubject;
     subjects: TeachingSubject[];
     hostname: string;
 
@@ -28,21 +28,8 @@ export class CrxObjectService {
             (val1) => {
                 this.subjects = val1
                 console.log(val1)
-                this.storage.get('selectedTeachingSubjectId').then((val2) => {
-                    if (val2 && val2 != "") {
-                        this.selectedTeachingSubject = this.getSubjectById(val2)
-                    }
-                    if( !this.selectedTeachingSubject ) {
-                        this.selectedTeachingSubject = this.subjects[0];
-                    }
-                    console.log(this.selectedTeachingSubject)
-                })
             }
         )
-    }
-
-    saveSelectedSubject(){
-        this.storage.set('selectedTeachingSubjectId',this.selectedTeachingSubject.id)
     }
 
     addSubject(subject: TeachingSubject) {

@@ -56,8 +56,11 @@ export class ChallengesService {
     return this.http.delete<ServerResponse>(url, { headers: this.authService.headers })
   }
 
-  getQuestions() {
+  getQuestions(subjectId: number) {
     let url = this.hostname + "/challenges/questions"
+    if( subjectId ) {
+      url = this.hostname + `/challenges/subjects/${subjectId}/questions`
+    }
     return this.http.get<CrxQuestion[]>(url, { headers: this.authService.anyHeaders })
   }
 
