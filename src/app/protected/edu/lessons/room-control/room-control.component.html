@@ -1,10 +1,11 @@
 <cranix-toolbar *ngIf="!eduS.selectedRoom" title="{{'Room control' | translate}}"></cranix-toolbar>
 <cranix-toolbar *ngIf="eduS.selectedRoom" title="{{'Room control in' | translate}} {{eduS.selectedRoom.name}}">
 </cranix-toolbar>
-<ion-toolbar class="page-toolbar">
+<ion-toolbar class="page-toolbar" style="max-height: 54px">
   <ion-buttons *ngIf="eduS.room" slot="start">
     <ion-button matTooltip="{{ 'To login' | translate}}" (click)="setAccess('login')" [disabled]="eduS.disableChange">
-      <ion-icon [ngStyle]="{'color': eduS.room.accessInRooms.login  ? '#2dd36f' : '#eb445a'}" name="key-sharp" size="large">
+      <ion-icon [ngStyle]="{'color': eduS.room.accessInRooms.login  ? '#2dd36f' : '#eb445a'}" name="key-sharp"
+        size="large">
       </ion-icon>
     </ion-button>
     <ion-button *ngIf="authS.isAllowed('education.proxy')" [disabled]="eduS.disableChange"
@@ -19,7 +20,33 @@
         size="large">
       </ion-icon>
     </ion-button>
-    <ion-button matTooltip="{{ 'Printing' | translate}}" (click)="setAccess('printing')" [disabled]="eduS.disableChange">
+    <ion-button *ngIf="authS.isAllowed('room.direct')" matTooltip="{{ 'Insert allowed domains' | translate}}"
+      [disabled]="eduS.disableChange || eduS.room.accessInRooms.direct" (click)="setExceptionsModalIsOpen = true">
+      <ion-icon name="arrow-redo-circle-outline" size="large"></ion-icon>
+      <ion-modal [isOpen]="setExceptionsModalIsOpen" #setExceptionsModal>
+        <ng-template>
+          <ion-header>
+            <ion-toolbar>
+              <ion-title>{{ 'Insert allowed domains' | translate}}</ion-title>
+              <ion-buttons slot="end">
+                <ion-button (click)="setExceptionsModalIsOpen = false" [strong]="true"><ion-icon slot="icon-only"
+                    name="close" color="danger"></ion-icon></ion-button>
+                <ion-button (click)="allowDomains()" [strong]="true"><ion-icon slot="icon-only" name="checkmark"
+                    color="success"></ion-icon></ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding">
+            <ion-item>
+              <ion-textarea placeholder="{{'Insert one domain name pro line. URLs are not allowed.' | translate}}"
+                [(ngModel)]="allowedDomains" [autoGrow]="true"></ion-textarea>
+            </ion-item>
+          </ion-content>
+        </ng-template>
+      </ion-modal>
+    </ion-button>
+    <ion-button matTooltip="{{ 'Printing' | translate}}" (click)="setAccess('printing')"
+      [disabled]="eduS.disableChange">
       <ion-icon [ngStyle]="{'color': eduS.room.accessInRooms.printing  ? '#2dd36f' : '#eb445a'}" name="print-sharp"
         size="large">
       </ion-icon>
@@ -37,37 +64,35 @@
       <ion-icon slot="end" name="desktop" size="large"></ion-icon>
     </ion-button>
   </ion-buttons>
-  <ion-buttons slot="end">
-    <ion-item lines="none" matTooltip="{{'Select the room to control' | translate}}">
-      <ion-label *ngIf="!authS.isMD()">{{'Select a room' | translate}}</ion-label>
+  <ion-item lines="none" slot="end" style="max-height: 54px">
+    <div slot="start" matTooltip="{{'Select the room to control' | translate}}">
+      <ion-label position="stacked">{{'Select a Room' | translate }}</ion-label>
       <ionic-selectable #selectRoom item-content [(ngModel)]="eduS.selectedRoom" [ngModelOptions]="{standalone: true}"
-      [items]="eduS.myRooms" itemValueField="id" itemTextField="name" [canSearch]="true" (onChange)="roomSelected()">
-      <ng-template ionicSelectableHeaderTemplate>
-        <ion-toolbar>
-          <ion-title>
-            {{ "Select a Room" | translate }}
-          </ion-title>
-          <ion-buttons slot="end">
-            <ion-button ion-button (click)="selectRoom.close()">
-              <ion-icon color="danger" name="close"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ng-template>
-      <ng-template ionicSelectableItemIconTemplate>
-        <div></div>
-      </ng-template>
-    </ionic-selectable>
-    </ion-item>
-    <ion-item *ngIf="!authS.isMD()" lines="none" matTooltip="{{'Select picture size' | translate}}">
-      <ion-label>{{'Select picture size' | translate }}</ion-label>
-      <ion-icon name="resize"></ion-icon>
-      <ion-select *ngIf="eduS.selectedRoom" [(ngModel)]="gridSize" name="gridSize"
-        (ionChange)="sizeChange($event)" okText="{{'apply' | translate }}" cancelText="{{ 'Cancel' | translate}}">
+        [items]="eduS.myRooms" itemValueField="id" itemTextField="name" [canSearch]="true" (onChange)="roomSelected()">
+        <ng-template ionicSelectableHeaderTemplate>
+          <ion-toolbar>
+            <ion-title>
+              {{ "Select a Room" | translate }}
+            </ion-title>
+            <ion-buttons slot="end">
+              <ion-button ion-button (click)="selectRoom.close()">
+                <ion-icon color="danger" name="close"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ng-template>
+        <ng-template ionicSelectableItemIconTemplate></ng-template>
+      </ionic-selectable>
+    </div>
+    <div slot="end" *ngIf="!authS.isMD()" lines="none" matTooltip="{{'Select picture size' | translate}}">
+      <ion-label position="stacked">{{'Select picture size' | translate }}</ion-label>
+      {{gridSize}}
+      <ion-select *ngIf="eduS.selectedRoom" [(ngModel)]="gridSize" name="gridSize" (ionChange)="sizeChange($event)"
+        okText="{{'apply' | translate }}" cancelText="{{ 'Cancel' | translate}}">
         <ion-select-option value="{{size}}" *ngFor="let size of gridSizes">{{size}}</ion-select-option>
       </ion-select>
-    </ion-item>
-  </ion-buttons>
+    </div>
+  </ion-item>
 </ion-toolbar>
 <ion-item-divider></ion-item-divider>
 <ion-content>

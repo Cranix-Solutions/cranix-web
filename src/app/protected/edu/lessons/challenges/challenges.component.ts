@@ -58,11 +58,10 @@ export class ChallengesComponent implements OnInit {
   }
 
   subjectChanged(subjectId: number){
-    this.questionToAdd = new CrxQuestion(this.languageService.trans('List of questions'));
+    this.questionToAdd = null
     this.challengesService.getQuestions(subjectId).subscribe(
       (val) => {
         this.questions = val
-        this.questions.push(this.questionToAdd)
       }
     )
   }
@@ -151,7 +150,7 @@ export class ChallengesComponent implements OnInit {
   }
 
   addNewQuestion() {
-    if( this.questionToAdd.id == 0) {
+    if( this.questionToAdd == null ) {
       this.questionToAdd= new CrxQuestion(this.languageService.trans('Question text.'));
       this.questionToAdd.answerType = this.answerType;
       this.questionToAdd.value = this.questionValue;
@@ -168,7 +167,7 @@ export class ChallengesComponent implements OnInit {
     }
     this.selectedChallenge.questions.push(this.questionToAdd)
     this.challengesService.modified = true;
-    this.questionToAdd = new CrxQuestion(this.languageService.trans('List of questions'));
+    this.questionToAdd = null
   }
 
   addOldQuestion(event) {

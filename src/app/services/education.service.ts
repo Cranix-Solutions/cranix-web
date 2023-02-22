@@ -48,6 +48,14 @@ export class EductaionService {
 
 
 
+	allowDomains(allowedDomains: string[]) {
+		this.url = `${this.hostname}/education/rooms/${this.selectedRoom.id}/allowDomains`;
+		this.objectService.requestSent()
+		this.http.post<ServerResponse>(this.url, allowedDomains, { headers: this.authService.headers }).subscribe(
+			(val) => { this.objectService.responseMessage(val)}
+		)
+	}
+
 	// miscellaneous
 	setWorkstationPassword(rId: number, pw: any) {
 		this.url = `${this.hostname}/education/rooms/${rId}/actionWithMap/setPassword`;
@@ -230,14 +238,15 @@ export class EductaionService {
 			.pipe(takeWhile(() => this.alive))
 			.subscribe(res => {
 				this.room = res
-				if(order) {
+				console.log(res)
+				if (order) {
 					this.orderRoom()
 				}
 			});
 
 	}
 
-	destroyEduRoom(){
+	destroyEduRoom() {
 		this.alive = null;
 		this.dropLists = null;
 		this.rows = null;

@@ -76,9 +76,8 @@
       {{objectService.formatUsers(selectedChallenge.users)}}</div>
     <ionic-selectable [(ngModel)]="selectedChallenge.teachingSubject" [items]="crxObjectService.subjects"
       itemValueField="id" itemTextField="name" [canSearch]="true" (onChange)="subjectChanged(selectedChallenge.teachingSubject.id)">
-      <ng-template ionicSelectableCloseButtonTemplate>
-        <ion-icon name="close" color="danger"></ion-icon>
-      </ng-template>
+      <ng-template ionicSelectableCloseButtonTemplate><ion-icon name="close" color="danger"></ion-icon></ng-template>
+      <ng-template ionicSelectablePlaceholderTemplate>{{'teachingSubject'|translate}}</ng-template>
     </ionic-selectable>
   </ion-item>
   <ion-buttons slot="end">
@@ -213,19 +212,15 @@
     </ion-button>
     <ionic-selectable style="background-color: aqua; color: black;" [(ngModel)]="questionToAdd" [items]="questions"
       itemValueField="id" itemTextField="question" [canSearch]="true" (onChange)="addNewQuestion()">
-      <ng-template ionicSelectableCloseButtonTemplate>
-        <ion-icon name="close" color="danger"></ion-icon>
-      </ng-template>
-      <ng-template ionicSelectableItemIconTemplate let-port="item">
-      </ng-template>
+      <ng-template ionicSelectableCloseButtonTemplate><ion-icon name="close" color="danger"></ion-icon></ng-template>
+      <ng-template ionicSelectablePlaceholderTemplate>{{'List of questions'|translate}}</ng-template>
+      <ng-template ionicSelectableItemIconTemplate let-port="item"></ng-template>
       <ng-template ionicSelectableItemTemplate let-port="item" let-isPortSelected="isItemSelected">
         <ion-icon *ngIf="port.id != 0"
           [name]="port.answerType == 'One' ? 'radio-button-off' : 'stop-outline'"></ion-icon>
         <div *ngIf="port.id != 0" [innerHTML]="port.question"></div>
       </ng-template>
-      <ng-template ionicSelectableValueTemplate let-ports="value">
-        <div class="ionic-selectable-value-item" [innerHTML]="ports.question"></div>
-      </ng-template>
+      <ng-template ionicSelectableValueTemplate>{{'List of questions'|translate}}</ng-template>
     </ionic-selectable>
   </ion-item>
 </ion-content>
