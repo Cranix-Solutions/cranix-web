@@ -74,6 +74,7 @@
       {{objectService.formatGroups(selectedChallenge.groups)}}</div>
     <div *ngIf="selectedChallenge.released && selectedChallenge.users.length">
       {{objectService.formatUsers(selectedChallenge.users)}}</div>
+    <ion-label>{{'Subject'|translate}}</ion-label>
     <ionic-selectable [(ngModel)]="selectedChallenge.teachingSubject" [items]="crxObjectService.subjects"
       itemValueField="id" itemTextField="name" [canSearch]="true" (onChange)="subjectChanged(selectedChallenge.teachingSubject.id)">
       <ng-template ionicSelectableCloseButtonTemplate><ion-icon name="close" color="danger"></ion-icon></ng-template>
@@ -98,7 +99,7 @@
       </ng-template>
     </ion-popover>
     <ion-button *ngIf="!selectedChallenge.released" size="small" fill="solid" (click)="save()"
-      matTooltip="{{'Save challenge' | translate }}">
+      matTooltip="{{'Save challenge' | translate }}" [disabled]="!selectedChallenge.description || !selectedChallenge.teachingSubject">
       <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
     </ion-button>
     <ion-button *ngIf="!selectedChallenge.released" fill="solid" (click)="assign(selectedChallenge)"
