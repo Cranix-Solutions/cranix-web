@@ -612,7 +612,7 @@
     "special": "Förderschule",
     "srvUsage": "/srv Belegung",
     "startclone": "Klonen starten",
-    "state": "Bundesland",
+    "state": "Status",
     "status": "Status",
     "statusGrouping": "Gruppierung nach Installationsstatus/Software/Raum",
     "stopclone": "Klonen anhalten",
