@@ -408,6 +408,12 @@ export const studentMenu = [
   {
     "enabled": true,
     "icon": "file-tray",
+    "color": "success",
+    "action": "rwProfile"
+  },
+  {
+    "enabled": true,
+    "icon": "file-tray",
     "color": "danger",
     "action": "copyTemplate"
   },

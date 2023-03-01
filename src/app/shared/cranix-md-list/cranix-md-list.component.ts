@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, AfterContentInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { CrxObjectService } from 'src/app/services/crx-object-service';
@@ -32,18 +32,21 @@ export class CranixMdListComponent implements OnInit {
     this.utilService.actMdList = this;
   }
 
+  ngAfterContentInit() {
+    this.subjectChanged(null)
+    console.log("CranixMdListComponent ngAfterContentInit")
+  }
+  
   async ngOnInit() {
     this.objectService.selection = []
     this.objectService.selectedIds = []
-    this.step = Number(this.authService.settings.lineProPageMD);
+    this.initSteps()
     if (!this.min) {
       this.min = -1;
     }
     if (!this.step || this.step < 3) {
       this.step = 3;
     }
-    this.max = this.min + this.step + 1;
-    this.authService.log("CranixMdListComponent Min Max Step", this.min, this.max, this.step)
     this.left1 = 'name'
     this.left2 = 'description'
     this.left3 = ''
@@ -87,7 +90,17 @@ export class CranixMdListComponent implements OnInit {
     if (this.max > (this.rowData.length)) {
       this.max = this.rowData.length
     }
-    console.log(this.rowData)
+    this.authService.log("CranixMdListComponent ngOnInit", this.rowData)
+  }
+
+  initSteps() {
+    this.step = Number(this.authService.settings.lineProPageMD);
+    this.min = -1;
+    if (!this.step || this.step < 3) {
+      this.step = 3;
+    }
+    this.max = this.min + this.step + 1;
+    this.authService.log("CranixMdListComponent Min Max Step", this.min, this.max, this.step)
   }
 
   back() {
@@ -241,7 +254,6 @@ export class CranixMdListComponent implements OnInit {
         break
       }
     }
-
     if (this.rowData.length < this.step) {
       this.min = -1
       this.max = this.rowData.length
@@ -263,10 +275,10 @@ export class CranixMdListComponent implements OnInit {
         this.objectService.allObjects[this.objectType] = val
         this.objectService.selection = []
         this.objectService.selectedIds = [];
-        console.log(this.rowData)
+        this.initSteps()
       }
     )
-    if(this.context.componentParent.subjectChanged) {
+    if (this.context.componentParent.subjectChanged) {
       this.context.componentParent.subjectChanged(this.authService.selectedTeachingSubject.id)
     }
   }

@@ -210,8 +210,8 @@ export class GenericObjectService {
 
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";
     //We do not read all challenges only the challenges from the selected
-    if(objectType == 'challenge' && this.crxObjectService.selectedTeachingSubject){
-      url = this.utilsS.hostName() + "/challenges/subjects/" + this.crxObjectService.selectedTeachingSubject.id
+    if(objectType == 'challenge' && this.authService.selectedTeachingSubject){
+      url = this.utilsS.hostName() + "/challenges/subjects/" + this.authService.selectedTeachingSubject.id
     }
     console.log("getAllObject" +url)
     let sub = this.http.get<any[]>(url, { headers: this.authService.headers }).subscribe({

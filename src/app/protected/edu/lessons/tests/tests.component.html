@@ -17,7 +17,7 @@
 </ion-content>
 <ion-toolbar *ngIf="selectedChallenge" class="page-toolbar">
   <ion-title>
-    {{selectedChallenge.description}}
+    <b *ngIf="selectedChallenge.teachingSubject">{{selectedChallenge.teachingSubject.name}}:</b> {{selectedChallenge.description}}
   </ion-title>
   <ion-buttons slot="end">
     <ion-button size="small" fill="solid" (click)="close(false)">

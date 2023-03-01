@@ -97,8 +97,9 @@ export class ChallengesComponent implements OnInit {
       this.selectedChallenge = data;
     } else {
       this.selectedChallenge = new CrxChallenge();
-      this.selectedChallenge.teachingSubject = this.crxObjectService.selectedTeachingSubject;
+      this.selectedChallenge.teachingSubject = this.authService.selectedTeachingSubject;
     }
+    console.log(data)
   }
 
   toggle(i, j) {
@@ -225,6 +226,7 @@ export class ChallengesComponent implements OnInit {
     if (this.selectedChallenge.id) {
       this.challengesService.modify(this.selectedChallenge).subscribe(
         (val) => {
+          console.log("Challenge modified:", val)
           this.objectService.responseMessage(val)
           this.objectService.getAllObject('challenge')
         }
@@ -232,12 +234,14 @@ export class ChallengesComponent implements OnInit {
     } else {
       this.challengesService.add(this.selectedChallenge).subscribe(
         (val) => {
-          this.objectService.responseMessage(val)
           if (val.code == "OK") {
+            console.log("Challenge added:", val)
             this.selectedChallenge.creatorId = this.authService.session.userId
             this.selectedChallenge.id = val.objectId;
             this.objectService.getAllObject('challenge')
+            console.log(this.selectedChallenge)
           }
+          this.objectService.responseMessage(val)
         }
       )
     }

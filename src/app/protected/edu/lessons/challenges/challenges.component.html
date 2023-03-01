@@ -74,11 +74,11 @@
       {{objectService.formatGroups(selectedChallenge.groups)}}</div>
     <div *ngIf="selectedChallenge.released && selectedChallenge.users.length">
       {{objectService.formatUsers(selectedChallenge.users)}}</div>
-    <ion-label>{{'Subject'|translate}}</ion-label>
+    <ion-label>{{'teachingSubject'|translate}}:</ion-label>
     <ionic-selectable [(ngModel)]="selectedChallenge.teachingSubject" [items]="crxObjectService.subjects"
       itemValueField="id" itemTextField="name" [canSearch]="true" (onChange)="subjectChanged(selectedChallenge.teachingSubject.id)">
       <ng-template ionicSelectableCloseButtonTemplate><ion-icon name="close" color="danger"></ion-icon></ng-template>
-      <ng-template ionicSelectablePlaceholderTemplate>{{'teachingSubject'|translate}}</ng-template>
+      <ng-template ionicSelectablePlaceholderTemplate>{{'select'|translate}}</ng-template>
     </ionic-selectable>
   </ion-item>
   <ion-buttons slot="end">
@@ -147,11 +147,13 @@
       </quill-editor>
       <ion-button size="small" fill="clear" (click)="toggleEditQuestion(i)">
         <ion-icon slot="icon-only" color="success" name="checkmark"></ion-icon>
+        <div>{{selectedChallenge.questions[i].question.length/1024}}KB</div>
       </ion-button>
     </ion-item>
     <ion-item *ngIf="questionToEdit != i" style="background-color: lightgray;" [disabled]="selectedChallenge.released">
       <div class="counter"><b>{{i+1}}.</b></div>
-      <div [innerHTML]="question.question" (click)="toggleEditQuestion(i)"></div>
+      <quill-view-html [content]="question.question" (click)="toggleEditQuestion(i)" style="min-width: 200px;"></quill-view-html>
+      <!-- div [innerHTML]="question.question" (click)="toggleEditQuestion(i)"></div -->
       <ion-label slot="end">{{ 'value' | translate }}:</ion-label>
       <ion-input slot="end" style="max-width: 40px; margin-right: 10px;" [(ngModel)]="question.value" type="number"
         (ionInput)="challengesService.modified = true" min="1"></ion-input>
@@ -182,11 +184,13 @@
       </quill-editor>
       <ion-button *ngIf="answerToEdit == i + '-' + j" size="small" fill="clear" (click)="toggleEditAnswer(i,j)">
         <ion-icon slot="icon-only" color="success" name="checkmark"></ion-icon>
+        <div>{{selectedChallenge.questions[i].crxQuestionAnswers[j].answer.length/1024}}KB</div>
       </ion-button>
       <input *ngIf="answerToEdit != i + '-' + j" style="margin-right: 10px;"
         [type]="question.answerType == 'One' ? 'radio' : 'checkbox'" name="answer-{{i}}" [value]="answer.answer"
         [checked]="answer.correct" (click)="toggle(i, j)">
       <div *ngIf="answerToEdit != i + '-' + j" [innerHTML]="answer.answer" (click)="toggleEditAnswer(i,j)"></div>
+      <div *ngIf="answerToEdit != i + '-' + j && !answer.answer" (click)="toggleEditAnswer(i,j)">{{'Answer text.'|translate}}</div>
       <ion-button *ngIf="answerToEdit != i + '-' + j" slot="end" size="small" fill="clear" (click)="deleteAnswer(i,j)">
         <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
       </ion-button>
