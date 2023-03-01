@@ -391,7 +391,7 @@ export class SystemConfig {
 	constructor() { }
 }
 
-export class CrxMConfig {
+export class CrxConfig {
 	id: number;
 	objectType: string;
 	objectId: number;
