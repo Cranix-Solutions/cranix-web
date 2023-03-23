@@ -90,15 +90,15 @@ export class SystemStatusComponent implements OnInit {
 
 
   update(ev: Event) {
-    let subM = this.systemService.update().subscribe(
-      (val) => {
-        console.log(this.systemStatus);
-      },
-      (err) => { console.log(err) },
-      () => { subM.unsubscribe() });
+    this.systemService.update()
   }
-  restart(ev: Event) { }
-  shutDown(ev: Event) { }
+
+  restart(ev: Event) {
+    this.systemService.restart()
+  }
+  shutDown(ev: Event) {
+    this.systemService.shutDown()
+   }
 
   async support(ev: Event) {
     delete this.mySupport.description;
