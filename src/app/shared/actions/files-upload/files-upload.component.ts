@@ -28,13 +28,13 @@ export class FilesUploadComponent implements OnInit {
     public modalController: ModalController,
     private objectService: GenericObjectService,
     private languageService: LanguageService
-  ) {
-  }
+  ) {}
 
 
   ngOnDestroy() {
     this.alive = false;
   }
+
   ngOnInit() {
     this.objectType = this.objectType.replace("education/", "");
     switch (this.objectType) {
@@ -71,7 +71,6 @@ export class FilesUploadComponent implements OnInit {
         this.educationController.uploadState.next(true);
         let fd = new FormData();
         fd.append('file', this.files[i], this.files[i].name);
-        i++;
         fd.append('objectIds', this.actionMap.objectIds.join(","));
         if (this.objectType == "group") {
           fd.append('studentsOnly', this.studentsOnly ? "true" : "false");
@@ -81,6 +80,7 @@ export class FilesUploadComponent implements OnInit {
         } else {
           fd.append('cleanUp', "false");
         }
+        i++;
         this.educationController.uploadDataToObjects(fd, this.objectType);
       }
     });
