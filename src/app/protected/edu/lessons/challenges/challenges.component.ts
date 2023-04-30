@@ -57,13 +57,15 @@ export class ChallengesComponent implements OnInit {
     this.subjectChanged(this.authService.selectedTeachingSubject ? this.authService.selectedTeachingSubject.id : null);
   }
 
-  subjectChanged(subjectId: number){
+  subjectChanged(subjectId: number) {
     this.questionToAdd = null
-    this.challengesService.getQuestions(subjectId).subscribe(
-      (val) => {
-        this.questions = val
-      }
-    )
+    if (subjectId) {
+      this.challengesService.getQuestions(subjectId).subscribe(
+        (val) => {
+          this.questions = val
+        }
+      )
+    }
   }
   ngAfterViewInit() {
     this.challengesService.modified = false;
@@ -151,19 +153,19 @@ export class ChallengesComponent implements OnInit {
   }
 
   addNewQuestion() {
-    if( this.questionToAdd == null ) {
-      this.questionToAdd= new CrxQuestion(this.languageService.trans('Question text.'));
+    if (this.questionToAdd == null) {
+      this.questionToAdd = new CrxQuestion(this.languageService.trans('Question text.'));
       this.questionToAdd.answerType = this.answerType;
       this.questionToAdd.value = this.questionValue;
       this.questionToAdd.crxQuestionAnswers.push(new CrxQuestionAnswer(this.languageService.trans('Answer text.')))
       this.questionToAdd.crxQuestionAnswers.push(new CrxQuestionAnswer(this.languageService.trans('Answer text.')))
       this.questionToAdd.crxQuestionAnswers.push(new CrxQuestionAnswer(this.languageService.trans('Answer text.')))
-      
+
     } else {
       //Clean up ids. This question must be created once more independend.
       this.questionToAdd.id = null
-      for(let j = 0; j < this.questionToAdd.crxQuestionAnswers.length; j++){
-        this.questionToAdd.crxQuestionAnswers[j].id=null
+      for (let j = 0; j < this.questionToAdd.crxQuestionAnswers.length; j++) {
+        this.questionToAdd.crxQuestionAnswers[j].id = null
       }
     }
     this.selectedChallenge.questions.push(this.questionToAdd)
@@ -215,10 +217,10 @@ export class ChallengesComponent implements OnInit {
       //We overtake an challenge from an other user.
       this.selectedChallenge.id = null
       //Clean up ids. All questions and answers must be created once more independend.
-      for(let i =0; i < this.selectedChallenge.questions.length; i++ ){
+      for (let i = 0; i < this.selectedChallenge.questions.length; i++) {
         this.selectedChallenge.questions[i].id = null;
-        for(let j=0; j < this.selectedChallenge.questions[i].crxQuestionAnswers.length; j++){
-          this.selectedChallenge.questions[i].crxQuestionAnswers[j].id=null;
+        for (let j = 0; j < this.selectedChallenge.questions[i].crxQuestionAnswers.length; j++) {
+          this.selectedChallenge.questions[i].crxQuestionAnswers[j].id = null;
         }
 
       }
