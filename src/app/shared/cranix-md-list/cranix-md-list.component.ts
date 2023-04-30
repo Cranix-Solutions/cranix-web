@@ -264,7 +264,7 @@ export class CranixMdListComponent implements OnInit {
     console.log(event)
     let path = "/" + this.objectType + "s/all";
     //We do not read all challenges only the challenges from the selected
-    if (this.objectType == 'challenge') {
+    if (this.objectType == 'challenge' && this.authService.selectedTeachingSubject) {
       path = "/challenges/subjects/" + this.authService.selectedTeachingSubject.id
     }
     this.authService.saveSelectedSubject()
@@ -278,7 +278,7 @@ export class CranixMdListComponent implements OnInit {
         this.initSteps()
       }
     )
-    if (this.context.componentParent.subjectChanged) {
+    if (this.context.componentParent.subjectChanged && this.authService.selectedTeachingSubject) {
       this.context.componentParent.subjectChanged(this.authService.selectedTeachingSubject.id)
     }
   }
