@@ -1,7 +1,15 @@
-<ion-tabs>
+<ion-tabs (ionTabsDidChange)="cleanUp()">
   <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="roomcontrol">
-      <ion-icon name="calendar"></ion-icon>
+    <ion-tab-button *ngIf="authS.isAllowed('challenge.manage')" tab="challenges">
+      <ion-icon name="list"></ion-icon>
+      <ion-label>{{ 'Create Tests' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="tests">
+      <ion-icon name="list"></ion-icon>
+      <ion-label>{{ 'Tests' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button *ngIf="authS.isAllowed('education.rooms')" tab="roomcontrol">
+      <ion-icon name="room"></ion-icon>
       <ion-label>{{ 'Room' | translate }}</ion-label>
     </ion-tab-button>
     <ion-tab-button *ngIf="authS.isAllowed('education.proxy')" tab="mypositive">

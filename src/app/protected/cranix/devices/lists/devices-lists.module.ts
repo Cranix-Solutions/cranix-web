@@ -9,11 +9,13 @@ import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { DevicesListsPage }   from './devices-lists.page';
 import { DevicesComponent }   from './devices.component';
 import { PrintersComponent }  from './printers.component';
-import { DevicePrintersComponent } from '../details/printers/device-printers.component' 
+import { DevicePrintersComponent } from '../details/printers/device-printers.component';
+import { CanActivateViaAcls } from 'src/app/services/auth-guard.service';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'devices',
+    canActivate: [CanActivateViaAcls],
     component: DevicesListsPage,
     children: [
       {
@@ -25,14 +27,9 @@ const routes: Routes = [
         component: PrintersComponent
       },
       {
-        path: '',
-        redirectTo: 'all'
+        path: '', redirectTo: 'all', pathMatch: 'full'
       }
     ]
-  },
-  {
-    path: '',
-    redirectTo: 'all'
   }
 ];
 

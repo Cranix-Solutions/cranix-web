@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AlertController, ModalController, ToastController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 // own modules
 import { ServerResponse } from 'src/app/shared/models/server-models';
-import { Package } from 'src/app/shared/models/data-model';
+import { Group, Package, User } from 'src/app/shared/models/data-model';
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 import { LanguageService } from './language.service';
+import { CrxObjectService } from './crx-object-service';
 import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
 export class GenericObjectService {
-  allObjects: any = {};
+  //allObjects: {} = {};
+  allObjects: Map<string,Object[]> = new Map<string,Object[]>();
   selectedObject: any = null;
   selectedObjectType: string = null;
   selection: any[] = [];
@@ -33,7 +35,9 @@ export class GenericObjectService {
     'device',
     'hwconf',
     'printer',
-    'adhocroom'
+    'adhocroom',
+    'challenge',
+    'challenges/todo'
   ]
   objects: string[] = [];
   /**
@@ -122,14 +126,14 @@ export class GenericObjectService {
     private http: HttpClient,
     private languageS: LanguageService,
     private utilsS: UtilsService,
-    private modalCtrl: ModalController,
+    private crxObjectService: CrxObjectService,
     public toastController: ToastController,
     private router: Router) {
   }
 
   initialize(force: boolean) {
     this.objects = []
-
+    this.crxObjectService.getSubjects();
     if (this.authService.isAllowed('cephalix.manage')) {
       this.initializeCephalixObjects();
     }
@@ -203,7 +207,13 @@ export class GenericObjectService {
       console.log("Unknown object type:",objectType)
       return;
     }
+
     let url = this.utilsS.hostName() + "/" + objectType + "s/all";
+    //We do not read all challenges only the challenges from the selected
+    if(objectType == 'challenge' && this.authService.selectedTeachingSubject){
+      url = this.utilsS.hostName() + "/challenges/subjects/" + this.authService.selectedTeachingSubject.id
+    }
+    console.log("getAllObject" +url)
     let sub = this.http.get<any[]>(url, { headers: this.authService.headers }).subscribe({
       next: (val) => {
         switch (objectType) {
@@ -226,6 +236,11 @@ export class GenericObjectService {
       },
       complete: () => sub.unsubscribe()
     });
+  }
+
+  getSubscribe(path){
+    let url = this.utilsS.hostName() + path
+    return this.http.get<any[]>(url, { headers: this.authService.headers })
   }
 
   isInitialized() {
@@ -253,6 +268,10 @@ export class GenericObjectService {
     if (!objectId) {
       return null;
     }
+    if(!objectType){
+      console.log("getObjectById",this);
+      return null
+    }
     for (let obj of this.allObjects[objectType]) {
       if (obj.id === objectId) {
         return obj;
@@ -277,7 +296,7 @@ export class GenericObjectService {
   }
   idToUid(objectType, objectId) {
     for (let obj of this.allObjects[objectType]) {
-      if (obj.id === objectId) {
+      if (obj.id == objectId) {
         return obj.uid;
       }
     }
@@ -285,7 +304,7 @@ export class GenericObjectService {
   }
   idToFulName(objectId) {
     for (let obj of this.allObjects['user']) {
-      if (obj.id === objectId) {
+      if (obj.id == objectId) {
         return obj.surName + ", " + obj.givenName;
       }
     }
@@ -576,4 +595,14 @@ export class GenericObjectService {
     }
     return output;
   }
+
+  /*Helper functions for inoic-selectable*/
+  formatUsers(users: User[]) {
+    return users.map((user) => user.fullName).join(', ');
+  }
+
+  formatGroups(groups: Group[]) {
+    return groups.map((group) => group.description).join(', ');
+  }
+
 }

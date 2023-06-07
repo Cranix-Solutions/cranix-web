@@ -51,7 +51,7 @@
       </ion-item>
       <ion-item>
         <ion-label position="stacked">{{'name'|translate}}</ion-label>
-        <ion-input type="text" [(ngModel)]="device.name" name="name" required></ion-input>
+        <ion-input type="text" [(ngModel)]="device.name" name="name" required pattern="^([0-9a-z][0-9a-z\-]+[0-9a-z])$"></ion-input>
       </ion-item>
       <ion-item *ngIf="!adHocRoom">
         <ion-label position="stacked">{{'hwconfId'| translate}}</ion-label>

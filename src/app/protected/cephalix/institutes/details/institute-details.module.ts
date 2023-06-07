@@ -18,7 +18,7 @@ const routes: Routes = [
     component: InstituteDetailsPage,
     children: [
       {
-        path: 'all',
+        path: 'all', pathMatch: 'full',
         redirectTo: '/pages/cephalix/institutes/all'
       },
       {
@@ -38,13 +38,13 @@ const routes: Routes = [
        component: InstituteSyncedObjectsComponent
       },
       {
-        path: '',
+        path: '', pathMatch: 'full',
         redirectTo: 'edit'
       }
     ]
   },
   {
-    path: '',
+    path: '', pathMatch: 'full',
     redirectTo: 'edit'
   }
 ];

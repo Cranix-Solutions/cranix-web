@@ -14,10 +14,6 @@ const routes: Routes = [
     path: 'devices',
     canActivate: [CanActivateViaAcls],
     loadChildren: () => import('./lists/devices-lists.module').then( m => m.DevicesListsModule)
-  },
-  {
-    path:        '',
-    redirectTo: 'all'
   }
 ];
 

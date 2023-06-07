@@ -43,14 +43,10 @@ const routes: Routes = [
         component: SystemAclsComponent
       },
       {
-        path: '',
+        path: '', pathMatch: 'full',
         redirectTo: 'status'
       }
     ]
-  },
-  {
-    path: '',
-    redirectTo: 'status'
   }
 ];
 

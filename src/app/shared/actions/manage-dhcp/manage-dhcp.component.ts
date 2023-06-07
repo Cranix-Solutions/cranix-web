@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { DHCPOptions, DHCPStatements } from './dhcp-constants';
-import { CrxMConfig } from 'src/app/shared/models/data-model';
+import { CrxConfig } from 'src/app/shared/models/data-model';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { HttpClient } from '@angular/common/http';
@@ -15,7 +15,7 @@ import { ModalController } from '@ionic/angular';
 })
 export class ManageDhcpComponent implements OnInit {
 
-  myDHCP:       CrxMConfig[];
+  myDHCP:       CrxConfig[];
   url:          string;
   selectedDHCP: any;
   newValue:     string = "";
@@ -36,7 +36,7 @@ export class ManageDhcpComponent implements OnInit {
         id++;
     }
     for( let value of DHCPStatements ) {
-      this.dhcpOptions.push({"id":id, "type":"dhcpStatement","name":value})
+      this.dhcpOptions.push({"id":id, "type":"dhcpStatements","name":value})
       id++;
   }
    }
@@ -50,7 +50,7 @@ export class ManageDhcpComponent implements OnInit {
 
 
   getDHCP() {
-    let subs = this.http.get<CrxMConfig[]>(this.url, { headers: this.authService.headers }).subscribe(
+    let subs = this.http.get<CrxConfig[]>(this.url, { headers: this.authService.headers }).subscribe(
       (val) => { this.myDHCP = val },
       (err) => { console.error(err); },
       () => { subs.unsubscribe(); }
@@ -58,7 +58,7 @@ export class ManageDhcpComponent implements OnInit {
   }
 
   addDHCP() {
-    let tmp = new CrxMConfig();
+    let tmp = new CrxConfig();
     tmp.keyword    = this.selectedDHCP.type;
     tmp.value      = this.selectedDHCP.name +" " +this.newValue;
     tmp.objectType = this.objectType;

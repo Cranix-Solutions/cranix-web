@@ -11,3 +11,4 @@ import { LessonsModule } from './lessons/lessons.module';
   ]
 })
 export class EduModule { }
+

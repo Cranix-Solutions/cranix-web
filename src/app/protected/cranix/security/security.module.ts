@@ -42,15 +42,12 @@ const routes: Routes = [
       }, {
         path: 'access-log',
         component: AccessLogComponent
-      }, {
+      },
+      {
         path: '',
-        redirectTo: 'access'
+        redirectTo: 'access', pathMatch: 'full'
       }
     ]
-  },
-  {
-    path: 'security',
-    redirectTo: 'access'
   }
 ];
 

@@ -19,6 +19,8 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
   portal: boolean;
   printing: boolean;
   proxy: boolean;
+  setExceptionsModalIsOpen: boolean = false;
+  allowedDomains: string;
 
   gridSize: number = 2;
   @ViewChild('selectRoom') selectRef: IonSelect;
@@ -90,6 +92,12 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     (await popover).present();
   }
+
+  allowDomains(){
+    this.eduS.allowDomains(this.allowedDomains.split("\n"))
+    this.setExceptionsModalIsOpen = false;
+  }
+  
   setAccess(type: string) {
     this.objectS.requestSent();
     this.eduS.disableChange = true;

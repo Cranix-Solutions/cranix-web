@@ -69,7 +69,7 @@ export class ProtectedPage implements OnInit {
     },
     {
       title: 'Lessons',
-      url: '/pages/edu/lessons/roomcontrol',
+      url: '/pages/edu/lessons',
       icon: 'school'
     },
     {
@@ -102,6 +102,15 @@ export class ProtectedPage implements OnInit {
       }
     })
     for (let page of this.defAppPages) {
+      if( page.title == 'Lessons') {
+        if(this.authService.isAllowed('challenge.manage')){
+          page.url = "/pages/edu/lessons/challenges"
+        } else {
+          page.url = "/pages/edu/lessons/tests"
+        }
+        this.appPages.push(page);
+        continue
+      }
       if (this.authService.isRouteAllowed(page.url)) {
         this.appPages.push(page);
       }

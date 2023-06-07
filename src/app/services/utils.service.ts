@@ -33,6 +33,7 @@ export class UtilsService {
 		}
                 //console.log("From utils: " + url);
                 return "https://admin.cephalix.eu/api"
+                return "https://localhost:8080/api"
                 return url ;
         }
         public log(args) {

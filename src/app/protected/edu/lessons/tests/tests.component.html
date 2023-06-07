@@ -1,0 +1,61 @@
+<cranix-toolbar title="{{ 'Todos' | translate}}"></cranix-toolbar>
+<ion-toolbar *ngIf="!selectedChallenge" class="page-toolbar">
+  {{'Reload tests to work on' | translate}}
+  <ion-buttons slot="end">
+    <ion-button size="small" fill="solid" (click)="objectService.getAllObject('challenges/todo')">
+      <ion-icon slot="icon-only" name="refresh" color="success"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+<ion-content *ngIf="!selectedChallenge">
+  <ion-item *ngFor="let object of objectService.allObjects['challenges/todo']; let i = index"
+    style="background-color : {{authService.rowColors[i%2]}}">
+    <ion-label (click)="redirectToEdit(object)">
+      <b *ngIf="object.teachingSubject">{{object.teachingSubject.name}}:</b> {{object.description}}
+    </ion-label>
+  </ion-item>
+</ion-content>
+<ion-toolbar *ngIf="selectedChallenge" class="page-toolbar">
+  <ion-title>
+    <b *ngIf="selectedChallenge.teachingSubject">{{selectedChallenge.teachingSubject.name}}:</b> {{selectedChallenge.description}}
+  </ion-title>
+  <ion-buttons slot="end">
+    <ion-button size="small" fill="solid" (click)="close(false)">
+      <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
+    </ion-button>
+    <ion-popover #popover [isOpen]="isOpen" (didDismiss)="isOpen = false">
+      <ng-template>
+        <ion-content class="ion-padding">
+          {{'Your changes will be lost if you close this window.' | translate}}<br>
+          <ion-button size="small" fill="solid" (click)="close(true)">{{'Close'|translate}}</ion-button>
+          <ion-button size="small" fill="solid" (click)="isOpen=false">{{'Abort'|translate}}</ion-button>
+        </ion-content>
+      </ng-template>
+    </ion-popover>
+    <ion-button *ngIf="!autoSave" size="small" fill="solid" (click)="autoSave = !autoSave"
+      matTooltip="{{'Turn on auto save. All changes will be saved inmediately.' | translate }}">
+      <ion-icon slot="icon-only" name="play" color="success"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="autoSave" size="small" fill="solid" (click)="autoSave = !autoSave"
+      matTooltip="{{'Turn off auto save. Changes will be saved only by push the checkmark.' | translate }}">
+      <ion-icon slot="icon-only" name="stop" color="danger"></ion-icon>
+    </ion-button>
+    <ion-button size="small" fill="solid" (click)="save(false)" matTooltip="{{'Save challenge' | translate }}"
+      [disabled]="!challengesService.modified">
+      <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+<ion-content *ngIf="selectedChallenge">
+  <div class="question" *ngFor="let question of selectedChallenge.questions; index as i">
+    <ion-item style="background-color: lightgray;">
+      <div class="counter"><b>{{i+1}}</b></div>
+      <div [innerHTML]="question.question"></div>
+    </ion-item>
+    <ion-item class="answer" *ngFor="let answer of question.crxQuestionAnswers; index as j">
+      <input style="margin-right: 10px;" [type]="question.answerType == 'One' ? 'radio' : 'checkbox'"
+        name="answer-{{i}}" [value]="answer.answer" [checked]="answer.correct" (click)="toggle(i, j)">
+      <div [innerHTML]="answer.answer"></div>
+    </ion-item>
+  </div>
+</ion-content>

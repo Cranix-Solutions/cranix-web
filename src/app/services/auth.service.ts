@@ -11,6 +11,7 @@ import { isDevMode } from '@angular/core';
 import { UtilsService } from './utils.service';
 import { UserResponse, LoginForm, Settings } from 'src/app/shared/models/server-models';
 import { LanguageService } from './language.service';
+import { TeachingSubject } from '../shared/models/data-model';
 
 @Injectable({
     providedIn: 'root'
@@ -18,6 +19,7 @@ import { LanguageService } from './language.service';
 
 export class AuthenticationService {
     authenticationState = new BehaviorSubject(false);
+    selectedTeachingSubject: TeachingSubject
     hostname: string;
     url: string;
     //Token will be used only for CEPHALIX connections to overhand the CRANIX session
@@ -61,6 +63,7 @@ export class AuthenticationService {
 
     loadSettings() {
         console.log(this.settings)
+        this.readSelectedTeachingSubject()
         this.storage.get('myCranixSettings').then((myCranixSettings) => {
             if (myCranixSettings && myCranixSettings != "") {
                 console.log("myCranixSettings");
@@ -79,6 +82,19 @@ export class AuthenticationService {
             }
         });
         this.languageService.setCustomLanguage();
+    }
+
+    readSelectedTeachingSubject() {
+        this.storage.get('selectedTeachingSubject').then((val2) => {
+            if (val2 && val2 != "") {
+                this.selectedTeachingSubject = JSON.parse(val2)
+            }
+            console.log("readSelectedTeachingSubject:", this.selectedTeachingSubject)
+        })
+    }
+
+    saveSelectedSubject(){
+        this.storage.set('selectedTeachingSubject',JSON.stringify(this.selectedTeachingSubject))
     }
 
     setUpSession(user: LoginForm, instituteName: string) {
@@ -276,6 +292,10 @@ export class AuthenticationService {
             case "/pages/cranix/system": { return this.isAllowed('system.status') }
             case "/pages/cranix/softwares": { return this.isAllowed('software.manage') }
             case "/pages/cranix/security": { return this.isOneOfAllowed(['system.firewall', 'system.proxy']) }
+            //TODO education.challenges
+            case "/pages/edu/lessons": { return this.isAllowed('permitall') }
+            case "/pages/edu/lessons/tests": { return this.isAllowed('permitall') }
+            case "/pages/edu/lessons/challenges": { return this.isAllowed('challenge.manage') }
             case "/pages/edu/lessons/roomcontrol": { return this.isAllowed('education.rooms') }
             case "/pages/cranix/profile": { return this.isAllowed('permitall') }
             case "/pages/cranix/profile/myself": { return this.isAllowed('permitall') }
@@ -310,7 +330,7 @@ export class AuthenticationService {
     async showInfo() {
         const toast = this.toastController.create({
             position: "middle",
-            message: 'Copyright 2022 Helmuth and Peter Varkoly, Nuremberg Germany<br>' +
+            message: 'Copyright 2023 Helmuth and Peter Varkoly, Nuremberg Germany<br>' +
                 'VERSION-PLACE-HOLDER',
             color: "success",
             duration: 5000

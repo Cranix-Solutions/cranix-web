@@ -9,10 +9,13 @@ import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { RoomsListsPage }   from './rooms-lists.page';
 import { RoomsComponent }   from './rooms.component';
 import { AdhocComponent }  from './adhoc.component';
+import { CanActivateViaAcls } from 'src/app/services/auth-guard.service';
+import { RoomPrintersPage } from 'src/app/protected/cranix/rooms/details/printers/room-printers.page';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'rooms',
+    canActivate: [CanActivateViaAcls],
     component: RoomsListsPage,
     children: [
       {
@@ -25,13 +28,9 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'all'
+        redirectTo: 'all', pathMatch: 'full'
       }
     ]
-  },
-  {
-    path: '',
-    redirectTo: 'all'
   }
 ];
 
@@ -43,7 +42,7 @@ const routes: Routes = [
     CranixSharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [RoomsListsPage,RoomsComponent,AdhocComponent]
+  declarations: [RoomsListsPage,RoomsComponent,AdhocComponent,RoomPrintersPage]
 })
 export class RoomsListsModule { }
 

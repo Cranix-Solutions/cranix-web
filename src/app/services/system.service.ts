@@ -65,7 +65,46 @@ export class SystemService {
 	update() {
 		this.url = this.hostname + `/system/update`;
 		console.log(this.url);
-		return this.http.put(this.url, null, { headers: this.authService.headers });
+		this.objectService.requestSent();
+		let sub = this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers }).subscribe({
+			next: (val) => {
+				this.objectService.responseMessage(val);
+			},
+			error: (err) => {
+				this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
+			},
+			complete: () => { sub.unsubscribe() }
+		});
+	}
+
+	restart() {
+		this.url = this.hostname + `/system/reboot`;
+		console.log(this.url);
+		this.objectService.requestSent();
+		let sub = this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers }).subscribe({
+			next: (val) => {
+				this.objectService.responseMessage(val);
+			},
+			error: (err) => {
+				this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
+			},
+			complete: () => { sub.unsubscribe() }
+		});
+	}
+
+	shutDown() {
+		this.url = this.hostname + `/system/shutDown`;
+		console.log(this.url);
+		this.objectService.requestSent();
+		let sub = this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers }).subscribe({
+			next: (val) => {
+				this.objectService.responseMessage(val);
+			},
+			error: (err) => {
+				this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
+			},
+			complete: () => { sub.unsubscribe() }
+		});
 	}
 
 	getSystemConfiguration() {

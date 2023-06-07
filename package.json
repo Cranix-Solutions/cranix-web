@@ -25,7 +25,7 @@
     "@angular/router": "",
     "@capacitor/core": "",
     "@ionic/angular": "",
-    "@ionic/storage-angular": "^3.0.6",
+    "@ionic/storage-angular": "",
     "@ngx-translate/core": "",
     "@ngx-translate/http-loader": "",
     "ag-charts-angular": "",
@@ -34,7 +34,7 @@
     "ag-grid-community": "",
     "angular-csv-ext": "",
     "ionic-selectable": "",
-    "ngx-quill": "^16.2.1",
+    "ngx-quill": "^20.0.1",
     "rxjs": "",
     "tslib": "",
     "zone.js": ""

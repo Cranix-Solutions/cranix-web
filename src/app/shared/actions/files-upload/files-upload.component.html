@@ -16,16 +16,19 @@
   <ion-content fullscreen>
     <ion-list>
       <ion-item>
-        <ion-input type="file" multiple (change)="onFilesAdded($event)"(change)="onFilesAdded($event)">
+        <ion-input type="file" multiple (change)="onFilesAdded($event)" (change)="onFilesAdded($event)">
         </ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="start">{{'cleanUp'| translate}}</ion-label>
-        <ion-checkbox position="end" checked="true" [(ngModel)]="cleanUp" name="cleanUp"></ion-checkbox>
+        <ion-label position="start"><div innerHTML="{{'cleanUp'| translate}}"></div></ion-label>
+        <ion-checkbox position="end" [(ngModel)]="cleanUp" name="cleanUp"></ion-checkbox>
       </ion-item>
       <ion-item *ngIf="objectType == 'group'">
         <ion-label position="start">{{'studentsOnly'| translate}}</ion-label>
-        <ion-checkbox position="end" checked="true" [(ngModel)]="studentsOnly" name="studentsOnly"></ion-checkbox>
+        <ion-checkbox position="end" [(ngModel)]="studentsOnly" name="studentsOnly"></ion-checkbox>
+      </ion-item>
+      <ion-item>
+        <div innerHTML="{{'For students and guest users the will be cleaned up anyway.'| translate}}"></div>
       </ion-item>
     </ion-list>
   </ion-content>

@@ -34,13 +34,13 @@ const routes: Routes = [
         component: InstitutesManage
       },
       {
-        path: '',
+        path: '', pathMatch: 'full',
         redirectTo: 'all'
       }
     ]
   },
   {
-    path: '',
+    path: '', pathMatch: 'full',
     redirectTo: 'all'
   }
 ];

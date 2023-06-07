@@ -53,6 +53,7 @@ import { FilesCollectComponent } from 'src/app/shared/actions/files-collect/file
 import { DownloadSoftwaresComponent } from 'src/app/shared/actions/download-softwares/download-softwares.component'
 import { SetContractComponent } from 'src/app/shared/actions/set-contract/set-contract.component'
 import { SetValidityComponent } from 'src/app/shared/actions/set-validity/set-validity.component'
+import { ShowImportComponent } from 'src/app/shared/actions/show-import/show-import.component'
 import { WindowRef } from 'src/app/shared/models/ohters'
 import { CranixMdListComponent } from 'src/app/shared/cranix-md-list/cranix-md-list.component'
 @NgModule({
@@ -87,6 +88,7 @@ import { CranixMdListComponent } from 'src/app/shared/cranix-md-list/cranix-md-l
     RoomIdCellRenderer,
     SetpasswordComponent,
     SetquotaComponent,
+    ShowImportComponent,
     SoftwareEditBTNRenderer,
     SelectColumnsComponent,
     SyncObjectRenderer,
@@ -103,31 +105,7 @@ import { CranixMdListComponent } from 'src/app/shared/cranix-md-list/cranix-md-l
   imports: [
     CommonModule,
     AgChartsAngularModule,
-    AgGridModule.withComponents([
-      ApplyCheckBoxBTNRenderer,
-      ActionBTNRenderer,
-      CustomerActionRenderer,
-      DateCellRenderer,
-      DateTimeCellRenderer,
-      DeviceIdCellRenderer,
-      DeviceActionBTNRenderer,
-      EditBTNRenderer,
-      SoftwareEditBTNRenderer,
-      GroupIdCellRenderer,
-      GroupActionBTNRenderer,
-      HwconfIdCellRenderer,
-      InstituteActionCellRenderer,
-      InstituteStatusRenderer,
-      PrinterActionBTNRenderer,
-      RoomIdCellRenderer,
-      RoomActionBTNRenderer,
-      UpdateRenderer,
-      UserActionBTNRenderer,
-      UserIdCellRenderer,
-      UserIdToNameCellRenderer,
-      YesNoBTNRenderer,
-      CheckBoxBTNRenderer,
-    ]),
+    AgGridModule,
     FormsModule,
     IonicModule,
     IonicSelectableModule,

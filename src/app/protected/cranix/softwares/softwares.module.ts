@@ -35,13 +35,13 @@ const routes: Routes = [
        component: EditInstallationSetComponent
       },
       {
-        path: '',
+        path: '', pathMatch: 'full', 
         redirectTo: 'sets'
       }
     ]
   },
   {
-    path: 'softwares',
+    path: 'softwares', pathMatch: 'full', 
     redirectTo: 'sets'
   }
 ];

@@ -210,7 +210,7 @@ export class Printer {
 	acceptingJobs: boolean = false;
 	activeJobs: number = 0;
 	inventary: string = "";
-	serial: string ="";
+	serial: string = "";
 	driverFile: any = "";
 	constructor() { }
 }
@@ -311,7 +311,7 @@ export class AdHocRoom extends Room {
 	devicesProUser?: number = 1;
 	devCount: number = 0;
 	studentsOnly: boolean = false;
-	groupIds: number[]=[];
+	groupIds: number[] = [];
 	userIds?: number[] = [];
 	users?: User[] = [];
 	groups?: Group[] = [];
@@ -391,7 +391,7 @@ export class SystemConfig {
 	constructor() { }
 }
 
-export class CrxMConfig {
+export class CrxConfig {
 	id: number;
 	objectType: string;
 	objectId: number;
@@ -400,7 +400,7 @@ export class CrxMConfig {
 	constructor() { }
 }
 
-export class EduRoom{
+export class EduRoom {
 	id?: number;
 	name: string = "";
 	description: string = "";
@@ -419,33 +419,34 @@ export class EduRoom{
 	constructor() { }
 }
 
-export interface SmartRoom{
-    id?: number, 
-    name: string, 
-    description: string, 
-    validFrom?: number, 
-    validUntil?: number,
-    ownerId?: number, 
-    deviceIds?: number[],
-    hwConfIds?: number [],
-    roomIds?: number [],
-    userIds?: number [],
-    groupIds?: number [],
-    announcementIds?: number [],
-  }
+export interface SmartRoom {
+	id?: number,
+	name: string,
+	description: string,
+	validFrom?: number,
+	validUntil?: number,
+	ownerId?: number,
+	deviceIds?: number[],
+	hwConfIds?: number[],
+	roomIds?: number[],
+	userIds?: number[],
+	groupIds?: number[],
+	announcementIds?: number[],
+}
 
-export interface SmartRoomStatus{
-    userId: number, 
-    deviceId: number
+export interface SmartRoomStatus {
+	userId: number,
+	deviceId: number
 }
 
 
 export class PositivList {
 	id?: number = 0;
-    name: string = "";
-    description: string = "";
-    subject: string  = "";
-    domains: string = "";
+	name: string = "";
+	description: string = "";
+	subject: string = "";
+	domains: string = "";
+	constructor() { }
 }
 
 export interface AccessStatus {
@@ -467,4 +468,58 @@ export interface AccessStatus {
 	printing: boolean,
 	proxy: boolean,
 	pointInTime?: string
+}
+
+export class SubjectArea {
+	id: number
+	creator_id: number = 0
+	name: string = ""
+	constructor() {}
+}
+
+export class TeachingSubject {
+	id: number = 0
+	creator_id: number = 0
+	name: string = ""
+	subjectAreas: SubjectArea[] = []
+	constructor() { }
+}
+
+export class CrxQuestionAnswer {
+	id?: number
+	answer: string = ""
+	correct: boolean = false
+	constructor(answer?: string) {
+		this.answer = answer
+	}
+}
+
+export class CrxQuestion {
+	id?: number = 0;
+	question: string = ""
+	answerType: string = ""
+	value: number = 1
+	crxQuestionAnswers: CrxQuestionAnswer[] = []
+	constructor(question?: string) {
+		this.question = question;
+	}
+}
+
+export class CrxChallenge {
+	id?: number
+	creatorId: number;
+	description: string = ""
+	questions: CrxQuestion[] = []
+	groups: Group[] = []
+	users: User[] = []
+	studentsOnly?: boolean = false;
+	released: boolean = false;
+	teachingSubject: TeachingSubject
+}
+
+export class CrxChallengeAnswer {
+	id: number
+	creator_id: number = 0
+	correct: boolean = false
+	constructor() { }
 }
