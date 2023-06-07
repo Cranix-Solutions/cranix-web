@@ -72,6 +72,8 @@ export class FirewallComponent implements OnInit {
 
   segmentChanged(event) {
     this.segment = event.detail.value;
+    this.remoteSelected = null
+    this.outSelected = null
   }
 
   addIncomingService(){
@@ -140,15 +142,24 @@ export class FirewallComponent implements OnInit {
    * Delets a rule
    */
   deleteRemoteRule() {
+    if( !this.remoteSelected ) {
+      return;
+    }
+    for (let rule of this.remoteSelected ) {
+      this.securityService.deleteRemoteRule(rule);
+    }
+    /*
     let newRules: RemoteRule[] = [];
     for (let rule of this.securityService.remoteRules) {
       if (this.remoteSelected.indexOf(rule) == -1) {
         newRules.push(rule);
+      } else {
+        this.securityService.deleteRemoteRule(rule);
       }
     }
     this.authService.log(newRules);
     this.securityService.remoteRules = newRules;
-    this.remoteApi.setRowData(newRules);
+    this.remoteApi.setRowData(newRules);*/
   }
   restartFirewall() {
     this.securityService.setFirewallStatus('restart')
