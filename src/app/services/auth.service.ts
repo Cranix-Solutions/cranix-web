@@ -338,4 +338,3 @@ export class AuthenticationService {
         (await toast).present();
     }
 }
-
