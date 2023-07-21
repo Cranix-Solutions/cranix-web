@@ -1,7 +1,8 @@
-import { Component, Input, OnInit, AfterContentInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/auth.service';
-import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { ChallengesService } from 'src/app/services/challenges.service';
 import { CrxObjectService } from 'src/app/services/crx-object-service';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -23,9 +24,10 @@ export class CranixMdListComponent implements OnInit {
   @Input() context;
   constructor(
     public authService: AuthenticationService,
-    public objectService: GenericObjectService,
+    private challengeService: ChallengesService,
     public crxObjectService: CrxObjectService,
-    public languageS: LanguageService,
+    public languageService: LanguageService,
+    public objectService: GenericObjectService,
     public utilService: UtilsService
   ) {
     this.authService.log("CranixMdListComponent constructor was called")
@@ -36,7 +38,7 @@ export class CranixMdListComponent implements OnInit {
     this.subjectChanged(null)
     console.log("CranixMdListComponent ngAfterContentInit")
   }
-  
+
   async ngOnInit() {
     this.objectService.selection = []
     this.objectService.selectedIds = []
@@ -186,7 +188,7 @@ export class CranixMdListComponent implements OnInit {
           if (
             obj.name.toLowerCase().indexOf(filter) != -1 ||
             obj.description.toLowerCase().indexOf(filter) != -1 ||
-            this.languageS.trans(obj.groupType).toLowerCase().indexOf(filter) != -1
+            this.languageService.trans(obj.groupType).toLowerCase().indexOf(filter) != -1
           ) {
             this.rowData.push(obj)
           }
@@ -221,8 +223,8 @@ export class CranixMdListComponent implements OnInit {
           if (
             obj.name.toLowerCase().indexOf(filter) != -1 ||
             obj.description.toLowerCase().indexOf(filter) != -1 ||
-            this.languageS.trans(obj.roomType).toLowerCase().indexOf(filter) != -1 ||
-            this.languageS.trans(obj.roomControl).toLowerCase().indexOf(filter) != -1
+            this.languageService.trans(obj.roomType).toLowerCase().indexOf(filter) != -1 ||
+            this.languageService.trans(obj.roomControl).toLowerCase().indexOf(filter) != -1
           ) {
             this.rowData.push(obj)
           }
@@ -235,7 +237,7 @@ export class CranixMdListComponent implements OnInit {
             obj.uid.toLowerCase().indexOf(filter) != -1 ||
             obj.givenName.toLowerCase().indexOf(filter) != -1 ||
             obj.surName.toLowerCase().indexOf(filter) != -1 ||
-            this.languageS.trans(obj.role).toLowerCase().indexOf(filter) != -1
+            this.languageService.trans(obj.role).toLowerCase().indexOf(filter) != -1
           ) {
             this.rowData.push(obj)
           }
@@ -281,5 +283,23 @@ export class CranixMdListComponent implements OnInit {
     if (this.context.componentParent.subjectChanged && this.authService.selectedTeachingSubject) {
       this.context.componentParent.subjectChanged(this.authService.selectedTeachingSubject.id)
     }
+  }
+
+  getCephalixChallenges() {
+    if(!this.authService.selectedTeachingSubject){
+      this.objectService.warningMessage(this.languageService.trans("Select one teaching subject"))
+      return
+    }
+
+    this.objectService.warningMessage(
+      this.languageService.trans("Check all questions and answers for accuracy! We do not guarantee that the solutions are correct.")
+    )
+    this.challengeService.getChallengesFromCephalix(this.authService.selectedTeachingSubject).subscribe({
+      next: (val) => {
+        this.rowData = val
+        console.log(this.rowData)
+      },
+      error: (error) => { this.objectService.errorMessage(error)}
+    })
   }
 }

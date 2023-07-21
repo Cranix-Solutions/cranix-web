@@ -24,6 +24,7 @@ export class CrxObjectService {
         this.http.get<TeachingSubject[]>(url, { headers: this.authService.headers }).subscribe(
             (val1) => {
                 this.subjects = val1
+                console.log("TEACHING SUBJECTS")
                 console.log(val1)
             }
         )

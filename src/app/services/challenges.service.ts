@@ -7,7 +7,7 @@ import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 import { CrxObjectService } from './crx-object-service';
 import { ServerResponse } from 'src/app/shared/models/server-models';
-import { CrxChallenge, CrxQuestion } from '../shared/models/data-model';
+import { CrxChallenge, CrxQuestion, TeachingSubject } from '../shared/models/data-model';
 import { LanguageService } from './language.service';
 
 @Injectable({
@@ -21,8 +21,7 @@ export class ChallengesService {
   constructor(
     private http: HttpClient,
     private utilsS: UtilsService,
-    private authService: AuthenticationService,
-    private crxObjectService: CrxObjectService) {
+    private authService: AuthenticationService) {
     this.hostname = this.utilsS.hostName();
   }
 
@@ -92,6 +91,21 @@ export class ChallengesService {
   downloadArchive(challengeId: number, dateString: string) {
     let url = this.hostname + `/challenges/${challengeId}/archives/${dateString}`
     return this.http.get(url, { headers: this.authService.anyHeaders, observe : 'response', responseType: 'blob' })
+  }
+
+  getChallengesFromCephalix(subject: TeachingSubject) {
+    let url = this.hostname + '/challenges/cephalix/get'
+    return this.http.post<any[]>(url, subject, { headers: this.authService.headers })
+  }
+
+  getQuestionsFromCephalix(subject: TeachingSubject) {
+    let url = this.hostname + '/challenges/cephalix/getQuestions'
+    return this.http.post<any[]>(url, subject, { headers: this.authService.headers })
+  }
+
+  addChallengeToCephalix(challenge: CrxChallenge) {
+    let url = this.hostname + "/challenges/cephalix/add"
+    return this.http.post<ServerResponse>(url, challenge, { headers: this.authService.headers })
   }
 }
 

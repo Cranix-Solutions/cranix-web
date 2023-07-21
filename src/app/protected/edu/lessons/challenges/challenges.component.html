@@ -39,8 +39,9 @@
   <ion-list>
     <ion-item>
       <ion-label>{{'Groups' | translate}}:</ion-label>
-      <ionic-selectable item-content [(ngModel)]="challengeToAssign.groups" [items]="objectService.allObjects['group']"
-        itemValueField="id" itemTextField="description" [canSearch]="true" [isMultiple]="true">
+      <ionic-selectable id="selectGroup" [(ngModel)]="challengeToAssign.groups"
+        [items]="objectService.allObjects['group']" itemValueField="id" itemTextField="description" [canSearch]="true"
+        [isMultiple]="true">
         <ng-template ionicSelectableCloseButtonTemplate>
           <ion-icon name="close" color="danger"></ion-icon>
         </ng-template>
@@ -75,9 +76,12 @@
     <div *ngIf="selectedChallenge.released && selectedChallenge.users.length">
       {{objectService.formatUsers(selectedChallenge.users)}}</div>
     <ion-label>{{'teachingSubject'|translate}}:</ion-label>
-    <ionic-selectable [(ngModel)]="selectedChallenge.teachingSubject" [items]="crxObjectService.subjects"
-      itemValueField="id" itemTextField="name" [canSearch]="true" (onChange)="subjectChanged(selectedChallenge.teachingSubject.id)">
-      <ng-template ionicSelectableCloseButtonTemplate><ion-icon name="close" color="danger"></ion-icon></ng-template>
+    <ionic-selectable id="selectTeachingSubject" [(ngModel)]="selectedChallenge.teachingSubject"
+      [items]="crxObjectService.subjects" itemValueField="id" itemTextField="name" [canSearch]="true"
+      (onChange)="getQuestionsFromServer()">
+      <ng-template ionicSelectableCloseButtonTemplate>
+        <ion-icon name="close" color="danger"></ion-icon>
+      </ng-template>
       <ng-template ionicSelectablePlaceholderTemplate>{{'select'|translate}}</ng-template>
     </ionic-selectable>
   </ion-item>
@@ -99,7 +103,8 @@
       </ng-template>
     </ion-popover>
     <ion-button *ngIf="!selectedChallenge.released" size="small" fill="solid" (click)="save()"
-      matTooltip="{{'Save challenge' | translate }}" [disabled]="!selectedChallenge.description || !selectedChallenge.teachingSubject">
+      matTooltip="{{'Save changes' | translate }}"
+      [disabled]="!selectedChallenge.description || !selectedChallenge.teachingSubject">
       <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
     </ion-button>
     <ion-button *ngIf="!selectedChallenge.released" fill="solid" (click)="assign(selectedChallenge)"
@@ -111,15 +116,19 @@
       <ion-icon slot="icon-only" name="stop-circle-outline" color="danger"></ion-icon>
     </ion-button>
     <ion-button *ngIf="selectedChallenge.released" size="small" fill="solid" (click)="evaluate()"
-      matTooltip="{{'Show results' | translate }}">
+      matTooltip="{{'Show actual results' | translate }}">
       <ion-icon slot="icon-only" name="settings" color="success"></ion-icon>
     </ion-button>
     <ion-button id="getArchive" size="small" fill="solid" (click)="getArchives(selectedChallenge.id)"
       matTooltip="{{'Manage the archived results of this challenge.' | translate }}">
       <ion-icon slot="icon-only" name="archive"></ion-icon>
     </ion-button>
+    <ion-button *ngIf="!selectedChallenge.released" fill="solid" (click)="ass(selectedChallenge)"
+      matTooltip="{{'Upload the test to CEPHALIX Server.'|translate}}">
+      <img src="assets/images/logo/cranix_school.svg" style="height: 32px; width: 32px;">
+    </ion-button>
     <ion-button *ngIf="!selectedChallenge.released" size="small" fill="solid"
-      (click)="deleteChallenge(selectedChallenge.id)" matTooltip="{{'Delete challenge' | translate }}">
+      (click)="deleteChallenge(selectedChallenge.id)" matTooltip="{{'Delete' | translate }}">
       <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
     </ion-button>
   </ion-buttons>
@@ -152,7 +161,8 @@
     </ion-item>
     <ion-item *ngIf="questionToEdit != i" style="background-color: lightgray;" [disabled]="selectedChallenge.released">
       <div class="counter"><b>{{i+1}}.</b></div>
-      <quill-view-html [content]="question.question" (click)="toggleEditQuestion(i)" style="min-width: 200px;"></quill-view-html>
+      <quill-view-html [content]="question.question" (click)="toggleEditQuestion(i)" style="min-width: 200px;">
+      </quill-view-html>
       <!-- div [innerHTML]="question.question" (click)="toggleEditQuestion(i)"></div -->
       <ion-label slot="end">{{ 'value' | translate }}:</ion-label>
       <ion-input slot="end" style="max-width: 40px; margin-right: 10px;" [(ngModel)]="question.value" type="number"
@@ -190,7 +200,8 @@
         [type]="question.answerType == 'One' ? 'radio' : 'checkbox'" name="answer-{{i}}" [value]="answer.answer"
         [checked]="answer.correct" (click)="toggle(i, j)">
       <div *ngIf="answerToEdit != i + '-' + j" [innerHTML]="answer.answer" (click)="toggleEditAnswer(i,j)"></div>
-      <div *ngIf="answerToEdit != i + '-' + j && !answer.answer" (click)="toggleEditAnswer(i,j)">{{'Answer text.'|translate}}</div>
+      <div *ngIf="answerToEdit != i + '-' + j && !answer.answer" (click)="toggleEditAnswer(i,j)">{{'Answer
+        text.'|translate}}</div>
       <ion-button *ngIf="answerToEdit != i + '-' + j" slot="end" size="small" fill="clear" (click)="deleteAnswer(i,j)">
         <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
       </ion-button>
@@ -203,41 +214,90 @@
     </ion-item>
   </div>
   <ion-item *ngIf="!selectedChallenge.released" style="color: green; background-color: lightgray;">
-    <b style="margin-right: 10px;">{{ 'New question' | translate }}:</b>
-    <i>{{'Type' | translate}}:</i>
-    <ion-select [(ngModel)]="answerType" style="max-width: 200px; margin: 10px; color: black;">
-      <ion-select-option value="One">{{'One right answer'|translate}}</ion-select-option>
-      <ion-select-option value="Multiple">{{'More right answers'|translate}}</ion-select-option>
-    </ion-select>
-    <i>{{ 'value' | translate }}:</i>
-    <ion-input style="min-width:50px; max-width: 50px; margin: 10px; color: black;" [(ngModel)]="questionValue"
-      type="number" min="1"></ion-input>
-    <ion-button size="small" fill="clear" (click)="addNewQuestion()">
+    <ion-label>{{ 'New question' | translate }}</ion-label>
+    <ion-button slot="end" size="small" fill="clear" (click)="modalAddNewQuestionIsOpen = true">
       <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
     </ion-button>
-    <ionic-selectable style="background-color: aqua; color: black;" [(ngModel)]="questionToAdd" [items]="questions"
-      itemValueField="id" itemTextField="question" [canSearch]="true" (onChange)="addNewQuestion()">
-      <ng-template ionicSelectableCloseButtonTemplate><ion-icon name="close" color="danger"></ion-icon></ng-template>
-      <ng-template ionicSelectablePlaceholderTemplate>{{'List of questions'|translate}}</ng-template>
-      <ng-template ionicSelectableItemIconTemplate let-port="item"></ng-template>
-      <ng-template ionicSelectableItemTemplate let-port="item" let-isPortSelected="isItemSelected">
-        <ion-icon *ngIf="port.id != 0"
-          [name]="port.answerType == 'One' ? 'radio-button-off' : 'stop-outline'"></ion-icon>
-        <div *ngIf="port.id != 0" [innerHTML]="port.question"></div>
-      </ng-template>
-      <ng-template ionicSelectableValueTemplate>{{'List of questions'|translate}}</ng-template>
-    </ionic-selectable>
   </ion-item>
 </ion-content>
 <!-- modal available on more pages -->
+<ion-modal #modalAddNewQuestion [isOpen]="modalAddNewQuestionIsOpen">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>{{'New question' | translate }}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="modalAddNewQuestionIsOpen = false">
+            <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
+          </ion-button>
+          <ion-button (click)="addNewQuestion()">
+            <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ion-list>
+        <ion-item>
+          <ion-label position="stacked">{{'Type' | translate}}:</ion-label>
+          <ion-select [(ngModel)]="answerType" style="max-width: 200px; margin: 10px; color: black;">
+            <ion-select-option value="One">{{'One right answer'|translate}}</ion-select-option>
+            <ion-select-option value="Multiple">{{'More right answers'|translate}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">{{ 'value' | translate }}:</ion-label>
+          <ion-input [(ngModel)]="questionValue" type="number" min="1"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">{{"Select from existing questions!"|translate}}:</ion-label>
+          <ionic-selectable #selectQuestions [(ngModel)]="questionsToAdd" [items]="questions" itemValueField="id"
+            itemTextField="question" [canSearch]="true" [isMultiple]="true" (onChange)="addQuestions()">
+            <ng-template ionicSelectableHeaderTemplate>
+              <ion-toolbar>
+                <ion-title>
+                  {{ questionListPlaceHolder | translate }}<br>
+                  {{ 'Select one or more questions!' | translate}}
+                </ion-title>
+                <ion-buttons slot="end">
+                  <ion-button ion-button (click)="selectQuestions.close()">
+                    <ion-icon color="danger" name="close"></ion-icon>
+                  </ion-button>
+                  <ion-button *ngIf="questionListPlaceHolder.indexOf('CEPHALIX') == -1" size="small" fill="solid" (click)="getQuestionsFromCephalix()"
+                    matTooltip="{{'Get challenge questions from CEPHALIX server to the selected subject.' | translate }}">
+                    <img src="assets/images/logo/cranix_school.svg" style="height: 32px; width: 32px;">
+                  </ion-button>
+                  <ion-button *ngIf="questionListPlaceHolder.indexOf('CEPHALIX') != -1" size="small" fill="solid" (click)="getQuestionsFromServer()"
+                    matTooltip="{{'Get challenge questions from your server to the selected subject.' | translate }}">
+                    <ion-icon slot="icon-only" name="download" color="success"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ion-toolbar>
+            </ng-template>
+            <ng-template ionicSelectablePlaceholderTemplate>{{questionListPlaceHolder|translate}}</ng-template>
+            <ng-template ionicSelectableItemIconTemplate let-port="item"></ng-template>
+            <ng-template ionicSelectableItemTemplate let-port="item" let-isPortSelected="isItemSelected">
+              <ion-icon *ngIf="port.answerType == 'One'"
+                [name]="isPortSelected ? 'checkmark-circle-outline' : 'radio-button-off'"></ion-icon>
+              <ion-icon *ngIf="port.answerType != 'One'" [name]="isPortSelected ? 'checkbox-outline' : 'stop-outline'">
+              </ion-icon>
+              <div *ngIf="port.id != 0" [innerHTML]="port.question"></div>
+            </ng-template>
+            <ng-template ionicSelectableValueTemplate></ng-template>
+          </ionic-selectable>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ng-template>
+</ion-modal>
 <ion-modal #modalGetArchive [isOpen]="modalGetArchiveIsOpen">
   <ng-template>
     <ion-header>
       <ion-toolbar>
         <ion-title>{{'Select the archive to download.' | translate }}</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="modalGetArchiveIsOpen = false"><ion-icon slot="icon-only" name="close"
-              color="danger"></ion-icon>
+          <ion-button (click)="modalGetArchiveIsOpen = false">
+            <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
           </ion-button>
           <ion-button (click)="downloadArchive()">
             <ion-icon slot="icon-only" name="download" color="success"></ion-icon>
@@ -262,8 +322,8 @@
     </ion-toolbar>
     <ion-toolbar>
       <ion-buttons slot="end">
-        <ion-button size="small" fill="clear"
-          (click)="popoverDeleteChallengeIsOpen=false; challengeToDelete=null;">{{'Abort'|translate}}</ion-button>
+        <ion-button size="small" fill="clear" (click)="popoverDeleteChallengeIsOpen=false; challengeToDelete=null;">
+          {{'Abort'|translate}}</ion-button>
         <ion-button size="small" fill="clear" (click)="deleteChallenge(null)">{{'Remove'|translate}}</ion-button>
       </ion-buttons>
     </ion-toolbar>
