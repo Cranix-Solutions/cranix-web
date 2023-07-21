@@ -126,7 +126,7 @@
         matTooltip="{{'Manage the archived results of this challenge.' | translate }}">
         <ion-icon slot="icon-only" name="archive"></ion-icon>
       </ion-button>
-      <ion-button *ngIf="!selectedChallenge.released" fill="solid" (click)="ass(selectedChallenge)"
+      <ion-button *ngIf="!selectedChallenge.released" fill="solid" (click)="uploadChallengeToCephalix()"
         matTooltip="{{'Upload the test to CEPHALIX Server.'|translate}}">
         <img src="assets/images/logo/cranix_school.svg" style="height: 32px; width: 32px;">
       </ion-button>
@@ -164,7 +164,7 @@
         matTooltip="{{'Manage the archived results of this challenge.' | translate }}">
         <ion-icon name="archive"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button *ngIf="!selectedChallenge.released" fill="solid" (click)="ass(selectedChallenge)"
+      <ion-fab-button *ngIf="!selectedChallenge.released" fill="solid" (click)="uploadChallengeToCephalix()"
         matTooltip="{{'Upload the test to CEPHALIX Server.'|translate}}">
         <img src="assets/images/logo/cranix_school.svg" style="height: 32px; width: 32px;">
       </ion-fab-button>
