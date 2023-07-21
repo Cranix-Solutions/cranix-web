@@ -2,7 +2,7 @@ import { ChallengesService } from 'src/app/services/challenges.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CrxChallenge, CrxQuestion, CrxQuestionAnswer } from 'src/app/shared/models/data-model';
+import { CrxChallenge, CrxQuestion, CrxQuestionAnswer, TeachingSubject } from 'src/app/shared/models/data-model';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { CrxObjectService } from 'src/app/services/crx-object-service';
@@ -70,6 +70,11 @@ export class ChallengesComponent implements OnInit {
     }
   }
 
+  changeTeachingSubject(){
+    this.authService.selectedTeachingSubject = this.selectedChallenge.teachingSubject
+    this.getQuestionsFromServer()
+  }
+  
   private cleanUpIds(){
     for (let i = 0; i < this.selectedChallenge.questions.length; i++) {
       this.selectedChallenge.questions[i].id = null;
