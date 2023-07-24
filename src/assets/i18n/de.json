@@ -1,6 +1,4 @@
 {
-    "Insert new own question":"Neue eigene Frage einfügen",
-    "Insert existing questions":"Vorhandene Fragen einfügen",
     "%s ( %s %s ) was created with password '%s'": "%s ( %s %s ) wurde mit dem Passwort '%s' angelegt.",
     "%s was created successfully.": "%s wurde erfolgreich erstellt.",
     "%s was deleted successfully.": "%s wurde erfolgreich gelöscht.",
@@ -185,6 +183,8 @@
     "Import was stopped.": "Import wurde angehalten",
     "Incoming rules": "Eingehende Regeln",
     "Informations": "Informationen",
+    "Insert existing questions": "Vorhandene Fragen einfügen",
+    "Insert new own question": "Neue eigene Frage einfügen",
     "Installation Status": "Installationstatus",
     "Installation sets": "Installationssets",
     "Institutes": "Institutionen",
