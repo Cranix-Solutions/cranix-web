@@ -1,4 +1,6 @@
 {
+    "Insert new own question":"Neue eigene Frage einfügen",
+    "Insert existing questions":"Vorhandene Fragen einfügen",
     "%s ( %s %s ) was created with password '%s'": "%s ( %s %s ) wurde mit dem Passwort '%s' angelegt.",
     "%s was created successfully.": "%s wurde erfolgreich erstellt.",
     "%s was deleted successfully.": "%s wurde erfolgreich gelöscht.",
