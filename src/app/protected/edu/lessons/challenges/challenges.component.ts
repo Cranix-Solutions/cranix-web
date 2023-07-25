@@ -55,9 +55,7 @@ export class ChallengesComponent implements OnInit {
     this.context = { componentParent: this };
   }
 
-  ngOnInit() {
-    this.getQuestionsFromServer();
-  }
+  ngOnInit() {}
 
   getQuestionsFromServer() {
     if (this.authService.selectedTeachingSubject) {
@@ -147,6 +145,13 @@ export class ChallengesComponent implements OnInit {
     console.log(data)
   }
 
+  openModalAddNewQuestion(){
+    if(!this.questions || this.questions.length == 0){
+      console.log("openModalAddNewQuestion no questions")
+      this.getQuestionsFromServer()
+    }
+    this.modalAddNewQuestionIsOpen = true
+  }
   toggle(i, j) {
     let correct = this.selectedChallenge.questions[i].crxQuestionAnswers[j].correct;
     if (this.selectedChallenge.questions[i].answerType == "One") {

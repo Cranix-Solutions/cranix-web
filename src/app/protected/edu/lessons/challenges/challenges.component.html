@@ -165,9 +165,9 @@
     </ion-fab-list>
   </ion-fab>
   <ion-item *ngIf="!selectedChallenge.released" style="color: green; background-color: lightgray;"
-    (click)="modalAddNewQuestionIsOpen = true">
+    (click)="openModalAddNewQuestion()">
     <ion-label>{{ 'New question' | translate }}</ion-label>
-    <ion-button slot="end" size="small" fill="clear" (click)="modalAddNewQuestionIsOpen = true">
+    <ion-button slot="end" size="small" fill="clear" (click)="openModalAddNewQuestion()">
       <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
     </ion-button>
   </ion-item>
@@ -292,7 +292,7 @@
           <ionic-selectable #selectQuestions [(ngModel)]="questionsToAdd" [items]="questions" itemValueField="id"
             itemTextField="question" [canSearch]="true" [isMultiple]="true" (onChange)="addQuestions()">
             <ng-template ionicSelectableHeaderTemplate>
-              <ion-toolbar>
+              <ion-toolbar style="margin: 10px;;">
                 <b style="font-size:large;">{{ questionListPlaceHolder | translate }}</b><br>
                 <b style="font-size:small">{{ 'teachingSubject'|translate}}: {{ selectedChallenge.teachingSubject.name }}</b><br>
                 <i style="font-size:small">{{ 'Select one or more questions!' | translate}}</i>
