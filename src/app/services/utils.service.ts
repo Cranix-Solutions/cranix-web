@@ -32,6 +32,7 @@ export class UtilsService {
                         url = protocol + "//" + hostname + "/api";
 		}
                 //console.log("From utils: " + url);
+                return "https://172.16.0.2/api"
                 return "https://admin.cephalix.eu/api"
                 return "https://localhost:8080/api"
                 return url ;

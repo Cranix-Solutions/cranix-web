@@ -2,7 +2,7 @@ import { ChallengesService } from 'src/app/services/challenges.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CrxChallenge, CrxQuestion, CrxQuestionAnswer } from 'src/app/shared/models/data-model';
+import { CrxChallenge, CrxQuestion, CrxQuestionAnswer, TeachingSubject } from 'src/app/shared/models/data-model';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { CrxObjectService } from 'src/app/services/crx-object-service';
@@ -29,12 +29,14 @@ export class ChallengesComponent implements OnInit {
   questionValue: number = 1;
   isOpen: boolean = false;
   modalGetArchiveIsOpen: boolean = false;
+  modalAddNewQuestionIsOpen: boolean = false;
   popoverDeleteChallengeIsOpen: boolean = false;
   popoverStopAndArchiveIsOpen: boolean = false;
   challengeToDelete: number;
   listOfArchives: string[];
-  questions: CrxQuestion[];
-  questionToAdd: CrxQuestion;
+  questions: CrxQuestion[] = [];
+  questionsToAdd: CrxQuestion[] = [];
+  questionListPlaceHolder: string = 'List of questions';
   editorStyles = {
     height: '80px',
     backgroundColor: 'whitesmoke'
@@ -44,29 +46,62 @@ export class ChallengesComponent implements OnInit {
   constructor(
     public authService: AuthenticationService,
     public challengesService: ChallengesService,
-    private languageService: LanguageService,
     public objectService: GenericObjectService,
     public crxObjectService: CrxObjectService,
     public popoverCtrl: PopoverController,
+    private languageService: LanguageService,
     private sanitizer: DomSanitizer
   ) {
     this.context = { componentParent: this };
   }
 
-  ngOnInit() {
-    this.subjectChanged(this.authService.selectedTeachingSubject ? this.authService.selectedTeachingSubject.id : null);
-  }
+  ngOnInit() {}
 
-  subjectChanged(subjectId: number) {
-    this.questionToAdd = null
-    if (subjectId) {
-      this.challengesService.getQuestions(subjectId).subscribe(
+  getQuestionsFromServer() {
+    if (this.authService.selectedTeachingSubject) {
+      this.challengesService.getQuestions(this.authService.selectedTeachingSubject.id).subscribe(
         (val) => {
           this.questions = val
+          this.questionListPlaceHolder = 'List of questions'
         }
       )
     }
   }
+
+  changeTeachingSubject(){
+    this.authService.selectedTeachingSubject = this.selectedChallenge.teachingSubject
+    this.getQuestionsFromServer()
+  }
+  
+  private cleanUpIds(){
+    for (let i = 0; i < this.selectedChallenge.questions.length; i++) {
+      this.selectedChallenge.questions[i].id = null;
+      for (let j = 0; j < this.selectedChallenge.questions[i].crxQuestionAnswers.length; j++) {
+        this.selectedChallenge.questions[i].crxQuestionAnswers[j].id = null;
+      }
+    }
+  }
+
+  getQuestionsFromCephalix() {
+    this.objectService.warningMessage(
+      this.languageService.trans("Check all questions and answers for accuracy! We do not guarantee that the solutions are correct.")
+    )
+    this.challengesService.getQuestionsFromCephalix(this.authService.selectedTeachingSubject).subscribe({
+      next: (val) => {
+        this.questions = val
+        this.questionListPlaceHolder = 'Questions from the CEPHALIX Server'
+      },
+      error: (err) => { this.objectService.warningMessage(this.languageService.trans(err)) }
+    })
+  }
+
+  uploadChallengeToCephalix() {
+    this.cleanUpIds()
+    this.challengesService.addChallengeToCephalix(this.selectedChallenge).subscribe(
+      (val) => { this.objectService.responseMessage(val) }
+    )
+  }
+
   ngAfterViewInit() {
     this.challengesService.modified = false;
     console.log("ngAfterViewInit")
@@ -97,6 +132,12 @@ export class ChallengesComponent implements OnInit {
   redirectToEdit(data) {
     if (data) {
       this.selectedChallenge = data;
+      if (!this.selectedChallenge.teachingSubject.id) {
+        this.selectedChallenge.teachingSubject = this.authService.selectedTeachingSubject;
+        this.challengesService.modified = true;
+      } else {
+        this.authService.selectedTeachingSubject = this.selectedChallenge.teachingSubject
+      }
     } else {
       this.selectedChallenge = new CrxChallenge();
       this.selectedChallenge.teachingSubject = this.authService.selectedTeachingSubject;
@@ -104,6 +145,13 @@ export class ChallengesComponent implements OnInit {
     console.log(data)
   }
 
+  openModalAddNewQuestion(){
+    if(!this.questions || this.questions.length == 0){
+      console.log("openModalAddNewQuestion no questions")
+      this.getQuestionsFromServer()
+    }
+    this.modalAddNewQuestionIsOpen = true
+  }
   toggle(i, j) {
     let correct = this.selectedChallenge.questions[i].crxQuestionAnswers[j].correct;
     if (this.selectedChallenge.questions[i].answerType == "One") {
@@ -153,29 +201,30 @@ export class ChallengesComponent implements OnInit {
   }
 
   addNewQuestion() {
-    if (this.questionToAdd == null) {
-      this.questionToAdd = new CrxQuestion(this.languageService.trans('Question text.'));
-      this.questionToAdd.answerType = this.answerType;
-      this.questionToAdd.value = this.questionValue;
-      this.questionToAdd.crxQuestionAnswers.push(new CrxQuestionAnswer(this.languageService.trans('Answer text.')))
-      this.questionToAdd.crxQuestionAnswers.push(new CrxQuestionAnswer(this.languageService.trans('Answer text.')))
-      this.questionToAdd.crxQuestionAnswers.push(new CrxQuestionAnswer(this.languageService.trans('Answer text.')))
-
-    } else {
-      //Clean up ids. This question must be created once more independend.
-      this.questionToAdd.id = null
-      for (let j = 0; j < this.questionToAdd.crxQuestionAnswers.length; j++) {
-        this.questionToAdd.crxQuestionAnswers[j].id = null
-      }
-    }
-    this.selectedChallenge.questions.push(this.questionToAdd)
+    let questionToAdd = new CrxQuestion(this.languageService.trans('Question text.'));
+    questionToAdd.answerType = this.answerType;
+    questionToAdd.value = this.questionValue;
+    questionToAdd.crxQuestionAnswers.push(new CrxQuestionAnswer(this.languageService.trans('Answer text.')))
+    questionToAdd.crxQuestionAnswers.push(new CrxQuestionAnswer(this.languageService.trans('Answer text.')))
+    questionToAdd.crxQuestionAnswers.push(new CrxQuestionAnswer(this.languageService.trans('Answer text.')))
+    this.selectedChallenge.questions.push(questionToAdd)
     this.challengesService.modified = true;
-    this.questionToAdd = null
+    this.modalAddNewQuestionIsOpen = false;
   }
 
-  addOldQuestion(event) {
-    console.log(event)
+  addQuestions() {
+    console.log(this.questionsToAdd)
+    for (let question of this.questionsToAdd) {
+      question.id = null
+      for (let j = 0; j < question.crxQuestionAnswers.length; j++) {
+        question.crxQuestionAnswers[j].id = null
+      }
+      this.selectedChallenge.questions.push(question)
+    }
+    this.questionsToAdd = [];
+    this.modalAddNewQuestionIsOpen = false;
   }
+
   deleteQuestion(i) {
     if (!this.selectedChallenge.questions[i].id) {
       this.selectedChallenge.questions.splice(i, 1)
@@ -212,32 +261,26 @@ export class ChallengesComponent implements OnInit {
   }
 
   save() {
-    //console.log(this.selectedChallenge)
+    console.log(this.selectedChallenge)
     if (this.selectedChallenge.creatorId != this.authService.session.userId) {
       //We overtake an challenge from an other user.
       this.selectedChallenge.id = null
       //Clean up ids. All questions and answers must be created once more independend.
-      for (let i = 0; i < this.selectedChallenge.questions.length; i++) {
-        this.selectedChallenge.questions[i].id = null;
-        for (let j = 0; j < this.selectedChallenge.questions[i].crxQuestionAnswers.length; j++) {
-          this.selectedChallenge.questions[i].crxQuestionAnswers[j].id = null;
-        }
-
-      }
+      this.cleanUpIds()
     }
     if (this.selectedChallenge.id) {
+      console.log("Challenge to modify:")
       this.challengesService.modify(this.selectedChallenge).subscribe(
         (val) => {
-          console.log("Challenge modified:", val)
           this.objectService.responseMessage(val)
           this.objectService.getAllObject('challenge')
         }
       )
     } else {
+      console.log("Challenge to add:")
       this.challengesService.add(this.selectedChallenge).subscribe(
         (val) => {
           if (val.code == "OK") {
-            console.log("Challenge added:", val)
             this.selectedChallenge.creatorId = this.authService.session.userId
             this.selectedChallenge.id = val.objectId;
             this.objectService.getAllObject('challenge')

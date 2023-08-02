@@ -18,6 +18,10 @@
       matTooltip="{{'Apply actions on the selected objects' | translate }}">
       <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
     </ion-button>
+    <ion-button *ngIf="objectType == 'challenge'" size="small" fill="solid" (click)="getCephalixChallenges()"
+      matTooltip="{{'Get challenges from CEPHALIX server to the selected subject.' | translate }}">
+      <img src="assets/images/logo/cranix_school.svg" style="height: 32px; width: 32px;">
+    </ion-button>
   </ion-buttons>
 </ion-toolbar>
 <ion-item *ngIf="authService.isMD()">
@@ -53,6 +57,10 @@
     </ion-fab-button>
     <ion-fab-button *ngIf="objectType != 'printer'" (click)="context.componentParent.redirectToEdit(null)">
       <ion-icon name="add-circle"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button *ngIf="objectType == 'challenge'" size="small" fill="solid" (click)="getCephalixChallenges()"
+      matTooltip="{{'Get challenges from CEPHALIX server to the selected subject.' | translate }}">
+      <img src="assets/images/logo/cranix_school.svg" style="height: 32px; width: 32px;">
     </ion-fab-button>
   </ion-fab-list>
 </ion-fab>

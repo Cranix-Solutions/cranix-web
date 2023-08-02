@@ -38,7 +38,7 @@ export class HwconfsPage implements OnInit {
     public objectService: GenericObjectService,
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
-    private route: Router,
+    public route: Router,
     private storage: Storage
   ) {
     this.context = { componentParent: this };
@@ -157,7 +157,8 @@ export class HwconfsPage implements OnInit {
   async redirectToEdit(hwconf: Hwconf) {
     if (hwconf) {
       this.objectService.selectedObject = hwconf;
-      this.route.navigate(['/pages/cranix/hwconfs/' + hwconf.id]);
+      let err = this.route.navigate(['/pages/cranix/hwconfs/' + hwconf.id]);
+      console.log(err)
     } else {
       const modal = await this.modalCtrl.create({
         component: ObjectsEditComponent,

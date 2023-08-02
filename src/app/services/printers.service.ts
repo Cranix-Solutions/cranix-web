@@ -49,9 +49,9 @@ export class PrintersService {
 		switch (what) {
 			case 'acceptingJobs': {
 				if (yesno) {
-					this.url = this.url + 'disable';
-				} else {
 					this.url = this.url + 'enable';
+				} else {
+					this.url = this.url + 'disable';
 				}
 				break;
 			}
@@ -59,6 +59,7 @@ export class PrintersService {
 				this.url = this.url + 'activateWindowsDriver';
 			}
 		}
+		//console.log(`PrintersService ${id} ${what} ${yesno} ${this.url}`)
 		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
 	}
 }
