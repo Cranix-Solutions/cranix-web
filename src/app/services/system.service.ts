@@ -180,11 +180,11 @@ export class SystemService {
 			next: (addons) => {
 				this.addons = addons;
 				for (let addon of this.addons) {
-					this.http.get<string[]>(this.url + `/${addon}/listActions`, { headers: this.authService.headers }).subscribe(
-						(actions) => { this.addonActions[addon] = actions }
+					this.http.get(this.url + `/${addon}/listActions`, { headers: this.authService.textHeaders, responseType: "text" }).subscribe(
+						(actions) => { this.addonActions[addon] = actions.split(" ") }
 					);
-					this.http.get<string[]>(this.url + `/${addon}/listKeys`, { headers: this.authService.headers }).subscribe({
-						next: (keys) => { this.addonKeys[addon] = keys },
+					this.http.get(this.url + `/${addon}/listKeys`, { headers: this.authService.textHeaders, responseType: "text" }).subscribe({
+						next: (keys) => { this.addonKeys[addon] = keys.split(" ") },
 						error: (err) => { console.log('get Actions', err) },
 						complete: () => { this.selectedAddon = this.addons[0] }
 					});
@@ -203,7 +203,7 @@ export class SystemService {
 	getKey(key) {
 		this.url = this.hostname + '/system/addon/' + this.selectedAddon + '/' + key;
 		console.log(this.url);
-		return this.http.get<string[]>(this.url, { headers: this.authService.headers });
+		return this.http.get(this.url, { headers: this.authService.textHeaders, responseType: "text"  });
 	}
 
 	getFile(path: string) {
