@@ -85,11 +85,10 @@ export class InstitutesComponent implements OnInit {
           col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
-          col['minWidth'] = 230;
+          col['minWidth'] = 300;
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
           col['flex'] = '1';
-          col['colId'] = '1';
           columnDefs.push(col);
           columnDefs.push({
             headerName: "",

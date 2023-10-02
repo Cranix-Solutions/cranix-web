@@ -98,6 +98,11 @@ export class CephalixService {
 		console.log(this.url);
 		return this.http.get<SynchronizedObject[]>(this.url, { headers: this.authService.headers });
 	}
+	stopSynching(mappingId: number, direction: string) {
+		this.url = this.hostname + `/institutes/syncing/${mappingId}/${direction}`;
+		console.log(this.url);
+		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers })
+	}
 	getObjectsFromInstitute(instituteId: number, objectType: string) {
 		this.url = this.hostname + `/institutes/${instituteId}/objects/${objectType}`;
 		return this.http.get<any[]>(this.url, { headers: this.authService.headers });

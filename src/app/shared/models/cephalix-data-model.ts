@@ -169,7 +169,8 @@ export interface SynchronizedObject {
     objectName: number,
     cephalixId: number,
     cranixId: number,
-    lastSync: number
+    lastSync: number,
+    syncRunning: boolean
 }
 
 export const contracts = [
