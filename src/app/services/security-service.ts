@@ -1,6 +1,6 @@
-import { Injectable, OnInit } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams, HttpClientModule } from '@angular/common/http';
-import { AlertController, ModalController, ToastController } from '@ionic/angular';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ModalController, ToastController } from '@ionic/angular';
 import { CanDeactivate } from '@angular/router';
 
 //Own Stuff
@@ -9,7 +9,7 @@ import { AuthenticationService } from './auth.service';
 import { GenericObjectService } from './generic-object.service';
 import { LanguageService } from './language.service';
 import { ServerResponse } from 'src/app/shared/models/server-models';
-import { AccessInRoom, IncomingRules, OutgoingRule, RemoteRule } from '../shared/models/secutiry-model';
+import { AccessInRoom, IncomingRules, OutgoingRule, RemoteRule, SafeSearch } from '../shared/models/secutiry-model';
 import { Room } from '../shared/models/data-model';
 
 @Injectable()
@@ -93,6 +93,19 @@ export class SecurityService {
     console.log(this.url);
     return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
   }
+
+  getUnboundSafeSearch() {
+    this.url = this.hostname + "/system/unbound/safesearch";
+    console.log(this.url);
+    return this.http.get<SafeSearch[]>(this.url, { headers: this.authService.headers });
+  }
+
+  setUnboundSafeSearch(list: SafeSearch[]) {
+    this.url = this.hostname + "/system/unbound/safesearch";
+    console.log(this.url);
+    return this.http.post<ServerResponse>(this.url, list, { headers: this.authService.headers })
+  }
+
   setProxyCustom(custom, list: string[]) {
     this.url = this.hostname + `/system/proxy/custom/${custom}`;
     console.log(this.url);
