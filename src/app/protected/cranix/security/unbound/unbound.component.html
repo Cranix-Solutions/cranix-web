@@ -27,7 +27,7 @@
   </ion-segment>
 </ion-toolbar>
 <ion-item-divider *ngIf="!authService.isMD()"></ion-item-divider>
-<ion-content [disabled]="saving">
+<ion-content>
   <ion-fab *ngIf="authService.isMD()" vertical="top" horizontal="end" slot="fixed">
     <ion-fab-button size="small">
       <ion-icon name="arrow-forward-circle"></ion-icon>
