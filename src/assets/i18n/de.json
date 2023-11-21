@@ -8,6 +8,7 @@
     "Access state in %s was set successfully.": "Zugangsstatus im Raum %s wurde geändert.",
     "Access was deleted successfully": "Zugriffsregel wurde erfolgreich gelöscht",
     "Access was modified successfully": "Zugriffsregel wurde erfolgreich geändert",
+    "Activate SafeSearch":"SafeSearch aktivieren",
     "Actual status": "Aktueller Status",
     "AdHoc rooms": "AdHoc Räume",
     "Add Device": "Gerät registrieren",
