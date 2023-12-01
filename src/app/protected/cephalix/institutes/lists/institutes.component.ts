@@ -46,7 +46,7 @@ export class InstitutesComponent implements OnInit {
     private storage: Storage
   ) {
     this.context = { componentParent: this };
-    this.objectKeys = Object.getOwnPropertyNames(cephalixService.templateInstitute);
+    this.objectKeys = Object.getOwnPropertyNames(cephalixService.getTemplateInstitute());
     this.createColumnDefs();
     this.defaultColDef = {
       resizable: true,
@@ -173,7 +173,7 @@ export class InstitutesComponent implements OnInit {
         componentProps: {
           objectType: "institute",
           objectAction: 'add',
-          object: this.cephalixService.templateInstitute,
+          object: this.cephalixService.getTemplateInstitute(),
           objectKeys: this.objectKeys
         },
         animated: true,

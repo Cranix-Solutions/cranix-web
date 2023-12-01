@@ -26,7 +26,6 @@ export class CephalixService {
 	headers: any;
 	selectedInstitutes: Institute[] = [];
 	selectedList: string[] = [];
-	templateInstitute = new Institute();
 	loadingStatus: boolean = false;
 
 	constructor(
@@ -35,12 +34,17 @@ export class CephalixService {
 		private authService: AuthenticationService,
 		private objectService: GenericObjectService) {
 		this.hostname = this.utilsS.hostName();
-		if (!authService.isAllowed('customer.manage')) {
-			delete this.templateInstitute.cephalixCustomerId;
-		}
 	}
 
 	//GET calls
+	getTemplateInstitute(){
+		var templateInstitute = new Institute();
+		if (!this.authService.isAllowed('customer.manage')) {
+			delete templateInstitute.cephalixCustomerId;
+		}
+		return templateInstitute
+	}
+
 	getInstituteToken(id: number) {
 		this.url = this.hostname + `/institutes/${id}/token`;
 		const headers = new HttpHeaders({
