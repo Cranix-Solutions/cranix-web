@@ -179,9 +179,7 @@ export class TicketsPage implements OnInit {
 
   ticketClickHandle(event) {
     //console.log(event)
-    if (event.column.colId == 'id') {
-      event.context.componentParent.redirectToDelete(event.data)
-    } else {
+    if (event.column.colId != 'id') {
       event.context.componentParent.route.navigate(['/pages/cephalix/tickets/' + event.data.id])
     }
   }

@@ -255,6 +255,7 @@ export class ActionsComponent implements OnInit {
       default: {
         const alert = await this.alertController.create({
           header: this.languageService.trans(ev),
+          message: this.languageService.trans("Count of selected objects: ") + actionMap.objectIds.length,
           buttons: [
             {
               text: this.languageService.trans('Cancel'),

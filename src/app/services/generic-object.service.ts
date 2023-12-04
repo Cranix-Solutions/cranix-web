@@ -368,7 +368,8 @@ export class GenericObjectService {
     }
     const alert = await this.alertController.create({
       header: this.languageS.trans('Confirm!'),
-      message: this.languageS.trans('Do you realy want to delete?') + '<br>' + name,
+      subHeader: this.languageS.trans('Do you realy want to delete?'),
+      message: name,
       buttons: [
         {
           text: this.languageS.trans('Cancel'),
