@@ -35,6 +35,7 @@ export class AuthenticationService {
     minLgWidth = 769;
     minLgHeight = 600;
     rowColors: string[] = ["#D2E3D5", "#E2F3E5", "#AFC2B2"]
+    need2fa: boolean = false
 
     constructor(
         private http: HttpClient,

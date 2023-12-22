@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 //Own modules
 import { AuthenticationService } from 'src/app/services/auth.service';
@@ -14,33 +13,33 @@ import { SystemService } from 'src/app/services/system.service';
 })
 export class LoginPage implements OnInit {
 
-    authForm: FormGroup;
     instName: Observable<string>;
     instituteName: string = "";
-    allowSavePassword: boolean = true;
     showPassword: boolean = false;
+    user = { username: "", password : ""}
+    totpPin: string;
 
     constructor(
         public  authService: AuthenticationService,
-        private formBuilder: FormBuilder,
         private systemService: SystemService,
     ) {
         this.instName = this.systemService.getInstituteName();
     }
 
     ngOnInit() {
-        this.authForm = this.formBuilder.group({
-            username: ['', Validators.compose([Validators.required])],
-            password: ['', Validators.compose([Validators.required])]
-        });
+        this.user = { username: "", password : ""}
+        this.totpPin = ""
     }
 
-    submit(user: any): void {
-        if (this.authForm.valid) {
-            this.authService.setUpSession(user,  this.instituteName);
+    submit(): void {
+        if(this.authService.isAllowed('crx2fa.use')) {
+
+        } else {
+            this.authService.setUpSession(this.user,  this.instituteName);
         }
     }
 
     ngOnDestroy() {
+        this.ngOnInit()
     }
 }
