@@ -140,7 +140,6 @@ export class ActionsComponent implements OnInit {
           component: FilesUploadComponent,
           cssClass: 'small-modal',
           animated: true,
-          swipeToClose: true,
           showBackdrop: true,
           componentProps: {
             objectType: this.objectType,
@@ -156,7 +155,6 @@ export class ActionsComponent implements OnInit {
           component: FilesCollectComponent,
           cssClass: 'small-modal',
           animated: true,
-          swipeToClose: true,
           showBackdrop: true,
           componentProps: {
             objectType: this.objectType,
@@ -172,7 +170,6 @@ export class ActionsComponent implements OnInit {
           component: SetpasswordComponent,
           cssClass: 'small-modal',
           animated: true,
-          swipeToClose: true,
           showBackdrop: true
         });
         modal.onDidDismiss().then((dataReturned) => {
@@ -192,7 +189,6 @@ export class ActionsComponent implements OnInit {
           component: SetquotaComponent,
           cssClass: 'small-modal',
           animated: true,
-          swipeToClose: true,
           showBackdrop: true,
           componentProps: { type: 'mail' }
         });
@@ -212,7 +208,6 @@ export class ActionsComponent implements OnInit {
           component: SetquotaComponent,
           cssClass: 'small-modal',
           animated: true,
-          swipeToClose: true,
           showBackdrop: true,
           componentProps: {type: 'file' }
         });
@@ -232,7 +227,6 @@ export class ActionsComponent implements OnInit {
           component: SetContractComponent,
           cssClass: 'small-modal',
           animated: true,
-          swipeToClose: true,
           showBackdrop: true,
           componentProps: { objectIds: this.objectIds }
         });
@@ -245,7 +239,6 @@ export class ActionsComponent implements OnInit {
           component: SetValidityComponent,
           cssClass: 'small-modal',
           animated: true,
-          swipeToClose: true,
           showBackdrop: true,
           componentProps: { objectIds: this.objectIds }
         });

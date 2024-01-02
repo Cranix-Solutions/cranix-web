@@ -172,7 +172,6 @@ export class InstituteStatusComponent implements OnInit {
         objectPath: "InstitutesStatusComponent.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {

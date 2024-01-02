@@ -170,7 +170,6 @@ export class UsersComponent implements OnInit {
       component: UserGroupsPage,
       cssClass: 'big-modal',
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -201,7 +200,6 @@ export class UsersComponent implements OnInit {
         object: user
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -225,7 +223,6 @@ export class UsersComponent implements OnInit {
         objectPath: "UsersPage.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {

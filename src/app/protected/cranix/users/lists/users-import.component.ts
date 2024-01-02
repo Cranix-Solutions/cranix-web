@@ -62,7 +62,6 @@ export class UsersImportComponent implements OnInit {
         object: userImport
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {

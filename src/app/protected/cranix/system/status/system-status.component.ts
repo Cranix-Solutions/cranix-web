@@ -117,7 +117,6 @@ export class SystemStatusComponent implements OnInit {
         support: this.mySupport,
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {

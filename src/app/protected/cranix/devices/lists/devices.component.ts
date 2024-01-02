@@ -223,7 +223,6 @@ export class DevicesComponent implements OnInit {
         object: device
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -241,7 +240,6 @@ export class DevicesComponent implements OnInit {
         object: device
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     (await modal).present();
@@ -252,7 +250,6 @@ export class DevicesComponent implements OnInit {
       component: DevicePrintersComponent,
       cssClass: "small-modal",
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -278,7 +275,6 @@ export class DevicesComponent implements OnInit {
         objectPath: "DevicesComponent.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -300,7 +296,6 @@ export class DevicesComponent implements OnInit {
         adHocRoom: false
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     (await modal).present().then((val) => {

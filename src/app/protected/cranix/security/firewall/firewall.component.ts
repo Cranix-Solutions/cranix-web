@@ -105,7 +105,6 @@ export class FirewallComponent implements OnInit {
       component: AddOutgoingRuleComponent,
       cssClass: 'medium-modal',
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     (await modal).present();
@@ -127,7 +126,6 @@ export class FirewallComponent implements OnInit {
       component: AddRemoteRuleComponent,
       cssClass: 'medium-modal',
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((val) => {

@@ -131,7 +131,6 @@ export class AdhocComponent implements OnInit {
         objectPath: "AdhocComponent.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -182,7 +181,6 @@ export class AdhocComponent implements OnInit {
         object: adhocroom
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {

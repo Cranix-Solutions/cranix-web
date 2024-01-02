@@ -181,6 +181,7 @@ input {
   box-shadow  : aqua;
 }
 
+/*
 input[type=text] {
   width: 250px;
   padding: 4px 4px;
@@ -190,7 +191,7 @@ input[type=text] {
   border-radius: 4px;
   box-sizing: border-box;
   background-color: aquamarine;
-}
+}*/
 
 input:focus,
 select:focus,
@@ -389,5 +390,9 @@ ion-item-divider{
 
 .ql-editor {
   padding: 0px
+}
+
+.white-background {
+  background-color: #fff;
 }
 

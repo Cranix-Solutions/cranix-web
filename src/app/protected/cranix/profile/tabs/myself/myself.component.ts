@@ -41,7 +41,6 @@ export class MyselfComponent implements OnInit, OnDestroy {
       component: SetpasswordComponent,
       cssClass: 'small-modal',
       animated: true,
-      swipeToClose: true,
       showBackdrop: true,
       componentProps: {
         'type': 'ownChange',

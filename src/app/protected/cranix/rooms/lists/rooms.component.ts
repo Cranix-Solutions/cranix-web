@@ -179,7 +179,6 @@ export class RoomsComponent implements OnInit {
         object: room
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -199,7 +198,6 @@ export class RoomsComponent implements OnInit {
         object: room
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     (await modal).present();
@@ -211,7 +209,6 @@ export class RoomsComponent implements OnInit {
       component: RoomPrintersPage,
       cssClass: "small-modal",
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -237,7 +234,6 @@ export class RoomsComponent implements OnInit {
         objectPath: "RoomsComponent.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {

@@ -312,7 +312,6 @@ export class MyGroupsPage implements OnInit {
       component: GroupMembersPage,
       cssClass: 'big-modal',
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -349,7 +348,6 @@ export class MyGroupsPage implements OnInit {
         object: anyObject
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -379,7 +377,6 @@ export class MyGroupsPage implements OnInit {
         guest: guest
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {

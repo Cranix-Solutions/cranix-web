@@ -258,7 +258,6 @@ export class RoomAccessComponent implements OnInit {
         roomAccess: roomAccess
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {

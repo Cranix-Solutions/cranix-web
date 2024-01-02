@@ -151,7 +151,6 @@ export class CustomersPage implements OnInit {
         objectKeys: Object.getOwnPropertyNames(institute)
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -176,7 +175,6 @@ export class CustomersPage implements OnInit {
         objectKeys: this.objectKeys
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -200,7 +198,6 @@ export class CustomersPage implements OnInit {
         objectPath: "CustomersPage.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {

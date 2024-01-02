@@ -78,7 +78,6 @@ export class ToolbarComponent implements OnInit {
         object: settings
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {

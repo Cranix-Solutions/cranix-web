@@ -117,7 +117,6 @@ export class MypositiveComponent implements OnInit {
         object: positivList
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {

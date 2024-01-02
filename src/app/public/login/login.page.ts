@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 //Own modules
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { SystemService } from 'src/app/services/system.service';
+import { LoginForm } from 'src/app/shared/models/server-models';
 
 
 
@@ -12,12 +13,13 @@ import { SystemService } from 'src/app/services/system.service';
     styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-
     instName: Observable<string>;
     instituteName: string = "";
+    allowSavePassword: boolean = true;
     showPassword: boolean = false;
-    user = { username: "", password : ""}
-    totpPin: string;
+    totp: boolean = false;
+    totppin: string = "";
+    user: LoginForm;
 
     constructor(
         public  authService: AuthenticationService,
@@ -27,19 +29,17 @@ export class LoginPage implements OnInit {
     }
 
     ngOnInit() {
-        this.user = { username: "", password : ""}
-        this.totpPin = ""
+        this.user = new LoginForm();
     }
 
-    submit(): void {
-        if(this.authService.isAllowed('crx2fa.use')) {
+    login(): void {
+        this.authService.setUpSession(this.user,  this.instituteName);
+    }
 
-        } else {
-            this.authService.setUpSession(this.user,  this.instituteName);
-        }
+    checkpin() {
+        
     }
 
     ngOnDestroy() {
-        this.ngOnInit()
     }
 }

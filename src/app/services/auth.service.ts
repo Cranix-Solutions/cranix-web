@@ -9,7 +9,7 @@ import { isDevMode } from '@angular/core';
 
 //Own modules
 import { UtilsService } from './utils.service';
-import { UserResponse, LoginForm, Settings } from 'src/app/shared/models/server-models';
+import { UserResponse, LoginForm, Settings, ServerResponse } from 'src/app/shared/models/server-models';
 import { LanguageService } from './language.service';
 import { TeachingSubject } from '../shared/models/data-model';
 
@@ -19,6 +19,7 @@ import { TeachingSubject } from '../shared/models/data-model';
 
 export class AuthenticationService {
     authenticationState = new BehaviorSubject(false);
+    use2fa: boolean = false;
     selectedTeachingSubject: TeachingSubject
     hostname: string;
     url: string;
@@ -36,6 +37,8 @@ export class AuthenticationService {
     minLgHeight = 600;
     rowColors: string[] = ["#D2E3D5", "#E2F3E5", "#AFC2B2"]
     need2fa: boolean = false
+    pinFalse: boolean = false;
+    passwrodFalse: boolean = false;
 
     constructor(
         private http: HttpClient,
@@ -52,7 +55,7 @@ export class AuthenticationService {
     }
 
     login(user: LoginForm) {
-        console.log("auth.services.login called:")
+        console.log("auth.services.login called:", user)
         this.hostname = this.utilsS.hostName();
         this.url = this.hostname + "/sessions/create";
         const headers = new HttpHeaders({
@@ -131,19 +134,16 @@ export class AuthenticationService {
                     'timeout': `${600000}`
                 });
                 this.loadSettings();
-                this.authenticationState.next(true);
-            },
-            error: async (err) => {
-                console.log('error is', err);
-                if (err.status === 401) {
-                    const toast = this.toastController.create({
-                        position: "middle",
-                        message: 'Passwort falsch!',
-                        color: "danger",
-                        duration: 3000
-                    });
-                    (await toast).present();
+                if(this.isAllowed("crx2fa.use")) {
+                    //TODO check if there is a valide cookie
+                    this.use2fa = true;
+                } else {
+                    this.authenticationState.next(true);
                 }
+            },
+            error: (err) => {
+                console.log('error is', err);
+                this.passwrodFalse = true;
             },
             complete: () => {
                 subscription.unsubscribe();
@@ -152,6 +152,23 @@ export class AuthenticationService {
         });
     }
 
+    checkTotPin(totPin: string) {
+        let url = this.hostname + `/2fa/checkpin`;
+        let headers =new HttpHeaders({
+            'Content-Type': "application/json",
+            'Accept': "application/json"
+        });
+        let data = { pin: totPin, token: this.token }
+        this.http.post<ServerResponse>(url,data,{headers: headers}).subscribe({
+            next: (val) => {
+                if(val.code="OK"){
+                    this.authenticationState.next(true);
+                } else {
+                    this.pinFalse = true;
+                }
+            }
+        })
+    }
     public loadSession() {
         console.log('loadSession', sessionStorage.getItem('shortName'))
         this.hostname = this.utilsS.hostName();

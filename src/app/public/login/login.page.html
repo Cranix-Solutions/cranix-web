@@ -1,46 +1,48 @@
-<form #authForm="ngForm">
-  <ion-grid>
-    <ion-row class="ion-justify-content-center">
-      <ion-col>
-        <ion-card class="ion-text-center">
-          <img src="assets/images/logo/cranix_school.svg" style="height: 200px; width: 200px; padding: 10px">
-          <ion-card-header class="ion-text-center">
-            <h2>{{ instName | async }}</h2>
-          </ion-card-header>
-          <ion-card-content *ngIf="!authService.isAllowed('crx2fa.use')">
-            <ion-item>
-              <ion-input [(ngModel)]="user.username" type="text" placeholder="{{ 'username' | translate }}"
-                autocomplete="off" required></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-input [(ngModel)]="user.password" [type]="showPassword ? 'text' : 'password'"
-                placeholder="{{ 'password' | translate }}" autocomplete="off" required></ion-input>
-              <ion-icon slot="end" [color]="showPassword ? 'primary' : 'medium'" name="eye-off"
-                (click)="showPassword = !showPassword"></ion-icon>
-            </ion-item>
-            <ion-item lines="none"
-              *ngIf="authForm.controls.password.hasError('required') && authForm.controls.password.touched">
-              <p class="error-text">{{ 'Sorry, field password is required!' | translate }}</p>
-            </ion-item>
-          </ion-card-content>
-          <ion-card-content *ngIf="authService.isAllowed('crx2fa.use')">
-            <ion-item>
-              <ion-input placeholder="TOTP Pin" [(ngModel)]="totpPin"></ion-input>
-            </ion-item>
-          </ion-card-content>
-          <ion-row class="ion-text-center">
-            <ion-col>
-              <ion-button full color="primary" [disabled]="!authForm.valid" style="margin-top: 20px;"
-                (click)="submit()">{{ 'login' | translate }}</ion-button>
-            </ion-col>
-          </ion-row>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-    <ion-footer collapse="fade">
-      <ion-button fill="clear" (click)="authService.showInfo()">
-        <ion-icon slot="icon-only" name="information-circle-outline"></ion-icon>
-      </ion-button>
-    </ion-footer>
-  </ion-grid>
-</form>
+<ion-card class="ion-text-center" style="max-width: 400px; margin-left: auto; margin-right: auto; margin-top: 30px;">
+  <ion-card-header class="ion-text-center">
+    <img src="assets/images/logo/cranix_school.svg" style="height: 200px; width: 200px; padding: 10px">
+    <h2 style="margin-top: 5px;">{{ instName | async }}</h2>
+  </ion-card-header>
+  <ion-card-content *ngIf="!totp">
+    <ion-list>
+      <ion-item>
+        <ion-label style="width: 120px;">
+          {{'username'|translate}}
+        </ion-label>
+        <ion-input style="background-color: white;" [(ngModel)]="user.username" name="username" type="text"
+          autocomplete="off" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label style="width: 120px;">
+          {{'password'|translate}}
+        </ion-label>
+        <ion-input style="background-color: white;" [(ngModel)]="user.password" name="password"
+          [type]="showPassword ? 'text' : 'password'" autocomplete="off" required></ion-input>
+        <ion-icon slot="end" [name]="showPassword ? 'eye-off' : 'eye'"
+          (click)="showPassword = !showPassword"></ion-icon>
+      </ion-item>
+      <ion-toast [isOpen]="showPassword" message="BLALBA"></ion-toast>
+      <ion-button style="margin-top: 10px;" expand="full" color="primary" (click)="login()">{{'login' |
+        translate}}</ion-button>
+      <ion-toast [isOpen]="authService.passwordFalse" message="{{'Pin fals'|translate}}" [duration]="5000"
+        (didDismiss)="authService.passwordFalse=false"></ion-toast>
+    </ion-list>
+  </ion-card-content>
+  <ion-card-content *ngIf="totp">
+    <ion-list>
+      <ion-item>
+        <ion-label>{{'Enter TOTP PIN'|translate}}</ion-label>
+        <ion-input [(ngModel)]="totppin" name="totppin"></ion-input>
+      </ion-item>
+      <ion-button style="margin: 10px;" expand="full" color="primary" (click)="checkpin()">{{'login' |
+        translate}}</ion-button>
+      <ion-toast [isOpen]="authService.pinFalse" message="{{'Pin fals'|translate}}" [duration]="5000"
+        (didDismiss)="authService.pinFalse=false"></ion-toast>
+    </ion-list>
+  </ion-card-content>
+</ion-card>
+<ion-footer collapse="fade">
+  <ion-button fill="clear" (click)="authService.showInfo()">
+    <ion-icon slot="icon-only" name="information-circle-outline"></ion-icon>
+  </ion-button>
+</ion-footer>

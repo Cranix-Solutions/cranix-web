@@ -22,9 +22,9 @@ export interface UserResponse {
  * The LoginForm intefrace 
  * @description variables used to login  
  */
-export interface LoginForm {
-  username: string,
-  password: string,
+export class LoginForm {
+  username: string = "";
+  password: string = "";
 }
 
 export interface ServerResponse {

@@ -233,7 +233,6 @@ export class TicketsPage implements OnInit {
           objectKeys: this.objectKeys
         },
         animated: true,
-        swipeToClose: true,
         showBackdrop: true
       });
       modal.onDidDismiss().then((dataReturned) => {
@@ -258,7 +257,6 @@ export class TicketsPage implements OnInit {
         objectPath: "TicketsPage.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {

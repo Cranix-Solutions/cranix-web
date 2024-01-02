@@ -125,7 +125,6 @@ export class DetailsPage implements OnInit {
         article: article
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {

@@ -194,7 +194,6 @@ export class PrintersComponent implements OnInit {
         object: printer
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -218,7 +217,6 @@ export class PrintersComponent implements OnInit {
         objectPath: "PrintersComponent.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -240,7 +238,6 @@ export class PrintersComponent implements OnInit {
         action: 'queue'
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -262,7 +259,6 @@ export class PrintersComponent implements OnInit {
         action: 'add'
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {

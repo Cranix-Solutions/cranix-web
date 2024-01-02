@@ -145,7 +145,6 @@ export class InstallationSetsComponent implements OnInit {
         objectAction: action
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {

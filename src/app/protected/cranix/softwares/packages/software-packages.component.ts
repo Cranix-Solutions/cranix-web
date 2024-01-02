@@ -142,7 +142,6 @@ export class SoftwarePackagesComponent implements OnInit {
         selected: this.displayedColumns
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -180,7 +179,6 @@ export class SoftwarePackagesComponent implements OnInit {
       },
       cssClass: 'medium-modal',
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -199,7 +197,6 @@ export class SoftwarePackagesComponent implements OnInit {
       },
       cssClass: 'medium-modal',
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {

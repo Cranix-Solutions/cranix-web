@@ -81,7 +81,6 @@ export class SystemAclsComponent implements OnInit {
     const modal = await this.modalCtrl.create({
       component: ManageAclsComponent,
       animated: true,
-      swipeToClose: true,
       showBackdrop: true,componentProps: {
         objectType: objectType,
         object: object

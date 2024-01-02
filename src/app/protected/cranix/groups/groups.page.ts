@@ -157,7 +157,6 @@ export class GroupsPage implements OnInit {
       component: GroupMembersPage,
       cssClass: 'big-modal',
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -182,7 +181,6 @@ export class GroupsPage implements OnInit {
         object: group
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -206,7 +204,6 @@ export class GroupsPage implements OnInit {
         objectPath: "GroupsPage.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
