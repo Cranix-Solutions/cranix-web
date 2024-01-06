@@ -523,14 +523,3 @@ export class CrxChallengeAnswer {
 	correct: boolean = false
 	constructor() { }
 }
-
-export class Crx2fa {
-	validHours: number
-	qrCode: string
-	serial: string
-}
-
-export class Crx2faSession {
-	valid: boolean
-	token: string
-}

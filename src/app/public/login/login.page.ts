@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 //Own modules
 import { AuthenticationService } from 'src/app/services/auth.service';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { SystemService } from 'src/app/services/system.service';
 import { LoginForm } from 'src/app/shared/models/server-models';
 
@@ -24,6 +25,7 @@ export class LoginPage implements OnInit {
     constructor(
         public  authService: AuthenticationService,
         private systemService: SystemService,
+        private objectService: GenericObjectService,
     ) {
         this.instName = this.systemService.getInstituteName();
     }
@@ -36,8 +38,16 @@ export class LoginPage implements OnInit {
         this.authService.setUpSession(this.user,  this.instituteName);
     }
 
-    checkpin() {
-        
+    checkPin() {
+        this.authService.checkTotPin(this.totppin);
+    }
+
+    sendPin() {
+        let id: number = parseInt(this.authService.crx2fa.split('#')[1])
+        this.authService.sendPin(id).subscribe({
+           next: (val) => { this.objectService.responseMessage(val)},
+           error: (error) => { this.objectService.errorMessage(error)}
+        })
     }
 
     ngOnDestroy() {
