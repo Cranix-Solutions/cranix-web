@@ -214,7 +214,7 @@ export class GenericObjectService {
       url = this.utilsS.hostName() + "/challenges/subjects/" + this.authService.selectedTeachingSubject.id
     }
     console.log("getAllObject" +url)
-    let sub = this.http.get<any[]>(url, { headers: this.authService.headers }).subscribe({
+    this.http.get<any[]>(url, { headers: this.authService.headers }).subscribe({
       next: (val) => {
         switch (objectType) {
           case 'ticket': val.sort(this.sortByRecDate)
@@ -233,8 +233,7 @@ export class GenericObjectService {
           this.selects[objectType + 'Id'] = [];
         }
         console.log('getAllObject', objectType, err);
-      },
-      complete: () => sub.unsubscribe()
+      }
     });
   }
 

@@ -170,27 +170,28 @@ export class AuthenticationService {
         });
     }
 
-    sendPin(id: number) {
-
+    sendPin(id: string) {
         let url = this.hostname + `/2fa/sendpin`;
         let headers = new HttpHeaders({
             'Content-Type': "application/json",
             'Accept': "application/json"
         });
-        let data = { crx2faId: id, token: this.token }
+        let data = { crx2faId: id, token: this.session.token }
+        console.log("sendPin", data);
         return this.http.post<ServerResponse>(url, data, { headers: headers })
     }
 
-    checkTotPin(otPin: string) {
+    checkTotPin(id: string, otPin: string) {
         let url = this.hostname + `/2fa/checkpin`;
         let headers = new HttpHeaders({
             'Content-Type': "application/json",
             'Accept': "application/json"
         });
-        let data = { pin: otPin, token: this.token }
+        let data = { crx2faId: id, pin: otPin, token: this.session.token }
         this.http.post(url, data, { headers: headers }).subscribe({
             next: (val) => {
-                this.authenticationState.next(true);
+                console.log(val)
+                this.authenticationState.next(true)
             },
             error: async (err) => {
                 // ionic 7
@@ -246,6 +247,7 @@ export class AuthenticationService {
                 next: (val) => {
                     this.authenticationState.next(false);
                     this.session = null;
+                    this.use2fa = false;
                     this.router.navigate(['/'])
                 },
                 error: (err) => { this.router.navigate(['/']) },

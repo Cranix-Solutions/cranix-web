@@ -39,11 +39,12 @@ export class LoginPage implements OnInit {
     }
 
     checkPin() {
-        this.authService.checkTotPin(this.totppin);
+        let id: string = this.authService.crx2fa.split('#')[1]
+        this.authService.checkTotPin(id, this.totppin);
     }
 
     sendPin() {
-        let id: number = parseInt(this.authService.crx2fa.split('#')[1])
+        let id: string = this.authService.crx2fa.split('#')[1]
         this.authService.sendPin(id).subscribe({
            next: (val) => { this.objectService.responseMessage(val)},
            error: (error) => { this.objectService.errorMessage(error)}
