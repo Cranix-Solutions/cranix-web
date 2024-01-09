@@ -5,14 +5,14 @@
  */
 
 
-export class Crx2fa {
-        id: number = 0;
-        creatorId: number = 0;
-        crx2faType: string = "TOTP";
-        crx2faAddress: string = "";
-        serial: string = "";
-        timeStep: number = 60;
-        validHours: number = 2;
+export interface Crx2fa {
+        id?: number,
+        creatorId?: number,
+        crx2faType: string,
+        crx2faAddress: string,
+        serial?: string,
+        timeStep: number,
+        validHours: number
 }
 
 export class Crx2faSession {

@@ -246,8 +246,6 @@ export class AuthenticationService {
             this.http.delete(this.hostname + `/sessions/${this.session.token}`, { headers: this.headers }).subscribe({
                 next: (val) => {
                     this.authenticationState.next(false);
-                    this.session = null;
-                    this.use2fa = false;
                     this.router.navigate(['/'])
                 },
                 error: (err) => { this.router.navigate(['/']) },
@@ -256,6 +254,7 @@ export class AuthenticationService {
         }
         this.authenticationState.next(false);
         this.session = null;
+        this.use2fa = false;
         this.router.navigate(['/']);
     }
 
