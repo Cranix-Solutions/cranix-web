@@ -143,6 +143,9 @@ export class GenericObjectService {
     if (this.authService.isAllowed('cephalix.ticket')) {
       this.objects.push('ticket');
     }
+    if (this.authService.isAllowed('2fa.manage')) {
+      this.objects.push('2fa');
+    }
     for (let obj of this.objectsTemlate) {
       this.objects.push(obj)
     }

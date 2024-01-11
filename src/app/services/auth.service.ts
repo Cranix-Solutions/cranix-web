@@ -171,7 +171,7 @@ export class AuthenticationService {
     }
 
     sendPin(id: string) {
-        let url = this.hostname + `/2fa/sendpin`;
+        let url = this.hostname + `/2fas/sendpin`;
         let headers = new HttpHeaders({
             'Content-Type': "application/json",
             'Accept': "application/json"
@@ -182,7 +182,7 @@ export class AuthenticationService {
     }
 
     checkTotPin(id: string, otPin: string) {
-        let url = this.hostname + `/2fa/checkpin`;
+        let url = this.hostname + `/2fas/checkpin`;
         let headers = new HttpHeaders({
             'Content-Type': "application/json",
             'Accept': "application/json"

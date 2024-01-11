@@ -90,12 +90,12 @@ export class SelfManagementService {
 
     //CRX2FA stuff
     getCfaTypes() {
-        const url = this.hostname + '/2fa/types';
+        const url = this.hostname + '/2fas/types';
         console.log(url);
         return this.http.get<string[]>(url, { headers: this.authService.headers });
     }
     saveMyCfa(crx2fa: Crx2fa) {
-        const url = this.hostname + '/2fa';
+        const url = this.hostname + '/2fas';
         console.log(url);
         if( crx2fa.id ) {
             return this.http.patch<ServerResponse>(url, crx2fa, { headers: this.authService.headers });
@@ -105,25 +105,25 @@ export class SelfManagementService {
     }
 
     getMyCfas() {
-        const url = this.hostname + '/2fa';
+        const url = this.hostname + '/2fas';
         console.log(url);
         return this.http.get<Crx2fa[]>(url, { headers: this.authService.headers });
     }
 
     deleteCfa(crx2fa: Crx2fa) {
-        const url = this.hostname + `/2fa/${crx2fa.id}`;
+        const url = this.hostname + `/2fas/${crx2fa.id}`;
         console.log(url);
         return this.http.delete<ServerResponse>(url, { headers: this.authService.headers });
     }
 
     resetCfa(crx2fa: Crx2fa) {
-        const url = this.hostname + `/2fa/${crx2fa.id}`;
+        const url = this.hostname + `/2fas/${crx2fa.id}`;
         console.log(url);
         return this.http.delete<ServerResponse>(url, { headers: this.authService.headers });
     }
 
     checkOtp(otppin: string) {
-        const url = this.hostname + '/2fa/checkpin';
+        const url = this.hostname + '/2fas/checkpin';
         console.log(url);
         const data = {
             pin: otppin,
