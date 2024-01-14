@@ -115,3 +115,13 @@ export class ServiceStatus {
         active: string;
 }
 export const TOKEN = 'cranix-token';
+
+export class MailAccess {
+        id: number = 0;
+        ownerId?: number = 0;
+        created?: string = "";
+        modified?: string = "";
+        address: string = "";
+        action: string = "";
+}
+
