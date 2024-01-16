@@ -45,7 +45,9 @@ export class AppComponent {
         console.log("cephalix_token",sessionStorage.getItem('cephalix_token'))
         console.log("shortName",sessionStorage.getItem('shortName'))
         if (state) {
-          this.genericObjectS.initialize(true);
+          if(!this.authService.session.mustSetup2fa) {
+            this.genericObjectS.initialize(true);
+          }
           if(this.authService.session.mustSetup2fa) {
             console.log('initializeApp: 2FA must be set up');
             this.router.navigate(['pages/cranix/profile/crx2fa']);
