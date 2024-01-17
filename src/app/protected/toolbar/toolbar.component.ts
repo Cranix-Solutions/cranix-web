@@ -30,8 +30,8 @@ export class ToolbarComponent implements OnInit {
     public modalConroller: ModalController,
     public utilService: UtilsService
   ) {
-    this.fullName    = authService.session.fullName;
-    this.roomName      = authService.session.roomName;
+    this.fullName = authService.session.fullName;
+    this.roomName = authService.session.roomName;
     this.instituteName = authService.session.instituteName;
   }
 
@@ -59,7 +59,7 @@ export class ToolbarComponent implements OnInit {
 
   async retirectToSettings(ev: Event) {
     let settings: Settings = this.authService.settings;
-    if( this.authService.isMD() ) {
+    if (this.authService.isMD()) {
       delete settings.agGridThema
       delete settings.rowHeight
       delete settings.rowMultiSelectWithClick
@@ -84,17 +84,19 @@ export class ToolbarComponent implements OnInit {
       if (dataReturned.data) {
         for (let key of Object.getOwnPropertyNames(dataReturned.data)) {
           this.authService.settings[key] = dataReturned.data[key]
-        }   
+        }
         this.storage.set("myCranixSettings", JSON.stringify(this.authService.settings));
         this.translateService.saveLanguage(this.authService.settings.lang);
-        this.utilService.actMdList.ngOnInit();
+        if (this.utilService.actMdList) {
+          this.utilService.actMdList.ngOnInit();
+        }
         this.authService.log("ToolbarComponent", "Settings was modified", this.authService.settings)
       }
     });
     (await modal).present();
   }
 
-  reloadAllObjects(){
+  reloadAllObjects() {
     this.objectService.okMessage(this.translateService.trans("Reloading all objects"))
     this.objectService.initialize(true)
   }

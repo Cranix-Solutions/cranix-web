@@ -87,7 +87,7 @@ export class CrxActionMap {
 }
 
 export class Settings {
-        lang: string = "";
+        lang: string = "DE";
         errorMessageDuration: number = 10;
         okMessageDuration: number = 10;
         warningMessageDuration: number = 6;

@@ -52,7 +52,7 @@
             <ion-input readonly="true">{{crx2fa.serial}}</ion-input>
           </ion-item>
           <ion-item *ngIf="crx2fa.crx2faType == 'TOTP' && crx2fa.id">
-            <img src="{{crx2fa.crx2faAddress}}" />
+            <img src="{{crx2fa.crx2faAddress}}"  width="400" height="400"/>
           </ion-item>
           <ion-item lines="none">
             <ion-button *ngIf="!crx2fa.id && crx2fa.crx2faType == 'TOTP'; else elseBlock" style="margin: auto;"
@@ -75,7 +75,8 @@
   </ion-card>
   <ol>
     <li>{{'Select the type of your CRANIX 2FA Type'|translate}}</li>
-    <li>{{'Set the validity of a PIN in seconds'|translate}}. min: 30 max: {{crx2fa.crx2faType == 'TOTP' ? '60':'600'}}</li>
+    <li>{{'Set the validity of a PIN in seconds'|translate}}. min: 30 max: {{crx2fa.crx2faType == 'TOTP' ? '60':'600'}}
+    </li>
     <li>{{'Set the validity of a 2FA session in hours'|translate}}. min: 1 max: 24</li>
     <li>{{'It is recomended to setup all 2FA types'|translate}}</li>
     <div *ngIf="crx2fa.crx2faType == 'MAIL'">
@@ -84,40 +85,44 @@
     </div>
     <div *ngIf="crx2fa.crx2faType == 'TOTP'">
       <li>{{'Download the privacyIDEA or Google Autenticator app to your mobil device.'|translate}}
-        <div *ngIf="platformService.IOS">
-          <a href="https://apps.apple.com/app/id1445401301" target="_blank">
-            <picture title="privacyIDEA Autenticator App">
-              <img src="/assets/images/logo/privacyIDEA.webp" width="40" height="40">
-            </picture>
-          </a>
-          <a fill="clear" href="https://apps.apple.com/app/id388497605" target="_blank">
-            <picture title="google Autenticator App">
-              <img src="/assets/images/logo/googleAuth.webp" width="40" height="40">
-            </picture>
-          </a>
-        </div>
-        <!-- div *ngIf="platformService.ANDROID" -->
-        <div>
-          <a href="https://play.google.com/store/apps/details?id=it.netknights.piauthenticator" target="_blank">
-            <picture title="privacyIDEA Autenticator App">
-              <img src="/assets/images/logo/privacyIDEA.webp" width="40" height="40">
-            </picture>
-          </a>
-          <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2"
-            target="_blank">
-            <picture title="google Autenticator App">
-              <img src="/assets/images/logo/googleAuth.webp" width="40" height="40">
-            </picture>
-          </a>
-        </div>
+        <ion-item lines="none">
+          <ion-label *ngIf="platformService.isBrowser" style="text-align: right; max-width: 80px;">iOS:</ion-label>
+          <ion-label *ngIf="platformService.IOS || platformService.isBrowser" style="max-width: 100px;">
+            <a href="https://apps.apple.com/app/id1445401301" target="_blank">
+              <picture title="privacyIDEA Autenticator App">
+                <img src="/assets/images/logo/privacyIDEA.webp" width="40" height="40">
+              </picture>
+            </a>
+            <a fill="clear" href="https://apps.apple.com/app/id388497605" target="_blank">
+              <picture title="google Autenticator App">
+                <img src="/assets/images/logo/googleAuth.webp" width="40" height="40">
+              </picture>
+            </a>
+          </ion-label>
+          <ion-label *ngIf="platformService.isBrowser" style="text-align: right; max-width: 80px;">Android:</ion-label>
+          <ion-label *ngIf="platformService.ANDROID  || platformService.isBrowser" style="max-width: 100px;">
+            <a href="https://play.google.com/store/apps/details?id=it.netknights.piauthenticator" target="_blank">
+              <picture title="privacyIDEA Autenticator App">
+                <img src="/assets/images/logo/privacyIDEA.webp" width="40" height="40">
+              </picture>
+            </a>
+            <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2"
+              target="_blank">
+              <picture title="google Autenticator App">
+                <img src="/assets/images/logo/googleAuth.webp" width="40" height="40">
+              </picture>
+            </a>
+          </ion-label>
+        </ion-item>
       </li>
       <li>{{'Generate a QRCode on this page.'|translate}}</li>
       <li>{{'Import (scan) the QRCode with your Autenticator app.'|translate}}</li>
       <li>{{'If you have trouble with your app delete the QRCode and generate it again.'|translate}}</li>
-      <li>{{'If you have lost your mobile device ask the system administrator to deactivate your QRCode.'|translate}}
-      </li>
+      <li>{{'If you have lost your mobile device delete the QRCode and generate it again.'|translate}}</li>
       <li>{{'After you have created your QRCode you can only modify the how long a 2FA session is
         available.'|translate}}</li>
+        
     </div>
+    <li>{{'Please note that you cannot delete the 2FA configuration that you used to log in yourself.'|translate}}</li>
   </ol>
 </ion-content>

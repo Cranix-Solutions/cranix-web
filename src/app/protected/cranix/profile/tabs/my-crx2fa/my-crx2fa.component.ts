@@ -34,6 +34,7 @@ export class MyCrx2faComponent implements OnInit {
 
   ngOnInit() {
     this.load()
+    this.platformService.isBrowser
   }
 
   load(){
