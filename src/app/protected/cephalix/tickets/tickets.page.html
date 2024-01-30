@@ -52,7 +52,7 @@
       <ion-item style="color: {{ticketColor[object.ticketStatus]}}">
         <ion-label (click)="redirectToEdit(object)">
           <h2>{{ object.title }}</h2>
-          {{ object.recDate | date:'yy-MM-dd HH:mm' }}
+          {{ object.created | date:'yy-MM-dd HH:mm' }}
         </ion-label>
         <ion-label>
           {{ object.email }} <br>

@@ -24,7 +24,7 @@ import { CephalixService } from 'src/app/services/cephalix.service';
 })
 export class TicketsPage implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['id', 'title', 'cephalixInstituteId', 'recDate', 'ownerId', 'ticketStatus'];
+  displayedColumns: string[] = ['id', 'title', 'cephalixInstituteId', 'modified', 'created', 'creatorId', 'ticketStatus'];
   columnDefs = [];
   defaultColDef = {};
   columnApi: ColumnApi;
@@ -119,16 +119,22 @@ export class TicketsPage implements OnInit {
           }
           break;
         }
-        case 'ownerId': {
+        case 'creatorId': {
           col['valueGetter'] = function (params) {
-            return params.context['componentParent'].objectService.idToName('user', params.data.ownerId);
+            return params.context['componentParent'].objectService.idToName('user', params.data.creatorId);
           }
           col['maxWidth'] = 200
           break;
         }
-        case 'recDate': {
+        case 'modified': {
           col['sort'] = 'desc',
-            col['cellRendererFramework'] = DateTimeCellRenderer;
+          col['cellRendererFramework'] = DateTimeCellRenderer;
+          col['minWidth'] = 180
+          col['maxWidth'] = 180
+          break;
+        }
+        case 'created': {
+          col['cellRendererFramework'] = DateTimeCellRenderer;
           col['minWidth'] = 180
           col['maxWidth'] = 180
           break;
@@ -161,7 +167,7 @@ export class TicketsPage implements OnInit {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
     if (this.authService.isMD()) {
       this.rowData = [];
-      for (let obj of this.objectService.allObjects['ticket'].sort(this.objectService.sortByRecDate)) {
+      for (let obj of this.objectService.allObjects['ticket'].sort(this.objectService.sortByCreated)) {
         if (
           obj.title.toLowerCase().indexOf(filter) != -1 ||
           (obj.email && obj.email.toLowerCase().indexOf(filter) != -1) ||

@@ -25,7 +25,7 @@ export class DetailsPage implements OnInit {
   institutes: ObjectList[] = [];
   instObject: ObjectList = new ObjectList;
   articleOpen = {};
-  ticketOwner: User;
+  ticketCreator: User;
   workers: User[];
   nativeWindow: any
   constructor(
@@ -55,7 +55,7 @@ export class DetailsPage implements OnInit {
         console.log("getTicketById was called", this.ticketId)
         this.workers = this.objectService.allObjects['user'].filter(o => o.role == 'sysadmins').sort((a, b) => a.fullName > b.label ? 0 : 1);
         this.ticket = val;
-        this.ticketOwner = this.objectService.getObjectById('user', this.ticket.ownerId);
+        this.ticketCreator = this.objectService.getObjectById('user', this.ticket.creatorId);
         this.institute   = this.objectService.getObjectById('institute', this.ticket.cephalixInstituteId);
         this.readArcticles();
         for (let i of this.objectService.allObjects['institute']) {
@@ -85,9 +85,9 @@ export class DetailsPage implements OnInit {
   }
 
   public assigneTicketToMe() {
-    this.ticket.ownerId = this.authService.session.userId;
-    this.ticketOwner.fullName = this.authService.session.fullName;
-    this.ticketOwner.id = this.authService.session.userId;
+    this.ticket.creatorId = this.authService.session.userId;
+    this.ticketCreator.fullName = this.authService.session.fullName;
+    this.ticketCreator.id = this.authService.session.userId;
     this.cephlixS.modifyTicket(this.ticket).subscribe({
       next: (val) => {
         this.objectService.responseMessage(val);
@@ -99,8 +99,8 @@ export class DetailsPage implements OnInit {
     })
   }
 
-  public setOwner() {
-    this.ticket.ownerId = this.ticketOwner.id
+  public setCreator() {
+    this.ticket.creatorId = this.ticketCreator.id
     this.cephlixS.modifyTicket(this.ticket).subscribe({
       next: (val) => {
         this.objectService.responseMessage(val);

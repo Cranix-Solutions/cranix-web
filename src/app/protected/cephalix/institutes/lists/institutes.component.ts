@@ -105,7 +105,7 @@ export class InstitutesComponent implements OnInit {
           col['cellRendererFramework'] = DateCellRenderer;
           break;
         }
-        case 'recDate': {
+        case 'created': {
           col['cellRendererFramework'] = DateCellRenderer;
           break;
         }

@@ -278,7 +278,7 @@ export class Announcenement {
 export class TaskResponse {
 	id?: number;
 	parentId: number = 0;
-	ownerId: number = 0;
+	creatorId: number = 0;
 	text: string = "";
 	rating: string = "";
 	title?: string = "";
@@ -365,7 +365,7 @@ export class Category {
 	categoryType: string = "";
 	validFrom?: any = new Date();
 	validUntil: any = new Date();
-	ownerId?: number = 0;
+	creatorId?: number = 0;
 	deviceIds?: number[] = [];
 	roomIds?: number[] = [];
 	userIds?: number[] = [];
@@ -425,7 +425,7 @@ export interface SmartRoom {
 	description: string,
 	validFrom?: number,
 	validUntil?: number,
-	ownerId?: number,
+	creatorId?: number,
 	deviceIds?: number[],
 	hwConfIds?: number[],
 	roomIds?: number[],

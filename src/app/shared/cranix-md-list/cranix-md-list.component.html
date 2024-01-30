@@ -150,7 +150,7 @@
           <ion-icon slot="icon-only" name="people"></ion-icon>
         </ion-item-option>
         <ion-item-option
-          *ngIf="objectType.indexOf('group') != -1 && (authService.isAllowed('group.modify') || authService.session.userId == object.ownerId)"
+          *ngIf="objectType.indexOf('group') != -1 && (authService.isAllowed('group.modify') || authService.session.userId == object.creatorId)"
           (click)="context.componentParent.redirectToMembers(object)">
           <ion-icon slot="icon-only" name="people-circle"></ion-icon>
         </ion-item-option>
@@ -158,7 +158,7 @@
           <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
         </ion-item-option>
         <ion-item-option
-          *ngIf="authService.session.userId == object.ownerId || authService.isAllowed(objectType + '.delete')"
+          *ngIf="authService.session.userId == object.creatorId || authService.isAllowed(objectType + '.delete')"
           color="danger" (click)="context.componentParent.redirectToDelete(object)">
           <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
         </ion-item-option>

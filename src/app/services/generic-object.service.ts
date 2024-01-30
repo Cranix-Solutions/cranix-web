@@ -79,8 +79,8 @@ export class GenericObjectService {
     'msQuotaUsed',
     'name',
     'network',
-    'ownerName',
-    'recDate',
+    'creatorName',
+    'created',
     'role',
     'roomId',
     'sourceAvailable',
@@ -99,7 +99,7 @@ export class GenericObjectService {
     'fullName',
     'loggedInId',
     'network',
-    'ownerId',
+    'creatorId',
     'partitions',
     'saveNext',
     'screenShot',
@@ -220,7 +220,7 @@ export class GenericObjectService {
     this.http.get<any[]>(url, { headers: this.authService.headers }).subscribe({
       next: (val) => {
         switch (objectType) {
-          case 'ticket': val.sort(this.sortByRecDate)
+          case 'ticket': val.sort(this.sortByCreated)
         }
         this.allObjects[objectType] = val;
         this.selects[objectType + 'Id'] = []
@@ -319,7 +319,7 @@ export class GenericObjectService {
    * @param idName
    */
   idToPipe(idName: string) {
-    if (idName == 'ownerId' || idName == 'loggedInId') {
+    if (idName == 'creatorId' || idName == 'loggedInId') {
       return 'user';
     }
     if (idName == 'cephalixCustomerId') {
@@ -518,11 +518,11 @@ export class GenericObjectService {
     }
     return 0;
   }
-  sortByRecDate(a, b) {
-    if (a.recDate < b.recDate) {
+  sortByCreated(a, b) {
+    if (a.created < b.created) {
       return 1;
     }
-    if (a.recDate > b.recDate) {
+    if (a.created > b.created) {
       return -1;
     }
     return 0;
@@ -536,7 +536,7 @@ export class GenericObjectService {
     if (key == 'id') {
       return 'numberRO'
     }
-    if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
+    if (key == 'birthDay' || key == 'validity' || key == 'created' || key == 'validFrom' || key == 'validUntil') {
       return 'date';
     }
     if (key == 'reminder' || key == 'created') {
@@ -589,7 +589,7 @@ export class GenericObjectService {
     //TODO introduce checks
     let output: any = {};
     for (let key in object) {
-      if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil' || key == 'created') {
+      if (key == 'birthDay' || key == 'validity' || key == 'created' || key == 'validFrom' || key == 'validUntil' || key == 'created') {
         let date = new Date(object[key]);
         output[key] = date.toJSON();
       } else {

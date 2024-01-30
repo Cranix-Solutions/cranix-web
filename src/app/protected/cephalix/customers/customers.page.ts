@@ -94,7 +94,7 @@ export class CustomersPage implements OnInit {
           this.columnDefs.push(action)
           continue;
         }
-        case 'recDate': {
+        case 'created': {
           col['cellRendererFramework'] = DateCellRenderer;
           break;
         }
