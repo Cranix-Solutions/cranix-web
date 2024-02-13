@@ -26,7 +26,7 @@ export class SoftwareEditBTNRenderer implements ICellRendererAngularComp {
 
     public details(event) {
         event.stopPropagation();
-        this.params.context.componentParent.redirectToEdit(null,this.params.data);
+        this.params.context.componentParent.redirectToEdit(this.params.data);
     }
     public licenses(event) {
         event.stopPropagation();
