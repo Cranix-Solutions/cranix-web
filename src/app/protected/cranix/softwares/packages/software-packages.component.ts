@@ -112,17 +112,6 @@ export class SoftwarePackagesComponent implements OnInit {
 
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.doLayout();
-  }
-  onResize($event) {
-    this.sizeAll();
-  }
-  sizeAll() {
-    var allColumnIds = [];
-    this.columnApi.getAllColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.columnApi.autoSizeColumns(allColumnIds);
   }
 
   public redirectToDelete = (software: Software) => {
