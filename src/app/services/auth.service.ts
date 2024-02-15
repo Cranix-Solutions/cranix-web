@@ -9,7 +9,7 @@ import { isDevMode } from '@angular/core';
 
 //Own modules
 import { UtilsService } from './utils.service';
-import { UserResponse, LoginForm, Settings, ServerResponse } from 'src/app/shared/models/server-models';
+import { UserResponse, LoginForm, Settings, ServerResponse, Crx2faSession } from 'src/app/shared/models/server-models';
 import { LanguageService } from './language.service';
 import { TeachingSubject } from '../shared/models/data-model';
 
@@ -105,6 +105,7 @@ export class AuthenticationService {
     setUpSession(user: LoginForm, instituteName: string) {
         this.session = null;
         this.authenticationState.next(false);
+        user.crx2faSessionId = this.utilsS.getCookie("crx2faSessionId");
         let subscription = this.login(user).subscribe({
             next: (val) => {
                 console.log('login respons is', val);
@@ -188,8 +189,9 @@ export class AuthenticationService {
             'Accept': "application/json"
         });
         let data = { crx2faId: id, pin: otPin, token: this.session.token }
-        this.http.post(url, data, { headers: headers }).subscribe({
+        this.http.post<Crx2faSession>(url, data, { headers: headers }).subscribe({
             next: (val) => {
+                this.utilsS.setCookie("crx2faSessionId",val.id.toString(),val.validHours)
                 console.log(val)
                 this.authenticationState.next(true)
             },

@@ -18,6 +18,7 @@ export interface Crx2fa {
 export class Crx2faSession {
         id: number = 0;
         creatorId: number = 0;
+        created?: string = "";
         validHours: number = 2;
         valid: boolean
         token: string
@@ -66,6 +67,7 @@ export class UserResponse {
 export class LoginForm {
         username: string = "";
         password: string = "";
+        crx2faSessionId?: string = "";
 }
 
 export interface ServerResponse {
