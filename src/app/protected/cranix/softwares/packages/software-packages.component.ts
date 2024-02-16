@@ -171,6 +171,7 @@ export class SoftwarePackagesComponent implements OnInit {
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
+      this.readInstallableSoftware();
       if (dataReturned.data) {
         this.authService.log("Object was created or modified", dataReturned.data)
       }
