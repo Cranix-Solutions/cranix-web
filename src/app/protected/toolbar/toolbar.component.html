@@ -12,7 +12,7 @@
       {{authService.session.fullName}} {{authService.session.instituteName}} {{authService.session.roomName}}
     </ion-label>
     <ion-buttons slot="end">
-      <ion-button *ngIf="authService.isAllowed('cephalix.ticket')" fill="clear" (click)="logOut($event)">
+      <ion-button *ngIf="authService.isAllowed('cephalix.ticket')" fill="clear" (click)="route.navigate(['/pages/cephalix/tickets'])">
         <div *ngIf="newTickets">
           <ion-icon color="danger" name="ticket"></ion-icon>
           <ion-badge color="danger">{{newTickets}}</ion-badge>

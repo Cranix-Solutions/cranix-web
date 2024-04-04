@@ -79,7 +79,9 @@ export class ObjectsEditComponent implements OnInit {
             if (this.objectService.typeOf(key, this.object, 'edit') == 'multivalued') {
               let s = val[key]
               this.object[key] = s.join()
-            } else {
+            } else if (key == 'validity' || key == 'created' || key == 'validFrom' || key == 'validUntil' || key == 'modified') {
+              this.object[key] = new Date(val[key]).toJSON().replace(".000Z","");
+             } else {
               this.object[key] = val[key];
             }
           }

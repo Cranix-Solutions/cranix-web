@@ -77,6 +77,7 @@ export class GenericObjectService {
     'ignoreNetbios',
     'loggedInName',
     'msQuotaUsed',
+    'modified',
     'name',
     'network',
     'creatorName',
@@ -536,10 +537,10 @@ export class GenericObjectService {
     if (key == 'id') {
       return 'numberRO'
     }
-    if (key == 'birthDay' || key == 'validity' || key == 'created' || key == 'validFrom' || key == 'validUntil') {
+    if (key == 'birthDay' || key == 'validity' || key == 'validFrom' || key == 'validUntil') {
       return 'date';
     }
-    if (key == 'reminder' || key == 'created') {
+    if (key == 'reminder' || key == 'created' || key == 'modified') {
       return 'date-time';
     }
     if (key == 'text' || key == 'domains') {
@@ -589,7 +590,8 @@ export class GenericObjectService {
     //TODO introduce checks
     let output: any = {};
     for (let key in object) {
-      if (key == 'birthDay' || key == 'validity' || key == 'created' || key == 'validFrom' || key == 'validUntil' || key == 'created') {
+      if (key == 'birthDay' || key == 'validity' || key == 'created' || key == 'validFrom' || key == 'validUntil' || key == 'modified') {
+        console.log(object[key])
         let date = new Date(object[key]);
         output[key] = date.toJSON();
       } else {
