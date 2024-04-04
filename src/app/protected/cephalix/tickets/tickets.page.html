@@ -38,6 +38,10 @@
     <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('ticketsFilterMD')"
       id="ticketsFilterMD" showCancelButton="never">
     </ion-searchbar>
+    <ion-button size="small" fill="solid" (click)="redirectToEdit(null)"
+      matTooltip="{{'Create a new ticket' | translate }}">
+      <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+    </ion-button>
     <ion-button fill="solid" (click)="reloadAllObjects()" matTooltip="{{'Reload tickets' | translate }}">
       <ion-icon color="secondary" slot="icon-only" name="refresh"></ion-icon>
     </ion-button>

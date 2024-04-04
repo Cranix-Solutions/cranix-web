@@ -1,13 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 //Own stuff
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { SystemService } from 'src/app/services/system.service';
 import { LanguageService } from 'src/app/services/language.service';
-import { SupportTicket } from 'src/app/shared/models/data-model';
+import { SupportRequest } from 'src/app/shared/models/data-model';
 import { ServiceStatus } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from 'src/app/services/auth.service';
+import { CreateSupport } from 'src/app/shared/actions/create-support/create-support-page';
 
 @Component({
   selector: 'cranix-system-status',
@@ -16,7 +17,7 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 })
 export class SystemStatusComponent implements OnInit {
 
-  mySupport = new SupportTicket();
+  mySupport = new SupportRequest();
   objectKeys: string[];
   systemStatus: any;
   servicesStatus: ServiceStatus[];
@@ -49,8 +50,8 @@ export class SystemStatusComponent implements OnInit {
       }
     });
     this.systemStatus = {};
-    let subM = this.systemService.getStatus().subscribe(
-      (val) => {
+    let subM = this.systemService.getStatus().subscribe({
+      next:(val) => {
         this.systemStatus = {};
         this.objectKeys = Object.keys(val).sort();
         for (let key of Object.keys(val)) {
@@ -82,10 +83,10 @@ export class SystemStatusComponent implements OnInit {
             this.systemStatus[key]['header'] = this.languageService.trans(key)
           }
         }
-
       },
-      (err) => { console.log(err) },
-      () => { subM.unsubscribe() });
+      error: (err) => { console.log(err) },
+      complete: () => { subM.unsubscribe() }
+    })
   }
 
 
@@ -130,48 +131,3 @@ export class SystemStatusComponent implements OnInit {
     (await modal).present();
   }
 }
-
-
-@Component({
-  selector: 'create-support-page',
-  templateUrl: 'create-support.html'
-})
-export class CreateSupport implements OnInit {
-
-  disabled: boolean = false;
-  files = [];
-  @Input() support
-  constructor(
-    public modalController: ModalController,
-    public systemService: SystemService,
-    public objectService: GenericObjectService
-  ) { }
-
-  ngOnInit() { }
-  onFilesAdded(event) {
-    this.files = event.target.files;
-  }
-
-  addAttachment() {
-    console.log("addP")
-    for (let file of this.files) {
-      this.support.attachmentName = file.name;
-      let fileReader = new FileReader();
-      fileReader.onload = (e) => {
-        let index = e.target.result.toString().indexOf("base64,") + 7;
-        this.support.attachment = e.target.result.toString().substring(index);
-      }
-      fileReader.readAsDataURL(file);
-    }
-  }
-  onSubmit() {
-    console.log(this.support)
-    this.systemService.createSupportRequest(this.support).subscribe(
-      (val) => {
-        this.objectService.responseMessage(val);
-        this.modalController.dismiss("OK")
-      }
-    )
-  };
-}
-

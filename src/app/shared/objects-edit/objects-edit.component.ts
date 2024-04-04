@@ -7,7 +7,7 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { UsersService } from 'src/app/services/users.service';
 import { SystemService } from 'src/app/services/system.service';
-import { SupportTicket, SoftwareVersion, SoftwareFullName } from '../models/data-model';
+import { SupportRequest, SoftwareVersion, SoftwareFullName } from '../models/data-model';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -177,7 +177,7 @@ export class ObjectsEditComponent implements OnInit {
     this.objectService.deleteObjectDialog(this.object, this.objectType, '');
     //this.modalController.dismiss("succes");
   }
-  supportRequest(object: SupportTicket) {
+  supportRequest(object: SupportRequest) {
     let subs = this.systemService.createSupportRequest(object).subscribe(
       (val) => {
         this.objectService.responseMessage(val);

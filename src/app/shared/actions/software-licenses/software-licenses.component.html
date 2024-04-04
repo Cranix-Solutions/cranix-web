@@ -31,13 +31,13 @@
           <ion-input type="number" [(ngModel)]="count" name="count"></ion-input>
         </ion-item>
       </ion-col>
-      <ion-col size=3>
+      <ion-col *ngIf="licenseType == 'C'" size=3>
         <ion-item [disabled]="file">
           <ion-label position="stacked">{{'value' | translate}}</ion-label>
           <ion-input type="text" [(ngModel)]="value" name="value"></ion-input>
         </ion-item>
       </ion-col>
-      <ion-col>
+      <ion-col *ngIf="licenseType == 'F'" size=3>
         <ion-item lines="none">
           <div class="upload-btn-wrapper">
             <button class="btn">
@@ -64,12 +64,8 @@
     <ion-row *ngFor="let license of licenses; index as i">
       <ion-col>
         <ion-item>
-          <ion-label position="stacked">
-          </ion-label>
-          <ion-select [(ngModel)]="licenses[i].licenseType">
-            <ion-select-option value="C">{{'Parameter license'|translate}}</ion-select-option>
-            <ion-select-option value="F">{{'File license'|translate}}</ion-select-option>
-          </ion-select>
+          <ion-label *ngIf="licenses[i].licenseType == 'C'">{{'Parameter license'|translate}}</ion-label>
+          <ion-label *ngIf="licenses[i].licenseType == 'F'">{{'File license'|translate}}</ion-label>
         </ion-item>
       </ion-col>
       <ion-col>
@@ -77,17 +73,17 @@
           <ion-input type="number" [(ngModel)]="licenses[i].count" name="{{count + i }}"></ion-input>
         </ion-item>
       </ion-col>
-      <ion-col size=3>
+      <ion-col *ngIf="licenses[i].licenseType == 'C'" size=3>
         <ion-item>
           <ion-input type="text" [(ngModel)]="licenses[i].value" name="{{value + i }}"></ion-input>
         </ion-item>
       </ion-col>
-      <ion-col>
+      <ion-col *ngIf="licenses[i].licenseType == 'F'" size="3">
         <ion-item lines="none">
           <div class="upload-btn-wrapper">
             <button class="btn">
               <div *ngIf="files[license.id]">{{files[license.id].name}}</div>
-              <div *ngIf="!files[license.id]">{{'Select a file'|translate}}</div>
+              <div *ngIf="!files[license.id]">{{licenses[i].value}}</div>
               <input type="file" (change)="onFilesChanged($event,license.id)" />
             </button>
           </div>

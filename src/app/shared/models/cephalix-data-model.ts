@@ -57,7 +57,8 @@ export class Ticket{
     id?: number = 0;
     title: string = "";
     cephalixInstituteId: number = 0;
-    ossuserId: number = 0;
+    cranixUserId: number = 0;
+    cranixDeviceId: number = 0;
     creatorId: number = 0;
     ticketType: string = "";
     firstname: string = "";

@@ -317,7 +317,7 @@ export class AdHocRoom extends Room {
 	groups?: Group[] = [];
 }
 
-export class SupportTicket {
+export class SupportRequest {
 	firstname: string = "";
 	lastname: string = "";
 	email: string = "";

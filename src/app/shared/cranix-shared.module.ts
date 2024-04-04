@@ -45,6 +45,7 @@ import { AddDeviceComponent } from 'src/app/protected/cranix/devices/add-device/
 import { AddPrinterComponent } from 'src/app/protected/cranix/devices/add-printer/add-printer.component';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
+import { CreateSupport } from 'src/app/shared/actions/create-support/create-support-page';
 import { SetpasswordComponent } from 'src/app/shared/actions/setpassword/setpassword.component'
 import { SetquotaComponent } from 'src/app/shared/actions/setquota/setquota.component';
 import { ManageDhcpComponent } from 'src/app/shared/actions/manage-dhcp/manage-dhcp.component'
@@ -56,6 +57,8 @@ import { SetValidityComponent } from 'src/app/shared/actions/set-validity/set-va
 import { ShowImportComponent } from 'src/app/shared/actions/show-import/show-import.component'
 import { WindowRef } from 'src/app/shared/models/ohters'
 import { CranixMdListComponent } from 'src/app/shared/cranix-md-list/cranix-md-list.component'
+import { QuillModule } from 'ngx-quill';
+import { simpleToolbarOptions } from 'src/app/shared/models/constants'
 @NgModule({
   declarations: [
     ActionsComponent,
@@ -64,6 +67,7 @@ import { CranixMdListComponent } from 'src/app/shared/cranix-md-list/cranix-md-l
     ApplyBTNRenderer,
     ApplyCheckBoxBTNRenderer,
     ActionBTNRenderer,
+    CreateSupport,
     CranixMdListComponent,
     CustomerActionRenderer,
     ObjectsEditComponent,
@@ -116,6 +120,9 @@ import { CranixMdListComponent } from 'src/app/shared/cranix-md-list/cranix-md-l
     ReactiveFormsModule,
     PipesModule,
     TranslateModule,
+    QuillModule.forRoot({
+      modules: { toolbar: simpleToolbarOptions},
+    }),
   ], exports: [
     CommonModule,
     AgChartsAngularModule,

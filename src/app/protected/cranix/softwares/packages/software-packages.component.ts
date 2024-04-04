@@ -185,7 +185,7 @@ export class SoftwarePackagesComponent implements OnInit {
       componentProps: {
         software: software
       },
-      cssClass: 'medium-modal',
+      cssClass: 'big-modal',
       animated: true,
       showBackdrop: true
     });

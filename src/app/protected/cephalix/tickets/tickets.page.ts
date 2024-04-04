@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
-import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
@@ -16,6 +15,8 @@ import { Ticket } from 'src/app/shared/models/cephalix-data-model'
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { Subscription } from 'rxjs';
 import { CephalixService } from 'src/app/services/cephalix.service';
+import { SupportRequest } from 'src/app/shared/models/data-model';
+import { CreateSupport } from 'src/app/shared/actions/create-support/create-support-page';
 
 @Component({
   selector: 'cranix-tickets',
@@ -41,6 +42,7 @@ export class TicketsPage implements OnInit {
   rowData = [];
   selectedIds: number[] = [];
   selection: Ticket[] = [];
+  supportRequest: SupportRequest
 
   constructor(
     public authService: AuthenticationService,
@@ -229,21 +231,24 @@ export class TicketsPage implements OnInit {
     if (ticket) {
       this.route.navigate(['/pages/cephalix/tickets/' + ticket.id]);
     } else {
-      ticket = new Ticket();
+      var mySupport = new SupportRequest();
+      mySupport.lastname = this.authService.session.fullName.replace("(","").replace(")","")
       const modal = await this.modalCtrl.create({
-        component: ObjectsEditComponent,
+        component: CreateSupport,
+        cssClass: 'big-modal',
         componentProps: {
-          objectType: "ticket",
-          objectAction: "add",
-          object: new Ticket(),
-          objectKeys: this.objectKeys
+          support: mySupport,
         },
         animated: true,
         showBackdrop: true
       });
       modal.onDidDismiss().then((dataReturned) => {
+        this.reloadAllObjects();
         if (dataReturned.data) {
-          this.authService.log("Object was created or modified", dataReturned.data)
+          delete dataReturned.data.subject;
+          delete dataReturned.data.text;
+          console.log("Object was created or modified", dataReturned.data);
+          this.storage.set('System.Status.mySupport', JSON.stringify(dataReturned.data));
         }
       });
       (await modal).present();

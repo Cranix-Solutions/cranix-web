@@ -47,7 +47,9 @@ export class SoftwareLicensesComponent implements OnInit {
     }
     formData.append('licenseType', this.licenseType);
     formData.append('count', this.count.toString());
-    if (this.value) {
+    if( this.licenseType == "F") {
+      formData.append('value', this.file.name);
+    } else {
       formData.append('value', this.value);
     }
     let sub = this.softwareService.addSoftwareLicense(this.software.id, formData).subscribe(
@@ -83,7 +85,11 @@ export class SoftwareLicensesComponent implements OnInit {
     }
     formData.append('licenseType', license.licenseType);
     formData.append('count', license.count.toString());
-    formData.append('value', license.value);
+    if( license.licenseType == "F") {
+      formData.append('value', this.files[license.id].name)
+    } else {
+      formData.append('value', license.value);
+    }
     let sub = this.softwareService.modifySoftwareLicense(license.id, formData).subscribe(
       (val) => {
         this.objectService.responseMessage(val);

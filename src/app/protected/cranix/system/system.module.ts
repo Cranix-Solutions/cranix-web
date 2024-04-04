@@ -8,7 +8,7 @@ import { QuillModule } from 'ngx-quill';
 //own modules
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { SystemPage } from './system.page';
-import { SystemStatusComponent, CreateSupport }  from './status/system-status.component';
+import { SystemStatusComponent }  from './status/system-status.component';
 import { SystemConfigComponent }  from './config/system-config.component';
 import { SystemAddonsComponent }  from './addons/system-addons.component';
 import { SystemAclsComponent } from './acls/system-acls.component';
@@ -67,7 +67,6 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ],
   declarations: [
-    CreateSupport,
     ManageAclsComponent,
     MailserverComponent,
     SystemAclsComponent,
