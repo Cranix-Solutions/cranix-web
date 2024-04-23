@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { Storage } from '@ionic/storage-angular';
-import { Router } from '@angular/router';
 import { interval } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 //Own module
@@ -37,7 +36,6 @@ export class ToolbarComponent implements OnInit {
     public translateService: LanguageService,
     public objectService: GenericObjectService,
     public modalConroller: ModalController,
-    public route: Router,
     public utilService: UtilsService
   ) {
     this.fullName = authService.session.fullName;

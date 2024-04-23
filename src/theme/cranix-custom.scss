@@ -229,35 +229,7 @@ button:focus {
       text-align: left;
   }
 }
-/*.ag-header-group-cell-label, .ag-header-cell-label{
-  justify-content: center;
-}
-/* Do not delete, might be usefull 
-.ag-theme-material .ag-selection-checkbox:not(.ag-hidden)~.ag-cell-value:not(:empty) {
-  margin-left: 12px;
-}
 
-.ag-header-cell-label .ag-header-cell-text {
-  font-size: 12px;
-  margin   : auto;
-}*/
-// set the colors to the ones from the material theme
-/*.ag-theme-material .ag-header-cell {
- //background-color: rgba(189, 195, 199, 0.5);
-}
-.ag-theme-material .ag-icon-checkbox-unchecked {
-  font-size: 15px;
-}
-
-.ag-theme-material .ag-icon-checkbox-checked {
-  font-size: 15px;
-}
-
-.ag-theme-material .ag-icon-checkbox-indeterminate:before {
-  font-size: 15px;
-
-}
-*/
 .rotate-header-class {
   transform: rotate(90deg);
   //display  : inline-block;

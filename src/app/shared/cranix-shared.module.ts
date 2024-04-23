@@ -39,7 +39,6 @@ import { UserIdCellRenderer } from 'src/app/pipes/ag-userid-renderer';
 import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-renderer';
 import { FileSystemUsageRenderer } from 'src/app/pipes/ag-filesystem-usage-renderer';
 import { CanActivateViaAcls } from '../services/auth-guard.service';
-import { IonicSelectableModule } from 'ionic-selectable';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { AddDeviceComponent } from 'src/app/protected/cranix/devices/add-device/add-device.component';
 import { AddPrinterComponent } from 'src/app/protected/cranix/devices/add-printer/add-printer.component';
@@ -112,7 +111,6 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     AgGridModule,
     FormsModule,
     IonicModule,
-    IonicSelectableModule,
     MatDatepickerModule,
     MatFormFieldModule,
     MatIconModule,
@@ -129,7 +127,6 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     AgGridModule,
     FormsModule,
     IonicModule,
-    IonicSelectableModule,
     MatDatepickerModule,
     MatFormFieldModule,
     MatIconModule,

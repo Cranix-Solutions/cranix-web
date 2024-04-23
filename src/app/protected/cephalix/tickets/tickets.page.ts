@@ -130,13 +130,13 @@ export class TicketsPage implements OnInit {
         }
         case 'modified': {
           col['sort'] = 'desc',
-          col['cellRendererFramework'] = DateTimeCellRenderer;
+          col['cellRenderer'] = DateTimeCellRenderer;
           col['minWidth'] = 180
           col['maxWidth'] = 180
           break;
         }
         case 'created': {
-          col['cellRendererFramework'] = DateTimeCellRenderer;
+          col['cellRenderer'] = DateTimeCellRenderer;
           col['minWidth'] = 180
           col['maxWidth'] = 180
           break;
@@ -181,7 +181,6 @@ export class TicketsPage implements OnInit {
       }
     } else {
       this.gridApi.setQuickFilter(filter);
-      this.gridApi.doLayout();
     }
   }
 

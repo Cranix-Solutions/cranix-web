@@ -52,7 +52,7 @@ export class InstitutesComponent implements OnInit {
       resizable: true,
       sortable: true,
       hide: false,
-      suppressMenu: true,
+      suppressHeaderMenuButton: true,
       minWidth: 110
     };
     this.nativeWindow = win.getNativeWindow()
@@ -97,16 +97,16 @@ export class InstitutesComponent implements OnInit {
             cellStyle: { 'padding': '1px' },
             field: 'actions',
             pinned: 'left',
-            cellRendererFramework: InstituteActionCellRenderer
+            cellRenderer: InstituteActionCellRenderer
           })
           continue;
         }
         case 'validity': {
-          col['cellRendererFramework'] = DateCellRenderer;
+          col['cellRenderer'] = DateCellRenderer;
           break;
         }
         case 'created': {
-          col['cellRendererFramework'] = DateCellRenderer;
+          col['cellRenderer'] = DateCellRenderer;
           break;
         }
       }
@@ -133,7 +133,6 @@ export class InstitutesComponent implements OnInit {
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
     this.gridApi.setQuickFilter(filter);
-    this.gridApi.doLayout();
   }
   public redirectToDelete = (institute: Institute) => {
     this.objectService.deleteObjectDialog(institute, 'institute', '')

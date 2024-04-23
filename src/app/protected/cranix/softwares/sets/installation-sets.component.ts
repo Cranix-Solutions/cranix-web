@@ -90,7 +90,7 @@ export class InstallationSetsComponent implements OnInit {
         cellStyle: { 'padding': '2px', 'line-height': '36px' },
         field: 'actions',
         pinned: 'left',
-        cellRendererFramework: EditBTNRenderer
+        cellRenderer: EditBTNRenderer
       },
       {
         field: 'description',
@@ -98,7 +98,7 @@ export class InstallationSetsComponent implements OnInit {
       },
       {
         field: 'softwares',
-        suppressMenu: true,
+        suppressHeaderMenuButton: true,
         headerName: this.languageS.trans('softwares'),
         valueGetter: function (params) {
           return params.data.softwareIds.length;
@@ -106,7 +106,7 @@ export class InstallationSetsComponent implements OnInit {
       },
       {
         field: 'hwconfs',
-        suppressMenu: true,
+        suppressHeaderMenuButton: true,
         headerName: this.languageS.trans('hwconfs'),
         valueGetter: function (params) {
           return params.data.hwconfIds.length;
@@ -114,7 +114,7 @@ export class InstallationSetsComponent implements OnInit {
       },
       {
         field: 'rooms',
-        suppressMenu: true,
+        suppressHeaderMenuButton: true,
         headerName: this.languageS.trans('rooms'),
         valueGetter: function (params) {
           return params.data.roomIds.length;
@@ -122,7 +122,7 @@ export class InstallationSetsComponent implements OnInit {
       },
       {
         field: 'devices',
-        suppressMenu: true,
+        suppressHeaderMenuButton: true,
         headerName: this.languageS.trans('devices'),
         valueGetter: function (params) {
           return params.data.deviceIds.length;

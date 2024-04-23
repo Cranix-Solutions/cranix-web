@@ -49,7 +49,7 @@ export class ProxyComponent implements OnInit {
       this.columnDefs = [{
         field: 'name',
         headerName: this.languageS.trans('name'),
-        suppressMenu: true,
+        suppressHeaderMenuButton: true,
         sortable: true
       },
       {
@@ -57,7 +57,7 @@ export class ProxyComponent implements OnInit {
         cellStyle: { 'justify-content': "center" },
         headerName: this.languageS.trans('applyForAll'),
         width: 100,
-        cellRendererFramework: ApplyCheckBoxBTNRenderer
+        cellRenderer: ApplyCheckBoxBTNRenderer
       }
       ];
       this.authService.log(this.rowData);
@@ -68,9 +68,9 @@ export class ProxyComponent implements OnInit {
           col['field'] = key;
           col['minWidth'] = 100;
           col['sortable'] = false;
-          col['suppressMenu'] = true;
+          col['suppressHeaderMenuButton'] = true;
           col['headerName'] = this.languageS.trans(key);
-          col['cellRendererFramework'] = CheckBoxBTNRenderer;
+          col['cellRenderer'] = CheckBoxBTNRenderer;
           this.columnDefs.push(col);
         }
       }

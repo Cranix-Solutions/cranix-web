@@ -24,7 +24,7 @@ export class HwconfMembersPage implements OnInit {
     resizable: true,
     sortable: true,
     hide: false,
-    suppressMenu: true
+    suppressHeaderMenuButton: true
   }
   memberApi;
   memberColumnApi;
@@ -73,7 +73,7 @@ export class HwconfMembersPage implements OnInit {
         {
           headerName: this.languageService.trans('room'),
           field: 'roomId',
-          cellRendererFramework: RoomIdCellRenderer,
+          cellRenderer: RoomIdCellRenderer,
         },
         {
           headerName: this.languageService.trans('ip'),

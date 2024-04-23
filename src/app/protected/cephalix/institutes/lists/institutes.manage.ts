@@ -45,7 +45,7 @@ export class InstitutesManage implements OnInit {
         resizable: true,
         sortable: true,
         hide: false,
-        suppressMenu : true,
+        suppressHeaderMenuButton : true,
         checkboxSelection : false
       };
   }
@@ -175,11 +175,10 @@ export class InstitutesManage implements OnInit {
   onQuickFilterChanged(quickFilter) {
     console.log(quickFilter,'value',(<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.doLayout();
   }
 
   onGridSizeChange(params) {
-    var allColumns = params.columnApi.getAllColumns();
+    var allColumns = params.columnApi.getColumns();
     params.api.sizeColumnsToFit();
     params.columnApi.autoSizeColumns();
     //this.sizeAll();
@@ -187,7 +186,7 @@ export class InstitutesManage implements OnInit {
 
   sizeAll(skip) {
     var allColumnIds = [];
-    this.columnApi.getAllColumns().forEach((column) => {
+    this.columnApi.getColumns().forEach((column) => {
       allColumnIds.push(column.getColId());
     });
     //this.gridApi.sizeColumnsToFit();

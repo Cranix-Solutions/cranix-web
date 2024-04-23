@@ -50,7 +50,7 @@ export class MyGroupsPage implements OnInit {
       resizable: true,
       sortable: true,
       hide: false,
-      suppressMenu: true
+      suppressHeaderMenuButton: true
     }
   }
   async ngOnInit() {
@@ -98,7 +98,7 @@ export class MyGroupsPage implements OnInit {
         suppressSizeToFit: true,
         cellStyle: { 'padding': '2px' },
         field: 'actions',
-        cellRendererFramework: GroupActionBTNRenderer
+        cellRenderer: GroupActionBTNRenderer
       },
       {
         field: 'description',
@@ -170,7 +170,7 @@ export class MyGroupsPage implements OnInit {
         suppressSizeToFit: true,
         cellStyle: { 'padding': '2px' },
         field: 'actions',
-        cellRendererFramework: EditBTNRenderer
+        cellRenderer: EditBTNRenderer
       },
       {
         field: 'description',
@@ -184,17 +184,17 @@ export class MyGroupsPage implements OnInit {
       {
         headerName: this.languageS.trans('private'),
         field: 'privateGroup',
-        cellRendererFramework: YesNoBTNRenderer
+        cellRenderer: YesNoBTNRenderer
       },
       {
         headerName: this.languageS.trans('AdHoc-Room'),
         field: 'createAdHocRoom',
-        cellRendererFramework: YesNoBTNRenderer
+        cellRenderer: YesNoBTNRenderer
       },
       {
         headerName: this.languageS.trans('validUntil'),
         field: 'validUntil',
-        cellRendererFramework: DateTimeCellRenderer
+        cellRenderer: DateTimeCellRenderer
       }
     ];
   }
@@ -265,7 +265,6 @@ export class MyGroupsPage implements OnInit {
 
     } else {
       this.gridApi.setQuickFilter(filter);
-      this.gridApi.doLayout();
     }
   }
   public redirectToDelete = (tmp) => {

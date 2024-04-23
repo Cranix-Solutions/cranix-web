@@ -55,7 +55,7 @@ export class PrintersComponent implements OnInit {
         resizable: true,
         sortable: true,
         hide: false,
-        suppressMenu: true
+        suppressHeaderMenuButton: true
       },
       columnDefs: this.columnDefs,
       context: this.context,
@@ -98,12 +98,12 @@ export class PrintersComponent implements OnInit {
         }
         case 'windowsDriver': {
           col['cellStyle'] = { 'justify-content': "center" };
-          col['cellRendererFramework'] = YesNoBTNRenderer
+          col['cellRenderer'] = YesNoBTNRenderer
           break;
         }
         case 'acceptingJobs': {
           col['cellStyle'] = { 'justify-content': "center" };
-          col['cellRendererFramework'] = YesNoBTNRenderer
+          col['cellRenderer'] = YesNoBTNRenderer
           break;
         }
         case 'roomId': {
@@ -122,7 +122,7 @@ export class PrintersComponent implements OnInit {
       cellStyle: { 'padding': '1px', 'line-height': '36px' },
       field: 'actions',
       pinned: 'left',
-      cellRendererFramework: PrinterActionBTNRenderer
+      cellRenderer: PrinterActionBTNRenderer
     };
     columnDefs.splice(1, 0, action);
     this.columnDefs = columnDefs;
@@ -143,11 +143,10 @@ export class PrintersComponent implements OnInit {
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
     this.gridApi.setQuickFilter(filter);
-    this.gridApi.doLayout();
   }
   sizeAll() {
     var allColumnIds = [];
-    this.columnApi.getAllColumns().forEach((column) => {
+    this.columnApi.getColumns().forEach((column) => {
       allColumnIds.push(column.getColId());
     });
     this.columnApi.autoSizeColumns(allColumnIds);

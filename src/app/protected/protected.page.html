@@ -15,7 +15,7 @@
         </ion-list-header>
         <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
           <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false"
-            style="background-color : {{ p.url.startsWith(activePath) ? 'var(--ion-color-secondary)' : 'var(--ion-color-primary-tint)' }};">
+            style="background-color : {{ location.path().startsWith(p.url) ? 'var(--ion-color-secondary)' : 'var(--ion-color-primary-tint)' }};">
             <ion-icon size="small" style="margin-right: 10px;" color="#ffffff" slot="start" [ios]="p.icon + '-outline'"
               [md]="p.icon + '-sharp'">
             </ion-icon>

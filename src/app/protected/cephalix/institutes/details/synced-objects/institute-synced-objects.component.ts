@@ -58,7 +58,7 @@ export class InstituteSyncedObjectsComponent implements OnInit {
       {
         headerName: "",
         field: 'cranixId',
-        cellRendererFramework: SyncObjectRenderer
+        cellRenderer: SyncObjectRenderer
       }
     ];
   }

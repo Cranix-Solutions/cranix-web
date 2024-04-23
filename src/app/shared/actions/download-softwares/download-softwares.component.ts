@@ -49,7 +49,6 @@ export class DownloadSoftwaresComponent implements OnInit {
 
   packagFilterChanged() {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById("packageFilter")).value);
-    this.gridApi.doLayout();
   }
   closeWindow() {
     this.modalController.dismiss();

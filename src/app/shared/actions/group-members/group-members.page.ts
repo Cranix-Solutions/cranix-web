@@ -59,7 +59,7 @@ export class GroupMembersPage implements OnInit {
         headerCheckboxSelection: this.authService.settings.headerCheckboxSelection,
         headerCheckboxSelectionFilteredOnly: true,
         checkboxSelection: this.authService.settings.checkboxSelection,
-        suppressMenu: true
+        suppressHeaderMenuButton: true
       },
       {
         headerName: this.languageS.trans('role'),
@@ -67,7 +67,7 @@ export class GroupMembersPage implements OnInit {
         resizable: true,
         field: 'role',
         width: 100,
-        suppressMenu: true,
+        suppressHeaderMenuButton: true,
         valueGetter: function (params) {
           return params.context['componentParent'].languageS.trans(params.data.role);
         }
@@ -83,7 +83,7 @@ export class GroupMembersPage implements OnInit {
         headerCheckboxSelection: this.authService.settings.headerCheckboxSelection,
         headerCheckboxSelectionFilteredOnly: true,
         checkboxSelection: this.authService.settings.checkboxSelection,
-        suppressMenu: true
+        suppressHeaderMenuButton: true
       },
       {
         headerName: this.languageS.trans('surName'),
@@ -103,7 +103,7 @@ export class GroupMembersPage implements OnInit {
         resizable: true,
         field: 'role',
         width: 150,
-        suppressMenu: true,
+        suppressHeaderMenuButton: true,
         valueGetter: function (params) {
           return params.context['componentParent'].languageS.trans(params.data.role);
         }

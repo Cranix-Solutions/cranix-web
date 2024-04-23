@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterEvent } from '@angular/router';
-
+import { Location } from '@angular/common';
 import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
@@ -9,7 +8,6 @@ import { AuthenticationService } from 'src/app/services/auth.service';
   styleUrls: ['./protected.page.scss'],
 })
 export class ProtectedPage implements OnInit {
-  public activePath = "";
   public appPages = [];
   private defAppPages = [
     {
@@ -92,19 +90,15 @@ export class ProtectedPage implements OnInit {
   public disabled: boolean = false;
 
   constructor(
-    private router: Router,
+    public location: Location,
     public authService: AuthenticationService
   ) {
-    this.router.events.subscribe((event: RouterEvent) => {
-      if (event.url) {
-        let path = event.url.split("/");
-        this.activePath = "/" + path[1] + "/" + path[2] + "/" + path[3]
-      }
-    })
+
+    console.log(this.location.path())
     for (let page of this.defAppPages) {
       if (this.authService.isRouteAllowed(page.url)) {
-        if( page.title == 'Lessons') {
-          if(this.authService.isAllowed('challenge.manage')){
+        if (page.title == 'Lessons') {
+          if (this.authService.isAllowed('challenge.manage')) {
             page.url = "/pages/edu/lessons/challenges"
           } else {
             page.url = "/pages/edu/lessons/tests"

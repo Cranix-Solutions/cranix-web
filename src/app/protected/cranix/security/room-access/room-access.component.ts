@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { GridApi } from 'ag-grid-community';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SecurityService } from 'src/app/services/security-service';
@@ -23,10 +24,8 @@ export class RoomAccessComponent implements OnInit {
   disabled: boolean = false;
   accessOptions = {};
   context;
-  accessApi;
-  accessColumnApi;
-  statusApi;
-  statusColumnApi;
+  accessApi: GridApi;
+  statusApi: GridApi;
   columnDefs: any[] = [];
   statusColumnDefs: any[] = [];
   defaultColDef;
@@ -49,7 +48,7 @@ export class RoomAccessComponent implements OnInit {
       cellStyle: { 'justify-content': "center" },
       minWidth: 100,
       maxWidth: 150,
-      suppressMenu: true,
+      suppressHeaderMenuButton: true,
       sortable: false,
       headerComponentParams: {
         template:
@@ -87,15 +86,15 @@ export class RoomAccessComponent implements OnInit {
       }, {
         headerName: this.languageS.trans('login'),
         field: 'login',
-        cellRendererFramework: YesNoBTNRenderer
+        cellRenderer: YesNoBTNRenderer
       }, {
         headerName: this.languageS.trans('portal'),
         field: 'portal',
-        cellRendererFramework: YesNoBTNRenderer
+        cellRenderer: YesNoBTNRenderer
       }, {
         headerName: this.languageS.trans('printing'),
         field: 'printing',
-        cellRendererFramework: YesNoBTNRenderer
+        cellRenderer: YesNoBTNRenderer
       }
     ];
     if (this.authService.isAllowed('system.proxy')) {
@@ -103,19 +102,19 @@ export class RoomAccessComponent implements OnInit {
         {
           headerName: this.languageS.trans('proxy'),
           field: 'proxy',
-          cellRendererFramework: YesNoBTNRenderer
+          cellRenderer: YesNoBTNRenderer
         }
       )
     }
     this.statusColumnDefs.push({
       headerName: this.languageS.trans('direct'),
       field: 'direct',
-      cellRendererFramework: YesNoBTNRenderer
+      cellRenderer: YesNoBTNRenderer
     })
     this.statusColumnDefs.push({
       headerName: this.languageS.trans('Apply Default'),
       field: 'apply_default',
-      cellRendererFramework: ApplyBTNRenderer
+      cellRenderer: ApplyBTNRenderer
     })
   }
   toggle(data, field: string, value: boolean) {
@@ -184,7 +183,7 @@ export class RoomAccessComponent implements OnInit {
         default: {
           col['minWidth'] = 70;
           col['maxWidth'] = 100;
-          col['cellRendererFramework'] = YesNoBTNRenderer;
+          col['cellRenderer'] = YesNoBTNRenderer;
         }
       }
       col['headerName'] = this.languageS.trans(key);
@@ -196,22 +195,18 @@ export class RoomAccessComponent implements OnInit {
   }
   onQuickFilterChanged(quickFilter) {
     if (this.segment == 'list') {
-      this.accessApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-      this.accessApi.doLayout();
+      this.accessApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById(quickFilter)).value);
     } else {
-      this.statusApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-      this.statusApi.doLayout();
+      this.statusApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById(quickFilter)).value);
     }
   }
   headerHeightSetter() {
     var padding = 20;
     var height = headerHeightGetter() + padding;
     if (this.segment == 'list') {
-      this.accessApi.setHeaderHeight(height);
-      this.accessApi.resetRowHeights();
+      this.accessApi.setGridOption('headerHeight', height);
     } else {
-      this.statusApi.setHeaderHeight(height);
-      this.statusApi.resetRowHeights();
+      this.statusApi.setGridOption('headerHeight', height);
     }
   }
   segmentChanged(event) {
@@ -232,15 +227,11 @@ export class RoomAccessComponent implements OnInit {
   }
   accessGridReady(params) {
     this.accessApi = params.api;
-    this.accessColumnApi = params.columnApi;
     this.authService.log(this.accessApi);
-    this.authService.log(this.accessColumnApi);
   }
   statusGridReady(params) {
     this.statusApi = params.api;
-    this.statusColumnApi = params.columnApi;
     this.authService.log(this.accessApi);
-    this.authService.log(this.accessColumnApi);
   }
   async redirectToAddEdit(roomAccess: AccessInRoom) {
     let action = "add";

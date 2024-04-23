@@ -48,7 +48,7 @@ export class CustomersPage implements OnInit {
       resizable: true,
       sortable: true,
       hide: false,
-      suppressMenu: true
+      suppressHeaderMenuButton: true
     };
 
   }
@@ -71,7 +71,7 @@ export class CustomersPage implements OnInit {
       cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
       pinned: 'left',
-      cellRendererFramework: CustomerActionRenderer
+      cellRenderer: CustomerActionRenderer
 
     };
     for (let key of this.objectKeys) {
@@ -95,7 +95,7 @@ export class CustomersPage implements OnInit {
           continue;
         }
         case 'created': {
-          col['cellRendererFramework'] = DateCellRenderer;
+          col['cellRenderer'] = DateCellRenderer;
           break;
         }
       }
@@ -113,11 +113,10 @@ export class CustomersPage implements OnInit {
 
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.doLayout();
   }
   sizeAll() {
     var allColumnIds = [];
-    this.columnApi.getAllColumns().forEach((column) => {
+    this.columnApi.getColumns().forEach((column) => {
       allColumnIds.push(column.getColId());
     });
     this.columnApi.autoSizeColumns(allColumnIds);
@@ -234,7 +233,7 @@ export class EditInstitutes implements OnInit {
     resizable: true,
     sortable: true,
     hide: false,
-    suppressMenu: true
+    suppressHeaderMenuButton: true
   }
   columnDefs = [
     { field: 'id', checkboxSelection: true, headerCheckboxSelection: true, headerCheckboxSelectionFilteredOnly: true },
@@ -278,7 +277,6 @@ export class EditInstitutes implements OnInit {
 
   onQuickFilterChanged() {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById('instituteFilter')).value);
-    this.gridApi.doLayout();
   }
 
   showOwned() {

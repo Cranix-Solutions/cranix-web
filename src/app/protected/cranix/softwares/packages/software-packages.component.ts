@@ -91,7 +91,7 @@ export class SoftwarePackagesComponent implements OnInit {
             cellStyle: { 'padding': '2px', 'line-height': '36px' },
             field: 'actions',
             pinned: 'left',
-            cellRendererFramework: SoftwareEditBTNRenderer
+            cellRenderer: SoftwareEditBTNRenderer
           });
           continue;
         }

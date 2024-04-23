@@ -21,11 +21,12 @@ export class SystemStatusComponent implements OnInit {
   objectKeys: string[];
   systemStatus: any;
   servicesStatus: ServiceStatus[];
+  chartsReady: boolean = false;
   series = [
     {
       type: 'pie',
       angleKey: 'count',
-      labelKey: 'name'
+      legendItemKey: 'name'
     }
   ];
 
@@ -41,6 +42,8 @@ export class SystemStatusComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.chartsReady = false;
     this.storage.get('System.Status.mySupport').then((val) => {
       let myTmp = JSON.parse(val);
       if (myTmp && myTmp.email) {
@@ -51,9 +54,10 @@ export class SystemStatusComponent implements OnInit {
     });
     this.systemStatus = {};
     let subM = this.systemService.getStatus().subscribe({
-      next:(val) => {
+      next: (val) => {
+        console.log(val)
         this.systemStatus = {};
-        this.objectKeys = Object.keys(val).sort();
+        this.objectKeys = Object.keys(val);
         for (let key of Object.keys(val)) {
           this.systemStatus[key] = {
             legend: { enabled: false },
@@ -64,25 +68,35 @@ export class SystemStatusComponent implements OnInit {
             padding: {
               right: 40,
               left: 40
-          }
+            }
           };
           if (key.startsWith("/dev")) {
             //Convert value into GB
             this.systemStatus[key]['data'] = []
-            for( let a  of val[key] ) {
+            for (let a of val[key]) {
               this.systemStatus[key]['data'].push(
                 {
                   name: a['name'],
-                  count: a['count'] / 1048576
+                  count: parseInt(a['count']) / 1048576
                 }
               )
             }
             this.systemStatus[key]['header'] = key + " [GB]"
           } else {
-            this.systemStatus[key]['data']  = val[key];
+            this.systemStatus[key]['data'] = []
+            for (let a of val[key]) {
+              this.systemStatus[key]['data'].push(
+                {
+                  name: a['name'],
+                  count: parseInt(a['count'])
+                }
+              )
+            }
             this.systemStatus[key]['header'] = this.languageService.trans(key)
           }
         }
+        this.chartsReady = true;
+        console.log(this.systemStatus)
       },
       error: (err) => { console.log(err) },
       complete: () => { subM.unsubscribe() }
@@ -99,7 +113,7 @@ export class SystemStatusComponent implements OnInit {
   }
   shutDown(ev: Event) {
     this.systemService.shutDown()
-   }
+  }
 
   async support(ev: Event) {
     delete this.mySupport.description;

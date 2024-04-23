@@ -52,7 +52,7 @@ export class InstituteStatusComponent implements OnInit {
       cellStyle: { 'justify-content': "center" },
       minWidth: 100,
       maxWidth: 150,
-      suppressMenu: true,
+      suppressHeaderMenuButton: true,
       sortable: true,
       resizable: false
     };
@@ -79,7 +79,6 @@ export class InstituteStatusComponent implements OnInit {
 
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.doLayout();
 
   }
   public ngAfterViewInit() {
@@ -93,31 +92,31 @@ export class InstituteStatusComponent implements OnInit {
       col['headerName'] = this.languageS.trans(key);
       switch (key) {
         case 'lastUpdate': {
-          col['cellRendererFramework'] = DateTimeCellRenderer;
+          col['cellRenderer'] = DateTimeCellRenderer;
           break;
         }
         case 'rootUsage': {
           col['headerClass'] = "rotate-header-class"
           col['minWidth'] = 70
-          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          col['cellRenderer'] = FileSystemUsageRenderer;
           break;
         }
         case 'homeUsage': {
           col['headerClass'] = "rotate-header-class"
           col['minWidth'] = 70
-          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          col['cellRenderer'] = FileSystemUsageRenderer;
           break;
         }
         case 'srvUsage': {
           col['headerClass'] = "rotate-header-class"
           col['minWidth'] = 70
-          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          col['cellRenderer'] = FileSystemUsageRenderer;
           break;
         }
         case 'varUsage': {
           col['headerClass'] = "rotate-header-class"
           col['width'] = 70
-          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          col['cellRenderer'] = FileSystemUsageRenderer;
           break;
         }
         case 'runningKernel': {
@@ -148,7 +147,7 @@ export class InstituteStatusComponent implements OnInit {
           break;
         }
         case 'created': {
-          col['cellRendererFramework'] = DateTimeCellRenderer;
+          col['cellRenderer'] = DateTimeCellRenderer;
           break;
         }
         case 'errorMessages': {

@@ -25,7 +25,7 @@ export class SystemAclsComponent implements OnInit {
     resizable: true,
     sortable: true,
     hide: false,
-    suppressMenu : true
+    suppressHeaderMenuButton : true
   }
 
   constructor(public authService: AuthenticationService,

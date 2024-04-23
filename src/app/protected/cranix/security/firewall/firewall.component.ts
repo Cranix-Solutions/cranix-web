@@ -43,7 +43,7 @@ export class FirewallComponent implements OnInit {
       resizable: true,
       sortable: true,
       hide: false,
-      suppressMenu: true
+      suppressHeaderMenuButton: true
     };
     this.outColumnDefs = [
       {

@@ -35,7 +35,7 @@ export class Users2faComponent implements OnInit {
             resizable: true,
             sortable: true,
             hide: false,
-            suppressMenu: true
+            suppressHeaderMenuButton: true
         }
         this.dataTypeDefinitions = {
             user: {
@@ -57,7 +57,6 @@ export class Users2faComponent implements OnInit {
     onQuickFilterChanged(quickFilter) {
         let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
         this.gridApi.setQuickFilter(filter);
-        //this.gridApi.doLayout();
     }
 
     createColumDef() {

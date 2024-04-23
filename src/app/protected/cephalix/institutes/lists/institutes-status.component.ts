@@ -136,7 +136,7 @@ export class InstitutesStatusComponent implements OnInit {
             headerName: "",
             editable: true,
             width: 30,
-            cellRendererFramework: InstituteStatusRenderer
+            cellRenderer: InstituteStatusRenderer
           })
           this.columnDefs.push({
             headerName: this.languageS.trans('ipVPN'),
@@ -150,23 +150,23 @@ export class InstitutesStatusComponent implements OnInit {
           continue;
         }
         case 'lastUpdate': {
-          col['cellRendererFramework'] = DateCellRenderer;
+          col['cellRenderer'] = DateCellRenderer;
           break;
         }
         case 'rootUsage': {
-          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          col['cellRenderer'] = FileSystemUsageRenderer;
           break;
         }
         case 'homeUsage': {
-          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          col['cellRenderer'] = FileSystemUsageRenderer;
           break;
         }
         case 'srvUsage': {
-          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          col['cellRenderer'] = FileSystemUsageRenderer;
           break;
         }
         case 'varUsage': {
-          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          col['cellRenderer'] = FileSystemUsageRenderer;
           break;
         }
         case 'runningKernel': {
@@ -187,13 +187,13 @@ export class InstitutesStatusComponent implements OnInit {
           break;
         }
         case 'availableUpdates': {
-          col['cellRendererFramework'] = UpdateRenderer;
+          col['cellRenderer'] = UpdateRenderer;
           break;
         }
         case 'created': {
           col['width'] = 160
           col['maxWidth'] = 160
-          col['cellRendererFramework'] = DateTimeCellRenderer;
+          col['cellRenderer'] = DateTimeCellRenderer;
           col['cellStyle'] = params => (this.now - params.value) > 36000000 ? { 'background-color': 'red' } : { 'background-color': '#2dd36f' }
           break;
         }
@@ -268,11 +268,10 @@ export class InstitutesStatusComponent implements OnInit {
   headerHeightSetter() {
     var padding = 20;
     var height = headerHeightGetter() + padding;
-    this.gridApi.setHeaderHeight(height);
+    this.gridApi.setGridOption('headerHeight',height);
   }
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.doLayout();
   }
 
   //TODO RESPONSE

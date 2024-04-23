@@ -48,7 +48,7 @@ export class HwconfsPage implements OnInit {
       resizable: true,
       sortable: true,
       hide: false,
-      suppressMenu: true
+      suppressHeaderMenuButton: true
     }
   }
   ngOnInit() {
@@ -69,7 +69,7 @@ export class HwconfsPage implements OnInit {
       cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
       pinned: 'left',
-      cellRendererFramework: ActionBTNRenderer
+      cellRenderer: ActionBTNRenderer
     };
     for (let key of this.objectKeys) {
       let col = {};
@@ -119,7 +119,6 @@ export class HwconfsPage implements OnInit {
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
     this.gridApi.setQuickFilter(filter);
-    this.gridApi.doLayout();
   }
 
   public redirectToDelete = (hwconf: Hwconf) => {

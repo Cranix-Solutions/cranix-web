@@ -46,7 +46,7 @@ export class GroupsPage implements OnInit {
       resizable: true,
       sortable: true,
       hide: false,
-      suppressMenu: true
+      suppressHeaderMenuButton: true
     }
   }
   ngOnInit() {
@@ -68,7 +68,7 @@ export class GroupsPage implements OnInit {
       cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
       pinned: 'left',
-      cellRendererFramework: GroupActionBTNRenderer
+      cellRenderer: GroupActionBTNRenderer
     };
     for (let key of this.objectKeys) {
       let col = {};
@@ -117,7 +117,6 @@ export class GroupsPage implements OnInit {
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
     this.gridApi.setQuickFilter(filter);
-    this.gridApi.doLayout();
   }
 
   public redirectToDelete = (group: Group) => {

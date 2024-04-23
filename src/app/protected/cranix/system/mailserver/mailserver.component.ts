@@ -18,7 +18,7 @@ export class MailserverComponent implements OnInit {
     resizable: true,
     sortable: true,
     hide: false,
-    suppressMenu: true
+    suppressHeaderMenuButton: true
   }
   columnDefs = []
   gridApi;
