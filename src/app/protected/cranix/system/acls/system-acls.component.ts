@@ -109,11 +109,11 @@ export class SystemAclsComponent implements OnInit {
     this.usersApi.addEventListener('rowClicked', this.userRowClickedHandler);
   }
   groupFilterChanged() {
-    this.groupsApi.setQuickFilter((<HTMLInputElement>document.getElementById('groupFilter')).value);
+    this.groupsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById('groupFilter')).value);
     this.groupsApi.doLayout();
   }
   userFilterChanged() {
-    this.usersApi.setQuickFilter((<HTMLInputElement>document.getElementById('userFilter')).value);
+    this.usersApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById('userFilter')).value);
     this.usersApi.doLayout();
   }
 }

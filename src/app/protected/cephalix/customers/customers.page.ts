@@ -112,7 +112,7 @@ export class CustomersPage implements OnInit {
   }
 
   onQuickFilterChanged(quickFilter) {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
+    this.gridApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById(quickFilter)).value);
   }
   sizeAll() {
     var allColumnIds = [];
@@ -276,7 +276,7 @@ export class EditInstitutes implements OnInit {
   }
 
   onQuickFilterChanged() {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById('instituteFilter')).value);
+    this.gridApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById('instituteFilter')).value);
   }
 
   showOwned() {

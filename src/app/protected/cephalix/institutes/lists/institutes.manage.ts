@@ -174,7 +174,7 @@ export class InstitutesManage implements OnInit {
 
   onQuickFilterChanged(quickFilter) {
     console.log(quickFilter,'value',(<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
+    this.gridApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById(quickFilter)).value);
   }
 
   onGridSizeChange(params) {

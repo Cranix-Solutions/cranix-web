@@ -138,7 +138,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.softwares = this.availableSoftwaresApi.getSelectedRows();
   }
   availableSoftwaresFilterChanged() {
-    this.availableSoftwaresApi.setQuickFilter((<HTMLInputElement>document.getElementById("availableSoftwaresFilter")).value);
+    this.availableSoftwaresApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("availableSoftwaresFilter")).value);
     this.availableSoftwaresApi.doLayout();
   }
 
@@ -163,7 +163,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.hwconfs = this.availableHwconfsApi.getSelectedRows();
   }
   availableHwconfsFilterChanged() {
-    this.availableHwconfsApi.setQuickFilter((<HTMLInputElement>document.getElementById("availableHwconfsFilter")).value);
+    this.availableHwconfsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("availableHwconfsFilter")).value);
     this.availableHwconfsApi.doLayout();
   }
 
@@ -188,7 +188,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.rooms = this.availableRoomsApi.getSelectedRows();
   }
   availableRoomsFilterChanged() {
-    this.availableRoomsApi.setQuickFilter((<HTMLInputElement>document.getElementById("availableRoomsFilter")).value);
+    this.availableRoomsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("availableRoomsFilter")).value);
     this.availableRoomsApi.doLayout();
   }
 
@@ -213,7 +213,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.devices = this.availableDevicesApi.getSelectedRows();
   }
   availableDevicesFilterChanged() {
-    this.availableDevicesApi.setQuickFilter((<HTMLInputElement>document.getElementById("availableDevicesFilter")).value);
+    this.availableDevicesApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("availableDevicesFilter")).value);
     this.availableDevicesApi.doLayout();
   }
 
@@ -229,7 +229,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.softwares = this.softwaresApi.getSelectedRows();
   }
   softwaresFilterChanged() {
-    this.softwaresApi.setQuickFilter((<HTMLInputElement>document.getElementById("softwaresFilter")).value);
+    this.softwaresApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("softwaresFilter")).value);
     this.availableSoftwaresApi.doLayout();
   }
 
@@ -245,7 +245,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.hwconfs = this.hwconfsApi.getSelectedRows();
   }
   hwconfsFilterChanged() {
-    this.hwconfsApi.setQuickFilter((<HTMLInputElement>document.getElementById("hwconfsFilter")).value);
+    this.hwconfsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("hwconfsFilter")).value);
     this.hwconfsApi.doLayout();
   }
 
@@ -261,7 +261,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.rooms = this.roomsApi.getSelectedRows();
   }
   roomsFilterChanged() {
-    this.roomsApi.setQuickFilter((<HTMLInputElement>document.getElementById("roomsFilter")).value);
+    this.roomsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("roomsFilter")).value);
     this.roomsApi.doLayout();
   }
 
@@ -277,7 +277,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.devices = this.devicesApi.getSelectedRows();
   }
   devicesFilterChanged() {
-    this.devicesApi.setQuickFilter((<HTMLInputElement>document.getElementById("devicesFilter")).value);
+    this.devicesApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("devicesFilter")).value);
     this.devicesApi.doLayout();
   }
   closeWindow() {

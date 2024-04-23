@@ -78,7 +78,7 @@ export class InstituteStatusComponent implements OnInit {
   }
 
   onQuickFilterChanged(quickFilter) {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
+    this.gridApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById(quickFilter)).value);
 
   }
   public ngAfterViewInit() {

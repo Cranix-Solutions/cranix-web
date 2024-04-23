@@ -271,7 +271,7 @@ export class InstitutesStatusComponent implements OnInit {
     this.gridApi.setGridOption('headerHeight',height);
   }
   onQuickFilterChanged(quickFilter) {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
+    this.gridApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById(quickFilter)).value);
   }
 
   //TODO RESPONSE

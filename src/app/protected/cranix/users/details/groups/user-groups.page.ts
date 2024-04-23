@@ -70,7 +70,7 @@ export class UserGroupsPage implements OnInit {
   }
 
   onMemberFilterChanged() {
-    this.memberApi.setQuickFilter((<HTMLInputElement>document.getElementById("memberFilter")).value);
+    this.memberApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("memberFilter")).value);
     this.memberApi.doLayout();
   }
 
@@ -85,7 +85,7 @@ export class UserGroupsPage implements OnInit {
   }
 
   onNoMemberFilterChanged() {
-    this.noMemberApi.setQuickFilter((<HTMLInputElement>document.getElementById("noMemberFilter")).value);
+    this.noMemberApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("noMemberFilter")).value);
     this.noMemberApi.doLayout();
   }
   applyChanges() {

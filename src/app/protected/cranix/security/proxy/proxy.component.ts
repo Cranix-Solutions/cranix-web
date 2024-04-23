@@ -83,7 +83,7 @@ export class ProxyComponent implements OnInit {
   }
 
   onQuickFilterChanged(){
-    this.proxyApi.setQuickFilter((<HTMLInputElement>document.getElementById('proxyQuickFilter')).value);
+    this.proxyApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById('proxyQuickFilter')).value);
     this.proxyApi.doLayout();
   }
   segmentChanged(event) {

@@ -62,7 +62,7 @@ export class InstallationSetsComponent implements OnInit {
   }
 
   setFilterChanged() {
-    this.installationSetApi.setQuickFilter((<HTMLInputElement>document.getElementById("installationSetFilter")).value);
+    this.installationSetApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("installationSetFilter")).value);
     this.installationSetApi.doLayout();
   }
 

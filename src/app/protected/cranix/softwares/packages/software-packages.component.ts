@@ -111,7 +111,7 @@ export class SoftwarePackagesComponent implements OnInit {
   }
 
   onQuickFilterChanged(quickFilter) {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
+    this.gridApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById(quickFilter)).value);
   }
 
   public redirectToDelete = (software: Software) => {

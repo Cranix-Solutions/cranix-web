@@ -97,7 +97,7 @@ export class HwconfMembersPage implements OnInit {
   }
 
   onQuickFilterChanged(quickFilter) {
-    this.memberApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
+    this.memberApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.memberApi.doLayout();
   }
 

@@ -180,7 +180,7 @@ export class TicketsPage implements OnInit {
         }
       }
     } else {
-      this.gridApi.setQuickFilter(filter);
+      this.gridApi.setGridOption('quickFilterText', filter);
     }
   }
 

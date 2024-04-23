@@ -264,7 +264,7 @@ export class MyGroupsPage implements OnInit {
       }
 
     } else {
-      this.gridApi.setQuickFilter(filter);
+      this.gridApi.setGridOption('quickFilterText', filter);
     }
   }
   public redirectToDelete = (tmp) => {

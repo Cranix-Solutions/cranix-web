@@ -48,7 +48,7 @@ export class InstitutesSyncObjectsComponent implements OnInit {
   }
 
   onMemberFilterChanged() {
-    this.memberApi.setQuickFilter((<HTMLInputElement>document.getElementById("memberFilter")).value);
+    this.memberApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("memberFilter")).value);
     this.memberApi.doLayout();
   }
 

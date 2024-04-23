@@ -53,7 +53,7 @@ export class SoftwareStatusComponent implements OnInit {
     this.softwareColumnApi = params.columnApi;
   }
   onQuickFilterChanged(quickFilter) {
-    this.softwareApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
+    this.softwareApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.softwareApi.doLayout();
   }
   sizeAll() {
