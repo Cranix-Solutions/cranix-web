@@ -58,6 +58,7 @@ import { WindowRef } from 'src/app/shared/models/ohters'
 import { CranixMdListComponent } from 'src/app/shared/cranix-md-list/cranix-md-list.component'
 import { QuillModule } from 'ngx-quill';
 import { simpleToolbarOptions } from 'src/app/shared/models/constants'
+import { IonicSelectableModule } from 'ionic-selectable';
 @NgModule({
   declarations: [
     ActionsComponent,
@@ -111,6 +112,7 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     AgGridModule,
     FormsModule,
     IonicModule,
+    IonicSelectableModule,
     MatDatepickerModule,
     MatFormFieldModule,
     MatIconModule,

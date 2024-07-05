@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { GridApi, ColumnApi } from 'ag-grid-community';
+import { GridApi, ColDef } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 
@@ -23,10 +23,9 @@ export class CustomersPage implements OnInit {
   objectKeys: string[] = [];
   displayedColumns: string[] = ['id', 'name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity'];
   sortableColumns: string[] = ['id', 'name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity'];
-  columnDefs = [];
-  defaultColDef = {};
+  columnDefs: ColDef[] = [];
+  defaultColDef: ColDef = {};
   gridApi: GridApi;
-  columnApi: ColumnApi;
   context;
   selected: Customer[] = [];
   title = 'app';
@@ -64,7 +63,7 @@ export class CustomersPage implements OnInit {
 
   createColumnDefs() {
     this.columnDefs = [];
-    let action = {
+    let action: ColDef = {
       headerName: "",
       minWidth: 130,
       suppressSizeToFit: true,
@@ -105,7 +104,6 @@ export class CustomersPage implements OnInit {
 
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
   onSelectionChanged() {
@@ -113,13 +111,6 @@ export class CustomersPage implements OnInit {
 
   onQuickFilterChanged(quickFilter) {
     this.gridApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById(quickFilter)).value);
-  }
-  sizeAll() {
-    var allColumnIds = [];
-    this.columnApi.getColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.columnApi.autoSizeColumns(allColumnIds);
   }
 
   public redirectToDelete = (customer: Customer) => {
@@ -229,13 +220,13 @@ export class EditInstitutes implements OnInit {
   context;
   gridApi;
   columnApi;
-  defaultColDef = {
+  defaultColDef: ColDef = {
     resizable: true,
     sortable: true,
     hide: false,
     suppressHeaderMenuButton: true
   }
-  columnDefs = [
+  columnDefs: ColDef[] = [
     { field: 'id', checkboxSelection: true, headerCheckboxSelection: true, headerCheckboxSelectionFilteredOnly: true },
     { field: 'name' },
     { field: 'locality' },
