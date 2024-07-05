@@ -1,5 +1,5 @@
 #!/bin/bash
-REPO="/home/OSC/home:pvarkoly:CRANIX/cranix-web"
+REPO="/data1/OSC/home:pvarkoly:CRANIX/cranix-web"
 HERE=$( pwd )
 DATE=$( date -u +"Built at: %Y-%m-%d %H:%M" )
 git status
