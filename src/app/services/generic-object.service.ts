@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 })
 export class GenericObjectService {
   //allObjects: {} = {};
-  allObjects: Map<string,Object[]> = new Map<string,Object[]>();
+  allObjects: Map<string, any[]> = new Map<string, any[]>();
   selectedObject: any = null;
   selectedObjectType: string = null;
   selection: any[] = [];
@@ -202,46 +202,56 @@ export class GenericObjectService {
       complete: () => { sub.unsubscribe() }
     });
   }
+
+
+  getObjects(objectType: string){
+    let url = this.utilsS.hostName() + "/" + objectType + "s/all";
+    //We do not read all challenges only the challenges from the selected
+    if (objectType == 'challenge' && this.authService.selectedTeachingSubject) {
+      url = this.utilsS.hostName() + "/challenges/subjects/" + this.authService.selectedTeachingSubject.id
+    }
+    console.log("getObjects " + url)
+    return fetch(url, {
+      method: 'get', headers: new Headers({
+        'Content-Type': "application/json",
+        'Accept': "application/json",
+        'Authorization': "Bearer " + this.authService.session.token
+      })
+    })
+  }
   /**
    * Loads the object of type 'objectType' from the server
    * @param objectType
    */
-  getAllObject(objectType) {
+  async getAllObject(objectType: string) {
     if (this.objects.indexOf(objectType) == -1) {
-      console.log("Unknown object type:",objectType)
+      console.log("Unknown object type:", objectType)
       return;
     }
-
-    let url = this.utilsS.hostName() + "/" + objectType + "s/all";
-    //We do not read all challenges only the challenges from the selected
-    if(objectType == 'challenge' && this.authService.selectedTeachingSubject){
-      url = this.utilsS.hostName() + "/challenges/subjects/" + this.authService.selectedTeachingSubject.id
-    }
-    console.log("getAllObject" +url)
-    this.http.get<any[]>(url, { headers: this.authService.headers }).subscribe({
-      next: (val) => {
-        switch (objectType) {
-          case 'ticket': val.sort(this.sortByCreated)
-        }
-        this.allObjects[objectType] = val;
-        this.selects[objectType + 'Id'] = []
-        for (let obj of <any[]>val) {
-          this.selects[objectType + 'Id'].push(obj.id);
-        }
-        this.authService.log("GenericObjectService: ", objectType + "s were read", this.allObjects[objectType]);
-        this.initialized++;
-      },
-      error: (err) => {
-        if (!this.allObjects[objectType]) {
-          this.allObjects[objectType] = [];
-          this.selects[objectType + 'Id'] = [];
-        }
-        console.log('getAllObject', objectType, err);
+    try {
+      let respons = await this.getObjects(objectType)
+      let val = await respons.json()
+      if (objectType == 'ticket') {
+        val.sort(this.sortByCreated)
       }
-    });
+      this.allObjects[objectType] = val;
+      this.selects[objectType + 'Id'] = []
+      for (let obj of <any[]>val) {
+        this.selects[objectType + 'Id'].push(obj.id);
+      }
+      this.authService.log("GenericObjectService: ", objectType + "s were read", this.allObjects[objectType]);
+      this.initialized++;
+    } catch (error) {
+      if (!this.allObjects[objectType]) {
+        this.allObjects[objectType] = [];
+        this.selects[objectType + 'Id'] = [];
+      }
+      console.log('getAllObject', objectType, error);
+    }
   }
 
-  getSubscribe(path){
+
+  getSubscribe(path) {
     let url = this.utilsS.hostName() + path
     return this.http.get<any[]>(url, { headers: this.authService.headers })
   }
@@ -271,8 +281,8 @@ export class GenericObjectService {
     if (!objectId) {
       return null;
     }
-    if(!objectType){
-      console.log("getObjectById",this);
+    if (!objectType) {
+      console.log("getObjectById", this);
       return null
     }
     for (let obj of this.allObjects[objectType]) {
@@ -320,7 +330,7 @@ export class GenericObjectService {
    * @param idName
    */
   idToPipe(idName: string) {
-    if (idName == 'creatorId' || idName == 'loggedInId') {
+    if (idName == 'creatorId' || idName == 'loggedInId' || idName.startsWith('owner')) {
       return 'user';
     }
     if (idName == 'cephalixCustomerId') {

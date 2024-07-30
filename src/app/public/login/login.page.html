@@ -7,17 +7,11 @@
     <ion-card-content *ngIf="!authService.use2fa">
       <ion-list>
         <ion-item>
-          <ion-label style="width: 120px;">
-            {{'username'|translate}}
-          </ion-label>
-          <ion-input [(ngModel)]="user.username" name="username" type="text"
+          <ion-input label="{{'username'|translate}}" [(ngModel)]="user.username" name="username" type="text"
             autocomplete="off" required></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label style="width: 120px;">
-            {{'password'|translate}}
-          </ion-label>
-          <ion-input [(ngModel)]="user.password" name="password"
+          <ion-input label="{{'password'|translate}}" [(ngModel)]="user.password" name="password"
             [type]="showPassword ? 'text' : 'password'" autocomplete="off" required></ion-input>
           <ion-icon slot="end" [name]="showPassword ? 'eye-off' : 'eye'"
             (click)="showPassword = !showPassword"></ion-icon>
@@ -37,8 +31,7 @@
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-label>{{'Enter PIN'|translate}}</ion-label>
-          <ion-input [(ngModel)]="totppin" name="totppin" required></ion-input>
+          <ion-input label="{{'Enter PIN'|translate}}" [(ngModel)]="totppin" name="totppin" required></ion-input>
           <ion-button *ngIf="!authService.crx2fa.startsWith('TOTP')" (click)="sendPin()">
             {{'Send pin'|translate}}
           </ion-button>

@@ -87,44 +87,55 @@
       <ng-template ionicSelectablePlaceholderTemplate>{{'select'|translate}}</ng-template>
     </ionic-selectable>
   </ion-item>
+  @if( !authService.isMD() ) {
   <ion-buttons slot="end">
-    <div *ngIf="!authService.isMD()">
-      <ion-button size="small" fill="solid" (click)="close(false)" matTooltip="{{'Close'|translate}}">
-        <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
-      </ion-button>
-      <ion-button *ngIf="!selectedChallenge.released" size="small" fill="solid" (click)="save()"
-        matTooltip="{{'Save changes' | translate }}"
-        [disabled]="!selectedChallenge.description || !selectedChallenge.teachingSubject">
-        <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
-      </ion-button>
-      <ion-button *ngIf="!selectedChallenge.released" fill="solid" (click)="assign(selectedChallenge)"
-        matTooltip="{{'Assign and start challenge.'|translate}}">
-        <ion-icon slot="icon-only" name="chevron-forward-circle-outline"></ion-icon>
-      </ion-button>
-      <ion-button *ngIf="selectedChallenge.released" fill="solid" (click)="stopAndArchive(selectedChallenge)"
-        matTooltip="{{'Stop and evaluate challenge and archive the results.'|translate}}">
-        <ion-icon slot="icon-only" name="stop-circle-outline" color="danger"></ion-icon>
-      </ion-button>
-      <ion-button *ngIf="selectedChallenge.released" size="small" fill="solid" (click)="evaluate()"
-        matTooltip="{{'Show actual results' | translate }}">
-        <ion-icon slot="icon-only" name="settings" color="success"></ion-icon>
-      </ion-button>
-      <ion-button id="getArchive" size="small" fill="solid" (click)="getArchives(selectedChallenge.id)"
-        matTooltip="{{'Manage the archived results of this challenge.' | translate }}">
-        <ion-icon slot="icon-only" name="archive"></ion-icon>
-      </ion-button>
-      <ion-button *ngIf="!selectedChallenge.released" fill="solid" (click)="uploadChallengeToCephalix()"
-        matTooltip="{{'Upload the test to CEPHALIX Server.'|translate}}">
-        <img src="assets/images/logo/cranix_school.svg" style="height: 32px; width: 32px;">
-      </ion-button>
-      <ion-button *ngIf="!selectedChallenge.released" size="small" fill="solid"
-        (click)="deleteChallenge(selectedChallenge.id)" matTooltip="{{'Delete' | translate }}">
-        <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
-      </ion-button>
-    </div>
+    <ion-button size="small" fill="solid" (click)="close(false)" matTooltip="{{'Close'|translate}}">
+      <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="!selectedChallenge.released" size="small" fill="solid" (click)="save()"
+      matTooltip="{{'Save changes' | translate }}"
+      [disabled]="!selectedChallenge.description || !selectedChallenge.teachingSubject">
+      <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="!selectedChallenge.released" fill="solid" (click)="assign(selectedChallenge)"
+      matTooltip="{{'Assign and start challenge.'|translate}}">
+      <ion-icon slot="icon-only" name="chevron-forward-circle-outline"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="selectedChallenge.released" fill="solid" (click)="stopAndArchive(selectedChallenge)"
+      matTooltip="{{'Stop and evaluate challenge and archive the results.'|translate}}">
+      <ion-icon slot="icon-only" name="stop-circle-outline" color="danger"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="selectedChallenge.released" size="small" fill="solid" (click)="evaluate()"
+      matTooltip="{{'Show actual results' | translate }}">
+      <ion-icon slot="icon-only" name="settings" color="success"></ion-icon>
+    </ion-button>
+    <ion-button id="getArchive" size="small" fill="solid" (click)="getArchives(selectedChallenge.id)"
+      matTooltip="{{'Manage the archived results of this challenge.' | translate }}">
+      <ion-icon slot="icon-only" name="archive"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="!selectedChallenge.released" fill="solid" (click)="uploadChallengeToCephalix()"
+      matTooltip="{{'Upload the test to CEPHALIX Server.'|translate}}">
+      <img src="assets/images/logo/cranix_school.svg" style="height: 32px; width: 32px;">
+    </ion-button>
+    <ion-button *ngIf="!selectedChallenge.released" size="small" fill="solid"
+      (click)="deleteChallenge(selectedChallenge.id)" matTooltip="{{'Delete' | translate }}">
+      <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
+    </ion-button>
   </ion-buttons>
+  }
 </ion-toolbar>
-<ion-content *ngIf="!htmlResult && !challengeToAssign && selectedChallenge">
+@if( !htmlResult && !challengeToAssign && selectedChallenge ) {
+@if( !selectedChallenge.released ) {
+<ion-footer>
+  <ion-item style="color: green; background-color: lightgray;">
+    <ion-label>{{ 'New question' | translate }}</ion-label>
+    <ion-button slot="end" size="small" fill="clear" (click)="openModalAddNewQuestion()">
+      <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
+    </ion-button>
+  </ion-item>
+</ion-footer>
+}
+<ion-content>
   <ion-fab *ngIf="authService.isMD()" vertical="center" horizontal="end" slot="fixed">
     <ion-fab-button size="small">
       <ion-icon name="arrow-forward-circle"></ion-icon>
@@ -164,13 +175,6 @@
       </ion-fab-button>
     </ion-fab-list>
   </ion-fab>
-  <ion-item *ngIf="!selectedChallenge.released" style="color: green; background-color: lightgray;"
-    (click)="openModalAddNewQuestion()">
-    <ion-label>{{ 'New question' | translate }}</ion-label>
-    <ion-button slot="end" size="small" fill="clear" (click)="openModalAddNewQuestion()">
-      <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
-    </ion-button>
-  </ion-item>
   <div class="question" *ngFor="let question of selectedChallenge.questions; index as i">
     <ion-item *ngIf="questionToEdit == i" style="background-color: lightgray;" [disabled]="selectedChallenge.released">
       <quill-editor [styles]="editorStyles" [(ngModel)]="selectedChallenge.questions[i].question" name="description">
@@ -201,8 +205,8 @@
       <quill-view-html [content]="question.question" (click)="toggleEditQuestion(i)" style="min-width: 200px;">
       </quill-view-html>
       <!-- div [innerHTML]="question.question" (click)="toggleEditQuestion(i)"></div -->
-      <ion-label slot="end">{{ 'value' | translate }}:</ion-label>
-      <ion-input slot="end" style="max-width: 40px; margin-right: 10px;" [(ngModel)]="question.value" type="number"
+      <ion-label class="answer" slot="end">{{ 'value' | translate }}:</ion-label>
+      <ion-input class="answer" slot="end" style="max-width: 30px; margin-right: 10px; margin-left: 5px;" [(ngModel)]="question.value" type="number"
         (ionInput)="challengesService.modified = true" min="1"></ion-input>
       <ion-button slot="end" size="small" fill="clear" (click)="deleteQuestion(i)">
         <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
@@ -251,6 +255,7 @@
     </ion-item>
   </div>
 </ion-content>
+}
 <!-- modal available on more pages -->
 <ion-modal #modalAddNewQuestion [isOpen]="modalAddNewQuestionIsOpen">
   <ng-template>
@@ -294,7 +299,8 @@
             <ng-template ionicSelectableHeaderTemplate>
               <ion-toolbar style="margin: 10px;;">
                 <b style="font-size:large;">{{ questionListPlaceHolder | translate }}</b><br>
-                <b style="font-size:small">{{ 'teachingSubject'|translate}}: {{ selectedChallenge.teachingSubject.name }}</b><br>
+                <b style="font-size:small">{{ 'teachingSubject'|translate}}: {{ selectedChallenge.teachingSubject.name
+                  }}</b><br>
                 <i style="font-size:small">{{ 'Select one or more questions!' | translate}}</i>
                 <ion-buttons slot="end">
                   <ion-button ion-button (click)="selectQuestions.close()">

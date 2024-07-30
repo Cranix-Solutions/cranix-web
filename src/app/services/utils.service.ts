@@ -32,7 +32,7 @@ export class UtilsService {
                         url = protocol + "//" + hostname + "/api";
                 }
                 //console.log("From utils: " + url);
-                return "https://adb.cephalix.eu/api"
+                return "https://admin.cephalix.eu/api"
                 //return "https://remscheid.cephalix.eu/api"
                 //return "https://admin.schulzentrum-kirchberg.at/api"
                 return "https://172.16.0.2/api"

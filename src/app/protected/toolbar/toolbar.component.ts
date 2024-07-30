@@ -12,6 +12,7 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { Settings } from 'src/app/shared/models/server-models';
 import { Ticket } from 'src/app/shared/models/cephalix-data-model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'cranix-toolbar',
@@ -36,6 +37,7 @@ export class ToolbarComponent implements OnInit {
     public translateService: LanguageService,
     public objectService: GenericObjectService,
     public modalConroller: ModalController,
+    public route: Router,
     public utilService: UtilsService
   ) {
     this.fullName = authService.session.fullName;

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GridApi, ColumnApi } from 'ag-grid-community';
+import { GridApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
@@ -28,7 +28,6 @@ export class TicketsPage implements OnInit {
   displayedColumns: string[] = ['id', 'title', 'cephalixInstituteId', 'modified', 'created', 'creatorId', 'ticketStatus'];
   columnDefs = [];
   defaultColDef = {};
-  columnApi: ColumnApi;
   gridApi: GridApi;
   context;
   title = 'app';
@@ -160,7 +159,6 @@ export class TicketsPage implements OnInit {
 
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
     //this.gridApi.addEventListener('rowClicked', this.ticketClickHandle);
   }
@@ -185,7 +183,7 @@ export class TicketsPage implements OnInit {
   }
 
   ticketClickHandle(event) {
-    //console.log(event)
+    console.log(event)
     if (event.column.colId != 'id') {
       event.context.componentParent.route.navigate(['/pages/cephalix/tickets/' + event.data.id])
     }

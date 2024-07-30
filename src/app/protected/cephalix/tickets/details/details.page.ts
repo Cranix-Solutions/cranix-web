@@ -39,24 +39,18 @@ export class DetailsPage implements OnInit {
   ) {
     this.nativeWindow = win.getNativeWindow();
     this.ticketId = this.route.snapshot.params.id;
+    console.log("Ticket details constructor called", this.ticketId)
   }
 
-  async ngOnInit() {
-    while( !this.objectService.allObjects.has('institute') || !this.objectService.allObjects.has('user')) {
-      await new Promise(f => setTimeout(f, 1000));
-    }
-  }
-
-  public ngAfterViewInit() {
-    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
-    console.log("Ticket details called", this.ticketId)
-    let sub = this.cephlixS.getTicketById(this.ticketId).subscribe({
+  ngOnInit() {
+    console.log("Ticket details ngOnInit called", this.ticketId)
+    this.cephlixS.getTicketById(this.ticketId).subscribe({
       next: (val) => {
         console.log("getTicketById was called", this.ticketId)
         this.workers = this.objectService.allObjects['user'].filter(o => o.role == 'sysadmins').sort((a, b) => a.fullName > b.label ? 0 : 1);
         this.ticket = val;
         this.ticketCreator = this.objectService.getObjectById('user', this.ticket.creatorId);
-        this.institute   = this.objectService.getObjectById('institute', this.ticket.cephalixInstituteId);
+        this.institute = this.objectService.getObjectById('institute', this.ticket.cephalixInstituteId);
         this.readArcticles();
         for (let i of this.objectService.allObjects['institute']) {
           this.institutes.push({ id: i.id, label: i.name + " " + i.locality })
@@ -71,8 +65,12 @@ export class DetailsPage implements OnInit {
         }
       },
       error: (err) => { console.log(err) },
-      complete: () => { sub.unsubscribe() }
+      complete: () => { }
     })
+  }
+
+  public ngAfterViewInit() {
+    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
   }
 
   public readArcticles() {

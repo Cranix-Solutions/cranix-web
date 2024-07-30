@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ToolbarComponent } from 'src/app/protected/toolbar/toolbar.component';
 import { IonicModule } from '@ionic/angular';
+import { IonicSelectableComponent } from 'ionic-selectable'
 import { TranslateModule } from '@ngx-translate/core';
 import { PipesModule } from 'src/app/pipes/pipe-modules';
 import { AgGridModule } from 'ag-grid-angular';
@@ -58,7 +59,7 @@ import { WindowRef } from 'src/app/shared/models/ohters'
 import { CranixMdListComponent } from 'src/app/shared/cranix-md-list/cranix-md-list.component'
 import { QuillModule } from 'ngx-quill';
 import { simpleToolbarOptions } from 'src/app/shared/models/constants'
-import { IonicSelectableModule } from 'ionic-selectable';
+
 @NgModule({
   declarations: [
     ActionsComponent,
@@ -109,10 +110,10 @@ import { IonicSelectableModule } from 'ionic-selectable';
   imports: [
     CommonModule,
     AgChartsAngularModule,
+    IonicSelectableComponent,
     AgGridModule,
     FormsModule,
     IonicModule,
-    IonicSelectableModule,
     MatDatepickerModule,
     MatFormFieldModule,
     MatIconModule,
@@ -137,7 +138,8 @@ import { IonicSelectableModule } from 'ionic-selectable';
     ReactiveFormsModule,
     TranslateModule,
     ToolbarComponent,
-    CranixMdListComponent
+    CranixMdListComponent,
+    IonicSelectableComponent
   ],
   providers: [WindowRef,CanActivateViaAcls ]
 })
