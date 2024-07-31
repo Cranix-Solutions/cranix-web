@@ -1,7 +1,7 @@
 {
   "name": "cranix-web",
-  "version": "4.5.11",
-  "author": "Helmuth & Peter Varkoly",
+  "version": "15.6.0",
+  "author": "Helmuth Varkoly & Peter Varkoly",
   "homepage": "https://cranix-solutions.de",
   "scripts": {
     "ng": "ng",
@@ -64,5 +64,5 @@
     "tslint": "",
     "typescript": ""
   },
-  "description": "GUI for CRANIX/CEPHALIX"
+  "description": "GUI for CRANIX/CEPHALIX server"
 }
