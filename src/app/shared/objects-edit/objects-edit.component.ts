@@ -149,6 +149,11 @@ export class ObjectsEditComponent implements OnInit {
         this.defaultAction(this.object);
       }
     }
+    for (let key of this.objectKeys) {
+      if (this.objectService.typeOf(key, this.object, 'edit') == 'multivalued') {
+        this.object[key]  = this.object[key].join(',')
+      }
+    }
   }
 
   handleFileInput(event) {
