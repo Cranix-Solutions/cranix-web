@@ -1,5 +1,4 @@
-import { Component, OnInit, AfterContentInit } from '@angular/core';
-import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
+import { Component, OnInit } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { takeWhile } from 'rxjs/internal/operators/takeWhile';
@@ -17,7 +16,6 @@ import { AuthenticationService } from 'src/app/services/auth.service';
   selector: 'cranix-users-import',
   templateUrl: './users-import.component.html',
   // styleUrls: ['./user-import.component.scss'],
-
 })
 export class UsersImportComponent implements OnInit {
   alive: boolean = true;

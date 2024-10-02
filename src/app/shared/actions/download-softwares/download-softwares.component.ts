@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, ToastController } from '@ionic/angular';
-import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
+import { GridApi } from 'ag-grid-community';
 //Own stuff
 import { SoftwareService } from 'src/app/services/softwares.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
@@ -16,7 +16,6 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 })
 export class DownloadSoftwaresComponent implements OnInit {
   gridApi: GridApi;
-  columnApi: ColumnApi;
   columns: any[] = [];
   context;
   selected: Package[];
@@ -44,7 +43,6 @@ export class DownloadSoftwaresComponent implements OnInit {
   }
   tableReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
   }
 
   packagFilterChanged() {

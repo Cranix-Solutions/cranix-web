@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GridApi } from 'ag-grid-community'
 //own stuff
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
@@ -26,8 +27,7 @@ export class HwconfMembersPage implements OnInit {
     hide: false,
     suppressHeaderMenuButton: true
   }
-  memberApi;
-  memberColumnApi;
+  memberApi: GridApi;
   memberData:  Device[] = [];
   memberDataB: Device[] = [];
   hwconf;
@@ -92,26 +92,13 @@ export class HwconfMembersPage implements OnInit {
 
   onMemberReady(params) {
     this.memberApi = params.api;
-    this.memberColumnApi = params.columnApi;
     //this.memberApi.sizeColumnsToFit();
   }
 
   onQuickFilterChanged(quickFilter) {
     this.memberApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.memberApi.doLayout();
   }
 
-  onResize($event) {
-    this.sizeAll();
-    //this.gridApi.sizeColumnsToFit();
-  }
-  sizeAll() {
-    var allColumnIds = [];
-    this.memberColumnApi.getAllColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.memberColumnApi.autoSizeColumns(allColumnIds);
-  }
   readMembers() {
     let subM = this.hwconfService.getMembers(this.hwconf.id).subscribe(
       (val) => {

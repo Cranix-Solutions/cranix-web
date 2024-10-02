@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GridApi } from 'ag-grid-community';
 
 //Own stuff
 import { AuthenticationService } from 'src/app/services/auth.service';
@@ -21,8 +22,7 @@ export class InstituteSyncedObjectsComponent implements OnInit {
     hide: false
   };
   columnDefs = [];
-  memberApi;
-  memberColumnApi;
+  memberApi: GridApi;
   memberSelection: SynchronizedObject[] = [];
   memberData: SynchronizedObject[] = [];
   modules = [];
@@ -73,12 +73,10 @@ export class InstituteSyncedObjectsComponent implements OnInit {
 
   onMemberReady(params) {
     this.memberApi = params.api;
-    this.memberColumnApi = params.columnApi;
   }
 
   onMemberFilterChanged() {
     this.memberApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("memberFilter")).value);
-    this.memberApi.doLayout();
   }
 
   onResize($event) {
@@ -86,10 +84,10 @@ export class InstituteSyncedObjectsComponent implements OnInit {
   }
   sizeAll() {
     var allColumnIds = [];
-    this.memberColumnApi.getAllColumns().forEach((column) => {
+    this.memberApi.getColumns().forEach((column) => {
       allColumnIds.push(column.getColId());
     });
-    this.memberColumnApi.autoSizeColumns(allColumnIds);
+    this.memberApi.autoSizeColumns(allColumnIds);
   }
   readMembers() {
     switch (this.segment) {

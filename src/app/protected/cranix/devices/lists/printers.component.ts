@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
+import { GridOptions, GridApi } from 'ag-grid-community';
 import { AlertController, PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
@@ -31,7 +31,6 @@ export class PrintersComponent implements OnInit {
   columnDefs = [];
   gridOptions: GridOptions;
   gridApi: GridApi;
-  columnApi: ColumnApi;
   context;
   selection: Printer[] = [];
   selectedIds: number[] = [];
@@ -130,7 +129,6 @@ export class PrintersComponent implements OnInit {
 
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
   selectionChanged(){
@@ -143,13 +141,6 @@ export class PrintersComponent implements OnInit {
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
     this.gridApi.setGridOption('quickFilterText', filter);
-  }
-  sizeAll() {
-    var allColumnIds = [];
-    this.columnApi.getColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.columnApi.autoSizeColumns(allColumnIds);
   }
 
   redirectToDelete(printer: Printer) {

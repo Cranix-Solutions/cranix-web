@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GridApi, ColumnApi } from 'ag-grid-community';
+import { GridApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 
@@ -25,7 +25,6 @@ export class UsersComponent implements OnInit {
   columnDefs = [];
   defaultColDef = {};
   gridApi: GridApi;
-  columnApi: ColumnApi;
   context;
   rowData = [];
   defaultMustChange: boolean = true;
@@ -105,7 +104,6 @@ export class UsersComponent implements OnInit {
   }
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
-import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
+import { GridOptions, GridApi } from 'ag-grid-community';
 //Own stuff
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { DownloadSoftwaresComponent } from 'src/app/shared/actions/download-softwares/download-softwares.component';
@@ -23,7 +23,6 @@ export class SoftwarePackagesComponent implements OnInit {
   gridOptions: GridOptions;
   columnDefs = [];
   gridApi: GridApi;
-  columnApi: ColumnApi;
   rowSelection;
   context;
   title = 'app';
@@ -107,7 +106,6 @@ export class SoftwarePackagesComponent implements OnInit {
   }
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
   }
 
   onQuickFilterChanged(quickFilter) {

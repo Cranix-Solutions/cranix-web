@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GridApi, ColumnApi } from 'ag-grid-community';
+import { GridApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
@@ -26,7 +26,6 @@ export class InstituteStatusComponent implements OnInit {
   columnDefs = [];
   defaultColDef = {};
   gridApi: GridApi;
-  columnApi: ColumnApi;
   rowSelection;
   context;
   selected: Institute[];
@@ -73,7 +72,6 @@ export class InstituteStatusComponent implements OnInit {
   }
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
 

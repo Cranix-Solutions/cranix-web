@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
+import { GridApi } from 'ag-grid-community'
 
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
@@ -25,8 +26,7 @@ export class HwconfsPage implements OnInit {
   sortableColumns: string[] = ['name', 'description', 'deviceType'];
   defaultColDef = {};
   columnDefs = [];
-  gridApi;
-  columnApi;
+  gridApi: GridApi;
   context;
   selected: Hwconf[] = [];
   title = 'app';
@@ -97,7 +97,6 @@ export class HwconfsPage implements OnInit {
   }
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
   selectionChanged(){

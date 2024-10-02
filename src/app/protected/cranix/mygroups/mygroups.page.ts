@@ -1,6 +1,6 @@
 import { Component, Inject, Input, LOCALE_ID, OnInit } from '@angular/core';
 import { formatDate } from '@angular/common';
-import { GridApi, ColumnApi } from 'ag-grid-community';
+import { GridApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -30,7 +30,6 @@ export class MyGroupsPage implements OnInit {
   columnDefs = [];
   defaultColDef = {};
   gridApi: GridApi;
-  columnApi: ColumnApi;
   rowSelection;
   context;
   rowData = [];
@@ -200,7 +199,6 @@ export class MyGroupsPage implements OnInit {
   }
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
 

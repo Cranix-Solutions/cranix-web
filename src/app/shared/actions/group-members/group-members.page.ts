@@ -21,8 +21,6 @@ export class GroupMembersPage implements OnInit {
   columnDefs = [];
   memberApi;
   noMemberApi;
-  memberColumnApi;
-  noMemberColumnApi;
   memberSelection: User[] = [];
   noMemberSelection: User[] = [];
   memberData: User[] = [];
@@ -116,7 +114,6 @@ export class GroupMembersPage implements OnInit {
 
   onMemberReady(params) {
     this.memberApi = params.api;
-    this.memberColumnApi = params.columnApi;
     this.memberApi.sizeColumnsToFit();
     (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.60) + "px";
   }
@@ -131,7 +128,6 @@ export class GroupMembersPage implements OnInit {
 
   onNoMemberReady(params) {
     this.noMemberApi = params.api;
-    this.noMemberColumnApi = params.columnApi;
     this.noMemberApi.sizeColumnsToFit();
     (<HTMLInputElement>document.getElementById("noMemberTable")).style.height = Math.trunc(window.innerHeight * 0.60) + "px";
   }

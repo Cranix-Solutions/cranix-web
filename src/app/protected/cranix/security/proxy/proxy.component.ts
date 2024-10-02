@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GridApi } from 'ag-grid-community'
 
 import { LanguageService } from 'src/app/services/language.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
@@ -23,8 +24,7 @@ export class ProxyComponent implements OnInit {
   lists  = {};
   proxyOptions;
   context;
-  proxyApi;
-  proxyColumnApi;
+  proxyApi: GridApi;
   proxySelected;
   columnDefs: any[];
 
@@ -84,7 +84,6 @@ export class ProxyComponent implements OnInit {
 
   onQuickFilterChanged(){
     this.proxyApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById('proxyQuickFilter')).value);
-    this.proxyApi.doLayout();
   }
   segmentChanged(event) {
     this.segment   = event.detail.value;
@@ -110,7 +109,6 @@ export class ProxyComponent implements OnInit {
 
   proxyGridReady(params) {
     this.proxyApi = params.api;
-    this.proxyColumnApi = params.columnApi;
     this.authService.log("proxyGridReady");
   }
   

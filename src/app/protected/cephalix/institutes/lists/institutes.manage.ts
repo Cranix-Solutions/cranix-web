@@ -1,5 +1,5 @@
-import { Component, OnInit, AfterContentInit } from '@angular/core';
-import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
+import { Component, OnInit } from '@angular/core';
+import { GridApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
@@ -26,7 +26,6 @@ export class InstitutesManage implements OnInit {
   columnDefs = [];
   defaultColDef = {};
   gridApi: GridApi;
-  columnApi: ColumnApi;
   context;
   title = 'app';
   rowData = [];
@@ -88,8 +87,7 @@ export class InstitutesManage implements OnInit {
 
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
-    this.gridApi.setRowData(this.managerUsers);
+    this.gridApi.setGridOption('rowData', this.managerUsers);
     params.columnApi.autoSizeColumns();
     this.gridApi.addEventListener('rowClicked', this.userRowClickedHandler);
   }
@@ -128,7 +126,7 @@ export class InstitutesManage implements OnInit {
   userList() {
     this.gridApi.removeEventListener('rowClicked', this.instituteRowClickedHandler);
     this.createColumnDefs(this.userKeys);
-    this.gridApi.setRowData(this.managerUsers);
+    this.gridApi.setGridOption('rowData', this.managerUsers);
     this.instituteView = false;
     (<HTMLInputElement>document.getElementById("instituteManageTable")).style.setProperty('height', '100%');
     this.gridApi.addEventListener('rowClicked', this.userRowClickedHandler);
@@ -156,12 +154,12 @@ export class InstitutesManage implements OnInit {
 
   showSelected() {
     let selectedRows = this.gridApi.getSelectedRows();
-    this.gridApi.setRowData(selectedRows);
+    this.gridApi.setGridOption('rowData', selectedRows);
     this.gridApi.selectAll();
   }
 
   showAll() {
-    this.gridApi.setRowData(this.objectService.allObjects['institute']);
+    this.gridApi.setGridOption('rowData', this.objectService.allObjects['institute']);
     var managedIds = this.managedIds;
     this.gridApi.forEachNode(
       function (node, index) {
@@ -176,25 +174,4 @@ export class InstitutesManage implements OnInit {
     console.log(quickFilter,'value',(<HTMLInputElement>document.getElementById(quickFilter)).value);
     this.gridApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById(quickFilter)).value);
   }
-
-  onGridSizeChange(params) {
-    var allColumns = params.columnApi.getColumns();
-    params.api.sizeColumnsToFit();
-    params.columnApi.autoSizeColumns();
-    //this.sizeAll();
-  }
-
-  sizeAll(skip) {
-    var allColumnIds = [];
-    this.columnApi.getColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    //this.gridApi.sizeColumnsToFit();
-    this.columnApi.autoSizeColumns(allColumnIds, skip);
-  }
-
-  sizeToFit() {
-    this.gridApi.sizeColumnsToFit();
-  }
-
 }

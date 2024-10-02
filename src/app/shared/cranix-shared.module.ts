@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AgChartsAngularModule } from 'ag-charts-angular';
+import { AgChartsModule } from 'ag-charts-angular';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -109,7 +109,7 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
   ],
   imports: [
     CommonModule,
-    AgChartsAngularModule,
+    AgChartsModule,
     IonicSelectableComponent,
     AgGridModule,
     FormsModule,
@@ -126,7 +126,7 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     }),
   ], exports: [
     CommonModule,
-    AgChartsAngularModule,
+    AgChartsModule,
     AgGridModule,
     FormsModule,
     IonicModule,

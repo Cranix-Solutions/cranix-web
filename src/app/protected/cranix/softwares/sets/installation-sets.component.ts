@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { PopoverController, ModalController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
+import { GridApi } from 'ag-grid-community';
 
 //Own stuff
 import { AuthenticationService } from 'src/app/services/auth.service';
@@ -21,8 +22,7 @@ export class InstallationSetsComponent implements OnInit {
   installationSetOptions;
   columnDefs = [];
   defaultColDef = {};
-  installationSetApi;
-  installationSetColumnApi;
+  installationSetApi: GridApi;
   installationSetSelection: Installation[] = [];
   autoGroupColumnDef;
   institute;
@@ -53,7 +53,6 @@ export class InstallationSetsComponent implements OnInit {
 
   installationSetReady(params) {
     this.installationSetApi = params.api;
-    this.installationSetColumnApi = params.columnApi;
     this.installationSetApi.sizeColumnsToFit();
   }
 
@@ -63,19 +62,8 @@ export class InstallationSetsComponent implements OnInit {
 
   setFilterChanged() {
     this.installationSetApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("installationSetFilter")).value);
-    this.installationSetApi.doLayout();
   }
-
-  onResize(ev: Event) {
-    //this.sizeAll();
-  }
-  sizeAll() {
-    var allColumnIds = [];
-    this.installationSetColumnApi.getAllColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.installationSetColumnApi.autoSizeColumns(allColumnIds);
-  }
+  
   createColumnDefs() {
     this.columnDefs = [
       {

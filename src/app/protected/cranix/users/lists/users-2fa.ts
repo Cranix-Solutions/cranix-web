@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GridApi, ColumnApi } from 'ag-grid-community';
+import { GridApi } from 'ag-grid-community';
 import { PopoverController } from '@ionic/angular';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
@@ -19,7 +19,6 @@ export class Users2faComponent implements OnInit {
     columnDefs = [];
     defaultColDef = {};
     gridApi: GridApi;
-    columnApi: ColumnApi;
     context;
     dataTypeDefinitions = {};
     constructor(
@@ -51,7 +50,6 @@ export class Users2faComponent implements OnInit {
 
     onGridReady(params) {
         this.gridApi = params.api;
-        this.columnApi = params.columnApi;
         this.gridApi.sizeColumnsToFit();
     }
     onQuickFilterChanged(quickFilter) {

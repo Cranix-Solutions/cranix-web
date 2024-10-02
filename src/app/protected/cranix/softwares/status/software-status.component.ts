@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GridApi } from 'ag-grid-community';
 //Own stuff
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { LanguageService } from 'src/app/services/language.service';
@@ -14,8 +15,7 @@ export class SoftwareStatusComponent implements OnInit {
   context;
   defaultColDef = {};
   columnDefs = [];
-  softwareApi;
-  softwareColumnApi;
+  softwareApi: GridApi;
   softwareData: SoftwareStatus[] = [];
   softwareDataBack: SoftwareStatus[] = [];
   selectedRooms = [];
@@ -50,18 +50,9 @@ export class SoftwareStatusComponent implements OnInit {
   }
   softwareDataReady(params) {
     this.softwareApi = params.api;
-    this.softwareColumnApi = params.columnApi;
   }
   onQuickFilterChanged(quickFilter) {
     this.softwareApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.softwareApi.doLayout();
-  }
-  sizeAll() {
-    var allColumnIds = [];
-    this.softwareColumnApi.getAllColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.softwareColumnApi.autoSizeColumns(allColumnIds);
   }
   readSoftwareData() {
     let subM = this.softwareService.getSoftwareStatus().subscribe(
