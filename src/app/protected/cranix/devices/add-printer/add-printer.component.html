@@ -24,11 +24,29 @@
     <ion-list lines="full">
       <ion-item *ngIf="action == 'add'">
         <ion-label position="stacked">{{'roomId'| translate}}</ion-label>
-        <ion-select type="text" [(ngModel)]="printer.roomId" name="roomId" (ngModelChange)="roomChanged($event)"
-          required [compareWith]="objectService.compareFn" [disabled]="submitted">
-          <ion-select-option *ngFor="let room of roomsToSelect" value="{{room.id}}">{{ room.name }}
-          </ion-select-option>
-        </ion-select>
+        <ionic-selectable
+          #ionicSelectable
+          (onChange)="roomChanged($event.value)"
+          [items]="roomsToSelect"
+          itemValueField="id"
+          itemTextField="name"
+          [canSearch]="true">
+          <ng-template ionicSelectableHeaderTemplate>
+            <ion-toolbar>
+              <ion-title>
+                {{ "Select a Room" | translate }}
+              </ion-title>
+              <ion-buttons slot="end">
+                <ion-button ion-button (click)="ionicSelectable.close()">
+                  <ion-icon color="danger" name="close"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ng-template>
+          <ng-template ionicSelectableItemIconTemplate>
+            <div></div>
+          </ng-template>
+        </ionic-selectable>
       </ion-item>
       <ion-item *ngIf="action == 'queue'">
         <ion-label position="stacked">{{'device'| translate}}</ion-label>

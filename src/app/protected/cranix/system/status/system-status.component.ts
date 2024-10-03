@@ -21,6 +21,7 @@ export class SystemStatusComponent implements OnInit {
   objectKeys: string[];
   systemStatus: any;
   servicesStatus: ServiceStatus[];
+  header = {};
   chartsReady: boolean = false;
   series = [
     {
@@ -61,7 +62,6 @@ export class SystemStatusComponent implements OnInit {
         for (let key of Object.keys(val)) {
           this.systemStatus[key] = {
             legend: { enabled: false },
-            autoSize: false,
             width: 250,
             height: 220,
             series: this.series,
@@ -81,7 +81,7 @@ export class SystemStatusComponent implements OnInit {
                 }
               )
             }
-            this.systemStatus[key]['header'] = key + " [GB]"
+            this.header[key] = key + " [GB]"
           } else {
             this.systemStatus[key]['data'] = []
             for (let a of val[key]) {
@@ -92,7 +92,7 @@ export class SystemStatusComponent implements OnInit {
                 }
               )
             }
-            this.systemStatus[key]['header'] = this.languageService.trans(key)
+            this.header[key] = this.languageService.trans(key)
           }
         }
         this.chartsReady = true;

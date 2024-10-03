@@ -215,7 +215,7 @@ export class InstitutesComponent implements OnInit {
     var hostname = window.location.hostname;
     var protocol = window.location.protocol;
     var port = window.location.port;
-    let sub = this.cephalixService.getInstituteToken(institute.id)
+    this.cephalixService.getInstituteToken(institute.id)
       .subscribe(
         async (res) => {
           let token = res;
@@ -234,9 +234,7 @@ export class InstitutesComponent implements OnInit {
             }
             sessionStorage.removeItem('shortName');
           }
-        },
-        (err) => { console.log(err) },
-        () => { sub.unsubscribe() }
+        }
       )
   }
 

@@ -1,55 +1,60 @@
 <cranix-toolbar title="{{'System status' | translate}}"></cranix-toolbar>
 <ion-content id="carded">
-  <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
-    <ion-fab-button>
-      <ion-icon name="arrow-forward-circle"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-list side="start">
+  @if(authService.isMD()) {
+    <ion-fab vertical="top" horizontal="end" slot="fixed" class="hidden-lg hidden-xl">
       <ion-fab-button>
-        <ion-icon name="help" (click)="support($event)"></ion-icon>
+        <ion-icon name="arrow-forward-circle"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button>
-        <ion-icon name="trending-up" color="tertiary" (click)="update($event)"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-button>
-        <ion-icon name="arrow-redo" color="tertiary" (click)="restart($event)"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-button>
-        <ion-icon name="power" color="danger" (click)="shutDown($event)"></ion-icon>
-      </ion-fab-button>
-    </ion-fab-list>
-  </ion-fab>
-  <ion-toolbar *ngIf="!authService.isMD()" class="page-toolbar">
-    <ion-buttons slot="end">
-      <ion-button size="small" fill="solid" (click)="support($event)" matTooltip="{{'Add support' | translate }}">
-        <ion-icon slot="icon-only" name="help-circle"></ion-icon>
-      </ion-button>
-      <ion-button size="small" fill="solid" (click)="update($event)" matTooltip="{{'Update the server.' | translate }}">
-        <ion-icon slot="icon-only" name="trending-up" color="tertiary"></ion-icon>
-      </ion-button>
-      <ion-button size="small" fill="solid" (click)="restart($event)"
-        matTooltip="{{'Restart the server.' | translate }}">
-        <ion-icon slot="icon-only" name="arrow-redo" color="tertiary"></ion-icon>
-      </ion-button>
-      <ion-button size="small" fill="solid" (click)="shutDown($event)"
-        matTooltip="{{'Shut down the server.' | translate }}">
-        <ion-icon slot="icon-only" color="danger" name="power"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-  <ion-item-divider *ngIf="!authService.isMD()"></ion-item-divider>
-  <ion-grid *ngIf="chartsReady">
-    <ion-row>
-      <ion-col *ngFor="let key of objectKeys">
-        <ion-card>
-          <ion-card-header>
-            <ion-title>{{ systemStatus[key]["header"] }}</ion-title>
-          </ion-card-header>
-          <ion-card-content>
-            <ag-charts-angular style="height: 270px" [options]="systemStatus[key]"></ag-charts-angular>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+      <ion-fab-list side="start">
+        <ion-fab-button>
+          <ion-icon name="help" (click)="support($event)"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button>
+          <ion-icon name="trending-up" color="tertiary" (click)="update($event)"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button>
+          <ion-icon name="arrow-redo" color="tertiary" (click)="restart($event)"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button>
+          <ion-icon name="power" color="danger" (click)="shutDown($event)"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
+  } @else {
+    <ion-toolbar class="page-toolbar">
+      <ion-buttons slot="end">
+        <ion-button size="small" fill="solid" (click)="support($event)" matTooltip="{{'Add support' | translate }}">
+          <ion-icon slot="icon-only" name="help-circle"></ion-icon>
+        </ion-button>
+        <ion-button size="small" fill="solid" (click)="update($event)" matTooltip="{{'Update the server.' | translate }}">
+          <ion-icon slot="icon-only" name="trending-up" color="tertiary"></ion-icon>
+        </ion-button>
+        <ion-button size="small" fill="solid" (click)="restart($event)"
+          matTooltip="{{'Restart the server.' | translate }}">
+          <ion-icon slot="icon-only" name="arrow-redo" color="tertiary"></ion-icon>
+        </ion-button>
+        <ion-button size="small" fill="solid" (click)="shutDown($event)"
+          matTooltip="{{'Shut down the server.' | translate }}">
+          <ion-icon slot="icon-only" color="danger" name="power"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+    <ion-item-divider></ion-item-divider>
+  }
+  @if( chartsReady ) {
+    <ion-grid>
+      <ion-row>
+        <ion-col *ngFor="let key of objectKeys">
+          <ion-card>
+            <ion-card-header>
+              <ion-title>{{ header[key] }}</ion-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ag-charts style="height: 270px" [options]="systemStatus[key]"></ag-charts>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  }
 </ion-content>
