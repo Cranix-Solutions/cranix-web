@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { GridApi } from 'ag-grid-community';
 
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
@@ -17,20 +18,20 @@ export class EditInstallationSetComponent implements OnInit {
   context;
   installationSet: Category = new Category();
   softwares: Software[] = [];
-  softwaresApi;
-  availableSoftwaresApi;
+  softwaresApi: GridApi;
+  availableSoftwaresApi: GridApi;
   hwconfs: Hwconf[] = [];
-  hwconfsApi;
+  hwconfsApi: GridApi;
   availableHwconfs: Hwconf[] = [];
-  availableHwconfsApi;
+  availableHwconfsApi: GridApi;
   rooms: Room[] = [];
-  roomsApi;
+  roomsApi: GridApi;
   availableRooms: Room[] = [];
-  availableRoomsApi;
+  availableRoomsApi: GridApi;
   devices: Device[] = [];
-  devicesApi;
+  devicesApi: GridApi;
   availableDevices: Device[] = [];
-  availableDevicesApi;
+  availableDevicesApi: GridApi;
   toShow = "overview";
   deviceColumnDefs = [];
   hwconfColumnDefs = [];
@@ -139,7 +140,6 @@ export class EditInstallationSetComponent implements OnInit {
   }
   availableSoftwaresFilterChanged() {
     this.availableSoftwaresApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("availableSoftwaresFilter")).value);
-    this.availableSoftwaresApi.doLayout();
   }
 
   /**Available Hwconfs */
@@ -164,7 +164,6 @@ export class EditInstallationSetComponent implements OnInit {
   }
   availableHwconfsFilterChanged() {
     this.availableHwconfsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("availableHwconfsFilter")).value);
-    this.availableHwconfsApi.doLayout();
   }
 
   /**Available Rooms */
@@ -189,7 +188,6 @@ export class EditInstallationSetComponent implements OnInit {
   }
   availableRoomsFilterChanged() {
     this.availableRoomsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("availableRoomsFilter")).value);
-    this.availableRoomsApi.doLayout();
   }
 
   /**Available Devices */
@@ -214,7 +212,6 @@ export class EditInstallationSetComponent implements OnInit {
   }
   availableDevicesFilterChanged() {
     this.availableDevicesApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("availableDevicesFilter")).value);
-    this.availableDevicesApi.doLayout();
   }
 
   /**Available Softwares */
@@ -230,7 +227,6 @@ export class EditInstallationSetComponent implements OnInit {
   }
   softwaresFilterChanged() {
     this.softwaresApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("softwaresFilter")).value);
-    this.availableSoftwaresApi.doLayout();
   }
 
   /**Available Hwconfs */
@@ -262,7 +258,6 @@ export class EditInstallationSetComponent implements OnInit {
   }
   roomsFilterChanged() {
     this.roomsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("roomsFilter")).value);
-    this.roomsApi.doLayout();
   }
 
   /**Available Devices */
@@ -278,7 +273,6 @@ export class EditInstallationSetComponent implements OnInit {
   }
   devicesFilterChanged() {
     this.devicesApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("devicesFilter")).value);
-    this.devicesApi.doLayout();
   }
   closeWindow() {
     this.modalCtrl.dismiss();
@@ -311,18 +305,18 @@ export class EditInstallationSetComponent implements OnInit {
       this.installationSet.id = this.softwareService.selectedInstallationSet.id;
     }
     console.log(this.installationSet)
-    let subs = this.softwareService.addModifyInstallationsSets(this.installationSet).subscribe(
-      (val) => {
+    let subs = this.softwareService.addModifyInstallationsSets(this.installationSet).subscribe({
+      next: (val) => {
         this.objectService.responseMessage(val);
         this.modalCtrl.dismiss();
       },
-      (err) => {
+      error: (err) => {
         this.objectService.errorMessage(err);
       },
-      () => {
+      complete: () => {
         this.submitted = false;
         subs.unsubscribe();
       }
-    )
+    })
   }
 }
