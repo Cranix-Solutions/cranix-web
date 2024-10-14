@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { GridApi } from 'ag-grid-community';
 
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
@@ -18,20 +17,20 @@ export class EditInstallationSetComponent implements OnInit {
   context;
   installationSet: Category = new Category();
   softwares: Software[] = [];
-  softwaresApi: GridApi;
-  availableSoftwaresApi: GridApi;
+  softwaresApi;
+  availableSoftwaresApi;
   hwconfs: Hwconf[] = [];
-  hwconfsApi: GridApi;
+  hwconfsApi;
   availableHwconfs: Hwconf[] = [];
-  availableHwconfsApi: GridApi;
+  availableHwconfsApi;
   rooms: Room[] = [];
-  roomsApi: GridApi;
+  roomsApi;
   availableRooms: Room[] = [];
-  availableRoomsApi: GridApi;
+  availableRoomsApi;
   devices: Device[] = [];
-  devicesApi: GridApi;
+  devicesApi;
   availableDevices: Device[] = [];
-  availableDevicesApi: GridApi;
+  availableDevicesApi;
   toShow = "overview";
   deviceColumnDefs = [];
   hwconfColumnDefs = [];
@@ -242,7 +241,6 @@ export class EditInstallationSetComponent implements OnInit {
   }
   hwconfsFilterChanged() {
     this.hwconfsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("hwconfsFilter")).value);
-    this.hwconfsApi.doLayout();
   }
 
   /**Available Rooms */
