@@ -35,7 +35,7 @@ export class UtilsService {
                 //return "https://admin.cephalix.eu/api"
                 //return "https://remscheid.cephalix.eu/api"
                 //return "https://admin.schulzentrum-kirchberg.at/api"
-                //return "https://192.168.122.100:444/api"
+                return "https://192.168.122.100:444/api"
                 return "https://192.168.178.91:1444/api"
                 return url;
         }

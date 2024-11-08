@@ -523,3 +523,24 @@ export class CrxChallengeAnswer {
 	correct: boolean = false
 	constructor() { }
 }
+
+export class CrxCalendar {
+	id: number
+	creatorId: number
+	created: Date
+	modified: Date
+	uuid: string
+	allDay: boolean
+	start: Date
+	end: Date 
+	title: string
+	description: string
+	location: string
+	userIds: number[] = []
+	groupIds: number[] = []
+	groups: Group[] = []
+	users: User[] = [] 
+	category: string = 'private'
+	color: string
+	rrule: string | any
+}

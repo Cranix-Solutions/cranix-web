@@ -26,6 +26,11 @@ export class ProtectedPage implements OnInit {
       icon: 'pricetags'
     },
     {
+      title: 'Calendar',
+      url: '/pages/cranix/calendar',
+      icon: 'calendar'
+    },
+    {
       title: 'Groups',
       url: '/pages/cranix/groups',
       icon: 'people'

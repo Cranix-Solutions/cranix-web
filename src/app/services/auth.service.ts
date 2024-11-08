@@ -364,6 +364,8 @@ export class AuthenticationService {
             case "hwconfs/:id": { return this.isAllowed('hwconf.modify') }
             case "rooms/:id": { return this.isAllowed('room.modify') }
             case "users/:id": { return this.isAllowed('user.modify') }
+            // TODO
+            case "/pages/cranix/calendar": { return true }
         }
         return false;
     }
