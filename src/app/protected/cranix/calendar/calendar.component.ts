@@ -7,8 +7,10 @@ import rrulePlugin from '@fullcalendar/rrule'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import { FullCalendarComponent } from '@fullcalendar/angular';
+import { RRule } from 'rrule';
 import { CrxCalendarService } from 'src/app/services/crx-calendar.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
+import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
   selector: 'crx-calendar',
@@ -33,18 +35,28 @@ export class CalendarComponent implements OnInit {
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
     },
+    buttonText: {
+      today:    this.lanaguageS.trans('today'),
+      month:    this.lanaguageS.trans('month'),
+      week:     this.lanaguageS.trans('week'),
+      day:      this.lanaguageS.trans('day'),
+      list:     this.lanaguageS.trans('list')
+    },
+    firstDay: 1,
     initialView: 'dayGridMonth',
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
     eventChange: this.handleEventChange.bind(this),
     editable: true,
     selectable: true,
+    weekNumbers: true
   };
 
   constructor(
     private authS: AuthenticationService,
     private calendarS: CrxCalendarService,
     private gestureCtrl: GestureController,
+    private lanaguageS: LanguageService,
     private el: ElementRef
   ) {
     this.loadDatas()
@@ -55,6 +67,12 @@ export class CalendarComponent implements OnInit {
     if( this.authS.isMD() ){
       this.initializeSwipeGesture();
     }
+    const rule = new RRule({
+      freq: RRule.WEEKLY,
+      byweekday: [ 0 ],
+      dtstart: new Date()
+    })
+    console.log(rule.toString())
   }
 
   //Handle Swipe
@@ -82,6 +100,7 @@ export class CalendarComponent implements OnInit {
   loadDatas(): void {
     this.calendarS.get().subscribe(
       (val) => {
+        console.log(val)
         this.events = val
     })
   }

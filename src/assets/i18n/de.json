@@ -1,4 +1,9 @@
 {
+    "today":"heute",
+    "month":"Monat",
+    "week": "Woche",
+    "list": "Liste",
+    "day": "Tag",
     "%s ( %s %s ) was created with password '%s'": "%s ( %s %s ) wurde mit dem Passwort '%s' angelegt.",
     "%s was created successfully.": "%s wurde erfolgreich erstellt.",
     "%s was deleted successfully.": "%s wurde erfolgreich gelöscht.",
