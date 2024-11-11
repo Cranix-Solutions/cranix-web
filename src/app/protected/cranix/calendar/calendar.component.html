@@ -15,6 +15,12 @@
                                 [disabled]="!addEditEventForm.valid">
                                 <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
                             </ion-button>
+                            @if(selectedEvent.id){
+                            <ion-button class="ion-no-margin" (click)="deleteEvent()"
+                                [disabled]="!addEditEventForm.valid">
+                                <ion-icon slot="icon-only" color="error" name="trash"></ion-icon>
+                            </ion-button>
+                            }
                             }
                             <ion-button fill="clear" size="small" (click)="setOpen(false)">
                                 <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
@@ -40,25 +46,18 @@
                             <ion-toggle [(ngModel)]="selectedEvent.allDay" name="allDay" labelPlacement="start"
                                 (ionChange)="adaptEventTimes()">{{'allDay'|translate}}</ion-toggle>
                         </ion-item>
-                        @if(eventRecurring && !selectedEvent.allDay) {
-                        <ion-item>
-                            <ion-label>{{'From'|translate}}*</ion-label>
-                            <input [(ngModel)]="selectedEvent.start" name="startTime" type="time" required />
-                        </ion-item>
-                        <ion-item>
-                            <ion-label>{{'Until'|translate}}*</ion-label>
-                            <input [(ngModel)]="selectedEvent.end" name="endTime" type="time" required />
-                        </ion-item>
-                        } @else if(!eventRecurring && selectedEvent.allDay) {
+                        @if(selectedEvent.allDay) {
                         <ion-item>
                             <ion-label>{{'From'|translate}}*</ion-label>
                             <input [(ngModel)]="selectedEvent.start" name="startTime" type="date" required />
                         </ion-item>
+                        @if(!recurring) {
                         <ion-item>
                             <ion-label>{{'Until'|translate}}*</ion-label>
                             <input [(ngModel)]="selectedEvent.end" name="endTime" type="date" required />
                         </ion-item>
-                        } @else if(!eventRecurring) {
+                        }
+                        } @else {
                         <ion-item>
                             <ion-label>{{'From'|translate}}*</ion-label>
                             <input [(ngModel)]="selectedEvent.start" name="startTime" type="datetime-local" required />
@@ -155,6 +154,10 @@
                                 <ion-select-option *ngFor="let month of rruleMonths; index as j" [value]="j">{{month |
                                     translate}}</ion-select-option>
                             </ion-select>
+                        </ion-item>
+                        <ion-item>
+                            <ion-label>{{'End Date'|translate}}*</ion-label>
+                            <input [(ngModel)]="rRule.until" name="endTime" type="date" required />
                         </ion-item>
                     </ion-list>
                 </ion-content>

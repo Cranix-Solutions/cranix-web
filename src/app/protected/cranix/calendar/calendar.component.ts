@@ -181,7 +181,7 @@ export class CalendarComponent implements OnInit {
   handleEventClick(arg: EventClickArg) {
     this.calendarS.getById(arg.event.id).subscribe((val) => {
       this.selectedEvent = val
-      if( val.rrule != "") {
+      if( val.rrule && val.rrule != "") {
         console.log(this.selectedEvent)
         let rule = RRule.fromString(val.rrule)
         console.log(rule.options)
@@ -203,12 +203,21 @@ export class CalendarComponent implements OnInit {
     console.log(arg.event.id)
   }
   handleEventChange(arg: EventChangeArg) {
+    this.calendarS.getById(arg.event.id).subscribe((val) => {
+      val.start = arg.event._instance?.range.start
+      val.end = arg.event._instance?.range.end
+      this.calendarS.modify(val).subscribe((val2) => {
+        this.loadData()
+        this.objectService.responseMessage(val2)
+      })
+    })
     console.log(arg.event._instance?.range)
   }
   addEditEvent(modal: any) {
     modal.dismiss()
     this.setOpen(false)
     this.objectService.requestSent()
+    console.log(this.selectedEvent)
     this.selectedEvent.start = new Date(this.selectedEvent.start)
     this.selectedEvent.end = new Date(this.selectedEvent.end)
     if (this.eventRecurring) {
@@ -233,5 +242,15 @@ export class CalendarComponent implements OnInit {
         }
       )
     }
+  }
+  deleteEvent(){
+    this.setOpen(false)
+    this.objectService.requestSent()
+    this.calendarS.delete(this.selectedEvent).subscribe(
+      (val) => {
+        this.loadData()
+        this.objectService.responseMessage(val)
+      }
+    )
   }
 }
