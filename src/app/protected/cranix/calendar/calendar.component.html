@@ -40,39 +40,34 @@
                             <ion-toggle [(ngModel)]="selectedEvent.allDay" name="allDay" labelPlacement="start"
                                 (ionChange)="adaptEventTimes()">{{'allDay'|translate}}</ion-toggle>
                         </ion-item>
-                        @if(selectedEvent.allDay) {
+                        @if(eventRecurring && !selectedEvent.allDay) {
                         <ion-item>
-                            <ion-input [(ngModel)]="selectedEvent.start" name="startTime" type="date"
-                                labelPlacement="fixed" label="{{'From'|translate}}*" required></ion-input>
+                            <ion-label>{{'From'|translate}}*</ion-label>
+                            <input [(ngModel)]="selectedEvent.start" name="startTime" type="time" required />
                         </ion-item>
                         <ion-item>
-                            <ion-input [(ngModel)]="selectedEvent.end" name="endTime" type="date" labelPlacement="fixed"
-                                label="{{'Until'|translate}}*" required></ion-input>
+                            <ion-label>{{'Until'|translate}}*</ion-label>
+                            <input [(ngModel)]="selectedEvent.end" name="endTime" type="time" required />
                         </ion-item>
-                        } @else {
+                        } @else if(!eventRecurring && selectedEvent.allDay) {
                         <ion-item>
-                            <ion-label>{{'From'|translate}}</ion-label>
-                            <ion-datetime-button datetime="eventStartTime"></ion-datetime-button>
+                            <ion-label>{{'From'|translate}}*</ion-label>
+                            <input [(ngModel)]="selectedEvent.start" name="startTime" type="date" required />
                         </ion-item>
                         <ion-item>
-                            <ion-label>{{'Until'|translate}}</ion-label>
-                            <ion-datetime-button datetime="eventEndTime"></ion-datetime-button>
+                            <ion-label>{{'Until'|translate}}*</ion-label>
+                            <input [(ngModel)]="selectedEvent.end" name="endTime" type="date" required />
+                        </ion-item>
+                        } @else if(!eventRecurring) {
+                        <ion-item>
+                            <ion-label>{{'From'|translate}}*</ion-label>
+                            <input [(ngModel)]="selectedEvent.start" name="startTime" type="datetime-local" required />
+                        </ion-item>
+                        <ion-item>
+                            <ion-label>{{'Until'|translate}}*</ion-label>
+                            <input [(ngModel)]="selectedEvent.end" name="endTime" type="datetime-local" required />
                         </ion-item>
                         }
-                        <ion-modal [keepContentsMounted]="true">
-                            <ng-template>
-                                <ion-datetime id="eventStartTime" [(ngModel)]="selectedEvent.start"
-                                    name="startTimeModal" [minuteValues]="eventMinuteValues" [yearValues]="yearValues"
-                                    [min]="minDate" [max]="maxDate"></ion-datetime>
-                            </ng-template>
-                        </ion-modal>
-                        <ion-modal [keepContentsMounted]="true">
-                            <ng-template>
-                                <ion-datetime id="eventEndTime" [(ngModel)]="selectedEvent.end" name="endTimeModal"
-                                    [minuteValues]="eventMinuteValues" [yearValues]="yearValues" [min]="minDate"
-                                    [max]="maxDate"></ion-datetime>
-                            </ng-template>
-                        </ion-modal>
                         <ion-item>
                             <ion-label>{{'Groups for the Event' | translate}}</ion-label>
                             <ionic-selectable #ionicSelectGroups itemValueField="id" itemTextField="description"

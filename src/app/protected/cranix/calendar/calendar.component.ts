@@ -185,12 +185,13 @@ export class CalendarComponent implements OnInit {
         console.log(this.selectedEvent)
         let rule = RRule.fromString(val.rrule)
         console.log(rule.options)
-        this.rRule.bymonth = rule.options.bymonth
+        this.rRule = rule.options
+        /*this.rRule.bymonth = rule.options.bymonth
         this.rRule.byweekday = rule.options.byweekday
         this.rRule.dtstart = rule.options.dtstart
         this.rRule.freq = rule.options.freq
         this.rRule.interval = rule.options.interval
-        this.rRule.until = rule.options.until
+        this.rRule.until = rule.options.until*/
         this.eventRecurring = true
       } else {
         this.rRule = new RecRule()
