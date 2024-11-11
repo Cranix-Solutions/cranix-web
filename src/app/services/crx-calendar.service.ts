@@ -41,4 +41,9 @@ export class CrxCalendarService {
     let url = this.hostname + "/calendar/"
     return this.http.get<CrxCalendar[]>(url, { headers: this.authService.headers })
   }
+
+  getById(id: string) {
+    let url = this.hostname + "/calendar/" + id
+    return this.http.get<CrxCalendar>(url, { headers: this.authService.headers })
+  }
 }

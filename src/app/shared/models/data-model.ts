@@ -1,4 +1,4 @@
-
+import { Frequency, RRule } from 'rrule';
 export class Hwconf {
 	id?: number = 0;
 	name: string = "";
@@ -525,14 +525,15 @@ export class CrxChallengeAnswer {
 }
 
 export class CrxCalendar {
-	id: number
+	id: number = 0
 	creatorId: number
 	created: Date
 	modified: Date
 	uuid: string
-	allDay: boolean
-	start: Date
-	end: Date 
+	allDay: boolean = false
+	start: Date | string
+	end: Date | string
+	duration: number
 	title: string
 	description: string
 	location: string
@@ -543,4 +544,13 @@ export class CrxCalendar {
 	category: string = 'private'
 	color: string
 	rrule: string | any
+}
+
+export class RecRule {
+    freq: Frequency = RRule.WEEKLY
+    interval: number = 1
+    byweekday: any[] = []
+    bymonth: any[] = []
+    dtstart: Date = new Date()
+    until: Date
 }
