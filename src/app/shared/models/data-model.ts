@@ -540,7 +540,8 @@ export class CrxCalendar {
 	userIds: number[] = []
 	groupIds: number[] = []
 	groups: Group[] = []
-	users: User[] = [] 
+	users: User[] = []
+	room: Room
 	category: string = 'private'
 	color: string
 	rrule: string | any

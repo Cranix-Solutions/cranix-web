@@ -3,6 +3,7 @@ import { GestureController } from '@ionic/angular';
 import { CalendarOptions, DateSelectArg, EventChangeArg, EventClickArg, EventSourceInput } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import multiMonthPlugin from '@fullcalendar/multimonth'
 import rrulePlugin from '@fullcalendar/rrule'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
@@ -11,7 +12,7 @@ import { RRule } from 'rrule';
 import { CrxCalendarService } from 'src/app/services/crx-calendar.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { LanguageService } from 'src/app/services/language.service';
-import { CrxCalendar, Group, RecRule } from 'src/app/shared/models/data-model';
+import { CrxCalendar, Group, RecRule, Room } from 'src/app/shared/models/data-model';
 import { UsersService } from 'src/app/services/users.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 
@@ -30,15 +31,23 @@ export class CalendarComponent implements OnInit {
       dayGridPlugin,
       interactionPlugin,
       listPlugin,
+      multiMonthPlugin,
       rrulePlugin,
       timeGridPlugin,
     ],
+    customButtons: {
+      selectCalendar: {
+        text: this.lanaguageS.trans('Calendar'),
+        click: this.selectCalendar.bind(this)
+      }
+    },
     headerToolbar: {
-      left: 'prev,next today',
+      left: 'prev,next today selectCalendar',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+      right: 'multiMonthYear,dayGridMonth,timeGridWeek,timeGridDay,listWeek'
     },
     buttonText: {
+      year: this.lanaguageS.trans('year'),
       today: this.lanaguageS.trans('today'),
       month: this.lanaguageS.trans('month'),
       week: this.lanaguageS.trans('week'),
@@ -54,7 +63,9 @@ export class CalendarComponent implements OnInit {
     selectable: true,
     weekNumbers: true
   };
+  addEditEventTitle: string
   eventRecurring: boolean = false
+  isCalendarModalOpen: boolean = false
   isModalOpen: boolean = false
   double = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09']
   rruleFrequents = [
@@ -71,6 +82,8 @@ export class CalendarComponent implements OnInit {
   rRule = new RecRule()
   myGroups: Group[]
   selectedEvent: CrxCalendar
+  selectedRooms:  Room[] = []
+  selectedGroups: Group[] = []
 
   constructor(
     public objectService: GenericObjectService,
@@ -88,18 +101,49 @@ export class CalendarComponent implements OnInit {
     console.log("CalendarComponent ngOnInit called")
     if (this.authService.isMD()) {
       this.initializeSwipeGesture();
+      this.calendarOptions.headerToolbar =  {
+        left: 'today',
+        center: 'title',
+        right: 'selectCalendar'
+      }
+      this.calendarOptions.footerToolbar =  {
+        left: '',
+        right: '',
+        center: 'multiMonthYear,dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+      }
     }
-    const rule = new RRule({
-      freq: RRule.WEEKLY,
-      byweekday: [0],
-      dtstart: new Date()
-    })
-    console.log(rule.toString())
   }
 
-
+  selectCalendar() {
+    this.isCalendarModalOpen = true
+  }
+  loadDataTest(): void {
+    this.events = [
+      {
+        title: "Bla",
+        start: new Date(1732183200000),
+        end: new Date(1732194000000)
+      }
+    ]
+    this.calendarS.get().subscribe((val) => {
+      console.log(val)
+    })
+  }
   loadData(): void {
-    this.calendarS.get().subscribe((val) => { this.events = val })
+    this.calendarS.get().subscribe((val) => {
+
+      let tmp: CrxCalendar[]= []
+      for(let event of val){
+        if(event.rrule == "") {
+          delete(event.rrule)
+        }
+        //event.start = new Date(event.start)
+        //event.end = new Date(event.end)
+        tmp.push(event)
+      }
+      this.events = tmp
+      console.log(this.events)
+    })
     this.userS.getUsersGroups(this.authService.session.userId).subscribe(
       (val) => { this.myGroups = val })
   }
@@ -146,7 +190,18 @@ export class CalendarComponent implements OnInit {
     }
     return ""
   }
-
+  isCalendarSelected(event: any) {
+    console.log(event)
+    //If no selection everything is showed
+    if( this.selectedGroups.length == 0 && this.selectedRooms.length == 0) return true;
+    //Private and individual events are sowed everytime
+    if (event.category == 'private' || event.category == 'individual') return true;
+    for (let a of event.groups) {
+      if (this.selectedGroups.includes(a)) return true;
+    }
+    if(this.selectedRooms.includes(event.room)) return true;
+    return false;
+  }
   toIonDate(dt: Date | undefined) {
     if (dt) {
       return dt.getFullYear() + "-" +
@@ -165,6 +220,7 @@ export class CalendarComponent implements OnInit {
     }
   }
   handleDateSelect(arg: DateSelectArg) {
+    this.addEditEventTitle = "Add new event"
     this.selectedEvent = new CrxCalendar();
     this.selectedEvent.start = arg.start
     this.selectedEvent.end = arg.end
@@ -179,6 +235,7 @@ export class CalendarComponent implements OnInit {
     }
   }
   handleEventClick(arg: EventClickArg) {
+    this.addEditEventTitle = "Edit event"
     this.calendarS.getById(arg.event.id).subscribe((val) => {
       this.selectedEvent = val
       if( val.rrule && val.rrule != "") {
@@ -215,17 +272,16 @@ export class CalendarComponent implements OnInit {
   }
   addEditEvent(modal: any) {
     modal.dismiss()
-    this.setOpen(false)
     this.objectService.requestSent()
     console.log(this.selectedEvent)
     this.selectedEvent.start = new Date(this.selectedEvent.start)
     this.selectedEvent.end = new Date(this.selectedEvent.end)
     if (this.eventRecurring) {
       this.rRule.dtstart = this.selectedEvent.start
-      this.selectedEvent['duration'] = this.selectedEvent.end.getTime() - this.selectedEvent.start.getTime()
       let rule = new RRule(this.rRule)
       this.selectedEvent['rrule'] = rule.toString()
     }
+    this.setOpen(false)
     console.log(this.selectedEvent)
     if (this.selectedEvent.id) {
       this.calendarS.modify(this.selectedEvent).subscribe(
