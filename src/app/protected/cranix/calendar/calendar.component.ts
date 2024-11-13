@@ -74,16 +74,19 @@ export class CalendarComponent implements OnInit {
     'WEEKLY',
     'DAILY',
     'HOURLY',
-    'MINUTELY',
-    'SECONDLY'
+    'MINUTELY'
   ]
   rruleDays = [ 'MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']
-  rruleMonths = [ '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  rruleMonths = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
   rRule = new RecRule()
   myGroups: Group[]
   selectedEvent: CrxCalendar
-  selectedRooms:  Room[] = []
-  selectedGroups: Group[] = []
+  eventFilter = {
+    rooms:  [],
+    groups: [],
+    showPrivate: false,
+    showIndividual: false
+  }
 
   constructor(
     public objectService: GenericObjectService,
@@ -117,28 +120,13 @@ export class CalendarComponent implements OnInit {
   selectCalendar() {
     this.isCalendarModalOpen = true
   }
-  loadDataTest(): void {
-    this.events = [
-      {
-        title: "Bla",
-        start: new Date(1732183200000),
-        end: new Date(1732194000000)
-      }
-    ]
-    this.calendarS.get().subscribe((val) => {
-      console.log(val)
-    })
-  }
   loadData(): void {
     this.calendarS.get().subscribe((val) => {
-
       let tmp: CrxCalendar[]= []
       for(let event of val){
         if(event.rrule == "") {
           delete(event.rrule)
         }
-        //event.start = new Date(event.start)
-        //event.end = new Date(event.end)
         tmp.push(event)
       }
       this.events = tmp
@@ -148,6 +136,29 @@ export class CalendarComponent implements OnInit {
       (val) => { this.myGroups = val })
   }
 
+  filterEvents(doFilter: boolean){
+    this.isCalendarModalOpen = false
+    if(doFilter) {
+      console.log(this.eventFilter)
+      this.calendarS.getFiltered(this.eventFilter).subscribe((val) => {
+        let tmp: CrxCalendar[]= []
+        for(let event of val){
+          if(event.rrule == "") {
+            delete(event.rrule)
+          }
+          tmp.push(event)
+        }
+        this.events = tmp
+        console.log(this.events)
+      })
+    } else {
+      this.loadData()
+      this.eventFilter.groups = []
+      this.eventFilter.rooms = []
+      this.eventFilter.showIndividual = true
+      this.eventFilter.showPrivate = true
+    }
+  }
   //Handle Swipe
   initializeSwipeGesture() {
     const gesture = this.gestureCtrl.create({
@@ -159,7 +170,7 @@ export class CalendarComponent implements OnInit {
   }
 
   handleSwipe(event) {
-    const threshold = 100; // Mindestdistanz für einen Swipe
+    const threshold = 50; // Mindestdistanz für einen Swipe
     if (event.deltaX > threshold) {
       this.calendarComponent.getApi().prev();
     } else if (event.deltaX < -threshold) {
@@ -191,15 +202,19 @@ export class CalendarComponent implements OnInit {
     return ""
   }
   isCalendarSelected(event: any) {
-    console.log(event)
+    //console.log(event)
     //If no selection everything is showed
-    if( this.selectedGroups.length == 0 && this.selectedRooms.length == 0) return true;
+    if( this.eventFilter.groups.length == 0 && this.eventFilter.rooms.length == 0) return true;
     //Private and individual events are sowed everytime
-    if (event.category == 'private' || event.category == 'individual') return true;
-    for (let a of event.groups) {
-      if (this.selectedGroups.includes(a)) return true;
+    //event._def.extendedProps.groups
+    //event._def.extendedProps.room
+    //event._def.extendedProps.category
+    let crxEvent = event._def.extendedProps;
+    if (crxEvent.category == 'private' || crxEvent.category == 'individual') return true;
+    for (let a of crxEvent.groups) {
+      if (this.eventFilter.groups.includes(a)) return true;
     }
-    if(this.selectedRooms.includes(event.room)) return true;
+    if(this.eventFilter.rooms.includes(crxEvent.room)) return true;
     return false;
   }
   toIonDate(dt: Date | undefined) {
@@ -278,6 +293,7 @@ export class CalendarComponent implements OnInit {
     this.selectedEvent.end = new Date(this.selectedEvent.end)
     if (this.eventRecurring) {
       this.rRule.dtstart = this.selectedEvent.start
+      console.log(this.rRule)
       let rule = new RRule(this.rRule)
       this.selectedEvent['rrule'] = rule.toString()
     }

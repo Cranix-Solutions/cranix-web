@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';;
 import { ServerResponse } from 'src/app/shared/models/server-models';
-import { CrxCalendar } from '../shared/models/data-model';
+import { CrxCalendar } from 'src/app/shared/models/data-model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,26 +24,37 @@ export class CrxCalendarService {
 
   add(event: CrxCalendar) {
     let url = this.hostname + "/calendar"
+    console.log(url)
     return this.http.post<ServerResponse>(url, event, { headers: this.authService.headers })
   }
 
   modify(event: CrxCalendar) {
     let url = this.hostname + "/calendar"
+    console.log(url)
     return this.http.patch<ServerResponse>(url, event, { headers: this.authService.headers })
   }
 
   delete(event: CrxCalendar) {
     let url = this.hostname + "/calendar/" + event.id
+    console.log(url)
     return this.http.delete<ServerResponse>(url, { headers: this.authService.headers })
   }
 
   get() {
-    let url = this.hostname + "/calendar/"
+    let url = this.hostname + "/calendar"
+    console.log(url)
     return this.http.get<CrxCalendar[]>(url, { headers: this.authService.headers })
+  }
+
+  getFiltered(map: any) {
+    let url = this.hostname + "/calendar/filter"
+    console.log(url)
+    return this.http.post<CrxCalendar[]>(url, map, { headers: this.authService.headers })
   }
 
   getById(id: string) {
     let url = this.hostname + "/calendar/" + id
+    console.log(url)
     return this.http.get<CrxCalendar>(url, { headers: this.authService.headers })
   }
 }
