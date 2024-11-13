@@ -252,10 +252,10 @@ export class RoomAccessComponent implements OnInit {
     (await modal).present();
   }
   restartFirewall() {
-    this.systemService.applyServiceState('firewalld', 'activ', 'restart')
+    this.systemService.applyServiceState('cranix-firewall', 'activ', 'restart')
   }
   stopFirewall() {
-    this.systemService.applyServiceState('firewalld', 'activ', 'false')
+    this.systemService.applyServiceState('cranix-firewall', 'activ', 'false')
   }
   delete() {
     let accessSelected = this.accessApi.getSelectedRows();
