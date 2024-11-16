@@ -51,7 +51,7 @@
                             <ion-label>{{'From'|translate}}*</ion-label>
                             <input [(ngModel)]="selectedEvent.start" name="startTime" type="date" required />
                         </ion-item>
-                        @if(!recurring) {
+                        @if(!eventRecurring) {
                         <ion-item>
                             <ion-label>{{'Until'|translate}}*</ion-label>
                             <input [(ngModel)]="selectedEvent.end" name="endTime" type="date" required />
