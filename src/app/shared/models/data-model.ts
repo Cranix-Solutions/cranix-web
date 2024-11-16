@@ -553,5 +553,6 @@ export class RecRule {
     byweekday: any[] = []
     bymonth: any[] = []
     dtstart: Date = new Date()
+    count: number
     until: Date
 }
