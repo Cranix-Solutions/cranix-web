@@ -294,6 +294,7 @@ export class CalendarComponent implements OnInit {
     if (this.eventRecurring) {
       this.rRule.dtstart = this.selectedEvent.start
       console.log(this.rRule)
+      if(this.rRule.count == 0) delete(this.rRule.count)
       let rule = new RRule(this.rRule)
       this.selectedEvent['rrule'] = rule.toString()
     }

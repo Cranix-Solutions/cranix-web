@@ -175,7 +175,7 @@
                         </ion-item>
                         <ion-item>
                             <ion-input [(ngModel)]="rRule.count" name="rruleCount" type="number"
-                                label="{{'Count'|translate}}" [disabled]="!eventRecurring || rRule.count"></ion-input>
+				   label="{{'Count'|translate}}" [disabled]="!eventRecurring || rRule.count > 0"></ion-input>
                         </ion-item>
                         <ion-item  [disabled]="!eventRecurring || rRule.count">
                             <ion-label>{{'End Date'|translate}}</ion-label>
