@@ -27,10 +27,10 @@
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 
 /* AgGrifd */
-@import "~ag-grid-community/dist/styles/ag-grid.css";
-@import "~ag-grid-community/dist/styles/ag-theme-balham.css";
-@import "~ag-grid-community/dist/styles/ag-theme-alpine.css";
-@import "~ag-grid-community/dist/styles/ag-theme-material.css";
+@import "~ag-grid-community/styles/ag-grid.css";
+@import "~ag-grid-community/styles/ag-theme-balham.css";
+@import "~ag-grid-community/styles/ag-theme-alpine.css";
+@import "~ag-grid-community/styles/ag-theme-material.css";
 /* do not import dark styles
 @import "~ag-grid-community/dist/styles/ag-theme-alpine-dark.css";
 @import "~ag-grid-community/dist/styles/ag-theme-balham-dark.css";
@@ -49,6 +49,7 @@
 @import "theme/ion-custom.scss";
 @import "theme/cranix-custom.scss";
 @import "theme/fonts.css";
+@import "theme/variables.scss";
 
 [contenteditable] {
   -webkit-user-select: text;
@@ -113,62 +114,3 @@ ion-select {
   white-space: normal !important;
 
 }
-
-/* ion-segment-button {
-  background-color: lightgrey;
-} */
-/*
-:root {
-  ion-tab-button.tab-selected {
-    ion-icon,
-    ion-label {
-      color           : var(--ion-color-secondary) !important;
-      --ion-color-base: var(--ion-color-secondary) !important;
-    }
-  }
-}*/
-/*.ag-theme-material .ag-icon-checkbox-unchecked{
-
-    font-size: 15px;
-}
-.ag-theme-material .ag-icon-checkbox-checked{
-
-    font-size: 15px;
-}
-.ag-theme-material .ag-header-row:first-child .ag-header-cell{
-
-    padding-left: 4px;
-}
-.ag-theme-material .ag-selection-checkbox:not(.ag-hidden) ~ .ag-cell-value:not(:empty){
-    margin-left: 12px;
-}
-.ag-header-cell-label .ag-header-cell-text{
-
-    font-size: 12px;
-    margin: auto;
-}
-
-
-ion-card {
-    //flex-grow: 1;
-    height: 93%;
-    display: grid;
-    grid-template-rows: 12%;
-    ion-card-header{
-        grid-row: 1/2;
-        height: 100%;
-    }
-    ion-card-content {
-    grid-row: 2/2;
-    height: 100%;
-    grid-column: 1/1;
-    overflow: hidden;
-
- //   align-content: center;
-}
-    //flex-direction: column;
-    //#display: flex;
-  //flex-direction: column;
-  //justify-content: center;
-  }
-*/

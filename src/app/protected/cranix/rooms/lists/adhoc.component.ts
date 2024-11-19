@@ -70,7 +70,7 @@ export class AdhocComponent implements OnInit {
           break;
         }
         case 'studentsOnly': {
-          col['cellRendererFramework'] = YesNoBTNRenderer;
+          col['cellRenderer'] = YesNoBTNRenderer;
           break;
         }
         case 'groupIds': {
@@ -95,7 +95,7 @@ export class AdhocComponent implements OnInit {
       cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
       pinned: 'left',
-      cellRendererFramework: EditBTNRenderer
+      cellRenderer: EditBTNRenderer
     };
     columnDefs.splice(1, 0, action);
     this.columnDefs = columnDefs;
@@ -115,8 +115,7 @@ export class AdhocComponent implements OnInit {
   }
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    this.gridApi.setQuickFilter(filter);
-    this.gridApi.doLayout();
+    this.gridApi.setGridOption('quickFilterText', filter);
   }
   public redirectToDelete = (adhoc: AdHocRoom) => {
     this.objectService.deleteObjectDialog(adhoc, 'adhocroom','')
@@ -131,7 +130,6 @@ export class AdhocComponent implements OnInit {
         objectPath: "AdhocComponent.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -182,7 +180,6 @@ export class AdhocComponent implements OnInit {
         object: adhocroom
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {

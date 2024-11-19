@@ -91,16 +91,14 @@ export class AddPrinterComponent implements OnInit {
       this.authService.log(id);
       this.ipAdresses = [];
       this.printerNames = {};
-      let sub = this.roomService.getAvailiableIPs(id).subscribe(
+      this.roomService.getAvailiableIPs(id).subscribe(
         (val) => {
           for (let a of val) {
             let b = a.split(" ");
             this.ipAdresses.push(b[0]);
             this.printerNames[b[0]] = b[1];
           }
-        },
-        (err) => { this.authService.log(err) },
-        () => { sub.unsubscribe() }
+        }
       )
       this.room = this.objectService.getObjectById('room', id);
       this.authService.log(this.room);
@@ -135,54 +133,54 @@ export class AddPrinterComponent implements OnInit {
         formData.append('mac', this.printer.mac);
         formData.append('roomId', this.printer.roomId.toString());
         formData.append('windowsDriver', "true");
-        let subs = this.printersService.add(formData).subscribe(
-          (val) => {
+        let subs = this.printersService.add(formData).subscribe({
+          next: (val) => {
             this.objectService.responseMessage(val);
             if (val.code == "OK") {
               this.modalCtrl.dismiss();
             }
             this.submitted = false;
           },
-          (err) => {
+          error: (err) => {
             this.objectService.errorMessage("ServerError" + err);
             this.authService.log(err);
             this.submitted = false;
           },
-          () => {
+          complete: () => {
             subs.unsubscribe();
             this.objectService.getAllObject('device');
             this.objectService.getAllObject('printer');
           }
-        )
+        })
         break
       }
       case 'queue': {
         formData.append('deviceId', this.printer.deviceId.toString());
         formData.append('windowsDriver', "true");
-        let subs = this.printersService.addQueue(formData).subscribe(
-          (val) => {
+        let subs = this.printersService.addQueue(formData).subscribe({
+          next: (val) => {
             this.objectService.responseMessage(val);
             if (val.code == "OK") {
               this.modalCtrl.dismiss();
             }
             this.submitted = false;
           },
-          (err) => {
+          error: (err) => {
             this.objectService.errorMessage("ServerError" + err);
             this.authService.log(err);
             this.submitted = false;
           },
-          () => {
+          complete: () => {
             subs.unsubscribe();
             this.objectService.getAllObject('printer');
           }
-        )
+        })
         break
       }
       case 'modify': {
         if (formData.has('file') || this.originalModel != this.printer.model || this.originalMac != this.printer.mac) {
-          let subs3 = this.printersService.setDriver(this.printer.id, formData).subscribe(
-            (val) => {
+          let subs3 = this.printersService.setDriver(this.printer.id, formData).subscribe({
+            next: (val) => {
               this.objectService.responseMessage(val);
               if (val.code == "OK") {
                 this.objectService.getAllObject('printer');
@@ -190,20 +188,21 @@ export class AddPrinterComponent implements OnInit {
               }
               this.submitted = false;
             },
-            (err) => {
+            error: (err) => {
               this.submitted = false;
               console.log(err)
             },
-            () => { subs3.unsubscribe() }
-          );
+            complete: () => { subs3.unsubscribe() }
+          });
         }
         break
       }
     }
   }
 
-  roomChanged(ev) {
-    this.initValues(parseInt(ev));
+  roomChanged(room: Room) {
+    this.printer.roomId = room.id;
+    this.initValues(room.id);
   }
   handleFileInput(ev) {
     this.driverFile = ev.target.files.item(0);

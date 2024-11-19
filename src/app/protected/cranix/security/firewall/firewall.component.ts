@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { GridApi } from 'ag-grid-community'
 import { IncomingRules, OutgoingRule, RemoteRule } from 'src/app/shared/models/secutiry-model';
 import { LanguageService } from 'src/app/services/language.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { SecurityService } from 'src/app/services/security-service';
-import { ModalController } from '@ionic/angular';
 import { AddOutgoingRuleComponent } from './add-rules/add-outgoing-rule.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { AddRemoteRuleComponent } from './add-rules/add-remote-rule.component';
@@ -20,11 +21,9 @@ export class FirewallComponent implements OnInit {
   outColumnDefs;
   remoteColumnDefs;
   context;
-  outApi;
-  outColumnApi;
+  outApi: GridApi;
   outSelected;
-  remoteApi;
-  remoteColumnApi;
+  remoteApi: GridApi;
   remoteSelected;
   newPort = "";
   newService = "";
@@ -43,7 +42,7 @@ export class FirewallComponent implements OnInit {
       resizable: true,
       sortable: true,
       hide: false,
-      suppressMenu: true
+      suppressHeaderMenuButton: true
     };
     this.outColumnDefs = [
       {
@@ -105,7 +104,6 @@ export class FirewallComponent implements OnInit {
       component: AddOutgoingRuleComponent,
       cssClass: 'medium-modal',
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     (await modal).present();
@@ -127,13 +125,12 @@ export class FirewallComponent implements OnInit {
       component: AddRemoteRuleComponent,
       cssClass: 'medium-modal',
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((val) => {
       if (val.data) {
         this.authService.log(this.securityService.remoteRules);
-        this.remoteApi.setRowData(this.securityService.remoteRules);
+        this.remoteApi.setGridOption('rowData', this.securityService.remoteRules);
       }
     });
     (await modal).present();
@@ -169,7 +166,6 @@ export class FirewallComponent implements OnInit {
   }
   outGridReady(params) {
     this.outApi = params.api;
-    this.outColumnApi = params.columnApi;
     this.outApi.sizeColumnsToFit();
     (<HTMLInputElement>document.getElementById("outGridTable")).style.height = Math.trunc(window.innerHeight * 0.63) + "px";
   }
@@ -178,7 +174,6 @@ export class FirewallComponent implements OnInit {
   }
   remoteGridReady(params) {
     this.remoteApi = params.api;
-    this.remoteColumnApi = params.columnApi;
     this.remoteApi.sizeColumnsToFit();
     (<HTMLInputElement>document.getElementById("remoteGridTable")).style.height = Math.trunc(window.innerHeight * 0.63) + "px";
   }

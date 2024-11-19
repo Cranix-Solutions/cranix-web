@@ -1,13 +1,17 @@
-<ion-toolbar *ngIf="!authService.isMD()" class="page-toolbar">
+@if( !authService.isMD() ) {
+<ion-toolbar class="page-toolbar">
   <ion-item lines="none">
-    <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="filterMD" style="min-width: 400px;">
+    <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="filterMD"
+      style="min-width: 400px;">
     </ion-input>
-    <ion-label  *ngIf="objectType == 'challenge'">{{'teachingSubject'|translate}}:</ion-label>
-    <ionic-selectable *ngIf="objectType == 'challenge'" [(ngModel)]="authService.selectedTeachingSubject"
-      [items]="crxObjectService.subjects" itemValueField="id" itemTextField="name" [canSearch]="true" (onChange)="subjectChanged($event)">
+    @if( objectType == 'challenge' ) {
+    <ion-label>{{'teachingSubject'|translate}}:</ion-label>
+    <ionic-selectable [(ngModel)]="authService.selectedTeachingSubject" [items]="crxObjectService.subjects"
+      itemValueField="id" itemTextField="name" [canSearch]="true" (onChange)="subjectChanged($event)">
       <ng-template ionicSelectablePlaceholderTemplate>{{'apparently'|translate}}</ng-template>
       <ng-template ionicSelectableCloseButtonTemplate><ion-icon name="close" color="danger"></ion-icon></ng-template>
     </ionic-selectable>
+    }
   </ion-item>
   <ion-buttons slot="end">
     <ion-button size="small" fill="solid" (click)="context.componentParent.redirectToEdit(null)"
@@ -18,18 +22,23 @@
       matTooltip="{{'Apply actions on the selected objects' | translate }}">
       <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
     </ion-button>
+    @if( objectType == 'challenge' ) {
     <ion-button *ngIf="objectType == 'challenge'" size="small" fill="solid" (click)="getCephalixChallenges()"
       matTooltip="{{'Get challenges from CEPHALIX server to the selected subject.' | translate }}">
       <img src="assets/images/logo/cranix_school.svg" style="height: 32px; width: 32px;">
     </ion-button>
+    }
   </ion-buttons>
 </ion-toolbar>
-<ion-item *ngIf="authService.isMD()">
-  <ionic-selectable *ngIf="objectType == 'challenge'" [(ngModel)]="authService.selectedTeachingSubject"
+} @else {
+<ion-item>
+  @if( objectType == 'challenge' ) {
+  <ionic-selectable [(ngModel)]="authService.selectedTeachingSubject"
     [items]="crxObjectService.subjects" itemValueField="id" itemTextField="name" [canSearch]="true">
     <ng-template ionicSelectablePlaceholderTemplate>{{'teachingSubject'|translate}}</ng-template>
     <ng-template ionicSelectableCloseButtonTemplate><ion-icon name="close" color="danger"></ion-icon></ng-template>
   </ionic-selectable>
+  }
   <ion-button size="small" fill="clear" (click)="back()" [disabled]="min <= 0">
     <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
     {{ min + 2 }}
@@ -40,8 +49,7 @@
     <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
   </ion-button>
 </ion-item>
-<!-- ion-content -->
-<ion-fab *ngIf="authService.isMD()" vertical="center" horizontal="end">
+<ion-fab vertical="center" horizontal="end">
   <ion-fab-button size="small">
     <ion-icon name="arrow-forward-circle"></ion-icon>
   </ion-fab-button>
@@ -64,6 +72,7 @@
     </ion-fab-button>
   </ion-fab-list>
 </ion-fab>
+}
 <ion-list>
   <div *ngFor="let object of rowData; let i = index">
     <ion-item-sliding *ngIf="i > min && i < max">
@@ -72,40 +81,42 @@
           <ion-checkbox (click)="$event.stopPropagation()" (ionChange)="checkChange($event,object)"></ion-checkbox>
         </ion-note>
         <ion-label (click)="context.componentParent.redirectToEdit(object)">
-          <h3>{{ object[left1] }}</h3>
-          <h5>{{ object[left2] }} {{ object[left3] }}</h5>
+          <b>
+            <p>{{ object[left1] }}</p>
+          </b>
+          <p>{{ object[left2] }} {{ object[left3] }}</p>
         </ion-label>
         <ion-label *ngIf="objectType == 'customer'">
-          <h4>{{ object.contact }}</h4>
-          <h4>{{ object.telephone }}</h4>
+          <p>{{ object.contact }}</p>
+          <p>{{ object.telephone }}</p>
         </ion-label>
         <ion-label *ngIf="objectType == 'device'">
-          <h5>{{ object.mac }}</h5>
-          <h5>{{ object.hwconfId | idToName:'hwconf' }}</h5>
-          <!-- h5>{{ object.roomId | idToName:'room' }}</h5 -->
+          <p>{{ object.mac }}</p>
+          <p>{{ object.hwconfId | idToName:'hwconf' }}</p>
+          <!-- p>{{ object.roomId | idToName:'room' }}</p -->
         </ion-label>
         <ion-label *ngIf="objectType.indexOf('group') != -1">
-          <h5>{{ object.groupType | translate }}</h5>
+          <p>{{ object.groupType | translate }}</p>
         </ion-label>
         <ion-label *ngIf="objectType == 'hwconf'">
-          <h5>{{ object.hwconfType | translate }}</h5>
+          <p>{{ object.hwconfType | translate }}</p>
         </ion-label>
         <ion-label *ngIf="objectType == 'institute'">
-          <h4>{{ object.locality }}</h4>
-          <h4>{{ object.instituteType | translate }}</h4>
+          <p>{{ object.locality }}</p>
+          <p>{{ object.instituteType | translate }}</p>
         </ion-label>
         <ion-label *ngIf="objectType == 'printer'">
-          <h5>{{ object.model }}</h5>
-          <h5>{{ object.activeJobs }}</h5>
+          <p>{{ object.model }}</p>
+          <p>{{ object.activeJobs }}</p>
         </ion-label>
         <ion-label *ngIf="objectType.indexOf('room') != -1">
-          <h5>{{ object.roomType | translate }}</h5>
-          <h5>{{ object.roomControl | translate }}</h5>
-          <h5 *ngIf="object.hwconfId">{{ object.hwconfId | idToName:'hwconf' }}</h5>
+          <p>{{ object.roomType | translate }}</p>
+          <p>{{ object.roomControl | translate }}</p>
+          <p *ngIf="object.hwconfId">{{ object.hwconfId | idToName:'hwconf' }}</p>
         </ion-label>
         <ion-label *ngIf="objectType.indexOf('user') != -1">
-          <h5>{{ object.role | translate }}</h5>
-          <h5>{{ object.classes }}</h5>
+          <p>{{ object.role | translate }}</p>
+          <p>{{ object.classes }}</p>
         </ion-label>
         <ion-item *ngIf="objectType == 'challenge' && object.creatorId == authService.session.userId">
           <div *ngIf="object.released && object.groups.length">{{objectService.formatGroups(object.groups)}}</div>
@@ -150,7 +161,7 @@
           <ion-icon slot="icon-only" name="people"></ion-icon>
         </ion-item-option>
         <ion-item-option
-          *ngIf="objectType.indexOf('group') != -1 && (authService.isAllowed('group.modify') || authService.session.userId == object.ownerId)"
+          *ngIf="objectType.indexOf('group') != -1 && (authService.isAllowed('group.modify') || authService.session.userId == object.creatorId)"
           (click)="context.componentParent.redirectToMembers(object)">
           <ion-icon slot="icon-only" name="people-circle"></ion-icon>
         </ion-item-option>
@@ -158,7 +169,7 @@
           <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
         </ion-item-option>
         <ion-item-option
-          *ngIf="authService.session.userId == object.ownerId || authService.isAllowed(objectType + '.delete')"
+          *ngIf="authService.session.userId == object.creatorId || authService.isAllowed(objectType + '.delete')"
           color="danger" (click)="context.componentParent.redirectToDelete(object)">
           <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
         </ion-item-option>

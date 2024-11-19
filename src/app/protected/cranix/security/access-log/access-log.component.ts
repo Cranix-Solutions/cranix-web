@@ -19,7 +19,7 @@ export class AccessLogComponent implements OnInit {
     resizable: true,
     sortable: true,
     hide: false,
-    suppressMenu: true
+    suppressHeaderMenuButton: true
   }
   constructor(
     public authService: AuthenticationService,
@@ -81,7 +81,6 @@ export class AccessLogComponent implements OnInit {
 
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    this.gridApi.setQuickFilter(filter);
-    this.gridApi.doLayout();
+    this.gridApi.setGridOption('quickFilterText', filter);
   }
 }

@@ -1,6 +1,6 @@
 import { Component, Inject, Input, LOCALE_ID, OnInit } from '@angular/core';
 import { formatDate } from '@angular/common';
-import { GridApi, ColumnApi } from 'ag-grid-community';
+import { GridApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -30,7 +30,6 @@ export class MyGroupsPage implements OnInit {
   columnDefs = [];
   defaultColDef = {};
   gridApi: GridApi;
-  columnApi: ColumnApi;
   rowSelection;
   context;
   rowData = [];
@@ -50,7 +49,7 @@ export class MyGroupsPage implements OnInit {
       resizable: true,
       sortable: true,
       hide: false,
-      suppressMenu: true
+      suppressHeaderMenuButton: true
     }
   }
   async ngOnInit() {
@@ -98,7 +97,7 @@ export class MyGroupsPage implements OnInit {
         suppressSizeToFit: true,
         cellStyle: { 'padding': '2px' },
         field: 'actions',
-        cellRendererFramework: GroupActionBTNRenderer
+        cellRenderer: GroupActionBTNRenderer
       },
       {
         field: 'description',
@@ -170,7 +169,7 @@ export class MyGroupsPage implements OnInit {
         suppressSizeToFit: true,
         cellStyle: { 'padding': '2px' },
         field: 'actions',
-        cellRendererFramework: EditBTNRenderer
+        cellRenderer: EditBTNRenderer
       },
       {
         field: 'description',
@@ -184,23 +183,22 @@ export class MyGroupsPage implements OnInit {
       {
         headerName: this.languageS.trans('private'),
         field: 'privateGroup',
-        cellRendererFramework: YesNoBTNRenderer
+        cellRenderer: YesNoBTNRenderer
       },
       {
         headerName: this.languageS.trans('AdHoc-Room'),
         field: 'createAdHocRoom',
-        cellRendererFramework: YesNoBTNRenderer
+        cellRenderer: YesNoBTNRenderer
       },
       {
         headerName: this.languageS.trans('validUntil'),
         field: 'validUntil',
-        cellRendererFramework: DateTimeCellRenderer
+        cellRenderer: DateTimeCellRenderer
       }
     ];
   }
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
 
@@ -264,8 +262,7 @@ export class MyGroupsPage implements OnInit {
       }
 
     } else {
-      this.gridApi.setQuickFilter(filter);
-      this.gridApi.doLayout();
+      this.gridApi.setGridOption('quickFilterText', filter);
     }
   }
   public redirectToDelete = (tmp) => {
@@ -312,7 +309,6 @@ export class MyGroupsPage implements OnInit {
       component: GroupMembersPage,
       cssClass: 'big-modal',
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -349,7 +345,6 @@ export class MyGroupsPage implements OnInit {
         object: anyObject
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -379,7 +374,6 @@ export class MyGroupsPage implements OnInit {
         guest: guest
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {

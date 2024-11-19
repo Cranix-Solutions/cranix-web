@@ -9,6 +9,7 @@ import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { UsersListsPage } from './users-lists.page';
 import { UsersComponent } from './users.component';
 import { UsersImportComponent } from './users-import.component';
+import { Users2faComponent } from './users-2fa';
 import { UserGroupsPage } from '../details/groups/user-groups.page';
 import { CanActivateViaAcls } from 'src/app/services/auth-guard.service';
 
@@ -25,6 +26,9 @@ const routes: Routes = [
       {
         path: 'import',
         component: UsersImportComponent
+      },{
+        path: 'crx2fa',
+        component: Users2faComponent
       },
       {
         path: '', pathMatch: 'full',
@@ -42,7 +46,7 @@ const routes: Routes = [
     CranixSharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [UsersListsPage,UsersComponent,UsersImportComponent,UserGroupsPage]
+  declarations: [UsersListsPage,UsersComponent,UsersImportComponent,Users2faComponent,UserGroupsPage]
 })
 export class UsersListsPageModule { }
 

@@ -14,7 +14,8 @@ export class Customer {
     country: string = '';
     contact: string = '';
     telephone: string = '';
-    recDate: any = new Date();
+    created: any = new Date();
+    modified: any = new Date();
     constructor() {}
 }
 
@@ -46,7 +47,8 @@ export class Institute {
     deleted;
     adminPW: string = '';
     cephalixPW: string = '';
-    recDate: any = new Date();
+    created: any = new Date();
+    modified: any = new Date();
     cephalixCustomerId: number;
     constructor() {}
 }
@@ -55,14 +57,16 @@ export class Ticket{
     id?: number = 0;
     title: string = "";
     cephalixInstituteId: number = 0;
-    ossuserId: number = 0;
-    ownerId: number = 0;
+    cranixUserId: number = 0;
+    cranixDeviceId: number = 0;
+    creatorId: number = 0;
     ticketType: string = "";
     firstname: string = "";
     lastname: string = "";
     email: string = "";
     priority: number = 0;
-    recDate: any = new Date();
+    modified: any = new Date();
+    created: any = new Date();
     ticketStatus: string = "";
     constructor() {}
 }
@@ -76,7 +80,8 @@ export class Article{
     articleType: string = "";
     seen: boolean = false;
     text: string = "";
-    recDate: any = new Date();
+    created: any = new Date();
+    modified: any = new Date();
     reminder: any = new Date();
     workTime: number = 0;
     pictures: any[] = [];
@@ -98,6 +103,7 @@ export class InstituteStatus {
     lastUpdate: any =new Date();
     version: string ="";
     created: any = new Date();
+    modified: any = new Date();
     uptime: string ="";
     constructor() {}
 }
@@ -116,16 +122,6 @@ export class CephalixCare{
     description: string = "";
     access: string = "";
     contact: string = "";
-    constructor() {}
-}
-
-export class CareMessage {
-    id?: number;
-    cephalixosscareId: number = 0;
-    recDate: any = new Date();
-    careMessageType: string = "";
-    description: string = "";
-    text: string = "";
     constructor() {}
 }
 
@@ -169,7 +165,8 @@ export interface SynchronizedObject {
     objectName: number,
     cephalixId: number,
     cranixId: number,
-    lastSync: number
+    lastSync: number,
+    syncRunning: boolean
 }
 
 export const contracts = [

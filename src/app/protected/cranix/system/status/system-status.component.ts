@@ -1,13 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 //Own stuff
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { SystemService } from 'src/app/services/system.service';
 import { LanguageService } from 'src/app/services/language.service';
-import { SupportTicket } from 'src/app/shared/models/data-model';
+import { SupportRequest } from 'src/app/shared/models/data-model';
 import { ServiceStatus } from 'src/app/shared/models/server-models';
 import { AuthenticationService } from 'src/app/services/auth.service';
+import { CreateSupport } from 'src/app/shared/actions/create-support/create-support-page';
 
 @Component({
   selector: 'cranix-system-status',
@@ -16,15 +17,17 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 })
 export class SystemStatusComponent implements OnInit {
 
-  mySupport = new SupportTicket();
+  mySupport = new SupportRequest();
   objectKeys: string[];
   systemStatus: any;
   servicesStatus: ServiceStatus[];
+  header = {};
+  chartsReady: boolean = false;
   series = [
     {
       type: 'pie',
       angleKey: 'count',
-      labelKey: 'name'
+      legendItemKey: 'name'
     }
   ];
 
@@ -40,6 +43,8 @@ export class SystemStatusComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.chartsReady = false;
     this.storage.get('System.Status.mySupport').then((val) => {
       let myTmp = JSON.parse(val);
       if (myTmp && myTmp.email) {
@@ -49,43 +54,53 @@ export class SystemStatusComponent implements OnInit {
       }
     });
     this.systemStatus = {};
-    let subM = this.systemService.getStatus().subscribe(
-      (val) => {
+    let subM = this.systemService.getStatus().subscribe({
+      next: (val) => {
+        console.log(val)
         this.systemStatus = {};
-        this.objectKeys = Object.keys(val).sort();
+        this.objectKeys = Object.keys(val);
         for (let key of Object.keys(val)) {
           this.systemStatus[key] = {
             legend: { enabled: false },
-            autoSize: false,
             width: 250,
             height: 220,
             series: this.series,
             padding: {
               right: 40,
               left: 40
-          }
+            }
           };
           if (key.startsWith("/dev")) {
             //Convert value into GB
             this.systemStatus[key]['data'] = []
-            for( let a  of val[key] ) {
+            for (let a of val[key]) {
               this.systemStatus[key]['data'].push(
                 {
                   name: a['name'],
-                  count: a['count'] / 1048576
+                  count: parseInt(a['count']) / 1048576
                 }
               )
             }
-            this.systemStatus[key]['header'] = key + " [GB]"
+            this.header[key] = key + " [GB]"
           } else {
-            this.systemStatus[key]['data']  = val[key];
-            this.systemStatus[key]['header'] = this.languageService.trans(key)
+            this.systemStatus[key]['data'] = []
+            for (let a of val[key]) {
+              this.systemStatus[key]['data'].push(
+                {
+                  name: a['name'],
+                  count: parseInt(a['count'])
+                }
+              )
+            }
+            this.header[key] = this.languageService.trans(key)
           }
         }
-
+        this.chartsReady = true;
+        console.log(this.systemStatus)
       },
-      (err) => { console.log(err) },
-      () => { subM.unsubscribe() });
+      error: (err) => { console.log(err) },
+      complete: () => { subM.unsubscribe() }
+    })
   }
 
 
@@ -98,7 +113,7 @@ export class SystemStatusComponent implements OnInit {
   }
   shutDown(ev: Event) {
     this.systemService.shutDown()
-   }
+  }
 
   async support(ev: Event) {
     delete this.mySupport.description;
@@ -117,7 +132,6 @@ export class SystemStatusComponent implements OnInit {
         support: this.mySupport,
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -131,48 +145,3 @@ export class SystemStatusComponent implements OnInit {
     (await modal).present();
   }
 }
-
-
-@Component({
-  selector: 'create-support-page',
-  templateUrl: 'create-support.html'
-})
-export class CreateSupport implements OnInit {
-
-  disabled: boolean = false;
-  files = [];
-  @Input() support
-  constructor(
-    public modalController: ModalController,
-    public systemService: SystemService,
-    public objectService: GenericObjectService
-  ) { }
-
-  ngOnInit() { }
-  onFilesAdded(event) {
-    this.files = event.target.files;
-  }
-
-  addAttachment() {
-    console.log("addP")
-    for (let file of this.files) {
-      this.support.attachmentName = file.name;
-      let fileReader = new FileReader();
-      fileReader.onload = (e) => {
-        let index = e.target.result.toString().indexOf("base64,") + 7;
-        this.support.attachment = e.target.result.toString().substring(index);
-      }
-      fileReader.readAsDataURL(file);
-    }
-  }
-  onSubmit() {
-    console.log(this.support)
-    this.systemService.createSupportRequest(this.support).subscribe(
-      (val) => {
-        this.objectService.responseMessage(val);
-        this.modalController.dismiss("OK")
-      }
-    )
-  };
-}
-

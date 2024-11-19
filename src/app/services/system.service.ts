@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders, HttpParams, HttpClientModule } from '@angular/
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 import { SystemConfig } from 'src/app/shared/models/data-model';
-import { ServerResponse, Acl, ServiceStatus } from 'src/app/shared/models/server-models';
+import { ServerResponse, Acl, ServiceStatus, MailAccess } from 'src/app/shared/models/server-models';
 import { GenericObjectService } from './generic-object.service';
 import { LanguageService } from './language.service';
 
@@ -180,11 +180,11 @@ export class SystemService {
 			next: (addons) => {
 				this.addons = addons;
 				for (let addon of this.addons) {
-					this.http.get<string[]>(this.url + `/${addon}/listActions`, { headers: this.authService.headers }).subscribe(
-						(actions) => { this.addonActions[addon] = actions }
+					this.http.get(this.url + `/${addon}/listActions`, { headers: this.authService.textHeaders, responseType: "text" }).subscribe(
+						(actions) => { this.addonActions[addon] = actions.split(" ") }
 					);
-					this.http.get<string[]>(this.url + `/${addon}/listKeys`, { headers: this.authService.headers }).subscribe({
-						next: (keys) => { this.addonKeys[addon] = keys },
+					this.http.get(this.url + `/${addon}/listKeys`, { headers: this.authService.textHeaders, responseType: "text" }).subscribe({
+						next: (keys) => { this.addonKeys[addon] = keys.split(" ") },
 						error: (err) => { console.log('get Actions', err) },
 						complete: () => { this.selectedAddon = this.addons[0] }
 					});
@@ -203,7 +203,7 @@ export class SystemService {
 	getKey(key) {
 		this.url = this.hostname + '/system/addon/' + this.selectedAddon + '/' + key;
 		console.log(this.url);
-		return this.http.get<string[]>(this.url, { headers: this.authService.headers });
+		return this.http.get(this.url, { headers: this.authService.textHeaders, responseType: "text"  });
 	}
 
 	getFile(path: string) {
@@ -221,5 +221,26 @@ export class SystemService {
 			next: (res) => { this.dnsDomains = res.filter(obj => !obj.endsWith('.in-addr.arpa')).sort() },
 			error: (err) => { console.log('get Actions', err) }
 		});
+	}
+
+	/**
+	 * Mailserver stuff
+	 */
+	getAllMailAccess(){
+		this.url = this.hostname + '/system/mailserver/access';
+		console.log(this.url);
+		return this.http.get<MailAccess[]>(this.url, { headers: this.authService.headers  });
+	}
+	addMailAccess(mailAccess: MailAccess){
+		this.url = this.hostname + '/system/mailserver/access';
+		console.log(this.url);
+		return this.http.post<ServerResponse>(this.url, mailAccess, { headers: this.authService.headers  })
+	}
+	deleteMailAccess(id: string){
+		this.url = this.hostname + `/system/mailserver/access/${id}`;
+		console.log(this.url);
+		this.http.delete<ServerResponse>(this.url,{ headers: this.authService.headers  }).subscribe(
+			(val)=>{this.objectService.responseMessage(val)}
+		)
 	}
 }

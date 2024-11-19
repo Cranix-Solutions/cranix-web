@@ -17,8 +17,8 @@
     <ion-list lines="full">
       <ion-item>
         <ion-label position="stacked">{{'roomId'| translate}}</ion-label>
-        <ionic-selectable
-          *ngIf="!selectedRoom"
+        @if(!selectedRoom) {
+          <ionic-selectable
           #ionicSelectable
           (onChange)="roomChanged($event.value)"
           [items]="roomsToSelect"
@@ -41,7 +41,9 @@
             <div></div>
           </ng-template>
         </ionic-selectable>
-        <ion-input *ngIf="selectedRoom" [value]="selectedRoom.name" disabled></ion-input>
+        } @else {
+          <ion-input [value]="selectedRoom.name" disabled></ion-input>
+        }
       </ion-item>
       <ion-item *ngIf="!adHocRoom && ipAdresses">
         <ion-label position="stacked">{{'ip'| translate}}</ion-label>

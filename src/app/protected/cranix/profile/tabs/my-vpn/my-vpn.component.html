@@ -12,13 +12,13 @@
       </ion-select>
     </ion-item>
     <ion-item lines="none">
-      <ion-button (click)="downloadConfig()" [disabled]="!selectedOS">
-        {{ 'Download config' | translate }}
+      <ion-button (click)="downloadExec()" [disabled]="!selectedOS">
+        {{ 'Download Installer' | translate }}
       </ion-button>
     </ion-item>
     <ion-item lines="none">
-      <ion-button (click)="downloadExec()" [disabled]="!selectedOS">
-        {{ 'Download Installer' | translate }}
+      <ion-button (click)="downloadConfig()" [disabled]="!selectedOS">
+        {{ 'Download config' | translate }}
       </ion-button>
     </ion-item>
   </ion-list>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
-import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
+import { GridOptions, GridApi } from 'ag-grid-community';
 //Own stuff
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { DownloadSoftwaresComponent } from 'src/app/shared/actions/download-softwares/download-softwares.component';
@@ -23,7 +23,6 @@ export class SoftwarePackagesComponent implements OnInit {
   gridOptions: GridOptions;
   columnDefs = [];
   gridApi: GridApi;
-  columnApi: ColumnApi;
   rowSelection;
   context;
   title = 'app';
@@ -91,7 +90,7 @@ export class SoftwarePackagesComponent implements OnInit {
             cellStyle: { 'padding': '2px', 'line-height': '36px' },
             field: 'actions',
             pinned: 'left',
-            cellRendererFramework: SoftwareEditBTNRenderer
+            cellRenderer: SoftwareEditBTNRenderer
           });
           continue;
         }
@@ -107,22 +106,10 @@ export class SoftwarePackagesComponent implements OnInit {
   }
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
   }
 
   onQuickFilterChanged(quickFilter) {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.doLayout();
-  }
-  onResize($event) {
-    this.sizeAll();
-  }
-  sizeAll() {
-    var allColumnIds = [];
-    this.columnApi.getAllColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.columnApi.autoSizeColumns(allColumnIds);
+    this.gridApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById(quickFilter)).value);
   }
 
   public redirectToDelete = (software: Software) => {
@@ -142,7 +129,6 @@ export class SoftwarePackagesComponent implements OnInit {
         selected: this.displayedColumns
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -180,10 +166,10 @@ export class SoftwarePackagesComponent implements OnInit {
       },
       cssClass: 'medium-modal',
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
+      this.readInstallableSoftware();
       if (dataReturned.data) {
         this.authService.log("Object was created or modified", dataReturned.data)
       }
@@ -197,9 +183,8 @@ export class SoftwarePackagesComponent implements OnInit {
       componentProps: {
         software: software
       },
-      cssClass: 'medium-modal',
+      cssClass: 'big-modal',
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {

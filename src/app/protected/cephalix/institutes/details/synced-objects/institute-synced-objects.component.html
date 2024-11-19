@@ -1,21 +1,26 @@
 <cranix-toolbar title="{{ 'List of synchronized objects in the selected institute:' | translate}} {{institute.name}}">
 </cranix-toolbar>
 <ion-content id="carded">
-  <ion-toolbar>
-    <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="list">
-      <ion-segment-button value="to">
-        <ion-label>{{'To' | translate}}</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="from">
-        <ion-label>{{'From' | translate}}</ion-label>
-      </ion-segment-button>
-    </ion-segment>
+  <ion-toolbar class="page-toolbar">
     <ion-item>
+      <ion-segment (ionChange)="segmentChanged($event)" color="secondary" value="to" style="width: 300px">
+        <ion-segment-button value="to">
+          <ion-label>{{'To' | translate}}</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="from">
+          <ion-label>{{'From' | translate}}</ion-label>
+        </ion-segment-button>
+      </ion-segment>
       <ion-input placeholder="{{'search' | translate }}" (input)="onMemberFilterChanged()" id="memberFilter">
       </ion-input>
     </ion-item>
+    <ion-buttons slot="end">
+      <ion-button size="small" (click)="readMembers()" fill="solid" matTooltip="{{'Reload status' | translate }}">
+        <ion-icon slot="icon-only" name="refresh-circle" color="tertiary"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
-  <ag-grid-angular #agGrid style="width: 100%; height: 450px;" class="{{authService.settings.agGridThema}}"
+  <ag-grid-angular #agGrid style="width: 100%; height: 88%;" class="{{authService.settings.agGridThema}}"
     [rowData]="memberData" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [context]="context"
     rowSelection="multiple" [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick"
     (gridReady)="onMemberReady($event)" id="memberTable">

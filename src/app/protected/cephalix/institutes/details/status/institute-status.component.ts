@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GridApi, ColumnApi } from 'ag-grid-community';
+import { GridApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
@@ -26,7 +26,6 @@ export class InstituteStatusComponent implements OnInit {
   columnDefs = [];
   defaultColDef = {};
   gridApi: GridApi;
-  columnApi: ColumnApi;
   rowSelection;
   context;
   selected: Institute[];
@@ -52,7 +51,7 @@ export class InstituteStatusComponent implements OnInit {
       cellStyle: { 'justify-content': "center" },
       minWidth: 100,
       maxWidth: 150,
-      suppressMenu: true,
+      suppressHeaderMenuButton: true,
       sortable: true,
       resizable: false
     };
@@ -73,13 +72,11 @@ export class InstituteStatusComponent implements OnInit {
   }
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
 
   onQuickFilterChanged(quickFilter) {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.doLayout();
+    this.gridApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById(quickFilter)).value);
 
   }
   public ngAfterViewInit() {
@@ -93,31 +90,31 @@ export class InstituteStatusComponent implements OnInit {
       col['headerName'] = this.languageS.trans(key);
       switch (key) {
         case 'lastUpdate': {
-          col['cellRendererFramework'] = DateTimeCellRenderer;
+          col['cellRenderer'] = DateTimeCellRenderer;
           break;
         }
         case 'rootUsage': {
           col['headerClass'] = "rotate-header-class"
           col['minWidth'] = 70
-          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          col['cellRenderer'] = FileSystemUsageRenderer;
           break;
         }
         case 'homeUsage': {
           col['headerClass'] = "rotate-header-class"
           col['minWidth'] = 70
-          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          col['cellRenderer'] = FileSystemUsageRenderer;
           break;
         }
         case 'srvUsage': {
           col['headerClass'] = "rotate-header-class"
           col['minWidth'] = 70
-          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          col['cellRenderer'] = FileSystemUsageRenderer;
           break;
         }
         case 'varUsage': {
           col['headerClass'] = "rotate-header-class"
           col['width'] = 70
-          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          col['cellRenderer'] = FileSystemUsageRenderer;
           break;
         }
         case 'runningKernel': {
@@ -148,7 +145,7 @@ export class InstituteStatusComponent implements OnInit {
           break;
         }
         case 'created': {
-          col['cellRendererFramework'] = DateTimeCellRenderer;
+          col['cellRenderer'] = DateTimeCellRenderer;
           break;
         }
         case 'errorMessages': {
@@ -172,7 +169,6 @@ export class InstituteStatusComponent implements OnInit {
         objectPath: "InstitutesStatusComponent.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {

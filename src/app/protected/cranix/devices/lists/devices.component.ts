@@ -54,7 +54,7 @@ export class DevicesComponent implements OnInit {
       resizable: true,
       sortable: true,
       hide: false,
-      suppressMenu: true
+      suppressHeaderMenuButton: true
     }
   }
   ngOnInit() {
@@ -114,7 +114,7 @@ export class DevicesComponent implements OnInit {
             cellStyle: { 'padding': '1px', 'line-height': '36px' },
             field: 'actions',
             pinned: 'left',
-            cellRendererFramework: DeviceActionBTNRenderer
+            cellRenderer: DeviceActionBTNRenderer
           })
           continue;
         }
@@ -149,12 +149,11 @@ export class DevicesComponent implements OnInit {
 
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    this.gridApi.setQuickFilter(filter);
-    this.gridApi.doLayout();
+    this.gridApi.setGridOption('quickFilterText', filter);
   }
   sizeAll() {
     var allColumnIds = [];
-    this.columnApi.getAllColumns().forEach((column) => {
+    this.columnApi.getColumns().forEach((column) => {
       allColumnIds.push(column.getColId());
     });
     this.columnApi.autoSizeColumns(allColumnIds);
@@ -223,7 +222,6 @@ export class DevicesComponent implements OnInit {
         object: device
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -241,7 +239,6 @@ export class DevicesComponent implements OnInit {
         object: device
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     (await modal).present();
@@ -252,7 +249,6 @@ export class DevicesComponent implements OnInit {
       component: DevicePrintersComponent,
       cssClass: "small-modal",
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -278,7 +274,6 @@ export class DevicesComponent implements OnInit {
         objectPath: "DevicesComponent.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -300,7 +295,6 @@ export class DevicesComponent implements OnInit {
         adHocRoom: false
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     (await modal).present().then((val) => {

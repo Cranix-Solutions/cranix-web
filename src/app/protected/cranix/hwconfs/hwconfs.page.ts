@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
+import { GridApi } from 'ag-grid-community'
 
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
@@ -25,8 +26,7 @@ export class HwconfsPage implements OnInit {
   sortableColumns: string[] = ['name', 'description', 'deviceType'];
   defaultColDef = {};
   columnDefs = [];
-  gridApi;
-  columnApi;
+  gridApi: GridApi;
   context;
   selected: Hwconf[] = [];
   title = 'app';
@@ -48,7 +48,7 @@ export class HwconfsPage implements OnInit {
       resizable: true,
       sortable: true,
       hide: false,
-      suppressMenu: true
+      suppressHeaderMenuButton: true
     }
   }
   ngOnInit() {
@@ -69,7 +69,7 @@ export class HwconfsPage implements OnInit {
       cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
       pinned: 'left',
-      cellRendererFramework: ActionBTNRenderer
+      cellRenderer: ActionBTNRenderer
     };
     for (let key of this.objectKeys) {
       let col = {};
@@ -97,7 +97,6 @@ export class HwconfsPage implements OnInit {
   }
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
   selectionChanged(){
@@ -118,8 +117,7 @@ export class HwconfsPage implements OnInit {
   }
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    this.gridApi.setQuickFilter(filter);
-    this.gridApi.doLayout();
+    this.gridApi.setGridOption('quickFilterText', filter);
   }
 
   public redirectToDelete = (hwconf: Hwconf) => {
@@ -169,7 +167,6 @@ export class HwconfsPage implements OnInit {
           objectKeys: this.objectKeys
         },
         animated: true,
-        swipeToClose: true,
         showBackdrop: true
       });
       modal.onDidDismiss().then((dataReturned) => {
@@ -194,7 +191,6 @@ export class HwconfsPage implements OnInit {
         objectPath: "HwconfsPage.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {

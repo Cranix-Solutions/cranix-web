@@ -56,7 +56,6 @@ export class InstituteNoticesComponent implements OnInit {
         object: notice
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {

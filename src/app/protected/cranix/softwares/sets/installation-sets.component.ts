@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { PopoverController, ModalController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
+import { GridApi } from 'ag-grid-community';
 
 //Own stuff
 import { AuthenticationService } from 'src/app/services/auth.service';
@@ -21,8 +22,7 @@ export class InstallationSetsComponent implements OnInit {
   installationSetOptions;
   columnDefs = [];
   defaultColDef = {};
-  installationSetApi;
-  installationSetColumnApi;
+  installationSetApi: GridApi;
   installationSetSelection: Installation[] = [];
   autoGroupColumnDef;
   institute;
@@ -53,7 +53,6 @@ export class InstallationSetsComponent implements OnInit {
 
   installationSetReady(params) {
     this.installationSetApi = params.api;
-    this.installationSetColumnApi = params.columnApi;
     this.installationSetApi.sizeColumnsToFit();
   }
 
@@ -62,20 +61,9 @@ export class InstallationSetsComponent implements OnInit {
   }
 
   setFilterChanged() {
-    this.installationSetApi.setQuickFilter((<HTMLInputElement>document.getElementById("installationSetFilter")).value);
-    this.installationSetApi.doLayout();
+    this.installationSetApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("installationSetFilter")).value);
   }
-
-  onResize(ev: Event) {
-    //this.sizeAll();
-  }
-  sizeAll() {
-    var allColumnIds = [];
-    this.installationSetColumnApi.getAllColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.installationSetColumnApi.autoSizeColumns(allColumnIds);
-  }
+  
   createColumnDefs() {
     this.columnDefs = [
       {
@@ -90,7 +78,7 @@ export class InstallationSetsComponent implements OnInit {
         cellStyle: { 'padding': '2px', 'line-height': '36px' },
         field: 'actions',
         pinned: 'left',
-        cellRendererFramework: EditBTNRenderer
+        cellRenderer: EditBTNRenderer
       },
       {
         field: 'description',
@@ -98,7 +86,7 @@ export class InstallationSetsComponent implements OnInit {
       },
       {
         field: 'softwares',
-        suppressMenu: true,
+        suppressHeaderMenuButton: true,
         headerName: this.languageS.trans('softwares'),
         valueGetter: function (params) {
           return params.data.softwareIds.length;
@@ -106,7 +94,7 @@ export class InstallationSetsComponent implements OnInit {
       },
       {
         field: 'hwconfs',
-        suppressMenu: true,
+        suppressHeaderMenuButton: true,
         headerName: this.languageS.trans('hwconfs'),
         valueGetter: function (params) {
           return params.data.hwconfIds.length;
@@ -114,7 +102,7 @@ export class InstallationSetsComponent implements OnInit {
       },
       {
         field: 'rooms',
-        suppressMenu: true,
+        suppressHeaderMenuButton: true,
         headerName: this.languageS.trans('rooms'),
         valueGetter: function (params) {
           return params.data.roomIds.length;
@@ -122,7 +110,7 @@ export class InstallationSetsComponent implements OnInit {
       },
       {
         field: 'devices',
-        suppressMenu: true,
+        suppressHeaderMenuButton: true,
         headerName: this.languageS.trans('devices'),
         valueGetter: function (params) {
           return params.data.deviceIds.length;
@@ -145,7 +133,6 @@ export class InstallationSetsComponent implements OnInit {
         objectAction: action
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {

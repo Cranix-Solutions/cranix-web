@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GridApi } from 'ag-grid-community';
 
 //Own stuff
 import { AuthenticationService } from 'src/app/services/auth.service';
@@ -21,8 +22,7 @@ export class InstituteSyncedObjectsComponent implements OnInit {
     hide: false
   };
   columnDefs = [];
-  memberApi;
-  memberColumnApi;
+  memberApi: GridApi;
   memberSelection: SynchronizedObject[] = [];
   memberData: SynchronizedObject[] = [];
   modules = [];
@@ -48,6 +48,7 @@ export class InstituteSyncedObjectsComponent implements OnInit {
       },
       {
         headerName: this.languageS.trans('name'),
+        minsize: '300px',
         field: 'objectName',
       },
       {
@@ -57,7 +58,7 @@ export class InstituteSyncedObjectsComponent implements OnInit {
       {
         headerName: "",
         field: 'cranixId',
-        cellRendererFramework: SyncObjectRenderer
+        cellRenderer: SyncObjectRenderer
       }
     ];
   }
@@ -72,12 +73,10 @@ export class InstituteSyncedObjectsComponent implements OnInit {
 
   onMemberReady(params) {
     this.memberApi = params.api;
-    this.memberColumnApi = params.columnApi;
   }
 
   onMemberFilterChanged() {
-    this.memberApi.setQuickFilter((<HTMLInputElement>document.getElementById("memberFilter")).value);
-    this.memberApi.doLayout();
+    this.memberApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("memberFilter")).value);
   }
 
   onResize($event) {
@@ -85,34 +84,47 @@ export class InstituteSyncedObjectsComponent implements OnInit {
   }
   sizeAll() {
     var allColumnIds = [];
-    this.memberColumnApi.getAllColumns().forEach((column) => {
+    this.memberApi.getColumns().forEach((column) => {
       allColumnIds.push(column.getColId());
     });
-    this.memberColumnApi.autoSizeColumns(allColumnIds);
+    this.memberApi.autoSizeColumns(allColumnIds);
   }
   readMembers() {
     switch (this.segment) {
       case 'to': {
-        let subM = this.cephalixService.getSynchronizedObjects(this.institute.id).subscribe(
-          (val) => { 
+        let subM = this.cephalixService.getSynchronizedObjects(this.institute.id).subscribe({
+          next: (val) => {
+            console.log("readMembers to " + val.length + "object read")
             this.memberData = val;
             this.syncedObjects = val;
           },
-          (err) => { this.authService.log(err) },
-          () => { subM.unsubscribe() });
+          error: (err) => { this.authService.log(err) },
+          complete: () => { subM.unsubscribe() }
+        });
         break;
       }
       case 'from': {
-        let subM = this.cephalixService.getObjectsFromInstitute(this.institute.id, 'hwconf').subscribe(
-          (val) => { 
-            this.memberData = []
-            for( let obj of val ) {
-              this.hwconfs[obj.id] = obj;
-              this.memberData.push( this.isSynced(obj, 'hwconf') )
-            }
-           },
-          (err) => { this.authService.log(err) },
-          () => { subM.unsubscribe() });
+        let subS = this.cephalixService.getSynchronizedObjects(this.institute.id).subscribe({
+          next: (val) => {
+            console.log("readMembers to " + val.length + "object read")
+            this.memberData = val;
+            this.syncedObjects = val;
+            let subM = this.cephalixService.getObjectsFromInstitute(this.institute.id, 'hwconf').subscribe({
+              next: (val) => {
+                this.memberData = []
+                console.log("readMembers from " + val.length + "object read")
+                for (let obj of val) {
+                  this.hwconfs[obj.id] = obj;
+                  this.memberData.push(this.isSynced(obj, 'hwconf'))
+                }
+              },
+              error: (err) => { this.authService.log(err) },
+              complete: () => { subM.unsubscribe() }
+            })
+          },
+          error: (err) => { this.authService.log(err) },
+          complete: () => { subS.unsubscribe() }
+        });
         break;
       }
     }
@@ -122,41 +134,58 @@ export class InstituteSyncedObjectsComponent implements OnInit {
     this.readMembers();
   }
 
-  isSynced(obj,objectType){
-    for(let tmp of this.syncedObjects){
-      if( tmp.objectType == objectType && tmp.cranixId == obj.id ) {
+  isSynced(obj, objectType) {
+    for (let tmp of this.syncedObjects) {
+      if (tmp.objectType == objectType && tmp.cranixId == obj.id) {
         console.log(tmp)
         return tmp
       }
     }
-    return  {
+    return {
       objectType: 'hwconf',
       objectName: obj.name,
       lastSync: 0,
       instituteId: this.institute.id,
       cephalixId: 0,
-      cranixId: obj.id
+      cranixId: obj.id,
+      syncRunning: false
     }
   }
-  getHWconfFromInstitute(hwconfId: number){
+  getHWconfFromInstitute(hwconfId: number) {
     this.objectService.requestSent();
-    this.cephalixService.getHWconfFromInstitute(this.institute.id,hwconfId,this.hwconfs[hwconfId]).subscribe(
-      (val) => { this.objectService.responseMessage(val)},
-      (err) => { this.objectService.errorMessage(err)}
+    this.cephalixService.getHWconfFromInstitute(this.institute.id, hwconfId, this.hwconfs[hwconfId]).subscribe(
+      (val) => {
+        this.objectService.responseMessage(val)
+        this.readMembers()
+      }
     )
   }
-  syncHWconfFromInstitute(mapping: SynchronizedObject){
+  syncHWconfFromInstitute(mapping: SynchronizedObject) {
     this.objectService.requestSent();
-    this.cephalixService.syncHWconfFromInstitute(this.institute.id,mapping).subscribe(
-      (val) => { this.objectService.responseMessage(val)},
-      (err) => { this.objectService.errorMessage(err)}
-    )
+    this.cephalixService.syncHWconfFromInstitute(this.institute.id, mapping).subscribe({
+      next: (val) => {
+        this.objectService.responseMessage(val)
+        this.readMembers()
+      },
+      error: (err) => { this.objectService.errorMessage(err) }
+    })
   }
-  syncObjectToInstitute(mapping: SynchronizedObject){
+  syncObjectToInstitute(mapping: SynchronizedObject) {
     this.objectService.requestSent();
-    this.cephalixService.putObjectToInstitute(this.institute.id,mapping.objectType,mapping.cephalixId).subscribe(
-      (val) => { this.objectService.responseMessage(val)},
-      (err) => { this.objectService.errorMessage(err)}
+    this.cephalixService.putObjectToInstitute(this.institute.id, mapping.objectType, mapping.cephalixId).subscribe({
+      next: (val) => {
+        this.objectService.responseMessage(val)
+        this.readMembers()
+      },
+      error: (err) => { this.objectService.errorMessage(err) }
+    })
+  }
+  stopSyncing(mappingId,direction){
+    this.cephalixService.stopSynching(mappingId,direction).subscribe(
+      (val) => {
+        this.objectService.responseMessage(val)
+        this.readMembers()
+      }
     )
   }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { ModalController } from '@ionic/angular';
+import { GridApi } from 'ag-grid-community'
 
 //own stuff
 import { LanguageService } from 'src/app/services/language.service';
@@ -15,10 +16,8 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 })
 export class UserGroupsPage implements OnInit {
   columnDefs = [];
-  memberApi;
-  noMemberApi;
-  memberColumnApi;
-  noMemberColumnApi;
+  memberApi: GridApi;
+  noMemberApi: GridApi;
   memberSelection: Group[] =[];
   noMemberSelection: Group[] =[];
   memberData: Group[] =[];
@@ -61,7 +60,6 @@ export class UserGroupsPage implements OnInit {
 
   onMemberReady(params) {
     this.memberApi = params.api;
-    this.memberColumnApi = params.columnApi;
     this.memberApi.sizeColumnsToFit();
     (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.63) + "px";
   }
@@ -70,13 +68,11 @@ export class UserGroupsPage implements OnInit {
   }
 
   onMemberFilterChanged() {
-    this.memberApi.setQuickFilter((<HTMLInputElement>document.getElementById("memberFilter")).value);
-    this.memberApi.doLayout();
+    this.memberApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("memberFilter")).value);
   }
 
   onNoMemberReady(params) {
     this.noMemberApi = params.api;
-    this.noMemberColumnApi = params.columnApi;
     this.noMemberApi.sizeColumnsToFit();
     (<HTMLInputElement>document.getElementById("noMemberTable")).style.height = Math.trunc(window.innerHeight * 0.63) + "px";
   }
@@ -85,9 +81,9 @@ export class UserGroupsPage implements OnInit {
   }
 
   onNoMemberFilterChanged() {
-    this.noMemberApi.setQuickFilter((<HTMLInputElement>document.getElementById("noMemberFilter")).value);
-    this.noMemberApi.doLayout();
+    this.noMemberApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("noMemberFilter")).value);
   }
+  
   applyChanges() {
     let groups: number[] = [];
     let rmGroups: number[] = [];

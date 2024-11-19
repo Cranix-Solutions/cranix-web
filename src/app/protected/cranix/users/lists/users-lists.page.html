@@ -8,6 +8,10 @@
         <ion-icon name="receipt"></ion-icon>
         <ion-label>{{ 'Import users' | translate}}</ion-label>
       </ion-tab-button>
+      <ion-tab-button *ngIf="authService.isAllowed('2fa.manage')" tab="crx2fa" >
+        <ion-icon name="key" ></ion-icon>
+        <ion-label>{{ 'CRX2fa' | translate }}</ion-label>
+      </ion-tab-button>
     </ion-tab-bar>
 </ion-tabs>
 

@@ -5,7 +5,7 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 import { CephalixService } from 'src/app/services/cephalix.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
-import { SynchronizedObject } from 'src/app/shared/models/cephalix-data-model';
+import { GridApi } from 'ag-grid-community';
 
 @Component({
   selector: 'cranix-institutes-sync-objects',
@@ -16,8 +16,7 @@ export class InstitutesSyncObjectsComponent implements OnInit {
   context;
   segment = "User";
   columnDefs = [];
-  memberApi;
-  memberColumnApi;
+  memberApi: GridApi;
   memberData = {};
   objectsToSync: string[] = [];
   institute;
@@ -44,20 +43,18 @@ export class InstitutesSyncObjectsComponent implements OnInit {
   }
   onMemberReady(params) {
     this.memberApi = params.api;
-    this.memberColumnApi = params.columnApi;
   }
 
   onMemberFilterChanged() {
-    this.memberApi.setQuickFilter((<HTMLInputElement>document.getElementById("memberFilter")).value);
-    this.memberApi.doLayout();
+    this.memberApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("memberFilter")).value);
   }
 
   sizeAll() {
     var allColumnIds = [];
-    this.memberColumnApi.getAllColumns().forEach((column) => {
+    this.memberApi.getColumns().forEach((column) => {
       allColumnIds.push(column.getColId());
     });
-    this.memberColumnApi.autoSizeColumns(allColumnIds);
+    this.memberApi.autoSizeColumns(allColumnIds);
   }
   readMembers() {
     let subM = this.cephalixService.getObjectsToSynchronize().subscribe(

@@ -1,7 +1,7 @@
 <ion-header translucent>
   <ion-toolbar>
     <ion-title>{{ 'Answer:' | translate }} {{ticket.title}}</ion-title>
-    <ion-subtitle>{{article.recDate | date:'yy-MM-dd HH:mm'}} {{article.title}} {{article.sender}}
+    <ion-subtitle>{{article.created | date:'yy-MM-dd HH:mm'}} {{article.title}} {{article.sender}}
     </ion-subtitle>
     <ion-buttons slot="end">
       <ion-button class="ion-no-margin" fill="clear" size="small" (click)="sendArticle()">

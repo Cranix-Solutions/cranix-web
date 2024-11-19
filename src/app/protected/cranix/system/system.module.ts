@@ -8,12 +8,13 @@ import { QuillModule } from 'ngx-quill';
 //own modules
 import { CranixSharedModule } from 'src/app/shared/cranix-shared.module';
 import { SystemPage } from './system.page';
-import { SystemStatusComponent, CreateSupport }  from './status/system-status.component';
+import { SystemStatusComponent }  from './status/system-status.component';
 import { SystemConfigComponent }  from './config/system-config.component';
 import { SystemAddonsComponent }  from './addons/system-addons.component';
 import { SystemAclsComponent } from './acls/system-acls.component';
 import { SystemServicesComponent } from './services/system-services.component';
 import { ManageAclsComponent } from 'src/app/protected/cranix/system/acls/manage-acls/manage-acls.component';
+import { MailserverComponent } from './mailserver/mailserver.component'
 import { simpleToolbarOptions } from 'src/app/shared/models/constants'
 
 
@@ -43,6 +44,10 @@ const routes: Routes = [
         component: SystemAclsComponent
       },
       {
+        path: 'mailserver',
+        component: MailserverComponent
+      },
+      {
         path: '', pathMatch: 'full',
         redirectTo: 'status'
       }
@@ -62,8 +67,9 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ],
   declarations: [
-    CreateSupport,
     ManageAclsComponent,
+    MailserverComponent,
+    SystemAclsComponent,
     SystemPage,
     SystemStatusComponent,
     SystemServicesComponent,

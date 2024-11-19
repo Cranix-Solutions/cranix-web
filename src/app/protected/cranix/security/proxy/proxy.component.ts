@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GridApi } from 'ag-grid-community'
 
 import { LanguageService } from 'src/app/services/language.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
@@ -23,8 +24,7 @@ export class ProxyComponent implements OnInit {
   lists  = {};
   proxyOptions;
   context;
-  proxyApi;
-  proxyColumnApi;
+  proxyApi: GridApi;
   proxySelected;
   columnDefs: any[];
 
@@ -49,7 +49,7 @@ export class ProxyComponent implements OnInit {
       this.columnDefs = [{
         field: 'name',
         headerName: this.languageS.trans('name'),
-        suppressMenu: true,
+        suppressHeaderMenuButton: true,
         sortable: true
       },
       {
@@ -57,7 +57,7 @@ export class ProxyComponent implements OnInit {
         cellStyle: { 'justify-content': "center" },
         headerName: this.languageS.trans('applyForAll'),
         width: 100,
-        cellRendererFramework: ApplyCheckBoxBTNRenderer
+        cellRenderer: ApplyCheckBoxBTNRenderer
       }
       ];
       this.authService.log(this.rowData);
@@ -68,9 +68,9 @@ export class ProxyComponent implements OnInit {
           col['field'] = key;
           col['minWidth'] = 100;
           col['sortable'] = false;
-          col['suppressMenu'] = true;
+          col['suppressHeaderMenuButton'] = true;
           col['headerName'] = this.languageS.trans(key);
-          col['cellRendererFramework'] = CheckBoxBTNRenderer;
+          col['cellRenderer'] = CheckBoxBTNRenderer;
           this.columnDefs.push(col);
         }
       }
@@ -83,8 +83,7 @@ export class ProxyComponent implements OnInit {
   }
 
   onQuickFilterChanged(){
-    this.proxyApi.setQuickFilter((<HTMLInputElement>document.getElementById('proxyQuickFilter')).value);
-    this.proxyApi.doLayout();
+    this.proxyApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById('proxyQuickFilter')).value);
   }
   segmentChanged(event) {
     this.segment   = event.detail.value;
@@ -110,7 +109,6 @@ export class ProxyComponent implements OnInit {
 
   proxyGridReady(params) {
     this.proxyApi = params.api;
-    this.proxyColumnApi = params.columnApi;
     this.authService.log("proxyGridReady");
   }
   

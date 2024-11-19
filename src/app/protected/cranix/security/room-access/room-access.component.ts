@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { GridApi } from 'ag-grid-community';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SecurityService } from 'src/app/services/security-service';
@@ -23,10 +24,8 @@ export class RoomAccessComponent implements OnInit {
   disabled: boolean = false;
   accessOptions = {};
   context;
-  accessApi;
-  accessColumnApi;
-  statusApi;
-  statusColumnApi;
+  accessApi: GridApi;
+  statusApi: GridApi;
   columnDefs: any[] = [];
   statusColumnDefs: any[] = [];
   defaultColDef;
@@ -34,7 +33,7 @@ export class RoomAccessComponent implements OnInit {
 
   constructor(
     public authService: AuthenticationService,
-    private languageS: LanguageService,
+    public languageS: LanguageService,
     public modalCtrl: ModalController,
     public objectService: GenericObjectService,
     public systemService: SystemService,
@@ -49,22 +48,8 @@ export class RoomAccessComponent implements OnInit {
       cellStyle: { 'justify-content': "center" },
       minWidth: 100,
       maxWidth: 150,
-      suppressMenu: true,
-      sortable: false,
-      headerComponentParams: {
-        template:
-          '<div class="ag-cell-label-container" role="presentation">' +
-          '  <span ref="eMenu" class="ag-header-icon ag-header-cell-menu-button"></span>' +
-          '  <div ref="eLabel" class="ag-header-cell-label" role="presentation">' +
-          '    <span ref="eSortOrder" class="ag-header-icon ag-sort-order"></span>' +
-          '    <span ref="eSortAsc" class="ag-header-icon ag-sort-ascending-icon"></span>' +
-          '    <span ref="eSortDesc" class="ag-header-icon ag-sort-descending-icon"></span>' +
-          '    <span ref="eSortNone" class="ag-header-icon ag-sort-none-icon"></span>' +
-          '    <span ref="eText" class="ag-header-cell-text" role="columnheader" style="white-space: normal;"></span>' +
-          '    <span ref="eFilter" class="ag-header-icon ag-filter-icon"></span>' +
-          '  </div>' +
-          '</div>',
-      }
+      suppressHeaderMenuButton: true,
+      sortable: false
     };
   }
 
@@ -87,15 +72,15 @@ export class RoomAccessComponent implements OnInit {
       }, {
         headerName: this.languageS.trans('login'),
         field: 'login',
-        cellRendererFramework: YesNoBTNRenderer
+        cellRenderer: YesNoBTNRenderer
       }, {
         headerName: this.languageS.trans('portal'),
         field: 'portal',
-        cellRendererFramework: YesNoBTNRenderer
+        cellRenderer: YesNoBTNRenderer
       }, {
         headerName: this.languageS.trans('printing'),
         field: 'printing',
-        cellRendererFramework: YesNoBTNRenderer
+        cellRenderer: YesNoBTNRenderer
       }
     ];
     if (this.authService.isAllowed('system.proxy')) {
@@ -103,19 +88,20 @@ export class RoomAccessComponent implements OnInit {
         {
           headerName: this.languageS.trans('proxy'),
           field: 'proxy',
-          cellRendererFramework: YesNoBTNRenderer
+          cellRenderer: YesNoBTNRenderer
         }
       )
     }
     this.statusColumnDefs.push({
       headerName: this.languageS.trans('direct'),
       field: 'direct',
-      cellRendererFramework: YesNoBTNRenderer
+      cellRenderer: YesNoBTNRenderer
     })
     this.statusColumnDefs.push({
       headerName: this.languageS.trans('Apply Default'),
       field: 'apply_default',
-      cellRendererFramework: ApplyBTNRenderer
+      maxWidth: 250,
+      cellRenderer: ApplyBTNRenderer
     })
   }
   toggle(data, field: string, value: boolean) {
@@ -173,18 +159,23 @@ export class RoomAccessComponent implements OnInit {
           break;
         }
         case "action": {
+          col['valueGetter'] = function (params) {
+            if (params.data && params.data.action) {
+              return params.context['componentParent'].languageS.trans(params.data.action);
+            }
+          }
           col['sortable'] = true;
           break;
         }
         case "accessType": {
-          //col['headerClass'] = "rotate-header-class"
+          
           col['sortable'] = true;
           break;
         }
         default: {
           col['minWidth'] = 70;
           col['maxWidth'] = 100;
-          col['cellRendererFramework'] = YesNoBTNRenderer;
+          col['cellRenderer'] = YesNoBTNRenderer;
         }
       }
       col['headerName'] = this.languageS.trans(key);
@@ -196,22 +187,18 @@ export class RoomAccessComponent implements OnInit {
   }
   onQuickFilterChanged(quickFilter) {
     if (this.segment == 'list') {
-      this.accessApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-      this.accessApi.doLayout();
+      this.accessApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById(quickFilter)).value);
     } else {
-      this.statusApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-      this.statusApi.doLayout();
+      this.statusApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById(quickFilter)).value);
     }
   }
   headerHeightSetter() {
     var padding = 20;
     var height = headerHeightGetter() + padding;
     if (this.segment == 'list') {
-      this.accessApi.setHeaderHeight(height);
-      this.accessApi.resetRowHeights();
+      this.accessApi.setGridOption('headerHeight', height);
     } else {
-      this.statusApi.setHeaderHeight(height);
-      this.statusApi.resetRowHeights();
+      this.statusApi.setGridOption('headerHeight', height);
     }
   }
   segmentChanged(event) {
@@ -232,15 +219,11 @@ export class RoomAccessComponent implements OnInit {
   }
   accessGridReady(params) {
     this.accessApi = params.api;
-    this.accessColumnApi = params.columnApi;
     this.authService.log(this.accessApi);
-    this.authService.log(this.accessColumnApi);
   }
   statusGridReady(params) {
     this.statusApi = params.api;
-    this.statusColumnApi = params.columnApi;
     this.authService.log(this.accessApi);
-    this.authService.log(this.accessColumnApi);
   }
   async redirectToAddEdit(roomAccess: AccessInRoom) {
     let action = "add";
@@ -258,7 +241,6 @@ export class RoomAccessComponent implements OnInit {
         roomAccess: roomAccess
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -270,10 +252,10 @@ export class RoomAccessComponent implements OnInit {
     (await modal).present();
   }
   restartFirewall() {
-    this.systemService.applyServiceState('firewalld', 'activ', 'restart')
+    this.systemService.applyServiceState('cranix-firewall', 'activ', 'restart')
   }
   stopFirewall() {
-    this.systemService.applyServiceState('firewalld', 'activ', 'false')
+    this.systemService.applyServiceState('cranix-firewall', 'activ', 'false')
   }
   delete() {
     let accessSelected = this.accessApi.getSelectedRows();

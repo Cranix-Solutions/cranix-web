@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GridApi, ColumnApi } from 'ag-grid-community';
+import { GridApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 
@@ -25,7 +25,6 @@ export class UsersComponent implements OnInit {
   columnDefs = [];
   defaultColDef = {};
   gridApi: GridApi;
-  columnApi: ColumnApi;
   context;
   rowData = [];
   defaultMustChange: boolean = true;
@@ -45,7 +44,7 @@ export class UsersComponent implements OnInit {
       resizable: true,
       sortable: true,
       hide: false,
-      suppressMenu: true
+      suppressHeaderMenuButton: true
     }
     this.systemService.getSystemConfigValue("DEFAULT_MUST_CHANGE").subscribe(
       (val) => {
@@ -94,7 +93,7 @@ export class UsersComponent implements OnInit {
             cellStyle: { 'padding': '2px', 'line-height': '36px' },
             field: 'actions',
             pinned: 'left',
-            cellRendererFramework: UserActionBTNRenderer
+            cellRenderer: UserActionBTNRenderer
           });
           continue;
         }
@@ -105,7 +104,6 @@ export class UsersComponent implements OnInit {
   }
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
 
@@ -128,8 +126,7 @@ export class UsersComponent implements OnInit {
   }
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    this.gridApi.setQuickFilter(filter);
-    this.gridApi.doLayout();
+    this.gridApi.setGridOption('quickFilterText', filter);
   }
   public redirectToDelete = (user: User) => {
     this.objectService.deleteObjectDialog(user, 'user', '')
@@ -170,7 +167,6 @@ export class UsersComponent implements OnInit {
       component: UserGroupsPage,
       cssClass: 'big-modal',
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -201,7 +197,6 @@ export class UsersComponent implements OnInit {
         object: user
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -225,7 +220,6 @@ export class UsersComponent implements OnInit {
         objectPath: "UsersPage.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {

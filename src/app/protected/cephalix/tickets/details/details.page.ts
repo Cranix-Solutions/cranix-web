@@ -25,7 +25,7 @@ export class DetailsPage implements OnInit {
   institutes: ObjectList[] = [];
   instObject: ObjectList = new ObjectList;
   articleOpen = {};
-  ticketOwner: User;
+  ticketCreator: User;
   workers: User[];
   nativeWindow: any
   constructor(
@@ -39,24 +39,18 @@ export class DetailsPage implements OnInit {
   ) {
     this.nativeWindow = win.getNativeWindow();
     this.ticketId = this.route.snapshot.params.id;
+    console.log("Ticket details constructor called", this.ticketId)
   }
 
-  async ngOnInit() {
-    while( !this.objectService.allObjects.has('institute') || !this.objectService.allObjects.has('user')) {
-      await new Promise(f => setTimeout(f, 1000));
-    }
-  }
-
-  public ngAfterViewInit() {
-    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
-    console.log("Ticket details called", this.ticketId)
-    let sub = this.cephlixS.getTicketById(this.ticketId).subscribe({
+  ngOnInit() {
+    console.log("Ticket details ngOnInit called", this.ticketId)
+    this.cephlixS.getTicketById(this.ticketId).subscribe({
       next: (val) => {
         console.log("getTicketById was called", this.ticketId)
         this.workers = this.objectService.allObjects['user'].filter(o => o.role == 'sysadmins').sort((a, b) => a.fullName > b.label ? 0 : 1);
         this.ticket = val;
-        this.ticketOwner = this.objectService.getObjectById('user', this.ticket.ownerId);
-        this.institute   = this.objectService.getObjectById('institute', this.ticket.cephalixInstituteId);
+        this.ticketCreator = this.objectService.getObjectById('user', this.ticket.creatorId);
+        this.institute = this.objectService.getObjectById('institute', this.ticket.cephalixInstituteId);
         this.readArcticles();
         for (let i of this.objectService.allObjects['institute']) {
           this.institutes.push({ id: i.id, label: i.name + " " + i.locality })
@@ -71,8 +65,12 @@ export class DetailsPage implements OnInit {
         }
       },
       error: (err) => { console.log(err) },
-      complete: () => { sub.unsubscribe() }
+      complete: () => { }
     })
+  }
+
+  public ngAfterViewInit() {
+    while (document.getElementsByTagName('mat-tooltip-component').length > 0) { document.getElementsByTagName('mat-tooltip-component')[0].remove(); }
   }
 
   public readArcticles() {
@@ -85,9 +83,9 @@ export class DetailsPage implements OnInit {
   }
 
   public assigneTicketToMe() {
-    this.ticket.ownerId = this.authService.session.userId;
-    this.ticketOwner.fullName = this.authService.session.fullName;
-    this.ticketOwner.id = this.authService.session.userId;
+    this.ticket.creatorId = this.authService.session.userId;
+    this.ticketCreator.fullName = this.authService.session.fullName;
+    this.ticketCreator.id = this.authService.session.userId;
     this.cephlixS.modifyTicket(this.ticket).subscribe({
       next: (val) => {
         this.objectService.responseMessage(val);
@@ -99,8 +97,8 @@ export class DetailsPage implements OnInit {
     })
   }
 
-  public setOwner() {
-    this.ticket.ownerId = this.ticketOwner.id
+  public setCreator() {
+    this.ticket.creatorId = this.ticketCreator.id
     this.cephlixS.modifyTicket(this.ticket).subscribe({
       next: (val) => {
         this.objectService.responseMessage(val);
@@ -125,7 +123,6 @@ export class DetailsPage implements OnInit {
         article: article
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {

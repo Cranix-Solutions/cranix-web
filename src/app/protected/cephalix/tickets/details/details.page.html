@@ -2,7 +2,7 @@
 <ion-content *ngIf="ticket">
   <ion-card>
     <ion-card-header>
-      <ion-card-title>#{{ticket.id}} {{ticket.title}} {{ticket.recDate | date:'yy-MM-dd HH:mm'}}</ion-card-title>
+      <ion-card-title>#{{ticket.id}} {{ticket.title}} {{ticket.created | date:'yy-MM-dd HH:mm'}}</ion-card-title>
       <ion-toolbar>
         <ion-card-subtitle>
           {{ institute.name }}
@@ -35,22 +35,22 @@
             <ion-item lines="none">
               <ion-label position="stacked">{{'Ticket Owner'| translate}}</ion-label>
               <ionic-selectable
-                #selectTicketOwner
+                #selectTicketCreator
                 item-content
-                [(ngModel)]="ticketOwner"
+                [(ngModel)]="ticketCreator"
                 [ngModelOptions]="{standalone: true}"
                 [items]="workers"
                 itemValueField="id"
                 itemTextField="fullName"
                 [canSearch]="true"
-                (onChange)="setOwner()">
+                (onChange)="setCreator()">
                 <ng-template ionicSelectableHeaderTemplate>
                   <ion-toolbar>
                     <ion-title>
                       {{ "Select the owner of the ticket" | translate }}
                     </ion-title>
                     <ion-buttons slot="end">
-                      <ion-button ion-button (click)="selectTicketOwner.close()">
+                      <ion-button ion-button (click)="selectTicketCreator.close()">
                         <ion-icon color="danger" name="close"></ion-icon>
                       </ion-button>
                     </ion-buttons>
@@ -94,7 +94,7 @@
     <ion-card-header>
       <ion-toolbar>
         <ion-card-subtitle [color]="article.articleType == 'O' ? 'warning' : article.seen ? 'success' : 'danger'">
-          {{article.recDate | date:'yyyy-MM-dd HH:mm'}}
+          {{article.created | date:'yyyy-MM-dd HH:mm'}}
           <ion-icon *ngIf="article.articleType == 'O'" name="play-back"></ion-icon>
           <ion-icon *ngIf="article.articleType == 'I'" name="play-forward"></ion-icon>
         </ion-card-subtitle>

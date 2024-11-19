@@ -26,7 +26,6 @@ export class CephalixService {
 	headers: any;
 	selectedInstitutes: Institute[] = [];
 	selectedList: string[] = [];
-	templateInstitute = new Institute();
 	loadingStatus: boolean = false;
 
 	constructor(
@@ -35,12 +34,17 @@ export class CephalixService {
 		private authService: AuthenticationService,
 		private objectService: GenericObjectService) {
 		this.hostname = this.utilsS.hostName();
-		if (!authService.isAllowed('customer.manage')) {
-			delete this.templateInstitute.cephalixCustomerId;
-		}
 	}
 
 	//GET calls
+	getTemplateInstitute(){
+		var templateInstitute = new Institute();
+		if (!this.authService.isAllowed('customer.manage')) {
+			delete templateInstitute.cephalixCustomerId;
+		}
+		return templateInstitute
+	}
+
 	getInstituteToken(id: number) {
 		this.url = this.hostname + `/institutes/${id}/token`;
 		const headers = new HttpHeaders({
@@ -97,6 +101,11 @@ export class CephalixService {
 		this.url = this.hostname + `/institutes/${instituteId}/sync`;
 		console.log(this.url);
 		return this.http.get<SynchronizedObject[]>(this.url, { headers: this.authService.headers });
+	}
+	stopSynching(mappingId: number, direction: string) {
+		this.url = this.hostname + `/institutes/syncing/${mappingId}/${direction}`;
+		console.log(this.url);
+		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers })
 	}
 	getObjectsFromInstitute(instituteId: number, objectType: string) {
 		this.url = this.hostname + `/institutes/${instituteId}/objects/${objectType}`;

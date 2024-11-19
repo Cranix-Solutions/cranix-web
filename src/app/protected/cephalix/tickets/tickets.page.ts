@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GridApi, ColumnApi } from 'ag-grid-community';
+import { GridApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
 //own modules
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
 import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
-import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
@@ -16,6 +15,8 @@ import { Ticket } from 'src/app/shared/models/cephalix-data-model'
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { Subscription } from 'rxjs';
 import { CephalixService } from 'src/app/services/cephalix.service';
+import { SupportRequest } from 'src/app/shared/models/data-model';
+import { CreateSupport } from 'src/app/shared/actions/create-support/create-support-page';
 
 @Component({
   selector: 'cranix-tickets',
@@ -24,10 +25,9 @@ import { CephalixService } from 'src/app/services/cephalix.service';
 })
 export class TicketsPage implements OnInit {
   objectKeys: string[] = [];
-  displayedColumns: string[] = ['id', 'title', 'cephalixInstituteId', 'recDate', 'ownerId', 'ticketStatus'];
+  displayedColumns: string[] = ['id', 'title', 'cephalixInstituteId', 'modified', 'created', 'creatorId', 'ticketStatus'];
   columnDefs = [];
   defaultColDef = {};
-  columnApi: ColumnApi;
   gridApi: GridApi;
   context;
   title = 'app';
@@ -41,6 +41,7 @@ export class TicketsPage implements OnInit {
   rowData = [];
   selectedIds: number[] = [];
   selection: Ticket[] = [];
+  supportRequest: SupportRequest
 
   constructor(
     public authService: AuthenticationService,
@@ -119,16 +120,22 @@ export class TicketsPage implements OnInit {
           }
           break;
         }
-        case 'ownerId': {
+        case 'creatorId': {
           col['valueGetter'] = function (params) {
-            return params.context['componentParent'].objectService.idToName('user', params.data.ownerId);
+            return params.context['componentParent'].objectService.idToName('user', params.data.creatorId);
           }
           col['maxWidth'] = 200
           break;
         }
-        case 'recDate': {
+        case 'modified': {
           col['sort'] = 'desc',
-            col['cellRendererFramework'] = DateTimeCellRenderer;
+          col['cellRenderer'] = DateTimeCellRenderer;
+          col['minWidth'] = 180
+          col['maxWidth'] = 180
+          break;
+        }
+        case 'created': {
+          col['cellRenderer'] = DateTimeCellRenderer;
           col['minWidth'] = 180
           col['maxWidth'] = 180
           break;
@@ -152,7 +159,6 @@ export class TicketsPage implements OnInit {
 
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
     //this.gridApi.addEventListener('rowClicked', this.ticketClickHandle);
   }
@@ -161,7 +167,7 @@ export class TicketsPage implements OnInit {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
     if (this.authService.isMD()) {
       this.rowData = [];
-      for (let obj of this.objectService.allObjects['ticket'].sort(this.objectService.sortByRecDate)) {
+      for (let obj of this.objectService.allObjects['ticket'].sort(this.objectService.sortByCreated)) {
         if (
           obj.title.toLowerCase().indexOf(filter) != -1 ||
           (obj.email && obj.email.toLowerCase().indexOf(filter) != -1) ||
@@ -172,16 +178,13 @@ export class TicketsPage implements OnInit {
         }
       }
     } else {
-      this.gridApi.setQuickFilter(filter);
-      this.gridApi.doLayout();
+      this.gridApi.setGridOption('quickFilterText', filter);
     }
   }
 
   ticketClickHandle(event) {
-    //console.log(event)
-    if (event.column.colId == 'id') {
-      event.context.componentParent.redirectToDelete(event.data)
-    } else {
+    console.log(event)
+    if (event.column.colId != 'id') {
       event.context.componentParent.route.navigate(['/pages/cephalix/tickets/' + event.data.id])
     }
   }
@@ -225,22 +228,24 @@ export class TicketsPage implements OnInit {
     if (ticket) {
       this.route.navigate(['/pages/cephalix/tickets/' + ticket.id]);
     } else {
-      ticket = new Ticket();
+      var mySupport = new SupportRequest();
+      mySupport.lastname = this.authService.session.fullName.replace("(","").replace(")","")
       const modal = await this.modalCtrl.create({
-        component: ObjectsEditComponent,
+        component: CreateSupport,
+        cssClass: 'big-modal',
         componentProps: {
-          objectType: "ticket",
-          objectAction: "add",
-          object: new Ticket(),
-          objectKeys: this.objectKeys
+          support: mySupport,
         },
         animated: true,
-        swipeToClose: true,
         showBackdrop: true
       });
       modal.onDidDismiss().then((dataReturned) => {
+        this.reloadAllObjects();
         if (dataReturned.data) {
-          this.authService.log("Object was created or modified", dataReturned.data)
+          delete dataReturned.data.subject;
+          delete dataReturned.data.text;
+          console.log("Object was created or modified", dataReturned.data);
+          this.storage.set('System.Status.mySupport', JSON.stringify(dataReturned.data));
         }
       });
       (await modal).present();
@@ -260,7 +265,6 @@ export class TicketsPage implements OnInit {
         objectPath: "TicketsPage.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {

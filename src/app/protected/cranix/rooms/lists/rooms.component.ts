@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GridApi, ColumnApi } from 'ag-grid-community';
+import { GridApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
@@ -22,12 +22,11 @@ import { ManageDhcpComponent } from 'src/app/shared/actions/manage-dhcp/manage-d
   styleUrls: ['./rooms.component.scss'],
 })
 export class RoomsComponent implements OnInit {
-  objectKeys: string[] = Object.getOwnPropertyNames(new Room());
+  objectKeys: string[] = [ 'id', 'name', 'ignoreNetbios', 'description', 'roomControl', 'hwconfId', 'startIP', 'netMask', 'roomType', 'network', 'places', 'rows' ]
   displayedColumns: string[] = ['name', 'description', 'roomType', 'roomControl', 'hwconfId', 'actions'];
   sortableColumns: string[] = ['name', 'description', 'roomType', 'roomControl', 'hwconfId'];
   columnDefs = [];
   gridApi: GridApi;
-  columnApi: ColumnApi;
   defaultColDef = {};
   context;
 
@@ -46,7 +45,7 @@ export class RoomsComponent implements OnInit {
       resizable: true,
       sortable: true,
       hide: false,
-      suppressMenu: true
+      suppressHeaderMenuButton: true
     }
   }
   ngOnInit() {
@@ -88,7 +87,7 @@ export class RoomsComponent implements OnInit {
             cellStyle: { 'padding': '1px', 'line-height': '36px' },
             field: 'actions',
             pinned: 'left',
-            cellRendererFramework: RoomActionBTNRenderer
+            cellRenderer: RoomActionBTNRenderer
           });
           continue;
         }
@@ -104,7 +103,6 @@ export class RoomsComponent implements OnInit {
   }
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
   selectionChanged() {
@@ -116,8 +114,7 @@ export class RoomsComponent implements OnInit {
   }
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    this.gridApi.setQuickFilter(filter);
-    this.gridApi.doLayout();
+    this.gridApi.setGridOption('quickFilterText', filter);
   }
   public redirectToDelete = (room: Room) => {
     this.objectService.deleteObjectDialog(room, 'room', '')
@@ -176,10 +173,10 @@ export class RoomsComponent implements OnInit {
       componentProps: {
         objectType: "room",
         objectAction: action,
-        object: room
+        object: room,
+        objectKeys: this.objectKeys
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -199,7 +196,6 @@ export class RoomsComponent implements OnInit {
         object: room
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     (await modal).present();
@@ -211,7 +207,6 @@ export class RoomsComponent implements OnInit {
       component: RoomPrintersPage,
       cssClass: "small-modal",
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -237,7 +232,6 @@ export class RoomsComponent implements OnInit {
         objectPath: "RoomsComponent.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {

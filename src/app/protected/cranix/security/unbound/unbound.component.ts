@@ -3,6 +3,7 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { SecurityService } from 'src/app/services/security-service';
 import { LanguageService } from 'src/app/services/language.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
+import { SafeSearch } from 'src/app/shared/models/secutiry-model';
 
 @Component({
   selector: 'cranix-unbound',
@@ -20,9 +21,10 @@ export class UnboundComponent implements OnInit {
   activeUnboundLists: string[] = [];
   saving: boolean = false;
   segment: string = "categories";
+  safeSearchList: SafeSearch[] = [];
 
   constructor(
-    public  authService: AuthenticationService,
+    public authService: AuthenticationService,
     private languageS: LanguageService,
     public objectService: GenericObjectService,
     public securityService: SecurityService
@@ -38,31 +40,29 @@ export class UnboundComponent implements OnInit {
       this.categories.sort((a, b) => (a.desc > b.desc) ? 1 : (b.desc > a.desc) ? -1 : 0)
     })
     this.securityService.getActiveUnboundLists().subscribe(
-      (val) => { if (val) { this.activeUnboundLists = val.split(" ") } },
-      (err) => { console.log(err) }
+      (val) => { if (val) { this.activeUnboundLists = val.split(" ") } }
+    )
+    this.securityService.getUnboundSafeSearch().subscribe(
+      (val) => { this.safeSearchList = val }
     )
   }
 
 
   segmentChanged(event) {
-    this.segment   = event.detail.value;
+    this.segment = event.detail.value;
     this.newDomain = "";
   }
   getProxyCategories(): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      let sub1 = this.securityService.getProxyCategories().subscribe(
-        (val) => { resolve(val) },
-        (err) => { console.log(err) },
-        () => { sub1.unsubscribe() }
+      this.securityService.getProxyCategories().subscribe(
+        (val) => { resolve(val) }
       )
     });
   }
   readLists(listName): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      let sub1 = this.securityService.getProxyCustom(listName).subscribe(
-        (val) => { resolve(val) },
-        (err) => { console.log(err) },
-        () => { sub1.unsubscribe() }
+      this.securityService.getProxyCustom(listName).subscribe(
+        (val) => { resolve(val) }
       )
     });
   }
@@ -89,36 +89,57 @@ export class UnboundComponent implements OnInit {
     this.newDomain1 = "";
   }
   writeConfig() {
+    console.log(this.safeSearchList)
     this.objectService.requestSent();
     this.saving = true;
-    if( this.authService.session.name == 'cephalix') {
+    if (this.authService.session.name == 'cephalix') {
       this.securityService.setProxyCustom('cephalix', this.cephalixList).subscribe();
     }
-    let sub = this.securityService.setProxyCustom('bad', this.badList).subscribe(
-      (val) => {
-        this.securityService.setProxyCustom('good', this.whiteList).subscribe(
-          (val1) => {
-            this.securityService.setActiveUnboundLists(this.activeUnboundLists.join(" ")).subscribe(
-              (val2) => {
-                this.securityService.resetUnbound().subscribe(
-                  (val3) => {
-                    this.objectService.responseMessage(val3)
-                    this.securityService.unboundChanged = false;
-                    this.saving = false;
+    let sub = this.securityService.setProxyCustom('bad', this.badList).subscribe({
+      next: (val) => {
+        this.securityService.setProxyCustom('good', this.whiteList).subscribe({
+          next: (val1) => {
+            this.securityService.setActiveUnboundLists(this.activeUnboundLists.join(" ")).subscribe({
+              next: (val2) => {
+                this.securityService.setUnboundSafeSearch(this.safeSearchList).subscribe({
+                  next: (val3) => {
+                    this.securityService.resetUnbound().subscribe({
+                      next: (val4) => {
+                        this.objectService.responseMessage(val4)
+                        this.securityService.unboundChanged = false;
+                        this.saving = false;
+                      },
+                      error: (err4) => { 
+                        this.objectService.errorMessage(err4)
+                        this.saving = false
+                      }
+                    })
                   },
-                  (err3) => { console.log(err3) }
-                )
+                  error: (err3) => { 
+                    this.objectService.errorMessage(err3)
+                    this.saving = false
+                   }
+                })
               },
-              (err2) => { console.log(err2) }
-            )
+              error: (err2) => { 
+                this.objectService.errorMessage(err2)
+                this.saving = false
+              }
+            })
           },
-          (err1) => { console.log(err1) }
-        )
+          error: (err1) => {
+            this.objectService.errorMessage(err1)
+            this.saving = false
+          }
+        })
       },
-      (err) => { this.objectService.errorMessage(this.languageS.trans("An error was accoured")); },
-      () => { sub.unsubscribe() }
-    )
+      error: (err) => {
+        this.objectService.errorMessage(err)
+        this.saving = false
+      }
+    })
   }
+  
   togleCategory(cat) {
     let index = this.activeUnboundLists.indexOf(cat);
     if (index == -1) {

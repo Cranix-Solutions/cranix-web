@@ -21,8 +21,6 @@ export class GroupMembersPage implements OnInit {
   columnDefs = [];
   memberApi;
   noMemberApi;
-  memberColumnApi;
-  noMemberColumnApi;
   memberSelection: User[] = [];
   noMemberSelection: User[] = [];
   memberData: User[] = [];
@@ -59,7 +57,7 @@ export class GroupMembersPage implements OnInit {
         headerCheckboxSelection: this.authService.settings.headerCheckboxSelection,
         headerCheckboxSelectionFilteredOnly: true,
         checkboxSelection: this.authService.settings.checkboxSelection,
-        suppressMenu: true
+        suppressHeaderMenuButton: true
       },
       {
         headerName: this.languageS.trans('role'),
@@ -67,7 +65,7 @@ export class GroupMembersPage implements OnInit {
         resizable: true,
         field: 'role',
         width: 100,
-        suppressMenu: true,
+        suppressHeaderMenuButton: true,
         valueGetter: function (params) {
           return params.context['componentParent'].languageS.trans(params.data.role);
         }
@@ -83,7 +81,7 @@ export class GroupMembersPage implements OnInit {
         headerCheckboxSelection: this.authService.settings.headerCheckboxSelection,
         headerCheckboxSelectionFilteredOnly: true,
         checkboxSelection: this.authService.settings.checkboxSelection,
-        suppressMenu: true
+        suppressHeaderMenuButton: true
       },
       {
         headerName: this.languageS.trans('surName'),
@@ -103,7 +101,7 @@ export class GroupMembersPage implements OnInit {
         resizable: true,
         field: 'role',
         width: 150,
-        suppressMenu: true,
+        suppressHeaderMenuButton: true,
         valueGetter: function (params) {
           return params.context['componentParent'].languageS.trans(params.data.role);
         }
@@ -116,7 +114,6 @@ export class GroupMembersPage implements OnInit {
 
   onMemberReady(params) {
     this.memberApi = params.api;
-    this.memberColumnApi = params.columnApi;
     this.memberApi.sizeColumnsToFit();
     (<HTMLInputElement>document.getElementById("memberTable")).style.height = Math.trunc(window.innerHeight * 0.60) + "px";
   }
@@ -125,13 +122,12 @@ export class GroupMembersPage implements OnInit {
   }
 
   onMemberFilterChanged() {
-    this.memberApi.setQuickFilter((<HTMLInputElement>document.getElementById("memberFilter")).value);
+    this.memberApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("memberFilter")).value);
     this.memberApi.doLayout();
   }
 
   onNoMemberReady(params) {
     this.noMemberApi = params.api;
-    this.noMemberColumnApi = params.columnApi;
     this.noMemberApi.sizeColumnsToFit();
     (<HTMLInputElement>document.getElementById("noMemberTable")).style.height = Math.trunc(window.innerHeight * 0.60) + "px";
   }
@@ -140,7 +136,7 @@ export class GroupMembersPage implements OnInit {
   }
 
   onNoMemberFilterChanged() {
-    this.noMemberApi.setQuickFilter((<HTMLInputElement>document.getElementById("noMemberFilter")).value);
+    this.noMemberApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("noMemberFilter")).value);
     this.noMemberApi.doLayout();
   }
   applyChanges() {

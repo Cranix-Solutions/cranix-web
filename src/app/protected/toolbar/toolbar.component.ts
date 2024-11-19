@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
+import { HttpClient } from '@angular/common/http';
 import { Storage } from '@ionic/storage-angular';
+import { interval } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 //Own module
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { LanguageService } from 'src/app/services/language.service';
@@ -8,6 +11,8 @@ import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.c
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { Settings } from 'src/app/shared/models/server-models';
+import { Ticket } from 'src/app/shared/models/cephalix-data-model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'cranix-toolbar',
@@ -19,23 +24,53 @@ export class ToolbarComponent implements OnInit {
   roomName: string = "";
   fullName: string = "";
   instituteName: string = "";
+  newTickets: number = 0;
+  alive: boolean = true;
+  url: string = "";
 
   @Input() title: string;
   constructor(
     public authService: AuthenticationService,
     public alertController: AlertController,
+    private http: HttpClient,
     public storage: Storage,
     public translateService: LanguageService,
     public objectService: GenericObjectService,
     public modalConroller: ModalController,
+    public route: Router,
     public utilService: UtilsService
   ) {
-    this.fullName    = authService.session.fullName;
-    this.roomName      = authService.session.roomName;
+    this.fullName = authService.session.fullName;
+    this.roomName = authService.session.roomName;
     this.instituteName = authService.session.instituteName;
+    this.url = this.utilService.hostName() + "/tickets/all";
   }
 
   ngOnInit() {
+  }
+
+  ngOnDestroy() {
+    this.alive = false;
+  }
+  ngAfterViewInit() {
+    if (this.authService.isAllowed("cephalix.ticket")) {
+      this.countTickets();
+      interval(30000).pipe(takeWhile(() => this.alive)).subscribe((func => {
+        this.countTickets();
+      }))
+    }
+  }
+
+  countTickets(){
+    this.http.get<Ticket[]>(this.url, { headers: this.authService.headers }).subscribe({
+      next: (val) => {
+        this.newTickets = 0;
+        for(let ticket of val){
+          if( ticket.ticketStatus == "N") {
+            this.newTickets++;
+          }
+        }
+      }})
   }
 
   async logOut(ev: Event) {
@@ -59,7 +94,7 @@ export class ToolbarComponent implements OnInit {
 
   async retirectToSettings(ev: Event) {
     let settings: Settings = this.authService.settings;
-    if( this.authService.isMD() ) {
+    if (this.authService.isMD()) {
       delete settings.agGridThema
       delete settings.rowHeight
       delete settings.rowMultiSelectWithClick
@@ -78,25 +113,27 @@ export class ToolbarComponent implements OnInit {
         object: settings
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned.data) {
         for (let key of Object.getOwnPropertyNames(dataReturned.data)) {
           this.authService.settings[key] = dataReturned.data[key]
-        }   
+        }
         this.storage.set("myCranixSettings", JSON.stringify(this.authService.settings));
         this.translateService.saveLanguage(this.authService.settings.lang);
-        this.utilService.actMdList.ngOnInit();
+        if (this.utilService.actMdList) {
+          this.utilService.actMdList.ngOnInit();
+        }
         this.authService.log("ToolbarComponent", "Settings was modified", this.authService.settings)
       }
     });
     (await modal).present();
   }
 
-  reloadAllObjects(){
+  reloadAllObjects() {
     this.objectService.okMessage(this.translateService.trans("Reloading all objects"))
     this.objectService.initialize(true)
   }
 }
+

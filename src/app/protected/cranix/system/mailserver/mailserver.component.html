@@ -1,0 +1,96 @@
+<cranix-toolbar title="{{'Manage CRANIX Mailserver' | translate}}"></cranix-toolbar>
+<ion-toolbar class="page-toolbar">
+  <ion-item lines="none">
+    <ion-label *ngIf="gridApi">
+      #{{gridApi.getDisplayedRowCount()}}
+    </ion-label>
+    <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('mailAccessFilter')"
+      id="mailAccessFilter">
+    </ion-input>
+  </ion-item>
+  <ion-buttons slot="end">
+    <ion-button size="small" fill="solid" (click)="isAddAccessOpen=true"
+      matTooltip="{{'Add new access!' | translate }}">
+      <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+    </ion-button>
+    <ion-button size="small" fill="solid" (click)="isRealyDeleteOpen=true"
+      matTooltip="{{'Delete selected accesses' | translate }}">
+      <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
+    </ion-button>
+    <ion-button size="small" fill="solid" (click)="ngOnInit()"
+    matTooltip="{{'Reload the accesses!' | translate }}">
+    <ion-icon slot="icon-only" name="refresh" color="success"></ion-icon>
+  </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+<ion-content>
+  <ag-grid-angular style="width: 100%; height: 100%;" class="{{authService.settings.agGridThema}}"
+    rowSelection="multiple" [rowHeight]="authService.settings.rowHeight"
+    [rowMultiSelectWithClick]="authService.settings.rowMultiSelectWithClick" [rowData]="allMailAccess"
+    [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" (gridReady)="onGridReady($event)"
+    id="agGridTable">
+  </ag-grid-angular>
+  <ion-modal [isOpen]="isRealyDeleteOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{'Do you relay want to delete the selected objects?'}}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="isRealyDeleteOpen=false">
+              <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
+            </ion-button>
+            <ion-button (click)="delete()" [disabled]="gridApi.getSelectedRows().length==0">
+              <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div *ngIf="gridApi.getSelectedRows().length==0">
+          <h1>{{'You have to select some entries'|translate}}</h1>
+        </div>
+        <ion-list>
+          <ion-item *ngFor="let obj of gridApi.getSelectedRows()">
+            <ion-label>{{obj.address}}:</ion-label>
+            <ion-label>{{obj.action}}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  <ion-modal [isOpen]="isAddAccessOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{'Add new mail access rule'|translate}}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="isAddAccessOpen=false">
+              <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
+            </ion-button>
+            <ion-button (click)="addMailAccess()" [disabled]="!addAccessForm.valid">
+              <ion-icon slot="icon-only" name="checkmark" color="success"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list>
+          <form #addAccessForm="ngForm">
+            <ion-item>
+              <ion-label>{{'Sender/Source'|translate}}</ion-label>
+              <ion-input type="text" placeholder="{{'Domainname/IP/Mailaddress'|translate}}"
+                [(ngModel)]="mailAccess.address" name="address" required></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>{{'Action'|translate}}</ion-label>
+              <ion-select [(ngModel)]="mailAccess.action" name="action" required>
+                <ion-select-option value="OK">OK</ion-select-option>
+                <ion-select-option value="REJECT">REJECT</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </form>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

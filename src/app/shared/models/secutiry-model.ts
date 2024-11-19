@@ -44,3 +44,10 @@ export class AccessInRoom  {
     constructor() { }
 }
 
+
+export class SafeSearch {
+	name: string = ""
+	description: string = ""
+	active: boolean = false
+	constructor() { }
+}

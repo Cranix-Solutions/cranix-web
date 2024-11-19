@@ -1,4 +1,3 @@
-
 <form #editForm="ngForm">
   <cranix-toolbar title="{{ 'Modify selected institute:' | translate}} {{object.name}}"></cranix-toolbar>
   <ion-toolbar>
@@ -16,7 +15,11 @@
         <ion-label>{{'Contract' | translate}}</ion-label>
       </ion-segment-button>
     </ion-segment>
-    <ion-buttons  *ngIf="!authService.isMD()" slot="end">
+    <ion-buttons *ngIf="!authService.isMD()" slot="end">
+      <ion-button size="small" fill="solid" fill="clear" (click)="togleShowPasswords()"
+        matTooltip="{{'Toggle show the passwords' | translate }}">
+        <ion-icon slot="icon-only" name="eye-off"></ion-icon>
+      </ion-button>
       <ion-button size="small" fill="solid" fill="clear" class="ion-no-margin" [disabled]="!editForm.valid"
         matTooltip="{{'Apply changes' | translate }}" (click)="onSubmit(editForm.value)">
         <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
@@ -49,6 +52,9 @@
         <ion-icon name="arrow-forward-circle"></ion-icon>
       </ion-fab-button>
       <ion-fab-list side="start">
+        <ion-fab-button (click)="togleShowPasswords()" matTooltip="{{'Toggle show the passwords' | translate }}">
+          <ion-icon name="eye-off"></ion-icon>
+        </ion-fab-button>
         <ion-fab-button (click)="onSubmit(editForm.value)">
           <ion-icon color="success" name="checkmark"></ion-icon>
         </ion-fab-button>

@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AgChartsAngularModule } from 'ag-charts-angular';
+import { AgChartsModule } from 'ag-charts-angular';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ToolbarComponent } from 'src/app/protected/toolbar/toolbar.component';
 import { IonicModule } from '@ionic/angular';
+import { IonicSelectableComponent } from 'ionic-selectable'
 import { TranslateModule } from '@ngx-translate/core';
 import { PipesModule } from 'src/app/pipes/pipe-modules';
 import { AgGridModule } from 'ag-grid-angular';
@@ -39,12 +40,12 @@ import { UserIdCellRenderer } from 'src/app/pipes/ag-userid-renderer';
 import { UserIdToNameCellRenderer } from 'src/app/pipes/ag-userid-to-name-renderer';
 import { FileSystemUsageRenderer } from 'src/app/pipes/ag-filesystem-usage-renderer';
 import { CanActivateViaAcls } from '../services/auth-guard.service';
-import { IonicSelectableModule } from 'ionic-selectable';
 import { SelectColumnsComponent } from 'src/app/shared/select-columns/select-columns.component';
 import { AddDeviceComponent } from 'src/app/protected/cranix/devices/add-device/add-device.component';
 import { AddPrinterComponent } from 'src/app/protected/cranix/devices/add-printer/add-printer.component';
 import { ObjectsEditComponent } from 'src/app/shared/objects-edit/objects-edit.component';
 import { ActionsComponent } from 'src/app/shared/actions/actions.component';
+import { CreateSupport } from 'src/app/shared/actions/create-support/create-support-page';
 import { SetpasswordComponent } from 'src/app/shared/actions/setpassword/setpassword.component'
 import { SetquotaComponent } from 'src/app/shared/actions/setquota/setquota.component';
 import { ManageDhcpComponent } from 'src/app/shared/actions/manage-dhcp/manage-dhcp.component'
@@ -56,6 +57,9 @@ import { SetValidityComponent } from 'src/app/shared/actions/set-validity/set-va
 import { ShowImportComponent } from 'src/app/shared/actions/show-import/show-import.component'
 import { WindowRef } from 'src/app/shared/models/ohters'
 import { CranixMdListComponent } from 'src/app/shared/cranix-md-list/cranix-md-list.component'
+import { QuillModule } from 'ngx-quill';
+import { simpleToolbarOptions } from 'src/app/shared/models/constants'
+
 @NgModule({
   declarations: [
     ActionsComponent,
@@ -64,6 +68,7 @@ import { CranixMdListComponent } from 'src/app/shared/cranix-md-list/cranix-md-l
     ApplyBTNRenderer,
     ApplyCheckBoxBTNRenderer,
     ActionBTNRenderer,
+    CreateSupport,
     CranixMdListComponent,
     CustomerActionRenderer,
     ObjectsEditComponent,
@@ -104,11 +109,11 @@ import { CranixMdListComponent } from 'src/app/shared/cranix-md-list/cranix-md-l
   ],
   imports: [
     CommonModule,
-    AgChartsAngularModule,
+    AgChartsModule,
+    IonicSelectableComponent,
     AgGridModule,
     FormsModule,
     IonicModule,
-    IonicSelectableModule,
     MatDatepickerModule,
     MatFormFieldModule,
     MatIconModule,
@@ -116,13 +121,15 @@ import { CranixMdListComponent } from 'src/app/shared/cranix-md-list/cranix-md-l
     ReactiveFormsModule,
     PipesModule,
     TranslateModule,
+    QuillModule.forRoot({
+      modules: { toolbar: simpleToolbarOptions},
+    }),
   ], exports: [
     CommonModule,
-    AgChartsAngularModule,
+    AgChartsModule,
     AgGridModule,
     FormsModule,
     IonicModule,
-    IonicSelectableModule,
     MatDatepickerModule,
     MatFormFieldModule,
     MatIconModule,
@@ -131,7 +138,8 @@ import { CranixMdListComponent } from 'src/app/shared/cranix-md-list/cranix-md-l
     ReactiveFormsModule,
     TranslateModule,
     ToolbarComponent,
-    CranixMdListComponent
+    CranixMdListComponent,
+    IonicSelectableComponent
   ],
   providers: [WindowRef,CanActivateViaAcls ]
 })

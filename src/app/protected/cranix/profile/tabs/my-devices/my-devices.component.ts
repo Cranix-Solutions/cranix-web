@@ -44,7 +44,6 @@ export class MyDevicesComponent implements OnInit, OnDestroy {
         adHocRoom: true
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((data) => {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GridOptions, GridApi, ColumnApi } from 'ag-grid-community';
+import { GridOptions, GridApi } from 'ag-grid-community';
 import { AlertController, PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
@@ -31,7 +31,6 @@ export class PrintersComponent implements OnInit {
   columnDefs = [];
   gridOptions: GridOptions;
   gridApi: GridApi;
-  columnApi: ColumnApi;
   context;
   selection: Printer[] = [];
   selectedIds: number[] = [];
@@ -55,7 +54,7 @@ export class PrintersComponent implements OnInit {
         resizable: true,
         sortable: true,
         hide: false,
-        suppressMenu: true
+        suppressHeaderMenuButton: true
       },
       columnDefs: this.columnDefs,
       context: this.context,
@@ -98,12 +97,12 @@ export class PrintersComponent implements OnInit {
         }
         case 'windowsDriver': {
           col['cellStyle'] = { 'justify-content': "center" };
-          col['cellRendererFramework'] = YesNoBTNRenderer
+          col['cellRenderer'] = YesNoBTNRenderer
           break;
         }
         case 'acceptingJobs': {
           col['cellStyle'] = { 'justify-content': "center" };
-          col['cellRendererFramework'] = YesNoBTNRenderer
+          col['cellRenderer'] = YesNoBTNRenderer
           break;
         }
         case 'roomId': {
@@ -122,7 +121,7 @@ export class PrintersComponent implements OnInit {
       cellStyle: { 'padding': '1px', 'line-height': '36px' },
       field: 'actions',
       pinned: 'left',
-      cellRendererFramework: PrinterActionBTNRenderer
+      cellRenderer: PrinterActionBTNRenderer
     };
     columnDefs.splice(1, 0, action);
     this.columnDefs = columnDefs;
@@ -130,7 +129,6 @@ export class PrintersComponent implements OnInit {
 
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
   selectionChanged(){
@@ -142,15 +140,7 @@ export class PrintersComponent implements OnInit {
   }
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    this.gridApi.setQuickFilter(filter);
-    this.gridApi.doLayout();
-  }
-  sizeAll() {
-    var allColumnIds = [];
-    this.columnApi.getAllColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.columnApi.autoSizeColumns(allColumnIds);
+    this.gridApi.setGridOption('quickFilterText', filter);
   }
 
   redirectToDelete(printer: Printer) {
@@ -194,7 +184,6 @@ export class PrintersComponent implements OnInit {
         object: printer
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -218,7 +207,6 @@ export class PrintersComponent implements OnInit {
         objectPath: "PrintersComponent.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -240,7 +228,6 @@ export class PrintersComponent implements OnInit {
         action: 'queue'
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -262,7 +249,6 @@ export class PrintersComponent implements OnInit {
         action: 'add'
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {

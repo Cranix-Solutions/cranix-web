@@ -138,8 +138,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.softwares = this.availableSoftwaresApi.getSelectedRows();
   }
   availableSoftwaresFilterChanged() {
-    this.availableSoftwaresApi.setQuickFilter((<HTMLInputElement>document.getElementById("availableSoftwaresFilter")).value);
-    this.availableSoftwaresApi.doLayout();
+    this.availableSoftwaresApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("availableSoftwaresFilter")).value);
   }
 
   /**Available Hwconfs */
@@ -163,8 +162,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.hwconfs = this.availableHwconfsApi.getSelectedRows();
   }
   availableHwconfsFilterChanged() {
-    this.availableHwconfsApi.setQuickFilter((<HTMLInputElement>document.getElementById("availableHwconfsFilter")).value);
-    this.availableHwconfsApi.doLayout();
+    this.availableHwconfsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("availableHwconfsFilter")).value);
   }
 
   /**Available Rooms */
@@ -188,8 +186,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.rooms = this.availableRoomsApi.getSelectedRows();
   }
   availableRoomsFilterChanged() {
-    this.availableRoomsApi.setQuickFilter((<HTMLInputElement>document.getElementById("availableRoomsFilter")).value);
-    this.availableRoomsApi.doLayout();
+    this.availableRoomsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("availableRoomsFilter")).value);
   }
 
   /**Available Devices */
@@ -213,8 +210,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.devices = this.availableDevicesApi.getSelectedRows();
   }
   availableDevicesFilterChanged() {
-    this.availableDevicesApi.setQuickFilter((<HTMLInputElement>document.getElementById("availableDevicesFilter")).value);
-    this.availableDevicesApi.doLayout();
+    this.availableDevicesApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("availableDevicesFilter")).value);
   }
 
   /**Available Softwares */
@@ -229,8 +225,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.softwares = this.softwaresApi.getSelectedRows();
   }
   softwaresFilterChanged() {
-    this.softwaresApi.setQuickFilter((<HTMLInputElement>document.getElementById("softwaresFilter")).value);
-    this.availableSoftwaresApi.doLayout();
+    this.softwaresApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("softwaresFilter")).value);
   }
 
   /**Available Hwconfs */
@@ -245,8 +240,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.hwconfs = this.hwconfsApi.getSelectedRows();
   }
   hwconfsFilterChanged() {
-    this.hwconfsApi.setQuickFilter((<HTMLInputElement>document.getElementById("hwconfsFilter")).value);
-    this.hwconfsApi.doLayout();
+    this.hwconfsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("hwconfsFilter")).value);
   }
 
   /**Available Rooms */
@@ -261,8 +255,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.rooms = this.roomsApi.getSelectedRows();
   }
   roomsFilterChanged() {
-    this.roomsApi.setQuickFilter((<HTMLInputElement>document.getElementById("roomsFilter")).value);
-    this.roomsApi.doLayout();
+    this.roomsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("roomsFilter")).value);
   }
 
   /**Available Devices */
@@ -277,8 +270,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.devices = this.devicesApi.getSelectedRows();
   }
   devicesFilterChanged() {
-    this.devicesApi.setQuickFilter((<HTMLInputElement>document.getElementById("devicesFilter")).value);
-    this.devicesApi.doLayout();
+    this.devicesApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("devicesFilter")).value);
   }
   closeWindow() {
     this.modalCtrl.dismiss();
@@ -311,18 +303,18 @@ export class EditInstallationSetComponent implements OnInit {
       this.installationSet.id = this.softwareService.selectedInstallationSet.id;
     }
     console.log(this.installationSet)
-    let subs = this.softwareService.addModifyInstallationsSets(this.installationSet).subscribe(
-      (val) => {
+    let subs = this.softwareService.addModifyInstallationsSets(this.installationSet).subscribe({
+      next: (val) => {
         this.objectService.responseMessage(val);
         this.modalCtrl.dismiss();
       },
-      (err) => {
+      error: (err) => {
         this.objectService.errorMessage(err);
       },
-      () => {
+      complete: () => {
         this.submitted = false;
         subs.unsubscribe();
       }
-    )
+    })
   }
 }

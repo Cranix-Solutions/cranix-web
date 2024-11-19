@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { GridApi, ColumnApi } from 'ag-grid-community';
+import { GridApi, ColDef } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 
@@ -23,10 +23,9 @@ export class CustomersPage implements OnInit {
   objectKeys: string[] = [];
   displayedColumns: string[] = ['id', 'name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity'];
   sortableColumns: string[] = ['id', 'name', 'uuid', 'locality', 'ipVPN', 'regCode', 'validity'];
-  columnDefs = [];
-  defaultColDef = {};
+  columnDefs: ColDef[] = [];
+  defaultColDef: ColDef = {};
   gridApi: GridApi;
-  columnApi: ColumnApi;
   context;
   selected: Customer[] = [];
   title = 'app';
@@ -48,7 +47,7 @@ export class CustomersPage implements OnInit {
       resizable: true,
       sortable: true,
       hide: false,
-      suppressMenu: true
+      suppressHeaderMenuButton: true
     };
 
   }
@@ -64,14 +63,14 @@ export class CustomersPage implements OnInit {
 
   createColumnDefs() {
     this.columnDefs = [];
-    let action = {
+    let action: ColDef = {
       headerName: "",
       minWidth: 130,
       suppressSizeToFit: true,
       cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
       pinned: 'left',
-      cellRendererFramework: CustomerActionRenderer
+      cellRenderer: CustomerActionRenderer
 
     };
     for (let key of this.objectKeys) {
@@ -94,8 +93,8 @@ export class CustomersPage implements OnInit {
           this.columnDefs.push(action)
           continue;
         }
-        case 'recDate': {
-          col['cellRendererFramework'] = DateCellRenderer;
+        case 'created': {
+          col['cellRenderer'] = DateCellRenderer;
           break;
         }
       }
@@ -105,22 +104,13 @@ export class CustomersPage implements OnInit {
 
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
   onSelectionChanged() {
   }
 
   onQuickFilterChanged(quickFilter) {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.doLayout();
-  }
-  sizeAll() {
-    var allColumnIds = [];
-    this.columnApi.getAllColumns().forEach((column) => {
-      allColumnIds.push(column.getColId());
-    });
-    this.columnApi.autoSizeColumns(allColumnIds);
+    this.gridApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById(quickFilter)).value);
   }
 
   public redirectToDelete = (customer: Customer) => {
@@ -151,7 +141,6 @@ export class CustomersPage implements OnInit {
         objectKeys: Object.getOwnPropertyNames(institute)
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -176,7 +165,6 @@ export class CustomersPage implements OnInit {
         objectKeys: this.objectKeys
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -200,7 +188,6 @@ export class CustomersPage implements OnInit {
         objectPath: "CustomersPage.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -233,13 +220,13 @@ export class EditInstitutes implements OnInit {
   context;
   gridApi;
   columnApi;
-  defaultColDef = {
+  defaultColDef: ColDef = {
     resizable: true,
     sortable: true,
     hide: false,
-    suppressMenu: true
+    suppressHeaderMenuButton: true
   }
-  columnDefs = [
+  columnDefs: ColDef[] = [
     { field: 'id', checkboxSelection: true, headerCheckboxSelection: true, headerCheckboxSelectionFilteredOnly: true },
     { field: 'name' },
     { field: 'locality' },
@@ -280,8 +267,7 @@ export class EditInstitutes implements OnInit {
   }
 
   onQuickFilterChanged() {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById('instituteFilter')).value);
-    this.gridApi.doLayout();
+    this.gridApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById('instituteFilter')).value);
   }
 
   showOwned() {

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { GridApi, ColumnApi } from 'ag-grid-community';
+import { GridApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
@@ -30,7 +30,6 @@ export class InstitutesStatusComponent implements OnInit {
   columnDefs = [];
   defaultColDef = {};
   gridApi: GridApi;
-  columnApi: ColumnApi;
   rowSelection;
   context;
   title = 'app';
@@ -136,7 +135,7 @@ export class InstitutesStatusComponent implements OnInit {
             headerName: "",
             editable: true,
             width: 30,
-            cellRendererFramework: InstituteStatusRenderer
+            cellRenderer: InstituteStatusRenderer
           })
           this.columnDefs.push({
             headerName: this.languageS.trans('ipVPN'),
@@ -150,23 +149,23 @@ export class InstitutesStatusComponent implements OnInit {
           continue;
         }
         case 'lastUpdate': {
-          col['cellRendererFramework'] = DateCellRenderer;
+          col['cellRenderer'] = DateCellRenderer;
           break;
         }
         case 'rootUsage': {
-          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          col['cellRenderer'] = FileSystemUsageRenderer;
           break;
         }
         case 'homeUsage': {
-          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          col['cellRenderer'] = FileSystemUsageRenderer;
           break;
         }
         case 'srvUsage': {
-          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          col['cellRenderer'] = FileSystemUsageRenderer;
           break;
         }
         case 'varUsage': {
-          col['cellRendererFramework'] = FileSystemUsageRenderer;
+          col['cellRenderer'] = FileSystemUsageRenderer;
           break;
         }
         case 'runningKernel': {
@@ -187,13 +186,13 @@ export class InstitutesStatusComponent implements OnInit {
           break;
         }
         case 'availableUpdates': {
-          col['cellRendererFramework'] = UpdateRenderer;
+          col['cellRenderer'] = UpdateRenderer;
           break;
         }
         case 'created': {
           col['width'] = 160
           col['maxWidth'] = 160
-          col['cellRendererFramework'] = DateTimeCellRenderer;
+          col['cellRenderer'] = DateTimeCellRenderer;
           col['cellStyle'] = params => (this.now - params.value) > 36000000 ? { 'background-color': 'red' } : { 'background-color': '#2dd36f' }
           break;
         }
@@ -262,17 +261,15 @@ export class InstitutesStatusComponent implements OnInit {
   }
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
   headerHeightSetter() {
     var padding = 20;
     var height = headerHeightGetter() + padding;
-    this.gridApi.setHeaderHeight(height);
+    this.gridApi.setGridOption('headerHeight',height);
   }
   onQuickFilterChanged(quickFilter) {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.doLayout();
+    this.gridApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById(quickFilter)).value);
   }
 
   //TODO RESPONSE
@@ -325,7 +322,6 @@ export class InstitutesStatusComponent implements OnInit {
         objectPath: "InstitutesStatusComponent.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {

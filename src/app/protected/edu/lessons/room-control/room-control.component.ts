@@ -136,7 +136,6 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       component: FilesUploadComponent,
       cssClass: 'small-modal',
       animated: true,
-      swipeToClose: true,
       showBackdrop: true,
       componentProps: {
         objectType: "room",
@@ -153,7 +152,6 @@ export class RoomControlComponent implements OnInit, OnDestroy, AfterViewInit {
       component: FilesCollectComponent,
       cssClass: 'small-modal',
       animated: true,
-      swipeToClose: true,
       showBackdrop: true,
       componentProps: {
         objectType: "room",

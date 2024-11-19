@@ -15,6 +15,9 @@ export class SystemAddonsComponent implements OnInit {
   action = "";
   key = "";
   disabled = false;
+  isModalOpen = false;
+  modalContent = "";
+
 
   constructor(
     public alertController: AlertController,
@@ -78,10 +81,16 @@ export class SystemAddonsComponent implements OnInit {
     this.disabled = true;
     this.systemService.getKey(this.key).subscribe(
       (val) => {
-        this.objectService.okMessage(this.key + ":<br>" + val.join("<br>"))
+        this.modalContent = val;
         this.disabled = false;
         this.key = "";
+        this.isModalOpen = true;
       }
     )
+  }
+
+  closeModal() {
+    this.key = "";
+    this.isModalOpen = false;
   }
 }

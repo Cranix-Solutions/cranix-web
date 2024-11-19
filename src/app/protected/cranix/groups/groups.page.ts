@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GridApi, ColumnApi } from 'ag-grid-community';
+import { GridApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
@@ -27,7 +27,6 @@ export class GroupsPage implements OnInit {
   columnDefs = [];
   defaultColDef = {};
   gridApi: GridApi;
-  columnApi: ColumnApi;
   context;
 
   constructor(
@@ -46,7 +45,7 @@ export class GroupsPage implements OnInit {
       resizable: true,
       sortable: true,
       hide: false,
-      suppressMenu: true
+      suppressHeaderMenuButton: true
     }
   }
   ngOnInit() {
@@ -68,7 +67,7 @@ export class GroupsPage implements OnInit {
       cellStyle: { 'padding': '2px', 'line-height': '36px' },
       field: 'actions',
       pinned: 'left',
-      cellRendererFramework: GroupActionBTNRenderer
+      cellRenderer: GroupActionBTNRenderer
     };
     for (let key of this.objectKeys) {
       let col = {};
@@ -103,7 +102,6 @@ export class GroupsPage implements OnInit {
 
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
   selectionChanged() {
@@ -116,8 +114,7 @@ export class GroupsPage implements OnInit {
 
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    this.gridApi.setQuickFilter(filter);
-    this.gridApi.doLayout();
+    this.gridApi.setGridOption('quickFilterText', filter);
   }
 
   public redirectToDelete = (group: Group) => {
@@ -157,7 +154,6 @@ export class GroupsPage implements OnInit {
       component: GroupMembersPage,
       cssClass: 'big-modal',
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -182,7 +178,6 @@ export class GroupsPage implements OnInit {
         object: group
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -206,7 +201,6 @@ export class GroupsPage implements OnInit {
         objectPath: "GroupsPage.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {

@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 })
 export class GenericObjectService {
   //allObjects: {} = {};
-  allObjects: Map<string,Object[]> = new Map<string,Object[]>();
+  allObjects: Map<string, any[]> = new Map<string, any[]>();
   selectedObject: any = null;
   selectedObjectType: string = null;
   selection: any[] = [];
@@ -77,10 +77,11 @@ export class GenericObjectService {
     'ignoreNetbios',
     'loggedInName',
     'msQuotaUsed',
+    'modified',
     'name',
     'network',
-    'ownerName',
-    'recDate',
+    'creatorName',
+    'created',
     'role',
     'roomId',
     'sourceAvailable',
@@ -99,7 +100,7 @@ export class GenericObjectService {
     'fullName',
     'loggedInId',
     'network',
-    'ownerId',
+    'creatorId',
     'partitions',
     'saveNext',
     'screenShot',
@@ -142,6 +143,9 @@ export class GenericObjectService {
     }
     if (this.authService.isAllowed('cephalix.ticket')) {
       this.objects.push('ticket');
+    }
+    if (this.authService.isAllowed('2fa.manage')) {
+      this.objects.push('2fa');
     }
     for (let obj of this.objectsTemlate) {
       this.objects.push(obj)
@@ -198,47 +202,56 @@ export class GenericObjectService {
       complete: () => { sub.unsubscribe() }
     });
   }
+
+
+  getObjects(objectType: string){
+    let url = this.utilsS.hostName() + "/" + objectType + "s/all";
+    //We do not read all challenges only the challenges from the selected
+    if (objectType == 'challenge' && this.authService.selectedTeachingSubject) {
+      url = this.utilsS.hostName() + "/challenges/subjects/" + this.authService.selectedTeachingSubject.id
+    }
+    console.log("getObjects " + url)
+    return fetch(url, {
+      method: 'get', headers: new Headers({
+        'Content-Type': "application/json",
+        'Accept': "application/json",
+        'Authorization': "Bearer " + this.authService.session.token
+      })
+    })
+  }
   /**
    * Loads the object of type 'objectType' from the server
    * @param objectType
    */
-  getAllObject(objectType) {
+  async getAllObject(objectType: string) {
     if (this.objects.indexOf(objectType) == -1) {
-      console.log("Unknown object type:",objectType)
+      console.log("Unknown object type:", objectType)
       return;
     }
-
-    let url = this.utilsS.hostName() + "/" + objectType + "s/all";
-    //We do not read all challenges only the challenges from the selected
-    if(objectType == 'challenge' && this.authService.selectedTeachingSubject){
-      url = this.utilsS.hostName() + "/challenges/subjects/" + this.authService.selectedTeachingSubject.id
+    try {
+      let respons = await this.getObjects(objectType)
+      let val = await respons.json()
+      if (objectType == 'ticket') {
+        val.sort(this.sortByCreated)
+      }
+      this.allObjects[objectType] = val;
+      this.selects[objectType + 'Id'] = []
+      for (let obj of <any[]>val) {
+        this.selects[objectType + 'Id'].push(obj.id);
+      }
+      this.authService.log("GenericObjectService: ", objectType + "s were read", this.allObjects[objectType]);
+      this.initialized++;
+    } catch (error) {
+      if (!this.allObjects[objectType]) {
+        this.allObjects[objectType] = [];
+        this.selects[objectType + 'Id'] = [];
+      }
+      console.log('getAllObject', objectType, error);
     }
-    console.log("getAllObject" +url)
-    let sub = this.http.get<any[]>(url, { headers: this.authService.headers }).subscribe({
-      next: (val) => {
-        switch (objectType) {
-          case 'ticket': val.sort(this.sortByRecDate)
-        }
-        this.allObjects[objectType] = val;
-        this.selects[objectType + 'Id'] = []
-        for (let obj of <any[]>val) {
-          this.selects[objectType + 'Id'].push(obj.id);
-        }
-        this.authService.log("GenericObjectService: ", objectType + "s were read", this.allObjects[objectType]);
-        this.initialized++;
-      },
-      error: (err) => {
-        if (!this.allObjects[objectType]) {
-          this.allObjects[objectType] = [];
-          this.selects[objectType + 'Id'] = [];
-        }
-        console.log('getAllObject', objectType, err);
-      },
-      complete: () => sub.unsubscribe()
-    });
   }
 
-  getSubscribe(path){
+
+  getSubscribe(path) {
     let url = this.utilsS.hostName() + path
     return this.http.get<any[]>(url, { headers: this.authService.headers })
   }
@@ -268,8 +281,8 @@ export class GenericObjectService {
     if (!objectId) {
       return null;
     }
-    if(!objectType){
-      console.log("getObjectById",this);
+    if (!objectType) {
+      console.log("getObjectById", this);
       return null
     }
     for (let obj of this.allObjects[objectType]) {
@@ -317,7 +330,7 @@ export class GenericObjectService {
    * @param idName
    */
   idToPipe(idName: string) {
-    if (idName == 'ownerId' || idName == 'loggedInId') {
+    if (idName == 'creatorId' || idName == 'loggedInId' || idName.startsWith('owner')) {
       return 'user';
     }
     if (idName == 'cephalixCustomerId') {
@@ -368,7 +381,8 @@ export class GenericObjectService {
     }
     const alert = await this.alertController.create({
       header: this.languageS.trans('Confirm!'),
-      message: this.languageS.trans('Do you realy want to delete?') + '<br>' + name,
+      subHeader: this.languageS.trans('Do you realy want to delete?'),
+      message: name,
       buttons: [
         {
           text: this.languageS.trans('Cancel'),
@@ -515,11 +529,11 @@ export class GenericObjectService {
     }
     return 0;
   }
-  sortByRecDate(a, b) {
-    if (a.recDate < b.recDate) {
+  sortByCreated(a, b) {
+    if (a.created < b.created) {
       return 1;
     }
-    if (a.recDate > b.recDate) {
+    if (a.created > b.created) {
       return -1;
     }
     return 0;
@@ -533,10 +547,10 @@ export class GenericObjectService {
     if (key == 'id') {
       return 'numberRO'
     }
-    if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil') {
+    if (key == 'birthDay' || key == 'validity' || key == 'validFrom' || key == 'validUntil') {
       return 'date';
     }
-    if (key == 'reminder' || key == 'created') {
+    if (key == 'reminder' || key == 'created' || key == 'modified') {
       return 'date-time';
     }
     if (key == 'text' || key == 'domains') {
@@ -586,7 +600,8 @@ export class GenericObjectService {
     //TODO introduce checks
     let output: any = {};
     for (let key in object) {
-      if (key == 'birthDay' || key == 'validity' || key == 'recDate' || key == 'validFrom' || key == 'validUntil' || key == 'created') {
+      if (key == 'birthDay' || key == 'validity' || key == 'created' || key == 'validFrom' || key == 'validUntil' || key == 'modified') {
+        console.log(object[key])
         let date = new Date(object[key]);
         output[key] = date.toJSON();
       } else {

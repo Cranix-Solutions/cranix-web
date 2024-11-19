@@ -23,7 +23,7 @@ export class MypositiveComponent implements OnInit {
     resizable: true,
     sortable: true,
     hide: false,
-    suppressMenu: true
+    suppressHeaderMenuButton: true
   };
   gridApi;
   columnApi;
@@ -50,8 +50,7 @@ export class MypositiveComponent implements OnInit {
   }
 
   onQuickFilterChanged(quickFilter) {
-    this.gridApi.setQuickFilter((<HTMLInputElement>document.getElementById(quickFilter)).value);
-    this.gridApi.doLayout();
+    this.gridApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById(quickFilter)).value);
   }
 
   createColumnDefs() {
@@ -72,7 +71,7 @@ export class MypositiveComponent implements OnInit {
             suppressSizeToFit: true,
             cellStyle: { 'padding': '2px', 'line-height': '36px' },
             field: 'actions',
-            cellRendererFramework: EditBTNRenderer
+            cellRenderer: EditBTNRenderer
           });
           break;
         }
@@ -117,7 +116,6 @@ export class MypositiveComponent implements OnInit {
         object: positivList
       },
       animated: true,
-      swipeToClose: true,
       showBackdrop: true
     });
     modal.onDidDismiss().then((dataReturned) => {

@@ -55,6 +55,16 @@ export const deviceMenu = [
   }
 ]
 
+
+export const crx2faMenu = [
+  {
+    "enabled": true,
+    "icon": "refresh-circle",
+    "color": "danger",
+    "action": "reset"
+  }
+]
+
 export const groupMenu = [
 ]
 

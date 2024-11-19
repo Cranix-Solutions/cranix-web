@@ -12,6 +12,15 @@
       {{authService.session.fullName}} {{authService.session.instituteName}} {{authService.session.roomName}}
     </ion-label>
     <ion-buttons slot="end">
+      <ion-button *ngIf="authService.isAllowed('cephalix.ticket')" fill="clear" (click)="route.navigate(['/pages/cephalix/tickets'])">
+        <div *ngIf="newTickets">
+          <ion-icon color="danger" name="ticket"></ion-icon>
+          <ion-badge color="danger">{{newTickets}}</ion-badge>
+        </div>
+        <div *ngIf="newTickets == 0">
+          <ion-icon color="success" name="ticket"></ion-icon>
+        </div>
+      </ion-button>
       <ion-button fill="clear" (click)="reloadAllObjects()"
         matTooltip="{{ 'Refresh all objects' | translate }}">
         <ion-icon color="tertiary" name="refresh"></ion-icon>

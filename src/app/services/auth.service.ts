@@ -9,7 +9,7 @@ import { isDevMode } from '@angular/core';
 
 //Own modules
 import { UtilsService } from './utils.service';
-import { UserResponse, LoginForm, Settings } from 'src/app/shared/models/server-models';
+import { UserResponse, LoginForm, Settings, ServerResponse, Crx2faSession } from 'src/app/shared/models/server-models';
 import { LanguageService } from './language.service';
 import { TeachingSubject } from '../shared/models/data-model';
 
@@ -19,6 +19,8 @@ import { TeachingSubject } from '../shared/models/data-model';
 
 export class AuthenticationService {
     authenticationState = new BehaviorSubject(false);
+    use2fa: boolean = false;
+    crx2fa: string = "";
     selectedTeachingSubject: TeachingSubject
     hostname: string;
     url: string;
@@ -35,6 +37,13 @@ export class AuthenticationService {
     minLgWidth = 769;
     minLgHeight = 600;
     rowColors: string[] = ["#D2E3D5", "#E2F3E5", "#AFC2B2"]
+    need2fa: boolean = false
+    pinFalse: boolean = false;
+    passwrodFalse: boolean = false;
+    anonHeaders = new HttpHeaders({
+        'Content-Type': "application/json",
+        'Accept': "application/json"
+    });
 
     constructor(
         private http: HttpClient,
@@ -51,14 +60,10 @@ export class AuthenticationService {
     }
 
     login(user: LoginForm) {
-        console.log("auth.services.login called:")
+        console.log("auth.services.login called:", user)
         this.hostname = this.utilsS.hostName();
         this.url = this.hostname + "/sessions/create";
-        const headers = new HttpHeaders({
-            'Content-Type': "application/json",
-            'Accept': "application/json"
-        });
-        return this.http.post<UserResponse>(this.url, user, { headers: headers });
+        return this.http.post<UserResponse>(this.url, user, { headers: this.anonHeaders });
     }
 
     loadSettings() {
@@ -93,13 +98,14 @@ export class AuthenticationService {
         })
     }
 
-    saveSelectedSubject(){
-        this.storage.set('selectedTeachingSubject',JSON.stringify(this.selectedTeachingSubject))
+    saveSelectedSubject() {
+        this.storage.set('selectedTeachingSubject', JSON.stringify(this.selectedTeachingSubject))
     }
 
     setUpSession(user: LoginForm, instituteName: string) {
         this.session = null;
         this.authenticationState.next(false);
+        user.crx2faSessionId = this.utilsS.getCookie("crx2faSessionId");
         let subscription = this.login(user).subscribe({
             next: (val) => {
                 console.log('login respons is', val);
@@ -130,25 +136,77 @@ export class AuthenticationService {
                     'timeout': `${600000}`
                 });
                 this.loadSettings();
-                this.authenticationState.next(true);
+                if (this.isAllowed("2fa.use")) {
+                    if (this.session.crx2faSession) {
+                        this.authenticationState.next(true);
+                    } else if (this.session.crx2fas && this.session.crx2fas.length > 0) {
+                        this.crx2fa = this.session.crx2fas[0];
+                        this.use2fa = true;
+                    } else {
+                        this.session.mustSetup2fa = true;
+                        this.session.acls = ["2fa.use"]
+                        this.authenticationState.next(true);
+                    }
+                } else {
+                    this.authenticationState.next(true);
+                }
             },
             error: async (err) => {
                 console.log('error is', err);
-                if (err.status === 401) {
-                    const toast = this.toastController.create({
-                        position: "middle",
-                        message: 'Passwort falsch!',
-                        color: "danger",
-                        duration: 3000
-                    });
-                    (await toast).present();
-                }
+                // From ionic 7
+                this.passwrodFalse = true;
+                const toast = this.toastController.create({
+                    position: "middle",
+                    message: 'Passwort falsch!',
+                    color: "danger",
+                    duration: 3000
+                });
+                (await toast).present();
+
             },
             complete: () => {
                 subscription.unsubscribe();
                 console.log("login call completed" + this.session.role);
             }
         });
+    }
+
+    sendPin(id: string) {
+        let url = this.hostname + `/2fas/sendpin`;
+        let headers = new HttpHeaders({
+            'Content-Type': "application/json",
+            'Accept': "application/json"
+        });
+        let data = { crx2faId: id, token: this.session.token }
+        console.log("sendPin", data);
+        return this.http.post<ServerResponse>(url, data, { headers: headers })
+    }
+
+    checkTotPin(id: string, otPin: string) {
+        let url = this.hostname + `/2fas/checkpin`;
+        let headers = new HttpHeaders({
+            'Content-Type': "application/json",
+            'Accept': "application/json"
+        });
+        let data = { crx2faId: id, pin: otPin, token: this.session.token }
+        this.http.post<Crx2faSession>(url, data, { headers: headers }).subscribe({
+            next: (val) => {
+                this.utilsS.setCookie("crx2faSessionId",val.id.toString(),val.validHours)
+                console.log(val)
+                this.authenticationState.next(true)
+            },
+            error: async (err) => {
+                // ionic 7
+                this.pinFalse = true;
+                const toast = this.toastController.create({
+                    position: "middle",
+                    message: 'Pin falsch!',
+                    color: "danger",
+                    duration: 3000
+                });
+                (await toast).present();
+            }
+        })
     }
 
     public loadSession() {
@@ -190,7 +248,6 @@ export class AuthenticationService {
             this.http.delete(this.hostname + `/sessions/${this.session.token}`, { headers: this.headers }).subscribe({
                 next: (val) => {
                     this.authenticationState.next(false);
-                    this.session = null;
                     this.router.navigate(['/'])
                 },
                 error: (err) => { this.router.navigate(['/']) },
@@ -199,6 +256,7 @@ export class AuthenticationService {
         }
         this.authenticationState.next(false);
         this.session = null;
+        this.use2fa = false;
         this.router.navigate(['/']);
     }
 
@@ -249,10 +307,7 @@ export class AuthenticationService {
      */
     public isOneOfAllowed(acls: string[]) {
         for (let acl of acls) {
-            if (acl == 'permitall') {
-                return true;
-            }
-            if (this.session.acls.indexOf(acl) > 0) {
+            if (this.session.acls.indexOf(acl) > -1) {
                 return true;
             }
         }
@@ -260,12 +315,10 @@ export class AuthenticationService {
     }
 
     public isAllowed(acl: string) {
-        if (acl == 'permitall') {
-            return true;
-        } else if (!this.session || !this.session.acls) {
+        if (!this.session || !this.session.acls) {
             return false
         }
-        return (this.session.acls.indexOf(acl) > 0);
+        return (this.session.acls.indexOf(acl) > -1);
     }
 
     /**
@@ -283,7 +336,7 @@ export class AuthenticationService {
             case "/pages/cranix/devices/all": { return this.isAllowed('device.manage') }
             case "/pages/cranix/groups": { return this.isAllowed('group.manage') }
             //TODO may be it can be configured
-            case "/pages/cranix/informations": { return true }
+            case "/pages/cranix/informations": { return this.isAllowed('permitall') }
             case "/pages/cranix/hwconfs": { return this.isAllowed('hwconf.manage') }
             case "/pages/cranix/rooms": { return this.isAllowed('room.manage') }
             case "/pages/cranix/rooms/all": { return this.isAllowed('room.manage') }
@@ -297,8 +350,10 @@ export class AuthenticationService {
             case "/pages/edu/lessons/tests": { return this.isAllowed('permitall') }
             case "/pages/edu/lessons/challenges": { return this.isAllowed('challenge.manage') }
             case "/pages/edu/lessons/roomcontrol": { return this.isAllowed('education.rooms') }
-            case "/pages/cranix/profile": { return this.isAllowed('permitall') }
+            case "/pages/cranix/profile": { return this.isOneOfAllowed(['permitall','2fa.use']) }
             case "/pages/cranix/profile/myself": { return this.isAllowed('permitall') }
+            case "/pages/cranix/profile/mydevice": { return this.isAllowed('permitall') }
+            case "/pages/cranix/profile/crx2fa": { return this.isAllowed('2fa.use') }
             case "/pages/cranix/mygroups": { return this.isAllowed('education.groups') }
             case "/pages/cranix/myusers": { return this.isAllowed('education.users') }
             case "institutes/:id": { return this.isAllowed('cephalix.modify') }

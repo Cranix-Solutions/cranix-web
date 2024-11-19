@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GridApi, ColumnApi } from 'ag-grid-community';
+import { GridApi } from 'ag-grid-community';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
@@ -29,7 +29,6 @@ export class InstitutesComponent implements OnInit {
   columnDefs = [];
   defaultColDef = {};
   gridApi: GridApi;
-  columnApi: ColumnApi;
   context;
   nativeWindow: any
   now: number = 0;
@@ -46,13 +45,13 @@ export class InstitutesComponent implements OnInit {
     private storage: Storage
   ) {
     this.context = { componentParent: this };
-    this.objectKeys = Object.getOwnPropertyNames(cephalixService.templateInstitute);
+    this.objectKeys = Object.getOwnPropertyNames(cephalixService.getTemplateInstitute());
     this.createColumnDefs();
     this.defaultColDef = {
       resizable: true,
       sortable: true,
       hide: false,
-      suppressMenu: true,
+      suppressHeaderMenuButton: true,
       minWidth: 110
     };
     this.nativeWindow = win.getNativeWindow()
@@ -85,11 +84,10 @@ export class InstitutesComponent implements OnInit {
           col['headerCheckboxSelection'] = this.authService.settings.headerCheckboxSelection;
           col['headerCheckboxSelectionFilteredOnly'] = true;
           col['checkboxSelection'] = this.authService.settings.checkboxSelection;
-          col['minWidth'] = 230;
+          col['minWidth'] = 300;
           col['suppressSizeToFit'] = true;
           col['pinned'] = 'left';
           col['flex'] = '1';
-          col['colId'] = '1';
           columnDefs.push(col);
           columnDefs.push({
             headerName: "",
@@ -98,16 +96,16 @@ export class InstitutesComponent implements OnInit {
             cellStyle: { 'padding': '1px' },
             field: 'actions',
             pinned: 'left',
-            cellRendererFramework: InstituteActionCellRenderer
+            cellRenderer: InstituteActionCellRenderer
           })
           continue;
         }
         case 'validity': {
-          col['cellRendererFramework'] = DateCellRenderer;
+          col['cellRenderer'] = DateCellRenderer;
           break;
         }
-        case 'recDate': {
-          col['cellRendererFramework'] = DateCellRenderer;
+        case 'created': {
+          col['cellRenderer'] = DateCellRenderer;
           break;
         }
       }
@@ -118,7 +116,6 @@ export class InstitutesComponent implements OnInit {
 
   onGridReady(params) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
     this.gridApi.sizeColumnsToFit();
   }
   selectionChanged() {
@@ -133,8 +130,7 @@ export class InstitutesComponent implements OnInit {
 
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
-    this.gridApi.setQuickFilter(filter);
-    this.gridApi.doLayout();
+    this.gridApi.setGridOption('quickFilterText', filter);
   }
   public redirectToDelete = (institute: Institute) => {
     this.objectService.deleteObjectDialog(institute, 'institute', '')
@@ -174,11 +170,10 @@ export class InstitutesComponent implements OnInit {
         componentProps: {
           objectType: "institute",
           objectAction: 'add',
-          object: this.cephalixService.templateInstitute,
+          object: this.cephalixService.getTemplateInstitute(),
           objectKeys: this.objectKeys
         },
         animated: true,
-        swipeToClose: true,
         showBackdrop: true
       });
       modal.onDidDismiss().then((dataReturned) => {
@@ -203,7 +198,6 @@ export class InstitutesComponent implements OnInit {
         objectPath: "InstitutesComponent.displayedColumns"
       },
       animated: true,
-      swipeToClose: true,
       backdropDismiss: false
     });
     modal.onDidDismiss().then((dataReturned) => {
@@ -221,7 +215,7 @@ export class InstitutesComponent implements OnInit {
     var hostname = window.location.hostname;
     var protocol = window.location.protocol;
     var port = window.location.port;
-    let sub = this.cephalixService.getInstituteToken(institute.id)
+    this.cephalixService.getInstituteToken(institute.id)
       .subscribe(
         async (res) => {
           let token = res;
@@ -240,9 +234,7 @@ export class InstitutesComponent implements OnInit {
             }
             sessionStorage.removeItem('shortName');
           }
-        },
-        (err) => { console.log(err) },
-        () => { sub.unsubscribe() }
+        }
       )
   }
 

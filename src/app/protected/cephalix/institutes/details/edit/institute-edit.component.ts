@@ -41,7 +41,9 @@ export class InstituteEditComponent implements OnInit {
     public systemService: SystemService
   ) {
     this.systemService.getDnsDomains();
-    this.object = this.objectService.selectedObject;
+    this.object = JSON.parse(JSON.stringify(this.objectService.selectedObject));
+    this.object.adminPW = ""
+    this.object.cephalixPW = ""
     this.cephalixService.getAllAddons().subscribe((val) => { this.allAddons = val });
     this.cephalixService.getAddonsOfInstitute(this.object.id).subscribe((val) => { this.addons = val; this.origAddons = val })
     this.cephalixService.getUsersFromInstitute(this.object.id).subscribe(
@@ -101,6 +103,16 @@ export class InstituteEditComponent implements OnInit {
   }
 
   ngOnInit() { }
+
+  togleShowPasswords(){
+    if( !this.object.adminPW )  {
+      this.object.adminPW    = this.objectService.selectedObject.adminPW
+      this.object.cephalixPW = this.objectService.selectedObject.cephalixPW
+    } else {
+      this.object.adminPW = ""
+      this.object.cephalixPW = ""
+    }
+  }
 
   segmentChanged(event) {
     this.segment = event.detail.value;

@@ -28,7 +28,7 @@ export class GroupActionBTNRenderer implements ICellRendererAngularComp {
         this.params = params;
         if (this.params.data) {
             this.mayEdit = params.context.componentParent.authService.isAllowed('group.modify') ||
-                (params.context.componentParent.authService.session.userId == params.data.ownerId);
+                (params.context.componentParent.authService.session.userId == params.data.creatorId);
         }
     }
 
