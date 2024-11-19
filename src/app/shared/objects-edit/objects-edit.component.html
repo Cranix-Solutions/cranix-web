@@ -85,11 +85,11 @@
             value="{{object[key]}}">
           </ion-textarea>
         </ion-item>
-        <ion-item *ngSwitchCase="'date'">
+        <ion-item *ngSwitchCase="'date'" [disabled]="objectService.readOnlyAttributes[key]">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
           <input [(ngModel)]="object[key]" name="{{key}}" type="date">
         </ion-item>
-        <ion-item *ngSwitchCase="'date-time'">
+        <ion-item *ngSwitchCase="'date-time'" [disabled]="objectService.readOnlyAttributes[key]">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
           <input [(ngModel)]="object[key]" name="{{key}}" type="datetime-local">
         </ion-item>

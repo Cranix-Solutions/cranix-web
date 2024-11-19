@@ -4,12 +4,12 @@
     <full-calendar #calendar [options]="calendarOptions" [events]="events"></full-calendar>
     @if(authService.isMD()){
     <ion-fab slot="fixed" horizontal="start" vertical="center">
-        <ion-fab-button (click)="calendarComponent.getApi().prev()">
+        <ion-fab-button (click)="calendarComponent.getApi().prev()" size="small">
             <ion-icon name="arrow-back"></ion-icon>
         </ion-fab-button>
     </ion-fab>
     <ion-fab slot="fixed" horizontal="end" vertical="center">
-        <ion-fab-button (click)="calendarComponent.getApi().next()">
+        <ion-fab-button (click)="calendarComponent.getApi().next()" size="small">
             <ion-icon name="arrow-forward"></ion-icon>
         </ion-fab-button>
     </ion-fab>

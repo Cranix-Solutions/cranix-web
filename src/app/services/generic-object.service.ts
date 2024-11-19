@@ -80,12 +80,13 @@ export class GenericObjectService {
     'modified',
     'name',
     'network',
+    'netMask',
     'creatorName',
     'created',
     'role',
     'roomId',
     'sourceAvailable',
-    'startIp',
+    'startIP',
     'uid',
     'wlanIp'
   ]
@@ -95,6 +96,7 @@ export class GenericObjectService {
   hiddenAttributes: string[] = [
     'accessInRooms',
     'cephalixInstituteId',
+    'color',
     'deleted',
     'devices',
     'fullName',
@@ -550,7 +552,8 @@ export class GenericObjectService {
     if (key == 'birthDay' || key == 'validity' || key == 'validFrom' || key == 'validUntil') {
       return 'date';
     }
-    if (key == 'reminder' || key == 'created' || key == 'modified') {
+    //if (key == 'reminder' || key == 'created' || key == 'modified') {
+    if (key == 'reminder') {
       return 'date-time';
     }
     if (key == 'text' || key == 'domains') {
