@@ -16,8 +16,6 @@ import { LoginForm } from 'src/app/shared/models/server-models';
 export class LoginPage implements OnInit {
     instName: Observable<string>;
     instituteName: string = "";
-    allowSavePassword: boolean = true;
-    showPassword: boolean = false;
     totp: boolean = false;
     totppin: string = "";
     user: LoginForm;

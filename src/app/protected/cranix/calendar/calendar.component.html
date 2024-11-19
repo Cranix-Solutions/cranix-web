@@ -2,6 +2,23 @@
 <cranix-toolbar title="Calendar"></cranix-toolbar>
 <ion-content>
     <full-calendar #calendar [options]="calendarOptions" [events]="events"></full-calendar>
+    @if(authService.isMD()){
+    <ion-fab slot="fixed" horizontal="start" vertical="center">
+        <ion-fab-button (click)="calendarComponent.getApi().prev()">
+            <ion-icon name="arrow-back"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+    <ion-fab slot="fixed" horizontal="end" vertical="center">
+        <ion-fab-button (click)="calendarComponent.getApi().next()">
+            <ion-icon name="arrow-forward"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+    <!-- ion-fab slot="fixed" horizontal="end" vertical="botton">
+        <ion-fab-button (click)="handleDateSelect(null)">
+            <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+    </ion-fab -->
+    }
     <ion-modal #addEditEventModal [isOpen]="isModalOpen">
         <ng-template>
             @if(selectedEvent){
@@ -156,8 +173,8 @@
                             </ion-select>
                         </ion-item>
                         <ion-item>
-                            <ion-input [(ngModel)]="rRule.interval" name="rruleInterval" type="number"
-                                label="{{'Interval'|translate}}" labelPlacement="fixed" [disabled]="!eventRecurring"></ion-input>
+                            <ion-input [(ngModel)]="rRule.interval" name="rruleInterval" type="number" class="number"
+                                label="{{'Interval'|translate}}" [disabled]="!eventRecurring"></ion-input>
                         </ion-item>
                         <ion-item>
                             <ion-select [(ngModel)]="rRule.byweekday" name="byweekday" label="{{'Weekday'|translate}}"
@@ -174,12 +191,13 @@
                             </ion-select>
                         </ion-item>
                         <ion-item>
-                            <ion-input [(ngModel)]="rRule.count" name="rruleCount" type="number"
-				   label="{{'Count'|translate}}" [disabled]="!eventRecurring || rRule.count > 0"></ion-input>
+                            <ion-input [(ngModel)]="rRule.count" name="rruleCount" type="number" class="number"
+                                label="{{'Count'|translate}}"
+                                [disabled]="!eventRecurring || recurringUntil != ''"></ion-input>
                         </ion-item>
-                        <ion-item  [disabled]="!eventRecurring || rRule.count">
+                        <ion-item [disabled]="!eventRecurring || rRule.count > 0">
                             <ion-label>{{'End Date'|translate}}</ion-label>
-                            <input [(ngModel)]="rRule.until" name="endTime" type="date"/>
+                            <input [(ngModel)]="recurringUntil" name="endRecuringTime" type="date" />
                         </ion-item>
                     </ion-list>
                 </ion-content>
@@ -204,22 +222,24 @@
             </ion-header>
             <ion-content>
                 <ion-list>
-                    <!-- ion-item>
+                    <ion-item>
                         <ion-label>
                             {{'If no items are seleceted all events are showed'|translate}}
                         </ion-label>
-                    </ion-item -->
-                    <ion-item>
-                        <ion-toggle labelPlacement="start" [(ngModel)]="eventFilter.showPrivate">{{'Private Events'|translate}}</ion-toggle>
                     </ion-item>
                     <ion-item>
-                        <ion-toggle labelPlacement="start" [(ngModel)]="eventFilter.showIndividual">{{'Individual Events'|translate}}</ion-toggle>
+                        <ion-toggle labelPlacement="start" [(ngModel)]="eventFilter.showPrivate">{{'Private
+                            Events'|translate}}</ion-toggle>
+                    </ion-item>
+                    <ion-item>
+                        <ion-toggle labelPlacement="start" [(ngModel)]="eventFilter.showIndividual">{{'Individual
+                            Events'|translate}}</ion-toggle>
                     </ion-item>
                     <ion-item>
                         <ion-label>{{'Select groups calendars' | translate}}</ion-label>
-                        <ionic-selectable #ionicSelectGroups itemValueField="id" itemTextField="description" [isMultiple]="true"
-                            [(ngModel)]="eventFilter.groups" [ngModelOptions]="{standalone: true}" [items]="myGroups"
-                            [canSearch]="true">
+                        <ionic-selectable #ionicSelectGroups itemValueField="id" itemTextField="description"
+                            [isMultiple]="true" [(ngModel)]="eventFilter.groups" [ngModelOptions]="{standalone: true}"
+                            [items]="myGroups" [canSearch]="true">
                             <ng-template ionicSelectableHeaderTemplate>
                                 <ion-header color="primary">
                                     <ion-toolbar>
@@ -243,8 +263,8 @@
                     </ion-item>
                     <ion-item>
                         <ion-label>{{'Select room calendars' | translate}}</ion-label>
-                        <ionic-selectable #ionicSelectUsers itemValueField="id" itemTextField="description" [isMultiple]="true"
-                            [(ngModel)]="eventFilter.rooms" [ngModelOptions]="{standalone: true}"
+                        <ionic-selectable #ionicSelectUsers itemValueField="id" itemTextField="description"
+                            [isMultiple]="true" [(ngModel)]="eventFilter.rooms" [ngModelOptions]="{standalone: true}"
                             [items]="objectService.allObjects['room']" [canSearch]="true">
                             <ng-template ionicSelectableHeaderTemplate>
                                 <ion-header color="primary">

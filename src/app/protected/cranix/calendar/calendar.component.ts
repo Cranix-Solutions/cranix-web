@@ -39,12 +39,16 @@ export class CalendarComponent implements OnInit {
       selectCalendar: {
         text: this.lanaguageS.trans('Calendar'),
         click: this.selectCalendar.bind(this)
+      },
+      addEvent: {
+        text: "+",
+        click: this.handleDateSelect.bind(this)
       }
     },
     headerToolbar: {
       left: 'prev,next today selectCalendar',
       center: 'title',
-      right: 'multiMonthYear,dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+      right: 'multiMonthYear,dayGridMonth,timeGridWeek,timeGridDay,listWeek addEvent'
     },
     buttonText: {
       year: this.lanaguageS.trans('year'),
@@ -65,6 +69,7 @@ export class CalendarComponent implements OnInit {
   };
   addEditEventTitle: string
   eventRecurring: boolean = false
+  recurringUntil: string = ""
   isCalendarModalOpen: boolean = false
   isModalOpen: boolean = false
   double = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09']
@@ -107,12 +112,12 @@ export class CalendarComponent implements OnInit {
       this.calendarOptions.headerToolbar =  {
         left: 'today',
         center: 'title',
-        right: 'selectCalendar'
+        right: 'selectCalendar addEvent'
       }
       this.calendarOptions.footerToolbar =  {
         left: '',
         right: '',
-        center: 'multiMonthYear,dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+        center: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
       }
     }
   }
@@ -235,10 +240,20 @@ export class CalendarComponent implements OnInit {
     }
   }
   handleDateSelect(arg: DateSelectArg) {
+    let start = new Date()
+    let end = new Date()
+    if( arg != null && arg.start != null ){
+      if(arg.start.getTime() < start.getTime()){
+        this.objectService.errorMessage("You can not create event in the past.")
+        return
+      }
+      start = arg.start
+      end = arg.end
+    }
     this.addEditEventTitle = "Add new event"
     this.selectedEvent = new CrxCalendar();
-    this.selectedEvent.start = arg.start
-    this.selectedEvent.end = arg.end
+    this.selectedEvent.start = start
+    this.selectedEvent.end = end
     this.adaptEventTimes()
     this.setOpen(true)
     console.log(arg)
@@ -250,12 +265,14 @@ export class CalendarComponent implements OnInit {
     }
   }
   handleEventClick(arg: EventClickArg) {
+    console.log(this.calendarComponent.options.selectable)
     this.addEditEventTitle = "Edit event"
     this.calendarS.getById(arg.event.id).subscribe((val) => {
       this.selectedEvent = val
       if( val.rrule && val.rrule != "") {
         console.log(this.selectedEvent)
         let rule = RRule.fromString(val.rrule)
+        this.recurringUntil = this.toIonDate(rule.options.until)
         console.log(rule.options)
         this.rRule = rule.options
         /*this.rRule.bymonth = rule.options.bymonth
@@ -285,6 +302,7 @@ export class CalendarComponent implements OnInit {
     })
     console.log(arg.event._instance?.range)
   }
+
   addEditEvent(modal: any) {
     modal.dismiss()
     this.objectService.requestSent()
@@ -294,9 +312,17 @@ export class CalendarComponent implements OnInit {
     if (this.eventRecurring) {
       this.rRule.dtstart = this.selectedEvent.start
       console.log(this.rRule)
-      if(this.rRule.count == 0) delete(this.rRule.count)
+      if(this.rRule.count == 0) {
+        delete(this.rRule.count)
+      }
+      if(this.recurringUntil != "") {
+        this.rRule.until = new Date(this.recurringUntil)
+      }
       let rule = new RRule(this.rRule)
       this.selectedEvent['rrule'] = rule.toString()
+      this.recurringUntil = ""
+      this.eventRecurring = false
+      this.rRule = new RecRule()
     }
     this.setOpen(false)
     console.log(this.selectedEvent)
@@ -316,6 +342,7 @@ export class CalendarComponent implements OnInit {
       )
     }
   }
+
   deleteEvent(){
     this.setOpen(false)
     this.objectService.requestSent()

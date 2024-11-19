@@ -7,19 +7,17 @@
     <ion-card-content *ngIf="!authService.use2fa">
       <ion-list>
         <ion-item>
-          <ion-input label="{{'username'|translate}}" labelPlacement="fixed" [(ngModel)]="user.username" name="username" type="text"
-            autocomplete="off" required></ion-input>
+          <ion-input label="{{'username'|translate}}" labelPlacement="fixed" [(ngModel)]="user.username" name="username"
+            type="text" autocomplete="off" required></ion-input>
         </ion-item>
         <ion-item>
           <ion-input label="{{'password'|translate}}" labelPlacement="fixed" [(ngModel)]="user.password" name="password"
-            [type]="showPassword ? 'text' : 'password'" autocomplete="off" required></ion-input>
-          <ion-icon slot="end" [name]="showPassword ? 'eye-off' : 'eye'"
-            (click)="showPassword = !showPassword"></ion-icon>
+            type="password" autocomplete="off" required>
+            <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+          </ion-input>
         </ion-item>
         <ion-button style="margin-top: 10px;" expand="full" color="primary" (click)="login()"
           [disabled]="!loginForm.valid">{{'login'|translate}}</ion-button>
-        <!-- ion-toast [isOpen]="authService.passwordFalse" message="{{'Pin fals'|translate}}" [duration]="5000"
-        (didDismiss)="authService.passwordFalse=false"></ion-toast -->
       </ion-list>
     </ion-card-content>
     <ion-card-content *ngIf="authService.use2fa">
@@ -31,15 +29,15 @@
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-input label="{{'Enter PIN'|translate}}" labelPlacement="fixed" [(ngModel)]="totppin" name="totppin" required></ion-input>
+          <ion-input label="{{'Enter PIN'|translate}}" labelPlacement="fixed" [(ngModel)]="totppin" name="totppin"
+            required></ion-input>
           <ion-button *ngIf="!authService.crx2fa.startsWith('TOTP')" (click)="sendPin()">
             {{'Send pin'|translate}}
           </ion-button>
         </ion-item>
-        <ion-button style="margin: 10px;" expand="full" color="primary" (click)="checkPin()" [disabled]="!loginForm.valid">{{'login' |
+        <ion-button style="margin: 10px;" expand="full" color="primary" (click)="checkPin()"
+          [disabled]="!loginForm.valid">{{'login' |
           translate}}</ion-button>
-        <!-- ion-toast [isOpen]="authService.pinFalse" message="{{'Pin fals'|translate}}" [duration]="5000"
-        (didDismiss)="authService.pinFalse=false"></ion-toast -->
       </ion-list>
     </ion-card-content>
   </ion-card>

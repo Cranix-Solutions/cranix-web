@@ -527,8 +527,8 @@ export class CrxChallengeAnswer {
 export class CrxCalendar {
 	id: number = 0
 	creatorId: number
-	created: Date
-	modified: Date
+	created: Date | string
+	modified: Date | string
 	uuid: string
 	allDay: boolean = false
 	start: Date | string
