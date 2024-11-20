@@ -95,7 +95,7 @@ export class CalendarComponent implements OnInit {
 
   constructor(
     public objectService: GenericObjectService,
-    private authService: AuthenticationService,
+    public authService: AuthenticationService,
     private calendarS: CrxCalendarService,
     private el: ElementRef,
     private gestureCtrl: GestureController,
