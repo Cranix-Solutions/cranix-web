@@ -3,7 +3,7 @@
   <ion-toolbar class="page-toolbar">
     <ion-item lines="none">
       <ion-label *ngIf="gridApi">
-        #{{gridApi.getDisplayedRowCount()}}
+        #{{gridApi.getDisplayedRowCount()}}&nbsp;
       </ion-label>
       <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('quickFilter')" id="quickFilter">
       </ion-input>
