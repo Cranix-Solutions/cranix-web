@@ -31,7 +31,7 @@
 </ion-toolbar>
 <ion-item *ngIf="!authService.isMD()" lines="none">
   <ion-label *ngIf="gridApi">
-    #{{gridApi.getDisplayedRowCount()}}
+    #{{gridApi.getDisplayedRowCount()}}&nbsp;
   </ion-label>
   <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('mygroupsFilter')"
     id="mygroupsFilter">
