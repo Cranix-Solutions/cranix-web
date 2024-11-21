@@ -1,4 +1,5 @@
 {
+    "You can not create event in the past.":"Ereignisse können nur in der Zukunft erstellt werden.",
     "modified":"geändert",
     "startIP":"Erste IP-Adresse",
     "netMask":"Netzwerkmaske",

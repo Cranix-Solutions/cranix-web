@@ -556,3 +556,43 @@ export class RecRule {
     count: number = 0
     until: Date
 }
+
+export class ParentRequest {
+	givenName: string
+	surName: string
+	birthDay: string
+	className: string
+}
+
+export class Parent extends User {
+	emailAddress: string
+	otp: string
+	children: User[]
+	requests: ParentRequest[]
+}
+
+export class PTMEvent {
+	id?: number
+	start: Date | string
+	end: Date | string
+	parent: Parent
+	student: User
+}
+
+export class PTMTeacherInRoom {
+	id?: number
+	room: Room
+	teacher: User
+	events: PTMEvent[]
+}
+
+export class ParentTeacherMeeting {
+	id?: number
+	title: string
+	start: Date | string
+	end: Date | string
+	duration: number = 10
+	startRegistration: Date | string
+	endRegistration: Date | string
+	ptmTeacherInRoomList: PTMTeacherInRoom[]
+}
