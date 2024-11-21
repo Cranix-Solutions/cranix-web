@@ -166,7 +166,7 @@ export class GroupMembersPage implements OnInit {
       },
       (err) => {
         this.objectS.errorMessage(
-          this.languageS.trans("A server error accoured.")
+          this.languageS.trans("A server error occoured.")
         )
         this.authService.log(err)
       },
