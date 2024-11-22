@@ -580,7 +580,7 @@ export class PTMEvent {
 }
 
 export class PTMTeacherInRoom {
-	id?: number
+	id: number = 0
 	room: Room
 	teacher: User
 	events: PTMEvent[]

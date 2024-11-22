@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component } from '@angular/core';
 //own modules
 import { ChallengesService } from 'src/app/services/challenges.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
@@ -7,17 +7,14 @@ import { AuthenticationService } from 'src/app/services/auth.service';
   selector: 'cranix-lessons',
   templateUrl: './lessons.page.html',
 })
-
-export class LessonsPage implements OnInit {
+export class LessonsPage{
 
     constructor(
       public challengesService: ChallengesService,
       public authS: AuthenticationService
-    ){}
-
-    ngOnInit(){
+    ){
+      console.log(authS.isAllowed('challenge.manage'))
     }
-
     cleanUp(){
       console.log("cleanUp called")
       this.challengesService.modified = false;

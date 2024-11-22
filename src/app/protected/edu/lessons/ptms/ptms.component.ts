@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/auth.service';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { PtmsService } from 'src/app/services/ptms.service';
+import { ticketMenu } from 'src/app/shared/actions/objects.menus';
 import { ParentTeacherMeeting, PTMTeacherInRoom, Room } from 'src/app/shared/models/data-model';
 
 @Component({
@@ -16,35 +18,52 @@ export class PtmsComponent {
   addEditPTMTitle: string = ""
   selectedPTM: ParentTeacherMeeting
   myPTMTeacherInRoom: PTMTeacherInRoom
-  listHeader: string
+  now: Date;
 
   constructor(
     public authService: AuthenticationService,
+    private objectService: GenericObjectService,
     public ptmService: PtmsService
-  ){
-    ptmService.getNextPTM().subscribe((val) => {
-       this.selectedPTM = val
-       if(val != null){
-        ptmService.getFreeRooms(val.id).subscribe((val2) => {
+  ) {
+    this.now = new Date()
+    this.readDatas()
+  }
+
+  readDatas() {
+    this.ptmService.getNextPTM().subscribe((val) => {
+      this.selectedPTM = val
+      if (val != null) {
+        this.ptmService.getFreeRooms(val.id).subscribe((val2) => {
           this.freeRooms = val2
         })
-        this.myPTMTeacherInRoom = new PTMTeacherInRoom()
-        this.listHeader = "Edit PTM"
-       }else if(this.authService.isAllowed('ptms.manage')) {
-        this.selectedPTM = new ParentTeacherMeeting()
-        this.listHeader = "Add new PTM"
-       }
+        for (let ptmTiR of this.selectedPTM.ptmTeacherInRoomList) {
+          if (ptmTiR.teacher.id == this.authService.session.userId) {
+            this.myPTMTeacherInRoom = ptmTiR
+            break
+          }
+        }
+        if (!this.myPTMTeacherInRoom) {
+          this.myPTMTeacherInRoom = new PTMTeacherInRoom()
+        }
+
+      }
+    })
+  }
+  selectRoom(){
+    let me = this.objectService.getObjectById("user",this.authService.session.userId);
+    this.myPTMTeacherInRoom.teacher=me
+    if(this.myPTMTeacherInRoom.id != 0) {
+      this.ptmService.cancelRoomRegistration(this.myPTMTeacherInRoom.id).subscribe(
+        (val)=>{ 
+          this.objectService.responseMessage(val)
+        }
+      )
+    }
+    this.ptmService.registerRoom(this.selectedPTM.id,this.myPTMTeacherInRoom).subscribe(
+      (val) => { 
+        this.objectService.responseMessage(val)
+        this.readDatas()
       }
     )
-
-  }
-  addEditPTM(modal: any){
-
-  }
-  deletePTM(){
-
-  }
-  setOpen(open: boolean){
-    this.isAddPTMOpen = open
   }
 }

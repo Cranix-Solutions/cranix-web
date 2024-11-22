@@ -1,108 +1,77 @@
 <cranix-toolbar></cranix-toolbar>
-@if(selectedPTM != null){
-<ion-content>
-    <form #addEditPTMForm="ngForm">
-        <ion-list>
-            <ion-list-header>{{listHeader|translate}}</ion-list-header>
-            <ion-item>
-                <ion-input [(ngModel)]="selectedPTM.title" label="{{'Title'|translate}}" labelPlacement="fixed"
-                    required></ion-input>
-            </ion-item>
-            <ion-item>
-                <ion-label>{{'From'|translate}}*</ion-label>
-                <input [(ngModel)]="selectedPTM.start" name="startTime" type="datetime-local" required />
-            </ion-item>
-            <ion-item>
-                <ion-label>{{'Until'|translate}}*</ion-label>
-                <input [(ngModel)]="selectedPTM.end" name="endTime" type="datetime-local" required />
-            </ion-item>
-            <ion-item>
-                <ion-input [(ngModel)]="selectedPTM.duration" label="{{'duration'|translate}}" labelPlacement="fixed"
-                    type="number" required></ion-input>
-            </ion-item>
-            <ion-item>
-                <ion-label>{{'Start Registration'|translate}}*</ion-label>
-                <input [(ngModel)]="selectedPTM.startRegsitration" name="startTime" type="datetime-local" required />
-            </ion-item>
-            <ion-item>
-                <ion-label>{{'End Registration'|translate}}*</ion-label>
-                <input [(ngModel)]="selectedPTM.endRegistration" name="endTime" type="datetime-local" required />
-            </ion-item>
-            <ion-item>
-                <ion-label></ion-label>
-            </ion-item>
-            @if(authService.isAllowed('ptms.manage')){
-            <ion-item>
-                <ion-button (click)="addEditPTM()" [disabled]="!"></ion-button>
-            </ion-item>
-            }
-        </ion-list>
-    </form>
-</ion-content>
-}
-<ion-modal [isOpen]="isRegisterRoomOpen">
-    <ion-header color="primary">
-        <ion-toolbar color="primary">
-            <ion-title>{{addEditEventTitle|translate}}</ion-title>
-            <ion-buttons slot="end">
-                <ion-button class="ion-no-margin" (click)="registerRoom(addEditEventModal)">
-                    <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
-                </ion-button>
-                <ion-button fill="clear" size="small" (click)="setOpen(false)">
-                    <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
-                </ion-button>
-            </ion-buttons>
-        </ion-toolbar>
-    </ion-header>
-    <ion-content>
-        <ion-item>
-            <ion-label>{{'Select room for the PTM' | translate}}</ion-label>
-            <ionic-selectable #ionicSelectRoom itemValueField="id" itemTextField="description" [isMultiple]="false"
-                [(ngModel)]="myPTMTeacherInRoom.room" [ngModelOptions]="{standalone: true}" [items]="freeRooms"
-                [canSearch]="true">
-                <ng-template ionicSelectableHeaderTemplate>
-                    <ion-header color="primary">
-                        <ion-toolbar>
-                            <ion-title>
-                                {{ "Select room for the PTM" | translate }}
-                            </ion-title>
-                            <ion-buttons slot="end">
-                                <ion-button ion-button (click)="ionicSelectRoom.close()">
-                                    <ion-icon color="danger" name="close"></ion-icon>
-                                </ion-button>
-                            </ion-buttons>
-                        </ion-toolbar>
-                    </ion-header>
-                </ng-template>
-            </ionic-selectable>
-        </ion-item>
-        @if(authService.isAllowed('ptms.manage')) {
-        <ion-item>
-            <ion-label>{{'Select users for the PTM' | translate}}</ion-label>
-            <ionic-selectable #ionicSelectUsers itemValueField="id" itemTextField="fullName" [isMultiple]="false"
-                [(ngModel)]="selectedPTM.user" [ngModelOptions]="{standalone: true}"
-                [items]="objectService.allObjects['user']" [canSearch]="true">
-                <ng-template ionicSelectableHeaderTemplate>
-                    <ion-header color="primary">
-                        <ion-toolbar>
-                            <ion-title>
-                                {{ "Select users for the PTM" | translate }}
-                            </ion-title>
-                            <ion-buttons slot="end">
-                                <ion-button ion-button (click)="ionicSelectUsers.close()">
-                                    <ion-icon color="danger" name="close"></ion-icon>
-                                </ion-button>
-                            </ion-buttons>
-                        </ion-toolbar>
-                    </ion-header>
-                </ng-template>
-                <ng-template ionicSelectableValueTemplate let-ports="value">
-                    <div class="ionic-selectable-value-item">
-                        {{ports.length}} {{'users are seleceted'|translate}}
-                    </div>
-                </ng-template>
-            </ionic-selectable>
-        </ion-item>
+@if(selectedPTM == null){
+<h1>{{'There is no PTM' | translate}} </h1>
+}@else{
+<ion-list>
+    <ion-list-header lines="full">
+        {{selectedPTM.title}}
+    </ion-list-header>
+    <ion-item>
+        <ion-label>{{'From'|translate}}*</ion-label>
+        <input [(ngModel)]="selectedPTM.start" name="startTime" type="datetime-local" readonly />
+    </ion-item>
+    <ion-item>
+        <ion-label>{{'Until'|translate}}*</ion-label>
+        <input [(ngModel)]="selectedPTM.end" name="endTime" type="datetime-local" readonly />
+    </ion-item>
+    <ion-item>
+        <ion-input [(ngModel)]="selectedPTM.duration" label="{{'duration'|translate}}" labelPlacement="fixed"
+            type="number" readonly></ion-input>
+    </ion-item>
+    <ion-item>
+        <ion-label>{{'Start Parent Registration'|translate}}*</ion-label>
+        <input [(ngModel)]="selectedPTM.startRegsitration" name="startTime" type="datetime-local" readonly />
+    </ion-item>
+    <ion-item>
+        <ion-label>{{'End Parent Registration'|translate}}*</ion-label>
+        <input [(ngModel)]="selectedPTM.endRegistration" name="endTime" type="datetime-local" readonly />
+    </ion-item>
+    <ion-item>
+        @if(myPTMTeacherInRoom.id > 0 && selectedPTM.startRegsitration.befor(now)){
+        <ion-label>{{'Your Room'|translate}}</ion-label>
+        <ion-label>{{myPTMTeacherInRoom.room.name}}: {{myPTMTeacherInRoom.room.description}} </ion-label>
+        }@else{
+        <ion-label>{{'Register a room'|translate}}</ion-label>
+        <ionic-selectable #ionicSelectRoom itemValueField="id" itemTextField="description" [isMultiple]="false"
+            [(ngModel)]="myPTMTeacherInRoom.room" [ngModelOptions]="{standalone: true}" [items]="freeRooms"
+            [canSearch]="true" (onChange)="selectRoom()">
+            <ng-template ionicSelectableHeaderTemplate>
+                <ion-header color="primary">
+                    <ion-toolbar>
+                        <ion-title>
+                            {{ "Select room for the PTM" | translate }}
+                        </ion-title>
+                        <ion-buttons slot="end">
+                            <ion-button ion-button (click)="ionicSelectRoom.close()">
+                                <ion-icon color="danger" name="close"></ion-icon>
+                            </ion-button>
+                        </ion-buttons>
+                    </ion-toolbar>
+                </ion-header>
+            </ng-template>
+        </ionic-selectable>
         }
-    </ion-content>
-</ion-modal>
+    </ion-item>
+</ion-list>
+@if(myPTMTeacherInRoom.id > 0 && selectedPTM.startRegsitration.befor(now)){
+<ion-list>
+    <ion-list-header lines="full">
+        {{'Registrations'|translate}}
+    </ion-list-header>
+    @for(item of myPTMTeacherInRoom.events) {
+    <ion-item>
+        <ion-label>{{item.start|date "HH:mm"}}</ion-label>
+        @if(event.parent){
+        @if(event.student){
+        <ion-label>{{event.parent.fullName}} {{event.student.fullName}} </ion-label>
+        }@else{
+        <ion-label>{{event.parent.fullName}} {{event.parente.children[0].fullName}} </ion-label>
+        }
+        }@else{
+        <ion-label color="success">{{'free'|translate}} </ion-label>
+        }
+    </ion-item>
+    }
+</ion-list>
+}
+}
