@@ -1,0 +1,111 @@
+<cranix-toolbar></cranix-toolbar>
+<ion-modal [isOpen]="isAddEditPTMModalOpen">
+    <ng-template>
+        <form #addEditPTMForm="ngForm">
+            <ion-list>
+                <ion-list-header>
+                    <ion-label>{{listHeader|translate}}</ion-label>
+                    <ion-button (click)="addEditPTM()" [disabled]="!addEditPTMForm.valid">
+                        <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+                    </ion-button>
+                </ion-list-header>
+                <ion-item>
+                    <ion-input [(ngModel)]="selectedPTM.title" label="{{'Title'|translate}}" labelPlacement="fixed"
+                        required></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label>{{'From'|translate}}*</ion-label>
+                    <input [(ngModel)]="selectedPTM.start" name="startTime" type="datetime-local" required />
+                </ion-item>
+                <ion-item>
+                    <ion-label>{{'Until'|translate}}*</ion-label>
+                    <input [(ngModel)]="selectedPTM.end" name="endTime" type="datetime-local" required />
+                </ion-item>
+                <ion-item>
+                    <ion-input [(ngModel)]="selectedPTM.duration" label="{{'duration'|translate}}"
+                        labelPlacement="fixed" type="number" required></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label>{{'Start Parent Registration'|translate}}*</ion-label>
+                    <input [(ngModel)]="selectedPTM.startRegsitration" name="startTime" type="datetime-local"
+                        required />
+                </ion-item>
+                <ion-item>
+                    <ion-label>{{'End Parent Registration'|translate}}*</ion-label>
+                    <input [(ngModel)]="selectedPTM.endRegistration" name="endTime" type="datetime-local" required />
+                </ion-item>
+                <ion-item>
+                    <ion-button label="Register Room" (click)="openRegisterRoom()"></ion-button>
+                </ion-item>
+            </ion-list>
+        </form>
+    </ng-template>
+</ion-modal>
+<ion-modal [isOpen]="isRegisterRoomOpen">
+    <ng-template>
+        <ion-header color="primary">
+            <ion-toolbar color="primary">
+                <ion-title>{{addEditEventTitle|translate}}</ion-title>
+                <ion-buttons slot="end">
+                    <ion-button class="ion-no-margin" (click)="registerRoom(addEditEventModal)">
+                        <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+                    </ion-button>
+                    <ion-button fill="clear" size="small" (click)="setOpen(false)">
+                        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content>
+            <ion-item>
+                <ion-label>{{'Select room for the PTM' | translate}}</ion-label>
+                <ionic-selectable #ionicSelectRoom itemValueField="id" itemTextField="description" [isMultiple]="false"
+                    [(ngModel)]="myPTMTeacherInRoom.room" [ngModelOptions]="{standalone: true}" [items]="freeRooms"
+                    [canSearch]="true">
+                    <ng-template ionicSelectableHeaderTemplate>
+                        <ion-header color="primary">
+                            <ion-toolbar>
+                                <ion-title>
+                                    {{ "Select room for the PTM" | translate }}
+                                </ion-title>
+                                <ion-buttons slot="end">
+                                    <ion-button ion-button (click)="ionicSelectRoom.close()">
+                                        <ion-icon color="danger" name="close"></ion-icon>
+                                    </ion-button>
+                                </ion-buttons>
+                            </ion-toolbar>
+                        </ion-header>
+                    </ng-template>
+                </ionic-selectable>
+            </ion-item>
+            @if(authService.isAllowed('ptms.manage')) {
+            <ion-item>
+                <ion-label>{{'Select users for the PTM' | translate}}</ion-label>
+                <ionic-selectable #ionicSelectUsers itemValueField="id" itemTextField="fullName" [isMultiple]="false"
+                    [(ngModel)]="selectedPTM.user" [ngModelOptions]="{standalone: true}"
+                    [items]="objectService.allObjects['user']" [canSearch]="true">
+                    <ng-template ionicSelectableHeaderTemplate>
+                        <ion-header color="primary">
+                            <ion-toolbar>
+                                <ion-title>
+                                    {{ "Select users for the PTM" | translate }}
+                                </ion-title>
+                                <ion-buttons slot="end">
+                                    <ion-button ion-button (click)="ionicSelectUsers.close()">
+                                        <ion-icon color="danger" name="close"></ion-icon>
+                                    </ion-button>
+                                </ion-buttons>
+                            </ion-toolbar>
+                        </ion-header>
+                    </ng-template>
+                    <ng-template ionicSelectableValueTemplate let-ports="value">
+                        <div class="ionic-selectable-value-item">
+                            {{ports.length}} {{'users are seleceted'|translate}}
+                        </div>
+                    </ng-template>
+                </ionic-selectable>
+            </ion-item>
+            }
+        </ion-content>
+    </ng-template>
+</ion-modal>
