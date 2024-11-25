@@ -558,10 +558,13 @@ export class RecRule {
 }
 
 export class ParentRequest {
+	id: number = 0
+	parentId: number
 	givenName: string
 	surName: string
 	birthDay: string
 	className: string
+	proceeded: boolean = false
 }
 
 export class Parent extends User {
@@ -572,7 +575,7 @@ export class Parent extends User {
 }
 
 export class PTMEvent {
-	id?: number
+	id: number = 0
 	start: Date | string
 	end: Date | string
 	parent: Parent
@@ -587,7 +590,7 @@ export class PTMTeacherInRoom {
 }
 
 export class ParentTeacherMeeting {
-	id?: number
+	id: number = 0
 	title: string
 	start: Date | string
 	end: Date | string
