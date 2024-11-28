@@ -28,7 +28,7 @@ import { HwconfsService } from './services/hwconfs.service';
 import { InformationsService } from './services/informations.services';
 import { LanguageService } from './services/language.service';
 import { PrintersService } from './services/printers.service';
-import { PtmsService } from './services/ptms.service';
+import { ParentsService } from './services/parents.service';
 import { RoomsService } from './services/rooms.service';
 import { SecurityService } from './services/security-service';
 import { SoftwareService } from './services/softwares.service';
@@ -74,7 +74,7 @@ export function createTranslateLoader(http: HttpClient) {
     InformationsService,
     LanguageService,
     PrintersService,
-    PtmsService,
+    ParentsService,
     RoomsService,
     SecurityService,
     SoftwareService,

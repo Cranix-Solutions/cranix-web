@@ -37,6 +37,8 @@ export class User {
 	fsQuotaUsed?: number = 0;
 	fullName: string;
 	mailAliases: string[];
+	emailAddress?: string = ""
+	telefonNumber?: string = ""
 	constructor() { }
 }
 export class UsersImport {
@@ -576,8 +578,8 @@ export class Parent extends User {
 
 export class PTMEvent {
 	id: number = 0
-	start: Date | string
-	end: Date | string
+	start: Date
+	end: Date
 	parent: Parent
 	student: User
 }

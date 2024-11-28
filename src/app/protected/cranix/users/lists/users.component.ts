@@ -20,7 +20,23 @@ import { SystemService } from 'src/app/services/system.service';
   templateUrl: './users.component.html'
 })
 export class UsersComponent implements OnInit {
-  objectKeys: string[] = [];
+  objectKeys: string[] = [
+    "uid",
+    "uuid",
+    "surName",
+    "givenName",
+    "birthDay",
+    "password",
+    "role",
+    "mustChange",
+    "classes",
+    "msQuota",
+    "fsQuota",
+    "msQuotaUsed",
+    "fsQuotaUsed",
+    "created",
+    "modified"
+  ];
   displayedColumns: string[] = ['uid', 'uuid', 'givenName', 'surName', 'role', 'classes', 'actions'];
   columnDefs = [];
   defaultColDef = {};
@@ -38,7 +54,6 @@ export class UsersComponent implements OnInit {
     private storage: Storage
   ) {
     this.context = { componentParent: this };
-    this.objectKeys = Object.getOwnPropertyNames(new User());
     this.createColumnDefs();
     this.defaultColDef = {
       resizable: true,
@@ -48,11 +63,13 @@ export class UsersComponent implements OnInit {
     }
     this.systemService.getSystemConfigValue("DEFAULT_MUST_CHANGE").subscribe(
       (val) => {
-        if( val == "no"){
-        this.defaultMustChange = false
-      }}
+        if (val == "no") {
+          this.defaultMustChange = false
+        }
+      }
     )
   }
+
   async ngOnInit() {
     this.storage.get('UsersPage.displayedColumns').then((val) => {
       let myArray = JSON.parse(val);
@@ -66,7 +83,6 @@ export class UsersComponent implements OnInit {
     }
     this.rowData = this.objectService.allObjects['user']
   }
-
 
   createColumnDefs() {
     let columnDefs = [];
@@ -101,6 +117,7 @@ export class UsersComponent implements OnInit {
       columnDefs.push(col);
     }
     this.columnDefs = columnDefs;
+    console.log(this.columnDefs)
   }
   onGridReady(params) {
     this.gridApi = params.api;
@@ -124,17 +141,16 @@ export class UsersComponent implements OnInit {
       this.objectService.selection = this.objectService.selection.filter(obj => obj.id != obj.id)
     }
   }
+
   onQuickFilterChanged(quickFilter) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
     this.gridApi.setGridOption('quickFilterText', filter);
   }
-  public redirectToDelete = (user: User) => {
+
+  redirectToDelete = (user: User) => {
     this.objectService.deleteObjectDialog(user, 'user', '')
   }
-  /**
- * Open the actions menu with the selected object ids.
- * @param ev
- */
+
   async openActions(ev: any, object: User) {
     if (object) {
       this.objectService.selectedIds.push(object.id)
@@ -194,7 +210,8 @@ export class UsersComponent implements OnInit {
       componentProps: {
         objectType: "user",
         objectAction: action,
-        object: user
+        object: user,
+        objectKeys: this.objectKeys
       },
       animated: true,
       showBackdrop: true

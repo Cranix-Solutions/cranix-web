@@ -5,6 +5,8 @@ import { isDevMode } from '@angular/core';
 @Injectable()
 export class UtilsService {
 
+
+        double = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09']
         public okBrowser: boolean = true;
         public actMdList;
         constructor() {
@@ -34,7 +36,7 @@ export class UtilsService {
                 //console.log("From utils: " + url);
                 //return "https://admin.cephalix.eu/api"
                 //return "https://remscheid.cephalix.eu/api"
-                return "https://test-cephalix.cephalix.eu/api"
+                //return "https://test-cephalix.cephalix.eu/api"
                 //return "https://192.168.122.100:444/api"
                 return "https://192.168.178.127:444/api"
                 return url;
@@ -71,6 +73,29 @@ export class UtilsService {
                 return '';
         }
 
+
+        getDouble(num: number) {
+                if (this.double[num]) return this.double[num]
+                return num
+        }
+        toIonISOString(dt: Date | undefined) {
+                if (dt) {
+                        return dt.getFullYear() + "-" +
+                                this.getDouble(dt.getMonth() + 1) + "-" +
+                                this.getDouble(dt.getDate()) + "T" +
+                                this.getDouble(dt.getHours()) + ":" +
+                                this.getDouble(dt.getMinutes())
+                }
+                return ""
+        }
+        toIonDate(dt: Date | undefined) {
+                if (dt) {
+                        return dt.getFullYear() + "-" +
+                                this.getDouble(dt.getMonth() + 1) + "-" +
+                                this.getDouble(dt.getDate())
+                }
+                return ""
+        }
         /**
          * set cookie
          * @param {string} name

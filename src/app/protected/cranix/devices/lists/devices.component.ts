@@ -24,6 +24,7 @@ import { ManageDhcpComponent } from 'src/app/shared/actions/manage-dhcp/manage-d
 export class DevicesComponent implements OnInit {
   selectedRoom;
   objectKeys: string[] = [
+    "roomId",
     "name",
     "ip",
     "mac",
@@ -35,7 +36,8 @@ export class DevicesComponent implements OnInit {
     "serial",
     "inventary",
     "locality",
-    "roomId"
+    "created",
+    "modified"
   ]
   displayedColumns: string[] = ['name', 'mac', 'ip', 'hwconfId', 'roomId'];
   sortableColumns: string[] = ['name', 'mac', 'ip', 'hwconfId', 'roomId'];

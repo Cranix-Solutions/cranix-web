@@ -15,6 +15,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { CrxCalendar, Group, RecRule, Room } from 'src/app/shared/models/data-model';
 import { UsersService } from 'src/app/services/users.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'crx-calendar',
@@ -72,7 +73,6 @@ export class CalendarComponent implements OnInit {
   recurringUntil: string = ""
   isCalendarModalOpen: boolean = false
   isModalOpen: boolean = false
-  double = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09']
   rruleFrequents = [
     'YEARLY',
     'MONTHLY',
@@ -100,6 +100,7 @@ export class CalendarComponent implements OnInit {
     private el: ElementRef,
     private gestureCtrl: GestureController,
     private lanaguageS: LanguageService,
+    private utilsService: UtilsService,
     private userS: UsersService,
   ) {
     this.loadData()
@@ -192,20 +193,6 @@ export class CalendarComponent implements OnInit {
     }
     return false;
   }
-  getDouble(num: number) {
-    if (this.double[num]) return this.double[num]
-    return num
-  }
-  toIonISOString(dt: Date | undefined) {
-    if (dt) {
-      return dt.getFullYear() + "-" +
-        this.getDouble(dt.getMonth() + 1) + "-" +
-        this.getDouble(dt.getDate()) + "T" +
-        this.getDouble(dt.getHours()) + ":" +
-        this.getDouble(dt.getMinutes())
-    }
-    return ""
-  }
   isCalendarSelected(event: any) {
     //console.log(event)
     //If no selection everything is showed
@@ -222,21 +209,13 @@ export class CalendarComponent implements OnInit {
     if(this.eventFilter.rooms.includes(crxEvent.room)) return true;
     return false;
   }
-  toIonDate(dt: Date | undefined) {
-    if (dt) {
-      return dt.getFullYear() + "-" +
-        this.getDouble(dt.getMonth() + 1) + "-" +
-        this.getDouble(dt.getDate())
-    }
-    return ""
-  }
   adaptEventTimes() {
     if (this.selectedEvent.allDay) {
-      this.selectedEvent.start = this.toIonDate(new Date(this.selectedEvent.start))
-      this.selectedEvent.end = this.toIonDate(new Date(this.selectedEvent.end))
+      this.selectedEvent.start = this.utilsService.toIonDate(new Date(this.selectedEvent.start))
+      this.selectedEvent.end = this.utilsService.toIonDate(new Date(this.selectedEvent.end))
     } else {
-      this.selectedEvent.start = this.toIonISOString(new Date(this.selectedEvent.start))
-      this.selectedEvent.end = this.toIonISOString(new Date(this.selectedEvent.end))
+      this.selectedEvent.start = this.utilsService.toIonISOString(new Date(this.selectedEvent.start))
+      this.selectedEvent.end = this.utilsService.toIonISOString(new Date(this.selectedEvent.end))
     }
   }
   handleDateSelect(arg: DateSelectArg) {
@@ -272,7 +251,7 @@ export class CalendarComponent implements OnInit {
       if( val.rrule && val.rrule != "") {
         console.log(this.selectedEvent)
         let rule = RRule.fromString(val.rrule)
-        this.recurringUntil = this.toIonDate(rule.options.until)
+        this.recurringUntil = this.utilsService.toIonDate(rule.options.until)
         console.log(rule.options)
         this.rRule = rule.options
         /*this.rRule.bymonth = rule.options.bymonth

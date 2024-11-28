@@ -1,6 +1,6 @@
 <form #editForm="ngForm">
   <ion-header translucent>
-    <ion-toolbar>
+    <ion-toolbar  color="primary">
       <ion-title *ngIf="!authService.isMD()">{{ objectActionTitle | translate }}</ion-title>
       <ion-label *ngIf="authService.isMD()">{{ objectActionTitle | translate }}</ion-label>
       <ion-buttons slot="end">

@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
-import { PtmsService } from 'src/app/services/ptms.service';
-import { ticketMenu } from 'src/app/shared/actions/objects.menus';
+import { ParentsService } from 'src/app/services/parents.service';
 import { ParentTeacherMeeting, PTMTeacherInRoom, Room } from 'src/app/shared/models/data-model';
 
 @Component({
@@ -23,7 +22,7 @@ export class PtmsComponent {
   constructor(
     public authService: AuthenticationService,
     private objectService: GenericObjectService,
-    public ptmService: PtmsService
+    public ptmService: ParentsService
   ) {
     this.now = new Date()
     this.readDatas()
