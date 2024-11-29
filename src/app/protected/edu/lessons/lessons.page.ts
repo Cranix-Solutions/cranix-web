@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 //own modules
 import { ChallengesService } from 'src/app/services/challenges.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
@@ -10,6 +11,7 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 export class LessonsPage{
 
     constructor(
+      public translateService: TranslateService,
       public challengesService: ChallengesService,
       public authS: AuthenticationService
     ){

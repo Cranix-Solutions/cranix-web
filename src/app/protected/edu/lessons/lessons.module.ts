@@ -25,26 +25,26 @@ const routes: Routes = [
     children: [
       {
         path: 'ptms',
-        component:PtmsComponent
+        component: PtmsComponent
       },
       {
         path: 'tests',
         canDeactivate: [ChallengeCanDeactivate],
-        component:TestsComponent
+        component: TestsComponent
       },
       {
         path: 'challenges',
         canDeactivate: [ChallengeCanDeactivate],
-        component:ChallengesComponent
+        component: ChallengesComponent
       },
       {
         path: 'roomcontrol',
-        component:RoomControlComponent
+        component: RoomControlComponent
       },
-      
+
       {
         path: 'mypositive',
-        component:MypositiveComponent
+        component: MypositiveComponent
       },
       {
         path: '',
@@ -70,8 +70,10 @@ const routes: Routes = [
     ChallengesComponent,
     RoomDevComponent,
     MypositiveComponent,
-    TestsComponent,
-    PtmsComponent
-  ]
+    PtmsComponent,
+    TestsComponent
+  ],
+  providers:
+    [ChallengeCanDeactivate]
 })
-export class LessonsModule {}
+export class LessonsModule { }
