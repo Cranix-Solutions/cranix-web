@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 //own modules
 import { UtilsService } from './utils.service';
@@ -57,4 +57,14 @@ export class CrxCalendarService {
     console.log(url)
     return this.http.get<CrxCalendar>(url, { headers: this.authService.headers })
   }
+
+  importTimeTable(imp: FormData) {
+		let url = this.hostname + `/calendar/import`;
+		const headers = new HttpHeaders({
+			'Accept': "application/json",
+			'Authorization': "Bearer " + this.authService.session.token
+		});
+		console.log(url)
+		return this.http.post<ServerResponse>(url, imp, { headers: headers });
+	}
 }

@@ -44,6 +44,11 @@ export class CalendarComponent implements OnInit {
       addEvent: {
         text: "+",
         click: this.handleDateSelect.bind(this)
+      },
+      importTimetable: {
+        text: "Import",
+        hint: this.lanaguageS.trans('Import timetable from WebUntis'),
+        click: this.importTimetable.bind(this)
       }
     },
     headerToolbar: {
@@ -73,6 +78,9 @@ export class CalendarComponent implements OnInit {
   recurringUntil: string = ""
   isCalendarModalOpen: boolean = false
   isModalOpen: boolean = false
+  isImportModalOpen: boolean = false
+  fileToUpload: File = null
+  importTimeTableHash = {}
   rruleFrequents = [
     'YEARLY',
     'MONTHLY',
@@ -119,6 +127,13 @@ export class CalendarComponent implements OnInit {
         left: '',
         right: '',
         center: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+      }
+    }
+    if( this.authService.isAllowed('calendar.manage')) {
+      this.calendarOptions.headerToolbar =  {
+        left: 'prev,next today selectCalendar',
+      center: 'title',
+      right: 'multiMonthYear,dayGridMonth,timeGridWeek,timeGridDay,listWeek addEvent importTimetable'
       }
     }
   }
@@ -329,6 +344,35 @@ export class CalendarComponent implements OnInit {
       (val) => {
         this.loadData()
         this.objectService.responseMessage(val)
+      }
+    )
+  }
+
+  importTimetable(){
+    this.fileToUpload = null
+    this.importTimeTableHash['start'] = ""
+    this.importTimeTableHash['end'] = ""
+    this.isImportModalOpen = true
+  }
+
+  onFilesAdded(event) {
+    this.fileToUpload = event.target.files.item(0);
+  }
+
+  doImportTimetable(){
+    let formData: FormData = new FormData();
+    formData.append('file', this.fileToUpload, this.fileToUpload.name);
+    console.log(this.importTimeTableHash)
+    //TODO convert date to UTC time 
+    let start = this.importTimeTableHash['start'].replace(/-/g,'') + "T000000Z";
+    let end = this.importTimeTableHash['end'].replace(/-/g,'') + "T000000Z";
+    formData.append('start', start);
+    formData.append('end', end);
+    this.objectService.requestSent()
+    this.calendarS.importTimeTable(formData).subscribe(
+      (val) => {
+        this.objectService.responseMessage(val)
+        this.isImportModalOpen = false
       }
     )
   }
