@@ -293,35 +293,37 @@
     </ion-modal>
     <ion-modal #importModal [isOpen]="isImportModalOpen">
         <ng-template>
-            <ion-header color="primary">
-                <ion-toolbar color="primary">
-                    <ion-title>{{'Import timetable from WebUntis'|translate}}</ion-title>
-                    <ion-buttons slot="end">
-                        <ion-button fill="clear" size="small" (click)="doImportTimetable()">
-                            <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
-                        </ion-button>
-                        <ion-button fill="clear" size="small" (click)="isImportModalOpen = false">
-                            <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
-                        </ion-button>
-                    </ion-buttons>
-                </ion-toolbar>
-            </ion-header>
-            <ion-content>
-                <ion-list>
-                    <ion-item>
-                        <ion-label>{{'From'|translate}}*</ion-label>
-                        <input [(ngModel)]="importTimeTableHash.start" name="startTimeTable" type="date" required />
-                    </ion-item>
-                    <ion-item>
-                        <ion-label>{{'Until'|translate}}*</ion-label>
-                        <input [(ngModel)]="importTimeTableHash.end" name="endTimeTable" type="date" required />
-                    </ion-item>
-                    <ion-item>
-                        <ion-input type="file" (change)="onFilesAdded($event)">
-                        </ion-input>
-                    </ion-item>
-                </ion-list>
-            </ion-content>
+            <form #importForm="ngForm">
+                <ion-header color="primary">
+                    <ion-toolbar color="primary">
+                        <ion-title>{{'Import timetable from WebUntis'|translate}}</ion-title>
+                        <ion-buttons slot="end">
+                            <ion-button fill="clear" size="small" (click)="doImportTimetable()" [disabled]="!importForm.valid">
+                                <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+                            </ion-button>
+                            <ion-button fill="clear" size="small" (click)="isImportModalOpen = false">
+                                <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+                            </ion-button>
+                        </ion-buttons>
+                    </ion-toolbar>
+                </ion-header>
+                <ion-content [fullscreen]="true">
+                    <ion-list>
+                        <ion-item>
+                            <ion-label>{{'From'|translate}}*</ion-label>
+                            <input [(ngModel)]="importTimeTableHash.start" name="startTimeTable" type="date" required />
+                        </ion-item>
+                        <ion-item>
+                            <ion-label>{{'Until'|translate}}*</ion-label>
+                            <input [(ngModel)]="importTimeTableHash.end" name="endTimeTable" type="date" required />
+                        </ion-item>
+                        <ion-item>
+                            <ion-input type="file" (change)="onFilesAdded($event)" required>
+                            </ion-input>
+                        </ion-item>
+                    </ion-list>
+                </ion-content>
+            </form>
         </ng-template>
     </ion-modal>
 </ion-content>

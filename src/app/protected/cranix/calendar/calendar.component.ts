@@ -142,9 +142,9 @@ export class CalendarComponent implements OnInit {
     this.isCalendarModalOpen = true
   }
   loadData(): void {
-    this.calendarS.get().subscribe((val) => {
+    this.calendarS.get().subscribe((val1) => {
       let tmp: CrxCalendar[]= []
-      for(let event of val){
+      for(let event of val1){
         if(event.rrule == "") {
           delete(event.rrule)
         }
@@ -366,11 +366,14 @@ export class CalendarComponent implements OnInit {
     //TODO convert date to UTC time 
     let start = this.importTimeTableHash['start'].replace(/-/g,'') + "T000000Z";
     let end = this.importTimeTableHash['end'].replace(/-/g,'') + "T000000Z";
+
     formData.append('start', start);
     formData.append('end', end);
+    this.fileToUpload = null
     this.objectService.requestSent()
     this.calendarS.importTimeTable(formData).subscribe(
       (val) => {
+        this.loadData()
         this.objectService.responseMessage(val)
         this.isImportModalOpen = false
       }

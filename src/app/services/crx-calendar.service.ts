@@ -42,6 +42,9 @@ export class CrxCalendarService {
 
   get() {
     let url = this.hostname + "/calendar"
+    if(this.authService.isAllowed('calendar.manage')) {
+      url = this.hostname + "/calendar/all"
+    }
     console.log(url)
     return this.http.get<CrxCalendar[]>(url, { headers: this.authService.headers })
   }
