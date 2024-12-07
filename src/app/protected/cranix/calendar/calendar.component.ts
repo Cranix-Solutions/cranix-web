@@ -317,6 +317,8 @@ export class CalendarComponent implements OnInit {
       }
       let rule = new RRule(this.rRule)
       this.selectedEvent['rrule'] = rule.toString()
+      delete(this.selectedEvent.start)
+      delete(this.selectedEvent.end)
       this.recurringUntil = ""
       this.eventRecurring = false
       this.rRule = new RecRule()
