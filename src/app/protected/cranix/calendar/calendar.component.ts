@@ -69,7 +69,7 @@ export class CalendarComponent implements OnInit {
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
     eventChange: this.handleEventChange.bind(this),
-    editable: true,
+    editable: this.authService.isOneOfAllowed(['calendar.manage','calendar.use']),
     selectable: true,
     weekNumbers: true
   };
@@ -264,25 +264,19 @@ export class CalendarComponent implements OnInit {
     this.calendarS.getById(arg.event.id).subscribe((val) => {
       this.selectedEvent = val
       if( val.rrule && val.rrule != "") {
-        console.log(this.selectedEvent)
         this.selectedEvent.start = arg.event.startStr
         this.selectedEvent.end = arg.event.endStr
         let rule = RRule.fromString(val.rrule)
         this.recurringUntil = this.utilsService.toIonDate(rule.options.until)
+        console.log(this.selectedEvent)
         console.log(rule.options)
         this.rRule = rule.options
-        /*this.rRule.bymonth = rule.options.bymonth
-        this.rRule.byweekday = rule.options.byweekday
-        this.rRule.dtstart = rule.options.dtstart
-        this.rRule.freq = rule.options.freq
-        this.rRule.interval = rule.options.interval
-        this.rRule.until = rule.options.until*/
         this.eventRecurring = true
       } else {
         this.rRule = new RecRule()
         this.eventRecurring = false
-        this.adaptEventTimes()
       }
+      this.adaptEventTimes()
       this.setOpen(true)
     })
     console.log(arg.event.id)
@@ -306,7 +300,14 @@ export class CalendarComponent implements OnInit {
     this.selectedEvent.start = new Date(this.selectedEvent.start)
     this.selectedEvent.end = new Date(this.selectedEvent.end)
     if (this.eventRecurring) {
-      this.rRule.dtstart = this.selectedEvent.start
+      if(!this.selectedEvent.id) {
+        this.rRule.dtstart = this.selectedEvent.start
+      } else {
+        this.rRule.dtstart.setHours(this.selectedEvent.start.getHours())
+        this.rRule.dtstart.setMinutes(this.selectedEvent.start.getMinutes())
+        delete(this.rRule.byminute)
+        delete(this.rRule.byhour)
+      }
       console.log(this.rRule)
       if(this.rRule.count == 0) {
         delete(this.rRule.count)
