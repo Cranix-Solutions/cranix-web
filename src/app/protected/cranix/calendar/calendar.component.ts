@@ -265,6 +265,8 @@ export class CalendarComponent implements OnInit {
       this.selectedEvent = val
       if( val.rrule && val.rrule != "") {
         console.log(this.selectedEvent)
+        this.selectedEvent.start = arg.event.startStr
+        this.selectedEvent.end = arg.event.endStr
         let rule = RRule.fromString(val.rrule)
         this.recurringUntil = this.utilsService.toIonDate(rule.options.until)
         console.log(rule.options)
@@ -279,8 +281,8 @@ export class CalendarComponent implements OnInit {
       } else {
         this.rRule = new RecRule()
         this.eventRecurring = false
+        this.adaptEventTimes()
       }
-      this.adaptEventTimes()
       this.setOpen(true)
     })
     console.log(arg.event.id)
@@ -362,10 +364,8 @@ export class CalendarComponent implements OnInit {
   doImportTimetable(){
     let formData: FormData = new FormData();
     formData.append('file', this.fileToUpload, this.fileToUpload.name);
-    console.log(this.importTimeTableHash)
-    //TODO convert date to UTC time 
-    let start = this.importTimeTableHash['start'].replace(/-/g,'') + "T000000Z";
-    let end = this.importTimeTableHash['end'].replace(/-/g,'') + "T000000Z";
+    let start = this.importTimeTableHash['start'].replace(/-/g,'');
+    let end = this.importTimeTableHash['end'].replace(/-/g,'');
 
     formData.append('start', start);
     formData.append('end', end);

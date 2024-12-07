@@ -533,6 +533,7 @@ export class CrxCalendar {
 	modified: Date | string
 	uuid: string
 	allDay: boolean = false
+	editable: boolean = true
 	start: Date | string
 	end: Date | string
 	duration: number
@@ -550,13 +551,15 @@ export class CrxCalendar {
 }
 
 export class RecRule {
-    freq: Frequency = RRule.WEEKLY
-    interval: number = 1
-    byweekday: any[] = []
-    bymonth: any[] = []
-    dtstart: Date = new Date()
-    count: number = 0
-    until: Date
+	freq: Frequency = RRule.WEEKLY
+	interval: number = 1
+	byweekday: any[] = []
+	bymonth: any[] = []
+	byhour: any = "10"
+	byminute: any = "00"
+	dtstart: Date = new Date()
+	count: number = 0
+	until: Date
 }
 
 export class ParentRequest {
