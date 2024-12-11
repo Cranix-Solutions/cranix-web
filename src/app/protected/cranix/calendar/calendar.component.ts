@@ -69,7 +69,7 @@ export class CalendarComponent implements OnInit {
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
     eventChange: this.handleEventChange.bind(this),
-    editable: this.authService.isOneOfAllowed(['calendar.manage','calendar.use']),
+    editable: this.authService.isOneOfAllowed(['calendar.manage', 'calendar.use']),
     selectable: true,
     weekNumbers: true
   };
@@ -89,13 +89,13 @@ export class CalendarComponent implements OnInit {
     'HOURLY',
     'MINUTELY'
   ]
-  rruleDays = [ 'MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']
-  rruleMonths = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  rruleDays = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']
+  rruleMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
   rRule = new RecRule()
   myGroups: Group[]
   selectedEvent: CrxCalendar
   eventFilter = {
-    rooms:  [],
+    rooms: [],
     groups: [],
     showPrivate: false,
     showIndividual: false
@@ -118,22 +118,22 @@ export class CalendarComponent implements OnInit {
     console.log("CalendarComponent ngOnInit called")
     if (this.authService.isMD()) {
       this.initializeSwipeGesture();
-      this.calendarOptions.headerToolbar =  {
+      this.calendarOptions.headerToolbar = {
         left: 'today',
         center: 'title',
         right: 'selectCalendar addEvent'
       }
-      this.calendarOptions.footerToolbar =  {
+      this.calendarOptions.footerToolbar = {
         left: '',
         right: '',
         center: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
       }
     }
-    if( this.authService.isAllowed('calendar.manage')) {
-      this.calendarOptions.headerToolbar =  {
+    if (this.authService.isAllowed('calendar.manage')) {
+      this.calendarOptions.headerToolbar = {
         left: 'prev,next today selectCalendar',
-      center: 'title',
-      right: 'multiMonthYear,dayGridMonth,timeGridWeek,timeGridDay,listWeek addEvent importTimetable'
+        center: 'title',
+        right: 'multiMonthYear,dayGridMonth,timeGridWeek,timeGridDay,listWeek addEvent importTimetable'
       }
     }
   }
@@ -142,30 +142,43 @@ export class CalendarComponent implements OnInit {
     this.isCalendarModalOpen = true
   }
   loadData(): void {
-    this.calendarS.get().subscribe((val1) => {
-      let tmp: CrxCalendar[]= []
-      for(let event of val1){
-        if(event.rrule == "") {
-          delete(event.rrule)
+    if (this.authService.isAllowed('calendar.manage')) {
+      this.myGroups = this.objectService.allObjects['group']
+      this.eventFilter.groups = []
+      this.eventFilter.rooms = []
+      this.eventFilter.showIndividual = true
+      this.eventFilter.showPrivate = true
+      this.filterEvents(true)
+    } else {
+      this.calendarS.get().subscribe((val1) => {
+        let tmp: CrxCalendar[] = []
+        for (let event of val1) {
+          if (event.rrule == "") {
+            delete (event.rrule)
+          }
+          tmp.push(event)
         }
-        tmp.push(event)
-      }
-      this.events = tmp
-      console.log(this.events)
-    })
-    this.userS.getUsersGroups(this.authService.session.userId).subscribe(
-      (val) => { this.myGroups = val })
+        this.events = tmp
+        console.log(this.events)
+      })
+      this.eventFilter.groups = []
+      this.eventFilter.rooms = []
+      this.eventFilter.showIndividual = false
+      this.eventFilter.showPrivate = false
+      this.userS.getUsersGroups(this.authService.session.userId).subscribe(
+        (val) => { this.myGroups = val })
+    }
   }
 
-  filterEvents(doFilter: boolean){
+  filterEvents(doFilter: boolean) {
     this.isCalendarModalOpen = false
-    if(doFilter) {
+    if (doFilter) {
       console.log(this.eventFilter)
       this.calendarS.getFiltered(this.eventFilter).subscribe((val) => {
-        let tmp: CrxCalendar[]= []
-        for(let event of val){
-          if(event.rrule == "") {
-            delete(event.rrule)
+        let tmp: CrxCalendar[] = []
+        for (let event of val) {
+          if (event.rrule == "") {
+            delete (event.rrule)
           }
           tmp.push(event)
         }
@@ -173,11 +186,11 @@ export class CalendarComponent implements OnInit {
         console.log(this.events)
       })
     } else {
-      this.loadData()
       this.eventFilter.groups = []
       this.eventFilter.rooms = []
-      this.eventFilter.showIndividual = true
-      this.eventFilter.showPrivate = true
+      this.eventFilter.showIndividual = false
+      this.eventFilter.showPrivate = false
+      this.loadData()
     }
   }
   //Handle Swipe
@@ -211,7 +224,7 @@ export class CalendarComponent implements OnInit {
   isCalendarSelected(event: any) {
     //console.log(event)
     //If no selection everything is showed
-    if( this.eventFilter.groups.length == 0 && this.eventFilter.rooms.length == 0) return true;
+    if (this.eventFilter.groups.length == 0 && this.eventFilter.rooms.length == 0) return true;
     //Private and individual events are sowed everytime
     //event._def.extendedProps.groups
     //event._def.extendedProps.room
@@ -221,7 +234,7 @@ export class CalendarComponent implements OnInit {
     for (let a of crxEvent.groups) {
       if (this.eventFilter.groups.includes(a)) return true;
     }
-    if(this.eventFilter.rooms.includes(crxEvent.room)) return true;
+    if (this.eventFilter.rooms.includes(crxEvent.room)) return true;
     return false;
   }
   adaptEventTimes() {
@@ -236,8 +249,8 @@ export class CalendarComponent implements OnInit {
   handleDateSelect(arg: DateSelectArg) {
     let start = new Date()
     let end = new Date()
-    if( arg != null && arg.start != null ){
-      if(arg.start.getTime() < start.getTime()){
+    if (arg != null && arg.start != null) {
+      if (arg.start.getTime() < start.getTime()) {
         this.objectService.errorMessage("You can not create event in the past.")
         return
       }
@@ -254,7 +267,7 @@ export class CalendarComponent implements OnInit {
   }
   setOpen(open: boolean) {
     this.isModalOpen = open
-    if(!open) {
+    if (!open) {
       this.eventRecurring = false
     }
   }
@@ -263,7 +276,7 @@ export class CalendarComponent implements OnInit {
     this.addEditEventTitle = "Edit event"
     this.calendarS.getById(arg.event.id).subscribe((val) => {
       this.selectedEvent = val
-      if( val.rrule && val.rrule != "") {
+      if (val.rrule && val.rrule != "") {
         this.selectedEvent.start = arg.event.startStr
         this.selectedEvent.end = arg.event.endStr
         let rule = RRule.fromString(val.rrule)
@@ -300,25 +313,25 @@ export class CalendarComponent implements OnInit {
     this.selectedEvent.start = new Date(this.selectedEvent.start)
     this.selectedEvent.end = new Date(this.selectedEvent.end)
     if (this.eventRecurring) {
-      if(!this.selectedEvent.id) {
+      if (!this.selectedEvent.id) {
         this.rRule.dtstart = this.selectedEvent.start
       } else {
         this.rRule.dtstart.setHours(this.selectedEvent.start.getHours())
         this.rRule.dtstart.setMinutes(this.selectedEvent.start.getMinutes())
-        delete(this.rRule.byminute)
-        delete(this.rRule.byhour)
+        delete (this.rRule.byminute)
+        delete (this.rRule.byhour)
       }
       console.log(this.rRule)
-      if(this.rRule.count == 0) {
-        delete(this.rRule.count)
+      if (this.rRule.count == 0) {
+        delete (this.rRule.count)
       }
-      if(this.recurringUntil != "") {
+      if (this.recurringUntil != "") {
         this.rRule.until = new Date(this.recurringUntil)
       }
       let rule = new RRule(this.rRule)
       this.selectedEvent['rrule'] = rule.toString()
-      delete(this.selectedEvent.start)
-      delete(this.selectedEvent.end)
+      delete (this.selectedEvent.start)
+      delete (this.selectedEvent.end)
       this.recurringUntil = ""
       this.eventRecurring = false
       this.rRule = new RecRule()
@@ -342,7 +355,7 @@ export class CalendarComponent implements OnInit {
     }
   }
 
-  deleteEvent(){
+  deleteEvent() {
     this.setOpen(false)
     this.objectService.requestSent()
     this.calendarS.delete(this.selectedEvent).subscribe(
@@ -353,7 +366,7 @@ export class CalendarComponent implements OnInit {
     )
   }
 
-  importTimetable(){
+  importTimetable() {
     this.fileToUpload = null
     this.importTimeTableHash['start'] = ""
     this.importTimeTableHash['end'] = ""
@@ -364,11 +377,12 @@ export class CalendarComponent implements OnInit {
     this.fileToUpload = event.target.files.item(0);
   }
 
-  doImportTimetable(){
+  doImportTimetable(importForm) {
+    importForm.form.disable()
     let formData: FormData = new FormData();
     formData.append('file', this.fileToUpload, this.fileToUpload.name);
-    let start = this.importTimeTableHash['start'].replace(/-/g,'');
-    let end = this.importTimeTableHash['end'].replace(/-/g,'');
+    let start = this.importTimeTableHash['start'].replace(/-/g, '');
+    let end = this.importTimeTableHash['end'].replace(/-/g, '');
 
     formData.append('start', start);
     formData.append('end', end);

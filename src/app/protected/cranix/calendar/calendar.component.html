@@ -215,6 +215,9 @@
                             <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
                         </ion-button>
                         <ion-button fill="clear" size="small" (click)="filterEvents(false)">
+                            <ion-icon slot="icon-only" color="warning" name="trash"></ion-icon>
+                        </ion-button>
+                        <ion-button fill="clear" size="small" (click)="isCalendarModalOpen = false">
                             <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
                         </ion-button>
                     </ion-buttons>
@@ -298,7 +301,7 @@
                     <ion-toolbar color="primary">
                         <ion-title>{{'Import timetable from WebUntis'|translate}}</ion-title>
                         <ion-buttons slot="end">
-                            <ion-button fill="clear" size="small" (click)="doImportTimetable()" [disabled]="!importForm.valid">
+                            <ion-button fill="clear" size="small" (click)="doImportTimetable(importForm)" [disabled]="!importForm.valid">
                                 <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
                             </ion-button>
                             <ion-button fill="clear" size="small" (click)="isImportModalOpen = false">
