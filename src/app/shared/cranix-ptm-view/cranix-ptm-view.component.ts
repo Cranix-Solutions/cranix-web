@@ -5,6 +5,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { ParentsService } from 'src/app/services/parents.service';
 import { ICellRendererAngularComp } from "ag-grid-angular";
 import { UtilsService } from 'src/app/services/utils.service';
+import { EventRenderer } from 'src/app/pipes/ag-event-renderer.ts';
 
 @Component({
   selector: 'cranix-ptm-view',
@@ -127,38 +128,5 @@ export class CranixPtmViewComponent implements OnInit {
 
   cancelEvent(event: PTMEvent) {
     console.log(event)
-  }
-}
-
-@Component({
-  selector: 'event-renderer',
-  styleUrl: './cranix-ptm-view.component.css',
-  template: `@if(event.parent){
-    <ion-button fill="clear" size="small" (click)="cancel()">
-      <ion-icon name="man-outline" color="danger"></ion-icon>
-    </ion-button>
-  }
-  @else
-  {
-    <ion-button fill="clear" size="small" (click)="register()">
-      <ion-icon name="pencil-outline" color="success"></ion-icon>
-    </ion-button>
-  }`
-})
-export class EventRenderer implements ICellRendererAngularComp {
-  public event: PTMEvent;
-  public context
-  agInit(params: any): void {
-    this.context = params.context.componentParent
-    this.event = this.context.events[params.value];
-  }
-  register() {
-    this.context.registerEvent(this.event)
-  }
-  cancel() {
-    this.context.cancelEvent(this.event)
-  }
-  refresh(params: any): boolean {
-    return true;
   }
 }
