@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateService  } from '@ngx-translate/core';
+import { IonicSelectableHeaderTemplateDirective } from 'ionic-selectable'
 
 import { CalendarComponent } from './calendar.component';
 import { CanActivateViaAcls } from 'src/app/services/auth-guard.service';
@@ -22,6 +23,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FullCalendarModule,
+    IonicSelectableHeaderTemplateDirective,
     RouterModule.forChild(routes),
     CranixSharedModule
   ],

@@ -19,11 +19,11 @@
         </ion-fab-button>
     </ion-fab -->
     }
-    <ion-modal #addEditEventModal [isOpen]="isModalOpen">
+    <ion-modal #addEditEventModal [isOpen]="isModalOpen" (didDismiss)="isModalOpen = false">
         <ng-template>
             @if(selectedEvent){
             <form #addEditEventForm="ngForm">
-                <ion-header color="primary">
+                <ion-header>
                     <ion-toolbar color="primary">
                         <ion-title>{{addEditEventTitle|translate}}</ion-title>
                         <ion-buttons slot="end">
@@ -55,10 +55,10 @@
                             <ion-input [(ngModel)]="selectedEvent.description" name="description" type="text-area"
                                 labelPlacement="fixed" label="{{'description'|translate}}"></ion-input>
                         </ion-item>
-                        <!-- ion-item>
+                        <ion-item>
                             <ion-input [(ngModel)]="selectedEvent.location" name="location" type="text"
                                 labelPlacement="fixed" label="{{'location'|translate}}"></ion-input>
-                        </ion-item -->
+                        </ion-item>
                         <ion-item>
                             <ion-toggle [(ngModel)]="selectedEvent.allDay" name="allDay" labelPlacement="start"
                                 (ionChange)="adaptEventTimes()">{{'allDay'|translate}}</ion-toggle>
@@ -90,8 +90,8 @@
                                 [isMultiple]="true" [(ngModel)]="selectedEvent.groups"
                                 [ngModelOptions]="{standalone: true}" [items]="myGroups" [canSearch]="true">
                                 <ng-template ionicSelectableHeaderTemplate>
-                                    <ion-header color="primary">
-                                        <ion-toolbar>
+                                    <ion-header>
+                                        <ion-toolbar color="primary">
                                             <ion-title>
                                                 {{ "Select groups for the event" | translate }}
                                             </ion-title>
@@ -117,8 +117,8 @@
                                 [ngModelOptions]="{standalone: true}" [items]="objectService.allObjects['user']"
                                 [canSearch]="true">
                                 <ng-template ionicSelectableHeaderTemplate>
-                                    <ion-header color="primary">
-                                        <ion-toolbar>
+                                    <ion-header>
+                                        <ion-toolbar color="primary">
                                             <ion-title>
                                                 {{ "Select users for the event" | translate }}
                                             </ion-title>
@@ -141,11 +141,11 @@
                             <ion-label>{{'Select room for the event' | translate}}</ion-label>
                             <ionic-selectable #ionicSelectRoom itemValueField="id" itemTextField="description"
                                 [isMultiple]="false" [(ngModel)]="selectedEvent.room"
-                                [ngModelOptions]="{standalone: true}" [items]="objectService.allObjects['room']"
+                                [ngModelOptions]="{standalone: true}" [items]="roomsForEvents"
                                 [canSearch]="true">
                                 <ng-template ionicSelectableHeaderTemplate>
-                                    <ion-header color="primary">
-                                        <ion-toolbar>
+                                    <ion-header>
+                                        <ion-toolbar color="primary">
                                             <ion-title>
                                                 {{ "Select room for the event" | translate }}
                                             </ion-title>
@@ -205,9 +205,9 @@
             }
         </ng-template>
     </ion-modal>
-    <ion-modal #selectCalendar [isOpen]="isCalendarModalOpen">
+    <ion-modal #selectCalendar [isOpen]="isCalendarModalOpen" (didDismiss)="isCalendarModalOpen = false">
         <ng-template>
-            <ion-header color="primary">
+            <ion-header>
                 <ion-toolbar color="primary">
                     <ion-title>{{'Select Calendars to show'|translate}}</ion-title>
                     <ion-buttons slot="end">
@@ -244,8 +244,8 @@
                             [isMultiple]="true" [(ngModel)]="eventFilter.groups" [ngModelOptions]="{standalone: true}"
                             [items]="myGroups" [canSearch]="true">
                             <ng-template ionicSelectableHeaderTemplate>
-                                <ion-header color="primary">
-                                    <ion-toolbar>
+                                <ion-header>
+                                    <ion-toolbar color="primary">
                                         <ion-title>
                                             {{ "Select groups calendars to show" | translate }}
                                         </ion-title>
@@ -268,10 +268,10 @@
                         <ion-label>{{'Select room calendars' | translate}}</ion-label>
                         <ionic-selectable #ionicSelectUsers itemValueField="id" itemTextField="description"
                             [isMultiple]="true" [(ngModel)]="eventFilter.rooms" [ngModelOptions]="{standalone: true}"
-                            [items]="objectService.allObjects['room']" [canSearch]="true">
+                            [items]="roomsForEvents" [canSearch]="true">
                             <ng-template ionicSelectableHeaderTemplate>
-                                <ion-header color="primary">
-                                    <ion-toolbar>
+                                <ion-header>
+                                    <ion-toolbar color="primary">
                                         <ion-title>
                                             {{ "Select room calendars to show" | translate }}
                                         </ion-title>
@@ -294,10 +294,10 @@
             </ion-content>
         </ng-template>
     </ion-modal>
-    <ion-modal #importModal [isOpen]="isImportModalOpen">
+    <ion-modal #importModal [isOpen]="isImportModalOpen" (didDismiss)="isImportModalOpen = false">
         <ng-template>
             <form #importForm="ngForm">
-                <ion-header color="primary">
+                <ion-header>
                     <ion-toolbar color="primary">
                         <ion-title>{{'Import timetable from WebUntis'|translate}}</ion-title>
                         <ion-buttons slot="end">

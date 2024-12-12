@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { GestureController } from '@ionic/angular';
-import { CalendarOptions, DateSelectArg, EventChangeArg, EventClickArg, EventSourceInput } from '@fullcalendar/core';
+import { CalendarOptions, DateSelectArg, EventChangeArg, EventClickArg } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import multiMonthPlugin from '@fullcalendar/multimonth'
@@ -93,6 +93,7 @@ export class CalendarComponent implements OnInit {
   rruleMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
   rRule = new RecRule()
   myGroups: Group[]
+  roomsForEvents: Room[] = []
   selectedEvent: CrxCalendar
   eventFilter = {
     rooms: [],
@@ -111,6 +112,19 @@ export class CalendarComponent implements OnInit {
     private utilsService: UtilsService,
     private userS: UsersService,
   ) {
+    console.log("CalendarComponent constructor called")
+    if (this.authService.isAllowed('calendar.manage')) {
+    } else {
+
+    }
+    if (this.roomsForEvents.length == 0) {
+      for (let room of this.objectService.allObjects['room']) {
+        if (room.roomType == 'AdHocAccess' || room.roomType == 'technicalRoom') {
+          continue
+        }
+        this.roomsForEvents.push(room)
+      }
+    }
     this.loadData()
   }
 
@@ -139,34 +153,44 @@ export class CalendarComponent implements OnInit {
   }
 
   selectCalendar() {
+    console.log("selectCalendar called")
     this.isCalendarModalOpen = true
+  }
+
+  resetFilter(my: boolean) {
+    this.eventFilter.groups = []
+    this.eventFilter.rooms = []
+    this.eventFilter.showIndividual = my
+    this.eventFilter.showPrivate = my
+
   }
   loadData(): void {
     if (this.authService.isAllowed('calendar.manage')) {
       this.myGroups = this.objectService.allObjects['group']
-      this.eventFilter.groups = []
-      this.eventFilter.rooms = []
-      this.eventFilter.showIndividual = true
-      this.eventFilter.showPrivate = true
+      this.resetFilter(true)
       this.filterEvents(true)
     } else {
-      this.calendarS.get().subscribe((val1) => {
-        let tmp: CrxCalendar[] = []
-        for (let event of val1) {
-          if (event.rrule == "") {
-            delete (event.rrule)
-          }
-          tmp.push(event)
-        }
-        this.events = tmp
-        console.log(this.events)
-      })
-      this.eventFilter.groups = []
-      this.eventFilter.rooms = []
-      this.eventFilter.showIndividual = false
-      this.eventFilter.showPrivate = false
       this.userS.getUsersGroups(this.authService.session.userId).subscribe(
-        (val) => { this.myGroups = val })
+        (val) => {
+          this.myGroups = val
+          if (this.myGroups.length > 10) {
+            this.resetFilter(true)
+            this.filterEvents(true)
+          } else {
+            this.calendarS.get().subscribe((val1) => {
+              let tmp: CrxCalendar[] = []
+              for (let event of val1) {
+                if (event.rrule == "") {
+                  delete (event.rrule)
+                }
+                tmp.push(event)
+              }
+              this.events = tmp
+              console.log(this.events)
+            })
+            this.resetFilter(false)
+          }
+        })
     }
   }
 
@@ -186,10 +210,6 @@ export class CalendarComponent implements OnInit {
         console.log(this.events)
       })
     } else {
-      this.eventFilter.groups = []
-      this.eventFilter.rooms = []
-      this.eventFilter.showIndividual = false
-      this.eventFilter.showPrivate = false
       this.loadData()
     }
   }
