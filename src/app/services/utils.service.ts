@@ -74,11 +74,12 @@ export class UtilsService {
         }
 
 
-        getDouble(num: number) {
+        public getDouble(num: number) {
                 if (this.double[num]) return this.double[num]
                 return num
         }
-        toIonISOString(dt: Date | undefined) {
+
+	public toIonISOString(dt: Date | undefined) {
                 if (dt) {
                         return dt.getFullYear() + "-" +
                                 this.getDouble(dt.getMonth() + 1) + "-" +
@@ -88,7 +89,8 @@ export class UtilsService {
                 }
                 return ""
         }
-        toIonDate(dt: Date | undefined) {
+
+	public toIonDate(dt: Date | undefined) {
                 if (dt) {
                         return dt.getFullYear() + "-" +
                                 this.getDouble(dt.getMonth() + 1) + "-" +

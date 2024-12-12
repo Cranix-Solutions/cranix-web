@@ -80,7 +80,8 @@ export class CalendarComponent implements OnInit {
   isModalOpen: boolean = false
   isImportModalOpen: boolean = false
   fileToUpload: File = null
-  importTimeTableHash = {}
+  importTimeTableStart = "" 
+  importTimeTableEnd = ""
   rruleFrequents = [
     'YEARLY',
     'MONTHLY',
@@ -388,8 +389,8 @@ export class CalendarComponent implements OnInit {
 
   importTimetable() {
     this.fileToUpload = null
-    this.importTimeTableHash['start'] = ""
-    this.importTimeTableHash['end'] = ""
+    this.importTimeTableStart = ""
+    this.importTimeTableEnd = ""
     this.isImportModalOpen = true
   }
 
@@ -401,8 +402,8 @@ export class CalendarComponent implements OnInit {
     importForm.form.disable()
     let formData: FormData = new FormData();
     formData.append('file', this.fileToUpload, this.fileToUpload.name);
-    let start = this.importTimeTableHash['start'].replace(/-/g, '');
-    let end = this.importTimeTableHash['end'].replace(/-/g, '');
+    let start = this.importTimeTableStart.replace(/-/g, '');
+    let end = this.importTimeTableEnd.replace(/-/g, '');
 
     formData.append('start', start);
     formData.append('end', end);

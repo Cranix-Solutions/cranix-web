@@ -314,11 +314,11 @@
                     <ion-list>
                         <ion-item>
                             <ion-label>{{'From'|translate}}*</ion-label>
-                            <input [(ngModel)]="importTimeTableHash.start" name="startTimeTable" type="date" required />
+                            <input [(ngModel)]="importTimeTableStart" name="startTimeTable" type="date" required />
                         </ion-item>
                         <ion-item>
                             <ion-label>{{'Until'|translate}}*</ion-label>
-                            <input [(ngModel)]="importTimeTableHash.end" name="endTimeTable" type="date" required />
+                            <input [(ngModel)]="importTimeTableEnd" name="endTimeTable" type="date" required />
                         </ion-item>
                         <ion-item>
                             <ion-input type="file" (change)="onFilesAdded($event)" required>
