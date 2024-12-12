@@ -1,9 +1,9 @@
 import {Component} from "@angular/core";
 import {ICellRendererAngularComp} from "ag-grid-angular";
+import {PTMEvent} from "src/app/shared/models/data-model";
 
 @Component({
   selector: 'event-renderer',
-  styleUrl: './cranix-ptm-view.component.css',
   template: `@if(event.parent){
     <ion-button fill="clear" size="small" (click)="cancel()">
       <ion-icon name="man-outline" color="danger"></ion-icon>
