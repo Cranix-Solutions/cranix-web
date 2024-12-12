@@ -5,7 +5,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { ParentsService } from 'src/app/services/parents.service';
 import { ICellRendererAngularComp } from "ag-grid-angular";
 import { UtilsService } from 'src/app/services/utils.service';
-import { EventRenderer } from 'src/app/pipes/ag-event-renderer.ts';
+import { EventRenderer } from 'src/app/pipes/ag-event-renderer';
 
 @Component({
   selector: 'cranix-ptm-view',
