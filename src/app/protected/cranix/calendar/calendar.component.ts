@@ -110,8 +110,8 @@ export class CalendarComponent implements OnInit {
     private el: ElementRef,
     private gestureCtrl: GestureController,
     private lanaguageS: LanguageService,
-    private utilsService: UtilsService,
     private userS: UsersService,
+    private utilsService: UtilsService,
   ) {
     console.log("CalendarComponent constructor called")
     if (this.authService.isAllowed('calendar.manage')) {
