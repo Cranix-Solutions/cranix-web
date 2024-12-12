@@ -129,4 +129,7 @@ export class CranixPtmViewComponent implements OnInit {
   cancelEvent(event: PTMEvent) {
     console.log(event)
   }
+
+  doRegister(){
+  }
 }

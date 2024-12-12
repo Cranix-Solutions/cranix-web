@@ -178,7 +178,7 @@ export class ManageParentsComponent {
     }
   }
 
-  onQuickFilterChanged(){
+  onQuickFilterChanged(quickFilter: string){
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
     this.gridApi.setGridOption('quickFilterText', filter);
   }
