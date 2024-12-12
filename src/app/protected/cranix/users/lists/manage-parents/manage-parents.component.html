@@ -85,7 +85,7 @@
             #{{gridApi.getDisplayedRowCount()}}
         </ion-label>
         <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('parentsFilter')"
-            id="usersFilter">
+            id="parentsFilter">
         </ion-input>
     </ion-item>
     <ion-buttons slot="end">
@@ -109,7 +109,7 @@
     <ng-template>
         <ion-header color="primary">
             <ion-toolbar color="primary">
-                <ion-title>{{addEditEventTitle|translate}}</ion-title>
+                <ion-title>{{'Register room'|translate}}</ion-title>
                 <ion-buttons slot="end">
                     <ion-button class="ion-no-margin" (click)="doRegisterRoom()">
                         <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>

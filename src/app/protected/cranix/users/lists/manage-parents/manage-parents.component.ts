@@ -28,7 +28,7 @@ export class ManageParentsComponent {
   requestKeys = ['parentId', 'givenName', 'surName', 'birthDay', 'className']
   gridApi
   columnDefs = []
-  defaultColumDefs = {
+  defaultColDef = {
     resizable: true,
     sortable: true,
     hide: false,
@@ -176,5 +176,10 @@ export class ManageParentsComponent {
         console.log(val.objectId)
       })
     }
+  }
+
+  onQuickFilterChanged(){
+    let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
+    this.gridApi.setGridOption('quickFilterText', filter);
   }
 }

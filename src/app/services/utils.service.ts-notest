@@ -5,6 +5,7 @@ import { isDevMode } from '@angular/core';
 @Injectable()
 export class UtilsService {
 
+	double = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09']
         public okBrowser: boolean = true;
         public actMdList;
         constructor() {
@@ -103,20 +104,6 @@ export class UtilsService {
                                 this.getDouble(dt.getDate())
                 }
                 return ""
-        }
-        /**
-         * set cookie
-         * @param {string} name
-         * @param {string} value
-         * @param {number} expireHours
-         * @param {string} path
-         */
-        public setCookie(name: string, value: string, expireHours: number, path: string = '') {
-                const d: Date = new Date();
-                d.setTime(d.getTime() + expireHours * 60 * 60 * 1000);
-                const expires = `expires=${d.toUTCString()}`;
-                const cpath = path ? `; path=${path}` : '';
-                document.cookie = `${name}=${value}; ${expires}${cpath}; SameSite=Lax`;
         }
 }
 
