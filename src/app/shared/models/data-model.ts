@@ -603,4 +603,6 @@ export class ParentTeacherMeeting {
 	startRegistration: Date | string
 	endRegistration: Date | string
 	ptmTeacherInRoomList: PTMTeacherInRoom[]
+	templateId?: number
+	classes: Group[] = []
 }

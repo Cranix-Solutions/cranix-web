@@ -4,7 +4,7 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { ParentsService } from 'src/app/services/parents.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { PTMTeacherInRoom, ParentTeacherMeeting, Room, TeachingSubject, User } from 'src/app/shared/models/data-model';
+import { Group, PTMTeacherInRoom, ParentTeacherMeeting, Room, TeachingSubject, User } from 'src/app/shared/models/data-model';
 import { EditBTNRenderer } from 'src/app/pipes/ag-edit-renderer'
 
 @Component({
@@ -15,14 +15,22 @@ import { EditBTNRenderer } from 'src/app/pipes/ag-edit-renderer'
 export class ManageParentsComponent {
   segment: string = "parents"
   rowData: any[] = []
+  nextPtms: ParentTeacherMeeting[] = []
+  formerPtms: ParentTeacherMeeting[] = []
   selectedPTM: ParentTeacherMeeting = new ParentTeacherMeeting()
+  isNewPtm: boolean = false;
   selectedParent: User
   selectedChildren: User[]
-  children: User[]
-  parents: User[]
+  children: User[] = []
+  parents: User[] = []
+  freeRooms: Room[] = []
+  freeTeachers: User[] = []
+  classes: Group[] = []
   isRegisterRoomOpen: boolean = false
   isRegisterEventOpen: boolean = false
   isAddEditParentOpen: boolean = false
+  isSelectPtmOpen: boolean = false
+  isDeletePtmOpen: boolean = false
   objectKeys = []
   parentKeys = ['givenName', 'surName', 'emailAddress', 'telefonNummer']
   requestKeys = ['parentId', 'givenName', 'surName', 'birthDay', 'className']
@@ -35,20 +43,27 @@ export class ManageParentsComponent {
     suppressHeaderMenuButton: true
   }
   context
-  freeRooms: Room[] = []
-  freeTeachers: User[] = []
   ptmTeacherInRoom: PTMTeacherInRoom
 
   constructor(
     public authService: AuthenticationService,
     public objectService: GenericObjectService,
     private languageS: LanguageService,
-    private parentsService: ParentsService,
-    private utilsService: UtilsService
+    private parentsService: ParentsService
   ) {
 
     this.context = { componentParent: this };
     this.loadData()
+    for (let o of this.objectService.allObjects['user']) {
+      if (o.role == 'students') {
+        this.children.push(o)
+      }
+    }
+    for (let g of this.objectService.allObjects['group']) {
+      if (g.groupType == 'class') {
+        this.classes.push(g)
+      }
+    }
   }
 
   onGridReady(params) {
@@ -67,10 +82,7 @@ export class ManageParentsComponent {
       case 'parents': {
         this.objectKeys = this.parentKeys
         this.createdColDef()
-        this.parentsService.getChildren().subscribe((val) => { this.children = val })
-        this.parentsService.getParents().subscribe((val) => {
-          this.rowData = val
-        })
+        this.parentsService.getParents().subscribe((val) => { this.rowData = val })
         break;
       }
       case 'requests': {
@@ -80,18 +92,28 @@ export class ManageParentsComponent {
         break;
       }
       case 'ptm': {
-        this.parentsService.getNextPTM().subscribe(
+        this.parentsService.get().subscribe(
           (val) => {
+            this.nextPtms = [];
+            this.nextPtms.push(new ParentTeacherMeeting())
+            this.nextPtms[0]['title'] = this.languageS.trans('New PTM')
             if (val) {
-              console.log(val)
-              this.selectedPTM = val
-              this.selectedPTM.start = this.utilsService.toIonISOString(new Date(val.start))
-              this.selectedPTM.end = this.utilsService.toIonISOString(new Date(val.end))
-              this.selectedPTM.startRegistration = this.utilsService.toIonISOString(new Date(val.startRegistration))
-              this.selectedPTM.endRegistration = this.utilsService.toIonISOString(new Date(val.endRegistration))
+              for (let o of val) {
+                this.nextPtms.push(o)
+              }
+              if (val.length == 1) {
+                this.selectedPTM = this.parentsService.adaptPtmTimes(val[0])
+                this.isNewPtm = true;
+              }
             } else {
               this.selectedPTM = new ParentTeacherMeeting();
             }
+            this.parentsService.getFormer().subscribe(
+              (val2) => {
+                this.formerPtms = val2
+                console.log("getFormer" + this.formerPtms.length)
+              }
+            )
             console.log(this.selectedPTM)
           }
         )
@@ -99,6 +121,11 @@ export class ManageParentsComponent {
     }
   }
 
+  selectPtm(ptm: ParentTeacherMeeting) {
+    this.selectedPTM = this.parentsService.adaptPtmTimes(ptm)
+    this.isNewPtm = this.nextPtms.some(p => p.id == this.selectedPTM.id)
+    this.isSelectPtmOpen = false
+  }
   createdColDef() {
     let cols = []
     cols.push({
@@ -130,6 +157,10 @@ export class ManageParentsComponent {
         this.loadData()
       })
     }
+  }
+
+  deletePtm(ptmId: number) {
+    this.parentsService.deletePtm(ptmId)
   }
 
   doRegisterRoom() {
@@ -164,9 +195,9 @@ export class ManageParentsComponent {
     this.isAddEditParentOpen = true;
   }
 
-  addEditParent(){
-    this.selectedParent.role='parents'
-    if(this.selectedParent.id){
+  addEditParent() {
+    this.selectedParent.role = 'parents'
+    if (this.selectedParent.id) {
       this.parentsService.modifyParent(this.selectedParent).subscribe((val) => {
         this.objectService.responseMessage(val)
       })
@@ -178,7 +209,7 @@ export class ManageParentsComponent {
     }
   }
 
-  onQuickFilterChanged(quickFilter: string){
+  onQuickFilterChanged(quickFilter: string) {
     let filter = (<HTMLInputElement>document.getElementById(quickFilter)).value.toLowerCase();
     this.gridApi.setGridOption('quickFilterText', filter);
   }

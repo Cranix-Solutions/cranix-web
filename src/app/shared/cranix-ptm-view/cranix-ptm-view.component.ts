@@ -18,6 +18,7 @@ export class CranixPtmViewComponent implements OnInit {
   parents: User[] =[]
   rowData = []
   events = {}
+  isPtmManager: boolean = false
   defaultColDef = {
     resizable: true,
     sortable: false,
@@ -41,6 +42,7 @@ export class CranixPtmViewComponent implements OnInit {
   ) {
     this.context = { componentParent: this };
     this.parentsService.getParents().subscribe((val) => {this.parents = val})
+    this.isPtmManager = this.authService.isAllowed('ptm.manage')
   }
 
   compare(a: any, b: any) {

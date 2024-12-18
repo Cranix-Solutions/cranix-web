@@ -14,28 +14,35 @@ export class ParentsService {
 	constructor(
 		private utils: UtilsService,
 		private http: HttpClient,
-		private authService: AuthenticationService) {
+		private authService: AuthenticationService,
+		private utilsService: UtilsService
+	) {
 		this.hostname = this.utils.hostName();
 	}
 
-    addPtm(ptm: ParentTeacherMeeting) {
-        this.url = this.hostname + "/parents/ptms/";
+	addPtm(ptm: ParentTeacherMeeting) {
+		this.url = this.hostname + "/parents/ptms";
 		return this.http.post<ServerResponse>(this.url, ptm, { headers: this.authService.headers });
-    }
+	}
 
-    modifyPtm(ptm: ParentTeacherMeeting) {
-        this.url = this.hostname + "/parents/ptms/";
+	modifyPtm(ptm: ParentTeacherMeeting) {
+		this.url = this.hostname + "/parents/ptms";
 		return this.http.patch<ServerResponse>(this.url, ptm, { headers: this.authService.headers });
-    }
+	}
 
-    deletePtm(id: number) {
+	deletePtm(id: number) {
 		this.url = this.hostname + "/parents/ptms/" + id;
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
 	}
 
-    getNextPTM() {
-		this.url = this.hostname + "/parents/ptms/";
-		return this.http.get<ParentTeacherMeeting>(this.url, { headers: this.authService.headers });
+	get() {
+		this.url = this.hostname + "/parents/ptms";
+		return this.http.get<ParentTeacherMeeting[]>(this.url, { headers: this.authService.headers });
+	}
+
+	getFormer() {
+		this.url = this.hostname + "/parents/ptms/former";
+		return this.http.get<ParentTeacherMeeting[]>(this.url, { headers: this.authService.headers });
 	}
 
 	getPTMById(id: number) {
@@ -43,7 +50,7 @@ export class ParentsService {
 		return this.http.get<ParentTeacherMeeting>(this.url, { headers: this.authService.headers });
 	}
 
-    getFreeRooms(id: number) {
+	getFreeRooms(id: number) {
 		this.url = this.hostname + "/parents/ptms/" + id + '/rooms';
 		return this.http.get<Room[]>(this.url, { headers: this.authService.headers });
 	}
@@ -54,25 +61,25 @@ export class ParentsService {
 		return this.http.get<User[]>(this.url, { headers: this.authService.headers });
 	}
 
-    registerRoom(id: number, ptmTiR: PTMTeacherInRoom) {
+	registerRoom(id: number, ptmTiR: PTMTeacherInRoom) {
 		this.url = this.hostname + "/parents/ptms/" + id + '/rooms';
 		return this.http.post<ServerResponse>(this.url, ptmTiR, { headers: this.authService.headers });
 	}
 
-    cancelRoomRegistration(id: number) {
+	cancelRoomRegistration(id: number) {
 		this.url = this.hostname + '/parentsptms/rooms/' + id
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
 	}
 
-    registerEvent(ptmEvent: PTMEvent){
-        this.url = this.hostname + '/parents/ptms/events'
+	registerEvent(ptmEvent: PTMEvent) {
+		this.url = this.hostname + '/parents/ptms/events'
 		return this.http.post<ServerResponse>(this.url, ptmEvent, { headers: this.authService.headers });
-    }
+	}
 
-    cancelEvent(id: number){
-        this.url = this.hostname + '/parents/ptms/events/' + id
+	cancelEvent(id: number) {
+		this.url = this.hostname + '/parents/ptms/events/' + id
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
-    }
+	}
 
 	//Functions to handle parents
 	getChildren() {
@@ -86,20 +93,20 @@ export class ParentsService {
 	}
 
 	addParent(ptm: User) {
-        this.url = this.hostname + "/parents/";
+		this.url = this.hostname + "/parents/";
 		return this.http.post<ServerResponse>(this.url, ptm, { headers: this.authService.headers });
-    }
+	}
 
-    modifyParent(ptm: User) {
-        this.url = this.hostname + "/parents/";
+	modifyParent(ptm: User) {
+		this.url = this.hostname + "/parents/";
 		return this.http.patch<ServerResponse>(this.url, ptm, { headers: this.authService.headers });
-    }
+	}
 
-    deleteParent(id: number) {
+	deleteParent(id: number) {
 		this.url = this.hostname + "/parents/" + id;
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
 	}
-	
+
 	//Functions to handle parent requests
 	getParentRequests() {
 		this.url = this.hostname + "/parents/requests/";
@@ -107,17 +114,25 @@ export class ParentsService {
 	}
 
 	addParentRequest(ptm: ParentRequest) {
-        this.url = this.hostname + "/parents/requests/";
+		this.url = this.hostname + "/parents/requests/";
 		return this.http.post<ServerResponse>(this.url, ptm, { headers: this.authService.headers });
-    }
+	}
 
-    modifyParentRequest(ptm: ParentRequest) {
-        this.url = this.hostname + "/parents/requests/";
+	modifyParentRequest(ptm: ParentRequest) {
+		this.url = this.hostname + "/parents/requests/";
 		return this.http.patch<ServerResponse>(this.url, ptm, { headers: this.authService.headers });
-    }
+	}
 
 	deleteParentRequest(id: number) {
 		this.url = this.hostname + "/parents/requests/" + id;
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
+	}
+
+	adaptPtmTimes(ptm: ParentTeacherMeeting) {
+		ptm.start = this.utilsService.toIonISOString(new Date(ptm.start))
+		ptm.end = this.utilsService.toIonISOString(new Date(ptm.end))
+		ptm.startRegistration = this.utilsService.toIonISOString(new Date(ptm.startRegistration))
+		ptm.endRegistration = this.utilsService.toIonISOString(new Date(ptm.endRegistration))
+		return ptm
 	}
 }

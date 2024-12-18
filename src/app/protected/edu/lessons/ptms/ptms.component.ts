@@ -15,6 +15,7 @@ export class PtmsComponent implements OnInit {
   isAddPTMOpen: boolean = false
   addEditPTMTitle: string = ""
   selectedPTM: ParentTeacherMeeting
+  newPtms: ParentTeacherMeeting[]
   myPTMTeacherInRoom: PTMTeacherInRoom
   now: Date;
 
@@ -32,29 +33,26 @@ export class PtmsComponent implements OnInit {
     console.log("ngOnInit called")
   }
   readDatas() {
-    this.ptmService.getNextPTM().subscribe((val) => {
-      this.selectedPTM = val
-      this.selectedPTM.start = this.utilsService.toIonISOString(new Date(val.start))
-      this.selectedPTM.end = this.utilsService.toIonISOString(new Date(val.end))
-      this.selectedPTM.startRegistration = this.utilsService.toIonISOString(new Date(val.startRegistration))
-      this.selectedPTM.endRegistration = this.utilsService.toIonISOString(new Date(val.endRegistration))
-      if (val != null) {
-        this.ptmService.getFreeRooms(val.id).subscribe((val2) => {
-          this.freeRooms = val2
-        })
-        for (let ptmTiR of this.selectedPTM.ptmTeacherInRoomList) {
-          if (ptmTiR.teacher.id == this.authService.session.userId) {
-            this.myPTMTeacherInRoom = ptmTiR
-            console.log(ptmTiR)
-            break
-          }
-        }
-        if (!this.myPTMTeacherInRoom) {
-          this.myPTMTeacherInRoom = new PTMTeacherInRoom()
-        }
-
-      }
+    this.ptmService.get().subscribe((val) => {
+      this.newPtms = val
     })
+  }
+
+  selectPTM(){
+    this.selectedPTM = this.ptmService.adaptPtmTimes(this.selectedPTM)
+    this.ptmService.getFreeRooms(this.selectedPTM.id).subscribe((val2) => {
+      this.freeRooms = val2
+    })
+    for (let ptmTiR of this.selectedPTM.ptmTeacherInRoomList) {
+      if (ptmTiR.teacher.id == this.authService.session.userId) {
+        this.myPTMTeacherInRoom = ptmTiR
+        console.log(ptmTiR)
+        break
+      }
+    }
+    if (!this.myPTMTeacherInRoom) {
+      this.myPTMTeacherInRoom = new PTMTeacherInRoom()
+    }
   }
   selectRoom(){
     let me = this.objectService.getObjectById("user",this.authService.session.userId);
