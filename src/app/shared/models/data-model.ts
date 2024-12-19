@@ -39,6 +39,8 @@ export class User {
 	mailAliases: string[];
 	emailAddress?: string = ""
 	telefonNumber?: string = ""
+	childIds?: number[] = []
+	parentIds?: number[] = [] 
 	constructor() { }
 }
 export class UsersImport {

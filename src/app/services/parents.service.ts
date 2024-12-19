@@ -106,6 +106,10 @@ export class ParentsService {
 		this.url = this.hostname + "/parents/" + id;
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
 	}
+	setChildren(id: number, children: User[]) {
+		this.url = this.hostname + "/parents/" + id +"/children";
+		return this.http.post<ServerResponse>(this.url, {children, headers: this.authService.headers });
+	} 
 
 	//Functions to handle parent requests
 	getParentRequests() {

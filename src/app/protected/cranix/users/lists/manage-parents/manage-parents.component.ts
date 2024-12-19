@@ -49,6 +49,7 @@ export class ManageParentsComponent {
     public authService: AuthenticationService,
     public objectService: GenericObjectService,
     private languageS: LanguageService,
+    private utilsService: UtilsService,
     private parentsService: ParentsService
   ) {
 
@@ -145,6 +146,7 @@ export class ManageParentsComponent {
   }
 
   addEditPTM() {
+    this.objectService.requestSent();
     if (this.selectedPTM.id > 0) {
       this.parentsService.modifyPtm(this.selectedPTM).subscribe((val) => {
         this.objectService.responseMessage(val)
@@ -160,7 +162,11 @@ export class ManageParentsComponent {
   }
 
   deletePtm(ptmId: number) {
-    this.parentsService.deletePtm(ptmId)
+    this.objectService.requestSent();
+    this.parentsService.deletePtm(ptmId).subscribe((val) => {
+      this.objectService.responseMessage(val)
+      this.loadData()
+    })
   }
 
   doRegisterRoom() {
@@ -189,6 +195,12 @@ export class ManageParentsComponent {
   redirectToEdit(parent: User) {
     if (parent) {
       this.selectedParent = parent
+      this.selectedChildren = []
+      for(let childId of parent.childIds) {
+        this.selectedChildren.push(
+          this.objectService.getObjectById("user",childId)
+        )
+      }
     } else {
       this.selectedParent = new User()
     }
@@ -200,11 +212,27 @@ export class ManageParentsComponent {
     if (this.selectedParent.id) {
       this.parentsService.modifyParent(this.selectedParent).subscribe((val) => {
         this.objectService.responseMessage(val)
+        if (val.code == "OK") {
+          this.parentsService.setChildren(this.selectedParent.id, this.selectedChildren).subscribe((val2) => {
+            this.objectService.responseMessage(val2)
+            this.isAddEditParentOpen = false
+            this.parentsService.getParents().subscribe((val3) => { this.rowData = val3 })
+            this.selectedChildren = []
+          })
+        }
       })
     } else {
+      this.selectedParent.birthDay = this.utilsService.toIonDate(new Date())
       this.parentsService.addParent(this.selectedParent).subscribe((val) => {
         this.objectService.responseMessage(val)
-        console.log(val.objectId)
+        if (val.code == "OK") {
+          this.parentsService.setChildren(val.objectId, this.selectedChildren).subscribe((val2) => {
+            this.objectService.responseMessage(val2)
+            this.isAddEditParentOpen = false
+            this.parentsService.getParents().subscribe((val3) => { this.rowData = val3 })
+            this.selectedChildren = []
+          })
+        }
       })
     }
   }

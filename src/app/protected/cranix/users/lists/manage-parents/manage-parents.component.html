@@ -197,7 +197,7 @@
                 <ion-item>
                     <ion-label>{{'Select children for the parent' | translate}}</ion-label>
                     <ionic-selectable #ionicSelectChildren itemValueField="id" itemTextField="fullName"
-                        [isMultiple]="false" [(ngModel)]="selectedChildren" [ngModelOptions]="{standalone: true}"
+                        [isMultiple]="true" [(ngModel)]="selectedChildren" [ngModelOptions]="{standalone: true}"
                         [items]="children" [canSearch]="true">
                     </ionic-selectable>
                 </ion-item>
@@ -237,7 +237,8 @@
         <ion-content>
             {{'Do you realy want to delete?'|translate}}
             <ion-item>
-                <ion-button ></ion-button>
+                <ion-button (click)="isDeletePtmOpen = false">{{'Cancel'|translate}}</ion-button>
+                <ion-button (click)="deletePtm(selectedPTM.id)">OK</ion-button>
             </ion-item>
         </ion-content>
     </ng-template>
