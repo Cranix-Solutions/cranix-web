@@ -40,7 +40,8 @@ export class User {
 	emailAddress?: string = ""
 	telefonNumber?: string = ""
 	childIds?: number[] = []
-	parentIds?: number[] = [] 
+	parentIds?: number[] = []
+	otp?: string
 	constructor() { }
 }
 export class UsersImport {
@@ -575,17 +576,14 @@ export class ParentRequest {
 }
 
 export class Parent extends User {
-	emailAddress: string
-	otp: string
-	children: User[]
-	requests: ParentRequest[]
 }
 
 export class PTMEvent {
 	id: number = 0
 	start: Date
 	end: Date
-	parent: Parent
+	blocked: boolean
+	parent: User
 	student: User
 }
 

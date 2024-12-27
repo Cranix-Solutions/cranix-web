@@ -1,41 +1,87 @@
-<cranix-toolbar></cranix-toolbar>
-@if(selectedPTM == null){
+<cranix-toolbar title="Parent teacher meeting"></cranix-toolbar>
 <ion-content>
+    @if(!selectedPTM){
+    @if(nextPtms.length == 0) {
     <h1>{{'There is no PTM' | translate}} </h1>
+    }@else{
+    <ion-item *ngFor="let ptm of nextPtms">
+        <ion-button fill="clear" expand="full" (click)="selectPtm(ptm)">{{ptm.title}}</ion-button>
+    </ion-item>
+    }
+    }@else{
+    <ion-accordion-group expand="inset">
+        <ion-accordion value="first">
+            <ion-item slot="header">
+                {{selectedPTM.title}}
+            </ion-item>
+            <ion-list slot="content">
+                <ion-item>
+                    <ion-label>{{'From'|translate}}</ion-label>
+                    <input [(ngModel)]="selectedPTM.start" name="startTime" type="datetime-local" readonly />
+                </ion-item>
+                <ion-item>
+                    <ion-label>{{'Until'|translate}}</ion-label>
+                    <input [(ngModel)]="selectedPTM.end" name="endTime" type="datetime-local" readonly />
+                </ion-item>
+                <ion-item>
+                    <ion-label>{{'Duration of a Session'|translate}}</ion-label>
+                    <input [(ngModel)]="selectedPTM.duration" type="number" readonly />
+                </ion-item>
+                <ion-item>
+                    <ion-label>{{'Start Parent Registration'|translate}}</ion-label>
+                    <input [(ngModel)]="selectedPTM.startRegistration" name="startTime" type="datetime-local"
+                        readonly />
+                </ion-item>
+                <ion-item>
+                    <ion-label>{{'End Parent Registration'|translate}}</ion-label>
+                    <input [(ngModel)]="selectedPTM.endRegistration" name="endTime" type="datetime-local" readonly />
+                </ion-item>
+                @if(myPTMTeacherInRoom.id == 0){
+                <ion-item>
+                    <ion-label>{{'Register a room'|translate}}</ion-label>
+                    <ionic-selectable #ionicSelectRoom itemValueField="id" itemTextField="description"
+                        [isMultiple]="false" [(ngModel)]="myPTMTeacherInRoom.room" [ngModelOptions]="{standalone: true}"
+                        [items]="freeRooms" [canSearch]="true" (onChange)="selectRoom()">
+                    </ionic-selectable>
+                </ion-item>
+                }@else{
+                <ion-item>
+                    <ion-label>{{'Room'|translate}} </ion-label>
+                    <ion-label>{{myPTMTeacherInRoom.room.name}}</ion-label>
+                </ion-item>
+                }
+            </ion-list>
+        </ion-accordion>
+        <ion-accordion value="regs">
+            <ion-item slot="header">{{'Registrations'}}</ion-item>
+            <ion-grid slot="content">
+                <ion-row>
+                    <ion-col>{{'Time'|translate}}</ion-col>
+                    <ion-col>{{'Student'|translate}}</ion-col>
+                    <ion-col>{{'Block'|translate}}</ion-col>
+                    <ion-col>{{'Notices'|translate}}</ion-col>
+                </ion-row>
+                <ion-row *ngFor="let event of myPTMTeacherInRoom.events.sort(compare)">
+                    <ion-col>{{event.start|date:'HH:mm'}}</ion-col>
+                    <ion-col>{{getStudentOfEvent(event)}}</ion-col>
+                    <ion-col>
+                        <ion-button fill="clear" size="small" (click)="setBlockEvent(event)">
+                            @if(event.blocked){
+                            <ion-icon name="lock-closed" color="danger"></ion-icon>
+                            } @else {
+                            <ion-icon name="lock-open" color="success"></ion-icon>
+                            }
+                        </ion-button>
+                    </ion-col>
+                    <ion-col>
+                        <ion-button fill="clear" size="small" (click)="createNotices(event)">
+                            <ion-icon name="clipboard" color="secondary"></ion-icon>
+                        </ion-button>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+
+        </ion-accordion>
+    </ion-accordion-group>
+    }
 </ion-content>
-}@else{
-<ion-content>
-    <ion-list>
-        <ion-list-header lines="full">
-            {{selectedPTM.title}}
-        </ion-list-header>
-        <ion-item>
-            <ion-label>{{'From'|translate}}</ion-label>
-            <input [(ngModel)]="selectedPTM.start" name="startTime" type="datetime-local" readonly />
-        </ion-item>
-        <ion-item>
-            <ion-label>{{'Until'|translate}}</ion-label>
-            <input [(ngModel)]="selectedPTM.end" name="endTime" type="datetime-local" readonly />
-        </ion-item>
-        <ion-item>
-            <ion-label>{{'Duration of a Session'|translate}}</ion-label>
-            <input [(ngModel)]="selectedPTM.duration" type="number" readonly />
-        </ion-item>
-        <ion-item>
-            <ion-label>{{'Start Parent Registration'|translate}}</ion-label>
-            <input [(ngModel)]="selectedPTM.startRegistration" name="startTime" type="datetime-local" readonly />
-        </ion-item>
-        <ion-item>
-            <ion-label>{{'End Parent Registration'|translate}}</ion-label>
-            <input [(ngModel)]="selectedPTM.endRegistration" name="endTime" type="datetime-local" readonly />
-        </ion-item>
-        <ion-item>
-            <ion-label>{{'Register a room'|translate}}</ion-label>
-            <ionic-selectable #ionicSelectRoom itemValueField="id" itemTextField="description" [isMultiple]="false"
-                [(ngModel)]="myPTMTeacherInRoom.room" [ngModelOptions]="{standalone: true}" [items]="freeRooms"
-                [canSearch]="true" (onChange)="selectRoom()">
-            </ionic-selectable>
-        </ion-item>
-    </ion-list>
-</ion-content>
-}

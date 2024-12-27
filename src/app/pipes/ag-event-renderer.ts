@@ -4,7 +4,11 @@ import { PTMEvent } from "src/app/shared/models/data-model";
 
 @Component({
   selector: 'event-renderer',
-  template: `@if(isSelectable()){
+  template: `@if(event.blocked){
+  <ion-button fill="clear" size="small">
+    <ion-icon name="lock-closed" color="primary"></ion-icon>
+  </ion-button>
+  }@else if(isSelectable()){
     <ion-button fill="clear" size="small" (click)="register()">
       <ion-icon name="pencil-outline" color="success"></ion-icon>
     </ion-button>
@@ -20,7 +24,6 @@ export class EventRenderer implements ICellRendererAngularComp {
   private role: string
   public myId: number
   agInit(params: any): void {
-    console.log(params)
     this.context = params.context.componentParent
     this.myId = this.context.authService.session.userId
     this.role = this.context.authService.session.role
@@ -30,26 +33,25 @@ export class EventRenderer implements ICellRendererAngularComp {
     this.context.registerEvent(this.event)
   }
   cancel() {
-    this.context.cancelEvent(this.event)
+    //TODO
+    this.context.registerEvent(this.event)
   }
-  isCancelable(){
-    if(this.event.parent) {
-      if(this.event.parent.id == this.myId || this.context.isPtmManager) {
+  isCancelable() {
+    if (this.event.parent) {
+      if (this.event.parent.id == this.myId || this.context.isPtmManager) {
         return true
       }
     }
   }
-  isSelectable(){
-    if(!this.event.parent) {
-      if(this.role == 'parents') {
-        let count = 0
-        for(let ev of this.context.events){
-          //TODO
-        }
+  isSelectable() {
+    if (this.event.student) return false
+    if (this.role == 'parents') {
+      let count = 0
+      for (let ev of this.context.events) {
+        //TODO
       }
-      return true
     }
-    return false
+    return true
   }
   refresh(params: any): boolean {
     return true;

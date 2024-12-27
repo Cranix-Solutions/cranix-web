@@ -8,7 +8,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ToolbarComponent } from 'src/app/protected/toolbar/toolbar.component';
 import { IonicModule } from '@ionic/angular';
-import { IonicSelectableComponent } from 'ionic-selectable'
+import { 
+  IonicSelectableComponent,
+  IonicSelectableHeaderTemplateDirective,
+  IonicSelectableValueTemplateDirective
+ } from 'ionic-selectable'
+
 import { TranslateModule } from '@ngx-translate/core';
 import { PipesModule } from 'src/app/pipes/pipe-modules';
 import { AgGridModule } from 'ag-grid-angular';
@@ -115,6 +120,8 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     CommonModule,
     AgChartsModule,
     IonicSelectableComponent,
+    IonicSelectableHeaderTemplateDirective,
+    IonicSelectableValueTemplateDirective,
     AgGridModule,
     FormsModule,
     IonicModule,
@@ -144,7 +151,9 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     ToolbarComponent,
     CranixMdListComponent,
     CranixPtmViewComponent,
-    IonicSelectableComponent
+    IonicSelectableComponent,
+    IonicSelectableHeaderTemplateDirective,
+    IonicSelectableValueTemplateDirective
   ],
   providers: [WindowRef,CanActivateViaAcls ]
 })

@@ -1,4 +1,4 @@
-@if(colDefIsReady) {
+@if(rowData) {
 <ag-grid-angular style="width: 100%; height: 100%;" class="{{authService.settings.agGridThema}}"
     [rowHeight]="authService.settings.rowHeight" [rowData]="rowData" [columnDefs]="columnDefs"
     [defaultColDef]="defaultColDef" [context]="context" (gridReady)="onGridReady($event)" id="agGridTable">
@@ -14,6 +14,11 @@
                     <ion-button class="ion-no-margin" (click)="doRegister()">
                         <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
                     </ion-button>
+                    @if(selectedEvent.parent){
+                    <ion-button class="ion-no-margin" (click)="cancelEvent()">
+                        <ion-icon slot="icon-only" color="success" name="trash"></ion-icon>
+                    </ion-button>
+                    }
                     <ion-button fill="clear" size="small" (click)="isRegisterEventOpen = false">
                         <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
                     </ion-button>
@@ -30,14 +35,15 @@
                         {{selectedPTMinRoom.teacher.givenName}} </ion-label>
                 </ion-item>
                 <ion-item>
-                    <ion-label>{{'Room'|translate}}</ion-label><ion-label>{{selectedPTMinRoom.room.name}}, {{selectedPTMinRoom.room.description}}
+                    <ion-label>{{'Room'|translate}}</ion-label><ion-label>{{selectedPTMinRoom.room.name}},
+                        {{selectedPTMinRoom.room.description}}
                     </ion-label>
                 </ion-item>
                 <ion-item>
-                    <ion-label>{{'Select parent for the event'|translate}}</ion-label>
+                    <ion-label>{{'Select student for the event'|translate}}</ion-label>
                     <ionic-selectable #ionicSelectUsers itemValueField="id" itemTextField="fullName"
-                        [isMultiple]="false" [(ngModel)]="selectedEvent.parent" [ngModelOptions]="{standalone: true}"
-                        [items]="parents" [canSearch]="true">
+                        [isMultiple]="false" [(ngModel)]="selectedEvent.student" [ngModelOptions]="{standalone: true}"
+                        [items]="students" [canSearch]="true">
                     </ionic-selectable>
                 </ion-item>
             </ion-list>
@@ -67,7 +73,8 @@
                         {{selectedPTMinRoom.teacher.givenName}} </ion-label>
                 </ion-item>
                 <ion-item>
-                    <ion-label>{{'Room'|translate}}</ion-label><ion-label>{{selectedPTMinRoom.room.name}}, {{selectedPTMinRoom.room.description}}
+                    <ion-label>{{'Room'|translate}}</ion-label><ion-label>{{selectedPTMinRoom.room.name}},
+                        {{selectedPTMinRoom.room.description}}
                     </ion-label>
                 </ion-item>
                 <ion-item>

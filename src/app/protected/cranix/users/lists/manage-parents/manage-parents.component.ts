@@ -177,6 +177,9 @@ export class ManageParentsComponent {
       }
     )
   }
+  sendMails(){
+    //TODO
+  }
 
   registerRoom() {
     this.parentsService.getFreeRooms(this.selectedPTM.id).subscribe(

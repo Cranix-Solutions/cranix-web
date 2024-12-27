@@ -4,6 +4,7 @@ import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 import { ParentTeacherMeeting, Room, PTMTeacherInRoom, PTMEvent, Parent, ParentRequest, User } from '../shared/models/data-model';
 import { ServerResponse } from '../shared/models/server-models';
+import { bl } from '@fullcalendar/core/internal-common';
 
 @Injectable()
 export class ParentsService {
@@ -81,12 +82,13 @@ export class ParentsService {
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
 	}
 
-	//Functions to handle parents
-	getChildren() {
-		this.url = this.hostname + "/users/byRole/students";
-		return this.http.get<User[]>(this.url, { headers: this.authService.headers });
+	blockEvent(id: number, block: boolean){
+		this.url = this.hostname + '/parents/ptms/events/' + id + '/' + (block ? 'true' : 'false')
+		console.log(this.url)
+		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
 	}
 
+	//Functions to handle parents
 	getParents() {
 		this.url = this.hostname + "/parents/";
 		return this.http.get<User[]>(this.url, { headers: this.authService.headers });
@@ -108,8 +110,16 @@ export class ParentsService {
 	}
 	setChildren(id: number, children: User[]) {
 		this.url = this.hostname + "/parents/" + id +"/children";
-		return this.http.post<ServerResponse>(this.url, {children, headers: this.authService.headers });
-	} 
+		return this.http.post<ServerResponse>(this.url, children, { headers: this.authService.headers });
+	}
+	getChildren(id: number) {
+		this.url = this.hostname + "/parents/" + id +"/children";
+		return this.http.get<User[]>(this.url, {headers: this.authService.headers });
+	}
+	getMyChildren() {
+		this.url = this.hostname + "/parents/myChildren";
+		return this.http.get<User[]>(this.url, {headers: this.authService.headers });
+	}
 
 	//Functions to handle parent requests
 	getParentRequests() {

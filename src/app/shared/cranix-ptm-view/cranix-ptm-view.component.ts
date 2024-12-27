@@ -3,9 +3,9 @@ import { PTMEvent, PTMTeacherInRoom, ParentTeacherMeeting, User } from '../model
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { ParentsService } from 'src/app/services/parents.service';
-import { ICellRendererAngularComp } from "ag-grid-angular";
 import { UtilsService } from 'src/app/services/utils.service';
 import { EventRenderer } from 'src/app/pipes/ag-event-renderer';
+import { GenericObjectService } from 'src/app/services/generic-object.service';
 
 @Component({
   selector: 'cranix-ptm-view',
@@ -13,12 +13,13 @@ import { EventRenderer } from 'src/app/pipes/ag-event-renderer';
   styleUrl: './cranix-ptm-view.component.css'
 })
 export class CranixPtmViewComponent implements OnInit {
-
   context
-  parents: User[] =[]
+  students: User[] = []
   rowData = []
   events = {}
+  me: User
   isPtmManager: boolean = false
+  isParent: boolean = false
   defaultColDef = {
     resizable: true,
     sortable: false,
@@ -27,7 +28,6 @@ export class CranixPtmViewComponent implements OnInit {
     suppressHeaderMenuButton: true
   }
   columnDefs = []
-  colDefIsReady = false
   gridApi
   ptm: ParentTeacherMeeting
   isRegisterEventOpen: boolean = false
@@ -37,11 +37,21 @@ export class CranixPtmViewComponent implements OnInit {
   constructor(
     public authService: AuthenticationService,
     private languageS: LanguageService,
+    private objectService: GenericObjectService,
     private parentsService: ParentsService,
     private utilService: UtilsService
   ) {
-    this.context = { componentParent: this };
-    this.parentsService.getParents().subscribe((val) => {this.parents = val})
+    this.context = { componentParent: this }
+    this.isParent = this.authService.session.role == 'parent'
+    this.students = []
+    if (this.isParent) {
+      this.me = this.objectService.getObjectById("user",this.authService.session.userId)
+      this.parentsService.getMyChildren().subscribe((val) => { this.students = val })
+    } else {
+      for (let s of this.objectService.allObjects['user']) {
+        if (s.role == 'students') this.students.push(s)
+      }
+    }
     this.isPtmManager = this.authService.isAllowed('ptm.manage')
   }
 
@@ -50,14 +60,18 @@ export class CranixPtmViewComponent implements OnInit {
   }
   ngOnInit(): void {
     console.log(this.id)
+    this.readData(true)
+  }
+  readData(doColdef: boolean){
     this.parentsService.getPTMById(this.id).subscribe(
       (val) => {
         this.ptm = val
-        this.createData()
+        this.createData(doColdef)
       }
     )
   }
-  createData() {
+  createData(doColdef: boolean) {
+    let colDefIsReady = !doColdef
     let data = []
     let colDef = []
     for (let ptmTeacherInRoom of this.ptm.ptmTeacherInRoomList) {
@@ -65,7 +79,7 @@ export class CranixPtmViewComponent implements OnInit {
         teacher: ptmTeacherInRoom.teacher.surName + ', ' + ptmTeacherInRoom.teacher.givenName,
         room: ptmTeacherInRoom.room.description ? ptmTeacherInRoom.room.description : ptmTeacherInRoom.room.name
       }
-      if (!this.colDefIsReady) {
+      if (!colDefIsReady) {
         colDef.push(
           {
             field: 'teacher',
@@ -77,7 +91,7 @@ export class CranixPtmViewComponent implements OnInit {
           {
             field: 'room',
             pinned: 'left',
-            minWidth: 120,
+            width: 100,
             lockPinned: true,
             headerName: this.languageS.trans('Room'),
           }
@@ -87,34 +101,37 @@ export class CranixPtmViewComponent implements OnInit {
         let time = this.utilService.getDouble(new Date(ptmEvent.start).getHours()) + ':' + this.utilService.getDouble(new Date(ptmEvent.start).getMinutes())
         this.events[ptmEvent.id] = ptmEvent
         roomEvents[time] = ptmEvent.id
-        if (!this.colDefIsReady) {
+        if (!colDefIsReady) {
           colDef.push(
             {
               field: time,
               headerName: time,
+              width: 80,
               cellRenderer: EventRenderer
             }
           )
         }
       }
-      this.columnDefs = colDef
-      this.colDefIsReady = true
+      colDefIsReady = true
       data.push(roomEvents)
     }
+    if( doColdef ) {
+      this.columnDefs = colDef
+    }
     this.rowData = data
-    //console.log(this.columnDefs)
-    //console.log(this.rowData)
+    console.log(this.columnDefs)
+    console.log(this.rowData)
   }
 
   onGridReady(params) {
     this.gridApi = params.api;
     this.gridApi.sizeColumnsToFit();
   }
-
-  selectPTMinRoom(event: PTMEvent){
-    for(let tmp of this.ptm.ptmTeacherInRoomList){
-      for(let e of tmp.events){
-        if(event.id == e.id){
+  
+  selectPTMinRoom(event: PTMEvent) {
+    for (let tmp of this.ptm.ptmTeacherInRoomList) {
+      for (let e of tmp.events) {
+        if (event.id == e.id) {
           return tmp
         }
       }
@@ -125,13 +142,28 @@ export class CranixPtmViewComponent implements OnInit {
     this.selectedEvent = event
     this.selectedPTMinRoom = this.selectPTMinRoom(event)
     this.isRegisterEventOpen = true
+    if (!this.selectedEvent.student && this.isParent) {
+      this.selectedEvent.parent = this.me
+      if (this.students.length == 1) {
+        this.selectedEvent.student = this.students[0]
+      }
+    }
     console.log(event)
   }
 
-  cancelEvent(event: PTMEvent) {
-    console.log(event)
+  cancelEvent() {
+    this.parentsService.cancelEvent(this.selectedEvent.id).subscribe((val) => {
+      this.objectService.responseMessage(val)
+      this.isRegisterEventOpen = false
+      this.readData(false)
+    })
   }
 
-  doRegister(){
+  doRegister() {
+    this.parentsService.registerEvent(this.selectedEvent).subscribe((val) => {
+      this.objectService.responseMessage(val)
+      this.isRegisterEventOpen = false
+      this.readData(false)
+    })
   }
 }
