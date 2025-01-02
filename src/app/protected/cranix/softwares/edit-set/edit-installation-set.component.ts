@@ -134,9 +134,6 @@ export class EditInstallationSetComponent implements OnInit {
     }
     this.availableSoftwaresApi.sizeColumnsToFit();
   }
-  availableSoftwaresChanged() {
-    this.softwares = this.availableSoftwaresApi.getSelectedRows();
-  }
   availableSoftwaresFilterChanged() {
     this.availableSoftwaresApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("availableSoftwaresFilter")).value);
   }
@@ -157,9 +154,6 @@ export class EditInstallationSetComponent implements OnInit {
       (<HTMLInputElement>document.getElementById("availableHwconfsTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
     }
     this.availableHwconfsApi.sizeColumnsToFit();
-  }
-  availableHwconfsChanged() {
-    this.hwconfs = this.availableHwconfsApi.getSelectedRows();
   }
   availableHwconfsFilterChanged() {
     this.availableHwconfsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("availableHwconfsFilter")).value);
@@ -182,9 +176,6 @@ export class EditInstallationSetComponent implements OnInit {
     }
     this.availableRoomsApi.sizeColumnsToFit();
   }
-  availableRoomsChanged() {
-    this.rooms = this.availableRoomsApi.getSelectedRows();
-  }
   availableRoomsFilterChanged() {
     this.availableRoomsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("availableRoomsFilter")).value);
   }
@@ -206,9 +197,6 @@ export class EditInstallationSetComponent implements OnInit {
       (<HTMLInputElement>document.getElementById("availableDevicesTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
     }
   }
-  availableDevicesChanged() {
-    this.devices = this.availableDevicesApi.getSelectedRows();
-  }
   availableDevicesFilterChanged() {
     this.availableDevicesApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("availableDevicesFilter")).value);
   }
@@ -220,9 +208,6 @@ export class EditInstallationSetComponent implements OnInit {
     if (!this.authService.isMD()) {
       (<HTMLInputElement>document.getElementById("softwaresTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
     }
-  }
-  softwaresChanged() {
-    this.softwares = this.softwaresApi.getSelectedRows();
   }
   softwaresFilterChanged() {
     this.softwaresApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("softwaresFilter")).value);
@@ -236,9 +221,6 @@ export class EditInstallationSetComponent implements OnInit {
       (<HTMLInputElement>document.getElementById("hwconfsTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
     }
   }
-  hwconfsChanged() {
-    this.hwconfs = this.hwconfsApi.getSelectedRows();
-  }
   hwconfsFilterChanged() {
     this.hwconfsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("hwconfsFilter")).value);
   }
@@ -251,9 +233,6 @@ export class EditInstallationSetComponent implements OnInit {
       (<HTMLInputElement>document.getElementById("roomsTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
     }
   }
-  roomsChanged() {
-    this.rooms = this.roomsApi.getSelectedRows();
-  }
   roomsFilterChanged() {
     this.roomsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("roomsFilter")).value);
   }
@@ -265,9 +244,6 @@ export class EditInstallationSetComponent implements OnInit {
     if (!this.authService.isMD()) {
       (<HTMLInputElement>document.getElementById("devicesTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
     }
-  }
-  devicesChanged() {
-    this.devices = this.devicesApi.getSelectedRows();
   }
   devicesFilterChanged() {
     this.devicesApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("devicesFilter")).value);
@@ -283,6 +259,10 @@ export class EditInstallationSetComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
     this.installationSet.deviceIds = [];
+    this.softwares = this.availableSoftwaresApi.getSelectedRows();
+    this.hwconfs = this.availableHwconfsApi.getSelectedRows();
+    this.rooms = this.availableRoomsApi.getSelectedRows();
+    this.devices = this.availableDevicesApi.getSelectedRows();
     for (let dev of this.devices) {
       this.installationSet.deviceIds.push(dev.id)
     }
