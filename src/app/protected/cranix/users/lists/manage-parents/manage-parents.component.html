@@ -57,7 +57,7 @@
             <ion-item>
                 <ion-input [(ngModel)]="selectedPTM.title" name="title" label="{{'Title'|translate}}"
                     labelPlacement="fixed" required></ion-input>
-                <ion-button (click)="isSelectPtmOpen = true">{{'Select'|translate}}</ion-button>
+                <ion-button (click)="isSelectPtmOpen = true">{{'Select PTM'|translate}}</ion-button>
             </ion-item>
             <ion-item>
                 <ion-label>{{'From'|translate}}*</ion-label>
@@ -80,23 +80,44 @@
             <ion-item>
                 <ion-label>{{'End Parent Registration'|translate}}*</ion-label>
                 <input [(ngModel)]="selectedPTM.endRegistration" name="endRegistration" type="datetime-local"
-                    required/>
+                    required />
             </ion-item>
             @if(isNewPtm || selectedPTM.id == 0){
-                <ion-item>
-                    <ion-label>{{'Select classes for the PTM' | translate}}</ion-label>
-                    <ionic-selectable #ionicSelectUser itemValueField="id" itemTextField="name" [isMultiple]="true"
-                        [(ngModel)]="selectedPTM.classes" [ngModelOptions]="{standalone: true}" [items]="classes"
-                        [canSearch]="true">
-                    </ionic-selectable>
-                </ion-item>
+            <ion-item>
+                <ion-label>{{'Select classes for the PTM' | translate}}</ion-label>
+                <ionic-selectable #ionicSelectClasses itemValueField="id" itemTextField="name" [isMultiple]="true"
+                    [(ngModel)]="selectedPTM.classes" [ngModelOptions]="{standalone: true}" [items]="classes"
+                    [canSearch]="true">
+                    <ng-template ionicSelectableHeaderTemplate>
+                        <ion-header>
+                            <ion-toolbar color="primary">
+                                <ion-title>
+                                    {{ "Select classes for the PTM" | translate }}
+                                </ion-title>
+                                <ion-buttons slot="end">
+                                    <ion-button ion-button (click)="ionicSelectClasses.close()">
+                                        <ion-icon color="danger" name="close"></ion-icon>
+                                    </ion-button>
+                                </ion-buttons>
+                            </ion-toolbar>
+                        </ion-header>
+                    </ng-template>
+                    <ng-template ionicSelectableValueTemplate let-ports="value">
+                        <div class="ionic-selectable-value-item">
+                            {{ports.length}} {{'classes are selected'|translate}}
+                        </div>
+                    </ng-template>
+                </ionic-selectable>
+
+            </ion-item>
             }
             @if(selectedPTM.id == 0 && formerPtms.length > 0) {
-                <ion-item>
-                    <ion-select label="{{'Select template for room reservation.'}}" [(ngModel)]="selectedPTM.templateId" name="templateId">
-                        <ion-select-option *ngFor="let ptm of formerPtms" [value]="ptm.id">{{ptm.title}}</ion-select-option>
-                    </ion-select>
-                </ion-item>
+            <ion-item>
+                <ion-select label="{{'Select template for room reservation'}}" [(ngModel)]="selectedPTM.templateId"
+                    name="templateId">
+                    <ion-select-option *ngFor="let ptm of formerPtms" [value]="ptm.id">{{ptm.title}}</ion-select-option>
+                </ion-select>
+            </ion-item>
             }
         </ion-list>
     </form>
@@ -149,13 +170,41 @@
                 <ionic-selectable #ionicSelectRoom itemValueField="id" itemTextField="description" [isMultiple]="false"
                     [(ngModel)]="ptmTeacherInRoom.room" [ngModelOptions]="{standalone: true}" [items]="freeRooms"
                     [canSearch]="true">
+                    <ng-template ionicSelectableHeaderTemplate>
+                        <ion-header>
+                            <ion-toolbar color="primary">
+                                <ion-title>
+                                    {{ "Select room for the PTM" | translate }}
+                                </ion-title>
+                                <ion-buttons slot="end">
+                                    <ion-button ion-button (click)="ionicSelectRoom.close()">
+                                        <ion-icon color="danger" name="close"></ion-icon>
+                                    </ion-button>
+                                </ion-buttons>
+                            </ion-toolbar>
+                        </ion-header>
+                    </ng-template>
                 </ionic-selectable>
             </ion-item>
             <ion-item>
                 <ion-label>{{'Select teacher for the PTM' | translate}}</ion-label>
-                <ionic-selectable #ionicSelectUsers itemValueField="id" itemTextField="fullName" [isMultiple]="false"
+                <ionic-selectable #ionicSelectTeacher itemValueField="id" itemTextField="fullName" [isMultiple]="false"
                     [(ngModel)]="ptmTeacherInRoom.teacher" [ngModelOptions]="{standalone: true}" [items]="freeTeachers"
                     [canSearch]="true">
+                    <ng-template ionicSelectableHeaderTemplate>
+                        <ion-header>
+                            <ion-toolbar color="primary">
+                                <ion-title>
+                                    {{ "Select teacher for the PTM" | translate }}
+                                </ion-title>
+                                <ion-buttons slot="end">
+                                    <ion-button ion-button (click)="ionicSelectTeacher.close()">
+                                        <ion-icon color="danger" name="close"></ion-icon>
+                                    </ion-button>
+                                </ion-buttons>
+                            </ion-toolbar>
+                        </ion-header>
+                    </ng-template>
                 </ionic-selectable>
             </ion-item>
         </ion-content>
@@ -198,7 +247,21 @@
                     <ion-label>{{'Select children for the parent' | translate}}</ion-label>
                     <ionic-selectable #ionicSelectChildren itemValueField="id" itemTextField="fullName"
                         [isMultiple]="true" [(ngModel)]="selectedChildren" [ngModelOptions]="{standalone: true}"
-                        [items]="children" [canSearch]="true">
+                        [items]="children" [canSearch]="true" groupValueField="classes" groupTextField="classes">
+                        <ng-template ionicSelectableHeaderTemplate>
+                            <ion-header>
+                                <ion-toolbar color="primary">
+                                    <ion-title>
+                                        {{ "Select children for the parent" | translate }}: {{selectedParent.surName}}
+                                    </ion-title>
+                                    <ion-buttons slot="end">
+                                        <ion-button ion-button (click)="ionicSelectChildren.close()">
+                                            <ion-icon color="danger" name="close"></ion-icon>
+                                        </ion-button>
+                                    </ion-buttons>
+                                </ion-toolbar>
+                            </ion-header>
+                        </ng-template>
                     </ionic-selectable>
                 </ion-item>
             </ion-list>
@@ -208,7 +271,7 @@
 <ion-modal [isOpen]="isSelectPtmOpen">
     <ng-template>
         <ion-header>
-            <ion-toolbar>
+            <ion-toolbar color="primary">
                 <ion-title>{{'Select PTM'|translate}}</ion-title>
                 <ion-buttons slot="end">
                     <ion-button fill="clear" size="small" (click)="isSelectPtmOpen = false">
@@ -219,14 +282,18 @@
         </ion-header>
         <ion-content>
             <ion-list>
+                <ion-item>
+                    <ion-button fill="clear" expand="block" (click)="selectPtm(null)">{{'Create parent teacher meeting'|translate}}</ion-button>
+                </ion-item>
+                <ion-item>{{'Upcoming PTMs'|translate}}:</ion-item>
                 <ion-item *ngFor="let ptm of nextPtms">
-                    <ion-button fill="clear" expand="full" (click)="selectPtm(ptm)">{{ptm.title}}</ion-button>
+                    <ion-button fill="clear" expand="block" (click)="selectPtm(ptm)">{{ptm.title}}</ion-button>
                 </ion-item>
                 @if(formerPtms.length > 0) {
-                    <ion-item>{{'Former PTMS:'|translate}}</ion-item>
-                    <ion-item *ngFor="let ptm of formerPtms">
-                        <ion-button fill="clear" expand="full" (click)="selectPtm(ptm)">{{ptm.title}}</ion-button>
-                    </ion-item>
+                <ion-item>{{'Former PTMs'|translate}}:</ion-item>
+                <ion-item *ngFor="let ptm of formerPtms">
+                    <ion-button fill="clear" expand="block" (click)="selectPtm(ptm)">{{ptm.title}}</ion-button>
+                </ion-item>
                 }
             </ion-list>
         </ion-content>

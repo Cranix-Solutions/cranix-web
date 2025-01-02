@@ -53,18 +53,18 @@
             </ion-list>
         </ion-accordion>
         <ion-accordion value="regs">
-            <ion-item slot="header">{{'Registrations'}}</ion-item>
+            <ion-item slot="header">{{'Registrations'|translate}}</ion-item>
             <ion-grid slot="content">
                 <ion-row>
                     <ion-col>{{'Time'|translate}}</ion-col>
-                    <ion-col>{{'Student'|translate}}</ion-col>
                     <ion-col>{{'Block'|translate}}</ion-col>
+                    <ion-col>{{'Student'|translate}}</ion-col>
                     <ion-col>{{'Notices'|translate}}</ion-col>
                 </ion-row>
                 <ion-row *ngFor="let event of myPTMTeacherInRoom.events.sort(compare)">
                     <ion-col>{{event.start|date:'HH:mm'}}</ion-col>
-                    <ion-col>{{getStudentOfEvent(event)}}</ion-col>
                     <ion-col>
+                        @if(!event.student){
                         <ion-button fill="clear" size="small" (click)="setBlockEvent(event)">
                             @if(event.blocked){
                             <ion-icon name="lock-closed" color="danger"></ion-icon>
@@ -72,11 +72,15 @@
                             <ion-icon name="lock-open" color="success"></ion-icon>
                             }
                         </ion-button>
+                        }
                     </ion-col>
+                    <ion-col>{{getStudentOfEvent(event)}}</ion-col>
                     <ion-col>
+                        @if(event.student){
                         <ion-button fill="clear" size="small" (click)="createNotices(event)">
                             <ion-icon name="clipboard" color="secondary"></ion-icon>
                         </ion-button>
+                        }
                     </ion-col>
                 </ion-row>
             </ion-grid>

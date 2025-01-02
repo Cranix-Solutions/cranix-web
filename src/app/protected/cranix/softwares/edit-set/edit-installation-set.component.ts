@@ -80,7 +80,9 @@ export class EditInstallationSetComponent implements OnInit {
         this.availableHwconfs.push(tmp);
       }
     }
-    this.availableRooms = this.objectService.allObjects['room'];
+    for(let room of this.objectService.allObjects['room']) {
+      if(room.roomType != 'AdHocAccess') this.availableRooms.push(room)
+    }
     for (let tmp of this.objectService.allObjects['device']) {
       let tmpHwconf = this.objectService.getObjectById('hwconf', tmp.hwconfId);
       if (tmpHwconf && tmpHwconf.deviceType == 'FatClient') {

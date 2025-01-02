@@ -96,8 +96,6 @@ export class ManageParentsComponent {
         this.parentsService.get().subscribe(
           (val) => {
             this.nextPtms = [];
-            this.nextPtms.push(new ParentTeacherMeeting())
-            this.nextPtms[0]['title'] = this.languageS.trans('New PTM')
             if (val) {
               for (let o of val) {
                 this.nextPtms.push(o)
@@ -123,8 +121,14 @@ export class ManageParentsComponent {
   }
 
   selectPtm(ptm: ParentTeacherMeeting) {
-    this.selectedPTM = this.parentsService.adaptPtmTimes(ptm)
-    this.isNewPtm = this.nextPtms.some(p => p.id == this.selectedPTM.id)
+    if(ptm) {
+      this.selectedPTM = this.parentsService.adaptPtmTimes(ptm)
+      this.isNewPtm = true
+    } else {
+      this.selectedPTM = new ParentTeacherMeeting()
+      this.isNewPtm = false
+    }
+    //this.isNewPtm = this.nextPtms.some(p => p.id == this.selectedPTM.id)
     this.isSelectPtmOpen = false
   }
   createdColDef() {
