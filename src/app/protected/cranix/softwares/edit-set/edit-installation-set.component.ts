@@ -122,7 +122,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.availableSoftwaresApi.forEachNode(
       function (node, index) {
         console.log(node)
-        for (let obj of node.beans.context.contextParams.providedBeanInstances.gridOptions.context.componentParent.softwares) {
+        for (let obj of node.beans.gridOptions.context.componentParent.softwares) {
           if (node.data.id == obj.id) {
             node.setSelected(true);
           }
@@ -146,7 +146,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.availableHwconfsApi = params.api;
     this.availableHwconfsApi.forEachNode(
       function (node, index) {
-        for (let obj of node.beans.context.contextParams.providedBeanInstances.gridOptions.context.componentParent.hwconfs) {
+        for (let obj of node.beans.gridOptions.context.componentParent.hwconfs) {
           if (node.data.id == obj.id) {
             node.setSelected(true);
           }
@@ -170,7 +170,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.availableRoomsApi = params.api;
     this.availableRoomsApi.forEachNode(
       function (node, index) {
-        for (let obj of node.beans.context.contextParams.providedBeanInstances.gridOptions.context.componentParent.rooms) {
+        for (let obj of node.beans.gridOptions.context.componentParent.rooms) {
           if (node.data.id == obj.id) {
             node.setSelected(true);
           }
@@ -194,7 +194,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.availableDevicesApi = params.api;
     this.availableDevicesApi.forEachNode(
       function (node, index) {
-        for (let obj of node.beans.context.contextParams.providedBeanInstances.gridOptions.context.componentParent.devices) {
+        for (let obj of node.beans.gridOptions.context.componentParent.devices) {
           if (node.data.id == obj.id) {
             node.setSelected(true);
           }
