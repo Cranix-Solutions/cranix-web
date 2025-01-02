@@ -80,8 +80,8 @@
                 <ion-item>
                     <ion-label>{{'Select your child for the event' | translate}}</ion-label>
                     <ionic-selectable #ionicSelectUsers itemValueField="id" itemTextField="fullName"
-                        [isMultiple]="false" [(ngModel)]="selectedEvent.parent" [ngModelOptions]="{standalone: true}"
-                        [items]="parents" [canSearch]="true">
+                        [isMultiple]="false" [(ngModel)]="selectedEvent.student" [ngModelOptions]="{standalone: true}"
+                        [items]="students" [canSearch]="true">
                     </ionic-selectable>
                 </ion-item>
             </ion-list>
