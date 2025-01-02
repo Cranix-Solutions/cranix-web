@@ -221,9 +221,6 @@ export class EditInstallationSetComponent implements OnInit {
       (<HTMLInputElement>document.getElementById("softwaresTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
     }
   }
-  softwaresChanged() {
-    this.softwares = this.softwaresApi.getSelectedRows();
-  }
   softwaresFilterChanged() {
     this.softwaresApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("softwaresFilter")).value);
   }
@@ -235,9 +232,6 @@ export class EditInstallationSetComponent implements OnInit {
     if (!this.authService.isMD()) {
       (<HTMLInputElement>document.getElementById("hwconfsTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
     }
-  }
-  hwconfsChanged() {
-    this.hwconfs = this.hwconfsApi.getSelectedRows();
   }
   hwconfsFilterChanged() {
     this.hwconfsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("hwconfsFilter")).value);
@@ -251,9 +245,6 @@ export class EditInstallationSetComponent implements OnInit {
       (<HTMLInputElement>document.getElementById("roomsTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
     }
   }
-  roomsChanged() {
-    this.rooms = this.roomsApi.getSelectedRows();
-  }
   roomsFilterChanged() {
     this.roomsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("roomsFilter")).value);
   }
@@ -265,9 +256,6 @@ export class EditInstallationSetComponent implements OnInit {
     if (!this.authService.isMD()) {
       (<HTMLInputElement>document.getElementById("devicesTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
     }
-  }
-  devicesChanged() {
-    this.devices = this.devicesApi.getSelectedRows();
   }
   devicesFilterChanged() {
     this.devicesApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("devicesFilter")).value);
