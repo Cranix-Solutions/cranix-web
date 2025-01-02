@@ -16,7 +16,7 @@
       <ion-icon name="calendar"></ion-icon>
       <ion-label>{{ 'Security' | translate }}</ion-label>
     </ion-tab-button>
-    <ion-tab-button *ngIf="authS.isOneOfAllowed(['ptm.manage','ptm.use'])" tab="ptms">
+    <ion-tab-button *ngIf="authS.isOneOfAllowed(['ptm.manage','ptm.registerRoom'])" tab="ptms">
       <ion-icon name="calendar"></ion-icon>
       <ion-label>{{ 'PTM' | translate }}</ion-label>
     </ion-tab-button>
