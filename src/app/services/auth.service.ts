@@ -36,6 +36,7 @@ export class AuthenticationService {
     requestedPath: string;
     minLgWidth = 769;
     minLgHeight = 600;
+    //rowColors: string[] = ["#135d54", "#E2F3E5", "#AFC2B2"]
     rowColors: string[] = ["#D2E3D5", "#E2F3E5", "#AFC2B2"]
     need2fa: boolean = false
     pinFalse: boolean = false;

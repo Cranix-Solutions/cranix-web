@@ -9,7 +9,8 @@
     </ion-item>
     }
     }@else{
-    <ion-accordion-group expand="inset">
+    <!-- ion-accordion-group expand="inset" (value)="myPTMTeacherInRoom.id == 0 ? 'first' : 'regs' " -->
+    <ion-accordion-group expand="inset" value="first">
         <ion-accordion value="first">
             <ion-item slot="header">
                 {{selectedPTM.title}}
@@ -38,11 +39,15 @@
                 </ion-item>
                 @if(myPTMTeacherInRoom.id == 0){
                 <ion-item>
+                    @if(authService.isAllowed('ptm.registerRoom')){
                     <ion-label>{{'Register a room'|translate}}</ion-label>
                     <ionic-selectable #ionicSelectRoom itemValueField="id" itemTextField="description"
                         [isMultiple]="false" [(ngModel)]="myPTMTeacherInRoom.room" [ngModelOptions]="{standalone: true}"
                         [items]="freeRooms" [canSearch]="true" (onChange)="selectRoom()">
                     </ionic-selectable>
+                    }@else{
+                    {{'You have to wait until a room will be reserved for you.'|translate}}
+                    }
                 </ion-item>
                 }@else{
                 <ion-item>
@@ -52,12 +57,12 @@
                 }
             </ion-list>
         </ion-accordion>
+        @if(myPTMTeacherInRoom.id != 0){
         <ion-accordion value="regs">
             <ion-item slot="header">{{'Registrations'|translate}}</ion-item>
             <ion-grid slot="content">
                 <ion-row>
                     <ion-col>{{'Time'|translate}}</ion-col>
-                    <ion-col>{{'Block'|translate}}</ion-col>
                     <ion-col>{{'Student'|translate}}</ion-col>
                     <ion-col>{{'Notices'|translate}}</ion-col>
                 </ion-row>
@@ -65,16 +70,23 @@
                     <ion-col>{{event.start|date:'HH:mm'}}</ion-col>
                     <ion-col>
                         @if(!event.student){
-                        <ion-button fill="clear" size="small" (click)="setBlockEvent(event)">
-                            @if(event.blocked){
-                            <ion-icon name="lock-closed" color="danger"></ion-icon>
-                            } @else {
-                            <ion-icon name="lock-open" color="success"></ion-icon>
-                            }
+
+                        @if(event.blocked){
+                        <ion-button fill="clear" size="small" (click)="setBlockEvent(event)"
+                            matTooltip="{{'blocked' | translate }}">
+                            <ion-icon slot="icon-only" name="lock-closed" color="danger"></ion-icon>
+                        </ion-button>
+
+                        } @else {
+                        <ion-button fill="clear" size="small" (click)="setBlockEvent(event)"
+                            matTooltip="{{'free' | translate }}">
+                            <ion-icon slot="icon-only" name="lock-open" color="success"></ion-icon>
                         </ion-button>
                         }
+                        }@else{
+                        {{getStudentOfEvent(event)}}
+                        }
                     </ion-col>
-                    <ion-col>{{getStudentOfEvent(event)}}</ion-col>
                     <ion-col>
                         @if(event.student){
                         <ion-button fill="clear" size="small" (click)="createNotices(event)">
@@ -84,8 +96,8 @@
                     </ion-col>
                 </ion-row>
             </ion-grid>
-
         </ion-accordion>
+        }
     </ion-accordion-group>
     }
 </ion-content>

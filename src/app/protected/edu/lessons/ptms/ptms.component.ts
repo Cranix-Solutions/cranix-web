@@ -24,7 +24,6 @@ export class PtmsComponent implements OnInit {
     public authService: AuthenticationService,
     private langService: LanguageService,
     private objectService: GenericObjectService,
-    private utilsService: UtilsService,
     public ptmService: ParentsService
   ) {
     this.now = new Date()
@@ -96,5 +95,9 @@ export class PtmsComponent implements OnInit {
         this.readData()
       }
     )
+  }
+  createNotices(event){
+    this.objectService.errorMessage("Ist noch nicht implementiert")
+    console.log(event)
   }
 }
