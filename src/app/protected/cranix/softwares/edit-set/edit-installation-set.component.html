@@ -67,7 +67,7 @@
               id="roomsFilter"></ion-input>
           </ion-item>
           <ag-grid-angular style="width: 100%; height: 100%;" class="{{authService.settings.agGridThema}}"
-            id="roomsTable" [rowData]="rooms" [columnDefs]="roomColumnDefs"[context]="context"
+            id="roomsTable" [rowData]="rooms" [columnDefs]="roomColumnDefs" [context]="context"
             (gridReady)="roomsReady($event)">
           </ag-grid-angular>
         </ion-col>
