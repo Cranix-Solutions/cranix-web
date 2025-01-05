@@ -21,19 +21,23 @@ export class LoginPage implements OnInit {
     user: LoginForm;
 
     constructor(
-        public  authService: AuthenticationService,
+        public authService: AuthenticationService,
         private systemService: SystemService,
         private objectService: GenericObjectService,
-    ) {
-        this.instName = this.systemService.getInstituteName();
-    }
+    ) {}
 
     ngOnInit() {
-        this.user = new LoginForm();
+        this.instName = this.systemService.getInstituteName();
+        const params = new URL(window.location.href).searchParams
+        if (params.has("token")) {
+            this.authService.setupSessionByToken(params.get("token"), this.instituteName)
+        } else {
+            this.user = new LoginForm();
+        }
     }
 
     login(): void {
-        this.authService.setUpSession(this.user,  this.instituteName);
+        this.authService.setUpSession(this.user, this.instituteName);
     }
 
     checkPin() {
@@ -44,8 +48,8 @@ export class LoginPage implements OnInit {
     sendPin() {
         let id: string = this.authService.crx2fa.split('#')[1]
         this.authService.sendPin(id).subscribe({
-           next: (val) => { this.objectService.responseMessage(val)},
-           error: (error) => { this.objectService.errorMessage(error)}
+            next: (val) => { this.objectService.responseMessage(val) },
+            error: (error) => { this.objectService.errorMessage(error) }
         })
     }
 

@@ -103,6 +103,45 @@ export class AuthenticationService {
         this.storage.set('selectedTeachingSubject', JSON.stringify(this.selectedTeachingSubject))
     }
 
+    setUpHeaders(){
+        this.headers = new HttpHeaders({
+            'Content-Type': "application/json",
+            'Accept': "application/json",
+            'Authorization': "Bearer " + this.session.token
+        });
+        this.formHeaders = new HttpHeaders({
+            'Accept': "application/json",
+            'Authorization': "Bearer " + this.session.token
+        });
+        this.anyHeaders = new HttpHeaders({
+            'Accept': "*/*",
+            'Authorization': "Bearer " + this.session.token
+        });
+        this.textHeaders = new HttpHeaders({
+            'Accept': "text/plain",
+            'Authorization': "Bearer " + this.session.token
+        });
+        this.longTimeHeader = new HttpHeaders({
+            'Accept': "*/*",
+            'Authorization': "Bearer " + this.session.token,
+            'timeout': `${600000}`
+        });
+    }
+    setupSessionByToken(token: string, instituteName: string){
+        this.http.get<UserResponse>(this.hostname + "sessions/byToken/" + token).subscribe(
+            (val) => {
+                if(!val) {
+                    //e
+                } else {
+                    this.session = val
+                    this.session['instituteName'] = instituteName;
+                    this.setUpHeaders();
+                    this.loadSettings();
+                    this.authenticationState.next(true);
+                }
+            }
+        )
+    }
     setUpSession(user: LoginForm, instituteName: string) {
         this.session = null;
         this.authenticationState.next(false);
@@ -112,30 +151,7 @@ export class AuthenticationService {
                 console.log('login respons is', val);
                 this.session = val;
                 this.session['instituteName'] = instituteName;
-                this.session['roomId'] = val.roomId;
-                this.session['roomName'] = val.roomName;
-                this.headers = new HttpHeaders({
-                    'Content-Type': "application/json",
-                    'Accept': "application/json",
-                    'Authorization': "Bearer " + this.session.token
-                });
-                this.formHeaders = new HttpHeaders({
-                    'Accept': "application/json",
-                    'Authorization': "Bearer " + this.session.token
-                });
-                this.anyHeaders = new HttpHeaders({
-                    'Accept': "*/*",
-                    'Authorization': "Bearer " + this.session.token
-                });
-                this.textHeaders = new HttpHeaders({
-                    'Accept': "text/plain",
-                    'Authorization': "Bearer " + this.session.token
-                });
-                this.longTimeHeader = new HttpHeaders({
-                    'Accept': "*/*",
-                    'Authorization': "Bearer " + this.session.token,
-                    'timeout': `${600000}`
-                });
+                this.setUpHeaders();
                 this.loadSettings();
                 if (this.isAllowed("2fa.use")) {
                     if (this.session.crx2faSession) {
