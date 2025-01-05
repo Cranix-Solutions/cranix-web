@@ -58,7 +58,7 @@ export class UserResponse {
         crx2faSession?: Crx2faSession
         acls: string[];
         crx2fas?: string[];
-        goto?: string
+        gotoPath?: string
 }
 
 /**

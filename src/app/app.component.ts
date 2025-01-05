@@ -45,8 +45,8 @@ export class AppComponent {
         console.log("cephalix_token",sessionStorage.getItem('cephalix_token'))
         console.log("shortName",sessionStorage.getItem('shortName'))
         if (state) {
-          if(this.authService.session.goto){
-            this.router.navigate([this.authService.session.goto]);
+          if(this.authService.session.gotoPath){
+            this.router.navigate([this.authService.session.gotoPath]);
           }
           if(!this.authService.session.mustSetup2fa) {
             this.genericObjectS.initialize(true);
