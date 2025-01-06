@@ -32,6 +32,7 @@ export class CranixPtmViewComponent implements OnInit {
   ptm: ParentTeacherMeeting
   isRegisterEventOpen: boolean = false
   selectedEvent: PTMEvent
+  selectedEventRegistered: boolean = false
   selectedPTMinRoom: PTMTeacherInRoom
   @Input() id: number;
   constructor(
@@ -142,11 +143,9 @@ export class CranixPtmViewComponent implements OnInit {
     this.selectedEvent = event
     this.selectedPTMinRoom = this.selectPTMinRoom(event)
     this.isRegisterEventOpen = true
+    this.selectedEventRegistered = this.selectedEvent.student != null
     if (!this.selectedEvent.student && this.isParent) {
       this.selectedEvent.parent = this.me
-      if (this.students.length == 1) {
-        this.selectedEvent.student = this.students[0]
-      }
     }
     console.log(event)
   }

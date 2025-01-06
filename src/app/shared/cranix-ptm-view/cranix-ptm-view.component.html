@@ -9,12 +9,12 @@
         @if(authService.isAllowed('parent.manage')){
         <ion-header color="primary">
             <ion-toolbar color="primary">
-                <ion-title>{{'Register parent for the event'|translate}}</ion-title>
+                <ion-title>{{'Register student for the event'|translate}}</ion-title>
                 <ion-buttons slot="end">
                     <ion-button class="ion-no-margin" (click)="doRegister()">
                         <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
                     </ion-button>
-                    @if(selectedEvent.parent){
+                    @if(selectedEventRegistered){
                     <ion-button class="ion-no-margin" (click)="cancelEvent()">
                         <ion-icon slot="icon-only" color="success" name="trash"></ion-icon>
                     </ion-button>
@@ -41,9 +41,23 @@
                 </ion-item>
                 <ion-item>
                     <ion-label>{{'Select student for the event'|translate}}</ion-label>
-                    <ionic-selectable #ionicSelectUsers itemValueField="id" itemTextField="fullName"
+                    <ionic-selectable #selectStudent itemValueField="id" itemTextField="fullName"
                         [isMultiple]="false" [(ngModel)]="selectedEvent.student" [ngModelOptions]="{standalone: true}"
                         [items]="students" [canSearch]="true">
+                        <ng-template ionicSelectableHeaderTemplate>
+                            <ion-header>
+                                <ion-toolbar color="primary">
+                                    <ion-title>
+                                        {{ "Select student for the event" | translate }}
+                                    </ion-title>
+                                    <ion-buttons slot="end">
+                                        <ion-button ion-button (click)="selectStudent.close()">
+                                            <ion-icon color="danger" name="close"></ion-icon>
+                                        </ion-button>
+                                    </ion-buttons>
+                                </ion-toolbar>
+                            </ion-header>
+                        </ng-template>
                     </ionic-selectable>
                 </ion-item>
             </ion-list>

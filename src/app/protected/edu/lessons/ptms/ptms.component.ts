@@ -3,8 +3,7 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { ParentsService } from 'src/app/services/parents.service';
-import { UtilsService } from 'src/app/services/utils.service';
-import { ParentTeacherMeeting, PTMEvent, PTMTeacherInRoom, Room } from 'src/app/shared/models/data-model';
+import { ParentTeacherMeeting, PTMEvent, PTMTeacherInRoom, Room, User } from 'src/app/shared/models/data-model';
 
 @Component({
   selector: 'app-ptms',
@@ -16,8 +15,12 @@ export class PtmsComponent implements OnInit {
   isAddPTMOpen: boolean = false
   addEditPTMTitle: string = ""
   selectedPTM: ParentTeacherMeeting
+  selectedEvent: PTMEvent =new PTMEvent()
+  selectedEventRegistered: boolean = false
+  isRegisterEventOpen = false
   nextPtms: ParentTeacherMeeting[] = []
   myPTMTeacherInRoom: PTMTeacherInRoom
+  students: User[] = [];
   now: Date;
 
   constructor(
@@ -34,6 +37,9 @@ export class PtmsComponent implements OnInit {
     console.log("ngOnInit called")
   }
   readData() {
+    for (let s of this.objectService.allObjects['user']) {
+      if (s.role == 'students') this.students.push(s)
+    }
     this.ptmService.get().subscribe((val) => {
       this.nextPtms = val
       if (val.length == 1) {
@@ -99,5 +105,27 @@ export class PtmsComponent implements OnInit {
   createNotices(event){
     this.objectService.errorMessage("Ist noch nicht implementiert")
     console.log(event)
+  }
+  registerEvent(event){
+    this.selectedEvent = event
+    this.selectedEventRegistered = this.selectedEvent.student != null
+    this.isRegisterEventOpen = true
+  }
+  doRegisterEvent(){
+    this.ptmService.registerEvent(this.selectedEvent).subscribe((val)=>{
+      this.objectService.responseMessage(val)
+      this.readData()
+      this.isRegisterEventOpen = false
+    })
+  }
+  cancelEvent() {
+    this.ptmService.cancelEvent(this.selectedEvent.id).subscribe((val) => {
+      this.objectService.responseMessage(val)
+      this.isRegisterEventOpen = false
+      this.readData()
+    })
+  }
+  printRegistrations(event){
+    event.stopPropagation();
   }
 }

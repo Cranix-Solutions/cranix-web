@@ -128,8 +128,8 @@ export class AuthenticationService {
         });
     }
     setupSessionByToken(token: string, instituteName: string){
-        this.http.get<UserResponse>(this.hostname + "sessions/byToken/" + token).subscribe(
-            (val) => {
+        this.http.get<UserResponse>(this.hostname + "sessions/byToken/" + token).subscribe({
+            next: (val) => {
                 if(!val) {
                     //e
                 } else {
@@ -139,8 +139,18 @@ export class AuthenticationService {
                     this.loadSettings();
                     this.authenticationState.next(true);
                 }
+            },
+            error: async (val) => {
+                console.log("error+" + val)
+                const toast = this.toastController.create({
+                    position: "middle",
+                    message: "Session ist nicht gültig",
+                    color: "danger",
+                    duration: 3000
+                });
+                (await toast).present();
             }
-        )
+        })
     }
     setUpSession(user: LoginForm, instituteName: string) {
         this.session = null;

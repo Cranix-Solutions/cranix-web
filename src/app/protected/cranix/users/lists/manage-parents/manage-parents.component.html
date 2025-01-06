@@ -282,20 +282,27 @@
         </ion-header>
         <ion-content>
             <ion-list>
-                <ion-item>
-                    <ion-button fill="clear" expand="block" (click)="selectPtm(null)">{{'Create parent teacher meeting'|translate}}</ion-button>
-                </ion-item>
-                <ion-item>{{'Upcoming PTMs'|translate}}:</ion-item>
-                <ion-item *ngFor="let ptm of nextPtms">
-                    <ion-button fill="clear" expand="block" (click)="selectPtm(ptm)">{{ptm.title}}</ion-button>
-                </ion-item>
-                @if(formerPtms.length > 0) {
-                <ion-item>{{'Former PTMs'|translate}}:</ion-item>
-                <ion-item *ngFor="let ptm of formerPtms">
-                    <ion-button fill="clear" expand="block" (click)="selectPtm(ptm)">{{ptm.title}}</ion-button>
-                </ion-item>
-                }
+                <ion-header lines="full">
+                    <ion-button fill="clear" expand="block" (click)="selectPtm(null)">
+                        <ion-icon name="add-circle" color="success"></ion-icon>
+                        {{'Create parent teacher meeting'|translate}}
+                    </ion-button>
+                </ion-header>
             </ion-list>
+            <ion-list>
+                <ion-header lines="full">{{'Upcoming PTMs'|translate}}:</ion-header>
+                <ion-item *ngFor="let ptm of nextPtms">
+                    <ion-button fill="clear" expand="block" (click)="selectPtm(ptm)">{{ptm.start|date:'yyyy-MM-dd'}}: {{ptm.title}}</ion-button>
+                </ion-item>
+            </ion-list>
+            @if(formerPtms.length > 0) {
+            <ion-list>
+                <ion-header lines="full">{{'Former PTMs'|translate}}:</ion-header>
+                <ion-item *ngFor="let ptm of formerPtms">
+                    <ion-button fill="clear" expand="block" (click)="selectPtm(ptm)">{{ptm.start|date:'yyyy-MM-dd'}}: {{ptm.title}}</ion-button>
+                </ion-item>
+            </ion-list>
+            }
         </ion-content>
     </ng-template>
 </ion-modal>

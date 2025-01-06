@@ -10,7 +10,7 @@ import { PTMEvent } from "src/app/shared/models/data-model";
   </ion-button>
   }@else if(isSelectable()){
     <ion-button fill="clear" size="small" (click)="register()">
-      <ion-icon name="pencil-outline" color="success"></ion-icon>
+      <ion-icon name="person-add-outline" color="success"></ion-icon>
     </ion-button>
   }@else{
     <ion-button fill="clear" size="small" (click)="cancel()">

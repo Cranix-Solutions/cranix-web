@@ -59,7 +59,12 @@
         </ion-accordion>
         @if(myPTMTeacherInRoom.id != 0){
         <ion-accordion value="regs">
-            <ion-item slot="header">{{'Registrations'|translate}}</ion-item>
+            <ion-item slot="header">
+                <ion-label>{{'Registrations'|translate}} </ion-label>
+                <ion-button fill="clear" (click)="printRegistrations($event)" matTooltip="{{'Print the list of the registrations' | translate }}">
+                    <ion-icon name="print-outline"></ion-icon>
+                </ion-button>
+            </ion-item>
             <ion-grid slot="content">
                 <ion-row>
                     <ion-col>{{'Time'|translate}}</ion-col>
@@ -70,7 +75,6 @@
                     <ion-col>{{event.start|date:'HH:mm'}}</ion-col>
                     <ion-col>
                         @if(!event.student){
-
                         @if(event.blocked){
                         <ion-button fill="clear" size="small" (click)="setBlockEvent(event)"
                             matTooltip="{{'blocked' | translate }}">
@@ -78,19 +82,25 @@
                         </ion-button>
 
                         } @else {
+                        <ion-button fill="clear" size="small" (click)="registerEvent(event)"
+                            matTooltip="{{'Register student for the event' | translate }}">
+                            <ion-icon slot="icon-only" name="person-add-outline" color="success"></ion-icon>
+                        </ion-button>
                         <ion-button fill="clear" size="small" (click)="setBlockEvent(event)"
-                            matTooltip="{{'free' | translate }}">
-                            <ion-icon slot="icon-only" name="lock-open" color="success"></ion-icon>
+                            matTooltip="{{'block' | translate }}">
+                            <ion-icon slot="icon-only" name="lock-open" color="warning"></ion-icon>
                         </ion-button>
                         }
                         }@else{
-                        {{getStudentOfEvent(event)}}
+                        <ion-button fill="clear" size="small" (click)="registerEvent(event)" style="color: #fff;">
+                            {{getStudentOfEvent(event)}}
+                        </ion-button>
                         }
                     </ion-col>
                     <ion-col>
                         @if(event.student){
                         <ion-button fill="clear" size="small" (click)="createNotices(event)">
-                            <ion-icon name="clipboard" color="secondary"></ion-icon>
+                            <ion-icon name="clipboard" color="tertiary"></ion-icon>
                         </ion-button>
                         }
                     </ion-col>
@@ -101,3 +111,56 @@
     </ion-accordion-group>
     }
 </ion-content>
+<ion-modal [isOpen]="isRegisterEventOpen">
+    <ng-template>
+        <ion-toolbar color="primary">
+            <ion-title>{{'Register student for the event'|translate}}</ion-title>
+            <ion-buttons slot="end">
+                <ion-button class="ion-no-margin" (click)="doRegisterEvent()">
+                    <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+                </ion-button>
+                @if(selectedEventRegistered){
+                <ion-button class="ion-no-margin" (click)="cancelEvent()" matTooltip="{{'Cancel registration' | translate }}">
+                    <ion-icon slot="icon-only" color="warning" name="trash"></ion-icon>
+                </ion-button>
+                }
+                <ion-button fill="clear" size="small" (click)="isRegisterEventOpen = false">
+                    <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+                </ion-button>
+            </ion-buttons>
+        </ion-toolbar>
+        <ion-content>
+            <ion-list>
+                <ion-item>
+                    <ion-label>{{'Time'|translate}}</ion-label><ion-label>{{selectedEvent.start|date:'HH:mm'}}</ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-label>{{'Room'|translate}}</ion-label><ion-label>{{myPTMTeacherInRoom.room.name}},
+                        {{myPTMTeacherInRoom.room.description}}
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-label>{{'Select student for the event'|translate}}</ion-label>
+                    <ionic-selectable #ionSelecdenttStu itemValueField="id" itemTextField="fullName"
+                        [isMultiple]="false" [(ngModel)]="selectedEvent.student" [ngModelOptions]="{standalone: true}"
+                        [items]="students" [canSearch]="true">
+                        <ng-template ionicSelectableHeaderTemplate>
+                            <ion-header>
+                                <ion-toolbar color="primary">
+                                    <ion-title>
+                                        {{ "Select student for the event" | translate }}
+                                    </ion-title>
+                                    <ion-buttons slot="end">
+                                        <ion-button ion-button (click)="ionSelecdenttStu.close()">
+                                            <ion-icon color="danger" name="close"></ion-icon>
+                                        </ion-button>
+                                    </ion-buttons>
+                                </ion-toolbar>
+                            </ion-header>
+                        </ng-template>
+                    </ionic-selectable>
+                </ion-item>
+            </ion-list>
+        </ion-content>
+    </ng-template>
+</ion-modal>
