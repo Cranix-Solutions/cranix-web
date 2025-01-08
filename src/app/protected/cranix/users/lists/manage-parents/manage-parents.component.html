@@ -36,19 +36,25 @@
             <ion-title>{{'Create parent teacher meeting'|translate}} </ion-title>
             }
             <ion-buttons slot="end">
-                <ion-button (click)="addEditPTM()" [disabled]="!addEditPTMForm.valid">
+                <ion-button (click)="isSelectPtmOpen = true" fill="solid" matTooltip="{{'Select PTM'|translate}}">
+                    <ion-icon slot="icon-only" color="success" name="list-outline"></ion-icon>
+                </ion-button>
+                <ion-button (click)="addEditPTM()" fill="solid" matTooltip="{{'Apply'|translate}}" [disabled]="!addEditPTMForm.valid">
                     <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
                 </ion-button>
-                <ion-button (click)="sendMails()" [disabled]="!isNewPtm">
-                    <ion-icon slot="icon-only" color="success" name="mail-outline"></ion-icon>
+                <ion-button (click)="selectPtm(null)" fill="solid" matTooltip="{{'Create parent teacher meeting'|translate}}">
+                    <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
                 </ion-button>
-                <ion-button (click)="registerRoom()" [disabled]="selectedPTM.id == 0">
-                    <ion-icon slot="icon-only" color="success" name="room"></ion-icon>
+                <ion-button (click)="sendMails()" fill="solid" [disabled]="!isUpcomming" matTooltip="{{'Send mail to the parents'|translate}}">
+                    <ion-icon slot="icon-only" color="primary" name="mail-outline"></ion-icon>
                 </ion-button>
-                <ion-button (click)="isRegisterEventOpen = true" [disabled]="selectedPTM.id == 0">
-                    <ion-icon slot="icon-only" color="success" name="people"></ion-icon>
+                <ion-button (click)="registerRoom()" fill="solid" [disabled]="!isUpcomming" matTooltip="{{'Register room for teachers'|translate}}">
+                    <ion-icon slot="icon-only" color="secondary" name="room"></ion-icon>
                 </ion-button>
-                <ion-button (click)="isDeletePtmOpen" [disabled]="selectedPTM.id == 0">
+                <ion-button (click)="isRegisterEventOpen = true" fill="solid" [disabled]="!isUpcomming!"  matTooltip="{{'Register students'|translate}}">
+                    <ion-icon slot="icon-only" color="tertiary" name="people"></ion-icon>
+                </ion-button>
+                <ion-button (click)="isDeletePtmOpen" fill="solid" [disabled]="selectedPTM.id == 0" matTooltip="{{'Remove PTM'|translate}}">
                     <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
                 </ion-button>
             </ion-buttons>
@@ -57,7 +63,7 @@
             <ion-item>
                 <ion-input [(ngModel)]="selectedPTM.title" name="title" label="{{'Title'|translate}}"
                     labelPlacement="fixed" required></ion-input>
-                <ion-button (click)="isSelectPtmOpen = true">{{'Select PTM'|translate}}</ion-button>
+
             </ion-item>
             <ion-item>
                 <ion-label>{{'From'|translate}}*</ion-label>
@@ -82,7 +88,7 @@
                 <input [(ngModel)]="selectedPTM.endRegistration" name="endRegistration" type="datetime-local"
                     required />
             </ion-item>
-            @if(isNewPtm || selectedPTM.id == 0){
+            @if(isUpcomming || selectedPTM.id == 0){
             <ion-item>
                 <ion-label>{{'Select classes for the PTM' | translate}}</ion-label>
                 <ionic-selectable #ionicSelectClasses itemValueField="id" itemTextField="name" [isMultiple]="true"
@@ -282,24 +288,18 @@
         </ion-header>
         <ion-content>
             <ion-list>
-                <ion-header lines="full">
-                    <ion-button fill="clear" expand="block" (click)="selectPtm(null)">
-                        <ion-icon name="add-circle" color="success"></ion-icon>
-                        {{'Create parent teacher meeting'|translate}}
-                    </ion-button>
-                </ion-header>
-            </ion-list>
-            <ion-list>
                 <ion-header lines="full">{{'Upcoming PTMs'|translate}}:</ion-header>
                 <ion-item *ngFor="let ptm of nextPtms">
-                    <ion-button fill="clear" expand="block" (click)="selectPtm(ptm)">{{ptm.start|date:'yyyy-MM-dd'}}: {{ptm.title}}</ion-button>
+                    <ion-button fill="clear" expand="block" (click)="selectPtm(ptm)">{{ptm.start|date:'yyyy-MM-dd'}}:
+                        {{ptm.title}}</ion-button>
                 </ion-item>
             </ion-list>
             @if(formerPtms.length > 0) {
             <ion-list>
                 <ion-header lines="full">{{'Former PTMs'|translate}}:</ion-header>
                 <ion-item *ngFor="let ptm of formerPtms">
-                    <ion-button fill="clear" expand="block" (click)="selectPtm(ptm)">{{ptm.start|date:'yyyy-MM-dd'}}: {{ptm.title}}</ion-button>
+                    <ion-button fill="clear" expand="block" (click)="selectPtm(ptm)">{{ptm.start|date:'yyyy-MM-dd'}}:
+                        {{ptm.title}}</ion-button>
                 </ion-item>
             </ion-list>
             }

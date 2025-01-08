@@ -18,7 +18,7 @@ export class ManageParentsComponent {
   nextPtms: ParentTeacherMeeting[] = []
   formerPtms: ParentTeacherMeeting[] = []
   selectedPTM: ParentTeacherMeeting = new ParentTeacherMeeting()
-  isNewPtm: boolean = false;
+  isUpcomming: boolean = false;
   selectedParent: User
   selectedChildren: User[]
   children: User[] = []
@@ -102,7 +102,7 @@ export class ManageParentsComponent {
               }
               if (val.length == 1) {
                 this.selectedPTM = this.parentsService.adaptPtmTimes(val[0])
-                this.isNewPtm = true;
+                this.isUpcomming = true;
               }
             } else {
               this.selectedPTM = new ParentTeacherMeeting();
@@ -123,12 +123,14 @@ export class ManageParentsComponent {
   selectPtm(ptm: ParentTeacherMeeting) {
     if(ptm) {
       this.selectedPTM = this.parentsService.adaptPtmTimes(ptm)
-      this.isNewPtm = true
+      let now = new Date().valueOf();
+      let start = new Date(this.selectedPTM.start).valueOf()
+      this.isUpcomming = ( now < start )
     } else {
       this.selectedPTM = new ParentTeacherMeeting()
-      this.isNewPtm = false
+      this.isUpcomming = false
     }
-    //this.isNewPtm = this.nextPtms.some(p => p.id == this.selectedPTM.id)
+    //this.isUpcomming = this.nextPtms.some(p => p.id == this.selectedPTM.id)
     this.isSelectPtmOpen = false
   }
   createdColDef() {
