@@ -184,7 +184,12 @@ export class ManageParentsComponent {
     )
   }
   sendMails(){
-    //TODO
+    this.parentsService.sendMails(this.selectedPTM.id).subscribe(
+      (val) => {
+        this.objectService.responseMessage(val);
+        this.isRegisterRoomOpen = false
+      }
+    )
   }
 
   registerRoom() {
