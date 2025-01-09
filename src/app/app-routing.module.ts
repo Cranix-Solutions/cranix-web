@@ -14,6 +14,10 @@ const routes: Routes = [
   {
     path: 'pages',
     loadChildren: () => import('./protected/protected.module').then(m => m.ProtectedPageModule)
+  },
+  {
+    path: 'trusted',
+    loadChildren: () => import('./trusted/trusted.modules').then(m => m.TrustedModule)
   }
 ];
 

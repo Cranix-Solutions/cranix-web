@@ -1,3 +1,8 @@
-<ion-app>
-  <ion-router-outlet></ion-router-outlet>
-</ion-app>
+
+@if(error){
+  {{error}}
+} @else {
+  <ion-app>
+    <ion-router-outlet></ion-router-outlet>
+  </ion-app>
+}

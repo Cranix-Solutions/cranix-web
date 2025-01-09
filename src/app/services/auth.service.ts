@@ -55,6 +55,7 @@ export class AuthenticationService {
         private languageService: LanguageService,
         private router: Router
     ) {
+        this.hostname = this.utilsS.hostName();
         this.plt.ready().then(() => {
             this.checkSession();
         });
@@ -62,7 +63,6 @@ export class AuthenticationService {
 
     login(user: LoginForm) {
         console.log("auth.services.login called:", user)
-        this.hostname = this.utilsS.hostName();
         this.url = this.hostname + "/sessions/create";
         return this.http.post<UserResponse>(this.url, user, { headers: this.anonHeaders });
     }
@@ -127,21 +127,21 @@ export class AuthenticationService {
             'timeout': `${600000}`
         });
     }
-    setupSessionByToken(token: string, instituteName: string){
-        this.http.get<UserResponse>(this.hostname + "sessions/byToken/" + token).subscribe({
+    setupSessionByToken(token: string){
+        this.http.get<UserResponse>(this.hostname + "/sessions/byToken/" + token).subscribe({
             next: (val) => {
                 if(!val) {
                     //e
                 } else {
                     this.session = val
-                    this.session['instituteName'] = instituteName;
                     this.setUpHeaders();
                     this.loadSettings();
-                    this.authenticationState.next(true);
+                    //this.authenticationState.next(true);
+                    this.router.navigate([this.session.gotoPath]);
                 }
             },
             error: async (val) => {
-                console.log("error+" + val)
+                console.log(val)
                 const toast = this.toastController.create({
                     position: "middle",
                     message: "Session ist nicht gültig",

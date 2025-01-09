@@ -24,16 +24,11 @@ export class LoginPage implements OnInit {
         public authService: AuthenticationService,
         private systemService: SystemService,
         private objectService: GenericObjectService,
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.instName = this.systemService.getInstituteName();
-        const params = new URL(window.location.href).searchParams
-        if (params.has("token")) {
-            this.authService.setupSessionByToken(params.get("token"), this.instituteName)
-        } else {
-            this.user = new LoginForm();
-        }
+        this.user = new LoginForm();
     }
 
     login(): void {
