@@ -128,6 +128,9 @@ export class ManageParentsComponent {
       this.isUpcomming = ( now < start )
     } else {
       this.selectedPTM = new ParentTeacherMeeting()
+      for( let cl of this.classes) {
+        this.selectedPTM.classes.push(cl)
+      }
       this.isUpcomming = false
     }
     //this.isUpcomming = this.nextPtms.some(p => p.id == this.selectedPTM.id)

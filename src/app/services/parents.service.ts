@@ -63,8 +63,8 @@ export class ParentsService {
 	}
 
 	sendMails(id: number): any {
-		this.url = this.hostname + "/parents/ptms/" + id + '/teachers';
-		return this.http.put<ServerResponse>(this.url, { headers: this.authService.headers });
+		this.url = this.hostname + "/parents/ptms/" + id;
+		return this.http.put<ServerResponse>(this.url, null, { headers: this.authService.headers });
 	}
 
 	registerRoom(id: number, ptmTiR: PTMTeacherInRoom) {
