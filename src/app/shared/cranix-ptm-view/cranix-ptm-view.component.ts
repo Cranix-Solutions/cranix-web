@@ -1,11 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { PTMEvent, PTMTeacherInRoom, ParentTeacherMeeting, User } from '../models/data-model';
+import { PTMEvent, PTMTeacherInRoom, ParentTeacherMeeting, Room, User } from '../models/data-model';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { ParentsService } from 'src/app/services/parents.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { EventRenderer } from 'src/app/pipes/ag-event-renderer';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
+import { ICellRendererAngularComp } from 'ag-grid-angular';
 
 @Component({
   selector: 'cranix-ptm-view',
@@ -14,7 +15,10 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 })
 export class CranixPtmViewComponent implements OnInit {
   context
+  ptmTeacherInRoom: PTMTeacherInRoom
+  ptm: ParentTeacherMeeting
   students: User[] = []
+  freeRooms: Room[]
   rowData = []
   events = {}
   me: User
@@ -29,11 +33,12 @@ export class CranixPtmViewComponent implements OnInit {
   }
   columnDefs = []
   gridApi
-  ptm: ParentTeacherMeeting
+  isRegisterRoomOpen: boolean = false
   isRegisterEventOpen: boolean = false
   selectedEvent: PTMEvent
   selectedEventRegistered: boolean = false
   selectedPTMinRoom: PTMTeacherInRoom
+  freeTeachers: User[] = []
   @Input() id: number;
   constructor(
     public authService: AuthenticationService,
@@ -46,7 +51,7 @@ export class CranixPtmViewComponent implements OnInit {
     this.isParent = this.authService.session.role == 'parent'
     this.students = []
     if (this.isParent) {
-      this.me = this.objectService.getObjectById("user",this.authService.session.userId)
+      this.me = this.objectService.getObjectById("user", this.authService.session.userId)
       this.parentsService.getMyChildren().subscribe((val) => { this.students = val })
     } else {
       for (let s of this.objectService.allObjects['user']) {
@@ -55,7 +60,6 @@ export class CranixPtmViewComponent implements OnInit {
     }
     this.isPtmManager = this.authService.isAllowed('ptm.manage')
   }
-
   compare(a: any, b: any) {
     return new Date(a.start).getTime() - new Date(b.start).getTime()
   }
@@ -63,14 +67,24 @@ export class CranixPtmViewComponent implements OnInit {
     console.log(this.id)
     this.readData(true)
   }
-  readData(doColdef: boolean){
+  readData(doColdef: boolean) {
     this.parentsService.getPTMById(this.id).subscribe(
       (val) => {
         this.ptm = val
-        this.createData(doColdef)
+        this.parentsService.getFreeTeachers(this.id).subscribe(
+          (val) => {
+            this.freeTeachers = val
+            this.createData(doColdef)
+          }
+        )
       }
     )
   }
+  onQuickFilterChanged() {
+    let filter = (<HTMLInputElement>document.getElementById("teacherFilter")).value.toLowerCase();
+    this.gridApi.setGridOption('quickFilterText', filter);
+  }
+
   createData(doColdef: boolean) {
     let colDefIsReady = !doColdef
     let data = []
@@ -78,23 +92,27 @@ export class CranixPtmViewComponent implements OnInit {
     for (let ptmTeacherInRoom of this.ptm.ptmTeacherInRoomList) {
       let roomEvents = {
         teacher: ptmTeacherInRoom.teacher.surName + ', ' + ptmTeacherInRoom.teacher.givenName,
-        room: ptmTeacherInRoom.room.description ? ptmTeacherInRoom.room.description : ptmTeacherInRoom.room.name
+        room: ptmTeacherInRoom.room.description ? ptmTeacherInRoom.room.description : ptmTeacherInRoom.room.name,
+        ptmId: ptmTeacherInRoom.id,
+        teacherId: ptmTeacherInRoom.teacher.id
       }
       if (!colDefIsReady) {
         colDef.push(
           {
             field: 'teacher',
             pinned: 'left',
-            minWidth: 120,
+            minWidth: 100,
             lockPinned: true,
             headerName: this.languageS.trans('Teacher'),
+            sortable: true
           },
           {
             field: 'room',
             pinned: 'left',
-            width: 100,
+            minWidth: 80,
             lockPinned: true,
             headerName: this.languageS.trans('Room'),
+            cellRenderer: RoomRenderer
           }
         )
       }
@@ -116,19 +134,27 @@ export class CranixPtmViewComponent implements OnInit {
       colDefIsReady = true
       data.push(roomEvents)
     }
-    if( doColdef ) {
+    if (doColdef) {
       this.columnDefs = colDef
     }
+    for (let user of this.freeTeachers) {
+      data.push(
+        {
+          teacher: user.surName + ', ' + user.givenName,
+          room: "0",
+          ptmId: 0,
+          teacherId: user.id
+        }
+      )
+    }
     this.rowData = data
-    console.log(this.columnDefs)
-    console.log(this.rowData)
   }
 
   onGridReady(params) {
     this.gridApi = params.api;
     this.gridApi.sizeColumnsToFit();
   }
-  
+
   selectPTMinRoom(event: PTMEvent) {
     for (let tmp of this.ptm.ptmTeacherInRoomList) {
       for (let e of tmp.events) {
@@ -164,5 +190,57 @@ export class CranixPtmViewComponent implements OnInit {
       this.isRegisterEventOpen = false
       this.readData(false)
     })
+  }
+
+  registerRoom(teacherId: number, ptmId: number) {
+    //TODO handle ptmId
+    this.parentsService.getFreeRooms(this.id).subscribe(
+      (val) => {
+        this.freeRooms = val
+        this.ptmTeacherInRoom = new PTMTeacherInRoom()
+        this.ptmTeacherInRoom['teacher'] = this.objectService.getObjectById("user", teacherId)
+        this.isRegisterRoomOpen = true;
+      })
+  }
+  doRegisterRoom() {
+    console.log(this.ptmTeacherInRoom)
+    this.parentsService.registerRoom(this.id, this.ptmTeacherInRoom).subscribe((val) => {
+      this.objectService.responseMessage(val)
+      this.isRegisterEventOpen = false
+      this.readData(false)
+      this.isRegisterRoomOpen = false;
+    }
+    )
+  }
+}
+
+@Component({
+  selector: 'room-renderer',
+  template: `@if(params.value != "0") {
+  @if(context.isPtmManager) {
+  <ion-button fill="clear" size="small" (click)="registerRoom(params.data.teacherId, params.data.ptmId)">
+  {{params.value}}  
+  </ion-button>
+  } @else {
+  {{params.value}}
+  }
+} @else {
+  <ion-button fill="clear" size="small" (click)="registerRoom(params.data.teacherId, params.data.ptmId)">
+    <ion-icon name="room-outline" color="success"></ion-icon>
+  </ion-button>
+}`
+})
+export class RoomRenderer implements ICellRendererAngularComp {
+  public context
+  public params
+  agInit(params: any): void {
+    this.context = params.context.componentParent
+    this.params = params
+  }
+  registerRoom(teacherId: number) {
+    this.context.registerRoom(teacherId);
+  }
+  refresh(params: any): boolean {
+    return true;
   }
 }

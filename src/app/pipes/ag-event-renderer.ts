@@ -4,7 +4,8 @@ import { PTMEvent } from "src/app/shared/models/data-model";
 
 @Component({
   selector: 'event-renderer',
-  template: `@if(event.blocked){
+  template: `@if(event){
+  @if(event.blocked){
   <ion-button fill="clear" size="small">
     <ion-icon name="lock-closed" color="primary"></ion-icon>
   </ion-button>
@@ -16,7 +17,8 @@ import { PTMEvent } from "src/app/shared/models/data-model";
     <ion-button fill="clear" size="small" (click)="cancel()">
       <ion-icon name="man-outline" color="danger"></ion-icon>
     </ion-button>
-  }`
+  }
+}`
 })
 export class EventRenderer implements ICellRendererAngularComp {
   public event: PTMEvent;

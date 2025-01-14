@@ -48,9 +48,6 @@
                 <ion-button (click)="sendMails()" fill="solid" [disabled]="!isUpcomming" matTooltip="{{'Send mail to the parents'|translate}}">
                     <ion-icon slot="icon-only" name="mail-outline"></ion-icon>
                 </ion-button>
-                <ion-button (click)="registerRoom()" fill="solid" [disabled]="!isUpcomming" matTooltip="{{'Register room for teachers'|translate}}">
-                    <ion-icon slot="icon-only" color="secondary" name="room"></ion-icon>
-                </ion-button>
                 <ion-button (click)="isRegisterEventOpen = true" fill="solid" [disabled]="!isUpcomming!"  matTooltip="{{'Register students'|translate}}">
                     <ion-icon slot="icon-only" color="tertiary" name="people"></ion-icon>
                 </ion-button>
@@ -155,67 +152,7 @@
 </ion-content>
 }
 }
-<ion-modal [isOpen]="isRegisterRoomOpen">
-    <ng-template>
-        <ion-header color="primary">
-            <ion-toolbar color="primary">
-                <ion-title>{{'Register room'|translate}}</ion-title>
-                <ion-buttons slot="end">
-                    <ion-button class="ion-no-margin" (click)="doRegisterRoom()">
-                        <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
-                    </ion-button>
-                    <ion-button fill="clear" size="small" (click)="isRegisterRoomOpen = false">
-                        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
-                    </ion-button>
-                </ion-buttons>
-            </ion-toolbar>
-        </ion-header>
-        <ion-content>
-            <ion-item>
-                <ion-label>{{'Select room for the PTM' | translate}}</ion-label>
-                <ionic-selectable #ionicSelectRoom itemValueField="id" itemTextField="description" [isMultiple]="false"
-                    [(ngModel)]="ptmTeacherInRoom.room" [ngModelOptions]="{standalone: true}" [items]="freeRooms"
-                    [canSearch]="true">
-                    <ng-template ionicSelectableHeaderTemplate>
-                        <ion-header>
-                            <ion-toolbar color="primary">
-                                <ion-title>
-                                    {{ "Select room for the PTM" | translate }}
-                                </ion-title>
-                                <ion-buttons slot="end">
-                                    <ion-button ion-button (click)="ionicSelectRoom.close()">
-                                        <ion-icon color="danger" name="close"></ion-icon>
-                                    </ion-button>
-                                </ion-buttons>
-                            </ion-toolbar>
-                        </ion-header>
-                    </ng-template>
-                </ionic-selectable>
-            </ion-item>
-            <ion-item>
-                <ion-label>{{'Select teacher for the PTM' | translate}}</ion-label>
-                <ionic-selectable #ionicSelectTeacher itemValueField="id" itemTextField="fullName" [isMultiple]="false"
-                    [(ngModel)]="ptmTeacherInRoom.teacher" [ngModelOptions]="{standalone: true}" [items]="freeTeachers"
-                    [canSearch]="true">
-                    <ng-template ionicSelectableHeaderTemplate>
-                        <ion-header>
-                            <ion-toolbar color="primary">
-                                <ion-title>
-                                    {{ "Select teacher for the PTM" | translate }}
-                                </ion-title>
-                                <ion-buttons slot="end">
-                                    <ion-button ion-button (click)="ionicSelectTeacher.close()">
-                                        <ion-icon color="danger" name="close"></ion-icon>
-                                    </ion-button>
-                                </ion-buttons>
-                            </ion-toolbar>
-                        </ion-header>
-                    </ng-template>
-                </ionic-selectable>
-            </ion-item>
-        </ion-content>
-    </ng-template>
-</ion-modal>
+
 <ion-modal [isOpen]="isAddEditParentOpen">
     <ng-template>
         <ion-header>

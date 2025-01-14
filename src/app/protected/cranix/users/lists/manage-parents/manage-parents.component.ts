@@ -23,8 +23,6 @@ export class ManageParentsComponent {
   selectedChildren: User[]
   children: User[] = []
   parents: User[] = []
-  freeRooms: Room[] = []
-  freeTeachers: User[] = []
   classes: Group[] = []
   isRegisterRoomOpen: boolean = false
   isRegisterEventOpen: boolean = false
@@ -194,21 +192,6 @@ export class ManageParentsComponent {
       }
     )
   }
-
-  registerRoom() {
-    this.parentsService.getFreeRooms(this.selectedPTM.id).subscribe(
-      (val) => {
-        this.freeRooms = val
-        this.freeTeachers = this.parentsService.getFreeTeachers(this.selectedPTM.id).subscribe(
-          (val) => {
-            this.freeTeachers = val
-            this.ptmTeacherInRoom = new PTMTeacherInRoom()
-            this.isRegisterRoomOpen = true
-          }
-        )
-      })
-  }
-
   redirectToEdit(parent: User) {
     if (parent) {
       this.selectedParent = parent

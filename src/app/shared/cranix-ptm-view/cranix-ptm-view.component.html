@@ -1,4 +1,5 @@
 @if(rowData) {
+<ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="teacherFilter"></ion-input>
 <ag-grid-angular style="width: 100%; height: 100%;" class="{{authService.settings.agGridThema}}"
     [rowHeight]="authService.settings.rowHeight" [rowData]="rowData" [columnDefs]="columnDefs"
     [defaultColDef]="defaultColDef" [context]="context" (gridReady)="onGridReady($event)" id="agGridTable">
@@ -41,9 +42,9 @@
                 </ion-item>
                 <ion-item>
                     <ion-label>{{'Select student for the event'|translate}}</ion-label>
-                    <ionic-selectable #selectStudent itemValueField="id" itemTextField="fullName"
-                        [isMultiple]="false" [(ngModel)]="selectedEvent.student" [ngModelOptions]="{standalone: true}"
-                        [items]="students" [canSearch]="true">
+                    <ionic-selectable #selectStudent itemValueField="id" itemTextField="fullName" [isMultiple]="false"
+                        [(ngModel)]="selectedEvent.student" [ngModelOptions]="{standalone: true}" [items]="students"
+                        [canSearch]="true">
                         <ng-template ionicSelectableHeaderTemplate>
                             <ion-header>
                                 <ion-toolbar color="primary">
@@ -101,5 +102,45 @@
             </ion-list>
         </ion-content>
         }
+    </ng-template>
+</ion-modal>
+<ion-modal [isOpen]="isRegisterRoomOpen">
+    <ng-template>
+        <ion-header color="primary">
+            <ion-toolbar color="primary">
+                <ion-title>{{'Register room for'|translate}} {{ptmTeacherInRoom.teacher.surName}}, {{ptmTeacherInRoom.teacher.givenName}} </ion-title>
+                <ion-buttons slot="end">
+                    <ion-button class="ion-no-margin" (click)="doRegisterRoom()">
+                        <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+                    </ion-button>
+                    <ion-button fill="clear" size="small" (click)="isRegisterRoomOpen = false">
+                        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content>
+            <ion-item>
+                <ion-label>{{'Select room for the PTM' | translate}}</ion-label>
+                <ionic-selectable #ionicSelectRoom itemValueField="id" itemTextField="description" [isMultiple]="false"
+                    [(ngModel)]="ptmTeacherInRoom.room" [ngModelOptions]="{standalone: true}" [items]="freeRooms"
+                    [canSearch]="true">
+                    <ng-template ionicSelectableHeaderTemplate>
+                        <ion-header>
+                            <ion-toolbar color="primary">
+                                <ion-title>
+                                    {{ "Select room for the PTM" | translate }}
+                                </ion-title>
+                                <ion-buttons slot="end">
+                                    <ion-button ion-button (click)="ionicSelectRoom.close()">
+                                        <ion-icon color="danger" name="close"></ion-icon>
+                                    </ion-button>
+                                </ion-buttons>
+                            </ion-toolbar>
+                        </ion-header>
+                    </ng-template>
+                </ionic-selectable>
+            </ion-item>
+        </ion-content>
     </ng-template>
 </ion-modal>
