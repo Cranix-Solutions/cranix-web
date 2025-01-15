@@ -19,7 +19,6 @@ import { PipesModule } from 'src/app/pipes/pipe-modules';
 import { AgGridModule } from 'ag-grid-angular';
 import { ActionBTNRenderer } from 'src/app/pipes/ag-action-renderer';
 import { ApplyBTNRenderer } from 'src/app/pipes/ag-apply-renderer';
-import { EventRenderer } from 'src/app/pipes/ag-event-renderer';
 import { ApplyCheckBoxBTNRenderer } from 'src/app/pipes/ag-apply-checkbox-renderer';
 import { CustomerActionRenderer } from 'src/app/pipes/ag-customer-action-renderer';
 import { YesNoBTNRenderer } from 'src/app/pipes/ag-yesno-renderer';
@@ -86,7 +85,6 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     DeviceActionBTNRenderer,
     DownloadSoftwaresComponent,
     EditBTNRenderer,
-    EventRenderer,
     FilesCollectComponent,
     FileSystemUsageRenderer,
     FilesUploadComponent,

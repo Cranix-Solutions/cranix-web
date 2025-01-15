@@ -39,7 +39,7 @@
                 <ion-button (click)="isSelectPtmOpen = true" fill="solid" matTooltip="{{'Select PTM'|translate}}">
                     <ion-icon slot="icon-only" color="success" name="list-outline"></ion-icon>
                 </ion-button>
-                <ion-button (click)="addEditPTM()" fill="solid" matTooltip="{{'Apply'|translate}}" [disabled]="!addEditPTMForm.valid">
+                <ion-button (click)="addEditPTM()" fill="solid" matTooltip="{{'Apply'|translate}}" [disabled]="!addEditPTMForm.valid || !isUpcomming">
                     <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
                 </ion-button>
                 <ion-button (click)="selectPtm(null)" fill="solid" matTooltip="{{'Create parent teacher meeting'|translate}}">
@@ -48,7 +48,7 @@
                 <ion-button (click)="sendMails()" fill="solid" [disabled]="!isUpcomming" matTooltip="{{'Send mail to the parents'|translate}}">
                     <ion-icon slot="icon-only" name="mail-outline"></ion-icon>
                 </ion-button>
-                <ion-button (click)="isRegisterEventOpen = true" fill="solid" [disabled]="!isUpcomming!"  matTooltip="{{'Register students'|translate}}">
+                <ion-button (click)="isRegisterEventOpen = true" fill="solid" [disabled]="!isUpcomming"  matTooltip="{{'Register students rooms and teachers for the PTM'|translate}}">
                     <ion-icon slot="icon-only" color="tertiary" name="people"></ion-icon>
                 </ion-button>
                 <ion-button (click)="isDeletePtmOpen" fill="solid" [disabled]="selectedPTM.id == 0" matTooltip="{{'Remove PTM'|translate}}">

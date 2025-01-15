@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { AlertController } from '@ionic/angular'
 import { PTMEvent, PTMTeacherInRoom, ParentTeacherMeeting, Room, User } from '../models/data-model';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { ParentsService } from 'src/app/services/parents.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { EventRenderer } from 'src/app/pipes/ag-event-renderer';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 
@@ -41,6 +41,7 @@ export class CranixPtmViewComponent implements OnInit {
   freeTeachers: User[] = []
   @Input() id: number;
   constructor(
+    public alertController: AlertController,
     public authService: AuthenticationService,
     private languageS: LanguageService,
     private objectService: GenericObjectService,
@@ -183,7 +184,6 @@ export class CranixPtmViewComponent implements OnInit {
       this.readData(false)
     })
   }
-
   doRegister() {
     this.parentsService.registerEvent(this.selectedEvent).subscribe((val) => {
       this.objectService.responseMessage(val)
@@ -191,14 +191,23 @@ export class CranixPtmViewComponent implements OnInit {
       this.readData(false)
     })
   }
-
   registerRoom(teacherId: number, ptmId: number) {
-    //TODO handle ptmId
+    console.log(teacherId, ptmId)
     this.parentsService.getFreeRooms(this.id).subscribe(
       (val) => {
         this.freeRooms = val
-        this.ptmTeacherInRoom = new PTMTeacherInRoom()
-        this.ptmTeacherInRoom['teacher'] = this.objectService.getObjectById("user", teacherId)
+        if (ptmId != 0) {
+          for (let teacherInRoom of this.ptm.ptmTeacherInRoomList) {
+            if (ptmId == teacherInRoom.id) {
+              this.ptmTeacherInRoom = teacherInRoom
+              break
+            }
+          }
+        } else {
+          this.ptmTeacherInRoom = new PTMTeacherInRoom()
+          this.ptmTeacherInRoom['teacher'] = this.objectService.getObjectById("user", teacherId)
+        }
+        console.log(this.ptmTeacherInRoom)
         this.isRegisterRoomOpen = true;
       })
   }
@@ -212,20 +221,50 @@ export class CranixPtmViewComponent implements OnInit {
     }
     )
   }
+  async cancelRoomRegistration() {
+    const alert = await this.alertController.create({
+      header: this.languageS.trans('Confirm!'),
+      subHeader: this.languageS.trans('Do you realy want to delete?'),
+      message: this.languageS.trans('Remove registrations for:') + this.ptmTeacherInRoom.teacher.surName +"," + this.ptmTeacherInRoom.teacher.givenName,
+      buttons: [
+        {
+          text: this.languageS.trans('Cancel'),
+          role: 'cancel',
+        }, {
+          text: 'OK',
+          handler: () => {
+            this.objectService.requestSent();
+            var a = this.parentsService.cancelRoomRegistration(this.ptmTeacherInRoom.id).subscribe({
+              next: (val) => {
+                this.objectService.responseMessage(val);
+                this.readData(false)
+                this.isRegisterRoomOpen = false;
+              },
+              error: (err) => {
+                this.objectService.errorMessage(this.languageS.trans("An error was accoured"));
+              },
+              complete: () => { a.unsubscribe() }
+            })
+          } 
+        }
+      ]
+    }); 
+    await alert.present();
+  }
 }
 
 @Component({
   selector: 'room-renderer',
   template: `@if(params.value != "0") {
   @if(context.isPtmManager) {
-  <ion-button fill="clear" size="small" (click)="registerRoom(params.data.teacherId, params.data.ptmId)">
+  <ion-button fill="clear" size="small" (click)="context.registerRoom(params.data.teacherId, params.data.ptmId)">
   {{params.value}}  
   </ion-button>
   } @else {
   {{params.value}}
   }
 } @else {
-  <ion-button fill="clear" size="small" (click)="registerRoom(params.data.teacherId, params.data.ptmId)">
+  <ion-button fill="clear" size="small" (click)="context.registerRoom(params.data.teacherId, params.data.ptmId)">
     <ion-icon name="room-outline" color="success"></ion-icon>
   </ion-button>
 }`
@@ -237,8 +276,64 @@ export class RoomRenderer implements ICellRendererAngularComp {
     this.context = params.context.componentParent
     this.params = params
   }
-  registerRoom(teacherId: number) {
-    this.context.registerRoom(teacherId);
+  refresh(params: any): boolean {
+    return true;
+  }
+}
+
+
+@Component({
+  selector: 'event-renderer',
+  template: `@if(event){
+  @if(event.blocked){
+  <ion-button fill="clear" size="small">
+    <ion-icon name="lock-closed" color="primary"></ion-icon>
+  </ion-button>
+  }@else if(isSelectable()){
+    <ion-button fill="clear" size="small" (click)="register()">
+      <ion-icon name="person-add-outline" color="success"></ion-icon>
+    </ion-button>
+  }@else{
+    <ion-button fill="clear" size="small" (click)="cancel()">
+      <ion-icon name="man-outline" color="danger"></ion-icon>
+    </ion-button>
+  }
+}`
+})
+export class EventRenderer implements ICellRendererAngularComp {
+  public event: PTMEvent;
+  public context
+  private role: string
+  public myId: number
+  agInit(params: any): void {
+    this.context = params.context.componentParent
+    this.myId = this.context.authService.session.userId
+    this.role = this.context.authService.session.role
+    this.event = this.context.events[params.value];
+  }
+  register() {
+    this.context.registerEvent(this.event)
+  }
+  cancel() {
+    //TODO
+    this.context.registerEvent(this.event)
+  }
+  isCancelable() {
+    if (this.event.parent) {
+      if (this.event.parent.id == this.myId || this.context.isPtmManager) {
+        return true
+      }
+    }
+  }
+  isSelectable() {
+    if (this.event.student) return false
+    if (this.role == 'parents') {
+      let count = 0
+      for (let ev of this.context.events) {
+        //TODO
+      }
+    }
+    return true
   }
   refresh(params: any): boolean {
     return true;

@@ -73,7 +73,7 @@ export class ParentsService {
 	}
 
 	cancelRoomRegistration(id: number) {
-		this.url = this.hostname + '/parentsptms/rooms/' + id
+		this.url = this.hostname + '/parents/ptms/rooms/' + id
 		return this.http.delete<ServerResponse>(this.url, { headers: this.authService.headers });
 	}
 
