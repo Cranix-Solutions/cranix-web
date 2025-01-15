@@ -31,11 +31,13 @@ import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
 import { RoomActionBTNRenderer } from 'src/app/pipes/ag-room-renderer';
 import { DeviceActionBTNRenderer } from 'src/app/pipes/ag-device-renderer';
 import { EditBTNRenderer } from 'src/app/pipes/ag-edit-renderer';
+import { EventRenderer } from 'src/app/pipes/ag-ptm-event-renderer';
 import { SoftwareEditBTNRenderer } from 'src/app/pipes/ag-software-edit-renderer';
 import { GroupIdCellRenderer } from 'src/app/pipes/ag-groupid-renderer';
 import { HwconfIdCellRenderer } from 'src/app/pipes/ag-hwconfid-renderer';
 import { PrinterActionBTNRenderer } from 'src/app/pipes/ag-printer-renderer';
 import { RoomIdCellRenderer } from 'src/app/pipes/ag-roomid-render';
+import { RoomRenderer } from 'src/app/pipes/ag-ptm-room-renderer';
 import { DeviceIdCellRenderer } from 'src/app/pipes/ag-deviceid-renderer';
 import { InstituteStatusRenderer } from 'src/app/pipes/ag-institute-status-renderer'
 import { SyncObjectRenderer } from 'src/app/pipes/ag-sync-object-renderer'
@@ -85,6 +87,7 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     DeviceActionBTNRenderer,
     DownloadSoftwaresComponent,
     EditBTNRenderer,
+    EventRenderer,
     FilesCollectComponent,
     FileSystemUsageRenderer,
     FilesUploadComponent,
@@ -97,6 +100,7 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     ManageDhcpComponent,
     PrinterActionBTNRenderer,
     RoomActionBTNRenderer,
+    RoomRenderer,
     RoomIdCellRenderer,
     SetpasswordComponent,
     SetquotaComponent,
