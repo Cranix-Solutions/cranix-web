@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PTMEvent } from '../models/data-model';
+import { PTMEvent } from 'src/app/shared/models/data-model';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 
 @Component({

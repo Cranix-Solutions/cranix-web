@@ -6,7 +6,8 @@ import { LanguageService } from 'src/app/services/language.service';
 import { ParentsService } from 'src/app/services/parents.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
-import { ICellRendererAngularComp } from 'ag-grid-angular';
+import { EventRenderer } from 'src/app/pipes/ag-ptm-event-renderer'
+import { RoomRenderer } from 'src/app/pipes/ag-ptm-room-renderer'
 
 @Component({
   selector: 'cranix-ptm-view',
@@ -250,92 +251,5 @@ export class CranixPtmViewComponent implements OnInit {
       ]
     }); 
     await alert.present();
-  }
-}
-
-@Component({
-  selector: 'room-renderer',
-  template: `@if(params.value != "0") {
-  @if(context.isPtmManager) {
-  <ion-button fill="clear" size="small" (click)="context.registerRoom(params.data.teacherId, params.data.ptmId)">
-  {{params.value}}  
-  </ion-button>
-  } @else {
-  {{params.value}}
-  }
-} @else {
-  <ion-button fill="clear" size="small" (click)="context.registerRoom(params.data.teacherId, params.data.ptmId)">
-    <ion-icon name="room-outline" color="success"></ion-icon>
-  </ion-button>
-}`
-})
-export class RoomRenderer implements ICellRendererAngularComp {
-  public context
-  public params
-  agInit(params: any): void {
-    this.context = params.context.componentParent
-    this.params = params
-  }
-  refresh(params: any): boolean {
-    return true;
-  }
-}
-
-
-@Component({
-  selector: 'event-renderer',
-  template: `@if(event){
-  @if(event.blocked){
-  <ion-button fill="clear" size="small">
-    <ion-icon name="lock-closed" color="primary"></ion-icon>
-  </ion-button>
-  }@else if(isSelectable()){
-    <ion-button fill="clear" size="small" (click)="register()">
-      <ion-icon name="person-add-outline" color="success"></ion-icon>
-    </ion-button>
-  }@else{
-    <ion-button fill="clear" size="small" (click)="cancel()">
-      <ion-icon name="man-outline" color="danger"></ion-icon>
-    </ion-button>
-  }
-}`
-})
-export class EventRenderer implements ICellRendererAngularComp {
-  public event: PTMEvent;
-  public context
-  private role: string
-  public myId: number
-  agInit(params: any): void {
-    this.context = params.context.componentParent
-    this.myId = this.context.authService.session.userId
-    this.role = this.context.authService.session.role
-    this.event = this.context.events[params.value];
-  }
-  register() {
-    this.context.registerEvent(this.event)
-  }
-  cancel() {
-    //TODO
-    this.context.registerEvent(this.event)
-  }
-  isCancelable() {
-    if (this.event.parent) {
-      if (this.event.parent.id == this.myId || this.context.isPtmManager) {
-        return true
-      }
-    }
-  }
-  isSelectable() {
-    if (this.event.student) return false
-    if (this.role == 'parents') {
-      let count = 0
-      for (let ev of this.context.events) {
-        //TODO
-      }
-    }
-    return true
-  }
-  refresh(params: any): boolean {
-    return true;
   }
 }
