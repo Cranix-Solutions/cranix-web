@@ -103,7 +103,7 @@ export class ManageParentsComponent {
                 this.isUpcomming = true;
               }
             } else {
-              this.selectedPTM = new ParentTeacherMeeting();
+              this.selectPtm(null)
             }
             this.parentsService.getFormer().subscribe(
               (val2) => {
@@ -117,6 +117,22 @@ export class ManageParentsComponent {
       }
     }
   }
+  startTimeSet(){
+    let start = new Date(this.selectedPTM.start)
+    console.log(this.selectedPTM)
+    if(!this.selectedPTM.end) {
+      this.selectedPTM.end = new Date(start.getTime() + 3600000 *6)
+    }
+    if(!this.selectedPTM.startRegistration) {
+      this.selectedPTM.startRegistration = new Date(start.getTime() - (3600000 * 24 * 7))
+    }
+    if(!this.selectedPTM.endRegistration) {
+      this.selectedPTM.endRegistration = new Date(start.getTime() - (3600000 * 24 * 2))
+    }
+    this.selectedPTM = this.parentsService.adaptPtmTimes(this.selectedPTM)
+
+    console.log(this.selectedPTM)
+  }
 
   selectPtm(ptm: ParentTeacherMeeting) {
     if(ptm) {
@@ -129,9 +145,8 @@ export class ManageParentsComponent {
       for( let cl of this.classes) {
         this.selectedPTM.classes.push(cl)
       }
-      this.isUpcomming = false
+      this.isUpcomming = true
     }
-    //this.isUpcomming = this.nextPtms.some(p => p.id == this.selectedPTM.id)
     this.isSelectPtmOpen = false
   }
   createdColDef() {

@@ -22,7 +22,8 @@ export class CranixPtmViewComponent implements OnInit {
   freeRooms: Room[]
   rowData = []
   events = {}
-  me: User
+  eventsTeacherStudent = {}
+  eventsTimeStudent = {}
   isPtmManager: boolean = false
   isParent: boolean = false
   defaultColDef = {
@@ -53,7 +54,6 @@ export class CranixPtmViewComponent implements OnInit {
     this.isParent = this.authService.session.role == 'parent'
     this.students = []
     if (this.isParent) {
-      this.me = this.objectService.getObjectById("user", this.authService.session.userId)
       this.parentsService.getMyChildren().subscribe((val) => { this.students = val })
     } else {
       for (let s of this.objectService.allObjects['user']) {
@@ -92,6 +92,9 @@ export class CranixPtmViewComponent implements OnInit {
     let data = []
     let colDef = []
     for (let ptmTeacherInRoom of this.ptm.ptmTeacherInRoomList) {
+      if(!this.eventsTeacherStudent[ptmTeacherInRoom.teacher.id]) {
+        this.eventsTeacherStudent[ptmTeacherInRoom.teacher.id] = {}
+      }
       let roomEvents = {
         teacher: ptmTeacherInRoom.teacher.surName + ', ' + ptmTeacherInRoom.teacher.givenName,
         room: ptmTeacherInRoom.room.description ? ptmTeacherInRoom.room.description : ptmTeacherInRoom.room.name,
@@ -121,6 +124,13 @@ export class CranixPtmViewComponent implements OnInit {
       for (let ptmEvent of ptmTeacherInRoom.events.sort(this.compare)) {
         let time = this.utilService.getDouble(new Date(ptmEvent.start).getHours()) + ':' + this.utilService.getDouble(new Date(ptmEvent.start).getMinutes())
         this.events[ptmEvent.id] = ptmEvent
+        if(!this.eventsTimeStudent[time]){
+          this.eventsTimeStudent[time] = {}
+        }
+        if( ptmEvent.student ) {
+          this.eventsTeacherStudent[ptmTeacherInRoom.teacher.id][ptmEvent.student.id] = 1
+          this.eventsTimeStudent[time][ptmEvent.student.id] = 1
+        }
         roomEvents[time] = ptmEvent.id
         if (!colDefIsReady) {
           colDef.push(
@@ -173,7 +183,7 @@ export class CranixPtmViewComponent implements OnInit {
     this.isRegisterEventOpen = true
     this.selectedEventRegistered = this.selectedEvent.student != null
     if (!this.selectedEvent.student && this.isParent) {
-      this.selectedEvent.parent = this.me
+      this.selectedEvent.parent = this.authService.session.user;
     }
     console.log(event)
   }

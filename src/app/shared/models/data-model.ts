@@ -602,7 +602,7 @@ export class ParentTeacherMeeting {
 	duration: number = 10
 	startRegistration: Date | string
 	endRegistration: Date | string
-	ptmTeacherInRoomList: PTMTeacherInRoom[]
+	ptmTeacherInRoomList: PTMTeacherInRoom[] = []
 	templateId?: number
 	classes: Group[] = []
 }

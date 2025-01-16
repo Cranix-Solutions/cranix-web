@@ -13,10 +13,12 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
     <ion-button fill="clear" size="small" (click)="register()">
       <ion-icon name="person-add-outline" color="success"></ion-icon>
     </ion-button>
-  }@else{
+  }@else if(isCancelable()){
     <ion-button fill="clear" size="small" (click)="cancel()">
       <ion-icon name="man-outline" color="danger"></ion-icon>
     </ion-button>
+  }@else{
+  <ion-icon name="man-outline" color="danger"></ion-icon>
   }
 }`
 })
@@ -24,34 +26,34 @@ export class EventRenderer implements ICellRendererAngularComp {
   public event: PTMEvent;
   public context
   private role: string
+  private params
   public myId: number
+
   agInit(params: any): void {
     this.context = params.context.componentParent
     this.myId = this.context.authService.session.userId
     this.role = this.context.authService.session.role
     this.event = this.context.events[params.value];
+    this.params = params
   }
   register() {
     this.context.registerEvent(this.event)
   }
   cancel() {
-    //TODO
     this.context.registerEvent(this.event)
   }
   isCancelable() {
-    if (this.event.parent) {
-      if (this.event.parent.id == this.myId || this.context.isPtmManager) {
+    if (this.event.student) {
+      if (this.event.student.id == this.myId || this.context.isPtmManager) {
         return true
       }
     }
   }
   isSelectable() {
     if (this.event.student) return false
-    if (this.role == 'parents') {
-      let count = 0
-      for (let ev of this.context.events) {
-        //TODO
-      }
+    if (this.role == 'parents' || this.role == 'student') {
+      if (this.context.eventsTeacherStudent[this.params.data.teacherId][this.myId]) return false;
+      if (this.context.eventsTeacherStudent[this.params.column.colId][this.myId]) return false;
     }
     return true
   }

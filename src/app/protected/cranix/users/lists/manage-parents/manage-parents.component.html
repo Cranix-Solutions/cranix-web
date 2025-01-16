@@ -58,13 +58,12 @@
         </ion-toolbar>
         <ion-list>
             <ion-item>
-                <ion-input [(ngModel)]="selectedPTM.title" name="title" label="{{'Title'|translate}}"
+                <ion-input [(ngModel)]="selectedPTM.title" name="title" label="{{'Title'|translate}}*"
                     labelPlacement="fixed" required></ion-input>
-
             </ion-item>
             <ion-item>
                 <ion-label>{{'From'|translate}}*</ion-label>
-                <input [(ngModel)]="selectedPTM.start" name="startTime" type="datetime-local" required />
+                <input [(ngModel)]="selectedPTM.start" name="startTime" type="datetime-local" required (change)="startTimeSet()"/>
             </ion-item>
             <ion-item>
                 <ion-label>{{'Until'|translate}}*</ion-label>

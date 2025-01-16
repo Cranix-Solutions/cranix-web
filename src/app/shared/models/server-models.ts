@@ -3,7 +3,7 @@
  * Thes session modell
  * @description The object recived if the login was succesfull.
  */
-
+import { User } from "./data-model";
 
 export interface Crx2fa {
         id?: number,
@@ -43,22 +43,29 @@ export class Crx2faSession {
 }
 */
 export class UserResponse {
+        id: number;
+        createDate: Date;
+        validFrom?: Date;
+        validUntil?: Date;
         userId: number;
+        user?: User;
+        crx2faSession?: Crx2faSession;
+        ip: string;
         token: string;
-        mac: string;
-        name: string;
-        fullName: string;
+        gotoPath?: string;
         role: string;
+        password: string;
+        mustChange: boolean;
+        mac: string;
         dnsName: string;
+        acls: string[];
+        fullName: string;
+        name: string;
         roomId: string;
         roomName?: string;
         instituteName?: string;
-        mustChange: boolean;
         mustSetup2fa?: boolean;
-        crx2faSession?: Crx2faSession
-        acls: string[];
         crx2fas?: string[];
-        gotoPath?: string
 }
 
 /**
