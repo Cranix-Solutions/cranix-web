@@ -27,6 +27,7 @@ export class AuthenticationService {
     //Token will be used only for CEPHALIX connections to overhand the CRANIX session
     token: string;
     session: UserResponse;
+    error: string;
     headers: HttpHeaders;
     formHeaders: HttpHeaders;
     textHeaders: HttpHeaders;
@@ -103,7 +104,7 @@ export class AuthenticationService {
         this.storage.set('selectedTeachingSubject', JSON.stringify(this.selectedTeachingSubject))
     }
 
-    setUpHeaders(){
+    setUpHeaders() {
         this.headers = new HttpHeaders({
             'Content-Type': "application/json",
             'Accept': "application/json",
@@ -127,28 +128,27 @@ export class AuthenticationService {
             'timeout': `${600000}`
         });
     }
-    setupSessionByToken(token: string){
+    setupSessionByToken(token: string) {
         this.http.get<UserResponse>(this.hostname + "/sessions/byToken/" + token).subscribe({
             next: (val) => {
-                if(!val) {
-                    //e
-                } else {
-                    this.session = val
-                    this.setUpHeaders();
-                    this.loadSettings();
-                    //this.authenticationState.next(true);
+                this.session = val
+                this.setUpHeaders();
+                //this.loadSettings();
+                console.log(this.session)
+                //this.authenticationState.next(true);
+                if(this.session.gotoPath) {
                     this.router.navigate([this.session.gotoPath]);
+                } else {
+                    this.error = "Ihr Token ist ungültig.";
                 }
             },
-            error: async (val) => {
-                console.log(val)
-                const toast = this.toastController.create({
-                    position: "middle",
-                    message: "Session ist nicht gültig",
-                    color: "danger",
-                    duration: 3000
-                });
-                (await toast).present();
+            error: async (err) => {
+                console.log(err)
+                switch(err.status) {
+                    case 402: { this.error = "Ihr Token ist ungültig."; break; }
+                    case 402: { this.error = "Ihr Zugriff ist noch nicht gültig."; break; }
+                    case 403: { this.error = "Ihr Zugriff ist abgelaufen."; break; }
+                }
             }
         })
     }
@@ -218,7 +218,7 @@ export class AuthenticationService {
         let data = { crx2faId: id, pin: otPin, token: this.session.token }
         this.http.post<Crx2faSession>(url, data, { headers: headers }).subscribe({
             next: (val) => {
-                this.utilsS.setCookie("crx2faSessionId",val.id.toString(),val.validHours)
+                this.utilsS.setCookie("crx2faSessionId", val.id.toString(), val.validHours)
                 console.log(val)
                 this.authenticationState.next(true)
             },
@@ -377,7 +377,7 @@ export class AuthenticationService {
             case "/pages/edu/lessons/tests": { return this.isAllowed('permitall') }
             case "/pages/edu/lessons/challenges": { return this.isAllowed('challenge.manage') }
             case "/pages/edu/lessons/roomcontrol": { return this.isAllowed('education.rooms') }
-            case "/pages/cranix/profile": { return this.isOneOfAllowed(['permitall','2fa.use']) }
+            case "/pages/cranix/profile": { return this.isOneOfAllowed(['permitall', '2fa.use']) }
             case "/pages/cranix/profile/myself": { return this.isAllowed('permitall') }
             case "/pages/cranix/profile/mydevice": { return this.isAllowed('permitall') }
             case "/pages/cranix/profile/crx2fa": { return this.isAllowed('2fa.use') }

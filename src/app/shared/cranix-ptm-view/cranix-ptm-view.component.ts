@@ -25,7 +25,7 @@ export class CranixPtmViewComponent implements OnInit {
   eventsTeacherStudent = {}
   eventsTimeStudent = {}
   isPtmManager: boolean = false
-  isParent: boolean = false
+  isStudent: boolean = false
   defaultColDef = {
     resizable: true,
     sortable: false,
@@ -51,11 +51,9 @@ export class CranixPtmViewComponent implements OnInit {
     private utilService: UtilsService
   ) {
     this.context = { componentParent: this }
-    this.isParent = this.authService.session.role == 'parent'
+    this.isStudent = this.authService.session.user.role == 'students'
     this.students = []
-    if (this.isParent) {
-      this.parentsService.getMyChildren().subscribe((val) => { this.students = val })
-    } else {
+    if (!this.isStudent) {
       for (let s of this.objectService.allObjects['user']) {
         if (s.role == 'students') this.students.push(s)
       }
@@ -73,12 +71,16 @@ export class CranixPtmViewComponent implements OnInit {
     this.parentsService.getPTMById(this.id).subscribe(
       (val) => {
         this.ptm = val
-        this.parentsService.getFreeTeachers(this.id).subscribe(
-          (val) => {
-            this.freeTeachers = val
-            this.createData(doColdef)
-          }
-        )
+        if (!this.isStudent) {
+          this.parentsService.getFreeTeachers(this.id).subscribe(
+            (val) => {
+              this.freeTeachers = val
+              this.createData(doColdef)
+            }
+          )
+        }else{
+          this.createData(doColdef)
+        }
       }
     )
   }
@@ -91,10 +93,9 @@ export class CranixPtmViewComponent implements OnInit {
     let colDefIsReady = !doColdef
     let data = []
     let colDef = []
+    this.eventsTimeStudent = {}
     for (let ptmTeacherInRoom of this.ptm.ptmTeacherInRoomList) {
-      if(!this.eventsTeacherStudent[ptmTeacherInRoom.teacher.id]) {
-        this.eventsTeacherStudent[ptmTeacherInRoom.teacher.id] = {}
-      }
+      this.eventsTeacherStudent[ptmTeacherInRoom.teacher.id] = {}
       let roomEvents = {
         teacher: ptmTeacherInRoom.teacher.surName + ', ' + ptmTeacherInRoom.teacher.givenName,
         room: ptmTeacherInRoom.room.description ? ptmTeacherInRoom.room.description : ptmTeacherInRoom.room.name,
@@ -124,12 +125,12 @@ export class CranixPtmViewComponent implements OnInit {
       for (let ptmEvent of ptmTeacherInRoom.events.sort(this.compare)) {
         let time = this.utilService.getDouble(new Date(ptmEvent.start).getHours()) + ':' + this.utilService.getDouble(new Date(ptmEvent.start).getMinutes())
         this.events[ptmEvent.id] = ptmEvent
-        if(!this.eventsTimeStudent[time]){
+        if (!this.eventsTimeStudent[time]) {
           this.eventsTimeStudent[time] = {}
         }
-        if( ptmEvent.student ) {
-          this.eventsTeacherStudent[ptmTeacherInRoom.teacher.id][ptmEvent.student.id] = 1
-          this.eventsTimeStudent[time][ptmEvent.student.id] = 1
+        if (ptmEvent.student) {
+          this.eventsTeacherStudent[ptmTeacherInRoom.teacher.id][ptmEvent.student.id] = time
+          this.eventsTimeStudent[time][ptmEvent.student.id] = ptmTeacherInRoom.id
         }
         roomEvents[time] = ptmEvent.id
         if (!colDefIsReady) {
@@ -179,11 +180,17 @@ export class CranixPtmViewComponent implements OnInit {
 
   registerEvent(event: PTMEvent) {
     this.selectedEvent = event
-    this.selectedPTMinRoom = this.selectPTMinRoom(event)
-    this.isRegisterEventOpen = true
     this.selectedEventRegistered = this.selectedEvent.student != null
-    if (!this.selectedEvent.student && this.isParent) {
-      this.selectedEvent.parent = this.authService.session.user;
+    if (this.isStudent) {
+      if (!this.selectedEvent.student) {
+        this.selectedEvent.student = this.authService.session.user
+        this.doRegister()
+      } else {
+        this.cancelEvent();
+      }
+    } else {
+      this.selectedPTMinRoom = this.selectPTMinRoom(event)
+      this.isRegisterEventOpen = true
     }
     console.log(event)
   }
@@ -236,7 +243,7 @@ export class CranixPtmViewComponent implements OnInit {
     const alert = await this.alertController.create({
       header: this.languageS.trans('Confirm!'),
       subHeader: this.languageS.trans('Do you realy want to delete?'),
-      message: this.languageS.trans('Remove registrations for:') + this.ptmTeacherInRoom.teacher.surName +"," + this.ptmTeacherInRoom.teacher.givenName,
+      message: this.languageS.trans('Remove registrations for:') + this.ptmTeacherInRoom.teacher.surName + "," + this.ptmTeacherInRoom.teacher.givenName,
       buttons: [
         {
           text: this.languageS.trans('Cancel'),
@@ -256,10 +263,10 @@ export class CranixPtmViewComponent implements OnInit {
               },
               complete: () => { a.unsubscribe() }
             })
-          } 
+          }
         }
       ]
-    }); 
+    });
     await alert.present();
   }
 }

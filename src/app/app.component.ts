@@ -16,7 +16,7 @@ export class AppComponent {
   token: string
   error: string
   constructor(
-    private authService: AuthenticationService,
+    public authService: AuthenticationService,
     private genericObjectS: GenericObjectService,
     private languageService: LanguageService,
     private platform: Platform,
@@ -42,7 +42,6 @@ export class AppComponent {
         this.token = params.get('token') 
         console.log(this.token)
         this.authService.setupSessionByToken(this.token)
-        this.error = "Szar van"
       } else {
         this.authService.authenticationState.subscribe(state => {
           console.log("pathname :" + window.location.pathname);

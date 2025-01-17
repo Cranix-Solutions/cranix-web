@@ -18,7 +18,7 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
       <ion-icon name="man-outline" color="danger"></ion-icon>
     </ion-button>
   }@else{
-  <ion-icon name="man-outline" color="danger"></ion-icon>
+  <ion-icon name="man-outline" color="primary"></ion-icon>
   }
 }`
 })
@@ -31,8 +31,8 @@ export class EventRenderer implements ICellRendererAngularComp {
 
   agInit(params: any): void {
     this.context = params.context.componentParent
-    this.myId = this.context.authService.session.userId
-    this.role = this.context.authService.session.role
+    this.myId = this.context.authService.session.user.id
+    this.role = this.context.authService.session.user.role
     this.event = this.context.events[params.value];
     this.params = params
   }
@@ -51,9 +51,9 @@ export class EventRenderer implements ICellRendererAngularComp {
   }
   isSelectable() {
     if (this.event.student) return false
-    if (this.role == 'parents' || this.role == 'student') {
+    if (this.role == 'parents' || this.role == 'students') {
       if (this.context.eventsTeacherStudent[this.params.data.teacherId][this.myId]) return false;
-      if (this.context.eventsTeacherStudent[this.params.column.colId][this.myId]) return false;
+      if (this.context.eventsTimeStudent[this.params.column.colId][this.myId]) return false;
     }
     return true
   }

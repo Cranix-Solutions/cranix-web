@@ -1,6 +1,6 @@
 @if(rowData) {
 <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()" id="teacherFilter"></ion-input>
-<ag-grid-angular style="width: 100%; height: 100%;" class="{{authService.settings.agGridThema}}"
+<ag-grid-angular style="width: 100%; height: 90%;" class="{{authService.settings.agGridThema}}"
     [rowHeight]="authService.settings.rowHeight" [rowData]="rowData" [columnDefs]="columnDefs"
     [defaultColDef]="defaultColDef" [context]="context" (gridReady)="onGridReady($event)" id="agGridTable">
 </ag-grid-angular>
