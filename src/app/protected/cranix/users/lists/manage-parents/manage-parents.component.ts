@@ -167,7 +167,35 @@ export class ManageParentsComponent {
     this.columnDefs = cols;
   }
 
+  checkPtmTimes(ptm: ParentTeacherMeeting){
+    let now = new Date().getTime();
+    let start = new Date(ptm.start).getTime();
+    let end = new Date(ptm.end).getTime();
+    let startReg = new Date(ptm.startRegistration).getTime();
+    let endReg = new Date(ptm.endRegistration).getTime();
+    let messages = []
+    if(start < now) {
+      messages.push(this.languageS.trans('The PTM must be in the future.'))
+    }
+    if(end<start) {
+      messages.push(this.languageS.trans('The PTM must ends later then start.'))
+    }
+    if(endReg>start) {
+      messages.push(this.languageS.trans('The registration must ends befor the PTM starts.'))
+    }
+    if(endReg<startReg) {
+      messages.push(this.languageS.trans('The registration must ends then starts.'))
+    }
+    if(messages.length > 0){
+      this.objectService.errorMessage(messages.join(" "))
+      return false
+    }
+    return true
+  }
   addEditPTM() {
+    if(!this.checkPtmTimes(this.selectedPTM)){
+      return
+    }
     this.objectService.requestSent();
     if (this.selectedPTM.id > 0) {
       this.parentsService.modifyPtm(this.selectedPTM).subscribe((val) => {
@@ -178,7 +206,13 @@ export class ManageParentsComponent {
       console.log(this.selectedPTM)
       this.parentsService.addPtm(this.selectedPTM).subscribe((val) => {
         this.objectService.responseMessage(val)
-        this.loadData()
+        if(val.code == "OK"){
+          console.log(val)
+          this.parentsService.getPTMById(val.objectId).subscribe((val2) => {
+            this.nextPtms.push(val2)
+            this.selectPtm(val2)
+          })
+        }
       })
     }
   }

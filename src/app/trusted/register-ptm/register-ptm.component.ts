@@ -32,5 +32,4 @@ export class RegisterPTMComponent implements OnInit {
       }
     )
   }
-
 }
