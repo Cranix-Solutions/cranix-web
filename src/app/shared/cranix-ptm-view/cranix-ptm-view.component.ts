@@ -294,20 +294,16 @@ export class CranixPtmViewComponent implements OnInit {
     let date = this.utilService.toIonDate(start)
     let startTime = this.utilService.toIonTime(start)
     let endTime = this.utilService.toIonTime(end)
-    let caption = this.languageS.trans('PTM')
-    caption += " " + this.languageS.trans('student') + ":"
-    caption += this.selectedStudent.surName + ", " + this.selectedStudent.givenName
-    caption += " " + this.languageS.trans('date') + date
-    caption += " " + startTime + " - " + endTime
-    let html ='<table style="border: 1px solid black;">'
-    html += "<caption>" + caption + "</caption>"
-    html += "<tr><th>"
+    let html = '<h2>' +this.languageS.trans('PTM') + ' ' + this.languageS.trans('student') + ': ' + this.selectedStudent.surName + ', ' + this.selectedStudent.givenName + '</h2>\n'
+    html += '<h3>' + this.languageS.trans('date') + ' ' + date + ': ' + startTime + ' - ' + endTime + '</h3>\n'
+    html +='<table style="border: 1px solid black;">'
+    html += '<tr><th>'
     html += this.languageS.trans('time')
-    html += "</th><th>"
+    html += '</th><th>'
     html += this.languageS.trans('room')
-    html += "</th><th>"
+    html += '</th><th>'
     html += this.languageS.trans('teacher')
-    html += "</th></tr>\n"
+    html += '</th></tr>\n'
     for(let time in this.eventsTimeStudent){
       console.log(time)
       if(this.eventsTimeStudent[time][this.selectedStudent.id]) {
@@ -322,8 +318,7 @@ export class CranixPtmViewComponent implements OnInit {
         }
       }
     }
-    html += "</table>"
-    //window.print()
+    html += '</table>'
     console.log(html)
     var hostname = window.location.hostname;
     var protocol = window.location.protocol;

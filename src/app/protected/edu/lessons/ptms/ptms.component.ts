@@ -3,7 +3,9 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { ParentsService } from 'src/app/services/parents.service';
+import { UtilsService } from 'src/app/services/utils.service';
 import { ParentTeacherMeeting, PTMEvent, PTMTeacherInRoom, Room, User } from 'src/app/shared/models/data-model';
+import { WindowRef } from 'src/app/shared/models/ohters';
 
 @Component({
   selector: 'app-ptms',
@@ -15,20 +17,23 @@ export class PtmsComponent implements OnInit {
   isAddPTMOpen: boolean = false
   addEditPTMTitle: string = ""
   selectedPTM: ParentTeacherMeeting
-  selectedEvent: PTMEvent =new PTMEvent()
+  selectedEvent: PTMEvent = new PTMEvent()
   selectedEventRegistered: boolean = false
   isRegisterEventOpen = false
   nextPtms: ParentTeacherMeeting[] = []
   myPTMTeacherInRoom: PTMTeacherInRoom
   students: User[] = [];
   now: Date;
-
+  nativeWindow: any
   constructor(
+    public win: WindowRef,
     public authService: AuthenticationService,
-    private langService: LanguageService,
+    private languageS: LanguageService,
     private objectService: GenericObjectService,
-    public ptmService: ParentsService
+    public ptmService: ParentsService,
+    private utilService: UtilsService
   ) {
+    this.nativeWindow = win.getNativeWindow();
     this.now = new Date()
     this.readData()
   }
@@ -58,13 +63,13 @@ export class PtmsComponent implements OnInit {
   }
   getStudentOfEvent(event: PTMEvent) {
     if (!event.blocked) {
-      return event.student ? event.student.fullName : this.langService.trans('free')
-    }else{
-      return this.langService.trans('blocked')
+      return event.student ? event.student.fullName : this.languageS.trans('free')
+    } else {
+      return this.languageS.trans('blocked')
     }
   }
-  setBlockEvent(event){
-    this.ptmService.blockEvent(event.id,!event.blocked).subscribe((val) => {
+  setBlockEvent(event) {
+    this.ptmService.blockEvent(event.id, !event.blocked).subscribe((val) => {
       this.objectService.responseMessage(val)
       this.readData()
     })
@@ -102,17 +107,17 @@ export class PtmsComponent implements OnInit {
       }
     )
   }
-  createNotices(event){
+  createNotices(event) {
     this.objectService.errorMessage("Ist noch nicht implementiert")
     console.log(event)
   }
-  registerEvent(event){
+  registerEvent(event) {
     this.selectedEvent = event
     this.selectedEventRegistered = this.selectedEvent.student != null
     this.isRegisterEventOpen = true
   }
-  doRegisterEvent(){
-    this.ptmService.registerEvent(this.selectedEvent).subscribe((val)=>{
+  doRegisterEvent() {
+    this.ptmService.registerEvent(this.selectedEvent).subscribe((val) => {
       this.objectService.responseMessage(val)
       this.readData()
       this.isRegisterEventOpen = false
@@ -125,7 +130,47 @@ export class PtmsComponent implements OnInit {
       this.readData()
     })
   }
-  printRegistrations(event){
+  printRegistrations(event) {
     event.stopPropagation();
+    let start = new Date(this.selectedPTM.start)
+    let end = new Date(this.selectedPTM.end)
+    let date = this.utilService.toIonDate(start)
+    let startTime = this.utilService.toIonTime(start)
+    let endTime = this.utilService.toIonTime(end)
+    let html = '<h2>' + this.languageS.trans('PTM') + ' ' + this.languageS.trans('teacher') + ': ' + this.myPTMTeacherInRoom.teacher.surName + ', ' + this.myPTMTeacherInRoom.teacher.givenName + '</h2>\n'
+    html += '<h3>' + this.languageS.trans('date') + ' ' + date + ': ' + startTime + ' - ' + endTime + '</h3>\n'
+    html += '<h3>' + this.languageS.trans('room') + ' ' + this.myPTMTeacherInRoom.room.name + '</h3>\n'
+    html += '<table style="border: 1px solid black;">'
+    html += '<tr><th>'
+    html += this.languageS.trans('time')
+    html += '</th><th>'
+    html += this.languageS.trans('student')
+    html += '</th><th>'
+    html += '</th></tr>\n'
+    for (let event of this.myPTMTeacherInRoom.events.sort(this.compare)) {
+      let start = new Date(event.start)
+      let time = this.utilService.toIonTime(start)
+      let user = ""
+      if (event.student) {
+        user = event.student.fullName + ", " + event.student.givenName
+      }
+      html += `<tr><td>${time}</td><td>${user}</td></tr>`
+    }
+    html += '</table>'
+    console.log(html)
+    var hostname = window.location.hostname;
+    var protocol = window.location.protocol;
+    var port = window.location.port;
+    sessionStorage.setItem('printPage', html);
+    if (port) {
+      this.nativeWindow.open(`${protocol}//${hostname}:${port}`);
+      sessionStorage.removeItem('shortName');
+    } else {
+      this.nativeWindow.open(`${protocol}//${hostname}`);
+      sessionStorage.removeItem('shortName');
+    }
+    sessionStorage.removeItem('printPage');
+
   }
+
 }
