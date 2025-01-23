@@ -1,0 +1,16 @@
+<ion-header class="no-print">
+    <ion-toolbar>
+        <ion-buttons slot="end">
+            <ion-button (click)="print()">
+                <ion-icon name="print"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-card>
+        <ion-card-content>
+            <div [innerHTML]="printPage"></div>
+        </ion-card-content>
+    </ion-card>
+</ion-content>

@@ -98,6 +98,14 @@ export class UtilsService {
                 }
                 return ""
         }
+
+        public toIonTime(dt: Date | undefined) {
+                if (dt) {
+                        return this.getDouble(dt.getHours()) + ":" +
+                               this.getDouble(dt.getMinutes())
+                }
+                return ""
+        }
         /**
          * set cookie
          * @param {string} name

@@ -13,26 +13,30 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
     <ion-button fill="clear" size="small" (click)="register()">
       <ion-icon name="person-add-outline" color="success"></ion-icon>
     </ion-button>
-  }@else if(isCancelable()){
+  }@else if(isMe()){
     <ion-button fill="clear" size="small" (click)="cancel()">
+      <ion-icon name="man-outline" color="warning"></ion-icon>
+    </ion-button>
+  }@else if(context.isPtmManager && event.student){
+    <ion-button fill="clear" size="small" (click)="cancel()" matTooltip="{{event.student.fullName}}">
       <ion-icon name="man-outline" color="danger"></ion-icon>
     </ion-button>
   }@else{
-  <ion-icon name="man-outline" color="primary"></ion-icon>
+    <ion-icon name="man-outline" color="primary"></ion-icon>
   }
 }`
 })
 export class EventRenderer implements ICellRendererAngularComp {
   public event: PTMEvent;
   public context
-  private role: string
   private params
-  public myId: number
+  public studentId: number
 
   agInit(params: any): void {
     this.context = params.context.componentParent
-    this.myId = this.context.authService.session.user.id
-    this.role = this.context.authService.session.user.role
+    if (this.context.selectedStudent) {
+      this.studentId = this.context.selectedStudent.id
+    }
     this.event = this.context.events[params.value];
     this.params = params
   }
@@ -42,18 +46,15 @@ export class EventRenderer implements ICellRendererAngularComp {
   cancel() {
     this.context.registerEvent(this.event)
   }
-  isCancelable() {
-    if (this.event.student) {
-      if (this.event.student.id == this.myId || this.context.isPtmManager) {
-        return true
-      }
-    }
+
+  isMe() {
+    return this.event.student && (this.event.student.id == this.studentId)
   }
   isSelectable() {
     if (this.event.student) return false
-    if (this.role == 'parents' || this.role == 'students') {
-      if (this.context.eventsTeacherStudent[this.params.data.teacherId][this.myId]) return false;
-      if (this.context.eventsTimeStudent[this.params.column.colId][this.myId]) return false;
+    if (this.studentId) {
+      if (this.context.eventsTeacherStudent[this.params.data.teacherId][this.studentId]) return false;
+      if (this.context.eventsTimeStudent[this.params.column.colId][this.studentId]) return false;
     }
     return true
   }

@@ -8,6 +8,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { EventRenderer } from 'src/app/pipes/ag-ptm-event-renderer'
 import { RoomRenderer } from 'src/app/pipes/ag-ptm-room-renderer'
+import { WindowRef } from 'src/app/shared/models/ohters'
 
 @Component({
   selector: 'cranix-ptm-view',
@@ -19,6 +20,7 @@ export class CranixPtmViewComponent implements OnInit {
   ptmTeacherInRoom: PTMTeacherInRoom
   ptm: ParentTeacherMeeting
   students: User[] = []
+  selectedStudent: User
   freeRooms: Room[]
   rowData = []
   events = {}
@@ -31,7 +33,8 @@ export class CranixPtmViewComponent implements OnInit {
     sortable: false,
     hide: false,
     minWidth: 80,
-    suppressHeaderMenuButton: true
+    suppressHeaderMenuButton: true,
+    suppressMovable: true
   }
   columnDefs = []
   gridApi
@@ -41,8 +44,10 @@ export class CranixPtmViewComponent implements OnInit {
   selectedEventRegistered: boolean = false
   selectedPTMinRoom: PTMTeacherInRoom
   freeTeachers: User[] = []
+  nativeWindow: any
   @Input() id: number;
   constructor(
+    public win: WindowRef,
     public alertController: AlertController,
     public authService: AuthenticationService,
     private languageS: LanguageService,
@@ -50,6 +55,7 @@ export class CranixPtmViewComponent implements OnInit {
     private parentsService: ParentsService,
     private utilService: UtilsService
   ) {
+    this.nativeWindow = win.getNativeWindow();
     this.context = { componentParent: this }
     this.isStudent = this.authService.session.user.role == 'students'
     this.students = []
@@ -57,6 +63,8 @@ export class CranixPtmViewComponent implements OnInit {
       for (let s of this.objectService.allObjects['user']) {
         if (s.role == 'students') this.students.push(s)
       }
+    } else {
+      this.selectedStudent = this.authService.session.user
     }
     this.isPtmManager = this.authService.isAllowed('ptm.manage')
   }
@@ -68,6 +76,7 @@ export class CranixPtmViewComponent implements OnInit {
     this.readData(true)
   }
   readData(doColdef: boolean) {
+    console.log("readData called")
     this.parentsService.getPTMById(this.id).subscribe(
       (val) => {
         this.ptm = val
@@ -78,7 +87,7 @@ export class CranixPtmViewComponent implements OnInit {
               this.createData(doColdef)
             }
           )
-        }else{
+        } else {
           this.createData(doColdef)
         }
       }
@@ -111,16 +120,20 @@ export class CranixPtmViewComponent implements OnInit {
             lockPinned: true,
             headerName: this.languageS.trans('Teacher'),
             sortable: true
-          },
-          {
-            field: 'room',
-            pinned: 'left',
-            minWidth: 80,
-            lockPinned: true,
-            headerName: this.languageS.trans('Room'),
-            cellRenderer: RoomRenderer
           }
         )
+        if (!this.authService.isMD) {
+          colDef.push(
+            {
+              field: 'room',
+              pinned: 'left',
+              minWidth: 80,
+              lockPinned: true,
+              headerName: this.languageS.trans('Room'),
+              cellRenderer: RoomRenderer
+            }
+          )
+        }
       }
       for (let ptmEvent of ptmTeacherInRoom.events.sort(this.compare)) {
         let time = this.utilService.getDouble(new Date(ptmEvent.start).getHours()) + ':' + this.utilService.getDouble(new Date(ptmEvent.start).getMinutes())
@@ -177,13 +190,17 @@ export class CranixPtmViewComponent implements OnInit {
       }
     }
   }
-
+  deselectStudent(selectStudentModal) {
+    selectStudentModal.close()
+    this.selectedStudent = null
+    this.readData(false)
+  }
   registerEvent(event: PTMEvent) {
     this.selectedEvent = event
     this.selectedEventRegistered = this.selectedEvent.student != null
-    if (this.isStudent) {
+    if (this.selectedStudent) {
       if (!this.selectedEvent.student) {
-        this.selectedEvent.student = this.authService.session.user
+        this.selectedEvent.student = this.selectedStudent
         this.doRegister()
       } else {
         this.cancelEvent();
@@ -268,5 +285,57 @@ export class CranixPtmViewComponent implements OnInit {
       ]
     });
     await alert.present();
+  }
+
+  printEventForStudent(){
+
+    let start = new Date(this.ptm.start)
+    let end = new Date(this.ptm.end)
+    let date = this.utilService.toIonDate(start)
+    let startTime = this.utilService.toIonTime(start)
+    let endTime = this.utilService.toIonTime(end)
+    let caption = this.languageS.trans('PTM')
+    caption += " " + this.languageS.trans('student') + ":"
+    caption += this.selectedStudent.surName + ", " + this.selectedStudent.givenName
+    caption += " " + this.languageS.trans('date') + date
+    caption += " " + startTime + " - " + endTime
+    let html ='<table style="border: 1px solid black;">'
+    html += "<caption>" + caption + "</caption>"
+    html += "<tr><th>"
+    html += this.languageS.trans('time')
+    html += "</th><th>"
+    html += this.languageS.trans('room')
+    html += "</th><th>"
+    html += this.languageS.trans('teacher')
+    html += "</th></tr>\n"
+    for(let time in this.eventsTimeStudent){
+      console.log(time)
+      if(this.eventsTimeStudent[time][this.selectedStudent.id]) {
+        let id = this.eventsTimeStudent[time][this.selectedStudent.id]
+        for (let tmp of this.ptm.ptmTeacherInRoomList) {
+          if(tmp.id == id){
+            let room = tmp.room.name
+            let teacher = tmp.teacher.surName + ", " + tmp.teacher.givenName
+            html += `<tr><td>${time}</td><td>${room}</td><td>${teacher}</td></tr>\n`
+            break
+          }
+        }
+      }
+    }
+    html += "</table>"
+    //window.print()
+    console.log(html)
+    var hostname = window.location.hostname;
+    var protocol = window.location.protocol;
+    var port = window.location.port;
+    sessionStorage.setItem('printPage', html);
+    if (port) {
+      this.nativeWindow.open(`${protocol}//${hostname}:${port}`);
+      sessionStorage.removeItem('shortName');
+    } else {
+      this.nativeWindow.open(`${protocol}//${hostname}`);
+      sessionStorage.removeItem('shortName');
+    }
+    sessionStorage.removeItem('printPage');
   }
 }

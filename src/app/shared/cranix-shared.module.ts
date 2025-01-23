@@ -11,7 +11,8 @@ import { IonicModule } from '@ionic/angular';
 import { 
   IonicSelectableComponent,
   IonicSelectableHeaderTemplateDirective,
-  IonicSelectableValueTemplateDirective
+  IonicSelectableValueTemplateDirective,
+  IonicSelectablePlaceholderTemplateDirective
  } from 'ionic-selectable'
 
 import { TranslateModule } from '@ngx-translate/core';
@@ -124,6 +125,7 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     IonicSelectableComponent,
     IonicSelectableHeaderTemplateDirective,
     IonicSelectableValueTemplateDirective,
+    IonicSelectablePlaceholderTemplateDirective,
     AgGridModule,
     FormsModule,
     IonicModule,
@@ -155,7 +157,8 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     CranixPtmViewComponent,
     IonicSelectableComponent,
     IonicSelectableHeaderTemplateDirective,
-    IonicSelectableValueTemplateDirective
+    IonicSelectableValueTemplateDirective,
+    IonicSelectablePlaceholderTemplateDirective
   ],
   providers: [WindowRef,CanActivateViaAcls ]
 })

@@ -82,6 +82,8 @@ export class AppComponent {
               console.log('pages/cranix/profile/myself');
               this.router.navigate(['pages/cranix/profile/myself']);
             }
+          } else if (sessionStorage.getItem('printPage')) {
+            this.router.navigate(['public/printPage']);
           } else if (sessionStorage.getItem('screenShot')) {
             this.router.navigate(['public/showScreen']);
           } else if (sessionStorage.getItem('cephalix_token')) {
