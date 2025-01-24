@@ -3,6 +3,7 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { ParentsService } from 'src/app/services/parents.service';
+import { SystemService } from 'src/app/services/system.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ParentTeacherMeeting, PTMEvent, PTMTeacherInRoom, Room, User } from 'src/app/shared/models/data-model';
 import { WindowRef } from 'src/app/shared/models/ohters';
@@ -20,6 +21,7 @@ export class PtmsComponent implements OnInit {
   selectedEvent: PTMEvent = new PTMEvent()
   selectedEventRegistered: boolean = false
   isRegisterEventOpen = false
+  instituteName: string = ""
   nextPtms: ParentTeacherMeeting[] = []
   myPTMTeacherInRoom: PTMTeacherInRoom
   students: User[] = [];
@@ -31,8 +33,10 @@ export class PtmsComponent implements OnInit {
     private languageS: LanguageService,
     private objectService: GenericObjectService,
     public ptmService: ParentsService,
-    private utilService: UtilsService
+    private utilService: UtilsService,
+    private systemService: SystemService
   ) {
+    this.systemService.getInstituteName().subscribe((val) => { this.instituteName = val })
     this.nativeWindow = win.getNativeWindow();
     this.now = new Date()
     this.readData()
@@ -137,15 +141,14 @@ export class PtmsComponent implements OnInit {
     let date = this.utilService.toIonDate(start)
     let startTime = this.utilService.toIonTime(start)
     let endTime = this.utilService.toIonTime(end)
-    let html = '<h2>' + this.languageS.trans('PTM') + ' ' + this.languageS.trans('teacher') + ': ' + this.myPTMTeacherInRoom.teacher.surName + ', ' + this.myPTMTeacherInRoom.teacher.givenName + '</h2>\n'
-    html += '<h3>' + this.languageS.trans('date') + ' ' + date + ': ' + startTime + ' - ' + endTime + '</h3>\n'
+    let html = '<h2>' + this.languageS.trans('PTM') + ' ' + date + ': ' + startTime + ' - ' + endTime + '</h2>\n'
+    html += '<h2>' + this.languageS.trans('Teacher') + ': ' + this.myPTMTeacherInRoom.teacher.surName + ', ' + this.myPTMTeacherInRoom.teacher.givenName + '</h2>\n'
     html += '<h3>' + this.languageS.trans('room') + ' ' + this.myPTMTeacherInRoom.room.name + '</h3>\n'
     html += '<table style="border: 1px solid black;">'
     html += '<tr><th>'
-    html += this.languageS.trans('time')
+    html += this.languageS.trans('Time')
     html += '</th><th>'
-    html += this.languageS.trans('student')
-    html += '</th><th>'
+    html += this.languageS.trans('Student')
     html += '</th></tr>\n'
     for (let event of this.myPTMTeacherInRoom.events.sort(this.compare)) {
       let start = new Date(event.start)
@@ -162,6 +165,7 @@ export class PtmsComponent implements OnInit {
     var protocol = window.location.protocol;
     var port = window.location.port;
     sessionStorage.setItem('printPage', html);
+    sessionStorage.setItem('instituteName', this.instituteName)
     if (port) {
       this.nativeWindow.open(`${protocol}//${hostname}:${port}`);
       sessionStorage.removeItem('shortName');
@@ -170,6 +174,7 @@ export class PtmsComponent implements OnInit {
       sessionStorage.removeItem('shortName');
     }
     sessionStorage.removeItem('printPage');
+    sessionStorage.removeItem('instituteName')
 
   }
 

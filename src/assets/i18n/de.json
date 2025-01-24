@@ -1,4 +1,5 @@
 {
+    "Date":"Datum",
     "Search for":"Suche nach",
     "Register student for the event":"Schüler anmelden",
     "Select student for the event":"Einen Schüler wählen",
@@ -451,7 +452,7 @@
     "Stop and evaluate challenge and archive the results.": "Test anhalten, auswerten und Ergebnisse archivieren.",
     "Stop firewall": "Firewall anhalten",
     "Stop the running user import": "Laufenden Import anhalten",
-    "Student": "Schüler",
+    "Student": "Schüler(in)",
     "Students": "Schüler",
     "Support request '%s' was created with ticket number '%s'. Answer will be sent to '%s'.": "Die Supportanfrage '%s' wurde mit der Nummer '%s' erstellt. Antwort wird an '%s' gesendet.",
     "Support request '%s' was not created. The reason is:'%s'": "Die Supportanfrage '%s' konnte nicht erstellt werden. Der Grund: '%s'",

@@ -9,6 +9,7 @@ import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { EventRenderer } from 'src/app/pipes/ag-ptm-event-renderer'
 import { RoomRenderer } from 'src/app/pipes/ag-ptm-room-renderer'
 import { WindowRef } from 'src/app/shared/models/ohters'
+import { SystemService } from 'src/app/services/system.service';
 
 @Component({
   selector: 'cranix-ptm-view',
@@ -28,6 +29,7 @@ export class CranixPtmViewComponent implements OnInit {
   eventsTimeStudent = {}
   isPtmManager: boolean = false
   isStudent: boolean = false
+  instituteName: string
   defaultColDef = {
     resizable: true,
     sortable: false,
@@ -53,9 +55,11 @@ export class CranixPtmViewComponent implements OnInit {
     private languageS: LanguageService,
     private objectService: GenericObjectService,
     private parentsService: ParentsService,
-    private utilService: UtilsService
+    private utilService: UtilsService,
+    private systemService: SystemService
   ) {
     this.nativeWindow = win.getNativeWindow();
+    this.systemService.getInstituteName().subscribe((val) => { this.instituteName = val })
     this.context = { componentParent: this }
     this.isStudent = this.authService.session.user.role == 'students'
     this.students = []
@@ -294,21 +298,20 @@ export class CranixPtmViewComponent implements OnInit {
   }
 
   printEventForStudent(){
-
     let start = new Date(this.ptm.start)
     let end = new Date(this.ptm.end)
     let date = this.utilService.toIonDate(start)
     let startTime = this.utilService.toIonTime(start)
     let endTime = this.utilService.toIonTime(end)
-    let html = '<h2>' +this.languageS.trans('PTM') + ' ' + this.languageS.trans('student') + ': ' + this.selectedStudent.surName + ', ' + this.selectedStudent.givenName + '</h2>\n'
-    html += '<h3>' + this.languageS.trans('date') + ' ' + date + ': ' + startTime + ' - ' + endTime + '</h3>\n'
-    html +='<table style="border: 1px solid black;">'
+    let html = '<h2>' +this.languageS.trans('PTM') + ' ' + date + ': ' + startTime + ' - ' + endTime + '</h2>\n'
+    html += '<table>\n'
+    html += '<caption>' +this.languageS.trans('Student') + ': ' + this.selectedStudent.surName + ', ' + this.selectedStudent.givenName + '</caption>\n'
     html += '<tr><th>'
-    html += this.languageS.trans('time')
+    html += this.languageS.trans('Time')
     html += '</th><th>'
     html += this.languageS.trans('room')
     html += '</th><th>'
-    html += this.languageS.trans('teacher')
+    html += this.languageS.trans('Teacher')
     html += '</th></tr>\n'
     for(let time in this.eventsTimeStudent){
       console.log(time)
@@ -330,6 +333,7 @@ export class CranixPtmViewComponent implements OnInit {
     var protocol = window.location.protocol;
     var port = window.location.port;
     sessionStorage.setItem('printPage', html);
+    sessionStorage.setItem('instituteName',this.instituteName)
     if (port) {
       this.nativeWindow.open(`${protocol}//${hostname}:${port}`);
       sessionStorage.removeItem('shortName');
@@ -338,5 +342,6 @@ export class CranixPtmViewComponent implements OnInit {
       sessionStorage.removeItem('shortName');
     }
     sessionStorage.removeItem('printPage');
+    sessionStorage.removeItem('instituteName');
   }
 }
