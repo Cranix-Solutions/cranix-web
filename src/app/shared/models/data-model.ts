@@ -41,6 +41,7 @@ export class User {
 	telefonNumber?: string = ""
 	childIds?: number[] = []
 	parentIds?: number[] = []
+	classIds?: number[] = []
 	otp?: string
 	constructor() { }
 }

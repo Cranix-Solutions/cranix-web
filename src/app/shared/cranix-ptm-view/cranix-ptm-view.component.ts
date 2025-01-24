@@ -105,6 +105,12 @@ export class CranixPtmViewComponent implements OnInit {
     this.eventsTimeStudent = {}
     for (let ptmTeacherInRoom of this.ptm.ptmTeacherInRoomList) {
       this.eventsTeacherStudent[ptmTeacherInRoom.teacher.id] = {}
+      if(this.selectedStudent){
+        //If student selected show only the corresponding teachers
+        if(! this.selectedStudent.classIds.some(classId => ptmTeacherInRoom.teacher.classIds.includes(classId))){
+          continue
+        }
+      }
       let roomEvents = {
         teacher: ptmTeacherInRoom.teacher.surName + ', ' + ptmTeacherInRoom.teacher.givenName,
         room: ptmTeacherInRoom.room.description ? ptmTeacherInRoom.room.description : ptmTeacherInRoom.room.name,
