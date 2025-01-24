@@ -5,12 +5,13 @@ table, th, td {
        padding-right: 5px;
        padding-top: 3px;
        padding-bottom: 2;
+       border: 1px solid black;
 }
 tr:nth-child(even) {
-      background-color: #D2E3D5;
+      background-color: #009EAD;
 }
 tr:nth-child(odd) {
-    background-color: #E2F3E5;
+    background-color: #00465A;
 }
 @media print {
     .no-print {

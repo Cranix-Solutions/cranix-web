@@ -1,5 +1,10 @@
 <ion-header class="no-print">
     <ion-toolbar>
+        @if(title) {
+        <ion-title>
+            {{title}}
+        </ion-title>
+        }
         <ion-buttons slot="end">
             <ion-button (click)="print()">
                 <ion-icon name="print"></ion-icon>
@@ -14,3 +19,9 @@
         </ion-card-content>
     </ion-card>
 </ion-content>
+<ion-footer>
+    <ion-toolbar>
+        <img src="assets/images/logo/cranix_school.svg" style="height: 32px; width: 32px;">
+        <ion-title>CRANIX Solutions GmbH</ion-title>
+    </ion-toolbar>
+</ion-footer>
