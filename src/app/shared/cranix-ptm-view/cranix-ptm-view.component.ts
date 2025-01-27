@@ -80,7 +80,7 @@ export class CranixPtmViewComponent implements OnInit {
     this.readData(true)
   }
   readData(doColdef: boolean) {
-    console.log("readData called")
+    console.log("readData called: " + doColdef)
     this.parentsService.getPTMById(this.id).subscribe(
       (val) => {
         this.ptm = val
@@ -107,6 +107,30 @@ export class CranixPtmViewComponent implements OnInit {
     let data = []
     let colDef = []
     this.eventsTimeStudent = {}
+    if (!colDefIsReady) {
+      colDef.push(
+        {
+          field: 'teacher',
+          pinned: 'left',
+          minWidth: 100,
+          lockPinned: true,
+          headerName: this.languageS.trans('Teacher'),
+          sortable: true
+        }
+      )
+      if (!this.authService.isMD()) {
+        colDef.push(
+          {
+            field: 'room',
+            pinned: 'left',
+            minWidth: 80,
+            lockPinned: true,
+            headerName: this.languageS.trans('Room'),
+            cellRenderer: RoomRenderer
+          }
+        )
+      }
+    }
     for (let ptmTeacherInRoom of this.ptm.ptmTeacherInRoomList) {
       this.eventsTeacherStudent[ptmTeacherInRoom.teacher.id] = {}
       if(this.selectedStudent){
@@ -120,30 +144,6 @@ export class CranixPtmViewComponent implements OnInit {
         room: ptmTeacherInRoom.room.description ? ptmTeacherInRoom.room.description : ptmTeacherInRoom.room.name,
         ptmId: ptmTeacherInRoom.id,
         teacherId: ptmTeacherInRoom.teacher.id
-      }
-      if (!colDefIsReady) {
-        colDef.push(
-          {
-            field: 'teacher',
-            pinned: 'left',
-            minWidth: 100,
-            lockPinned: true,
-            headerName: this.languageS.trans('Teacher'),
-            sortable: true
-          }
-        )
-        if (!this.authService.isMD) {
-          colDef.push(
-            {
-              field: 'room',
-              pinned: 'left',
-              minWidth: 80,
-              lockPinned: true,
-              headerName: this.languageS.trans('Room'),
-              cellRenderer: RoomRenderer
-            }
-          )
-        }
       }
       for (let ptmEvent of ptmTeacherInRoom.events.sort(this.compare)) {
         let time = this.utilService.getDouble(new Date(ptmEvent.start).getHours()) + ':' + this.utilService.getDouble(new Date(ptmEvent.start).getMinutes())
@@ -173,13 +173,19 @@ export class CranixPtmViewComponent implements OnInit {
     if (doColdef) {
       this.columnDefs = colDef
     }
-    for (let user of this.freeTeachers) {
+    for (let teacher of this.freeTeachers) {
+      if(this.selectedStudent){
+        //If student selected show only the corresponding teachers
+        if(! this.selectedStudent.classIds.some(classId => teacher.classIds.includes(classId))){
+          continue
+        }
+      }
       data.push(
         {
-          teacher: user.surName + ', ' + user.givenName,
+          teacher: teacher.surName + ', ' + teacher.givenName,
           room: "0",
           ptmId: 0,
-          teacherId: user.id
+          teacherId: teacher.id
         }
       )
     }
@@ -252,12 +258,10 @@ export class CranixPtmViewComponent implements OnInit {
           this.ptmTeacherInRoom = new PTMTeacherInRoom()
           this.ptmTeacherInRoom['teacher'] = this.objectService.getObjectById("user", teacherId)
         }
-        console.log(this.ptmTeacherInRoom)
         this.isRegisterRoomOpen = true;
       })
   }
   doRegisterRoom() {
-    console.log(this.ptmTeacherInRoom)
     this.parentsService.registerRoom(this.id, this.ptmTeacherInRoom).subscribe((val) => {
       this.objectService.responseMessage(val)
       this.isRegisterEventOpen = false
@@ -314,7 +318,6 @@ export class CranixPtmViewComponent implements OnInit {
     html += this.languageS.trans('Teacher')
     html += '</th></tr>\n'
     for(let time in this.eventsTimeStudent){
-      console.log(time)
       if(this.eventsTimeStudent[time][this.selectedStudent.id]) {
         let id = this.eventsTimeStudent[time][this.selectedStudent.id]
         for (let tmp of this.ptm.ptmTeacherInRoomList) {
@@ -328,7 +331,6 @@ export class CranixPtmViewComponent implements OnInit {
       }
     }
     html += '</table>'
-    console.log(html)
     var hostname = window.location.hostname;
     var protocol = window.location.protocol;
     var port = window.location.port;
