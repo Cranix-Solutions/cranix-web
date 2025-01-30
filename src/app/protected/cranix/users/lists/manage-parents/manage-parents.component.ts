@@ -17,7 +17,7 @@ export class ManageParentsComponent {
   rowData: any[] = []
   nextPtms: ParentTeacherMeeting[] = []
   formerPtms: ParentTeacherMeeting[] = []
-  selectedPTM: ParentTeacherMeeting = new ParentTeacherMeeting()
+  selectedPTM: ParentTeacherMeeting
   isUpcomming: boolean = false;
   selectedParent: User
   selectedChildren: User[]
@@ -102,7 +102,8 @@ export class ManageParentsComponent {
                 this.selectedPTM = this.parentsService.adaptPtmTimes(val[0])
                 this.isUpcomming = true;
               }
-            } else {
+            }
+            if(!this.selectedPTM){
               this.selectPtm(null)
             }
             this.parentsService.getFormer().subscribe(
@@ -196,11 +197,15 @@ export class ManageParentsComponent {
     if(!this.checkPtmTimes(this.selectedPTM)){
       return
     }
+    this.parentsService.convertPtmTimes(this.selectedPTM)
+    console.log(this.selectedPTM)
     this.objectService.requestSent();
     if (this.selectedPTM.id > 0) {
       this.parentsService.modifyPtm(this.selectedPTM).subscribe((val) => {
         this.objectService.responseMessage(val)
-        this.loadData()
+        this.parentsService.getPTMById(this.selectedPTM.id).subscribe((val2) => {
+          this.selectPtm(val2)
+        })
       })
     } else {
       console.log(this.selectedPTM)

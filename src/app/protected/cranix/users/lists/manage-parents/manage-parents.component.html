@@ -28,6 +28,7 @@
 </ion-segment>
 @if(segment == 'ptm'){
 <ion-content>
+    @if(selectedPTM){
     <form #addEditPTMForm="ngForm">
         <ion-toolbar class="page-toolbar">
             @if(selectedPTM.id > 0){
@@ -39,19 +40,24 @@
                 <ion-button (click)="isSelectPtmOpen = true" fill="solid" matTooltip="{{'Select PTM'|translate}}">
                     <ion-icon slot="icon-only" color="success" name="list-outline"></ion-icon>
                 </ion-button>
-                <ion-button (click)="addEditPTM()" fill="solid" matTooltip="{{'Apply'|translate}}" [disabled]="!addEditPTMForm.valid || !isUpcomming">
+                <ion-button (click)="addEditPTM()" fill="solid" matTooltip="{{'Apply'|translate}}"
+                    [disabled]="!addEditPTMForm.valid || !isUpcomming">
                     <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
                 </ion-button>
-                <ion-button (click)="selectPtm(null)" fill="solid" matTooltip="{{'Create parent teacher meeting'|translate}}">
+                <ion-button (click)="selectPtm(null)" fill="solid"
+                    matTooltip="{{'Create parent teacher meeting'|translate}}">
                     <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
                 </ion-button>
-                <ion-button (click)="sendMails()" fill="solid" [disabled]="!isUpcomming" matTooltip="{{'Send mail to the parents'|translate}}">
+                <ion-button (click)="sendMails()" fill="solid" [disabled]="!isUpcomming"
+                    matTooltip="{{'Send mail to the parents'|translate}}">
                     <ion-icon slot="icon-only" name="mail-outline"></ion-icon>
                 </ion-button>
-                <ion-button (click)="isRegisterEventOpen = true" fill="solid" [disabled]="!isUpcomming"  matTooltip="{{'Register students rooms and teachers for the PTM'|translate}}">
+                <ion-button (click)="isRegisterEventOpen = true" fill="solid" [disabled]="!isUpcomming"
+                    matTooltip="{{'Register students rooms and teachers for the PTM'|translate}}">
                     <ion-icon slot="icon-only" color="tertiary" name="people"></ion-icon>
                 </ion-button>
-                <ion-button (click)="isDeletePtmOpen" fill="solid" [disabled]="selectedPTM.id == 0" matTooltip="{{'Remove PTM'|translate}}">
+                <ion-button (click)="isDeletePtmOpen" fill="solid" [disabled]="selectedPTM.id == 0"
+                    matTooltip="{{'Remove PTM'|translate}}">
                     <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
                 </ion-button>
             </ion-buttons>
@@ -62,30 +68,31 @@
                     labelPlacement="fixed" required></ion-input>
             </ion-item>
             <ion-item>
-                <ion-toggle labelPlacement="start" [(ngModel)]="selectedPTM.released" name="released" [enableOnOffLabels]="true">{{'Released'|translate}}</ion-toggle>
+                <ion-toggle labelPlacement="start" [(ngModel)]="selectedPTM.released" name="released"
+                    [enableOnOffLabels]="true">{{'Released'|translate}}</ion-toggle>
             </ion-item>
             <ion-item>
                 <ion-label>{{'From'|translate}}*</ion-label>
-                <input [(ngModel)]="selectedPTM.start" name="startTime" type="datetime-local" required (change)="startTimeSet()" [disabled]="selectedPTM.ptmTeacherInRoomList.length > 0"/>
+                <input [(ngModel)]="selectedPTM.start" name="startTime" type="datetime-local" required
+                    (change)="startTimeSet()" [disabled]="selectedPTM.ptmTeacherInRoomList.length > 0"/>
             </ion-item>
             <ion-item>
                 <ion-label>{{'Until'|translate}}*</ion-label>
-                <input [(ngModel)]="selectedPTM.end" name="endTime" type="datetime-local" required [disabled]="selectedPTM.ptmTeacherInRoomList.length > 0" />
+                <input [(ngModel)]="selectedPTM.end" name="endTime" type="datetime-local" required
+                    [disabled]="selectedPTM.ptmTeacherInRoomList.length > 0"/>
             </ion-item>
             <ion-item>
                 <ion-label>{{'Duration of a Session'|translate}}*</ion-label>
-                <input [(ngModel)]="selectedPTM.duration" name="duration" type="number"
-                    required  [disabled]="selectedPTM.ptmTeacherInRoomList.length > 0"/>{{'Minutes'|translate}}
+                <input [(ngModel)]="selectedPTM.duration" name="duration" type="number" required
+                    [disabled]="selectedPTM.ptmTeacherInRoomList.length > 0"/>{{'Minutes'|translate}}
             </ion-item>
             <ion-item>
                 <ion-label>{{'Start Parent Registration'|translate}}*</ion-label>
-                <input [(ngModel)]="selectedPTM.startRegistration" name="startRegistration" type="datetime-local"
-                    required />
+                <input [(ngModel)]="selectedPTM.startRegistration" name="startRegistration" type="datetime-local" required/>
             </ion-item>
             <ion-item>
                 <ion-label>{{'End Parent Registration'|translate}}*</ion-label>
-                <input [(ngModel)]="selectedPTM.endRegistration" name="endRegistration" type="datetime-local"
-                    required />
+                <input [(ngModel)]="selectedPTM.endRegistration" name="endRegistration" type="datetime-local" required/>
             </ion-item>
             @if(isUpcomming || selectedPTM.id == 0){
             <ion-item>
@@ -126,6 +133,11 @@
             }
         </ion-list>
     </form>
+    }@else{
+    <ion-toolbar class="page-toolbar">
+        <ion-title>{{'Loading data'|translate}} ...</ion-title>
+    </ion-toolbar>
+    }
 </ion-content>
 }@else{
 <ion-toolbar class="page-toolbar">
