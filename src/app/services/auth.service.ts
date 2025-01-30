@@ -139,14 +139,14 @@ export class AuthenticationService {
                 if (this.session.gotoPath) {
                     this.router.navigate([this.session.gotoPath]);
                 } else {
-                    this.error = "Ihr Token ist ungültig.";
+                    this.error = "Ihr Token ist korrupt.";
                 }
             },
             error: async (err) => {
                 console.log(err)
                 switch (err.status) {
-                    case 402: { this.error = "Ihr Token ist ungültig."; break; }
-                    case 402: { this.error = "Ihr Zugriff ist noch nicht gültig."; break; }
+                    case 401: { this.error = "Ihr Token ist ungültig."; break; }
+                    case 402: { this.error = "Ihr Zugriff ist noch nicht gültig. Versuchen Sie es später!"; break; }
                     case 403: { this.error = "Ihr Zugriff ist abgelaufen."; break; }
                 }
             }

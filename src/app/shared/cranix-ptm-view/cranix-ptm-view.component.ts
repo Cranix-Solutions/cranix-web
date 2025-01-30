@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { AlertController } from '@ionic/angular'
 import { PTMEvent, PTMTeacherInRoom, ParentTeacherMeeting, Room, User } from '../models/data-model';
 import { AuthenticationService } from 'src/app/services/auth.service';
@@ -10,6 +10,7 @@ import { EventRenderer } from 'src/app/pipes/ag-ptm-event-renderer'
 import { RoomRenderer } from 'src/app/pipes/ag-ptm-room-renderer'
 import { WindowRef } from 'src/app/shared/models/ohters'
 import { SystemService } from 'src/app/services/system.service';
+import { interval, takeWhile } from 'rxjs';
 
 @Component({
   selector: 'cranix-ptm-view',
@@ -17,6 +18,7 @@ import { SystemService } from 'src/app/services/system.service';
   styleUrl: './cranix-ptm-view.component.css'
 })
 export class CranixPtmViewComponent implements OnInit {
+  alive: boolean = true
   context
   ptmTeacherInRoom: PTMTeacherInRoom
   ptm: ParentTeacherMeeting
@@ -77,7 +79,24 @@ export class CranixPtmViewComponent implements OnInit {
   }
   ngOnInit(): void {
     console.log(this.id)
+    this.alive = true
     this.readData(true)
+    interval(3000).pipe(takeWhile(() => this.alive)).subscribe((func => {
+      this.refreshDatat();
+    }))
+  }
+  ngOnDestroy(): void {
+    this.alive = false
+  }
+  refreshDatat(): void{
+    this.parentsService.getLastChange(this.id).subscribe((val) => {
+      console.log(val);
+      let lastChange = new Date(val)
+      console.log(lastChange.toISOString())
+      if(val && lastChange.getTime() > this.parentsService.lastSeen[this.id]){
+        this.readData(false)
+      }
+    })
   }
   readData(doColdef: boolean) {
     console.log("readData called: " + doColdef)
@@ -133,9 +152,9 @@ export class CranixPtmViewComponent implements OnInit {
     }
     for (let ptmTeacherInRoom of this.ptm.ptmTeacherInRoomList) {
       this.eventsTeacherStudent[ptmTeacherInRoom.teacher.id] = {}
-      if(this.selectedStudent){
+      if (this.selectedStudent) {
         //If student selected show only the corresponding teachers
-        if(! this.selectedStudent.classIds.some(classId => ptmTeacherInRoom.teacher.classIds.includes(classId))){
+        if (!this.selectedStudent.classIds.some(classId => ptmTeacherInRoom.teacher.classIds.includes(classId))) {
           continue
         }
       }
@@ -174,9 +193,9 @@ export class CranixPtmViewComponent implements OnInit {
       this.columnDefs = colDef
     }
     for (let teacher of this.freeTeachers) {
-      if(this.selectedStudent){
+      if (this.selectedStudent) {
         //If student selected show only the corresponding teachers
-        if(! this.selectedStudent.classIds.some(classId => teacher.classIds.includes(classId))){
+        if (!this.selectedStudent.classIds.some(classId => teacher.classIds.includes(classId))) {
           continue
         }
       }
@@ -301,15 +320,15 @@ export class CranixPtmViewComponent implements OnInit {
     await alert.present();
   }
 
-  printEventForStudent(){
+  printEventForStudent() {
     let start = new Date(this.ptm.start)
     let end = new Date(this.ptm.end)
     let date = this.utilService.toIonDate(start)
     let startTime = this.utilService.toIonTime(start)
     let endTime = this.utilService.toIonTime(end)
-    let html = '<h2>' +this.languageS.trans('PTM') + ' ' + date + ': ' + startTime + ' - ' + endTime + '</h2>\n'
+    let html = '<h2>' + this.languageS.trans('PTM') + ' ' + date + ': ' + startTime + ' - ' + endTime + '</h2>\n'
     html += '<table>\n'
-    html += '<caption>' +this.languageS.trans('Student') + ': ' + this.selectedStudent.surName + ', ' + this.selectedStudent.givenName + '</caption>\n'
+    html += '<caption>' + this.languageS.trans('Student') + ': ' + this.selectedStudent.surName + ', ' + this.selectedStudent.givenName + '</caption>\n'
     html += '<tr><th>'
     html += this.languageS.trans('Time')
     html += '</th><th>'
@@ -317,11 +336,11 @@ export class CranixPtmViewComponent implements OnInit {
     html += '</th><th>'
     html += this.languageS.trans('Teacher')
     html += '</th></tr>\n'
-    for(let time in this.eventsTimeStudent){
-      if(this.eventsTimeStudent[time][this.selectedStudent.id]) {
+    for (let time in this.eventsTimeStudent) {
+      if (this.eventsTimeStudent[time][this.selectedStudent.id]) {
         let id = this.eventsTimeStudent[time][this.selectedStudent.id]
         for (let tmp of this.ptm.ptmTeacherInRoomList) {
-          if(tmp.id == id){
+          if (tmp.id == id) {
             let room = tmp.room.name
             let teacher = tmp.teacher.surName + ", " + tmp.teacher.givenName
             html += `<tr><td>${time}</td><td>${room}</td><td>${teacher}</td></tr>\n`
@@ -335,7 +354,7 @@ export class CranixPtmViewComponent implements OnInit {
     var protocol = window.location.protocol;
     var port = window.location.port;
     sessionStorage.setItem('printPage', html);
-    sessionStorage.setItem('instituteName',this.instituteName)
+    sessionStorage.setItem('instituteName', this.instituteName)
     if (port) {
       this.nativeWindow.open(`${protocol}//${hostname}:${port}`);
       sessionStorage.removeItem('shortName');

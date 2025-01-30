@@ -62,17 +62,20 @@
                     labelPlacement="fixed" required></ion-input>
             </ion-item>
             <ion-item>
+                <ion-toggle labelPlacement="start" [(ngModel)]="selectedPTM.released" name="released" [enableOnOffLabels]="true">{{'Released'|translate}}</ion-toggle>
+            </ion-item>
+            <ion-item>
                 <ion-label>{{'From'|translate}}*</ion-label>
-                <input [(ngModel)]="selectedPTM.start" name="startTime" type="datetime-local" required (change)="startTimeSet()"/>
+                <input [(ngModel)]="selectedPTM.start" name="startTime" type="datetime-local" required (change)="startTimeSet()" [disabled]="selectedPTM.ptmTeacherInRoomList.length > 0"/>
             </ion-item>
             <ion-item>
                 <ion-label>{{'Until'|translate}}*</ion-label>
-                <input [(ngModel)]="selectedPTM.end" name="endTime" type="datetime-local" required />
+                <input [(ngModel)]="selectedPTM.end" name="endTime" type="datetime-local" required [disabled]="selectedPTM.ptmTeacherInRoomList.length > 0" />
             </ion-item>
             <ion-item>
                 <ion-label>{{'Duration of a Session'|translate}}*</ion-label>
                 <input [(ngModel)]="selectedPTM.duration" name="duration" type="number"
-                    required />{{'Minutes'|translate}}
+                    required  [disabled]="selectedPTM.ptmTeacherInRoomList.length > 0"/>{{'Minutes'|translate}}
             </ion-item>
             <ion-item>
                 <ion-label>{{'Start Parent Registration'|translate}}*</ion-label>

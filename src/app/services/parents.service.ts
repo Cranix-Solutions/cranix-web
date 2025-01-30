@@ -10,6 +10,7 @@ import { bl } from '@fullcalendar/core/internal-common';
 export class ParentsService {
 	hostname: string;
 	url: string;
+	lastSeen = {};
 
 
 	constructor(
@@ -47,8 +48,14 @@ export class ParentsService {
 	}
 
 	getPTMById(id: number) {
+		this.lastSeen[id] = new Date().getTime();
 		this.url = this.hostname + "/parents/ptms/" + id;
 		return this.http.get<ParentTeacherMeeting>(this.url, { headers: this.authService.headers });
+	}
+
+	getLastChange(id: number){
+		this.url = this.hostname + "/parents/ptms/" + id + "/lastChange";
+		return this.http.get<Date>(this.url, { headers: this.authService.headers });
 	}
 
 	getFreeRooms(id: number) {
