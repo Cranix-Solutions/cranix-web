@@ -234,6 +234,7 @@ export class ManageParentsComponent {
     )
   }
   sendMails(){
+    this.objectService.requestSent();
     this.parentsService.sendMails(this.selectedPTM.id).subscribe(
       (val) => {
         this.objectService.responseMessage(val);
