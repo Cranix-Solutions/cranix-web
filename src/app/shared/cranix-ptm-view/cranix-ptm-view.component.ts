@@ -29,7 +29,10 @@ export class CranixPtmViewComponent implements OnInit {
   events = {}
   eventsTeacherStudent = {}
   eventsTimeStudent = {}
+  isOpened: boolean = true
   isPtmManager: boolean = false
+  isRegisterRoomOpen: boolean = false
+  isRegisterEventOpen: boolean = false
   isStudent: boolean = false
   instituteName: string
   defaultColDef = {
@@ -42,8 +45,6 @@ export class CranixPtmViewComponent implements OnInit {
   }
   columnDefs = []
   gridApi
-  isRegisterRoomOpen: boolean = false
-  isRegisterEventOpen: boolean = false
   selectedEvent: PTMEvent
   selectedEventRegistered: boolean = false
   selectedPTMinRoom: PTMTeacherInRoom
@@ -74,6 +75,7 @@ export class CranixPtmViewComponent implements OnInit {
     }
     this.isPtmManager = this.authService.isAllowed('ptm.manage')
   }
+
   compare(a: any, b: any) {
     return new Date(a.start).getTime() - new Date(b.start).getTime()
   }
@@ -81,14 +83,14 @@ export class CranixPtmViewComponent implements OnInit {
     console.log(this.id)
     this.alive = true
     this.readData(true)
-    interval(5000).pipe(takeWhile(() => this.alive)).subscribe((func => {
-      this.refreshDatat();
+    interval(5000).pipe(takeWhile(() => this.alive && this.isOpened )).subscribe((func => {
+      this.refreshData();
     }))
   }
   ngOnDestroy(): void {
     this.alive = false
   }
-  refreshDatat(): void{
+  refreshData(): void{
     this.parentsService.getLastChange(this.id).subscribe((val) => {
       let lastChange = new Date(val)
       console.log(lastChange.toISOString())
@@ -101,6 +103,10 @@ export class CranixPtmViewComponent implements OnInit {
     this.parentsService.getPTMById(this.id).subscribe(
       (val) => {
         this.ptm = val
+        let endReg = new Date(this.ptm.endRegistration).getTime()
+        if(new Date().getTime() > endReg) {
+          this.isOpened = false
+        }
         if (!this.isStudent) {
           this.parentsService.getFreeTeachers(this.id).subscribe(
             (val) => {
@@ -229,6 +235,10 @@ export class CranixPtmViewComponent implements OnInit {
     this.readData(false)
   }
   registerEvent(event: PTMEvent) {
+    if(!this.isOpened){
+      this.objectService.errorMessage(this.languageS.trans("Registration closed."))
+      return;
+    }
     this.selectedEvent = event
     this.selectedEventRegistered = this.selectedEvent.student != null
     if (this.selectedStudent) {
@@ -260,6 +270,9 @@ export class CranixPtmViewComponent implements OnInit {
     })
   }
   registerRoom(teacherId: number, ptmId: number) {
+    if(new Date(this.ptm.endRegistration).getTime() > new Date().getTime()){
+      this.objectService.errorMessage(this.languageS.trans("Registration started. No change is allowed."))
+    }
     this.parentsService.getFreeRooms(this.id).subscribe(
       (val) => {
         this.freeRooms = val
