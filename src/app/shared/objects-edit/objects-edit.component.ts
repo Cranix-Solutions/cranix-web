@@ -86,6 +86,7 @@ export class ObjectsEditComponent implements OnInit {
             }
           }
           console.log(this.object)
+          console.log(this.objectKeys)
         }
       );
     }

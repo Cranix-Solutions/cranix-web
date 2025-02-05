@@ -30,6 +30,7 @@ export class UsersComponent implements OnInit {
     "role",
     "mustChange",
     "classes",
+    "mailAliases",
     "msQuota",
     "fsQuota",
     "msQuotaUsed",

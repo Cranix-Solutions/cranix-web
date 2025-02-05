@@ -23,7 +23,7 @@
   </ion-header>
   <ion-content fullscreen>
     <ion-list lines="full" class="ion-no-margin ion-no-padding">
-      <div *ngFor="let key of objectKeys" [ngSwitch]="">
+      <div *ngFor="let key of objectKeys">
         @switch(objectService.typeOf(key,object,objectAction)) {
         @case("file") {
         <ion-item>
@@ -115,7 +115,7 @@
         </ion-item>
         }
         @case("idPipeRO") {
-        <ion-item *ngSwitchCase="'idPipeRO'">
+        <ion-item>
           <ion-label position="stacked">{{ key | translate }}{{objectService.required[key]}}</ion-label>
           <ion-input color="tertiary" type="text" [value]="objectService.idToName(key,object[key])" readonly>
           </ion-input>
@@ -142,7 +142,7 @@
         </ion-item>
         }
         @case("idsPipe") {
-        <ion-item *ngSwitchCase="'idsPipe'">
+        <ion-item>
           <ion-label position="stacked">{{ key.substring(0,key.length -1 ) | translate }}{{objectService.required[key]}}
           </ion-label>
           <ion-select class="select-full-width wrap-no" type="text" [(ngModel)]="object[key]" name="{{key}}"
@@ -155,7 +155,7 @@
         </ion-item>
         }
         @case("multivalued") {
-        <ion-item *ngSwitchCase="'multivalued'">
+        <ion-item>
           <ion-label position="stacked">{{ key | translate }} {{'Comma separated list' | translate }}</ion-label>
           <ion-input type="text" [(ngModel)]="object[key]" name="{{key}}" value="{{object[key]}}"></ion-input>
         </ion-item>
