@@ -53,7 +53,7 @@ export class PtmsComponent implements OnInit {
     this.ptmService.get().subscribe((val) => {
       this.nextPtms = val
       if(val.length == 1) {
-        this.noPtms = true;
+        this.noPTM = true;
       }
       if (val.length == 1) {
         this.selectPTM(val[0])
