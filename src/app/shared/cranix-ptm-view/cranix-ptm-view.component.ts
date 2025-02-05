@@ -90,7 +90,6 @@ export class CranixPtmViewComponent implements OnInit {
   }
   refreshDatat(): void{
     this.parentsService.getLastChange(this.id).subscribe((val) => {
-      console.log(val);
       let lastChange = new Date(val)
       console.log(lastChange.toISOString())
       if(val && lastChange.getTime() > this.parentsService.lastSeen[this.id]){
@@ -99,7 +98,6 @@ export class CranixPtmViewComponent implements OnInit {
     })
   }
   readData(doColdef: boolean) {
-    console.log("readData called: " + doColdef)
     this.parentsService.getPTMById(this.id).subscribe(
       (val) => {
         this.ptm = val
@@ -262,7 +260,6 @@ export class CranixPtmViewComponent implements OnInit {
     })
   }
   registerRoom(teacherId: number, ptmId: number) {
-    console.log(teacherId, ptmId)
     this.parentsService.getFreeRooms(this.id).subscribe(
       (val) => {
         this.freeRooms = val
