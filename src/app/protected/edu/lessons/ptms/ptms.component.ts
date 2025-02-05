@@ -15,7 +15,7 @@ import { WindowRef } from 'src/app/shared/models/ohters';
 })
 export class PtmsComponent implements OnInit {
   freeRooms: Room[]
-  noPtms: boolean = false;
+  noPTM: boolean = false;
   isAddPTMOpen: boolean = false;
   addEditPTMTitle: string = ""
   selectedPTM: ParentTeacherMeeting
