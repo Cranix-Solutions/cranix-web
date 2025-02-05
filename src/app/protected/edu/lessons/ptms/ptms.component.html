@@ -1,8 +1,10 @@
 <cranix-toolbar title="Parent teacher meeting"></cranix-toolbar>
 <ion-content>
     @if(!selectedPTM){
-    @if(nextPtms.length == 0) {
-    <h1>{{'There is no PTM' | translate}} </h1>
+    @if(noPTM){
+    <h1>{{'There is no PTM'|translate}}</h1>
+    }@else if(nextPtms.length == 0) {
+    <h1>{{'Loading Data' | translate}} </h1>
     }@else{
     <ion-item *ngFor="let ptm of nextPtms">
         <ion-button fill="clear" expand="full" (click)="selectPTM(ptm)">{{ptm.title}}</ion-button>
@@ -13,7 +15,12 @@
     <ion-accordion-group expand="inset" value="first">
         <ion-accordion value="first">
             <ion-item slot="header">
-                {{selectedPTM.title}}
+                <ion-label>{{selectedPTM.title}}</ion-label>
+                @if(nextPtms.length > 1) {
+                <ion-button fill="clear" (click)="deselect()">
+                    <ion-icon name="close" color="danger"></ion-icon>
+                </ion-button>
+                }
             </ion-item>
             <ion-list slot="content">
                 <ion-item>
@@ -61,7 +68,8 @@
         <ion-accordion value="regs">
             <ion-item slot="header">
                 <ion-label>{{'Registrations'|translate}} </ion-label>
-                <ion-button fill="clear" (click)="printRegistrations($event)" matTooltip="{{'Print the list of the registrations' | translate }}">
+                <ion-button fill="clear" (click)="printRegistrations($event)"
+                    matTooltip="{{'Print the list of the registrations' | translate }}">
                     <ion-icon name="print-outline"></ion-icon>
                 </ion-button>
             </ion-item>
@@ -120,7 +128,8 @@
                     <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
                 </ion-button>
                 @if(selectedEventRegistered){
-                <ion-button class="ion-no-margin" (click)="cancelEvent()" matTooltip="{{'Cancel registration' | translate }}">
+                <ion-button class="ion-no-margin" (click)="cancelEvent()"
+                    matTooltip="{{'Cancel registration' | translate }}">
                     <ion-icon slot="icon-only" color="warning" name="trash"></ion-icon>
                 </ion-button>
                 }

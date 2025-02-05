@@ -15,7 +15,8 @@ import { WindowRef } from 'src/app/shared/models/ohters';
 })
 export class PtmsComponent implements OnInit {
   freeRooms: Room[]
-  isAddPTMOpen: boolean = false
+  noPtms: boolean = false;
+  isAddPTMOpen: boolean = false;
   addEditPTMTitle: string = ""
   selectedPTM: ParentTeacherMeeting
   selectedEvent: PTMEvent = new PTMEvent()
@@ -51,16 +52,17 @@ export class PtmsComponent implements OnInit {
     }
     this.ptmService.get().subscribe((val) => {
       this.nextPtms = val
+      if(val.length == 1) {
+        this.noPtms = true;
+      }
       if (val.length == 1) {
         this.selectPTM(val[0])
       }
     })
   }
-
-  blockEvent(eventId: number, block: boolean) {
-    this.ptmService.blockEvent(eventId, block).subscribe((val) => {
-      this.objectService.responseMessage(val)
-    })
+  deselect(){
+    this.selectedPTM = null;
+    this.readData()
   }
   compare(a: any, b: any) {
     return new Date(a.start).getTime() - new Date(b.start).getTime()
@@ -75,7 +77,10 @@ export class PtmsComponent implements OnInit {
   setBlockEvent(event) {
     this.ptmService.blockEvent(event.id, !event.blocked).subscribe((val) => {
       this.objectService.responseMessage(val)
-      this.readData()
+      this.ptmService.getPTMById(this.selectedPTM.id).subscribe((val2) => {
+        console.log(val2)
+        this.selectPTM(val2)
+      })
     })
   }
   selectPTM(ptm) {

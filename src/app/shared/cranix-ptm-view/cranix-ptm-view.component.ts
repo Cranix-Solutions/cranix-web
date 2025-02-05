@@ -81,7 +81,7 @@ export class CranixPtmViewComponent implements OnInit {
     console.log(this.id)
     this.alive = true
     this.readData(true)
-    interval(3000).pipe(takeWhile(() => this.alive)).subscribe((func => {
+    interval(5000).pipe(takeWhile(() => this.alive)).subscribe((func => {
       this.refreshDatat();
     }))
   }
