@@ -28,7 +28,6 @@ export class RegisterPTMComponent implements OnInit {
     this.parentService.getPTMById(this.id).subscribe(
       (val) => {
         this.selectedPTM = val
-        console.log(this.selectedPTM)
       }
     )
   }

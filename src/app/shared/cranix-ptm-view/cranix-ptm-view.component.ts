@@ -252,7 +252,6 @@ export class CranixPtmViewComponent implements OnInit {
       this.selectedPTMinRoom = this.selectPTMinRoom(event)
       this.isRegisterEventOpen = true
     }
-    console.log(event)
   }
 
   cancelEvent() {
