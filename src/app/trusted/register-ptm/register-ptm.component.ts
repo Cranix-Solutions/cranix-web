@@ -13,6 +13,7 @@ export class RegisterPTMComponent implements OnInit {
   id: number
   selectedPTM: ParentTeacherMeeting
   student: User
+  instituteName: string = ""
 
   constructor(
     private route: ActivatedRoute,
@@ -22,6 +23,7 @@ export class RegisterPTMComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.instituteName = this.authService.session.instituteName;
     this.student = this.authService.session.user;
     this.id = this.route.snapshot.params['id'];
     console.log(this.id)
