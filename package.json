@@ -24,6 +24,7 @@
     "@angular/platform-browser-dynamic": "",
     "@angular/router": "",
     "@capacitor/core": "",
+    "@capacitor/camera":"",
     "@fullcalendar/angular": "^6.1.15",
     "@fullcalendar/core": "^6.1.15",
     "@fullcalendar/daygrid": "^6.1.15",

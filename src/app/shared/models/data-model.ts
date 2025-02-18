@@ -608,3 +608,15 @@ export class ParentTeacherMeeting {
 	templateId?: number
 	classes: Group[] = []
 }
+
+export class IdRequest {
+	id: number = 0
+	creatorId: number = 0
+	created: Date | string
+	modified: Date | string
+	uuid: string = ""
+	allowed: boolean = false
+	validUntil: Date| string = ""
+	requester: User = new User
+	picture: string = ""
+}

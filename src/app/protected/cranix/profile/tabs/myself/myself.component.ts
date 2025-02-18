@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { User } from 'src/app/shared/models/data-model';
+import { IdRequest, User } from 'src/app/shared/models/data-model';
 import { SelfManagementService } from 'src/app/services/selfmanagement.service';
 import { takeWhile } from 'rxjs/internal/operators/takeWhile';
 import { TranslateService } from '@ngx-translate/core';
@@ -17,6 +17,7 @@ export class MyselfComponent implements OnInit, OnDestroy {
 
   alive: boolean = true;
   mySelf: User;
+  myIdRequest: IdRequest
 
   constructor(
     private mySelfs: SelfManagementService,
@@ -25,6 +26,17 @@ export class MyselfComponent implements OnInit, OnDestroy {
     public modalController: ModalController,
     public authService: AuthenticationService
   ) {
+    if(this.authService.isAllowed('id_requset.use')) {
+      this.mySelfs.getMyIdRequest().subscribe(
+        (val) => {
+          if(val) {
+            this.myIdRequest = val
+          } else {
+            this.myIdRequest = new IdRequest();
+          }
+        }
+      )
+    }
     this.mySelfs.getMySelf()
       .pipe(takeWhile(() => this.alive))
       .subscribe((res) => {

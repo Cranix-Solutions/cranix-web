@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { AuthenticationService } from './auth.service';
 import { UtilsService } from './utils.service';
 import { Crx2fa, ServerResponse } from 'src/app/shared/models/server-models';
-import { User, Device, Room } from 'src/app/shared/models/data-model';
+import { User, Device, Room, IdRequest } from 'src/app/shared/models/data-model';
 
 @Injectable()
 export class SelfManagementService {
@@ -130,5 +130,17 @@ export class SelfManagementService {
             token: this.authService.token
         }
         return this.http.post<ServerResponse>(url, data, { headers: this.authService.anonHeaders });
+    }
+
+    addEditIdRequest(idRequests: IdRequest) {
+        const url = this.hostname + '/idRequests/my';
+        console.log(url);
+        return this.http.post<ServerResponse>(url, idRequests, { headers: this.authService.anonHeaders });
+    }
+
+    getMyIdRequest() {
+        const url = this.hostname + '/idRequests/my';
+        console.log(url);
+        return this.http.get<IdRequest>(url, { headers: this.authService.anonHeaders });
     }
 }
