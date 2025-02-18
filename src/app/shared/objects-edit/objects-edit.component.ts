@@ -116,8 +116,9 @@ export class ObjectsEditComponent implements OnInit {
     for (let key of this.objectKeys) {
       if (this.objectService.typeOf(key, this.object, 'edit') == 'multivalued') {
         let s: string = this.object[key];
-	if(s) { this.object[key] = s.split(",") }
+	      if(s) { this.object[key] = s.split(",") }
        	else { this.object[key] = [] }
+      }
     }
     this.disabled = true;
     this.objectService.requestSent();
