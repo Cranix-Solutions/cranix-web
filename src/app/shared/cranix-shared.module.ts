@@ -66,6 +66,7 @@ import { ShowImportComponent } from 'src/app/shared/actions/show-import/show-imp
 import { WindowRef } from 'src/app/shared/models/ohters'
 import { CranixMdListComponent } from 'src/app/shared/cranix-md-list/cranix-md-list.component'
 import { CranixPtmViewComponent } from 'src/app/shared/cranix-ptm-view/cranix-ptm-view.component'
+import { CranixSearchComponent } from './cranix-search/cranix-search.component';
 import { QuillModule } from 'ngx-quill';
 import { simpleToolbarOptions } from 'src/app/shared/models/constants'
 
@@ -80,6 +81,7 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     CreateSupport,
     CranixMdListComponent,
     CranixPtmViewComponent,
+    CranixSearchComponent,
     CustomerActionRenderer,
     ObjectsEditComponent,
     DateCellRenderer,
@@ -155,6 +157,7 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     ToolbarComponent,
     CranixMdListComponent,
     CranixPtmViewComponent,
+    CranixSearchComponent,
     IonicSelectableComponent,
     IonicSelectableHeaderTemplateDirective,
     IonicSelectableValueTemplateDirective,

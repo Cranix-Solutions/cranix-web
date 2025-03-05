@@ -17,7 +17,7 @@
                     id="crxSearchFilter"></ion-searchbar>
             </ion-item>
             @for(o of objects; track o.id){
-            if(selectedItems.filter(obj => obj.id == o.id).length == 1){
+            @if(isSelected(o)){
             <ion-item [button]="true" , (click)="select(o)" color="primary">{{o[label]}}</ion-item>
             }@else{
             <ion-item [button]="true" , (click)="deSelect(o)">{{o[label]}}</ion-item>

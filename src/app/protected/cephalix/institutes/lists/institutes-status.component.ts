@@ -59,21 +59,7 @@ export class InstitutesStatusComponent implements OnInit {
       wrapText: true,
       autoHeight: true,
       sortable: true,
-      width: 70,
-      headerComponentParams: {
-        template:
-          '<div class="ag-cell-label-container" role="presentation">' +
-          '  <span ref="eMenu" class="ag-header-icon ag-header-cell-menu-button"></span>' +
-          '  <div ref="eLabel" class="ag-header-cell-label" role="presentation">' +
-          '    <span ref="eSortOrder" class="ag-header-icon ag-sort-order"></span>' +
-          '    <span ref="eSortAsc" class="ag-header-icon ag-sort-ascending-icon"></span>' +
-          '    <span ref="eSortDesc" class="ag-header-icon ag-sort-descending-icon"></span>' +
-          '    <span ref="eSortNone" class="ag-header-icon ag-sort-none-icon"></span>' +
-          '    <span ref="eText" class="ag-header-cell-text" role="columnheader" style="white-space: normal;"></span>' +
-          '    <span ref="eFilter" class="ag-header-icon ag-filter-icon"></span>' +
-          '  </div>' +
-          '</div>',
-      }
+      width: 100
     };
   }
 
@@ -169,6 +155,7 @@ export class InstitutesStatusComponent implements OnInit {
           break;
         }
         case 'runningKernel': {
+          col['width'] = 60
           col['valueGetter'] = function (params) {
             let index = params.data.runningKernel.indexOf("-default");
             let run = params.data.runningKernel.substring(0, index);
@@ -186,6 +173,7 @@ export class InstitutesStatusComponent implements OnInit {
           break;
         }
         case 'availableUpdates': {
+          col['width'] = 60
           col['cellRenderer'] = UpdateRenderer;
           break;
         }

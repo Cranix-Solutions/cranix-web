@@ -2,9 +2,7 @@ import { Component, Input } from '@angular/core';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 
 @Component({
-  selector: 'app-cranix-search',
-  standalone: true,
-  imports: [],
+  selector: 'cranix-search',
   templateUrl: './cranix-search.component.html',
   styleUrl: './cranix-search.component.css'
 })
@@ -13,15 +11,22 @@ export class CranixSearchComponent {
   rowData = []
 
   @Input({ required: true }) objectType: string
-  @Input({ required: true }) multiple: boolean
-  @Input() label: string
   @Input({ required: true }) selectedItems: any[]
+  @Input() context
   @Input() inputData: any[]
+  @Input() label: string
+  @Input() multiple: boolean
   constructor(
     private objectService: GenericObjectService
   ){
-    if(!this.inputData){
+    if(typeof this.inputData == "undefined"){
       this.inputData = this.objectService.allObjects[this.objectType]
+    }
+    if(typeof this.multiple == "undefined"){
+      this.multiple = false;
+    }
+    if(typeof this.label == "undefined"){
+      this.label = "Search " + this.objectType;
     }
     this.rowData = this.inputData
   }
