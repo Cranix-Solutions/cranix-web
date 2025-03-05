@@ -1,0 +1,28 @@
+<ion-item [button]="true" , (click)="close(o)">
+    <ion-label position="stacked">{{objectType|translate}}</ion-label>
+    @if( selectedItems.length> 1){
+    {{selectedItems.length}} {{'items are selected'| translate}}
+    }@else{
+    selectedItems[0][label]
+    }
+</ion-item>
+<ion-modal [isOpened]="isModalOpened">
+    <ng-template>
+        <ion-list>
+            <ion-list-header>
+
+            </ion-list-header>
+            <ion-item>
+                <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()"
+                    id="crxSearchFilter"></ion-searchbar>
+            </ion-item>
+            @for(o of objects; track o.id){
+            if(selectedItems.filter(obj => obj.id == o.id).length == 1){
+            <ion-item [button]="true" , (click)="select(o)" color="primary">{{o[label]}}</ion-item>
+            }@else{
+            <ion-item [button]="true" , (click)="deSelect(o)">{{o[label]}}</ion-item>
+            }
+            }
+        </ion-list>
+    </ng-template>
+</ion-modal>
