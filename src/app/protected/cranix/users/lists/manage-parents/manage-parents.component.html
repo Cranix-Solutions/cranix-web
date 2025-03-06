@@ -202,7 +202,8 @@
                 </ion-item>
                 <ion-item>
                     <ion-label>{{'Select children for the parent' | translate}}</ion-label>
-                    <ionic-selectable #ionicSelectChildren itemValueField="id" itemTextField="fullName"
+                    <cranix-search objectType="user" [(selectedItems)]="selectedChildren" name="selectedChildren" [inputData]="children"></cranix-search>
+                    <!-- ionic-selectable #ionicSelectChildren itemValueField="id" itemTextField="fullName"
                         [isMultiple]="true" [(ngModel)]="selectedChildren" [ngModelOptions]="{standalone: true}"
                         [items]="children" [canSearch]="true" groupValueField="classes" groupTextField="classes">
                         <ng-template ionicSelectableHeaderTemplate>
@@ -219,7 +220,7 @@
                                 </ion-toolbar>
                             </ion-header>
                         </ng-template>
-                    </ionic-selectable>
+                    </ionic-selectable -->
                 </ion-item>
             </ion-list>
         </ion-content>

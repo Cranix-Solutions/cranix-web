@@ -1,28 +1,59 @@
-<ion-item [button]="true" , (click)="close(o)">
-    <ion-label position="stacked">{{objectType|translate}}</ion-label>
-    @if( selectedItems.length> 1){
-    {{selectedItems.length}} {{'items are selected'| translate}}
+<ion-button (click)="openModal()">
+    @if(selection){
+    @if(multiple){
+    {{selection.length}} {{objectType|translate}} {{'selected'|translate}}
     }@else{
-    selectedItems[0][label]
+    {{selection[itemTextField]}}
     }
-</ion-item>
-<ion-modal [isOpened]="isModalOpened">
+    }@else{
+    {{'Select'|translate}} {{objectType|translate}}
+    }
+</ion-button>
+<ion-modal [isOpen]="isCranixSearchModalOpen">
     <ng-template>
-        <ion-list>
-            <ion-list-header>
-
-            </ion-list-header>
+        <ion-header>
+            <ion-toolbar color="primary">
+                <ion-title>
+                    {{'Search for'|translate}} {{objectType|translate}}
+                </ion-title>
+                <ion-buttons slot="end">
+                    <ion-button class="ion-no-margin" (click)="returnValues()">
+                        <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+                    </ion-button>
+                    <ion-button class="ion-no-margin" (click)="clearSelection()">
+                        <ion-icon slot="icon-only" color="warning" name="trash"></ion-icon>
+                    </ion-button>
+                    <ion-button fill="clear" size="small" (click)="closeModal()">
+                        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
             <ion-item>
                 <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()"
                     id="crxSearchFilter"></ion-searchbar>
             </ion-item>
-            @for(o of objects; track o.id){
-            @if(isSelected(o)){
-            <ion-item [button]="true" , (click)="select(o)" color="primary">{{o[label]}}</ion-item>
+        </ion-header>
+        <ion-content>
+            @if(multiple){
+            <ul class="checklist">
+                @for(o of rowData; track o.id){
+                <li>
+                    <input type="checkbox" (click)="doSelect(o)" [id]="o[itemTextField]" [checked]="isSelected(o.id)">
+                    <label [for]="o[itemTextField]">{{o[itemTextField]}}</label>
+                </li>
+                }
+            </ul>
             }@else{
-            <ion-item [button]="true" , (click)="deSelect(o)">{{o[label]}}</ion-item>
+            <ul class="radiolist">
+                @for(o of rowData; track o.id){
+                <li>
+                    <input type="radio" (click)="select(o)" [id]="o[itemTextField]" name="cranixSearchList"
+                        [checked]="selection && o.id == selection.id">
+                    <label [for]="o[itemTextField]">{{o[itemTextField]}}</label>
+                </li>
+                }
+            </ul>
             }
-            }
-        </ion-list>
+        </ion-content>
     </ng-template>
 </ion-modal>

@@ -37,14 +37,15 @@
     </ion-item>
     @if(myIdRequest){
     @if(myIdRequest.id == 0){
-      <ion-item>
-        <ion-label>{{'Upload foto'}}</ion-label>
-        <ion-input type="file" (change)="onFilesAdded($event)"></ion-input>
-        <ion-button (click)="takePhoto(realestate)">
-          <ion-icon slot="icon-only" name="camera"></ion-icon>
-        </ion-button>
-      </ion-item>
-    }@else if(myIdRequest.allowed)
+    <ion-item>
+      <ion-label>{{'Upload foto'}}</ion-label>
+      <ion-input type="file" (change)="onFilesAdded($event)"></ion-input>
+      <ion-button (click)="takePhoto(realestate)">
+        <ion-icon slot="icon-only" name="camera"></ion-icon>
+      </ion-button>
+    </ion-item>
+    }@else if(myIdRequest.allowed){
+    }
     }
   </ion-list>
 </ion-content>

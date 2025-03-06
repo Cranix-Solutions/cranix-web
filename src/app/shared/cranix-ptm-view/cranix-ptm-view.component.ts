@@ -100,6 +100,7 @@ export class CranixPtmViewComponent implements OnInit {
     })
   }
   readData(doColdef: boolean) {
+    console.log(this.selectedStudent)
     this.parentsService.getPTMById(this.id).subscribe(
       (val) => {
         this.ptm = val

@@ -1,0 +1,100 @@
+ul.checklist {
+    list-style: none; /* Entfernt die Standard-Aufzählungszeichen */
+    padding: 0;
+    border-top: 1px solid #ccc; /* Obere Linie für die erste Zeile */
+}
+
+ul.checklist li {
+  padding: 10px;
+  border-bottom: 1px solid #ccc; /* Linie zwischen den Zeilen */
+  display: flex;
+  align-items: center; /* Vertikale Zentrierung von Checkbox und Label */
+}
+
+ul.checklist label {
+  margin-left: 10px; /* Abstand zwischen Checkbox und Label */
+  cursor: pointer; /* Zeiger-Cursor beim Hover über das Label */
+}
+
+/* Optionales Styling für ein modernes Aussehen */
+ul.checklist {
+  font-family: sans-serif;
+}
+
+ul.checklist li:hover {
+  background-color: #f5f5f5; /* Hintergrundfarbe beim Hover */
+}
+
+ul.checklist input[type="checkbox"] {
+  appearance: none; /* Entfernt das Standard-Checkbox-Design */
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+ul.checklist input[type="checkbox"]:checked {
+  background-color: #007bff; /* Farbe der Checkbox, wenn aktiviert */
+  border-color: #007bff;
+}
+
+ul.checklist input[type="checkbox"]:checked::before {
+  content: '\2713'; /* Fügt ein Häkchen hinzu */
+  display: block;
+  text-align: center;
+  color: white;
+  font-size: 16px;
+  line-height: 18px;
+}
+
+ul.radiolist {
+  list-style: none; /* Entfernt die Standard-Aufzählungszeichen */
+  padding: 0;
+  border-top: 1px solid #ccc; /* Obere Linie für die erste Zeile */
+}
+
+ul.radiolist li {
+  padding: 10px;
+  border-bottom: 1px solid #ccc; /* Linie zwischen den Zeilen */
+  display: flex;
+  align-items: center; /* Vertikale Zentrierung von Radiobutton und Label */
+}
+
+ul.radiolist label {
+  margin-left: 10px; /* Abstand zwischen Radiobutton und Label */
+  cursor: pointer; /* Zeiger-Cursor beim Hover über das Label */
+}
+
+/* Optionales Styling für ein modernes Aussehen */
+ul.radiolist {
+  font-family: sans-serif;
+}
+
+ul.radiolist li:hover {
+  background-color: #f5f5f5; /* Hintergrundfarbe beim Hover */
+}
+
+ul.radiolist input[type="radio"] {
+  appearance: none; /* Entfernt das Standard-Radiobutton-Design */
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 50%; /* Macht den Radiobutton rund */
+  cursor: pointer;
+}
+
+ul.radiolist input[type="radio"]:checked {
+  background-color: #007bff; /* Farbe des Radiobuttons, wenn aktiviert */
+  border-color: #007bff;
+}
+
+ul.radiolist input[type="radio"]:checked::before {
+  content: ''; /* Fügt einen Punkt in der Mitte hinzu */
+  display: block;
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  border-radius: 50%;
+  margin: 3px auto; /* Zentriert den Punkt */
+}

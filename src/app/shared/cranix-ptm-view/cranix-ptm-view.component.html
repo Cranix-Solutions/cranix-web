@@ -7,8 +7,9 @@
         </ion-button>
     }
     @if(isPtmManager){
+        <cranix-search  objectType="user" [(ngModel)]="selectedStudent" [ngModelOptions]="{standalone: true}" [items]="students" itemTextField="fullName" (callback)="readData(false)"></cranix-search>
     <!-- ion-label style="min-width: 300;">{{'Select student for the event'|translate}}</ion-label -->
-    <ionic-selectable #selectStudent itemValueField="id" itemTextField="fullName" [isMultiple]="false"
+    <!-- ionic-selectable #selectStudent itemValueField="id" itemTextField="fullName" [isMultiple]="false"
         [(ngModel)]="selectedStudent" [ngModelOptions]="{standalone: true}" [items]="students" [canSearch]="true"
         (onChange)="readData(false)"
         style="min-width: 300;">
@@ -30,7 +31,7 @@
                 </ion-toolbar>
             </ion-header>
         </ng-template>
-    </ionic-selectable>
+    </ionic-selectable -->
     }
 </ion-item>
 <ag-grid-angular style="width: 100%; height: 90%;" class="{{authService.settings.agGridThema}}"
@@ -75,7 +76,8 @@
                 </ion-item>
                 <ion-item>
                     <ion-label>{{'Select student for the event'|translate}}</ion-label>
-                    <ionic-selectable #selectEventStudent itemValueField="id" itemTextField="fullName" [isMultiple]="false"
+                    <cranix-search  objectType="user" [(ngModel)]="selectedEvent.student" [ngModelOptions]="{standalone: true}" [items]="students" itemTextField="fullName"></cranix-search>
+                    <!-- ionic-selectable #selectEventStudent itemValueField="id" itemTextField="fullName" [isMultiple]="false"
                         [(ngModel)]="selectedEvent.student" [ngModelOptions]="{standalone: true}" [items]="students"
                         [canSearch]="true">
                         <ng-template ionicSelectableHeaderTemplate>
@@ -92,7 +94,7 @@
                                 </ion-toolbar>
                             </ion-header>
                         </ng-template>
-                    </ionic-selectable>
+                    </ionic-selectable -->
                 </ion-item>
             </ion-list>
         </ion-content>
