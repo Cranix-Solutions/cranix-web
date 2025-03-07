@@ -1,7 +1,7 @@
 <cranix-toolbar title="{{'Manage yourself' | translate}}"></cranix-toolbar>
-<ion-content *ngIf="mySelf">
+<ion-content *ngIf="mySelf" color="light">
   <h1>{{mySelf.givenName}} {{ mySelf.surName}}</h1> {{mySelf.role | translate}}
-  <ion-list>
+  <ion-list [inset]="true">
     <ion-item>
       <ion-icon slot="start" name="calendar"></ion-icon>
       <ion-label>
@@ -30,22 +30,31 @@
         <h3>{{ 'fsQuota' | translate}}</h3>
       </ion-label>
     </ion-item>
+    @if(idRequestUse){
+    @if(myIdRequest.id == 0){
+    <ion-item>
+      <ion-icon slot="start" name="id-card"></ion-icon>
+      <ion-input label="{{'Upload foto'}}" type="file" (change)="onFilesAdded($event)"></ion-input>
+      <ion-button (click)="takePhoto(realestate)">
+        <ion-icon slot="icon-only" name="camera"></ion-icon>
+      </ion-button>
+    </ion-item>
+    }@else{
+    @if(myIdRequest.allowed){
+    <ion-item>
+
+    </ion-item>
+    }@else{
+    <ion-item>
+
+    </ion-item>
+    }
+    }
+    }
     <ion-item lines="none">
       <ion-button (click)="openChangePW()">
         {{ 'Reset password' | translate }}
       </ion-button>
     </ion-item>
-    @if(myIdRequest){
-    @if(myIdRequest.id == 0){
-    <ion-item>
-      <ion-label>{{'Upload foto'}}</ion-label>
-      <ion-input type="file" (change)="onFilesAdded($event)"></ion-input>
-      <ion-button (click)="takePhoto(realestate)">
-        <ion-icon slot="icon-only" name="camera"></ion-icon>
-      </ion-button>
-    </ion-item>
-    }@else if(myIdRequest.allowed){
-    }
-    }
   </ion-list>
 </ion-content>

@@ -104,8 +104,12 @@ export class CranixPtmViewComponent implements OnInit {
     this.parentsService.getPTMById(this.id).subscribe(
       (val) => {
         this.ptm = val
+        let now = new Date().getTime()
         let endReg = new Date(this.ptm.endRegistration).getTime()
-        if(new Date().getTime() > endReg) {
+        let startReg = new Date(this.ptm.startRegistration).getTime()
+        console.log(endReg)
+        console.log(now)
+        if(now > endReg || now < startReg) {
           this.isOpened = false
         }
         if (!this.isStudent) {
@@ -236,7 +240,7 @@ export class CranixPtmViewComponent implements OnInit {
     this.readData(false)
   }
   registerEvent(event: PTMEvent) {
-    if(!this.isOpened){
+    if(!this.isOpened && !this.isPtmManager){
       this.objectService.errorMessage(this.languageS.trans("Registration closed."))
       return;
     }
@@ -270,8 +274,9 @@ export class CranixPtmViewComponent implements OnInit {
     })
   }
   registerRoom(teacherId: number, ptmId: number) {
-    if(new Date(this.ptm.endRegistration).getTime() > new Date().getTime()){
+    if(new Date(this.ptm.startRegistration).getTime() < new Date().getTime()){
       this.objectService.errorMessage(this.languageS.trans("Registration started. No change is allowed."))
+      return
     }
     this.parentsService.getFreeRooms(this.id).subscribe(
       (val) => {

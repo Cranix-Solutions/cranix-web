@@ -135,12 +135,12 @@ export class SelfManagementService {
     addEditIdRequest(idRequests: IdRequest) {
         const url = this.hostname + '/idRequests/my';
         console.log(url);
-        return this.http.post<ServerResponse>(url, idRequests, { headers: this.authService.anonHeaders });
+        return this.http.post<ServerResponse>(url, idRequests, { headers: this.authService.headers });
     }
 
     getMyIdRequest() {
         const url = this.hostname + '/idRequests/my';
         console.log(url);
-        return this.http.get<IdRequest>(url, { headers: this.authService.anonHeaders });
+        return this.http.get<IdRequest>(url, { headers: this.authService.headers });
     }
 }

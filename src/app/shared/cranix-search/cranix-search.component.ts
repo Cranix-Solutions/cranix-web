@@ -16,6 +16,8 @@ export class CranixSearchComponent implements ControlValueAccessor, OnInit {
   isCranixSearchModalOpen: boolean = false;
   rowData = []
   selection: any|any[]
+  emptyLabel: string = ""
+  selectedLabel: string = ""
 
   @Output() callback = new EventEmitter<any>();
   @Input({ required: true }) objectType: string
@@ -29,7 +31,6 @@ export class CranixSearchComponent implements ControlValueAccessor, OnInit {
 
   ngOnInit(): void {
     console.log("CranixSearchComponent")
-    console.log(this.objectType)
     if (typeof this.items == "undefined") {
       console.log("items undefined")
       this.items = this.objectService.allObjects[this.objectType]
@@ -45,6 +46,8 @@ export class CranixSearchComponent implements ControlValueAccessor, OnInit {
     if (this.multiple) {
       this.selection = []
     }
+    this.emptyLabel = 'Select ' + this.objectType
+    this.selectedLabel = this.objectType + 'selected.'
     this.rowData = this.items
   }
 
@@ -52,6 +55,7 @@ export class CranixSearchComponent implements ControlValueAccessor, OnInit {
   private propagateOnTouched = () => { };
 
   writeValue(value: any) {
+    console.log("write value called")
     this.selection = value;
   }
   registerOnChange(method: any): void {
@@ -60,25 +64,12 @@ export class CranixSearchComponent implements ControlValueAccessor, OnInit {
   registerOnTouched(method: () => void) {
     this.propagateOnTouched = method;
   }
-  clearSelection(){
-    if(this.multiple){
-      this.selection = []
-    }else{
-      this.selection = null
-    }
-    this.propagateOnChange(this.selection);
-  }
   openModal() {
     console.log(this.openModal)
     this.isCranixSearchModalOpen = true
   }
-  returnValues(){
-    this.isCranixSearchModalOpen = false
-    if(this.callback){
-      this.callback.emit();
-    }
-  }
-  closeModal(){
+  closeModal(modal){
+    modal.dismiss();
     this.isCranixSearchModalOpen = false
   }
   isSelected(id: number) {
@@ -87,21 +78,40 @@ export class CranixSearchComponent implements ControlValueAccessor, OnInit {
     }
     return false;
   }
-
-  select(o: any) {
+  clearSelection(modal){
+    if(this.multiple){
+      this.selection = []
+    }else{
+      this.selection = null
+    }
+    this.propagateOnChange(this.selection);
+    if(!this.multiple){
+      this.closeModal(modal)
+    }
+  }
+  select(o: any, modal) {
     this.selection = o;
     this.propagateOnChange(this.selection);
-    console.log(this.selection)
+    if(this.callback){
+      this.callback.emit();
+    }
+    this.closeModal(modal)
   }
-
   doSelect(o: any) {
     if(this.selection.filter(obj => obj.id == o.id).length == 1){
       this.selection = this.selection.filter(obj => obj.id != o.id)
     } else {
       this.selection.push(o)
     }
-    this.propagateOnChange(this.selection);
     console.log(this.selection)
+  }
+  returnValues(modal){
+    this.propagateOnChange(this.selection);
+    this.isCranixSearchModalOpen = false
+    if(this.callback){
+      this.callback.emit();
+    }
+    this.closeModal(modal)
   }
   onQuickFilterChanged() {
     let filter = (<HTMLInputElement>document.getElementById('crxSearchFilter')).value.toLowerCase();

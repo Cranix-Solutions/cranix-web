@@ -17,7 +17,8 @@ export class MyselfComponent implements OnInit, OnDestroy {
 
   alive: boolean = true;
   mySelf: User;
-  myIdRequest: IdRequest
+  myIdRequest: IdRequest = new IdRequest();
+  idRequestUse: boolean = false;
 
   constructor(
     private mySelfs: SelfManagementService,
@@ -26,9 +27,10 @@ export class MyselfComponent implements OnInit, OnDestroy {
     public modalController: ModalController,
     public authService: AuthenticationService
   ) {
-    if(this.authService.isAllowed('id_requset.use')) {
+    if(this.authService.isAllowed('idrequest.use')) {
       this.mySelfs.getMyIdRequest().subscribe(
         (val) => {
+          this.idRequestUse = true;
           if(val) {
             this.myIdRequest = val
           } else {

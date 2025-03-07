@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AlertController } from '@ionic/angular'
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
@@ -28,7 +29,7 @@ export class ManageParentsComponent {
   isRegisterEventOpen: boolean = false
   isAddEditParentOpen: boolean = false
   isSelectPtmOpen: boolean = false
-  isDeletePtmOpen: boolean = false
+  loadingData: boolean = true
   objectKeys = []
   parentKeys = ['givenName', 'surName', 'emailAddress', 'telefonNummer']
   requestKeys = ['parentId', 'givenName', 'surName', 'birthDay', 'className']
@@ -42,8 +43,8 @@ export class ManageParentsComponent {
   }
   context
   ptmTeacherInRoom: PTMTeacherInRoom
-
   constructor(
+    private alertController: AlertController,
     public authService: AuthenticationService,
     public objectService: GenericObjectService,
     private languageS: LanguageService,
@@ -91,6 +92,7 @@ export class ManageParentsComponent {
         break;
       }
       case 'ptm': {
+        this.loadingData = true
         this.parentsService.get().subscribe(
           (val) => {
             this.nextPtms = [];
@@ -98,21 +100,13 @@ export class ManageParentsComponent {
               for (let o of val) {
                 this.nextPtms.push(o)
               }
-              if (val.length == 1) {
-                this.selectedPTM = this.parentsService.adaptPtmTimes(val[0])
-                this.isUpcomming = true;
-              }
-            }
-            if(!this.selectedPTM){
-              this.selectPtm(null)
             }
             this.parentsService.getFormer().subscribe(
               (val2) => {
                 this.formerPtms = val2
-                console.log("getFormer" + this.formerPtms.length)
+                this.loadingData = false
               }
             )
-            console.log(this.selectedPTM)
           }
         )
       }
@@ -222,10 +216,31 @@ export class ManageParentsComponent {
     }
   }
 
+  async presentDeleteAlert(){
+    const alert = await this.alertController.create({
+      header: this.languageS.trans('Confirm!'),
+      subHeader: this.languageS.trans('Do you realy want to delete?'),
+      message: this.selectedPTM.title,
+      buttons: [
+        {
+          text: this.languageS.trans('Cancel'),
+          role: 'cancel',
+        }, {
+          text: 'OK',
+          handler: () => {
+            this.deletePtm(this.selectedPTM.id)
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
   deletePtm(ptmId: number) {
     this.objectService.requestSent();
     this.parentsService.deletePtm(ptmId).subscribe((val) => {
       this.objectService.responseMessage(val)
+      this.selectedPTM = null
       this.loadData()
     })
   }

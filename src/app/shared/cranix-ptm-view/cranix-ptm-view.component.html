@@ -129,10 +129,11 @@
                 </ion-item>
                 <ion-item>
                     <ion-label>{{'Select your child for the event' | translate}}</ion-label>
-                    <ionic-selectable #ionicSelectUsers itemValueField="id" itemTextField="fullName"
+                    <cranix-search  objectType="user" [(ngModel)]="selectedEvent.student" [ngModelOptions]="{standalone: true}" [items]="students" itemTextField="fullName"></cranix-search>
+                    <!-- ionic-selectable #ionicSelectUsers itemValueField="id" itemTextField="fullName"
                         [isMultiple]="false" [(ngModel)]="selectedEvent.student" [ngModelOptions]="{standalone: true}"
                         [items]="students" [canSearch]="true">
-                    </ionic-selectable>
+                    </ionic-selectable -->
                 </ion-item>
             </ion-list>
         </ion-content>
@@ -163,7 +164,9 @@
         <ion-content>
             <ion-item>
                 <ion-label>{{'Select room for the PTM' | translate}}</ion-label>
-                <ionic-selectable #ionicSelectRoom itemValueField="id" itemTextField="description" [isMultiple]="false"
+                <cranix-search objectType="room" [(ngModel)]="ptmTeacherInRoom.room" [ngModelOptions]="{standalone: true}" [items]="freeRooms" itemTextField="description"></cranix-search>
+                    
+                <!-- ionic-selectable #ionicSelectRoom itemValueField="id" itemTextField="description" [isMultiple]="false"
                     [(ngModel)]="ptmTeacherInRoom.room" [ngModelOptions]="{standalone: true}" [items]="freeRooms"
                     [canSearch]="true">
                     <ng-template ionicSelectableHeaderTemplate>
@@ -180,7 +183,7 @@
                             </ion-toolbar>
                         </ion-header>
                     </ng-template>
-                </ionic-selectable>
+                </ionic-selectable -->
             </ion-item>
         </ion-content>
     </ng-template>

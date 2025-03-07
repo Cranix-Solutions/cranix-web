@@ -1,4 +1,11 @@
 {
+    "Select or create parent teacher meeting":"Sprechtag wählen oder anlegen",
+    "Select user": "Benutzer wählen",
+    "user selected": "Benutzer ausgewählt",
+    "Select group": "Gruppe wählen",
+    "group selected": "Gruppe ausgewählt",
+    "Select room": "Room wählen",
+    "room selected": "Room ausgewählt",
     "Registration started. No change is allowed.":"Anmeldung gestartet. Änderungen sind nicht mehr erlaubt.",
     "Registration closed":"Anmeldungszeit abgelaufen.",
     "Released":"Veröffentlicht",

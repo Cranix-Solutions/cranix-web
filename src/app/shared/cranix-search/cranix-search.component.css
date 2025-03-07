@@ -98,3 +98,30 @@ ul.radiolist input[type="radio"]:checked::before {
   border-radius: 50%;
   margin: 3px auto; /* Zentriert den Punkt */
 }
+
+.searchButton {
+	box-shadow: 3px 3px 0px 0px #4f5357;
+	background-color:#ffffff;
+	border-radius:0px;
+	border-bottom:1px solid #000000;
+  border-right: 1px solid #000000;
+	display:inline-block;
+	cursor:pointer;
+	color:#000000;
+	font-family:Arial;
+	font-size:17px;
+  margin: 4px;
+  min-width: 100px;
+  max-width: 200px;
+	text-decoration:none;
+  padding: 4px;
+  white-space: nowrap;
+}
+.searchButton:hover {
+	background-color:#378de5;
+}
+.searchButton:active {
+	position:relative;
+	top:2px;
+}
+

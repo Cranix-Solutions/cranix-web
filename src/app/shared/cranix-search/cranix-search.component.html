@@ -1,15 +1,15 @@
-<ion-button (click)="openModal()">
+<button class="searchButton" (click)="openModal()">
     @if(selection){
     @if(multiple){
-    {{selection.length}} {{objectType|translate}} {{'selected'|translate}}
+    {{selection.length}} {{selectedLabel|translate}}
     }@else{
     {{selection[itemTextField]}}
     }
     }@else{
-    {{'Select'|translate}} {{objectType|translate}}
+    {{emptyLabel|translate}}
     }
-</ion-button>
-<ion-modal [isOpen]="isCranixSearchModalOpen">
+</button>
+<ion-modal [isOpen]="isCranixSearchModalOpen" #cranixSearchModal>
     <ng-template>
         <ion-header>
             <ion-toolbar color="primary">
@@ -17,15 +17,20 @@
                     {{'Search for'|translate}} {{objectType|translate}}
                 </ion-title>
                 <ion-buttons slot="end">
-                    <ion-button class="ion-no-margin" (click)="returnValues()">
+                    @if(multiple){
+                    <ion-button class="ion-no-margin" (click)="returnValues(cranixSearchModal)">
                         <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
                     </ion-button>
-                    <ion-button class="ion-no-margin" (click)="clearSelection()">
+                    }
+                    <ion-button class="ion-no-margin" (click)="clearSelection(cranixSearchModal)"
+                        matTooltip="{{'Clear selection' | translate }}">
                         <ion-icon slot="icon-only" color="warning" name="trash"></ion-icon>
                     </ion-button>
-                    <ion-button fill="clear" size="small" (click)="closeModal()">
+                    @if(!multiple){
+                    <ion-button class="ion-no-margin" (click)="closeModal(cranixSearchModal)">
                         <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
                     </ion-button>
+                    }
                 </ion-buttons>
             </ion-toolbar>
             <ion-item>
@@ -47,8 +52,8 @@
             <ul class="radiolist">
                 @for(o of rowData; track o.id){
                 <li>
-                    <input type="radio" (click)="select(o)" [id]="o[itemTextField]" name="cranixSearchList"
-                        [checked]="selection && o.id == selection.id">
+                    <input type="radio" (click)="select(o,cranixSearchModal)" [id]="o[itemTextField]"
+                        name="cranixSearchList" [checked]="selection && o.id == selection.id">
                     <label [for]="o[itemTextField]">{{o[itemTextField]}}</label>
                 </li>
                 }
