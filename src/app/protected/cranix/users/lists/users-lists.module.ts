@@ -12,6 +12,7 @@ import { UsersImportComponent } from './users-import.component';
 import { Users2faComponent } from './users-2fa';
 import { UserGroupsPage } from '../details/groups/user-groups.page';
 import { ManageParentsComponent } from './manage-parents/manage-parents.component'
+import { IdCardsComponent } from './id-cards/id-cards.component'
 import { CanActivateViaAcls } from 'src/app/services/auth-guard.service';
 
 const routes: Routes = [
@@ -33,6 +34,9 @@ const routes: Routes = [
       },{
         path: 'parents',
         component: ManageParentsComponent
+      },{
+        path: 'idcards',
+        component: IdCardsComponent
       },
       {
         path: '', pathMatch: 'full',

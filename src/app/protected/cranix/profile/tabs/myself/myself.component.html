@@ -31,24 +31,41 @@
       </ion-label>
     </ion-item>
     @if(idRequestUse){
-    @if(myIdRequest.id == 0){
     <ion-item>
       <ion-icon slot="start" name="id-card"></ion-icon>
-      <ion-input label="{{'Upload foto'}}" type="file" (change)="onFilesAdded($event)"></ion-input>
-      <ion-button (click)="takePhoto(realestate)">
+      <ion-label>{{'ID Card'|translate}}</ion-label>
+      @if(myIdRequest.allowed){
+      <ion-button fill="clear" [href]="myIdRequest.googleUrl">
+        <!-- img src="assets/icon/google-wallet-primary.png" -->
+        <ion-icon slot="icon-only" name="google-add-wallet" style="height: 15mm; width: 40mm;"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" [href]="myIdRequest.appleUrl">
+        <ion-icon slot="icon-only" name="apple-add-wallet" style="height: 15mm; width: 40mm;"></ion-icon>
+      </ion-button>
+      <!-- a [href]="myIdReques.googleUrl"><img src="assets/icon/google-wallet-primary.png"></a>
+      <a [href]="myIdReques.appleUrl"><img src="assets/icon/apple-wallet-primary.png"></a -->
+      }@else{
+      @if(myIdRequest.message){
+      <ion-button id="openIdMessage">
+        <ion-icon slot="icon-only" color="error" name="alert-circle"></ion-icon>
+      </ion-button>
+      <ion-popover trigger="openIdMessage" triggerAction="hover">
+        <ng-template>
+          <ion-content class="ion-padding">{{myIdRequest.message}}</ion-content>
+        </ng-template>
+      </ion-popover>
+      }
+      <ion-button (click)="takePhoto()">
         <ion-icon slot="icon-only" name="camera"></ion-icon>
       </ion-button>
+      <ion-button (click)="findPhoto()">
+        <ion-icon slot="icon-only" name="images"></ion-icon>
+      </ion-button>
+      <!-- ion-input label="{{'Upload foto'}}" type="file" (change)="uploadImage($event)"></ion-input -->
+      }
     </ion-item>
-    }@else{
-    @if(myIdRequest.allowed){
-    <ion-item>
-
-    </ion-item>
-    }@else{
-    <ion-item>
-
-    </ion-item>
-    }
+    @if(picture){
+    <img [src]="picture">
     }
     }
     <ion-item lines="none">

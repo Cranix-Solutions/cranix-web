@@ -81,6 +81,23 @@
             "browserTarget": "app:build"
           },
           "configurations": {
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*.svg",
+                "input": "src/assets/custom-ion-icons",
+                "output": "./svg"
+              },
+              {
+                "glob": "**/*.svg",
+                "input": "node_modules/ionicons/dist/ionicons/svg",
+                "output": "./svg"
+              }
+            ],
             "production": {
               "browserTarget": "app:build:production"
             },
