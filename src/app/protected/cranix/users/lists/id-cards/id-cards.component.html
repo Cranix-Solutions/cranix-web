@@ -1,1 +1,25 @@
-<p>id-cards works!</p>
+<cranix-toolbar title="Manage ID-Cards"></cranix-toolbar>
+<ion-header>
+    <ion-toolbar>
+        <ion-searchbar id="serach-requests" (ionChange)="serachRequests"></ion-searchbar>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-list [inset]="true">
+        @for(request of requests; track request.id){
+            <ion-item [button]="">
+                <ion-avatar aria-hidden="true" slot="start">
+                    <img alt="" [src]="https://ionicframework.com/docs/img/demos/avatar.svg" />
+                  </ion-avatar>
+                <ion-label>
+                    <strong>{{request.requester.surName}}, {{request.requester.givenName}}</strong>
+                    <ion-note>{{'Valid until:'}} {{request.validUntil|date:'yyyy-MM-dd'}}</ion-note>
+                </ion-label>
+                <div class="metadata-end-wrapper" slot="end">
+                    <ion-note color="medium">Yesterday</ion-note>
+                    <ion-icon color="medium" name="chevron-forward"></ion-icon>
+                  </div>
+            </ion-item>
+        }
+    </ion-list>
+</ion-content>

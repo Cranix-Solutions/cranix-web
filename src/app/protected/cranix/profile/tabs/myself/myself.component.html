@@ -32,7 +32,10 @@
     </ion-item>
     @if(idRequestUse){
     <ion-item>
-      <ion-icon slot="start" name="id-card"></ion-icon>
+      <ion-avatar>
+        <img [src]="picture">
+      </ion-avatar>
+      <!-- ion-icon slot="start" name="id-card"></ion-icon -->
       <ion-label>{{'ID Card'|translate}}</ion-label>
       @if(myIdRequest.allowed){
       <ion-button fill="clear" [href]="myIdRequest.googleUrl">

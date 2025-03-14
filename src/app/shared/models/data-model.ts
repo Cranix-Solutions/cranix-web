@@ -616,8 +616,8 @@ export class IdRequest {
 	modified: Date | string
 	uuid: string = ""
 	allowed: boolean = false
-	message: string = "Du sollst ein besseres Bild verwenden!"
-	validUntil: Date| string = ""
+	message: string = ""
+	validUntil: Date| string = ''
 	requester: User = new User
 	picture: string = ""
 	googleUrl: string = ""
