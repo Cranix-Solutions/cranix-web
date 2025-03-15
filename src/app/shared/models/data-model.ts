@@ -618,7 +618,7 @@ export class IdRequest {
 	allowed: boolean = false
 	message: string = ""
 	validUntil: Date| string = ''
-	requester: User = new User
+	avatar: string = ""
 	picture: string = ""
 	googleUrl: string = ""
 	appleUrl: string = ""

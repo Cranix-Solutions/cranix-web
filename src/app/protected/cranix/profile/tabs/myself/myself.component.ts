@@ -38,7 +38,6 @@ export class MyselfComponent implements OnInit, OnDestroy {
             this.picture = "data:image/jpg;base64," + val.picture;
           } else {
             this.myIdRequest = new IdRequest();
-            this.picture = "data:image/jpg;base64," + this.myIdRequest.picture;
           }
         }
       )

@@ -60,7 +60,8 @@ const routes: Routes = [
     UsersImportComponent,
     Users2faComponent,
     UserGroupsPage,
-    ManageParentsComponent
+    ManageParentsComponent,
+    IdCardsComponent
   ]
 })
 export class UsersListsPageModule { }
