@@ -45,28 +45,25 @@
       <!-- a [href]="myIdReques.googleUrl"><img src="assets/icon/google-wallet-primary.png"></a>
       <a [href]="myIdReques.appleUrl"><img src="assets/icon/apple-wallet-primary.png"></a -->
       }@else{
-      @if(myIdRequest.message){
-      <ion-button id="openIdMessage">
-        <ion-icon slot="icon-only" color="error" name="alert-circle"></ion-icon>
-      </ion-button>
-      <ion-popover trigger="openIdMessage" triggerAction="hover">
-        <ng-template>
-          <ion-content class="ion-padding">{{myIdRequest.message}}</ion-content>
-        </ng-template>
-      </ion-popover>
+      @if(myIdRequest.comment){
+        <ion-label>
+          <h2>{{'Reviewer comment:'|translate}}</h2>
+          <h3>{{myIdRequest.comment}}</h3>
+        </ion-label>
+        
       }
-      <ion-button (click)="takePhoto()">
+      @if(picture){
+      <img [src]="picture">
+      }
+      <ion-button fill="clear" (click)="takePhoto()">
         <ion-icon slot="icon-only" name="camera"></ion-icon>
       </ion-button>
-      <ion-button (click)="findPhoto()">
+      <ion-button fill="clear" (click)="findPhoto()">
         <ion-icon slot="icon-only" name="images"></ion-icon>
       </ion-button>
       <!-- ion-input label="{{'Upload foto'}}" type="file" (change)="uploadImage($event)"></ion-input -->
       }
     </ion-item>
-    @if(picture){
-    <img [src]="picture">
-    }
     }
     <ion-item lines="none">
       <ion-button (click)="openChangePW()">

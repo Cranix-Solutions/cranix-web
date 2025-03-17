@@ -611,13 +611,13 @@ export class ParentTeacherMeeting {
 
 export class IdRequest {
 	id: number = 0
-	creatorId: number = 0
+	creator: User = new User
 	created: Date | string
 	modified: Date | string
 	uuid: string = ""
 	allowed: boolean = false
 	message: string = ""
-	validUntil: Date| string = ''
+	validUntil: string = ""
 	avatar: string = ""
 	picture: string = ""
 	googleUrl: string = ""

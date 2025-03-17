@@ -29,12 +29,13 @@ export class MyselfComponent implements OnInit, OnDestroy {
     public modalController: ModalController,
     public authService: AuthenticationService
   ) {
-    if(this.authService.isAllowed('idrequest.use')) {
+    if (this.authService.isAllowed('idrequest.use')) {
       this.mySelfs.getMyIdRequest().subscribe(
         (val) => {
           this.idRequestUse = true;
-          if(val) {
+          if (val) {
             this.myIdRequest = val
+            console.log(val)
             this.picture = "data:image/jpg;base64," + val.picture;
           } else {
             this.myIdRequest = new IdRequest();
@@ -73,7 +74,7 @@ export class MyselfComponent implements OnInit, OnDestroy {
           .subscribe((res) => {
             console.log('response is:', res);
             this.objectService.responseMessage(res)
-            if( res.code == "OK") {
+            if (res.code == "OK") {
               this.authService.session.mustChange = false;
             }
           }, (err) => {
@@ -95,10 +96,16 @@ export class MyselfComponent implements OnInit, OnDestroy {
       quality: 60
     }).then((photo) => {
       this.myIdRequest.picture = photo.base64String;
-      this.picture = "data:image/jpg;base64," + photo.base64String
-      console.log(photo.dataUrl)
       this.mySelfs.addEditIdRequest(this.myIdRequest).subscribe(
-        (val) => { this.objectService.responseMessage(val)}
+        (val) => {
+          this.objectService.responseMessage(val)
+          this.mySelfs.getMyIdRequest().subscribe(
+            (val) => {
+              this.myIdRequest = val
+              this.picture = "data:image/jpg;base64," + val.picture;
+            }
+          )
+        }
       )
     })
   }
@@ -113,7 +120,7 @@ export class MyselfComponent implements OnInit, OnDestroy {
       this.myIdRequest.picture = photo.base64String;
       this.picture = "data:image/jpg;base64," + photo.base64String
       this.mySelfs.addEditIdRequest(this.myIdRequest).subscribe(
-        (val) => { this.objectService.responseMessage(val)}
+        (val) => { this.objectService.responseMessage(val) }
       )
     })
   }
@@ -125,7 +132,7 @@ export class MyselfComponent implements OnInit, OnDestroy {
       reader.onload = (e: any) => {
         this.myIdRequest.picture = e.target.result;
         this.mySelfs.addEditIdRequest(this.myIdRequest).subscribe(
-          (val) => { this.objectService.responseMessage(val)}
+          (val) => { this.objectService.responseMessage(val) }
         )
       };
       reader.onerror = (error) => {

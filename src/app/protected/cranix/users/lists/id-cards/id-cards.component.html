@@ -1,23 +1,66 @@
 <cranix-toolbar title="Manage ID-Cards"></cranix-toolbar>
-<ion-toolbar>
-    <ion-searchbar id="serach-requests" (ionChange)="serachRequests"></ion-searchbar>
-</ion-toolbar>
+<ion-item>
+    <ion-searchbar id="search-requests" (input)="searchRequests()"></ion-searchbar>
+    <ion-toggle (ionChange)="searchRequests()" [(ngModel)]="openedOnly" name="openedOnly">{{'Opened
+        Only'|translate}}</ion-toggle>
+</ion-item>
 <ion-content>
-    <ion-list [inset]="true">
-        @for(request of requests; track request.id){
-        <ion-item [button]="">
-            <ion-avatar aria-hidden="true" slot="start">
-                <img alt="" [src]="request.avatar" />
-            </ion-avatar>
-            <ion-label>
-                <strong>{{request.requester.surName}}, {{request.requester.givenName}}</strong>
-                <ion-note>{{'Valid until:'}} {{request.validUntil|date:'yyyy-MM-dd'}}</ion-note>
-            </ion-label>
-            <div class="metadata-end-wrapper" slot="end">
-                <ion-note color="medium">Yesterday</ion-note>
-                <ion-icon color="medium" name="chevron-forward"></ion-icon>
-            </div>
-        </ion-item>
-        }
-    </ion-list>
+    <ion-grid>
+        <ion-row>
+            @for(request of requests; track request.id){
+            <ion-col size="2" size-xs="12" size-sm="12" size-md="6" size-lg="3" size-xl="2" class="grid-cell">
+                <ion-item>
+                    <ion-thumbnail aria-hidden="true" slot="start">
+                        <img alt="" [src]="request.avatar" />
+                    </ion-thumbnail>
+                    <ion-label>
+                        <strong>{{request.creator.surName}}, {{request.creator.givenName}}</strong>
+                    </ion-label>
+                    <ion-button (click)="getIdRequest(request.id)" fill="clear">
+                        <ion-icon slot="icon-only" color="primary" name="image"></ion-icon>
+                    </ion-button>
+                    <ion-button (click)="deleteIdRequest(request.id)" fill="clear">
+                        <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
+                    </ion-button>
+                </ion-item>
+                <ion-item line="none">
+                    <ion-textarea labelPlacement="stacked" label="{{'Comment'|translate}}" [(ngModel)]="request.comment"
+                        name="comment" fill="solid" [counter]="true" maxlength="128">
+                        <ion-button slot="end" (click)="setIdRequest(request)" fill="clear" [disabled]="request.comment.length == 0">
+                            <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
+                        </ion-button>
+                    </ion-textarea>
+                </ion-item>
+                <ion-item>
+                    <ion-label>{{'validUntil'|translate}}</ion-label>
+                    <input type="date" [(ngModel)]="request.validUntil" name="validUntil">
+                </ion-item>
+                <ion-item>
+                    <ion-toggle [(ngModel)]="request.allowed" justify="space-between"
+                        (ionChange)="setIdRequest(request)"> {{'Released'|translate}}</ion-toggle>
+                </ion-item>
+            </ion-col>
+            }
+        </ion-row>
+    </ion-grid>
 </ion-content>
+
+<ion-popover #popOver [isOpen]="isPopoverOpen">
+    <ng-template>
+        <ion-header>
+            <ion-toolbar>
+                <ion-title>
+                    {{selectedRequest.creator.surName}} {{selectedRequest.creator.givenName}}
+                </ion-title>
+                <ion-buttons slot="end">
+                    <ion-button (click)="closePopOver(popOver)">
+                        <ion-icon name="close"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+            <ion-img [src]="selectedRequest.picture"></ion-img>
+        </ion-content>
+    </ng-template>
+</ion-popover>

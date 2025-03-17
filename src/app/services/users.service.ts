@@ -123,11 +123,16 @@ export class UsersService {
 	getIdRequest(id: number) {
 		const url = `${this.hostname}/idRequests/${id}`
 		console.log(url);
-		return this.http.get<IdRequest[]>(url, { headers: this.authService.headers });
+		return this.http.get<IdRequest>(url, { headers: this.authService.headers });
 	}
 	setIdRequest(idRequest: IdRequest) {
 		const url = `${this.hostname}/idRequests/`
 		console.log(url);
 		return this.http.patch<ServerResponse>(url, idRequest, { headers: this.authService.headers });
+	}
+	deleteIdRequest(id: number){
+		const url = `${this.hostname}/idRequests/${id}`
+		console.log(url);
+		return this.http.delete<ServerResponse>(url, { headers: this.authService.headers });
 	}
 }

@@ -90,7 +90,7 @@ export class UtilsService {
                 return ""
         }
 
-	public toIonDate(dt: Date | undefined) {
+	public toIonDate(dt: Date| undefined) {
                 if (dt) {
                         return dt.getFullYear() + "-" +
                                 this.getDouble(dt.getMonth() + 1) + "-" +
