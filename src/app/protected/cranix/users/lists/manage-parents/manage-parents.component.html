@@ -208,8 +208,8 @@
                 </ion-item>
                 <ion-item>
                     <ion-label>{{'Select children for the parent' | translate}}</ion-label>
-                    <cranix-search objectType="user" [(selectedItems)]="selectedChildren" name="selectedChildren"
-                        [inputData]="children"></cranix-search>
+                    <cranix-search objectType="user" [(ngModel)]="selectedChildren" name="selectedChildren"
+                        [items]="children"></cranix-search>
                     <!-- ionic-selectable #ionicSelectChildren itemValueField="id" itemTextField="fullName"
                         [isMultiple]="true" [(ngModel)]="selectedChildren" [ngModelOptions]="{standalone: true}"
                         [items]="children" [canSearch]="true" groupValueField="classes" groupTextField="classes">

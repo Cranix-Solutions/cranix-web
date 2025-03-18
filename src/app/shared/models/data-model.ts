@@ -616,7 +616,7 @@ export class IdRequest {
 	modified: Date | string
 	uuid: string = ""
 	allowed: boolean = false
-	message: string = ""
+	comment: string = ""
 	validUntil: string = ""
 	avatar: string = ""
 	picture: string = ""
