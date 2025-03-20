@@ -81,7 +81,6 @@ export class SelfManagementService {
         return this.http.post<ServerResponse>(url, dev, { headers: this.authService.headers });
     }
 
-    //Delete
     removeDevice(devId: number) {
         const url = this.hostname + `/selfmanagement/devices/${devId}`;
         console.log(url);
@@ -142,5 +141,11 @@ export class SelfManagementService {
         const url = this.hostname + '/idRequests/my';
         console.log(url);
         return this.http.get<IdRequest>(url, { headers: this.authService.headers });
+    }
+
+    deleteMyIdRequest(id: number) {
+        const url = `${this.hostname}/idRequests/${id}`;
+        console.log(url);
+        return this.http.delete<ServerResponse>(url, { headers: this.authService.headers });
     }
 }

@@ -3,11 +3,12 @@ import { IdRequest, User } from 'src/app/shared/models/data-model';
 import { SelfManagementService } from 'src/app/services/selfmanagement.service';
 import { takeWhile } from 'rxjs/internal/operators/takeWhile';
 import { TranslateService } from '@ngx-translate/core';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { SetpasswordComponent } from 'src/app/shared/actions/setpassword/setpassword.component';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
+import { LanguageService } from 'src/app/services/language.service';
 @Component({
   selector: 'cranix-myself',
   templateUrl: './myself.component.html',
@@ -23,8 +24,9 @@ export class MyselfComponent implements OnInit, OnDestroy {
   files = []
 
   constructor(
+    private alertController: AlertController,
     private mySelfs: SelfManagementService,
-    public translateService: TranslateService,
+    private languageS: LanguageService,
     public objectService: GenericObjectService,
     public modalController: ModalController,
     public authService: AuthenticationService
@@ -140,5 +142,33 @@ export class MyselfComponent implements OnInit, OnDestroy {
       };
       reader.readAsDataURL(file);
     }
+  }
+
+  async deleteId(){
+    const alert = await this.alertController.create({
+      header: this.languageS.trans('Confirm!'),
+      subHeader: this.languageS.trans('Do you realy want to delete?'),
+      message: this.languageS.trans('After deleting you ID card, you can recreate it again.'),
+      buttons: [
+        {
+          text: this.languageS.trans('Cancel'),
+          role: 'cancel',
+        }, {
+          text: 'OK',
+          handler: () => {
+            this.mySelfs.deleteMyIdRequest(this.myIdRequest.id).subscribe(
+              (val) => { 
+                this.objectService.responseMessage(val)
+                if(val.code == "OK"){
+                  this.myIdRequest = new IdRequest();
+                  this.picture = "";
+                }
+              }
+            )
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 }

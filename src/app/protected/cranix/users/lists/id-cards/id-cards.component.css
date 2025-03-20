@@ -6,3 +6,11 @@
     padding: 10px; /* Innenabstand */
     text-align: center; /* Text zentrieren */
   }
+
+.button-no-margit {
+  margin-left: 0 !important;
+}
+
+ion-button {
+  margin-left: 0 !important;
+}

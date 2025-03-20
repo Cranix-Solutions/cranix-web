@@ -16,20 +16,20 @@
                     <ion-label>
                         <strong>{{request.creator.surName}}, {{request.creator.givenName}}</strong>
                     </ion-label>
-                    <ion-button (click)="getIdRequest(request.id)" fill="clear">
+                    <ion-button (click)="getIdRequest(request.id)" fill="clear" size="large" >
                         <ion-icon slot="icon-only" color="primary" name="image"></ion-icon>
                     </ion-button>
-                    <ion-button (click)="deleteIdRequest(request.id)" fill="clear">
+                    <ion-button (click)="deleteIdRequest(request.id)" fill="clear" size="large">
                         <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
                     </ion-button>
                 </ion-item>
                 <ion-item line="none">
                     <ion-textarea labelPlacement="stacked" label="{{'Comment'|translate}}" [(ngModel)]="request.comment"
-                        name="comment" fill="solid" [counter]="true" maxlength="128">
-                        <ion-button slot="end" (click)="setIdRequest(request)" fill="clear" [disabled]="request.comment.length == 0">
-                            <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
-                        </ion-button>
+                        name="comment" fill="solid" [counter]="false" maxlength="128">
                     </ion-textarea>
+                    <ion-button size="large" class="button-no-margin" slot="end" (click)="setIdRequest(request)" fill="clear" [disabled]="request.comment.length == 0">
+                        <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
+                    </ion-button>
                 </ion-item>
                 <ion-item>
                     <ion-label>{{'validUntil'|translate}}</ion-label>
@@ -45,7 +45,7 @@
     </ion-grid>
 </ion-content>
 
-<ion-popover #popOver [isOpen]="isPopoverOpen">
+<ion-popover #popOver [isOpen]="isPopoverOpen" [backdropDismiss]="false" (onDidDismiss)="isPopoverOpen = false">
     <ng-template>
         <ion-header>
             <ion-toolbar>
