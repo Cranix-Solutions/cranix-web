@@ -1,4 +1,10 @@
 {
+    "Release all shown cards":"Alle gezeigte Ausweise veröffentlichen",
+    "Manage ID-Card Requests":"Ausweisanfragen verwalten",
+    "ID-Cards":"Ausweise",
+    "Release":"Veröffentlichen",
+    "Opened Only":"Nur offene",
+    "Comment":"Kommentar",
     "Select or create parent teacher meeting":"Sprechtag wählen oder anlegen",
     "Select user": "Benutzer wählen",
     "user selected": "Benutzer ausgewählt",
@@ -570,7 +576,6 @@
     "counter": "Zähler",
     "country": "Land",
     "createAdHocRoom": "Extra Raum mit WLAN-Zugriff",
-    "created": "erstellt",
     "csv-export": "CSV Export",
     "customerId": "",
     "debug": "Konsolen-Ausgabe für die Oberfläche erlauben",
