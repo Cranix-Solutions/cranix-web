@@ -30,7 +30,15 @@ export class ManageParentsComponent {
   selectedChildren: User[]
   children: User[] = []
   parents: User[] = []
-  ptmSettings = {};
+  ptmSettings = {
+	  "ALLOW_MULTI_USE_OF_ROOMS":"",
+	  'SEND_NOTIFICATION_TO_STUDENTS':"",
+	  "DELAY_BETWEEN_EMAILS":"",
+	  "SENDER_ADDRESS":"",
+	  "LetterSubjectTemplate":"",
+	  "LetterStudentTemplate":"",
+	  "LetterParentTemplate":""
+  };
   loadingData: boolean = true
   objectKeys = []
   parentKeys = ['givenName', 'surName', 'emailAddress', 'telefonNummer']
