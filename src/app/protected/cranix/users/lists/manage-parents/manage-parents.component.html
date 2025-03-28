@@ -44,6 +44,9 @@
             }
             }
             <ion-buttons slot="end">
+                <ion-button (click)="getPTMSettings()" fill="solid" matTooltip="{{'Adapt PTM settings'|translate}}">
+                    <ion-icon slot="icon-only" name="settings-outline"></ion-icon>
+                </ion-button>
                 <ion-button (click)="isSelectPtmOpen = true" fill="solid" matTooltip="{{'Select PTM'|translate}}">
                     <ion-icon slot="icon-only" color="success" name="list-outline"></ion-icon>
                 </ion-button>
@@ -92,7 +95,8 @@
             <ion-item>
                 <ion-label>{{'Duration of a Session'|translate}}*</ion-label>
                 <input [(ngModel)]="selectedPTM.duration" name="duration" type="number" required
-                    [disabled]="selectedPTM.ptmTeacherInRoomList.length > 0" />{{'Minutes'|translate}}
+                    [disabled]="selectedPTM.ptmTeacherInRoomList.length > 0" />
+                <div slot="end">{{'Minutes'|translate}}</div>
             </ion-item>
             <ion-item>
                 <ion-label>{{'Start Parent Registration'|translate}}*</ion-label>
@@ -262,6 +266,74 @@
                 </ion-item>
             </ion-list>
             }
+        </ion-content>
+    </ng-template>
+</ion-modal>
+<ion-modal #ptmManagementSetting [isOpen]="isPtmSettingsOpen" [backdropDismiss]="false">
+    <ng-template>
+        <ion-header>
+            <ion-toolbar color="primary">
+                <ion-title>{{'PTM Management settings'|translate}}</ion-title>
+                <ion-buttons slot="end">
+                    <ion-button fill="clear" size="small" (click)="setPTMSettings(1,ptmManagementSetting)">
+                        <ion-icon slot="icon-only" color="success" name="checkmark"></ion-icon>
+                    </ion-button>
+                    <ion-button fill="clear" size="small" (click)="setPTMSettings(0,ptmManagementSetting)">
+                        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content>
+            <ion-list>
+                <ion-item>
+                    <ion-select [(ngModel)]="ptmSettings.ALLOW_MULTI_USE_OF_ROOMS" name="ALLOW_MULTI_USE_OF_ROOMS"
+                        label="{{'Allow multi use of rooms.'|translate}}">
+                        <ion-select-option value="yes">yes</ion-select-option>
+                        <ion-select-option value="no">no</ion-select-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item>
+                    <ion-select [(ngModel)]="ptmSettings.SEND_NOTIFICATION_TO_STUDENTS"
+                        name="SEND_NOTIFICATION_TO_STUDENTS"
+                        label="{{'Send notifications to the email addresses of the students.'|translate}}">
+                        <ion-select-option value="yes">yes</ion-select-option>
+                        <ion-select-option value="no">no</ion-select-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item>
+                    <ion-select [(ngModel)]="ptmSettings.DELAY_BETWEEN_EMAILS" name="DELAY_BETWEEN_EMAILS"
+                        label="{{'Delay between sending two emails.'|translate}}">
+                        <div slot="end">{{'second(s)'|translate}}</div>
+                        <ion-select-option value="1">1</ion-select-option>
+                        <ion-select-option value="2">2</ion-select-option>
+                        <ion-select-option value="3">3</ion-select-option>
+                        <ion-select-option value="4">4</ion-select-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item>
+                    <ion-input [(ngModel)]="ptmSettings.SENDER_ADDRESS" name="SENDER_ADDRESS" type="email"
+                        label="{{'Sender address'|translate}}:" inputmode="email"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-input [(ngModel)]="ptmSettings.LetterSubjectTemplate" name="LetterSubjectTemplate"
+                        labelPlacement="stacked">
+                        <div slot="label"><b>{{'Mail subject template'|translate}}:</b></div>
+                    </ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-textarea [(ngModel)]="ptmSettings.LetterStudentTemplate" name="LetterStudentTemplate"
+                        labelPlacement="stacked" [autoGrow]="true">
+                        <div slot="label"><b>{{'Mail template for students'|translate}}:</b></div>
+                    </ion-textarea>
+                </ion-item>
+                <ion-item>
+                    <ion-textarea [(ngModel)]="ptmSettings.LetterParentTemplate" name="LetterParentTemplate"
+                        labelPlacement="stacked" [autoGrow]="true">
+                        <div slot="label"><b>{{'Mail template for parents'|translate}}:</b></div>
+                    </ion-textarea>
+                </ion-item>
+            </ion-list>
         </ion-content>
     </ng-template>
 </ion-modal>
