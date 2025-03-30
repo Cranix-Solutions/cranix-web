@@ -1,4 +1,4 @@
-<cranix-toolbar title="Parent teacher meeting"></cranix-toolbar>
+<cranix-toolbar title="PTM"></cranix-toolbar>
 <ion-content>
     @if(!selectedPTM){
     @if(noPTM){
@@ -119,7 +119,7 @@
     </ion-accordion-group>
     }
 </ion-content>
-<ion-modal [isOpen]="isRegisterEventOpen">
+<ion-modal [isOpen]="isRegisterEventOpen" [backdropDismiss]="false">
     <ng-template>
         <ion-toolbar color="primary">
             <ion-title>{{'Register student for the event'|translate}}</ion-title>
@@ -150,7 +150,7 @@
                 </ion-item>
                 <ion-item>
                     <ion-label>{{'Select student for the event'|translate}}</ion-label>
-                    <ionic-selectable #ionSelecdenttStu itemValueField="id" itemTextField="fullName"
+                    <ionic-selectable #ionSelectStudent itemValueField="id" itemTextField="fullName"
                         [isMultiple]="false" [(ngModel)]="selectedEvent.student" [ngModelOptions]="{standalone: true}"
                         [items]="students" [canSearch]="true">
                         <ng-template ionicSelectableHeaderTemplate>
@@ -160,7 +160,7 @@
                                         {{ "Select student for the event" | translate }}
                                     </ion-title>
                                     <ion-buttons slot="end">
-                                        <ion-button ion-button (click)="ionSelecdenttStu.close()">
+                                        <ion-button ion-button (click)="ionSelectStudent.close()">
                                             <ion-icon color="danger" name="close"></ion-icon>
                                         </ion-button>
                                     </ion-buttons>
@@ -168,6 +168,35 @@
                             </ion-header>
                         </ng-template>
                     </ionic-selectable>
+                </ion-item>
+            </ion-list>
+        </ion-content>
+    </ng-template>
+</ion-modal>
+<ion-modal #noticeModal [isOpen]="isNoticeOpen" [backdropDismiss]="false">
+    <ng-template>
+        <ion-header>
+            <ion-toolbar color="primary">
+                <ion-title>
+                    {{'Create notice for:'|translate}} {{selectedEvent.student.surName}}, {{selectedEvent.student.givenName}}
+                </ion-title>
+                <ion-buttons slot="end">
+                    <ion-button class="ion-no-margin" (click)="saveNotice()">
+                        <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+                    </ion-button>
+                    <ion-button fill="clear" size="small" (click)="closeNotice(noticeModal)">
+                        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content>
+            <ion-list>
+                <ion-list-header>
+                    <ion-input label="{{'title'|translate}}:" [(ngModel)]="selectedNotice.title" fill="solid"></ion-input>
+                </ion-list-header>
+                <ion-item>
+                    <quill-editor [(ngModel)]="selectedNotice.text"></quill-editor>
                 </ion-item>
             </ion-list>
         </ion-content>

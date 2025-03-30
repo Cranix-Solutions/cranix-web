@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
+import { NoticesService } from 'src/app/services/notices.service';
 import { ParentsService } from 'src/app/services/parents.service';
 import { SystemService } from 'src/app/services/system.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { ParentTeacherMeeting, PTMEvent, PTMTeacherInRoom, Room, User } from 'src/app/shared/models/data-model';
+import { CrxNotice, ParentTeacherMeeting, PTMEvent, PTMTeacherInRoom, Room, User } from 'src/app/shared/models/data-model';
 import { WindowRef } from 'src/app/shared/models/ohters';
 
 @Component({
@@ -14,13 +15,16 @@ import { WindowRef } from 'src/app/shared/models/ohters';
   styleUrl: './ptms.component.css'
 })
 export class PtmsComponent implements OnInit {
+
+  addEditPTMTitle: string = ""
   freeRooms: Room[]
   noPTM: boolean = false;
   isAddPTMOpen: boolean = false;
-  addEditPTMTitle: string = ""
   selectedPTM: ParentTeacherMeeting
   selectedEvent: PTMEvent = new PTMEvent()
   selectedEventRegistered: boolean = false
+  selectedNotice: CrxNotice = new CrxNotice()
+  isNoticeOpen: boolean = false
   isRegisterEventOpen = false
   instituteName: string = ""
   nextPtms: ParentTeacherMeeting[] = []
@@ -33,6 +37,7 @@ export class PtmsComponent implements OnInit {
     public authService: AuthenticationService,
     private languageS: LanguageService,
     private objectService: GenericObjectService,
+    private noticeService: NoticesService,
     public ptmService: ParentsService,
     private utilService: UtilsService,
     private systemService: SystemService
@@ -52,7 +57,7 @@ export class PtmsComponent implements OnInit {
     }
     this.ptmService.get().subscribe((val) => {
       this.nextPtms = val
-      if(val.length == 1) {
+      if (val.length < 1) {
         this.noPTM = true;
       }
       if (val.length == 1) {
@@ -60,7 +65,7 @@ export class PtmsComponent implements OnInit {
       }
     })
   }
-  deselect(){
+  deselect() {
     this.selectedPTM = null;
     this.readData()
   }
@@ -74,7 +79,7 @@ export class PtmsComponent implements OnInit {
       return this.languageS.trans('blocked')
     }
   }
-  setBlockEvent(event) {
+  setBlockEvent(event: PTMEvent) {
     this.ptmService.blockEvent(event.id, !event.blocked).subscribe((val) => {
       this.objectService.responseMessage(val)
       this.ptmService.getPTMById(this.selectedPTM.id).subscribe((val2) => {
@@ -116,9 +121,31 @@ export class PtmsComponent implements OnInit {
       }
     )
   }
-  createNotices(event) {
-    this.objectService.errorMessage("Ist noch nicht implementiert")
+  closeNotice(modal) {
+    modal.dismiss()
+    this.isNoticeOpen = false
+  }
+  createNotices(event: PTMEvent) {
+    this.selectedEvent = event
+    this.selectedNotice = new CrxNotice()
+    this.selectedNotice.title = this.languageS.trans('PTM') + " " + new Date(event.start).toLocaleString()
+    this.selectedNotice.objectType = "user"
+    this.selectedNotice.objectId = event.student.id
+    this.selectedNotice.issueType = "PTMEvent"
+    this.selectedNotice.issueId = event.id
+    this.noticeService.getByFilter(this.selectedNotice).subscribe(
+      (val) => {
+        if (val.length > 0) {
+          this.selectedNotice = val[0]
+        }
+      })
+    this.isNoticeOpen = true
     console.log(event)
+  }
+  saveNotice(){
+    this.noticeService.add(this.selectedNotice).subscribe(
+      (val) => { this.objectService.responseMessage(val)}
+    )
   }
   registerEvent(event) {
     this.selectedEvent = event
@@ -160,7 +187,7 @@ export class PtmsComponent implements OnInit {
       let time = this.utilService.toIonTime(start)
       let user = ""
       if (event.student) {
-        user = event.student.fullName + ", " + event.student.givenName
+        user = event.student.surName + ", " + event.student.givenName
       }
       html += `<tr><td>${time}</td><td>${user}</td></tr>`
     }

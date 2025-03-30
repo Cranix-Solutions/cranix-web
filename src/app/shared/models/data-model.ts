@@ -623,3 +623,20 @@ export class IdRequest {
 	googleUrl: string = ""
 	appleUrl: string = ""
 }
+
+export class CrxNotice {
+	id: number = 0
+	creator: User = new User
+	created: Date | string = ""
+	modified: Date | string = ""
+	reminder: Date | string = ""
+	title: string = ""
+	noticeType: string = ""
+	text: string = ""
+	grading: number = 0
+	weighting: number = 1
+	objectType: string = ""
+	objectId: number = 0
+	issueType: string = ""
+	issueId: number = 0
+}
