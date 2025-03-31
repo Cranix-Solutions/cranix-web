@@ -33,8 +33,8 @@
 } @else {
 <ion-item>
   @if( objectType == 'challenge' ) {
-  <ionic-selectable [(ngModel)]="authService.selectedTeachingSubject"
-    [items]="crxObjectService.subjects" itemValueField="id" itemTextField="name" [canSearch]="true">
+  <ionic-selectable [(ngModel)]="authService.selectedTeachingSubject" [items]="crxObjectService.subjects"
+    itemValueField="id" itemTextField="name" [canSearch]="true">
     <ng-template ionicSelectablePlaceholderTemplate>{{'teachingSubject'|translate}}</ng-template>
     <ng-template ionicSelectableCloseButtonTemplate><ion-icon name="close" color="danger"></ion-icon></ng-template>
   </ionic-selectable>
@@ -57,124 +57,141 @@
     <ion-fab-button (click)="context.componentParent.openActions($event,null)">
       <ion-icon name="ellipsis-vertical-sharp"></ion-icon>
     </ion-fab-button>
-    <ion-fab-button *ngIf="objectType == 'printer'">
-      <ion-icon name="add-circle" (click)="context.componentParent.addDevice($event)"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-button *ngIf="objectType == 'printer'">
-      <ion-icon name="print-outline" (click)="context.componentParent.addPrinter($event)" disabled></ion-icon>
-    </ion-fab-button>
-    <ion-fab-button *ngIf="objectType != 'printer'" (click)="context.componentParent.redirectToEdit(null)">
+    @if(objectType == 'printer'){
+    <ion-fab-button (click)="context.componentParent.addDevice($event)">
       <ion-icon name="add-circle"></ion-icon>
     </ion-fab-button>
-    <ion-fab-button *ngIf="objectType == 'challenge'" size="small" fill="solid" (click)="getCephalixChallenges()"
+    <ion-fab-button (click)="context.componentParent.addPrinter($event)" disabled>
+      <ion-icon name="print-outline"></ion-icon>
+    </ion-fab-button>
+    }@else{
+    <ion-fab-button (click)="context.componentParent.redirectToEdit(null)">
+      <ion-icon name="add-circle"></ion-icon>
+    </ion-fab-button>
+    }
+    @if(objectType == 'challenge'){
+    <ion-fab-button size="small" fill="solid" (click)="getCephalixChallenges()"
       matTooltip="{{'Get challenges from CEPHALIX server to the selected subject.' | translate }}">
       <img src="assets/images/logo/cranix_school.svg" style="height: 32px; width: 32px;">
     </ion-fab-button>
+    }
   </ion-fab-list>
 </ion-fab>
 }
 <ion-list>
-  <div *ngFor="let object of rowData; let i = index">
-    <ion-item-sliding *ngIf="i > min && i < max">
-      <ion-item style="background-color : {{authService.rowColors[i%2]}}">
-        <ion-note slot="start">
-          <ion-checkbox (click)="$event.stopPropagation()" (ionChange)="checkChange($event,object)"></ion-checkbox>
-        </ion-note>
-        <ion-label (click)="context.componentParent.redirectToEdit(object)">
-          <b>
-            <p>{{ object[left1] }}</p>
-          </b>
-          <p>{{ object[left2] }} {{ object[left3] }}</p>
-        </ion-label>
-        <ion-label *ngIf="objectType == 'customer'">
-          <p>{{ object.contact }}</p>
-          <p>{{ object.telephone }}</p>
-        </ion-label>
-        <ion-label *ngIf="objectType == 'device'">
-          <p>{{ object.mac }}</p>
-          <p>{{ object.hwconfId | idToName:'hwconf' }}</p>
-          <!-- p>{{ object.roomId | idToName:'room' }}</p -->
-        </ion-label>
-        <ion-label *ngIf="objectType.indexOf('group') != -1">
-          <p>{{ object.groupType | translate }}</p>
-        </ion-label>
-        <ion-label *ngIf="objectType == 'hwconf'">
-          <p>{{ object.hwconfType | translate }}</p>
-        </ion-label>
-        <ion-label *ngIf="objectType == 'institute'">
-          <p>{{ object.locality }}</p>
-          <p>{{ object.instituteType | translate }}</p>
-        </ion-label>
-        <ion-label *ngIf="objectType == 'printer'">
-          <p>{{ object.model }}</p>
-          <p>{{ object.activeJobs }}</p>
-        </ion-label>
-        <ion-label *ngIf="objectType.indexOf('room') != -1">
-          <p>{{ object.roomType | translate }}</p>
-          <p>{{ object.roomControl | translate }}</p>
-          <p *ngIf="object.hwconfId">{{ object.hwconfId | idToName:'hwconf' }}</p>
-        </ion-label>
-        <ion-label *ngIf="objectType.indexOf('user') != -1">
-          <p>{{ object.role | translate }}</p>
-          <p>{{ object.classes }}</p>
-        </ion-label>
-        <ion-item *ngIf="objectType == 'challenge' && object.creatorId == authService.session.userId">
-          <div *ngIf="object.released && object.groups.length">{{objectService.formatGroups(object.groups)}}</div>
-          <div *ngIf="object.released && object.users.length">{{objectService.formatUsers(object.users)}}</div>
-          <ion-buttons slot="end">
-            <ion-button *ngIf="object.released" (click)="context.componentParent.stopAndArchive(object)"
-              matTooltip="{{'Stop and evaluate challenge and archive the results.'|translate}}">
-              <ion-icon slot="icon-only" name="stop-circle-outline" color="danger"></ion-icon>
-            </ion-button>
-            <ion-button *ngIf="!object.released" (click)="context.componentParent.assign(object)"
-              matTooltip="{{'Assign and start challenge.'|translate}}">
-              <ion-icon slot="icon-only" name="chevron-forward-circle-outline"></ion-icon>
-            </ion-button>
-            <ion-button (click)="context.componentParent.getArchives(object.id)"
-              matTooltip="{{'Manage the archived results of this challenge.'|translate}}">
-              <ion-icon slot="icon-only" name="archive"></ion-icon>
-            </ion-button>
-            <ion-button *ngIf="!object.released" (click)="context.componentParent.deleteChallenge(object.id)"
-              matTooltip="{{'Delete challenge.'|translate}}">
-              <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-item>
+  @for(object of rowData; track object.id; let i = $index; ){
+  @if(i > min && i < max){ <ion-item-sliding>
+    <ion-item style="background-color : {{authService.rowColors[i%2]}}">
+      <ion-note slot="start">
+        <ion-checkbox (click)="$event.stopPropagation()" (ionChange)="checkChange($event,object)"></ion-checkbox>
+      </ion-note>
+      <ion-label (click)="context.componentParent.redirectToEdit(object)">
+        <b>
+          <p>{{ object[left1] }}</p>
+        </b>
+        <p>{{ object[left2] }} {{ object[left3] }}</p>
+      </ion-label>
+      <ion-label *ngIf="objectType == 'customer'">
+        <p>{{ object.contact }}</p>
+        <p>{{ object.telephone }}</p>
+      </ion-label>
+      <ion-label *ngIf="objectType == 'device'">
+        <p>{{ object.mac }}</p>
+        <p>{{ object.hwconfId | idToName:'hwconf' }}</p>
+        <!-- p>{{ object.roomId | idToName:'room' }}</p -->
+      </ion-label>
+      <ion-label *ngIf="objectType.indexOf('group') != -1">
+        <p>{{ object.groupType | translate }}</p>
+      </ion-label>
+      <ion-label *ngIf="objectType == 'hwconf'">
+        <p>{{ object.hwconfType | translate }}</p>
+      </ion-label>
+      <ion-label *ngIf="objectType == 'institute'">
+        <p>{{ object.locality }}</p>
+        <p>{{ object.instituteType | translate }}</p>
+      </ion-label>
+      <ion-label *ngIf="objectType == 'printer'">
+        <p>{{ object.model }}</p>
+        <p>{{ object.activeJobs }}</p>
+      </ion-label>
+      <ion-label *ngIf="objectType.indexOf('room') != -1">
+        <p>{{ object.roomType | translate }}</p>
+        <p>{{ object.roomControl | translate }}</p>
+        <p *ngIf="object.hwconfId">{{ object.hwconfId | idToName:'hwconf' }}</p>
+      </ion-label>
+      <ion-label *ngIf="objectType.indexOf('user') != -1">
+        <p>{{ object.role | translate }}</p>
+        <p>{{ object.classes }}</p>
+      </ion-label>
+      <ion-item *ngIf="objectType == 'challenge' && object.creatorId == authService.session.userId">
+        <div *ngIf="object.released && object.groups.length">{{objectService.formatGroups(object.groups)}}</div>
+        <div *ngIf="object.released && object.users.length">{{objectService.formatUsers(object.users)}}</div>
+        <ion-buttons slot="end">
+          <ion-button *ngIf="object.released" (click)="context.componentParent.stopAndArchive(object)"
+            matTooltip="{{'Stop and evaluate challenge and archive the results.'|translate}}">
+            <ion-icon slot="icon-only" name="stop-circle-outline" color="danger"></ion-icon>
+          </ion-button>
+          <ion-button *ngIf="!object.released" (click)="context.componentParent.assign(object)"
+            matTooltip="{{'Assign and start challenge.'|translate}}">
+            <ion-icon slot="icon-only" name="chevron-forward-circle-outline"></ion-icon>
+          </ion-button>
+          <ion-button (click)="context.componentParent.getArchives(object.id)"
+            matTooltip="{{'Manage the archived results of this challenge.'|translate}}">
+            <ion-icon slot="icon-only" name="archive"></ion-icon>
+          </ion-button>
+          <ion-button *ngIf="!object.released" (click)="context.componentParent.deleteChallenge(object.id)"
+            matTooltip="{{'Delete challenge.'|translate}}">
+            <ion-icon slot="icon-only" name="trash" color="danger"></ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-item>
-      <ion-item-options side="end">
-        <ion-item-option *ngIf="objectType == 'institute' && object.ipVPN && object.ipVPN != ''" color="secondary"
-          (click)="context.componentParent.routeInstitute(object)">
-          <ion-icon slot="icon-only" name="create-outline" style="height:15px;width:15px"></ion-icon>
-        </ion-item-option>
-        <ion-item-option *ngIf="objectType == 'room' || objectType == 'device'" color="warning"
-          (click)="context.componentParent.setDhcp(object)">
-          <ion-icon slot="icon-only" name="server"></ion-icon>
-        </ion-item-option>
-        <ion-item-option *ngIf="objectType == 'room' || objectType == 'device'"
-          (click)="context.componentParent.setPrinters(object)">
-          <ion-icon slot="icon-only" name="print"></ion-icon>
-        </ion-item-option>
-        <ion-item-option *ngIf="objectType == 'room'" color="success" (click)="context.componentParent.devices(object)">
-          <ion-icon slot="icon-only" name="desktop"></ion-icon>
-        </ion-item-option>
-        <ion-item-option *ngIf="objectType == 'user'" (click)="context.componentParent.redirectToGroups(object)">
-          <ion-icon slot="icon-only" name="people"></ion-icon>
-        </ion-item-option>
-        <ion-item-option
-          *ngIf="objectType.indexOf('group') != -1 && (authService.isAllowed('group.modify') || authService.session.userId == object.creatorId)"
-          (click)="context.componentParent.redirectToMembers(object)">
-          <ion-icon slot="icon-only" name="people-circle"></ion-icon>
-        </ion-item-option>
-        <ion-item-option color="tertiary" (click)="context.componentParent.openActions($event,object)">
-          <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
-        </ion-item-option>
-        <ion-item-option
-          *ngIf="authService.session.userId == object.creatorId || authService.isAllowed(objectType + '.delete')"
-          color="danger" (click)="context.componentParent.redirectToDelete(object)">
-          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
-        </ion-item-option>
-      </ion-item-options>
+    </ion-item>
+    <ion-item-options side="end">
+      @if(objectType == 'institute' && object.ipVPN && object.ipVPN != ''){
+      <ion-item-option color="secondary" (click)="context.componentParent.routeInstitute(object)">
+        <ion-icon slot="icon-only" name="create-outline" style="height:15px;width:15px"></ion-icon>
+      </ion-item-option>
+      }
+      @if(objectType == 'room' || objectType == 'device'){
+      <ion-item-option color="warning" (click)="context.componentParent.setDhcp(object)">
+        <ion-icon slot="icon-only" name="server"></ion-icon>
+      </ion-item-option>
+      <ion-item-option (click)="context.componentParent.setPrinters(object)">
+        <ion-icon slot="icon-only" name="print"></ion-icon>
+      </ion-item-option>
+      }
+      @if(objectType == 'room'){
+      <ion-item-option *ngIf="" color="success" (click)="context.componentParent.devices(object)">
+        <ion-icon slot="icon-only" name="desktop"></ion-icon>
+      </ion-item-option>
+      }
+      @if(objectType == 'user'){
+      <ion-item-option (click)="context.componentParent.redirectToGroups(object)">
+        <ion-icon slot="icon-only" name="people"></ion-icon>
+      </ion-item-option>
+      }
+      @if(objectType.indexOf('user') != -1 || objectType.indexOf('group') != -1){
+      <ion-item-option (click)="openNotice(object)">
+        <ion-icon slot="icon-only" name="clipboard" color="tertiary"></ion-icon>
+      </ion-item-option>
+      }
+      @if(objectType.indexOf('group') != -1 && (authService.isAllowed('group.modify') || authService.session.userId ==
+      object.creatorId)){
+      <ion-item-option (click)="context.componentParent.redirectToMembers(object)">
+        <ion-icon slot="icon-only" name="people-circle"></ion-icon>
+      </ion-item-option>
+      }
+      <ion-item-option color="tertiary" (click)="context.componentParent.openActions($event,object)">
+        <ion-icon slot="icon-only" name="ellipsis-vertical-sharp"></ion-icon>
+      </ion-item-option>
+      @if(authService.session.userId == object.creatorId || authService.isAllowed(objectType + '.delete')){
+      <ion-item-option color="danger" (click)="context.componentParent.redirectToDelete(object)">
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      </ion-item-option>
+      }
+    </ion-item-options>
     </ion-item-sliding>
-  </div>
+    }
+    }
 </ion-list>
 <!-- /ion-content -->

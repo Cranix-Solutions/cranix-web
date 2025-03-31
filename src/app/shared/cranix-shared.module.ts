@@ -65,6 +65,7 @@ import { SetValidityComponent } from 'src/app/shared/actions/set-validity/set-va
 import { ShowImportComponent } from 'src/app/shared/actions/show-import/show-import.component'
 import { WindowRef } from 'src/app/shared/models/ohters'
 import { CranixMdListComponent } from 'src/app/shared/cranix-md-list/cranix-md-list.component'
+import { CranixNoticesComponent } from './cranix-notices/cranix-notices.component';
 import { CranixPtmViewComponent } from 'src/app/shared/cranix-ptm-view/cranix-ptm-view.component'
 import { CranixSearchComponent } from './cranix-search/cranix-search.component';
 import { QuillModule } from 'ngx-quill';
@@ -80,6 +81,7 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     ActionBTNRenderer,
     CreateSupport,
     CranixMdListComponent,
+    CranixNoticesComponent,
     CranixPtmViewComponent,
     CranixSearchComponent,
     CustomerActionRenderer,
@@ -156,6 +158,7 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     TranslateModule,
     ToolbarComponent,
     CranixMdListComponent,
+    CranixNoticesComponent,
     CranixPtmViewComponent,
     CranixSearchComponent,
     IonicSelectableComponent,

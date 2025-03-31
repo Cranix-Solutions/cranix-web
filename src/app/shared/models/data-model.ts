@@ -627,8 +627,8 @@ export class IdRequest {
 export class CrxNotice {
 	id: number = 0
 	creator: User = new User
-	created: Date | string = ""
-	modified: Date | string = ""
+	created: Date | string = new Date()
+	modified: Date | string = new Date()
 	reminder: Date | string = ""
 	title: string = ""
 	noticeType: string = ""

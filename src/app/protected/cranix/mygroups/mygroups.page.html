@@ -86,3 +86,32 @@
     </ion-item-sliding>
   </ion-list>
 </ion-content>
+<ion-modal #noticeModal [isOpen]="isNoticeOpen" [backdropDismiss]="false">
+  <ng-template>
+      <ion-header>
+          <ion-toolbar color="primary">
+              <ion-title>
+                  {{'Create notice for:'|translate}} {{selectedEvent.student.surName}}, {{selectedEvent.student.givenName}}
+              </ion-title>
+              <ion-buttons slot="end">
+                  <ion-button class="ion-no-margin" (click)="saveNotice()">
+                      <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+                  </ion-button>
+                  <ion-button fill="clear" size="small" (click)="closeNotice(noticeModal)">
+                      <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+                  </ion-button>
+              </ion-buttons>
+          </ion-toolbar>
+      </ion-header>
+      <ion-content>
+          <ion-list>
+              <ion-list-header>
+                  <ion-input label="{{'title'|translate}}:" [(ngModel)]="selectedNotice.title" fill="solid"></ion-input>
+              </ion-list-header>
+              <ion-item>
+                  <quill-editor [(ngModel)]="selectedNotice.text"></quill-editor>
+              </ion-item>
+          </ion-list>
+      </ion-content>
+  </ng-template>
+</ion-modal>
