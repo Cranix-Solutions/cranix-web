@@ -1,4 +1,4 @@
-
+import { Frequency, RRule } from 'rrule';
 export class Hwconf {
 	id?: number = 0;
 	name: string = "";
@@ -35,8 +35,14 @@ export class User {
 	fsQuota?: number = 0;
 	msQuotaUsed?: number = 0;
 	fsQuotaUsed?: number = 0;
-	fullName: string;
-	mailAliases: string[];
+	fullName: string = "";
+	mailAliases: string[] = [];
+	emailAddress?: string = ""
+	telefonNumber?: string = ""
+	childIds?: number[] = []
+	parentIds?: number[] = []
+	classIds?: number[] = []
+	otp?: string
 	constructor() { }
 }
 export class UsersImport {
@@ -522,4 +528,115 @@ export class CrxChallengeAnswer {
 	creator_id: number = 0
 	correct: boolean = false
 	constructor() { }
+}
+
+export class CrxCalendar {
+	id: number = 0
+	creatorId: number
+	created: Date | string
+	modified: Date | string
+	uuid: string
+	allDay: boolean = false
+	editable: boolean = true
+	start: Date | string
+	end: Date | string
+	duration: number
+	title: string
+	description: string
+	location: string
+	userIds: number[] = []
+	groupIds: number[] = []
+	groups: Group[] = []
+	users: User[] = []
+	room: Room
+	category: string = 'private'
+	color: string
+	rrule: string | any
+}
+
+export class RecRule {
+	freq: Frequency = RRule.WEEKLY
+	interval: number = 1
+	byweekday: any[] = []
+	bymonth: any[] = []
+	byhour: any = "10"
+	byminute: any = "00"
+	dtstart: Date = new Date()
+	count: number = 0
+	until: Date
+}
+
+export class ParentRequest {
+	id: number = 0
+	parentId: number
+	givenName: string
+	surName: string
+	birthDay: string
+	className: string
+	proceeded: boolean = false
+}
+
+export class Parent extends User {
+}
+
+export class PTMEvent {
+	id: number = 0
+	start: Date
+	end: Date
+	blocked: boolean
+	parent: User
+	student: User
+}
+
+export class PTMTeacherInRoom {
+	id: number = 0
+	room: Room
+	teacher: User
+	events: PTMEvent[]
+}
+
+export class ParentTeacherMeeting {
+	id: number = 0
+	title: string
+	start: Date | string
+	end: Date | string
+	duration: number = 10
+	startRegistration: Date | string
+	endRegistration: Date | string
+	ptmTeacherInRoomList: PTMTeacherInRoom[] = []
+	released: boolean = false
+	templateId?: number
+	classes: Group[] = []
+}
+
+export class IdRequest {
+	id: number = 0
+	creator: User = new User
+	created: Date | string
+	modified: Date | string
+	uuid: string = ""
+	allowed: boolean = false
+	comment: string = ""
+	validUntil: string = ""
+	avatar: string = ""
+	picture: string = ""
+	googleUrl: string = ""
+	appleUrl: string = ""
+}
+
+export class CrxNotice {
+	id: number = 0
+	creator: User = new User
+	created: Date | string = new Date()
+	modified: Date | string = new Date()
+	reminder: Date | string = ""
+	title: string = ""
+	noticeType: string = ""
+	text: string = ""
+	grading: number = 0
+	weighting: number = 1
+	objectType: string = ""
+	objectId: number = 0
+	issueType: string = ""
+	issueId: number = 0
 }

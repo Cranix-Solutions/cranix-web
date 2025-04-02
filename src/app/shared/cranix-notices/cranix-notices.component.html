@@ -1,0 +1,134 @@
+@if(isNoticeOpen){
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="end">
+            <ion-button (click)="saveNotice()" [disabled]="isDisabled">
+                <ion-icon name="checkmark" color="success"></ion-icon>
+            </ion-button>
+            @if(selectedNotice.id > 0){
+            <ion-button (click)="deleteNotice(selectedNotice)" [disabled]="isDisabled">
+                <ion-icon name="trash" color="danger"></ion-icon>
+            </ion-button>
+            }
+            <ion-button (click)="closeNotice()" [disabled]="isDisabled">
+                <ion-icon name="close" color="danger"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-item>
+        <ion-input label="{{'Title'|translate}}: " [(ngModel)]="selectedNotice.title"
+            placeholder="{{'Insert title'|translate}}"></ion-input>
+    </ion-item>
+    <ion-item>
+        @if( selectedNotice.issueType == "PTMEvent" ) {
+        <ion-label>{{'PTM'|translate}}</ion-label>
+        }@else{
+        <ion-select justify="space-between" label="{{'teachingSubject'|translate}}:"
+            placeholder="{{'Select a subject'}}" [(ngModel)]="selectedIssue">
+            @for( subject of crxObjectService.subjects; track subject.id){
+            <ion-select-option value="subject#{{subject.id}}">{{subject.name}}</ion-select-option>
+            }
+        </ion-select>
+        }
+    </ion-item>
+    <ion-item>
+        <ion-input label="{{'grading'|translate}}: " type="number" [(ngModel)]="selectedNotice.grading"></ion-input>
+        <ion-input label="{{'weighting'|translate}}: " type="number" [(ngModel)]="selectedNotice.weighting"></ion-input>
+    </ion-item>
+    <ion-item>
+        <quill-editor [styles]="{ height: '600px' }" [(ngModel)]="selectedNotice.text">
+            <div quill-editor-toolbar>
+                <span class="ql-formats">
+                    <select class="ql-font">
+                        <option selected></option>
+                        <option value="serif"></option>
+                        <option value="monospace"></option>
+                    </select>
+                    <select class="ql-size">
+                        <option value="small"></option>
+                        <option selected></option>
+                        <option value="large"></option>
+                        <option value="huge"></option>
+                    </select>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+                <span class="ql-formats">
+                    <select class="ql-color"></select>
+                    <select class="ql-background"></select>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-list" value="ordered"></button>
+                    <button class="ql-list" value="bullet"></button>
+                    <select class="ql-align">
+                        <option selected></option>
+                        <option value="center"></option>
+                        <option value="right"></option>
+                        <option value="justify"></option>
+                    </select>
+                </span>
+            </div>
+        </quill-editor>
+    </ion-item>
+</ion-content>
+}@else{
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>
+            {{'Notices for'|translate}}:
+            @if(objectType.indexOf('user') != -1){
+            {{selectedObject.surName}}, {{selectedObject.givenName}}
+            }@else{
+            {{selectedObject.description}}
+            }
+        </ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="openNotice(null)">
+                <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+            </ion-button>
+            <ion-button (click)="closeNotices()" [disabled]="isDisabled">
+                <ion-icon slot="icon-only" name="close" color="danger"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-grid>
+        <ion-row>
+            @for(notice of notices; track notice.id){
+            <ion-col size="2" size-xs="12" size-sm="6" size-md="4">
+                <ion-card>
+                    <ion-card-header>
+                        <ion-toolbar>
+                            <ion-label>
+                                {{labels[notice.id]}}
+                            </ion-label>
+                            <ion-buttons slot="end">
+                                <ion-button fill="clear" (click)="deleteNotice(notice)">
+                                    <ion-icon name="trash" color="danger"></ion-icon>
+                                </ion-button>
+                            </ion-buttons>
+                        </ion-toolbar>
+                    </ion-card-header>
+                    <ion-card-content>
+                        <ion-item [button]="true" (click)="openNotice(notice)">
+                            <ion-label>
+                                <b>{{notice.title}}</b><br>
+                                <p>{{'created'|translate}} {{notice.created|date:"yyyy-MM-dd"}}</p>
+                                <p>{{'modified'|translate}} {{notice.modified|date:"yyyy-MM-dd"}}</p>
+                            </ion-label>
+                        </ion-item>
+                    </ion-card-content>
+                </ion-card>
+            </ion-col>
+            }
+        </ion-row>
+    </ion-grid>
+</ion-content>
+}

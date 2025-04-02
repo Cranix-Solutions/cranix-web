@@ -5,6 +5,8 @@ import { isDevMode } from '@angular/core';
 @Injectable()
 export class UtilsService {
 
+
+        double = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09']
         public okBrowser: boolean = true;
         public actMdList;
         constructor() {
@@ -33,10 +35,10 @@ export class UtilsService {
                 }
                 //console.log("From utils: " + url);
                 //return "https://admin.cephalix.eu/api"
-                //return "https://remscheid.cephalix.eu/api"
-                //return "https://admin.schulzentrum-kirchberg.at/api"
+                //return "https://gif1.bbs1-gifhorn.de:444/api"
+                return "https://test-cephalix.cephalix.eu/api"
                 //return "https://192.168.122.100:444/api"
-                return "https://192.168.178.91:1444/api"
+                return "https://192.168.178.127:444/api"
                 return url;
         }
         public log(args) {
@@ -71,6 +73,39 @@ export class UtilsService {
                 return '';
         }
 
+
+        public getDouble(num: number) {
+                if (this.double[num]) return this.double[num]
+                return num
+        }
+
+	public toIonISOString(dt: Date | undefined) {
+                if (dt) {
+                        return dt.getFullYear() + "-" +
+                                this.getDouble(dt.getMonth() + 1) + "-" +
+                                this.getDouble(dt.getDate()) + "T" +
+                                this.getDouble(dt.getHours()) + ":" +
+                                this.getDouble(dt.getMinutes())
+                }
+                return ""
+        }
+
+	public toIonDate(dt: Date| undefined) {
+                if (dt) {
+                        return dt.getFullYear() + "-" +
+                                this.getDouble(dt.getMonth() + 1) + "-" +
+                                this.getDouble(dt.getDate())
+                }
+                return ""
+        }
+
+        public toIonTime(dt: Date | undefined) {
+                if (dt) {
+                        return this.getDouble(dt.getHours()) + ":" +
+                               this.getDouble(dt.getMinutes())
+                }
+                return ""
+        }
         /**
          * set cookie
          * @param {string} name

@@ -27,6 +27,7 @@ export class AuthenticationService {
     //Token will be used only for CEPHALIX connections to overhand the CRANIX session
     token: string;
     session: UserResponse;
+    error: string;
     headers: HttpHeaders;
     formHeaders: HttpHeaders;
     textHeaders: HttpHeaders;
@@ -36,6 +37,7 @@ export class AuthenticationService {
     requestedPath: string;
     minLgWidth = 769;
     minLgHeight = 600;
+    //rowColors: string[] = ["#135d54", "#E2F3E5", "#AFC2B2"]
     rowColors: string[] = ["#D2E3D5", "#E2F3E5", "#AFC2B2"]
     need2fa: boolean = false
     pinFalse: boolean = false;
@@ -54,6 +56,7 @@ export class AuthenticationService {
         private languageService: LanguageService,
         private router: Router
     ) {
+        this.hostname = this.utilsS.hostName();
         this.plt.ready().then(() => {
             this.checkSession();
         });
@@ -61,7 +64,6 @@ export class AuthenticationService {
 
     login(user: LoginForm) {
         console.log("auth.services.login called:", user)
-        this.hostname = this.utilsS.hostName();
         this.url = this.hostname + "/sessions/create";
         return this.http.post<UserResponse>(this.url, user, { headers: this.anonHeaders });
     }
@@ -102,6 +104,54 @@ export class AuthenticationService {
         this.storage.set('selectedTeachingSubject', JSON.stringify(this.selectedTeachingSubject))
     }
 
+    setUpHeaders() {
+        this.headers = new HttpHeaders({
+            'Content-Type': "application/json",
+            'Accept': "application/json",
+            'Authorization': "Bearer " + this.session.token
+        });
+        this.formHeaders = new HttpHeaders({
+            'Accept': "application/json",
+            'Authorization': "Bearer " + this.session.token
+        });
+        this.anyHeaders = new HttpHeaders({
+            'Accept': "*/*",
+            'Authorization': "Bearer " + this.session.token
+        });
+        this.textHeaders = new HttpHeaders({
+            'Accept': "text/plain",
+            'Authorization': "Bearer " + this.session.token
+        });
+        this.longTimeHeader = new HttpHeaders({
+            'Accept': "*/*",
+            'Authorization': "Bearer " + this.session.token,
+            'timeout': `${600000}`
+        });
+    }
+    setupSessionByToken(token: string) {
+        this.http.get<UserResponse>(this.hostname + "/sessions/byToken/" + token).subscribe({
+            next: (val) => {
+                this.session = val
+                this.setUpHeaders();
+                //this.loadSettings();
+                console.log(this.session)
+                //this.authenticationState.next(true);
+                if (this.session.gotoPath) {
+                    this.router.navigate([this.session.gotoPath]);
+                } else {
+                    this.error = "Ihr Token ist korrupt.";
+                }
+            },
+            error: async (err) => {
+                console.log(err)
+                switch (err.status) {
+                    case 401: { this.error = "Ihr Token ist ungültig."; break; }
+                    case 402: { this.error = "Ihr Zugriff ist noch nicht gültig. Versuchen Sie es später!"; break; }
+                    case 403: { this.error = "Ihr Zugriff ist abgelaufen."; break; }
+                }
+            }
+        })
+    }
     setUpSession(user: LoginForm, instituteName: string) {
         this.session = null;
         this.authenticationState.next(false);
@@ -111,30 +161,7 @@ export class AuthenticationService {
                 console.log('login respons is', val);
                 this.session = val;
                 this.session['instituteName'] = instituteName;
-                this.session['roomId'] = val.roomId;
-                this.session['roomName'] = val.roomName;
-                this.headers = new HttpHeaders({
-                    'Content-Type': "application/json",
-                    'Accept': "application/json",
-                    'Authorization': "Bearer " + this.session.token
-                });
-                this.formHeaders = new HttpHeaders({
-                    'Accept': "application/json",
-                    'Authorization': "Bearer " + this.session.token
-                });
-                this.anyHeaders = new HttpHeaders({
-                    'Accept': "*/*",
-                    'Authorization': "Bearer " + this.session.token
-                });
-                this.textHeaders = new HttpHeaders({
-                    'Accept': "text/plain",
-                    'Authorization': "Bearer " + this.session.token
-                });
-                this.longTimeHeader = new HttpHeaders({
-                    'Accept': "*/*",
-                    'Authorization': "Bearer " + this.session.token,
-                    'timeout': `${600000}`
-                });
+                this.setUpHeaders();
                 this.loadSettings();
                 if (this.isAllowed("2fa.use")) {
                     if (this.session.crx2faSession) {
@@ -191,7 +218,7 @@ export class AuthenticationService {
         let data = { crx2faId: id, pin: otPin, token: this.session.token }
         this.http.post<Crx2faSession>(url, data, { headers: headers }).subscribe({
             next: (val) => {
-                this.utilsS.setCookie("crx2faSessionId",val.id.toString(),val.validHours)
+                this.utilsS.setCookie("crx2faSessionId", val.id.toString(), val.validHours)
                 console.log(val)
                 this.authenticationState.next(true)
             },
@@ -332,12 +359,18 @@ export class AuthenticationService {
             case "/pages/cephalix/institutes": { return this.isAllowed('cephalix.manage') }
             case "/pages/cephalix/institutes/all": { return this.isAllowed('cephalix.manage') }
             case "/pages/cephalix/tickets": { return this.isAllowed('cephalix.ticket') }
+            case "/pages/cranix/calendar": { return this.isOneOfAllowed(['calendar.manage', 'calendar.use', 'calendar.read']) }
             case "/pages/cranix/devices": { return this.isAllowed('device.manage') }
             case "/pages/cranix/devices/all": { return this.isAllowed('device.manage') }
             case "/pages/cranix/groups": { return this.isAllowed('group.manage') }
-            //TODO may be it can be configured
-            case "/pages/cranix/informations": { return this.isAllowed('permitall') }
             case "/pages/cranix/hwconfs": { return this.isAllowed('hwconf.manage') }
+            case "/pages/cranix/informations": { return this.isAllowed('permitall') }
+            case "/pages/cranix/mygroups": { return this.isAllowed('education.groups') }
+            case "/pages/cranix/myusers": { return this.isAllowed('education.users') }
+            case "/pages/cranix/profile": { return this.isOneOfAllowed(['permitall', '2fa.use']) }
+            case "/pages/cranix/profile/myself": { return this.isAllowed('permitall') }
+            case "/pages/cranix/profile/mydevice": { return this.isAllowed('permitall') }
+            case "/pages/cranix/profile/crx2fa": { return this.isAllowed('2fa.use') }
             case "/pages/cranix/rooms": { return this.isAllowed('room.manage') }
             case "/pages/cranix/rooms/all": { return this.isAllowed('room.manage') }
             case "/pages/cranix/users": { return this.isAllowed('user.manage') }
@@ -350,12 +383,6 @@ export class AuthenticationService {
             case "/pages/edu/lessons/tests": { return this.isAllowed('permitall') }
             case "/pages/edu/lessons/challenges": { return this.isAllowed('challenge.manage') }
             case "/pages/edu/lessons/roomcontrol": { return this.isAllowed('education.rooms') }
-            case "/pages/cranix/profile": { return this.isOneOfAllowed(['permitall','2fa.use']) }
-            case "/pages/cranix/profile/myself": { return this.isAllowed('permitall') }
-            case "/pages/cranix/profile/mydevice": { return this.isAllowed('permitall') }
-            case "/pages/cranix/profile/crx2fa": { return this.isAllowed('2fa.use') }
-            case "/pages/cranix/mygroups": { return this.isAllowed('education.groups') }
-            case "/pages/cranix/myusers": { return this.isAllowed('education.users') }
             case "institutes/:id": { return this.isAllowed('cephalix.modify') }
             case "customers/:id": { return this.isAllowed('customer.modify') }
             case "tickets/:id": { return this.isAllowed('cephalix.ticket') }
@@ -385,7 +412,7 @@ export class AuthenticationService {
     async showInfo() {
         const toast = this.toastController.create({
             position: "middle",
-            message: 'Copyright 2023 Helmuth and Peter Varkoly, Nuremberg Germany<br>' +
+            message: 'Copyright 2024 Helmuth and Peter Varkoly, Nuremberg Germany<br>' +
                 'VERSION-PLACE-HOLDER',
             color: "success",
             duration: 5000

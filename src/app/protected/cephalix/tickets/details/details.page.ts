@@ -263,6 +263,7 @@ export class EditArticle implements OnInit {
 
   sendArticle() {
     this.article.recipient = this.article.sender;
+    this.article.created = new Date()
     this.article.articleType = 'O';
     this.article.text = this.newText;
     this.disabled = true;

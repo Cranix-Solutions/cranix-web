@@ -1,0 +1,14 @@
+.grid-cell {
+    border: 1px solid #000; /* Sichtbare Grenze */
+    border-radius: 20px;
+    box-shadow: 5px 5px gray;
+    margin: 5px;
+    padding: 10px; /* Innenabstand */
+    text-align: center; /* Text zentrieren */
+  }
+
+  ion-card-content {
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-bottom: 6px;
+  }

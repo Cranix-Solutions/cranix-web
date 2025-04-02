@@ -1,0 +1,190 @@
+@if(rowData) {
+<ion-item>
+    <ion-input placeholder="{{'Search for' | translate }} {{'Teacher'|translate}}" (input)="onQuickFilterChanged()" id="teacherFilter"></ion-input>
+    @if(selectedStudent){
+        <ion-button (click)="printEventForStudent()">
+            <ion-icon color="success" name="print"></ion-icon>
+        </ion-button>
+    }
+    @if(isPtmManager){
+        <cranix-search  objectType="user" [(ngModel)]="selectedStudent" [ngModelOptions]="{standalone: true}" [items]="students" itemTextField="fullName" (callback)="readData(false)"></cranix-search>
+    <!-- ion-label style="min-width: 300;">{{'Select student for the event'|translate}}</ion-label -->
+    <!-- ionic-selectable #selectStudent itemValueField="id" itemTextField="fullName" [isMultiple]="false"
+        [(ngModel)]="selectedStudent" [ngModelOptions]="{standalone: true}" [items]="students" [canSearch]="true"
+        (onChange)="readData(false)"
+        style="min-width: 300;">
+        <ng-template ionicSelectablePlaceholderTemplate>{{ "Select student for the event" | translate }}</ng-template>
+        <ng-template ionicSelectableHeaderTemplate>
+            <ion-header>
+                <ion-toolbar color="primary">
+                    <ion-title>
+                        {{ "Select student for the event" | translate }}
+                    </ion-title>
+                    <ion-buttons slot="end">
+                        <ion-button (click)="deselectStudent(selectStudent)" matTooltip="{{'Deselect student'}}">
+                            <ion-icon color="success" name="trash"></ion-icon>
+                        </ion-button>
+                        <ion-button ion-button (click)="selectStudent.close()">
+                            <ion-icon color="danger" name="close"></ion-icon>
+                        </ion-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+        </ng-template>
+    </ionic-selectable -->
+    }
+</ion-item>
+<ag-grid-angular style="width: 100%; height: 90%;" class="{{authService.settings.agGridThema}}"
+    [rowHeight]="authService.settings.rowHeight" [rowData]="rowData" [columnDefs]="columnDefs"
+    [defaultColDef]="defaultColDef" [context]="context" (gridReady)="onGridReady($event)" id="agGridTable">
+</ag-grid-angular>
+}
+<ion-modal [isOpen]="isRegisterEventOpen">
+    <ng-template>
+        @if(authService.isAllowed('parent.manage')){
+        <ion-header color="primary">
+            <ion-toolbar color="primary">
+                <ion-title>{{'Register student for the event'|translate}}</ion-title>
+                <ion-buttons slot="end">
+                    <ion-button class="ion-no-margin" (click)="doRegister()">
+                        <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+                    </ion-button>
+                    @if(selectedEventRegistered){
+                    <ion-button class="ion-no-margin" (click)="cancelEvent()">
+                        <ion-icon slot="icon-only" color="success" name="trash"></ion-icon>
+                    </ion-button>
+                    }
+                    <ion-button fill="clear" size="small" (click)="isRegisterEventOpen = false">
+                        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content>
+            <ion-list>
+                <ion-item>
+                    <ion-label>{{'Time'|translate}}</ion-label><ion-label>{{selectedEvent.start|date:'HH:mm'}}</ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-label>{{'Teacher'|translate}}</ion-label><ion-label>{{selectedPTMinRoom.teacher.surName}},
+                        {{selectedPTMinRoom.teacher.givenName}} </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-label>{{'Room'|translate}}</ion-label><ion-label>{{selectedPTMinRoom.room.name}},
+                        {{selectedPTMinRoom.room.description}}
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-label>{{'Select student for the event'|translate}}</ion-label>
+                    <cranix-search  objectType="user" [(ngModel)]="selectedEvent.student" [ngModelOptions]="{standalone: true}" [items]="students" itemTextField="fullName"></cranix-search>
+                    <!-- ionic-selectable #selectEventStudent itemValueField="id" itemTextField="fullName" [isMultiple]="false"
+                        [(ngModel)]="selectedEvent.student" [ngModelOptions]="{standalone: true}" [items]="students"
+                        [canSearch]="true">
+                        <ng-template ionicSelectableHeaderTemplate>
+                            <ion-header>
+                                <ion-toolbar color="primary">
+                                    <ion-title>
+                                        {{ "Select student for the event" | translate }}
+                                    </ion-title>
+                                    <ion-buttons slot="end">
+                                        <ion-button ion-button (click)="selectEventStudent.close()">
+                                            <ion-icon color="danger" name="close"></ion-icon>
+                                        </ion-button>
+                                    </ion-buttons>
+                                </ion-toolbar>
+                            </ion-header>
+                        </ng-template>
+                    </ionic-selectable -->
+                </ion-item>
+            </ion-list>
+        </ion-content>
+        }@else{
+        <ion-header color="primary">
+            <ion-toolbar color="primary">
+                <ion-title>{{'Register yourself to an event'|translate}}</ion-title>
+                <ion-label></ion-label>
+                <ion-buttons slot="end">
+                    <ion-button class="ion-no-margin" (click)="doRegister()">
+                        <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+                    </ion-button>
+                    <ion-button fill="clear" size="small" (click)="isRegisterEventOpen = false">
+                        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content>
+            <ion-list>
+                <ion-item>
+                    <ion-label>{{'Time'|translate}}</ion-label><ion-label>{{selectedEvent.start|date:'HH:mm'}}</ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-label>{{'Teacher'|translate}}</ion-label><ion-label>{{selectedPTMinRoom.teacher.surName}},
+                        {{selectedPTMinRoom.teacher.givenName}} </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-label>{{'Room'|translate}}</ion-label><ion-label>{{selectedPTMinRoom.room.name}},
+                        {{selectedPTMinRoom.room.description}}
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-label>{{'Select your child for the event' | translate}}</ion-label>
+                    <cranix-search  objectType="user" [(ngModel)]="selectedEvent.student" [ngModelOptions]="{standalone: true}" [items]="students" itemTextField="fullName"></cranix-search>
+                    <!-- ionic-selectable #ionicSelectUsers itemValueField="id" itemTextField="fullName"
+                        [isMultiple]="false" [(ngModel)]="selectedEvent.student" [ngModelOptions]="{standalone: true}"
+                        [items]="students" [canSearch]="true">
+                    </ionic-selectable -->
+                </ion-item>
+            </ion-list>
+        </ion-content>
+        }
+    </ng-template>
+</ion-modal>
+<ion-modal [isOpen]="isRegisterRoomOpen">
+    <ng-template>
+        <ion-header color="primary">
+            <ion-toolbar color="primary">
+                <ion-title>{{'Register room for'|translate}} {{ptmTeacherInRoom.teacher.surName}},
+                    {{ptmTeacherInRoom.teacher.givenName}} </ion-title>
+                <ion-buttons slot="end">
+                    <ion-button class="ion-no-margin" (click)="doRegisterRoom()">
+                        <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+                    </ion-button>
+                    @if(ptmTeacherInRoom.id != 0) {
+                    <ion-button fill="clear" size="small" (click)="cancelRoomRegistration()">
+                        <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
+                    </ion-button>
+                    }
+                    <ion-button fill="clear" size="small" (click)="isRegisterRoomOpen = false">
+                        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content>
+            <ion-item>
+                <ion-label>{{'Select room for the PTM' | translate}}</ion-label>
+                <cranix-search objectType="room" [(ngModel)]="ptmTeacherInRoom.room" [ngModelOptions]="{standalone: true}" [items]="freeRooms" itemTextField="description"></cranix-search>
+                    
+                <!-- ionic-selectable #ionicSelectRoom itemValueField="id" itemTextField="description" [isMultiple]="false"
+                    [(ngModel)]="ptmTeacherInRoom.room" [ngModelOptions]="{standalone: true}" [items]="freeRooms"
+                    [canSearch]="true">
+                    <ng-template ionicSelectableHeaderTemplate>
+                        <ion-header>
+                            <ion-toolbar color="primary">
+                                <ion-title>
+                                    {{ "Select room for the PTM" | translate }}
+                                </ion-title>
+                                <ion-buttons slot="end">
+                                    <ion-button ion-button (click)="ionicSelectRoom.close()">
+                                        <ion-icon color="danger" name="close"></ion-icon>
+                                    </ion-button>
+                                </ion-buttons>
+                            </ion-toolbar>
+                        </ion-header>
+                    </ng-template>
+                </ionic-selectable -->
+            </ion-item>
+        </ion-content>
+    </ng-template>
+</ion-modal>

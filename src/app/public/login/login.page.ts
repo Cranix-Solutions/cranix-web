@@ -16,26 +16,23 @@ import { LoginForm } from 'src/app/shared/models/server-models';
 export class LoginPage implements OnInit {
     instName: Observable<string>;
     instituteName: string = "";
-    allowSavePassword: boolean = true;
-    showPassword: boolean = false;
     totp: boolean = false;
     totppin: string = "";
     user: LoginForm;
 
     constructor(
-        public  authService: AuthenticationService,
+        public authService: AuthenticationService,
         private systemService: SystemService,
         private objectService: GenericObjectService,
-    ) {
-        this.instName = this.systemService.getInstituteName();
-    }
+    ) { }
 
     ngOnInit() {
+        this.instName = this.systemService.getInstituteName();
         this.user = new LoginForm();
     }
 
     login(): void {
-        this.authService.setUpSession(this.user,  this.instituteName);
+        this.authService.setUpSession(this.user, this.instituteName);
     }
 
     checkPin() {
@@ -46,8 +43,8 @@ export class LoginPage implements OnInit {
     sendPin() {
         let id: string = this.authService.crx2fa.split('#')[1]
         this.authService.sendPin(id).subscribe({
-           next: (val) => { this.objectService.responseMessage(val)},
-           error: (error) => { this.objectService.errorMessage(error)}
+            next: (val) => { this.objectService.responseMessage(val) },
+            error: (error) => { this.objectService.errorMessage(error) }
         })
     }
 

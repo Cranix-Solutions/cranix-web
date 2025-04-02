@@ -17,6 +17,7 @@ import { QuillModule } from 'ngx-quill';
 import { CranixSharedModule } from './shared/cranix-shared.module';
 
 //own services
+import { CrxCalendarService } from './services/crx-calendar.service';
 import { CephalixService } from './services/cephalix.service';
 import { DevicesService } from './services/devices.service';
 import { EductaionService } from './services/education.service';
@@ -27,6 +28,7 @@ import { HwconfsService } from './services/hwconfs.service';
 import { InformationsService } from './services/informations.services';
 import { LanguageService } from './services/language.service';
 import { PrintersService } from './services/printers.service';
+import { ParentsService } from './services/parents.service';
 import { RoomsService } from './services/rooms.service';
 import { SecurityService } from './services/security-service';
 import { SoftwareService } from './services/softwares.service';
@@ -63,6 +65,7 @@ export function createTranslateLoader(http: HttpClient) {
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     CephalixService,
     CrxObjectService,
+    CrxCalendarService,
     DevicesService,
     EductaionService,
     GenericObjectService,
@@ -71,6 +74,7 @@ export function createTranslateLoader(http: HttpClient) {
     InformationsService,
     LanguageService,
     PrintersService,
+    ParentsService,
     RoomsService,
     SecurityService,
     SoftwareService,

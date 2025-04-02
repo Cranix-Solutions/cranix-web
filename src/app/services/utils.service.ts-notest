@@ -5,6 +5,7 @@ import { isDevMode } from '@angular/core';
 @Injectable()
 export class UtilsService {
 
+	double = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09']
         public okBrowser: boolean = true;
         public actMdList;
         constructor() {
@@ -78,6 +79,38 @@ export class UtilsService {
                 const expires = `expires=${d.toUTCString()}`;
                 const cpath = path ? `; path=${path}` : '';
                 document.cookie = `${name}=${value}; ${expires}${cpath}; SameSite=Lax`;
+	}
+
+	public getDouble(num: number) {
+                if (this.double[num]) return this.double[num]
+                return num
+        }
+
+        public toIonISOString(dt: Date | undefined) {
+                if (dt) {
+                        return dt.getFullYear() + "-" +
+                                this.getDouble(dt.getMonth() + 1) + "-" +
+                                this.getDouble(dt.getDate()) + "T" +
+                                this.getDouble(dt.getHours()) + ":" +
+                                this.getDouble(dt.getMinutes())
+                }
+                return ""
+        }
+
+        public toIonDate(dt: Date | undefined) {
+                if (dt) {
+                        return dt.getFullYear() + "-" +
+                                this.getDouble(dt.getMonth() + 1) + "-" +
+                                this.getDouble(dt.getDate())
+                }
+                return ""
+        }
+        public toIonTime(dt: Date | undefined) {
+                if (dt) {
+                        return this.getDouble(dt.getHours()) + ":" +
+                               this.getDouble(dt.getMinutes())
+                }
+                return ""
         }
 }
 

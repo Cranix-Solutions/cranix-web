@@ -1,7 +1,7 @@
 <cranix-toolbar title="{{'Manage yourself' | translate}}"></cranix-toolbar>
-<ion-content *ngIf="mySelf">
+<ion-content *ngIf="mySelf" color="light">
   <h1>{{mySelf.givenName}} {{ mySelf.surName}}</h1> {{mySelf.role | translate}}
-  <ion-list>
+  <ion-list [inset]="true">
     <ion-item>
       <ion-icon slot="start" name="calendar"></ion-icon>
       <ion-label>
@@ -30,6 +30,41 @@
         <h3>{{ 'fsQuota' | translate}}</h3>
       </ion-label>
     </ion-item>
+    @if(idRequestUse){
+    <ion-item>
+      <ion-icon slot="start" name="id-card"></ion-icon>
+      <ion-label>{{'ID Card'|translate}}</ion-label>
+      @if(myIdRequest.allowed){
+      <ion-button fill="clear" [href]="myIdRequest.googleUrl">
+        <ion-icon slot="icon-only" name="google-add-wallet" style="height: 15mm; width: 40mm;"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" [href]="myIdRequest.appleUrl">
+        <ion-icon slot="icon-only" name="apple-add-wallet" style="height: 15mm; width: 40mm;"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" size="large" (click)="deleteId()">
+        <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
+      </ion-button>
+      }@else{
+      @if(myIdRequest.comment){
+        <ion-label>
+          <h2>{{'Reviewer comment:'|translate}}</h2>
+          <h3>{{myIdRequest.comment}}</h3>
+        </ion-label>
+        
+      }
+      @if(picture){
+      <img [src]="picture">
+      }
+      <ion-button fill="clear" size="large" (click)="takePhoto()">
+        <ion-icon slot="icon-only" name="camera"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" size="large" (click)="findPhoto()">
+        <ion-icon slot="icon-only" name="images"></ion-icon>
+      </ion-button>
+      <!-- ion-input label="{{'Upload foto'}}" type="file" (change)="uploadImage($event)"></ion-input -->
+      }
+    </ion-item>
+    }
     <ion-item lines="none">
       <ion-button (click)="openChangePW()">
         {{ 'Reset password' | translate }}

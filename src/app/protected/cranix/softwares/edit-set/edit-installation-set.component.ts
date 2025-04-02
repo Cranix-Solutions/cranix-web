@@ -80,7 +80,9 @@ export class EditInstallationSetComponent implements OnInit {
         this.availableHwconfs.push(tmp);
       }
     }
-    this.availableRooms = this.objectService.allObjects['room'];
+    for(let room of this.objectService.allObjects['room']) {
+      if(room.roomType != 'AdHocAccess') this.availableRooms.push(room)
+    }
     for (let tmp of this.objectService.allObjects['device']) {
       let tmpHwconf = this.objectService.getObjectById('hwconf', tmp.hwconfId);
       if (tmpHwconf && tmpHwconf.deviceType == 'FatClient') {
@@ -122,7 +124,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.availableSoftwaresApi.forEachNode(
       function (node, index) {
         console.log(node)
-        for (let obj of node.beans.context.contextParams.providedBeanInstances.gridOptions.context.componentParent.softwares) {
+        for (let obj of node.beans.gridOptions.context.componentParent.softwares) {
           if (node.data.id == obj.id) {
             node.setSelected(true);
           }
@@ -146,7 +148,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.availableHwconfsApi = params.api;
     this.availableHwconfsApi.forEachNode(
       function (node, index) {
-        for (let obj of node.beans.context.contextParams.providedBeanInstances.gridOptions.context.componentParent.hwconfs) {
+        for (let obj of node.beans.gridOptions.context.componentParent.hwconfs) {
           if (node.data.id == obj.id) {
             node.setSelected(true);
           }
@@ -170,7 +172,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.availableRoomsApi = params.api;
     this.availableRoomsApi.forEachNode(
       function (node, index) {
-        for (let obj of node.beans.context.contextParams.providedBeanInstances.gridOptions.context.componentParent.rooms) {
+        for (let obj of node.beans.gridOptions.context.componentParent.rooms) {
           if (node.data.id == obj.id) {
             node.setSelected(true);
           }
@@ -194,7 +196,7 @@ export class EditInstallationSetComponent implements OnInit {
     this.availableDevicesApi = params.api;
     this.availableDevicesApi.forEachNode(
       function (node, index) {
-        for (let obj of node.beans.context.contextParams.providedBeanInstances.gridOptions.context.componentParent.devices) {
+        for (let obj of node.beans.gridOptions.context.componentParent.devices) {
           if (node.data.id == obj.id) {
             node.setSelected(true);
           }
@@ -221,9 +223,6 @@ export class EditInstallationSetComponent implements OnInit {
       (<HTMLInputElement>document.getElementById("softwaresTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
     }
   }
-  softwaresChanged() {
-    this.softwares = this.softwaresApi.getSelectedRows();
-  }
   softwaresFilterChanged() {
     this.softwaresApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("softwaresFilter")).value);
   }
@@ -235,9 +234,6 @@ export class EditInstallationSetComponent implements OnInit {
     if (!this.authService.isMD()) {
       (<HTMLInputElement>document.getElementById("hwconfsTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
     }
-  }
-  hwconfsChanged() {
-    this.hwconfs = this.hwconfsApi.getSelectedRows();
   }
   hwconfsFilterChanged() {
     this.hwconfsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("hwconfsFilter")).value);
@@ -251,9 +247,6 @@ export class EditInstallationSetComponent implements OnInit {
       (<HTMLInputElement>document.getElementById("roomsTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
     }
   }
-  roomsChanged() {
-    this.rooms = this.roomsApi.getSelectedRows();
-  }
   roomsFilterChanged() {
     this.roomsApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("roomsFilter")).value);
   }
@@ -265,9 +258,6 @@ export class EditInstallationSetComponent implements OnInit {
     if (!this.authService.isMD()) {
       (<HTMLInputElement>document.getElementById("devicesTable")).style.height = Math.trunc(window.innerHeight * 0.65) + "px";
     }
-  }
-  devicesChanged() {
-    this.devices = this.devicesApi.getSelectedRows();
   }
   devicesFilterChanged() {
     this.devicesApi.setGridOption('quickFilterText', (<HTMLInputElement>document.getElementById("devicesFilter")).value);

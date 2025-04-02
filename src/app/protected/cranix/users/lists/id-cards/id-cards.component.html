@@ -1,0 +1,103 @@
+<cranix-toolbar title="{{'Manage ID-Card Requests'| translate}}"></cranix-toolbar>
+@if(overView){
+<ion-item>
+    @if(!authService.isMD()){
+    <ion-toggle (ionChange)="doReView(true)" [(ngModel)]="overView"
+        name="overViewToole">{{'Overview'|translate}}</ion-toggle>
+    }
+    <ion-searchbar id="search-requests" (input)="searchRequests()"></ion-searchbar>
+    <ion-toggle (ionChange)="searchRequests()" [(ngModel)]="openedOnly" name="openedOnlyToogle">
+        {{'Opened Only'|translate}}</ion-toggle>
+</ion-item>
+<ion-content>
+    <ion-grid>
+        <ion-row>
+            @for(request of requests; track request.id){
+            <ion-col size="2" size-xs="12" size-sm="12" size-md="6" size-lg="3" size-xl="2" class="grid-cell">
+                <ion-item>
+                    <ion-thumbnail aria-hidden="true" slot="start">
+                        <img alt="" [src]="request.avatar" />
+                    </ion-thumbnail>
+                    <ion-label>
+                        <strong>{{request.creator.surName}}, {{request.creator.givenName}}</strong>
+                    </ion-label>
+                    <ion-button (click)="getIdRequest(request.id)" fill="clear" size="large">
+                        <ion-icon slot="icon-only" color="primary" name="image"></ion-icon>
+                    </ion-button>
+                    <ion-button (click)="deleteIdRequest(request.id)" fill="clear" size="large">
+                        <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
+                    </ion-button>
+                </ion-item>
+                <ion-item line="none">
+                    <ion-textarea labelPlacement="stacked" label="{{'Comment'|translate}}" [(ngModel)]="request.comment"
+                        name="comment" fill="solid" [counter]="false" maxlength="128">
+                    </ion-textarea>
+                    <ion-button size="large" class="button-no-margin" slot="end" (click)="setIdRequest(request)"
+                        fill="clear" [disabled]="request.comment.length == 0">
+                        <ion-icon slot="icon-only" color="success" name="add-circle"></ion-icon>
+                    </ion-button>
+                </ion-item>
+                <ion-item>
+                    <ion-label>{{'validUntil'|translate}}</ion-label>
+                    <input type="date" [(ngModel)]="request.validUntil" name="validUntil">
+                </ion-item>
+                <ion-item>
+                    <ion-toggle [(ngModel)]="request.allowed" justify="space-between"
+                        (ionChange)="setIdRequest(request)"> {{'Released'|translate}}</ion-toggle>
+                </ion-item>
+            </ion-col>
+            }
+        </ion-row>
+    </ion-grid>
+</ion-content>
+}@else{
+<ion-item>
+    <ion-toggle justify="start" [(ngModel)]="overView" name="openedOnly">{{'Overview'|translate}}</ion-toggle>
+    <ion-button (click)="release()" [disabled]="releasing">{{'Release all shown cards'|translate}}</ion-button>
+</ion-item>
+<ion-grid>
+    <ion-row>
+        @for(request of reviewRequests; track request.id; let idx = $index ){
+        <ion-col size="2">
+            <ion-card>
+                <ion-card-header>
+                    <ion-toolbar>
+                        <ion-label>
+                            {{request.creator.surName}}
+                            {{request.creator.givenName}}
+                        </ion-label>
+                        <ion-buttons slot="end">
+                            <ion-button fill="clear" (click)="doNotRelease(idx)">
+                                <ion-icon color="danger" name="close"></ion-icon>
+                            </ion-button>
+                        </ion-buttons>
+                    </ion-toolbar>
+                </ion-card-header>
+                <ion-card-content>
+                    <ion-img [src]="request.picture"></ion-img>
+                </ion-card-content>
+            </ion-card>
+        </ion-col>
+        }
+    </ion-row>
+</ion-grid>
+}
+<ion-popover #popOver [isOpen]="isPopoverOpen" [backdropDismiss]="false" (onDidDismiss)="isPopoverOpen = false">
+    <ng-template>
+        <ion-header>
+            <ion-toolbar>
+                <ion-title>
+                    {{selectedRequest.creator.surName}} {{selectedRequest.creator.givenName}}
+                </ion-title>
+                <ion-buttons slot="end">
+                    <ion-button (click)="closePopOver(popOver)">
+                        <ion-icon name="close"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+            <ion-img [src]="selectedRequest.picture"></ion-img>
+        </ion-content>
+    </ng-template>
+</ion-popover>

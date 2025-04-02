@@ -12,6 +12,14 @@
         <ion-icon name="key" ></ion-icon>
         <ion-label>{{ 'CRX2fa' | translate }}</ion-label>
       </ion-tab-button>
+      <ion-tab-button *ngIf="authService.isAllowed('parent.manage')" tab="parents" >
+        <ion-icon name="people-circle" ></ion-icon>
+        <ion-label>{{ 'Parents' | translate }}</ion-label>
+      </ion-tab-button>
+      <ion-tab-button *ngIf="authService.isAllowed('idrequest.manage')" tab="idcards" >
+        <ion-icon name="id-card" ></ion-icon>
+        <ion-label>{{ 'ID-Cards' | translate }}</ion-label>
+      </ion-tab-button>
     </ion-tab-bar>
 </ion-tabs>
 

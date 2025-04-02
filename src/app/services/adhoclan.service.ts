@@ -1,8 +1,8 @@
 import { Group, User, Device } from 'src/app/shared/models/data-model';
-import {  AdHocRoom } from 'src/app/shared/models/data-model';
+import { AdHocRoom } from 'src/app/shared/models/data-model';
 import { ServerResponse } from 'src/app/shared/models/server-models';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 
@@ -19,10 +19,12 @@ export class AdHocLanService {
 
 
 
-    constructor(private utils: UtilsService,
-		 private http: HttpClient,
-          private authService: AuthenticationService)
-        {
+    constructor(
+        private utils: UtilsService,
+		private http: HttpClient,
+        private authService: AuthenticationService
+    )
+    {
 		this.hostname = this.utils.hostName();
     }
 

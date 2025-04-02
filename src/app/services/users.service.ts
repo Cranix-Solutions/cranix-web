@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UtilsService } from './utils.service';
 import { AuthenticationService } from './auth.service';
 import { ServerResponse } from 'src/app/shared/models/server-models';
-import { Group, UsersImport } from 'src/app/shared/models/data-model';
+import { Group, IdRequest, UsersImport } from 'src/app/shared/models/data-model';
 
 interface UserList {
 	id: number;
@@ -115,4 +115,24 @@ export class UsersService {
 		return this.http.get(this.url, { headers: this.authService.headers, observe : 'response', responseType: 'blob' });
 	}
 
+	getIdRequests() {
+			const url = this.hostname + '/idRequests';
+			console.log(url);
+			return this.http.get<IdRequest[]>(url, { headers: this.authService.headers });
+	}
+	getIdRequest(id: number) {
+		const url = `${this.hostname}/idRequests/${id}`
+		console.log(url);
+		return this.http.get<IdRequest>(url, { headers: this.authService.headers });
+	}
+	setIdRequest(idRequest: IdRequest) {
+		const url = `${this.hostname}/idRequests/`
+		console.log(url);
+		return this.http.patch<ServerResponse>(url, idRequest, { headers: this.authService.headers });
+	}
+	deleteIdRequest(id: number){
+		const url = `${this.hostname}/idRequests/${id}`
+		console.log(url);
+		return this.http.delete<ServerResponse>(url, { headers: this.authService.headers });
+	}
 }

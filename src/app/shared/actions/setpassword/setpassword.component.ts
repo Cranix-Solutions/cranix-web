@@ -9,16 +9,13 @@ import { SystemService } from 'src/app/services/system.service';
 })
 export class SetpasswordComponent implements OnInit {
 
-  @Input() type;
-
   setPassword = {
     mustChange: true,
     password: "",
     password2:""
   }
 
-  showPassword: boolean = false
-
+  @Input() type;
   constructor(
     public modalController: ModalController,
     public systemService: SystemService

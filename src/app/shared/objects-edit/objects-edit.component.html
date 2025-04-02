@@ -1,6 +1,6 @@
 <form #editForm="ngForm">
   <ion-header translucent>
-    <ion-toolbar>
+    <ion-toolbar  color="primary">
       <ion-title *ngIf="!authService.isMD()">{{ objectActionTitle | translate }}</ion-title>
       <ion-label *ngIf="authService.isMD()">{{ objectActionTitle | translate }}</ion-label>
       <ion-buttons slot="end">
@@ -23,13 +23,17 @@
   </ion-header>
   <ion-content fullscreen>
     <ion-list lines="full" class="ion-no-margin ion-no-padding">
-      <div *ngFor="let key of objectKeys" [ngSwitch]="objectService.typeOf(key,object,objectAction)">
-        <ion-item *ngSwitchCase="'file'">
+      <div *ngFor="let key of objectKeys">
+        @switch(objectService.typeOf(key,object,objectAction)) {
+        @case("file") {
+        <ion-item>
           <ion-label>{{ key | translate }}{{objectService.required[key]}}</ion-label>
           <ion-input type="file" multiple (change)="handleFileInput($event)">
           </ion-input>
         </ion-item>
-        <ion-item *ngSwitchCase="'number'">
+        }
+        @case("number") {
+        <ion-item>
           <ion-label position="stacked">{{ key | translate }}</ion-label>
           <ng-template [ngIf]="objectService.selects[key]" [ngIfElse]="elseBlock1">
             <ion-select type="number" [(ngModel)]="object[key]" name="{{key}}" [compareWith]="objectService.compareFn"
@@ -43,21 +47,29 @@
             </ion-input>
           </ng-template>
         </ion-item>
-        <ion-item *ngSwitchCase="'numberRO'">
+        }
+        @case("numberRO") {
+        <ion-item>
           <ion-label position="stacked">{{ key | translate }}</ion-label>
           <ion-input color="tertiary" type="number" [(ngModel)]="object[key]" name="{{key}}" value="{{object[key]}}"
             readonly>
           </ion-input>
         </ion-item>
-        <ion-item *ngSwitchCase="'booleanTrue'">
+        }
+        @case("booleanTrue") {
+        <ion-item>
           <ion-label position="stacked">{{ key | translate }}</ion-label>
           <ion-toggle slot="end" [(ngModel)]="object[key]" name="{{key}}" color="secondary" checked></ion-toggle>
         </ion-item>
-        <ion-item *ngSwitchCase="'booleanFalse'">
+        }
+        @case("booleanFalse") {
+        <ion-item>
           <ion-label position="stacked">{{ key | translate }}</ion-label>
           <ion-toggle slot="end" [(ngModel)]="object[key]" name="{{key}}" color="secondary"></ion-toggle>
         </ion-item>
-        <ion-item *ngSwitchCase="'string'">
+        }
+        @case("string") {
+        <ion-item>
           <ion-label position="stacked">{{ key | translate }}{{objectService.required[key]}}</ion-label>
           <ion-label position="stacked"
             *ngIf="editForm.controls[key] && editForm.controls[key].hasError('required')  && editForm.controls[key].touched">
@@ -74,31 +86,43 @@
               [required]="objectService.required[key]" [pattern]="getPattern(key)"></ion-input>
           </ng-template>
         </ion-item>
-        <ion-item *ngSwitchCase="'stringRO'">
+        }
+        @case("stringRO") {
+        <ion-item>
           <ion-label position="stacked">{{ key | translate }}</ion-label>
           <ion-input color="tertiary" type="text" value="{{object[key]}}" readonly>
           </ion-input>
         </ion-item>
-        <ion-item *ngSwitchCase="'text'" lines="none">
+        }
+        @case("text") {
+        <ion-item lines="none">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
           <ion-textarea color="tertiary" autoGrow="true" [(ngModel)]="object[key]" name="{{key}}"
             value="{{object[key]}}">
           </ion-textarea>
         </ion-item>
-        <ion-item *ngSwitchCase="'date'">
+        }
+        @case("date") {
+        <ion-item [disabled]="objectService.readOnlyAttributes[key]">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
           <input [(ngModel)]="object[key]" name="{{key}}" type="date">
         </ion-item>
-        <ion-item *ngSwitchCase="'date-time'">
+        }
+        @case("date-time") {
+        <ion-item [disabled]="objectService.readOnlyAttributes[key]">
           <ion-label position="stacked">{{ key | translate }}</ion-label>
           <input [(ngModel)]="object[key]" name="{{key}}" type="datetime-local">
         </ion-item>
-        <ion-item *ngSwitchCase="'idPipeRO'">
+        }
+        @case("idPipeRO") {
+        <ion-item>
           <ion-label position="stacked">{{ key | translate }}{{objectService.required[key]}}</ion-label>
           <ion-input color="tertiary" type="text" [value]="objectService.idToName(key,object[key])" readonly>
           </ion-input>
         </ion-item>
-        <ion-item *ngSwitchCase="'idPipe'">
+        }
+        @case("idPipe") {
+        <ion-item>
           <ion-label position="stacked">{{ key | translate }}{{objectService.required[key]}}</ion-label>
           <ion-label position="stacked"
             *ngIf="editForm.controls[key] && editForm.controls[key].hasError('required')  && editForm.controls[key].touched">
@@ -116,7 +140,9 @@
             </ion-input>
           </ng-template>
         </ion-item>
-        <ion-item *ngSwitchCase="'idsPipe'">
+        }
+        @case("idsPipe") {
+        <ion-item>
           <ion-label position="stacked">{{ key.substring(0,key.length -1 ) | translate }}{{objectService.required[key]}}
           </ion-label>
           <ion-select class="select-full-width wrap-no" type="text" [(ngModel)]="object[key]" name="{{key}}"
@@ -127,10 +153,14 @@
             </ion-select-option>
           </ion-select>
         </ion-item>
-        <ion-item *ngSwitchCase="'multivalued'">
+        }
+        @case("multivalued") {
+        <ion-item>
           <ion-label position="stacked">{{ key | translate }} {{'Comma separated list' | translate }}</ion-label>
           <ion-input type="text" [(ngModel)]="object[key]" name="{{key}}" value="{{object[key]}}"></ion-input>
         </ion-item>
+        }
+        }
       </div>
     </ion-list>
   </ion-content>

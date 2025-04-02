@@ -8,7 +8,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ToolbarComponent } from 'src/app/protected/toolbar/toolbar.component';
 import { IonicModule } from '@ionic/angular';
-import { IonicSelectableComponent } from 'ionic-selectable'
+import { 
+  IonicSelectableComponent,
+  IonicSelectableHeaderTemplateDirective,
+  IonicSelectableValueTemplateDirective,
+  IonicSelectablePlaceholderTemplateDirective
+ } from 'ionic-selectable'
+
 import { TranslateModule } from '@ngx-translate/core';
 import { PipesModule } from 'src/app/pipes/pipe-modules';
 import { AgGridModule } from 'ag-grid-angular';
@@ -26,11 +32,13 @@ import { DateTimeCellRenderer } from 'src/app/pipes/ag-datetime-renderer';
 import { RoomActionBTNRenderer } from 'src/app/pipes/ag-room-renderer';
 import { DeviceActionBTNRenderer } from 'src/app/pipes/ag-device-renderer';
 import { EditBTNRenderer } from 'src/app/pipes/ag-edit-renderer';
+import { EventRenderer } from 'src/app/pipes/ag-ptm-event-renderer';
 import { SoftwareEditBTNRenderer } from 'src/app/pipes/ag-software-edit-renderer';
 import { GroupIdCellRenderer } from 'src/app/pipes/ag-groupid-renderer';
 import { HwconfIdCellRenderer } from 'src/app/pipes/ag-hwconfid-renderer';
 import { PrinterActionBTNRenderer } from 'src/app/pipes/ag-printer-renderer';
 import { RoomIdCellRenderer } from 'src/app/pipes/ag-roomid-render';
+import { RoomRenderer } from 'src/app/pipes/ag-ptm-room-renderer';
 import { DeviceIdCellRenderer } from 'src/app/pipes/ag-deviceid-renderer';
 import { InstituteStatusRenderer } from 'src/app/pipes/ag-institute-status-renderer'
 import { SyncObjectRenderer } from 'src/app/pipes/ag-sync-object-renderer'
@@ -57,6 +65,9 @@ import { SetValidityComponent } from 'src/app/shared/actions/set-validity/set-va
 import { ShowImportComponent } from 'src/app/shared/actions/show-import/show-import.component'
 import { WindowRef } from 'src/app/shared/models/ohters'
 import { CranixMdListComponent } from 'src/app/shared/cranix-md-list/cranix-md-list.component'
+import { CranixNoticesComponent } from './cranix-notices/cranix-notices.component';
+import { CranixPtmViewComponent } from 'src/app/shared/cranix-ptm-view/cranix-ptm-view.component'
+import { CranixSearchComponent } from './cranix-search/cranix-search.component';
 import { QuillModule } from 'ngx-quill';
 import { simpleToolbarOptions } from 'src/app/shared/models/constants'
 
@@ -70,6 +81,9 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     ActionBTNRenderer,
     CreateSupport,
     CranixMdListComponent,
+    CranixNoticesComponent,
+    CranixPtmViewComponent,
+    CranixSearchComponent,
     CustomerActionRenderer,
     ObjectsEditComponent,
     DateCellRenderer,
@@ -78,6 +92,7 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     DeviceActionBTNRenderer,
     DownloadSoftwaresComponent,
     EditBTNRenderer,
+    EventRenderer,
     FilesCollectComponent,
     FileSystemUsageRenderer,
     FilesUploadComponent,
@@ -90,6 +105,7 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     ManageDhcpComponent,
     PrinterActionBTNRenderer,
     RoomActionBTNRenderer,
+    RoomRenderer,
     RoomIdCellRenderer,
     SetpasswordComponent,
     SetquotaComponent,
@@ -111,6 +127,9 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     CommonModule,
     AgChartsModule,
     IonicSelectableComponent,
+    IonicSelectableHeaderTemplateDirective,
+    IonicSelectableValueTemplateDirective,
+    IonicSelectablePlaceholderTemplateDirective,
     AgGridModule,
     FormsModule,
     IonicModule,
@@ -139,7 +158,13 @@ import { simpleToolbarOptions } from 'src/app/shared/models/constants'
     TranslateModule,
     ToolbarComponent,
     CranixMdListComponent,
-    IonicSelectableComponent
+    CranixNoticesComponent,
+    CranixPtmViewComponent,
+    CranixSearchComponent,
+    IonicSelectableComponent,
+    IonicSelectableHeaderTemplateDirective,
+    IonicSelectableValueTemplateDirective,
+    IonicSelectablePlaceholderTemplateDirective
   ],
   providers: [WindowRef,CanActivateViaAcls ]
 })

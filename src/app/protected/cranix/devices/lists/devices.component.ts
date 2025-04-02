@@ -23,7 +23,22 @@ import { ManageDhcpComponent } from 'src/app/shared/actions/manage-dhcp/manage-d
 })
 export class DevicesComponent implements OnInit {
   selectedRoom;
-  objectKeys: string[] = [];
+  objectKeys: string[] = [
+    "roomId",
+    "name",
+    "ip",
+    "mac",
+    "wlanIp",
+    "wlanMac",
+    "hwconfId",
+    "place",
+    "row",
+    "serial",
+    "inventary",
+    "locality",
+    "created",
+    "modified"
+  ]
   displayedColumns: string[] = ['name', 'mac', 'ip', 'hwconfId', 'roomId'];
   sortableColumns: string[] = ['name', 'mac', 'ip', 'hwconfId', 'roomId'];
   columnDefs = [];
@@ -33,7 +48,7 @@ export class DevicesComponent implements OnInit {
   context;
   title = 'app';
   rowData = [];
-  selection:   Device[] = [];
+  selection: Device[] = [];
   selectedIds: number[] = [];
 
   constructor(
@@ -48,7 +63,6 @@ export class DevicesComponent implements OnInit {
   ) {
 
     this.context = { componentParent: this };
-    this.objectKeys = Object.getOwnPropertyNames(new Device());
     this.createColumnDefs();
     this.defaultColDef = {
       resizable: true,
@@ -163,20 +177,20 @@ export class DevicesComponent implements OnInit {
     this.objectService.deleteObjectDialog(device, 'device', '')
   }
 
-  selectionChanged(){
+  selectionChanged() {
     this.objectService.selectedIds = []
     for (let i = 0; i < this.gridApi.getSelectedRows().length; i++) {
       this.objectService.selectedIds.push(this.gridApi.getSelectedRows()[i].id);
     }
     this.objectService.selection = this.gridApi.getSelectedRows()
   }
-  checkChange(ev, dev: Device){
-    if( ev.detail.checked ) {
+  checkChange(ev, dev: Device) {
+    if (ev.detail.checked) {
       this.objectService.selectedIds.push(dev.id)
       this.objectService.selection.push(dev)
     } else {
       this.objectService.selectedIds = this.objectService.selectedIds.filter(id => id != dev.id)
-      this.objectService.selection   = this.objectService.selection.filter(obj => obj.id != dev.id)
+      this.objectService.selection = this.objectService.selection.filter(obj => obj.id != dev.id)
     }
   }
 
@@ -219,6 +233,7 @@ export class DevicesComponent implements OnInit {
       componentProps: {
         objectType: "device",
         objectAction: action,
+        objectKeys: this.objectKeys,
         object: device
       },
       animated: true,

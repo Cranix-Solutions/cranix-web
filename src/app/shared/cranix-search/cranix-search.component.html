@@ -1,0 +1,64 @@
+<button class="searchButton" (click)="openModal()">
+    @if(selection){
+    @if(multiple){
+    {{selection.length}} {{selectedLabel|translate}}
+    }@else{
+    {{selection[itemTextField]}}
+    }
+    }@else{
+    {{emptyLabel|translate}}
+    }
+</button>
+<ion-modal [isOpen]="isCranixSearchModalOpen" #cranixSearchModal>
+    <ng-template>
+        <ion-header>
+            <ion-toolbar color="primary">
+                <ion-title>
+                    {{'Search for'|translate}} {{objectType|translate}}
+                </ion-title>
+                <ion-buttons slot="end">
+                    @if(multiple){
+                    <ion-button class="ion-no-margin" (click)="returnValues(cranixSearchModal)">
+                        <ion-icon slot="icon-only" color="success" name="checkmark-sharp"></ion-icon>
+                    </ion-button>
+                    }
+                    <ion-button class="ion-no-margin" (click)="clearSelection(cranixSearchModal)"
+                        matTooltip="{{'Clear selection' | translate }}">
+                        <ion-icon slot="icon-only" color="warning" name="trash"></ion-icon>
+                    </ion-button>
+                    @if(!multiple){
+                    <ion-button class="ion-no-margin" (click)="closeModal(cranixSearchModal)">
+                        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+                    </ion-button>
+                    }
+                </ion-buttons>
+            </ion-toolbar>
+            <ion-item>
+                <ion-searchbar placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged()"
+                    id="crxSearchFilter"></ion-searchbar>
+            </ion-item>
+        </ion-header>
+        <ion-content>
+            @if(multiple){
+            <ul class="checklist">
+                @for(o of rowData; track o.id){
+                <li>
+                    <input type="checkbox" (click)="doSelect(o)" [id]="o[itemTextField]" [checked]="isSelected(o.id)">
+                    <label [for]="o[itemTextField]">{{o[itemTextField]}}</label>
+                </li>
+                }
+            </ul>
+            }@else{
+            <ul class="radiolist">
+                @for(o of rowData; track o.id){
+                <li>
+                    <input type="radio" (click)="select(o,cranixSearchModal)" [id]="o[itemTextField]"
+                        name="cranixSearchList" [checked]="selection && o.id == selection.id">
+                    <label [for]="o[itemTextField]">{{o[itemTextField]}}</label>
+                </li>
+                }
+            </ul>
+            }
+        </ion-content>
+    </ng-template>
+</ion-modal>

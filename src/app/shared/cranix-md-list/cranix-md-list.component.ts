@@ -1,10 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular'
 import { AuthenticationService } from 'src/app/services/auth.service';
 import { ChallengesService } from 'src/app/services/challenges.service';
 import { CrxObjectService } from 'src/app/services/crx-object-service';
 import { GenericObjectService } from 'src/app/services/generic-object.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { CranixNoticesComponent } from 'src/app/shared/cranix-notices/cranix-notices.component'
 
 @Component({
   selector: 'cranix-md-list',
@@ -28,13 +30,15 @@ export class CranixMdListComponent implements OnInit {
     public crxObjectService: CrxObjectService,
     public languageService: LanguageService,
     public objectService: GenericObjectService,
-    public utilService: UtilsService
+    public utilService: UtilsService,
+    private modalController: ModalController
   ) {
     this.authService.log("CranixMdListComponent constructor was called")
     this.utilService.actMdList = this;
   }
 
   ngAfterContentInit() {
+    console.log(this.objectType)
     this.subjectChanged(null)
     console.log("CranixMdListComponent ngAfterContentInit")
   }
@@ -301,5 +305,16 @@ export class CranixMdListComponent implements OnInit {
       },
       error: (error) => { this.objectService.errorMessage(error)}
     })
+  }
+
+  async openNotice(object){
+    const  modal = await this.modalController.create({
+      component: CranixNoticesComponent,
+      componentProps: {
+        selectedObject: object,
+        objectType: this.objectType
+      }
+    })
+    modal.present();
   }
 }
