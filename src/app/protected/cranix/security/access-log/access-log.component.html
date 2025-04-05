@@ -2,7 +2,7 @@
 <ion-content id="carded">
   <ion-item lines="none">
     <ion-label *ngIf="gridApi">
-      #{{gridApi.getDisplayedRowCount()}}
+      #{{gridApi.getDisplayedRowCount()}}&nbsp;
     </ion-label>
     <ion-input placeholder="{{'search' | translate }}" (input)="onQuickFilterChanged('logsFilter')" id="logsFilter">
     </ion-input>

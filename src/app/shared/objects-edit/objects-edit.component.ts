@@ -174,7 +174,7 @@ export class ObjectsEditComponent implements OnInit {
         }
       },
       (error) => {
-        this.objectService.errorMessage("A Server Error is accoured:" + error);
+        this.objectService.errorMessage("A server error occoured: " + error);
         this.disabled = false;
       },
       () => {
@@ -197,7 +197,7 @@ export class ObjectsEditComponent implements OnInit {
         }
       },
       (error) => {
-        this.objectService.errorMessage("A Server Error is accoured:" + error.toString());
+        this.objectService.errorMessage("A server error occoured: " + error.toString());
       },
       () => {
         subs.unsubscribe();
